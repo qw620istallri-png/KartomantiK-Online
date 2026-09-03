@@ -692,13 +692,23 @@ function zoneActionsHtml(ownerId, zone, canAct) {
   return buttons.join("");
 }
 
+// "M"/"W" for Manifestation/Will, plus the card's own temperament symbol —
+// reuses the same icon set as tokens/essences, keyed the same way (colorKey).
+function zoneCardKindBadgeHtml(cardId) {
+  const card = cardsById.get(cardId);
+  if (!card) return "";
+  const kindLetter = card.type === "manifestation" ? "M" : "W";
+  return `<img class="zone-card-temperament" src="${esc(temperamentSymbol(card.colorKey))}" alt="">
+    <span class="zone-card-kind" title="${esc(card.typeLabel || "")}">${kindLetter}</span>`;
+}
+
 function zoneCardRowHtml(ownerId, zone, cardId, canAct) {
   const style = `style="--owner-color:${playerColor(ownerId)}"`;
   if (!canAct) {
-    return `<div class="zone-card-row" ${style}><span>${esc(cardName(cardId))}</span></div>`;
+    return `<div class="zone-card-row" ${style}>${zoneCardKindBadgeHtml(cardId)}<span>${esc(cardName(cardId))}</span></div>`;
   }
   return `<div class="zone-card-row" ${style} data-zone-card="${esc(ownerId)}:${zone}:${esc(cardId)}" data-preview-card="${esc(cardId)}">
-    <span>${esc(cardName(cardId))}</span>
+    ${zoneCardKindBadgeHtml(cardId)}<span>${esc(cardName(cardId))}</span>
   </div>`;
 }
 
@@ -1851,6 +1861,37 @@ function initRevealResize() {
   });
 }
 
+// ---------------------------------------------------------------- hand-view resize
+
+const HAND_VIEW_SIZE_KEY = "ko_hand_view_card_h";
+const HAND_VIEW_SIZE_MAX = 500;
+let handViewCardHeight = Math.min(HAND_VIEW_SIZE_MAX, Math.max(100, Number(localStorage.getItem(HAND_VIEW_SIZE_KEY)) || 182));
+
+function applyHandViewCardHeight() {
+  document.documentElement.style.setProperty("--hv-card-h", handViewCardHeight + "px");
+}
+
+function initHandViewResize() {
+  applyHandViewCardHeight();
+  $("#handViewResizeHandle").addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    const startY = event.clientY;
+    const startHeight = handViewCardHeight;
+    const move = (e) => {
+      // handle sits below the card row, same as the reveal panel's — dragging down grows it
+      handViewCardHeight = Math.min(HAND_VIEW_SIZE_MAX, Math.max(100, startHeight + (e.clientY - startY)));
+      applyHandViewCardHeight();
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      localStorage.setItem(HAND_VIEW_SIZE_KEY, String(handViewCardHeight));
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  });
+}
+
 // ---------------------------------------------------------------- hand resize
 
 const HAND_SIZE_KEY = "ko_hand_card_h";
@@ -2320,6 +2361,7 @@ async function boot() {
   initZoomControls();
   initHandResize();
   initRevealResize();
+  initHandViewResize();
   initHandToolbar();
   initDrawTool();
   initTokenToolbar();
