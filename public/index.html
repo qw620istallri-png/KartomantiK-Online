@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Kartomantik Online</title>
+  <link rel="icon" type="image/png" href="grimoire-icon.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <section id="joinScreen">
+    <div class="join-hero">
+      <img src="grimoire.png" alt="" id="joinHero">
+      <h1 id="appTitle"></h1>
+    </div>
+    <div class="join-card">
+      <p class="tagline" id="tagline"></p>
+
+      <div class="tabs">
+        <button id="tabCreate" class="active"></button>
+        <button id="tabJoin"></button>
+      </div>
+
+      <div id="createPane">
+        <div class="field">
+          <label id="nameLabel1"></label>
+          <input id="createName" maxlength="30">
+        </div>
+        <button class="primary" id="createBtn"></button>
+
+        <div class="codes-box hidden" id="codesBox">
+          <div class="code-pill"><span id="playerCodeLabel"></span><div class="code-pill-row"><strong id="playerCodeValue"></strong><button data-copy="playerCodeValue" id="copyPlayerCode"></button></div></div>
+          <div class="code-pill"><span id="observerCodeLabel"></span><div class="code-pill-row"><strong id="observerCodeValue"></strong><button data-copy="observerCodeValue" id="copyObserverCode"></button></div></div>
+          <p class="share-hint" id="shareHint"></p>
+          <button class="primary" id="continueBtn"></button>
+        </div>
+      </div>
+
+      <div id="joinPane" class="hidden">
+        <div class="field">
+          <label id="nameLabel2"></label>
+          <input id="joinName" maxlength="30">
+        </div>
+        <div class="field">
+          <label id="codeLabel"></label>
+          <input id="joinCode" maxlength="8" style="text-transform:uppercase">
+        </div>
+        <button class="primary" id="joinBtn"></button>
+      </div>
+
+      <p class="status-line" id="statusLine"></p>
+    </div>
+    <nav class="social-links">
+      <a href="https://qw620istallri-png.github.io/DECKOMANTIK/" target="_blank" rel="noopener noreferrer" id="socialDeckomantik"></a>
+      <a href="https://discord.gg/4YvXKyJ94p" target="_blank" rel="noopener noreferrer" id="socialDiscord"></a>
+      <a href="https://www.instagram.com/kartomantik_cardgame/" target="_blank" rel="noopener noreferrer" id="socialInstagram"></a>
+    </nav>
+  </section>
+
+  <section id="gameScreen" class="hidden">
+    <header class="game-header">
+      <div class="brand" id="brandLabel"><img src="grimoire-icon.png" alt="" id="brandLogo"><span id="brandText"></span></div>
+      <div class="codes" id="headerCodes"></div>
+      <div class="actions">
+        <button id="fullscreenBtn"></button>
+        <button id="importDeckBtn"></button>
+        <button id="downloadLogBtn"></button>
+        <button id="endSessionBtn"></button>
+        <button id="leaveSessionBtn" class="hidden"></button>
+      </div>
+    </header>
+    <p class="status-line" id="gameStatusLine"></p>
+    <div class="session-ended-banner hidden" id="sessionEndedBanner"></div>
+    <div class="board-field-wrap" id="battlefieldWrap">
+      <div class="opp-rows" id="oppRows"></div>
+      <div class="hand-view-panel hidden" id="handViewPanel">
+        <button class="hand-view-close" id="handViewCloseBtn">✕</button>
+        <div class="hand-view-title" id="handViewTitle"></div>
+        <div class="hand-view-cards" id="handViewCards"></div>
+      </div>
+      <div class="side-toolbars" id="sideToolbars">
+        <div class="draw-toolbar" id="drawToolbar">
+          <button id="drawPenBtn" title="Draw">✏️</button>
+          <button id="drawEraseBtn" title="Erase area">⬚</button>
+          <div class="draw-sep"></div>
+          <button id="drawUndoBtn" title="Undo">↩</button>
+          <button id="drawRedoBtn" title="Redo">↪</button>
+          <div class="draw-sep"></div>
+          <button id="drawClearBtn" title="Clear my drawings">🗑</button>
+        </div>
+        <div class="token-toolbar" id="tokenToolbar">
+          <button id="createTokenBtn" title="Create a token card">🃏+</button>
+          <button id="createEssenceBtn" title="Create essence"></button>
+        </div>
+      </div>
+      <div class="zoom-controls">
+        <button id="zoomOutBtn">−</button>
+        <button id="zoomResetBtn">100%</button>
+        <button id="zoomInBtn">+</button>
+        <div class="zoom-sep"></div>
+        <button id="pileCalibrateBtn"></button>
+      </div>
+      <div class="battlefield" id="battlefield">
+        <svg class="draw-layer" id="drawLayer"></svg>
+      </div>
+      <div class="hand-area" id="handArea">
+        <div class="hand-toolbar" id="handToolbar">
+          <button class="primary" id="handHideBtn"></button>
+          <button class="hand-tool-btn" id="handDrawOneBtn"></button>
+          <button class="hand-tool-btn" id="handDrawHandBtn"></button>
+          <button class="hand-tool-btn" id="handDiscardBtn"></button>
+          <button class="hand-tool-btn" id="handDiscardRandomBtn"></button>
+          <button class="hand-tool-btn" id="handShowBtn"></button>
+          <button class="hand-tool-btn" id="handMulliganBtn"></button>
+          <span class="hint hand-tool-btn hidden" id="handPickHint"></span>
+        </div>
+        <div class="hand-resize-handle" id="handResizeHandle"></div>
+        <div class="hand-tray" id="myHandTray"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="log-panel hidden" id="importPanel">
+    <div class="box">
+      <h2 id="importDeckHeading"></h2>
+      <a href="https://qw620istallri-png.github.io/DECKOMANTIK/" target="_blank" rel="noopener noreferrer" class="deckomantik-link" id="deckomantikLink">DeckomantiK ↗</a>
+
+      <h3 id="starterDecksHeading" class="import-subhead"></h3>
+      <div id="starterDeckList" class="deck-pick-list"></div>
+
+      <h3 id="savedDecksHeading" class="import-subhead"></h3>
+      <div id="savedDeckList" class="deck-pick-list"></div>
+
+      <p id="importDeckHintText" style="color:var(--muted);font-size:14px"></p>
+      <textarea id="importDeckText" rows="10" style="width:100%"></textarea>
+      <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
+        <button id="importCancelBtn"></button>
+        <button class="primary" id="importConfirmBtn"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="log-panel hidden" id="logPanel">
+    <div class="box">
+      <div class="log-toolbar">
+        <h2 id="logHeading"></h2>
+        <div style="display:flex;gap:8px">
+          <button id="logDownloadBtn"></button>
+          <button id="logCloseBtn"></button>
+        </div>
+      </div>
+      <div id="logEntries"></div>
+    </div>
+  </div>
+
+  <div class="log-panel reveal-panel hidden" id="revealPanel">
+    <div class="box">
+      <h2 id="revealHeading"></h2>
+      <p class="reveal-who" id="revealWho"></p>
+      <div class="reveal-cards" id="revealCards"></div>
+      <div class="reveal-resize-handle" id="revealResizeHandle"></div>
+      <div style="display:flex;justify-content:flex-end;margin-top:16px">
+        <button id="revealCloseBtn"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="log-panel inspect-panel hidden" id="inspectPanel">
+    <div class="box">
+      <div class="inspect-img"><img id="inspectImg" alt=""></div>
+      <div class="inspect-text">
+        <h2 id="inspectName"></h2>
+        <div class="meta" id="inspectMeta"></div>
+        <div class="effect" id="inspectEffect"></div>
+        <div style="display:flex;justify-content:flex-end;margin-top:14px">
+          <button id="inspectCloseBtn"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="log-panel token-panel hidden" id="tokenPanel">
+    <div class="box">
+      <h2 id="tokenPanelHeading"></h2>
+      <p id="tokenPanelHint" style="color:var(--muted);font-size:14px"></p>
+      <div class="token-temperament-grid" id="tokenTemperamentGrid"></div>
+      <div class="field">
+        <label id="tokenPowerLabel"></label>
+        <input id="tokenPowerInput" type="number" value="1">
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
+        <button id="tokenCancelBtn"></button>
+        <button class="primary" id="tokenCreateBtn"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="log-panel token-panel hidden" id="essencePanel">
+    <div class="box">
+      <h2 id="essencePanelHeading"></h2>
+      <p id="essencePanelHint" style="color:var(--muted);font-size:14px"></p>
+      <div class="token-temperament-grid" id="essenceTemperamentGrid"></div>
+      <div class="field">
+        <label id="essenceCountLabel"></label>
+        <input id="essenceCountInput" type="number" value="1">
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
+        <button id="essenceCancelBtn"></button>
+        <button class="primary" id="essenceCreateBtn"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="log-panel hand-request-panel hidden" id="handRequestPanel">
+    <div class="box">
+      <h2 id="handRequestHeading"></h2>
+      <p id="handRequestText"></p>
+      <div class="hand-request-card" id="handRequestCard"></div>
+      <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
+        <button id="handRequestDeclineBtn"></button>
+        <button class="primary" id="handRequestAcceptBtn"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="i18n.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

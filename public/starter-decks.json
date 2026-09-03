@@ -1,0 +1,257 @@
+[
+  {
+    "id": "starter-phlegmatic",
+    "name": "Phlegmatic Starter",
+    "colorKey": "phlegmatic",
+    "groups": [
+      {
+        "id": "manifestations",
+        "kind": "manifestations",
+        "name": "Manifestations",
+        "cardIds": [
+          "6jz7otalrdq0q8u_en",
+          "l4suqymyd2ehsue_en",
+          "8lion52jjnmxvko_en",
+          "gbvulprmpw89ohr_en",
+          "jh2nsqxr9x2ii1l_en",
+          "aumzs91roqg77y1_en",
+          "nu1ycheygeru344_en",
+          "4rnpxnnceu8x9o9_en",
+          "85kx4sk1y809276_en",
+          "6xfwhr4h38wvm4u_en",
+          "6b4f3yh4tk4091p_en",
+          "iuqpdn4gvjiu25v_en",
+          "dbevnzpvngas8pg_en",
+          "5h7k3m44jsn0esy_en",
+          "skh6d780jne193w_en",
+          "bf94i4ttvl7r4mt_en",
+          "je9rwgrjwk97oes_en",
+          "46id1c09q8inlkz_en",
+          "276sz8daqngt2dh_en",
+          "ibf2epfw6eap5x3_en"
+        ]
+      },
+      {
+        "id": "volontes",
+        "kind": "volontes",
+        "name": "Wills",
+        "cardIds": [
+          "erkwir53va9m8gm_en",
+          "nzyipkk7u6vrd4a_en",
+          "31k2b7hz7ockvvn_en",
+          "ud9clfoj2c6x96o_en",
+          "5q6t7i5pzctbi8s_en",
+          "8xi4zh0ekdl42me_en",
+          "n9olbthp7vtmypo_en",
+          "lo85kdsow36bymu_en",
+          "ivx8jr1o6utm32a_en",
+          "ztunjt1msq1ofsv_en"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "starter-vitreous",
+    "name": "Vitreous Starter",
+    "colorKey": "vitreous",
+    "groups": [
+      {
+        "id": "manifestations",
+        "kind": "manifestations",
+        "name": "Manifestations",
+        "cardIds": [
+          "tpnlqhi6o8evklz_en",
+          "01ynsddc9h2r6wc_en",
+          "fro1wz8eln9t49l_en",
+          "fvk7w9y8xidbuwa_en",
+          "vus7jchkjhws8lu_en",
+          "dxl82w4oxzcg1eg_en",
+          "yy29lowj25q1z5y_en",
+          "rm8d0h0v6eu7ho7_en",
+          "shiox5powdvu5nl_en",
+          "bx0uyxxb3c6pas2_en",
+          "qn8r98kyqqma972_en",
+          "7g0495fr3188or9_en",
+          "i7h2c7ku2gt1yvg_en",
+          "xzaw511oz4g4km9_en",
+          "twn0cer0tjbw09n_en",
+          "xoo3jxtiy1sonm1_en",
+          "nt0bixroxp0ftnk_en",
+          "n0natbzt0nfylml_en",
+          "nbms08jb9t9eqbh_en"
+        ]
+      },
+      {
+        "id": "volontes",
+        "kind": "volontes",
+        "name": "Wills",
+        "cardIds": [
+          "265f4wdooq43pjn_en",
+          "9yylrq6xancbn0m_en",
+          "ek1bng9r7vhriwt_en",
+          "72zvsiuky5ytolh_en",
+          "q6rha5kz42bkxle_en",
+          "9c7s9dn3sa5dcko_en",
+          "zk76fhtep0wm3hh_en",
+          "xav48hincrnl32d_en",
+          "ryg8e3lgopl6z52_en",
+          "g0mtnp4zbhwj7cb_en",
+          "omhqwnu5tvwlzzg_en"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "starter-melancholic",
+    "name": "Melancholic Starter",
+    "colorKey": "melancholic",
+    "groups": [
+      {
+        "id": "manifestations",
+        "kind": "manifestations",
+        "name": "Manifestations",
+        "cardIds": [
+          "zozynivu4tbojjg_en",
+          "5zgq2zcogt4g4d0_en",
+          "h3qquea83b813t9_en",
+          "k7bnhqhxkij5lsl_en",
+          "o2vng99wk76o072_en",
+          "kl0n8mt9m1fwly0_en",
+          "g3zumpyf623hto6_en",
+          "7e2ppf4rfgkdfms_en",
+          "wbyjru9luc175ak_en",
+          "icxqhki0ivfgqu0_en",
+          "bu1y6jwy7iaywqu_en",
+          "0kcy08a6jd7ez7k_en",
+          "ydijk2x1ne8w93g_en",
+          "lmjn89wobbttfop_en",
+          "d6jip43i66i34xk_en",
+          "k4m0j5h0l3f61hs_en",
+          "86nfr2vhox3l6y2_en",
+          "zh4rjhzon9qes6m_en",
+          "9ypw4x4igfon1qi_en",
+          "pekwxpsy3c0ro3l_en"
+        ]
+      },
+      {
+        "id": "volontes",
+        "kind": "volontes",
+        "name": "Wills",
+        "cardIds": [
+          "a058t24med4h5nx_en",
+          "jy05w4j8zcuvezq_en",
+          "zd6h16he0m4kuwb_en",
+          "k7dq8ye448xwj54_en",
+          "z2fen73ktw8pbqz_en",
+          "5r7g2e0r6q17lur_en",
+          "uin3dxt3bc50z6q_en",
+          "0coh7nrbvcvan1i_en",
+          "zni76s4aabicqag_en",
+          "e049wxg2j24nczl_en"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "starter-capricious",
+    "name": "Capricious Starter",
+    "colorKey": "capricious",
+    "groups": [
+      {
+        "id": "manifestations",
+        "kind": "manifestations",
+        "name": "Manifestations",
+        "cardIds": [
+          "axsr1earxwcrta3_en",
+          "ptwyrc2a26wqwc8_en",
+          "easl4l3aiiim2qg_en",
+          "93gvk0hy12hylm6_en",
+          "girck4py9u1vrke_en",
+          "o6fsczgrftd88lz_en",
+          "a9bsslut738hm0k_en",
+          "7badn4v9w72srad_en",
+          "1a8wzhi7xhbcenj_en",
+          "rngwnb4y158ya2q_en",
+          "pwsjhnw4vpvqgkv_en",
+          "uycbbilf0zlttb9_en",
+          "fw18tebi26jwiqb_en",
+          "o1b1hf2xpmkt8j2_en",
+          "fdnhc537c4xu2wo_en",
+          "tdy2112mspb7u97_en",
+          "vt30v1v8anw5hib_en",
+          "kaw822pzpzd2l9k_en",
+          "6vxm454ffuni41x_en",
+          "om4qbiofb0ihq6p_en",
+          "ei33difzdc81zha_en"
+        ]
+      },
+      {
+        "id": "volontes",
+        "kind": "volontes",
+        "name": "Wills",
+        "cardIds": [
+          "rqvzo3iji2a1l65_en",
+          "t42gc95tma8uhzm_en",
+          "2y961kgs0crdict_en",
+          "7gd19pmexrjlrap_en",
+          "xeeg6rdiy9xeew5_en",
+          "kmyzmxtakzhj58p_en",
+          "ey6fuk5gguasrb0_en",
+          "1ixfmjkfewc0o42_en",
+          "xzh48oy0ramirce_en"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "starter-choleric",
+    "name": "Choleric Starter",
+    "colorKey": "choleric",
+    "groups": [
+      {
+        "id": "manifestations",
+        "kind": "manifestations",
+        "name": "Manifestations",
+        "cardIds": [
+          "43faoiy4cmoxmaw_en",
+          "qs29rt3f6w1jx4o_en",
+          "xw1fbhs6hwz6thc_en",
+          "ymsp3bnm3142ji3_en",
+          "jfzgsewuzsgn7hu_en",
+          "qairavs7la5qg39_en",
+          "iwpmdq754ew0mw7_en",
+          "v1mhtnl7jec5xby_en",
+          "1a0vuhn4xwybszo_en",
+          "x15xumjqqhrnrds_en",
+          "0um05ree31uu6e2_en",
+          "03jzw541k0af8x3_en",
+          "ng6w09m6mrjq3xc_en",
+          "o4p1r7347u6sff2_en",
+          "70wsdfb29mmcsqf_en",
+          "e769fgfnxo63e2t_en",
+          "7j3udrfh5t8vl25_en",
+          "pgvrly9397pua77_en",
+          "l6ragmkyw5oyued_en",
+          "1bbl0f2xi1u5rgi_en"
+        ]
+      },
+      {
+        "id": "volontes",
+        "kind": "volontes",
+        "name": "Wills",
+        "cardIds": [
+          "m2l3v60n0iakrm2_en",
+          "4naoqbqz6ebozj5_en",
+          "w3jt07uuk00nmaj_en",
+          "goxjkkrwos0lhx4_en",
+          "obn1uv72ewxv3y5_en",
+          "s6mezxrq1zp2958_en",
+          "4phs0d8l223jk7t_en",
+          "bithch9c4vi77cu_en",
+          "dly528oj65qnznh_en",
+          "2xqczn7vzkm5n50_en"
+        ]
+      }
+    ]
+  }
+]
