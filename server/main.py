@@ -58,10 +58,16 @@ async def serve_static(path):
     path = path.split("?", 1)[0]
     safe_rel = os.path.normpath(path).lstrip("\\/")
     full_path = os.path.normpath(os.path.join(PUBLIC_DIR, safe_rel))
+    # websockets' HTTP support is a thin layer meant for the WS handshake, not
+    # a real static file server — it doesn't reliably handle a browser reusing
+    # one keep-alive connection for a page's many sequential asset requests
+    # (seen as intermittent 404s/broken images through a real proxy, never
+    # locally). Forcing a fresh connection per request sidesteps that instead
+    # of trying to make keep-alive work in a library not built for it.
     if not (full_path == PUBLIC_DIR or full_path.startswith(PUBLIC_DIR + os.sep)):
-        return Response(403, "Forbidden", Headers(), b"Forbidden")
+        return Response(403, "Forbidden", Headers([("Connection", "close")]), b"Forbidden")
     if not os.path.isfile(full_path):
-        return Response(404, "Not Found", Headers(), b"Not Found")
+        return Response(404, "Not Found", Headers([("Connection", "close")]), b"Not Found")
     with open(full_path, "rb") as f:
         body = f.read()
     content_type, _ = mimetypes.guess_type(full_path)
@@ -69,6 +75,7 @@ async def serve_static(path):
     headers["Content-Type"] = content_type or "application/octet-stream"
     headers["Content-Length"] = str(len(body))
     headers["Cache-Control"] = "no-cache"
+    headers["Connection"] = "close"
     return Response(200, "OK", headers, body)
 
 
