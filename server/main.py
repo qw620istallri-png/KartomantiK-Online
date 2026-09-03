@@ -697,6 +697,18 @@ async def handle_message(ws, info, data):
         session.touch()
         await broadcast_state(session)
 
+    elif msg_type == "reset_counter":
+        if is_observer:
+            return await send_error(ws, "Observers cannot act.")
+        target = session.find_battlefield_item(data.get("itemId")) or session.find_token(data.get("tokenId"))
+        if target is None:
+            return await send_error(ws, "Target not found.")
+        key = str(data.get("counterKey") or "counter")[:20]
+        target["counters"][key] = 0
+        session.add_log(actor_id, "reset_counter", {"key": key, "itemId": data.get("itemId"), "tokenId": data.get("tokenId")})
+        session.touch()
+        await broadcast_state(session)
+
     elif msg_type == "set_score":
         if is_observer:
             return await send_error(ws, "Observers cannot act.")

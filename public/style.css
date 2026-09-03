@@ -102,6 +102,9 @@ input, textarea, select {
 .tabs button.active { background: var(--gold); border-color: var(--gold-deep); color: var(--carbon); }
 .field { display: grid; gap: 4px; margin-bottom: 12px; }
 .field label { font-size: 14px; font-weight: 700; text-transform: uppercase; color: var(--muted); }
+.number-stepper { display: flex; align-items: stretch; gap: 6px; }
+.number-stepper input { width: 52px; text-align: center; padding: 6px 2px; flex: none; }
+.number-stepper .stepper-btn { width: 34px; padding: 0; font-size: 16px; font-weight: 900; min-height: 0; }
 .codes-box { display: grid; gap: 10px; margin: 16px 0; }
 .code-pill { display: grid; gap: 6px; padding: 10px 12px; background: var(--cream-2); border: 1px solid var(--line); border-radius: 8px; }
 .code-pill > span { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--gold-deep); }
@@ -376,6 +379,7 @@ input, textarea, select {
   width: 30px; height: 30px; border-radius: 50%; background: var(--gold); border: 2px solid var(--gold-deep);
   display: grid; place-items: center; font-size: 14px; font-weight: 900; color: var(--carbon); box-shadow: 1px 2px 4px #0004;
 }
+.bf-counter-temp { background: #5aa9c9; border-color: #2f7392; color: #fff; }
 .bf-token {
   position: absolute; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center;
   border: 3px solid var(--carbon); box-shadow: 2px 3px 6px #0004; cursor: grab; font-size: 14px; font-weight: 900; color: #fff; text-align: center;
@@ -398,6 +402,15 @@ input, textarea, select {
 .ctx-menu { position: fixed; z-index: 90; background: var(--field); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 10px 24px #0004; padding: 4px; min-width: 170px; }
 .ctx-menu button { display: block; width: 100%; text-align: left; border: 0; border-radius: 4px; padding: 7px 10px; font-size: 14px; font-weight: 400; background: transparent; }
 .ctx-menu button:hover { background: var(--cream-2); }
+
+.counter-grid { display: flex; gap: 6px; padding: 4px; width: 240px; }
+.counter-col { flex: 1; display: flex; flex-direction: column; gap: 4px; border-radius: 6px; padding: 6px; }
+.counter-col-perm { background: #f2dfa733; border: 1px solid var(--gold-deep); }
+.counter-col-temp { background: #5aa9c933; border: 1px solid #2f7392; }
+.counter-col-label { font-size: 14px; font-weight: 700; text-align: center; }
+.counter-col-btns { display: flex; gap: 4px; }
+.counter-col-btns button { flex: 1; padding: 5px 0; font-size: 14px; min-height: 0; text-align: center; }
+.counter-reset-btn { font-size: 14px; padding: 5px 4px; min-height: 0; text-align: center; white-space: nowrap; }
 .ctx-sep { height: 1px; background: var(--line); margin: 4px 2px; }
 
 .bf-float-label {

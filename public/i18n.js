@@ -161,6 +161,9 @@ const ui = {
     lockPiles: "Lock piles",
     resetPilePosition: "Reset position",
     resetMarker: "Reset marker",
+    permanentCounter: "Permanent",
+    temporaryCounter: "Temporary",
+    removeCounters: "Remove counters",
   },
 };
 

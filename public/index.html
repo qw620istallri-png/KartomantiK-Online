@@ -187,7 +187,11 @@
       <div class="token-temperament-grid" id="tokenTemperamentGrid"></div>
       <div class="field">
         <label id="tokenPowerLabel"></label>
-        <input id="tokenPowerInput" type="number" value="1">
+        <div class="number-stepper">
+          <button type="button" class="stepper-btn" data-step="-1" data-target="tokenPowerInput">−</button>
+          <input id="tokenPowerInput" type="number" value="1" min="-20" max="20">
+          <button type="button" class="stepper-btn" data-step="1" data-target="tokenPowerInput">+</button>
+        </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
         <button id="tokenCancelBtn"></button>
@@ -203,7 +207,11 @@
       <div class="token-temperament-grid" id="essenceTemperamentGrid"></div>
       <div class="field">
         <label id="essenceCountLabel"></label>
-        <input id="essenceCountInput" type="number" value="1">
+        <div class="number-stepper">
+          <button type="button" class="stepper-btn" data-step="-1" data-target="essenceCountInput">−</button>
+          <input id="essenceCountInput" type="number" value="1" min="-99" max="99">
+          <button type="button" class="stepper-btn" data-step="1" data-target="essenceCountInput">+</button>
+        </div>
       </div>
       <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
         <button id="essenceCancelBtn"></button>

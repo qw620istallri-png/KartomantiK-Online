@@ -385,6 +385,7 @@ function handleServerMessage(msg) {
     myPlayerId = msg.playerId;
     isObserver = msg.isObserver;
     $("#drawToolbar").classList.toggle("hidden", isObserver);
+    $("#tokenToolbar").classList.toggle("hidden", isObserver);
     if (msg.codePlayer) codePlayer = msg.codePlayer;
     codeObserver = msg.codeObserver;
     joinedCode = joinedCode || codePlayer;
@@ -1390,6 +1391,14 @@ function closeContextMenuOnOutsideClick(event) {
   if (activeContextMenu && !activeContextMenu.contains(event.target)) closeContextMenu();
 }
 
+// Items are normally { label, onSelect } (closes the menu on click) or
+// { separator: true }. Two extra, general-purpose shapes support richer
+// content without special-casing any one caller:
+//   { label, onSelect, keepOpen: true } — stays open after clicking, so a
+//     repeatable action (e.g. +1 counter) can be clicked several times in a row.
+//   { html, afterRender: (containerEl) => {...} } — raw markup (e.g. a whole
+//     counter grid) inserted as-is; afterRender wires up its own listeners
+//     since it isn't a single label+action.
 function showContextMenu(clientX, clientY, items) {
   closeContextMenu();
   const menu = document.createElement("div");
@@ -1397,13 +1406,22 @@ function showContextMenu(clientX, clientY, items) {
   menu.style.left = clientX + "px";
   menu.style.top = clientY + "px";
   menu.innerHTML = items
-    .map((item, i) => (item.separator ? `<div class="ctx-sep"></div>` : `<button data-ctx-item="${i}">${esc(item.label)}</button>`))
+    .map((item, i) => {
+      if (item.separator) return `<div class="ctx-sep"></div>`;
+      if (item.html) return `<div data-ctx-item="${i}">${item.html}</div>`;
+      return `<button data-ctx-item="${i}">${esc(item.label)}</button>`;
+    })
     .join("");
   document.body.appendChild(menu);
   items.forEach((item, i) => {
     if (item.separator) return;
-    menu.querySelector(`[data-ctx-item="${i}"]`).onclick = () => {
-      closeContextMenu();
+    const container = menu.querySelector(`[data-ctx-item="${i}"]`);
+    if (item.html) {
+      if (item.afterRender) item.afterRender(container);
+      return;
+    }
+    container.onclick = () => {
+      if (!item.keepOpen) closeContextMenu();
       item.onSelect();
     };
   });
@@ -1863,8 +1881,38 @@ function initHandResize() {
 function counterCircles(counters) {
   return Object.entries(counters || {})
     .filter(([, v]) => v)
-    .map(([, v]) => `<span class="bf-counter">${v > 0 ? "+" : ""}${v}</span>`)
+    .map(([k, v]) => `<span class="bf-counter${k === "tempCounter" ? " bf-counter-temp" : ""}">${v > 0 ? "+" : ""}${v}</span>`)
     .join("");
+}
+
+// A two-column +1/-1/reset grid for a card/token's counters: one column for
+// its existing "permanent" counter (power/mark/essence — whichever this
+// entity already used before), one for a new, generic "temporary" counter
+// alongside it. Returned as a showContextMenu html+afterRender item so the
+// menu stays open across repeated clicks (see showContextMenu's own doc).
+function counterGridMenuItem(permKey, target) {
+  const col = (key, labelKey, cls) => `
+    <div class="counter-col ${cls}">
+      <div class="counter-col-label">${esc(t(labelKey))}</div>
+      <div class="counter-col-btns">
+        <button data-counter-key="${esc(key)}" data-counter-op="sub">−1</button>
+        <button data-counter-key="${esc(key)}" data-counter-op="add">+1</button>
+      </div>
+      <button class="counter-reset-btn" data-counter-key="${esc(key)}" data-counter-op="reset">${esc(t("removeCounters"))}</button>
+    </div>`;
+  return {
+    html: `<div class="counter-grid">${col(permKey, "permanentCounter", "counter-col-perm")}${col("tempCounter", "temporaryCounter", "counter-col-temp")}</div>`,
+    afterRender: (container) => {
+      container.querySelectorAll("[data-counter-op]").forEach((btn) => {
+        btn.onclick = (event) => {
+          event.stopPropagation();
+          const key = btn.dataset.counterKey;
+          if (btn.dataset.counterOp === "reset") send({ type: "reset_counter", ...target, counterKey: key });
+          else send({ type: "add_counter", ...target, counterKey: key, delta: btn.dataset.counterOp === "add" ? 1 : -1 });
+        };
+      });
+    },
+  };
 }
 
 // A stacked card's own x/y is a frozen fallback (wherever it was before being
@@ -1909,47 +1957,53 @@ function renderBattlefield() {
       inner = `<div class="bf-card-face"><div class="back-face"></div></div>`;
     }
     el.innerHTML = `<div class="bf-card-inner" style="transform:rotate(${item.rotation || 0}deg)">${inner}</div><div class="counters">${counterCircles(item.counters)}</div>`;
-    if (!isObserver) {
-      bindCardDragSource(el, { kind: "battlefield", itemId: item.id });
-      el.addEventListener("contextmenu", (event) => {
-        event.preventDefault();
-        const items = [];
-        if (item.isTokenCard) {
-          items.push({ label: t("exhaust"), onSelect: () => send({ type: "move_battlefield_item", itemId: item.id, x: item.x, y: item.y, rotation: item.rotation ? 0 : 90 }) });
-          items.push({ label: t("addCounter"), onSelect: () => send({ type: "add_counter", itemId: item.id, counterKey: "power", delta: 1 }) });
-          items.push({ label: t("removeCounter"), onSelect: () => send({ type: "add_counter", itemId: item.id, counterKey: "power", delta: -1 }) });
-          items.push({ separator: true });
-          items.push({ label: t("remove"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toZone: "graveyard" }) });
-          showContextMenu(event.clientX, event.clientY, items);
-          return;
+    if (!isObserver) bindCardDragSource(el, { kind: "battlefield", itemId: item.id });
+    el.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      if (isObserver) {
+        // nothing read-only-useful to show for a token card (no real identity to inspect)
+        if (!item.isTokenCard) {
+          showContextMenu(event.clientX, event.clientY, [{ label: t("inspect"), onSelect: () => showInspect(item.cardId, !item.faceUp && !canPeek) }]);
         }
-        items.push({ label: t("inspect"), onSelect: () => showInspect(item.cardId, !item.faceUp && !canPeek) });
-        items.push({ separator: true });
-        if (isMine) items.push({ label: t("flip"), onSelect: () => send({ type: "flip_card", itemId: item.id }) });
-        items.push({ label: t("exhaust"), onSelect: () => send({ type: "move_battlefield_item", itemId: item.id, x: item.x, y: item.y, rotation: item.rotation ? 0 : 90 }) });
-        items.push({ label: t("addCounter"), onSelect: () => send({ type: "add_counter", itemId: item.id, counterKey: "power", delta: 1 }) });
-        items.push({ label: t("removeCounter"), onSelect: () => send({ type: "add_counter", itemId: item.id, counterKey: "power", delta: -1 }) });
-        items.push({ separator: true });
-        // Empathic Vessel always collects into the ACTOR's own vessel,
-        // regardless of whose card it is — Limbo/Exile stay with the card's
-        // own owner, each player keeping their own
-        ["graveyard", "exile"].forEach((z) => {
-          items.push({ label: `${t("moveTo")} ${t(z)}`, onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: z }) });
-        });
-        items.push({ label: `${t("moveTo")} ${t("receptacle")}`, onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: myPlayerId, toZone: "receptacle" }) });
-        if (isMine) {
-          items.push({ label: `${t("moveTo")} ${t("hand")}`, onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: "hand" }) });
-          items.push({ label: t("moveToDeckTop"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: "deck", position: "top" }) });
-          items.push({ label: t("moveToDeckBottom"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: "deck", position: "bottom" }) });
-        }
-        showContextMenu(event.clientX, event.clientY, items);
-        // must run AFTER showContextMenu: it calls closeContextMenu() first
-        // (to dismiss any previously-open menu), which would otherwise wipe
-        // out labels created before it
-        const canSeeName = item.faceUp || canPeek;
-        showCardLabels(el, canSeeName ? cardName(item.cardId) : null, (latestState.players[item.ownerId] || {}).name || "");
+        return;
+      }
+      if (item.isTokenCard) {
+        showContextMenu(event.clientX, event.clientY, [
+          { label: t("exhaust"), onSelect: () => send({ type: "move_battlefield_item", itemId: item.id, x: item.x, y: item.y, rotation: item.rotation ? 0 : 90 }) },
+          { separator: true },
+          counterGridMenuItem("power", { itemId: item.id }),
+          { separator: true },
+          { label: t("remove"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toZone: "graveyard" }) },
+        ]);
+        return;
+      }
+      const items = [];
+      items.push({ label: t("inspect"), onSelect: () => showInspect(item.cardId, !item.faceUp && !canPeek) });
+      items.push({ separator: true });
+      if (isMine) items.push({ label: t("flip"), onSelect: () => send({ type: "flip_card", itemId: item.id }) });
+      items.push({ label: t("exhaust"), onSelect: () => send({ type: "move_battlefield_item", itemId: item.id, x: item.x, y: item.y, rotation: item.rotation ? 0 : 90 }) });
+      items.push({ separator: true });
+      items.push(counterGridMenuItem("power", { itemId: item.id }));
+      items.push({ separator: true });
+      // Empathic Vessel always collects into the ACTOR's own vessel,
+      // regardless of whose card it is — Limbo/Exile stay with the card's
+      // own owner, each player keeping their own
+      ["graveyard", "exile"].forEach((z) => {
+        items.push({ label: `${t("moveTo")} ${t(z)}`, onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: z }) });
       });
-    }
+      items.push({ label: `${t("moveTo")} ${t("receptacle")}`, onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: myPlayerId, toZone: "receptacle" }) });
+      if (isMine) {
+        items.push({ label: `${t("moveTo")} ${t("hand")}`, onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: "hand" }) });
+        items.push({ label: t("moveToDeckTop"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: "deck", position: "top" }) });
+        items.push({ label: t("moveToDeckBottom"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: "deck", position: "bottom" }) });
+      }
+      showContextMenu(event.clientX, event.clientY, items);
+      // must run AFTER showContextMenu: it calls closeContextMenu() first
+      // (to dismiss any previously-open menu), which would otherwise wipe
+      // out labels created before it
+      const canSeeName = item.faceUp || canPeek;
+      showCardLabels(el, canSeeName ? cardName(item.cardId) : null, (latestState.players[item.ownerId] || {}).name || "");
+    });
     bf.appendChild(el);
   });
 
@@ -1976,16 +2030,14 @@ function renderBattlefield() {
         event.preventDefault();
         if (token.isEssence) {
           showContextMenu(event.clientX, event.clientY, [
-            { label: t("addCounter"), onSelect: () => send({ type: "add_counter", tokenId: token.id, counterKey: "essence", delta: 1 }) },
-            { label: t("removeCounter"), onSelect: () => send({ type: "add_counter", tokenId: token.id, counterKey: "essence", delta: -1 }) },
+            counterGridMenuItem("essence", { tokenId: token.id }),
             { separator: true },
             { label: t("remove"), onSelect: () => send({ type: "remove_token", tokenId: token.id }) },
           ]);
           return;
         }
         showContextMenu(event.clientX, event.clientY, [
-          { label: t("addCounter"), onSelect: () => send({ type: "add_counter", tokenId: token.id, counterKey: "mark", delta: 1 }) },
-          { label: t("removeCounter"), onSelect: () => send({ type: "add_counter", tokenId: token.id, counterKey: "mark", delta: -1 }) },
+          counterGridMenuItem("mark", { tokenId: token.id }),
           { separator: true },
           { label: t("remove"), onSelect: () => send({ type: "remove_token", tokenId: token.id }) },
         ]);
@@ -2205,6 +2257,14 @@ async function boot() {
   document.addEventListener("contextmenu", (event) => {
     event.preventDefault();
     if (drawMode) setDrawMode(null); // right-click is also the "exit draw/erase mode" gesture
+  });
+  document.addEventListener("click", (event) => {
+    const btn = event.target.closest(".stepper-btn");
+    if (!btn) return;
+    const input = $("#" + btn.dataset.target);
+    const min = input.min === "" ? -Infinity : Number(input.min);
+    const max = input.max === "" ? Infinity : Number(input.max);
+    input.value = Math.max(min, Math.min(max, (Number(input.value) || 0) + Number(btn.dataset.step)));
   });
   document.addEventListener("keydown", (event) => {
     if (event.code !== "Space" || event.target?.closest?.("input, textarea, select, button")) return;
