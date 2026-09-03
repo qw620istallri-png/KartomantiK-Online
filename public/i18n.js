@@ -166,6 +166,7 @@ const ui = {
     removeCounters: "Remove counters",
     bringToFront: "Bring to front",
     sendToBack: "Send to back",
+    undo: "Undo",
   },
 };
 

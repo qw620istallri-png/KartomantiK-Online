@@ -456,17 +456,28 @@ function showToast(text, isError = false) {
 }
 
 // Tracks, for the CURRENTLY open reveal/scry popup only, which cards have
-// already been sent somewhere — reset every time a new popup opens.
+// already been sent somewhere — reset every time a new popup opens. Each
+// entry is { label, undo } — undo is only present for destinations that are
+// cleanly reversible (a plain move_card back to the reveal's own source
+// zone); playing to the battlefield creates a new item with no id known
+// back here, so those aren't offered an undo.
 let revealSentState = new Map();
+
+function sentCardHtml(cardId, sent) {
+  return `<img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}">
+    <div class="sent-label">
+      <div>${esc(t("sentTo"))} ${esc(sent.label)}</div>
+      ${sent.undo ? `<button class="sent-undo-btn" data-undo-card="${esc(cardId)}">${esc(t("undo"))}</button>` : ""}
+    </div>`;
+}
 
 function cardImagesHtml(cardIds) {
   if (!cardIds.length) return `<p>${esc(t("cards"))}: 0</p>`;
   return cardIds
     .map((cid) => {
-      const sentTo = revealSentState.get(cid);
-      return `<div class="reveal-card${sentTo ? " sent" : ""}" data-card-id="${esc(cid)}">
-      <img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}" title="${esc(cardName(cid))}">
-      ${sentTo ? `<div class="sent-label">${esc(t("sentTo"))} ${esc(sentTo)}</div>` : ""}
+      const sent = revealSentState.get(cid);
+      return `<div class="reveal-card${sent ? " sent" : ""}" data-card-id="${esc(cid)}">
+      ${sent ? sentCardHtml(cid, sent) : `<img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}" title="${esc(cardName(cid))}">`}
     </div>`;
     })
     .join("");
@@ -475,12 +486,21 @@ function cardImagesHtml(cardIds) {
 // Once a card is sent somewhere, it stays in the popup but greyed out with
 // "sent to X" instead of vanishing — the point is to keep the whole reveal
 // visible as a record of what was looked at and where each card ended up.
-function markRevealCardSent(cardId, destinationLabel) {
-  revealSentState.set(cardId, destinationLabel);
+function markRevealCardSent(cardId, destinationLabel, undoFn) {
+  revealSentState.set(cardId, { label: destinationLabel, undo: undoFn });
   const el = document.querySelector(`#revealCards [data-card-id="${cardId}"]`);
   if (!el) return;
   el.classList.add("sent");
-  el.innerHTML = `<img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"><div class="sent-label">${esc(t("sentTo"))} ${esc(destinationLabel)}</div>`;
+  el.innerHTML = sentCardHtml(cardId, revealSentState.get(cardId));
+  if (undoFn) {
+    el.querySelector(".sent-undo-btn").onclick = (event) => {
+      event.stopPropagation();
+      undoFn();
+      revealSentState.delete(cardId);
+      el.classList.remove("sent");
+      el.innerHTML = `<img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}" title="${esc(cardName(cardId))}">`;
+    };
+  }
 }
 
 // Right-click on a card shown in the reveal/scry popup: always let the viewer
@@ -510,7 +530,9 @@ function wireRevealCards(ctx) {
               // Empathic Vessel always collects into the ACTOR's own vessel
               const toOwnerId = z === "receptacle" ? myPlayerId : ctx.ownerId;
               send({ type: "move_card", fromOwnerId: ctx.ownerId, fromZone: ctx.zone, toOwnerId, toZone: z, cardId });
-              markRevealCardSent(cardId, t(z));
+              markRevealCardSent(cardId, t(z), () =>
+                send({ type: "move_card", fromOwnerId: toOwnerId, fromZone: z, toOwnerId: ctx.ownerId, toZone: ctx.zone, cardId })
+              );
             },
           });
         });
@@ -518,14 +540,18 @@ function wireRevealCards(ctx) {
           label: t("moveToDeckTop"),
           onSelect: () => {
             send({ type: "move_card", fromOwnerId: ctx.ownerId, fromZone: ctx.zone, toOwnerId: ctx.ownerId, toZone: "deck", cardId, position: "top" });
-            markRevealCardSent(cardId, `${t("deck")} (${t("moveToDeckTop")})`);
+            markRevealCardSent(cardId, `${t("deck")} (${t("moveToDeckTop")})`, () =>
+              send({ type: "move_card", fromOwnerId: ctx.ownerId, fromZone: "deck", toOwnerId: ctx.ownerId, toZone: ctx.zone, cardId })
+            );
           },
         });
         items.push({
           label: t("moveToDeckBottom"),
           onSelect: () => {
             send({ type: "move_card", fromOwnerId: ctx.ownerId, fromZone: ctx.zone, toOwnerId: ctx.ownerId, toZone: "deck", cardId, position: "bottom" });
-            markRevealCardSent(cardId, `${t("deck")} (${t("moveToDeckBottom")})`);
+            markRevealCardSent(cardId, `${t("deck")} (${t("moveToDeckBottom")})`, () =>
+              send({ type: "move_card", fromOwnerId: ctx.ownerId, fromZone: "deck", toOwnerId: ctx.ownerId, toZone: ctx.zone, cardId })
+            );
           },
         });
       }
@@ -1859,6 +1885,17 @@ function initRevealResize() {
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
   });
+  $("#revealCards").addEventListener(
+    "wheel",
+    (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if ($("#revealCards").scrollWidth > $("#revealCards").clientWidth) {
+        $("#revealCards").scrollLeft += event.deltaY;
+      }
+    },
+    { passive: false }
+  );
 }
 
 // ---------------------------------------------------------------- hand-view resize

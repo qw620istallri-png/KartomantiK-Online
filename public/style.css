@@ -475,9 +475,10 @@ input, textarea, select {
 .reveal-panel .reveal-card.sent:hover { transform: none; }
 .reveal-panel .reveal-card.sent img { filter: grayscale(1) brightness(.55); }
 .reveal-panel .reveal-card .sent-label {
-  position: absolute; inset: 0; display: grid; place-items: center; padding: 8px; text-align: center;
-  color: #fff; font-size: 14px; font-weight: 700; text-shadow: 0 1px 3px #000;
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  padding: 8px; text-align: center; color: #fff; font-size: 14px; font-weight: 700; text-shadow: 0 1px 3px #000;
 }
+.reveal-panel .sent-undo-btn { font-size: 14px; padding: 5px 12px; min-height: 0; }
 .reveal-resize-handle {
   height: 10px; margin: 0 auto 4px; width: 80px; cursor: ns-resize; border-radius: 4px;
   background: linear-gradient(90deg, transparent, var(--gold-deep) 50%, transparent); opacity: .5;
@@ -487,8 +488,13 @@ input, textarea, select {
 .confirm-panel .box { width: min(420px, 92vw); }
 .confirm-panel #confirmPanelText { font-size: 14px; line-height: 1.5; margin: 0; }
 
-.inspect-panel .box { width: min(760px, 92vw); display: flex; gap: 20px; }
-.inspect-panel .inspect-img { width: 260px; flex-shrink: 0; border-radius: 12px; border: 3px solid var(--carbon); overflow: hidden; box-shadow: 4px 8px 20px #0005; }
+/* Unlike other modals: no backdrop (board stays visible AND interactive
+   behind it — this is a reference panel, not a blocking dialog), docked to
+   the right-middle instead of centred, and it stays open across other
+   actions until its own Close button is used. */
+.inspect-panel { background: transparent; display: flex; justify-content: flex-end; align-items: center; padding-right: 24px; pointer-events: none; }
+.inspect-panel .box { pointer-events: auto; width: min(280px, 92vw); box-shadow: 0 10px 30px #0007; }
+.inspect-panel .inspect-img { border-radius: 12px; border: 3px solid var(--carbon); overflow: hidden; box-shadow: 4px 8px 20px #0005; margin-bottom: 12px; }
 .inspect-panel .inspect-img img { width: 100%; display: block; }
 .inspect-panel .inspect-text h2 { margin: 0 0 4px; }
 .inspect-panel .inspect-text .meta { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
