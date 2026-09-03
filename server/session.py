@@ -15,38 +15,17 @@ ALL_ZONES = PRIVATE_ZONES | SHARED_ZONES
 
 SESSION_TTL_SECONDS = 6 * 60 * 60  # expire an inactive session after 6h
 
-# Fixed on-field pile positions, matching the official playmat art's printed
-# zone slots (board-bg.png, 1549x1549). Positions are NOT player-adjustable
-# any more by default (a client-side "unlock piles" mode still lets someone
-# drag their own local view for personal comfort, but that never reaches the
-# server — see pileOverrides/flipXY in app.js).
-#
-# Earlier attempts derived cluster B (seat 1) from cluster A by mirroring
-# through a measured axis (screenshot pixel analysis, then live-render grid
-# overlays, then label-text centres — each an improvement, none quite right).
-# That approach was abandoned: dragging cluster A's own piles while actually
-# viewing seat 0, and cluster B's while actually viewing seat 1, and comparing
-# against the SAME piles dragged from the opposite (mirrored) viewpoint,
-# showed a consistent ~(26,70)px disagreement between "direct" and "mirrored"
-# placement — i.e. no single mirror axis reproduces the art exactly for both
-# clusters. So the two clusters below are independently calibrated, each
-# measured only from its own seat's direct (unflipped) view, with no formula
-# relating one to the other. The client's flipXY still mirrors whichever
-# cluster is "away" for a seat-1 viewer at render time (see app.js) — that
-# per-viewer rendering step is unrelated to how these stored values were set.
-_CLUSTER_A = {
-    "deck": {"x": 1194, "y": 1039},
-    "graveyard": {"x": 1366, "y": 1039},
-    "receptacle": {"x": 1192, "y": 1297},
-    "exile": {"x": 1366, "y": 1297},
-}
-_CLUSTER_B = {
-    "deck": {"x": 234, "y": 375},
-    "graveyard": {"x": 59, "y": 375},
-    "receptacle": {"x": 235, "y": 121},
-    "exile": {"x": 62, "y": 121},
-}
-DEFAULT_ZONE_POSITIONS = [_CLUSTER_A, _CLUSTER_B]
+# On-field pile SCREEN positions are no longer server state at all — they're
+# a pure function of (viewer's seat, pile owner's seat, zone), with no runtime
+# transform/mirroring involved, so they live entirely client-side now (see
+# PILE_SCREEN_POS in app.js). That replaced an earlier attempt at deriving a
+# single mirrored pair of clusters from one axis: dragging a pile while
+# actually viewing it directly, vs. viewing that same pile from the OTHER
+# seat (mirrored), gave measurably different "looks right" coordinates — i.e.
+# no single per-owner position can look correct from both viewpoints at once.
+# The only fix is a value per (viewer, owner, zone) triple, which needs no
+# server involvement since it depends on nothing session-specific.
+NUM_SEATS = 2
 
 
 def gen_code(length=6):
@@ -59,8 +38,7 @@ def new_id():
 
 
 def make_player(player_id, name, cluster_index=0):
-    seat = cluster_index % len(DEFAULT_ZONE_POSITIONS)
-    positions = DEFAULT_ZONE_POSITIONS[seat]
+    seat = cluster_index % NUM_SEATS
     return {
         "id": player_id,
         "name": name,
@@ -68,7 +46,6 @@ def make_player(player_id, name, cluster_index=0):
         "score": 0,
         "seat": seat,
         "zones": {zone: [] for zone in ALL_ZONES},
-        "zonePositions": {zone: dict(pos) for zone, pos in positions.items()},
     }
 
 
@@ -164,7 +141,6 @@ class Session:
                 "score": player["score"],
                 "seat": player["seat"],
                 "zones": zones_view,
-                "zonePositions": player["zonePositions"],
             }
 
         battlefield_view = []

@@ -769,11 +769,26 @@ function receptaclePoints(zoneData, score) {
   return cardPoints + (score || 0);
 }
 
-// Pile positions come from the server (shared, same for everyone) unless this
-// ONE browser has locally nudged them — a personal display fix, never synced,
-// for whenever the shared defaults don't quite match someone's own screen.
-// Keyed by "seat:zone" (not ownerId) since the position belongs to a slot in
-// the printed art, not to whichever player currently happens to sit there.
+// Pile SCREEN position, keyed by [viewer's own seat][pile owner's seat][zone].
+// This is deliberately NOT a single stored position mirrored through some
+// formula for the "away" viewer: dragging a pile while directly viewing it
+// vs. viewing that same pile from the OTHER seat (mirrored) measurably don't
+// agree on one "correct" spot, so there is no substitute for a value per
+// (viewer, owner) pair — 16 numbers total, all independently calibrated by
+// dragging in-app and reading off the coordinates (see bindPileCalibration).
+const PILE_SCREEN_POS = {
+  0: {
+    0: { deck: { x: 1194, y: 1039 }, graveyard: { x: 1366, y: 1039 }, receptacle: { x: 1192, y: 1297 }, exile: { x: 1366, y: 1297 } },
+    1: { deck: { x: 210, y: 305 }, graveyard: { x: 31, y: 305 }, receptacle: { x: 209, y: 48 }, exile: { x: 31, y: 48 } },
+  },
+  1: {
+    0: { deck: { x: 1218, y: 1110 }, graveyard: { x: 1393, y: 1110 }, receptacle: { x: 1218, y: 1364 }, exile: { x: 1394, y: 1366 } },
+    1: { deck: { x: 234, y: 375 }, graveyard: { x: 59, y: 375 }, receptacle: { x: 235, y: 121 }, exile: { x: 62, y: 121 } },
+  },
+};
+
+// A local nudge on top of the table above — a personal display fix, never
+// synced to the server or the other player. Keyed by "viewerSeat:ownerSeat:zone".
 const PILE_OVERRIDES_KEY = "kartomantik.pileOverrides";
 let pileOverrides = {};
 let pilesLocked = true;
@@ -792,13 +807,14 @@ function savePileOverrides() {
 
 function initPileCalibration() {
   loadPileOverrides();
+  loadCenterMarkerOverride();
   $("#pileCalibrateBtn").textContent = "🔒";
   $("#pileCalibrateBtn").onclick = () => {
     pilesLocked = !pilesLocked;
     $("#pileCalibrateBtn").textContent = pilesLocked ? "🔒" : "🔓";
     $("#pileCalibrateBtn").classList.toggle("active", !pilesLocked);
     $("#pileCalibrateBtn").title = t(pilesLocked ? "unlockPiles" : "lockPiles");
-    renderPiles();
+    renderBattlefield();
   };
 }
 
@@ -813,12 +829,13 @@ function bindPileCalibration() {
       const overrideKey = el.dataset.overrideKey;
       const move = (e) => {
         const rect = $("#battlefieldWrap").getBoundingClientRect();
-        const logical = flipXY((e.clientX - rect.left - panX) / zoomLevel - 75, (e.clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
-        pileOverrides[overrideKey] = logical;
-        const displayPos = flipXY(logical.x, logical.y, PILE_W, PILE_H); // flipXY is self-inverse: back to display space
-        el.style.left = displayPos.x + "px";
-        el.style.top = displayPos.y + "px";
-        el.querySelector(".pile-coords").textContent = `${el.dataset.zone}: ${Math.round(logical.x)}, ${Math.round(logical.y)}`;
+        // this is already screen/display space — no flip involved any more,
+        // since a pile's position is now looked up directly per (viewer, owner)
+        const pos = { x: (e.clientX - rect.left - panX) / zoomLevel - 75, y: (e.clientY - rect.top - panY) / zoomLevel - 105 };
+        pileOverrides[overrideKey] = pos;
+        el.style.left = pos.x + "px";
+        el.style.top = pos.y + "px";
+        el.querySelector(".pile-coords").textContent = `${el.dataset.zone}: ${Math.round(pos.x)}, ${Math.round(pos.y)}`;
       };
       const up = () => {
         window.removeEventListener("pointermove", move);
@@ -838,6 +855,71 @@ function bindPileCalibration() {
   });
 }
 
+// The flipY axis (see MIRROR_CENTER_Y above) drawn as a visible, draggable
+// line + dot, only while calibration mode is unlocked — the same idea as
+// pileOverrides, for the one other number that was ever eyeballed/measured
+// rather than directly calibrated. A local-only nudge; never sent anywhere.
+const CENTER_MARKER_KEY = "kartomantik.centerMarkerOverride";
+let centerMarkerOverride = null;
+
+function loadCenterMarkerOverride() {
+  try {
+    centerMarkerOverride = JSON.parse(localStorage.getItem(CENTER_MARKER_KEY) || "null");
+  } catch (e) {
+    centerMarkerOverride = null;
+  }
+}
+
+function effectiveMirrorCenterY() {
+  return centerMarkerOverride ? centerMarkerOverride.y : MIRROR_CENTER_Y;
+}
+
+function renderCenterMarker() {
+  $$(".center-marker").forEach((el) => el.remove());
+  if (pilesLocked) return;
+  const bf = $("#battlefield");
+  const markerX = centerMarkerOverride ? centerMarkerOverride.x : BOARD_SIZE / 2;
+  const markerY = effectiveMirrorCenterY();
+  const line = document.createElement("div");
+  line.className = "center-marker center-marker-line";
+  line.style.top = markerY + "px";
+  bf.appendChild(line);
+  const dot = document.createElement("div");
+  dot.className = "center-marker center-marker-dot";
+  dot.style.left = markerX + "px";
+  dot.style.top = markerY + "px";
+  dot.title = `${Math.round(markerX)}, ${Math.round(markerY)}`;
+  dot.addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const move = (e) => {
+      const rect = $("#battlefieldWrap").getBoundingClientRect();
+      const pos = { x: (e.clientX - rect.left - panX) / zoomLevel, y: (e.clientY - rect.top - panY) / zoomLevel };
+      centerMarkerOverride = pos;
+      dot.style.left = pos.x + "px";
+      dot.style.top = pos.y + "px";
+      dot.title = `${Math.round(pos.x)}, ${Math.round(pos.y)}`;
+      line.style.top = pos.y + "px";
+      renderBattlefield(); // live preview: cards/tokens/strokes re-mirror against the new axis immediately
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      localStorage.setItem(CENTER_MARKER_KEY, JSON.stringify(centerMarkerOverride));
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  });
+  dot.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    showContextMenu(event.clientX, event.clientY, [
+      { label: t("resetMarker"), onSelect: () => { centerMarkerOverride = null; localStorage.removeItem(CENTER_MARKER_KEY); renderBattlefield(); } },
+    ]);
+  });
+  bf.appendChild(dot);
+}
+
 function renderPiles() {
   const bf = $("#battlefield");
   bf.querySelectorAll(".field-pile").forEach((el) => el.remove());
@@ -848,10 +930,9 @@ function renderPiles() {
       const canView = zoneData.cards !== undefined;
       const isMine = player.id === myPlayerId;
       const canAct = !isObserver && (isMine || !PRIVATE_ZONES.has(zone));
-      const overrideKey = `${player.seat}:${zone}`;
-      const rawPos = pileOverrides[overrideKey] || player.zonePositions[zone] || { x: 0, y: 0 };
-      const pos = flipXY(rawPos.x, rawPos.y, PILE_W, PILE_H);
-      bf.insertAdjacentHTML("beforeend", pileFieldHtml(player.id, zone, zoneData, canView, canAct, pos, player.score, overrideKey, rawPos));
+      const overrideKey = `${mySeat()}:${player.seat}:${zone}`;
+      const pos = pileOverrides[overrideKey] || PILE_SCREEN_POS[mySeat()][player.seat][zone];
+      bf.insertAdjacentHTML("beforeend", pileFieldHtml(player.id, zone, zoneData, canView, canAct, pos, player.score, overrideKey, pos));
     });
   });
   wireZoneButtons();
@@ -1294,18 +1375,17 @@ let panY = 0;
 
 // ---------------------------------------------------------------- seat-based display flip
 // Each player should see their OWN side near the bottom of the screen and
-// their opponent near the top. Two different transforms do that, for two
+// their opponent near the top. Two different mechanisms do that, for two
 // different kinds of object:
 //
-// - flipXY (full 180° point reflection, both axes) is for the fixed PILE
-//   slots only. Their printed positions on the mat art are genuinely related
-//   by a 180° rotation, not a simple vertical mirror — confirmed by direct
-//   measurement: e.g. the Deck slot sits at x=1192 in one corner cluster and
-//   x=234 in the other (see DEFAULT_ZONE_POSITIONS / _CLUSTER_A server-side),
-//   which a same-x vertical flip could never produce. The mat's measured
-//   symmetric centre is (788,812) — re-derived from the live-rendered slot
-//   labels' own centres, not the canvas centre (774.5,774.5) and not raw
-//   pixel-alpha sampling of the art (both tried first and both wrong).
+// - Fixed PILE slots use no transform at all any more: PILE_SCREEN_POS holds
+//   a screen position per (viewer's seat, pile owner's seat, zone) directly.
+//   An earlier version derived the "away" seat's positions from the "near"
+//   seat's through a single mirror axis, but dragging a pile while actually
+//   viewing it directly vs. viewing that same pile from the OTHER seat
+//   (mirrored) measurably didn't agree on one "correct" spot — no single axis
+//   reproduces the printed art from both viewpoints, so there's a value per
+//   (viewer, owner) pair instead, with nothing computed at render time.
 //
 // - flipY (vertical-only reflection, x untouched) is for everything a player
 //   places freely: battlefield cards (incl. token-cards), tokens, and draw
@@ -1314,15 +1394,16 @@ let panY = 0;
 //   one player would look left-right flipped to the other. Since nothing
 //   forces these free-floating objects to match a printed slot, there's no
 //   reason to flip x for them at all — only y, so each player still sees
-//   their own side near the bottom.
+//   their own side near the bottom. The mirror axis (812) was re-derived from
+//   the live-rendered slot labels' own centres, not the canvas centre
+//   (774.5) and not raw pixel-alpha sampling of the art (both tried first).
 //
-// Both share one rule: a stored (x,y) is always a box's CSS top-left, never
-// a bare point. Reflecting a box's top-left across an axis lands on the
-// OPPOSITE corner unless the box's own width/height is subtracted back out
-// — otherwise every flipped position is off by exactly that box's size. Pass
-// the object's width/height for anything box-shaped; leave them at 0 for
-// bare points (stroke points, view-centres) which need no such correction.
-const MIRROR_CENTER_X = 788;
+// flipY's one extra rule: a stored (x,y) is always a box's CSS top-left,
+// never a bare point. Reflecting a box's top-left across an axis lands on
+// the OPPOSITE corner unless the box's own width/height is subtracted back
+// out — otherwise every flipped position is off by exactly that box's size.
+// Pass the object's width/height for anything box-shaped; leave them at 0
+// for bare points (stroke points, view-centres) which need no such correction.
 const MIRROR_CENTER_Y = 812;
 const PILE_W = 150, PILE_H = 210;
 const TOKEN_W = 52, TOKEN_H = 52;
@@ -1332,12 +1413,8 @@ function mySeat() {
   return latestState.players[myPlayerId]?.seat || 0;
 }
 
-function flipXY(x, y, w = 0, h = 0) {
-  return mySeat() === 1 ? { x: 2 * MIRROR_CENTER_X - w - x, y: 2 * MIRROR_CENTER_Y - h - y } : { x, y };
-}
-
 function flipY(x, y, w = 0, h = 0) {
-  return mySeat() === 1 ? { x, y: 2 * MIRROR_CENTER_Y - h - y } : { x, y };
+  return mySeat() === 1 ? { x, y: 2 * effectiveMirrorCenterY() - h - y } : { x, y };
 }
 
 function applyTransform() {
@@ -1849,6 +1926,8 @@ function renderBattlefield() {
     }
     bf.appendChild(el);
   });
+
+  renderCenterMarker();
 }
 
 function bindDrag(el, onDrop) {

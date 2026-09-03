@@ -214,6 +214,13 @@ input, textarea, select {
   background: #000000d9; color: #fff; font-size: 14px; font-weight: 700; white-space: nowrap; padding: 2px 8px; border-radius: 4px; z-index: 3;
 }
 .field-pile.calibrating .pile-coords { display: block; }
+
+.center-marker-line { position: absolute; left: 0; width: 1549px; height: 0; border-top: 3px dashed #ff2d78; z-index: 40; pointer-events: none; }
+.center-marker-dot {
+  position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%;
+  background: #ff2d78; border: 3px solid #fff; box-shadow: 0 0 0 2px #000a; z-index: 41; cursor: grab;
+}
+.center-marker-dot:active { cursor: grabbing; }
 .field-pile .pile-card {
   width: 150px; height: 210px; border-radius: 10px; border: 3px solid var(--owner-color, var(--carbon)); display: grid; place-items: center;
   background: repeating-linear-gradient(135deg, var(--owner-color, #6b5b2f) 0 10px, #00000018 10px 20px);
