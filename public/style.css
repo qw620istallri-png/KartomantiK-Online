@@ -87,6 +87,16 @@ input, textarea, select {
   text-decoration: none;
 }
 .social-links a:hover { background: var(--gold-deep); color: var(--carbon); }
+#socialDeckomantik { position: relative; overflow: hidden; border-color: var(--gold); }
+#socialDeckomantik::after {
+  content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+  background: linear-gradient(115deg, transparent, #ffffffb0, transparent);
+  animation: ko-shine 3.2s ease-in-out infinite;
+}
+@keyframes ko-shine {
+  0%, 55% { left: -60%; }
+  100% { left: 130%; }
+}
 .tabs { display: flex; gap: 6px; margin-bottom: 16px; }
 .tabs button { flex: 1; }
 .tabs button.active { background: var(--gold); border-color: var(--gold-deep); color: var(--carbon); }
@@ -171,7 +181,7 @@ input, textarea, select {
 
 /* one vertically-centred column so these don't stack up near the top and
    collide with the opponent rows / opened popovers up there */
-.side-toolbars { position: absolute; top: 50%; left: 8px; z-index: 20; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; }
+.side-toolbars { position: absolute; top: 50%; left: 8px; z-index: 22; transform: translateY(-50%); display: flex; flex-direction: column; gap: 10px; }
 .draw-toolbar {
   display: flex; flex-direction: column; gap: 4px;
   background: #fffdf6cc; border: 1px solid var(--line); border-radius: 6px; padding: 4px;
@@ -439,6 +449,9 @@ input, textarea, select {
 }
 .reveal-resize-handle:hover { opacity: .9; }
 
+.confirm-panel .box { width: min(420px, 92vw); }
+.confirm-panel #confirmPanelText { font-size: 14px; line-height: 1.5; margin: 0; }
+
 .inspect-panel .box { width: min(760px, 92vw); display: flex; gap: 20px; }
 .inspect-panel .inspect-img { width: 260px; flex-shrink: 0; border-radius: 12px; border: 3px solid var(--carbon); overflow: hidden; box-shadow: 4px 8px 20px #0005; }
 .inspect-panel .inspect-img img { width: 100%; display: block; }
@@ -471,6 +484,12 @@ input, textarea, select {
 .import-subhead { margin: 14px 0 6px; font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: var(--gold-deep); }
 .deck-pick-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
 .deck-pick { padding: 6px 10px; font-size: 14px; }
+.deck-pick-temperament {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: color-mix(in srgb, var(--temperament-ink) 25%, var(--field)); border-color: var(--temperament-ink);
+}
+.deck-pick-temperament:hover { background: color-mix(in srgb, var(--temperament-ink) 45%, var(--field)); }
+.deck-pick-temperament img { width: 18px; height: 18px; object-fit: contain; }
 .deck-pick-row { display: flex; align-items: center; gap: 4px; }
 .deck-forget { padding: 4px 7px; font-size: 14px; min-height: 0; color: var(--danger); }
 

@@ -146,7 +146,11 @@ function importDeckPayload(deck, name, persist = true) {
 function renderStarterDecks() {
   const box = $("#starterDeckList");
   box.innerHTML = starterDecks
-    .map((d) => `<button class="deck-pick" data-import-starter="${esc(d.id)}">${esc(d.name)}</button>`)
+    .map(
+      (d) => `<button class="deck-pick deck-pick-temperament" data-import-starter="${esc(d.id)}" style="--temperament-ink:${esc(temperamentInk(d.colorKey))}">
+        <img src="${esc(temperamentSymbol(d.colorKey))}" alt="">${esc(d.name)}
+      </button>`
+    )
     .join("");
   $$("[data-import-starter]").forEach((btn) => {
     btn.onclick = () => {
@@ -754,7 +758,7 @@ function pileFieldHtml(ownerId, zone, zoneData, canView, canAct, pos, score, ove
   return `<div class="field-pile ${count === 0 ? "empty" : ""}"${dropAttr} data-field-pile="${esc(key)}" data-zone="${esc(zone)}" data-override-key="${esc(overrideKey)}" style="left:${pos.x}px;top:${pos.y}px;--owner-color:${playerColor(ownerId)}">
     ${scoreAdjust}
     <div class="pile-trigger" data-pile-trigger="${esc(key)}">
-      ${count > 0 ? `<span class="pile-count">${count}</span>` : ""}
+      <span class="pile-count">${count}</span>
       <div class="pile-card">${topCardHtml}</div>
       <span class="pile-label">${esc(t(zone))}</span>
       ${pointsBadge}
@@ -1063,12 +1067,14 @@ function initHandToolbar() {
   };
   $("#handDiscardRandomBtn").onclick = () => send({ type: "move_card", fromZone: "hand", toZone: "graveyard", random: true });
   $("#handMulliganBtn").onclick = () => {
-    if (confirm(t("confirmMulligan"))) send({ type: "mulligan" });
+    showConfirm(t("confirmMulligan"), () => send({ type: "mulligan" }));
   };
-  $("#handHideBtn").onclick = () => {
-    handHiddenByUser = !handHiddenByUser;
-    applyHandVisibility(isObserver ? null : myPlayerId);
-  };
+  $("#handHideBtn").onclick = toggleHandHidden;
+}
+
+function toggleHandHidden() {
+  handHiddenByUser = !handHiddenByUser;
+  applyHandVisibility(isObserver ? null : myPlayerId);
 }
 
 function playFromHand(cardId, faceUp) {
@@ -2055,15 +2061,17 @@ function initGameControls() {
   });
 
   $("#endSessionBtn").onclick = () => {
-    if (!confirm(t("confirmEndSession"))) return;
-    send({ type: "end_session" });
-    leaveSession();
+    showConfirm(t("confirmEndSession"), () => {
+      send({ type: "end_session" });
+      leaveSession();
+    });
   };
 
   $("#leaveSessionBtn").onclick = () => {
-    if (!confirm(t("confirmLeaveSession"))) return;
-    if (!isObserver) send({ type: "leave_session" }); // frees the seat for someone else to join
-    leaveSession();
+    showConfirm(t("confirmLeaveSession"), () => {
+      if (!isObserver) send({ type: "leave_session" }); // frees the seat for someone else to join
+      leaveSession();
+    });
   };
 
   $("#downloadLogBtn").onclick = () => send({ type: "request_log" });
@@ -2162,10 +2170,50 @@ function downloadLog(entries) {
   URL.revokeObjectURL(link.href);
 }
 
+// ---------------------------------------------------------------- confirm modal
+// An in-app replacement for window.confirm(), themed like every other panel
+// instead of popping the browser's own dialog.
+
+let pendingConfirmCallback = null;
+
+function initConfirmPanel() {
+  $("#confirmPanelCancelBtn").textContent = t("close");
+  $("#confirmPanelCancelBtn").onclick = () => {
+    pendingConfirmCallback = null;
+    $("#confirmPanel").classList.add("hidden");
+  };
+  $("#confirmPanelOkBtn").onclick = () => {
+    const cb = pendingConfirmCallback;
+    pendingConfirmCallback = null;
+    $("#confirmPanel").classList.add("hidden");
+    if (cb) cb();
+  };
+}
+
+function showConfirm(message, onConfirm, confirmLabel) {
+  $("#confirmPanelText").textContent = message;
+  $("#confirmPanelOkBtn").textContent = confirmLabel || t("confirm");
+  pendingConfirmCallback = onConfirm;
+  $("#confirmPanel").classList.remove("hidden");
+}
+
 // ---------------------------------------------------------------- boot
 
 async function boot() {
+  // the whole app has its own right-click menus everywhere that needs one;
+  // the browser's native one is never wanted, on any surface
+  document.addEventListener("contextmenu", (event) => {
+    event.preventDefault();
+    if (drawMode) setDrawMode(null); // right-click is also the "exit draw/erase mode" gesture
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.code !== "Space" || event.target?.closest?.("input, textarea, select, button")) return;
+    if (!latestState || isObserver) return;
+    event.preventDefault();
+    toggleHandHidden();
+  });
   paintStaticText();
+  initConfirmPanel();
   await loadCardDatabase();
   await loadStarterDecks();
   renderStarterDecks();

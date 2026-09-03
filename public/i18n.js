@@ -109,6 +109,7 @@ const ui = {
     toReceptacle: "To Empathic Vessel",
     toBattlefield: "To battlefield",
     close: "Close",
+    confirm: "Confirm",
     copy: "Copy",
     copied: "Copied!",
     counter: "Counter",
