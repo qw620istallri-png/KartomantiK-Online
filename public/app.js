@@ -1213,6 +1213,26 @@ function clearDropHighlights() {
   lastDropHighlight = null;
 }
 
+// A drop landing exactly on another (non-stacked) battlefield card stacks
+// onto it instead of placing/moving freely — see stackedScreenPos for how
+// that's rendered. Chains are deliberately not supported (only "free" cards
+// can be an anchor), which also rules out any possibility of a cycle.
+function stackAnchorAt(el, excludeItemId) {
+  const cardEl = el.closest(".bf-card");
+  if (!cardEl || cardEl.dataset.itemId === excludeItemId) return null;
+  const anchorItem = latestState.battlefield.find((it) => it.id === cardEl.dataset.itemId);
+  if (!anchorItem || anchorItem.stackedOn) return null;
+  return { anchorEl: cardEl, anchorId: anchorItem.id };
+}
+
+// Offset of a new card's top-left from the anchor's top-left, in the same
+// board-logical units as x/y — deliberately NOT run through flipY, since the
+// whole point is that this offset must look identical to both viewers.
+function stackOffsetFrom(anchorEl, clientX, clientY) {
+  const rect = anchorEl.getBoundingClientRect();
+  return { x: (clientX - rect.left) / zoomLevel - 75, y: (clientY - rect.top) / zoomLevel - 105 };
+}
+
 function resolveDrop(ctx, clientX, clientY) {
   const el = document.elementFromPoint(clientX, clientY);
   if (!el) return;
@@ -1227,9 +1247,18 @@ function resolveDrop(ctx, clientX, clientY) {
     } else if (handEl) {
       send({ type: "remove_battlefield_item", itemId: ctx.itemId, toOwnerId: myPlayerId, toZone: "hand" });
     } else if (fieldEl) {
-      const rect = fieldEl.getBoundingClientRect();
-      const logical = flipY((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
-      send({ type: "move_battlefield_item", itemId: ctx.itemId, x: logical.x, y: logical.y });
+      const anchor = stackAnchorAt(el, ctx.itemId);
+      if (anchor) {
+        const offset = stackOffsetFrom(anchor.anchorEl, clientX, clientY);
+        send({ type: "move_battlefield_item", itemId: ctx.itemId, stackOnId: anchor.anchorId, offsetX: offset.x, offsetY: offset.y });
+      } else {
+        const rect = fieldEl.getBoundingClientRect();
+        const logical = flipY((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
+        // an explicit unstack, not just an absent stackOnId: dropping in open
+        // space is the "detach" gesture, unlike e.g. exhaust which also omits
+        // stackOnId but must NOT detach a stacked card as a side effect
+        send({ type: "move_battlefield_item", itemId: ctx.itemId, x: logical.x, y: logical.y, unstack: true });
+      }
     }
     return;
   }
@@ -1247,7 +1276,15 @@ function resolveDrop(ctx, clientX, clientY) {
   } else if (fieldEl) {
     const rect = fieldEl.getBoundingClientRect();
     const logical = flipY((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
-    send({ type: "place_card", ownerId: ctx.fromOwnerId, fromZone: ctx.fromZone, cardId: ctx.cardId, faceUp: true, x: logical.x, y: logical.y });
+    const anchor = stackAnchorAt(el, null);
+    if (anchor) {
+      // x/y still sent as a fallback position (this is a BRAND NEW item, so
+      // there's no earlier "before it was stacked" position to freeze on)
+      const offset = stackOffsetFrom(anchor.anchorEl, clientX, clientY);
+      send({ type: "place_card", ownerId: ctx.fromOwnerId, fromZone: ctx.fromZone, cardId: ctx.cardId, faceUp: true, x: logical.x, y: logical.y, stackOnId: anchor.anchorId, offsetX: offset.x, offsetY: offset.y });
+    } else {
+      send({ type: "place_card", ownerId: ctx.fromOwnerId, fromZone: ctx.fromZone, cardId: ctx.cardId, faceUp: true, x: logical.x, y: logical.y });
+    }
   }
 }
 
@@ -1815,6 +1852,20 @@ function counterCircles(counters) {
     .join("");
 }
 
+// A stacked card's own x/y is a frozen fallback (wherever it was before being
+// stacked — see apply_stack_fields server-side), not its live position: while
+// stacked, it's rendered relative to its anchor's CURRENT screen position
+// instead. Crucially the offset itself is never flipped (see flipY's own
+// comment) — it's captured directly in screen pixels, so a deliberate overlap
+// arrangement looks identical to both players regardless of seat.
+function stackedScreenPos(item) {
+  if (!item.stackedOn) return null;
+  const anchor = latestState.battlefield.find((it) => it.id === item.stackedOn);
+  if (!anchor) return null;
+  const anchorPos = stackedScreenPos(anchor) || flipY(anchor.x, anchor.y, PILE_W, PILE_H);
+  return { x: anchorPos.x + item.stackOffsetX, y: anchorPos.y + item.stackOffsetY };
+}
+
 function renderBattlefield() {
   renderPiles();
   const bf = $("#battlefield");
@@ -1823,7 +1874,8 @@ function renderBattlefield() {
   latestState.battlefield.forEach((item) => {
     const el = document.createElement("div");
     el.className = "bf-card";
-    const pos = flipY(item.x, item.y, PILE_W, PILE_H);
+    el.dataset.itemId = item.id;
+    const pos = stackedScreenPos(item) || flipY(item.x, item.y, PILE_W, PILE_H);
     el.style.left = pos.x + "px";
     el.style.top = pos.y + "px";
     el.style.setProperty("--owner-color", playerColor(item.ownerId));

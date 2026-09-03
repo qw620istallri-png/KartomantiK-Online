@@ -165,6 +165,10 @@ class Session:
                 entry["isTokenCard"] = True
                 entry["temperament"] = item["temperament"]
                 entry["power"] = item["power"]
+            if item.get("stackedOn"):
+                entry["stackedOn"] = item["stackedOn"]
+                entry["stackOffsetX"] = item["stackOffsetX"]
+                entry["stackOffsetY"] = item["stackOffsetY"]
             battlefield_view.append(entry)
 
         return {

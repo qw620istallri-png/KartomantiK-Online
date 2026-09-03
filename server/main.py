@@ -34,6 +34,47 @@ def find_player_ws(session, player_id):
             return ws
     return None
 
+
+def apply_stack_fields(session, item, data):
+    """Set, clear, or leave untouched an item's stackedOn relationship from a
+    place_card/move_battlefield_item payload. The offset is screen-space pixels
+    (never flipped for either viewer — see flipY in app.js), so the server just
+    stores it opaquely; it never does the math. Returns an error message, or
+    None on success.
+
+    Three explicit outcomes, not two: callers that don't mention stacking at
+    all (e.g. the "exhaust"/rotate action, which only ever sends x/y unchanged
+    plus rotation) must NOT silently detach a stacked card as a side effect —
+    only an explicit stackOnId (attach) or unstack flag (detach) may change it.
+    """
+    if data.get("stackOnId"):
+        stack_on_id = data["stackOnId"]
+    elif data.get("unstack"):
+        item["stackedOn"] = None
+        return None
+    else:
+        return None
+    if stack_on_id == item["id"]:
+        return "A card cannot stack on itself."
+    anchor = session.find_battlefield_item(stack_on_id)
+    if anchor is None:
+        return "Stack target not found."
+    if anchor.get("stackedOn"):
+        return "Cannot stack on a card that is itself stacked (no chains)."
+    item["stackedOn"] = stack_on_id
+    item["stackOffsetX"] = float(data.get("offsetX") or 0)
+    item["stackOffsetY"] = float(data.get("offsetY") or 0)
+    return None
+
+
+def unstack_dependents(session, removed_item_id):
+    """When an anchor leaves the battlefield, whatever was stacked on it falls back
+    to its own last x/y (frozen from before it was stacked — see apply_stack_fields)
+    rather than staying attached to a card that no longer exists."""
+    for other in session.battlefield:
+        if other.get("stackedOn") == removed_item_id:
+            other["stackedOn"] = None
+
 sessions: dict[str, Session] = {}  # keyed by a canonical session id (player code)
 connections: dict[object, dict] = {}  # websocket -> {"session": Session, "playerId": str, "isObserver": bool}
 
@@ -407,7 +448,11 @@ async def handle_message(ws, info, data):
             "faceUp": bool(data.get("faceUp", True)),
             "rotation": float(data.get("rotation") or 0),
             "counters": {},
+            "stackedOn": None,
         }
+        stack_error = apply_stack_fields(session, item, data)
+        if stack_error:
+            return await send_error(ws, stack_error)
         session.battlefield.append(item)
         place_details = {"ownerId": owner_id, "fromZone": from_zone, "itemId": item["id"], "faceUp": item["faceUp"]}
         if item["faceUp"]:
@@ -426,6 +471,9 @@ async def handle_message(ws, info, data):
         item["y"] = float(data.get("y", item["y"]))
         if "rotation" in data:
             item["rotation"] = float(data.get("rotation") or 0)
+        stack_error = apply_stack_fields(session, item, data)
+        if stack_error:
+            return await send_error(ws, stack_error)
         session.add_log(actor_id, "move_battlefield_item", {"itemId": item["id"]})
         session.touch()
         await broadcast_state(session)
@@ -460,6 +508,7 @@ async def handle_message(ws, info, data):
             if item["ownerId"] != actor_id:
                 return await send_error(ws, "Only the owner can remove this token.")
             session.battlefield.remove(item)
+            unstack_dependents(session, item["id"])
             session.add_log(actor_id, "remove_battlefield_item", {"itemId": item["id"], "tokenCard": True})
             session.touch()
             return await broadcast_state(session)
@@ -473,6 +522,7 @@ async def handle_message(ws, info, data):
         if player is None:
             return await send_error(ws, "Unknown destination player.")
         session.battlefield.remove(item)
+        unstack_dependents(session, item["id"])
         # index 0 is always "the last card that entered" / the top of a deck,
         # so shared-zone piles can show it and drawing keeps working intuitively
         position = data.get("position") or "top"
