@@ -164,6 +164,8 @@ const ui = {
     permanentCounter: "Permanent",
     temporaryCounter: "Temporary",
     removeCounters: "Remove counters",
+    bringToFront: "Bring to front",
+    sendToBack: "Send to back",
   },
 };
 

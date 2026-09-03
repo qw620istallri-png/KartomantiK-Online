@@ -478,6 +478,24 @@ async def handle_message(ws, info, data):
         session.touch()
         await broadcast_state(session)
 
+    elif msg_type == "reorder_battlefield_item":
+        # paint order == array order (see renderBattlefield in app.js), so
+        # this is unrelated to stackedOn — any card can be sent to the front
+        # or back of the whole battlefield, stacked or not
+        if is_observer:
+            return await send_error(ws, "Observers cannot act.")
+        item = session.find_battlefield_item(data.get("itemId"))
+        if item is None:
+            return await send_error(ws, "Item not found.")
+        session.battlefield.remove(item)
+        if data.get("position") == "back":
+            session.battlefield.insert(0, item)
+        else:
+            session.battlefield.append(item)
+        session.add_log(actor_id, "reorder_battlefield_item", {"itemId": item["id"], "position": data.get("position") or "front"})
+        session.touch()
+        await broadcast_state(session)
+
     elif msg_type == "flip_card":
         if is_observer:
             return await send_error(ws, "Observers cannot act.")

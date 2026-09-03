@@ -197,6 +197,13 @@ input, textarea, select {
   background: #fffdf6cc; border: 1px solid var(--line); border-radius: 6px; padding: 4px;
 }
 .token-toolbar button { width: 34px; height: 34px; padding: 0; font-size: 14px; min-height: 0; }
+.view-toolbar {
+  display: flex; flex-direction: column; gap: 4px;
+  background: #fffdf6cc; border: 1px solid var(--line); border-radius: 6px; padding: 4px;
+}
+.view-toolbar button { width: 34px; height: 34px; padding: 0; font-size: 15px; min-height: 0; }
+.view-toolbar button.active { background: var(--gold); border-color: var(--gold-deep); }
+#battlefield.highlight-owners .bf-card { outline: 4px solid var(--owner-color); outline-offset: 2px; }
 .draw-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 6; }
 .draw-layer.mode-draw, .draw-layer.mode-erase { pointer-events: auto; }
 .board-field-wrap.mode-draw, .board-field-wrap.mode-erase { cursor: crosshair; }
@@ -265,6 +272,7 @@ input, textarea, select {
   position: absolute; z-index: 45; top: 100%; left: 50%; transform: translateX(-50%); margin-top: 8px; width: 240px;
   background: var(--field); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 10px 24px #0004; padding: 8px; text-align: left; cursor: default;
 }
+.zone-popover-above { top: auto; bottom: 100%; margin-top: 0; margin-bottom: 8px; }
 
 .zone { margin-bottom: 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--field); overflow: hidden; }
 .zone:last-child { margin-bottom: 0; }
@@ -311,6 +319,8 @@ input, textarea, select {
 .hand-toolbar button { padding: 5px 10px; font-size: 14px; min-height: 0; }
 .hand-toolbar button.active { background: var(--gold); border-color: var(--gold-deep); }
 .hand-toolbar .hint { color: var(--muted); font-style: italic; }
+.hand-tool-sep { width: 1px; align-self: stretch; background: var(--line); margin: 4px 2px; }
+.hand-card-count { font-weight: 700; color: var(--gold-pale); white-space: nowrap; }
 .hand-toolbar #handHideBtn { padding: 12px 20px; font-size: 15px; }
 
 .hand-tray {
@@ -402,6 +412,8 @@ input, textarea, select {
 .ctx-menu { position: fixed; z-index: 90; background: var(--field); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 10px 24px #0004; padding: 4px; min-width: 170px; }
 .ctx-menu button { display: block; width: 100%; text-align: left; border: 0; border-radius: 4px; padding: 7px 10px; font-size: 14px; font-weight: 400; background: transparent; }
 .ctx-menu button:hover { background: var(--cream-2); }
+.ctx-menu button.ctx-highlight { background: var(--gold); font-weight: 700; }
+.ctx-menu button.ctx-highlight:hover { background: #e3bc59; }
 
 .counter-grid { display: flex; gap: 6px; padding: 4px; width: 240px; }
 .counter-col { flex: 1; display: flex; flex-direction: column; gap: 4px; border-radius: 6px; padding: 6px; }

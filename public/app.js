@@ -961,6 +961,26 @@ function renderPiles() {
     };
   });
   bindPileCalibration();
+  repositionOpenPopovers();
+}
+
+// .zone-popover is normally centred below its pile via pure CSS, which
+// overflows off-screen for piles near an edge (piles are fixed, so this is a
+// small, bounded set of positions, but a real measurement is simpler and more
+// robust than hardcoding a per-pile correction).
+function repositionOpenPopovers() {
+  $$(".zone-popover").forEach((pop) => {
+    pop.style.transform = "";
+    pop.classList.remove("zone-popover-above");
+    const margin = 4;
+    let rect = pop.getBoundingClientRect();
+    if (rect.bottom > window.innerHeight - margin) pop.classList.add("zone-popover-above");
+    rect = pop.getBoundingClientRect();
+    let dx = 0;
+    if (rect.left < margin) dx = margin - rect.left;
+    else if (rect.right > window.innerWidth - margin) dx = window.innerWidth - margin - rect.right;
+    if (dx) pop.style.transform = `translateX(calc(-50% + ${dx}px))`;
+  });
 }
 
 let previousHandCardIds = new Set();
@@ -990,9 +1010,11 @@ function renderHandTray() {
   applyHandVisibility(meId);
   if (!meId || !latestState.players[meId]) {
     tray.innerHTML = "";
+    $("#handCardCount").textContent = "";
     return;
   }
   const cards = latestState.players[meId].zones.hand.cards || [];
+  $("#handCardCount").textContent = `${cards.length} ${cards.length === 1 ? t("card") : t("cards")}`;
   const currentIds = new Set(cards);
   const deckZone = latestState.players[meId].zones.deck;
   const deckCount = deckZone.count !== undefined ? deckZone.count : (deckZone.cards || []).length;
@@ -1392,10 +1414,12 @@ function closeContextMenuOnOutsideClick(event) {
 }
 
 // Items are normally { label, onSelect } (closes the menu on click) or
-// { separator: true }. Two extra, general-purpose shapes support richer
-// content without special-casing any one caller:
+// { separator: true }. A few extra, general-purpose fields/shapes support
+// richer content without special-casing any one caller:
 //   { label, onSelect, keepOpen: true } — stays open after clicking, so a
 //     repeatable action (e.g. +1 counter) can be clicked several times in a row.
+//   { label, onSelect, highlight: true } — visually emphasized (e.g. "flip"
+//     when the card is currently face-down, the action most people want next).
 //   { html, afterRender: (containerEl) => {...} } — raw markup (e.g. a whole
 //     counter grid) inserted as-is; afterRender wires up its own listeners
 //     since it isn't a single label+action.
@@ -1409,7 +1433,7 @@ function showContextMenu(clientX, clientY, items) {
     .map((item, i) => {
       if (item.separator) return `<div class="ctx-sep"></div>`;
       if (item.html) return `<div data-ctx-item="${i}">${item.html}</div>`;
-      return `<button data-ctx-item="${i}">${esc(item.label)}</button>`;
+      return `<button data-ctx-item="${i}"${item.highlight ? ' class="ctx-highlight"' : ""}>${esc(item.label)}</button>`;
     })
     .join("");
   document.body.appendChild(menu);
@@ -1812,7 +1836,9 @@ function initRevealResize() {
     const startY = event.clientY;
     const startWidth = revealCardWidth;
     const move = (e) => {
-      revealCardWidth = Math.min(REVEAL_SIZE_MAX, Math.max(90, startWidth + (startY - e.clientY)));
+      // unlike the hand's handle (above its tray), this one sits BELOW the
+      // card row, so dragging away from the content (down) is what should grow it
+      revealCardWidth = Math.min(REVEAL_SIZE_MAX, Math.max(90, startWidth + (e.clientY - startY)));
       applyRevealCardWidth();
     };
     const up = () => {
@@ -1967,9 +1993,15 @@ function renderBattlefield() {
         }
         return;
       }
+      const zOrderItems = [
+        { label: t("bringToFront"), onSelect: () => send({ type: "reorder_battlefield_item", itemId: item.id, position: "front" }) },
+        { label: t("sendToBack"), onSelect: () => send({ type: "reorder_battlefield_item", itemId: item.id, position: "back" }) },
+      ];
       if (item.isTokenCard) {
         showContextMenu(event.clientX, event.clientY, [
           { label: t("exhaust"), onSelect: () => send({ type: "move_battlefield_item", itemId: item.id, x: item.x, y: item.y, rotation: item.rotation ? 0 : 90 }) },
+          { separator: true },
+          ...zOrderItems,
           { separator: true },
           counterGridMenuItem("power", { itemId: item.id }),
           { separator: true },
@@ -1980,8 +2012,9 @@ function renderBattlefield() {
       const items = [];
       items.push({ label: t("inspect"), onSelect: () => showInspect(item.cardId, !item.faceUp && !canPeek) });
       items.push({ separator: true });
-      if (isMine) items.push({ label: t("flip"), onSelect: () => send({ type: "flip_card", itemId: item.id }) });
+      if (isMine) items.push({ label: t("flip"), onSelect: () => send({ type: "flip_card", itemId: item.id }), highlight: !item.faceUp });
       items.push({ label: t("exhaust"), onSelect: () => send({ type: "move_battlefield_item", itemId: item.id, x: item.x, y: item.y, rotation: item.rotation ? 0 : 90 }) });
+      items.push(...zOrderItems);
       items.push({ separator: true });
       items.push(counterGridMenuItem("power", { itemId: item.id }));
       items.push({ separator: true });
@@ -2102,6 +2135,10 @@ function initImportPanel() {
 // ---------------------------------------------------------------- token add + end session + log
 
 function initGameControls() {
+  $("#highlightOwnersBtn").onclick = () => {
+    const on = $("#battlefield").classList.toggle("highlight-owners");
+    $("#highlightOwnersBtn").classList.toggle("active", on);
+  };
   $("#battlefieldWrap").addEventListener("dblclick", (event) => {
     if (isObserver) return;
     if (event.target !== $("#battlefield") && event.target !== $("#battlefieldWrap")) return;
