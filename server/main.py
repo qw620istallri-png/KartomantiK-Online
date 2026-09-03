@@ -718,6 +718,18 @@ async def handle_message(ws, info, data):
         session.touch()
         await broadcast_state(session)
 
+    elif msg_type == "leave_session":
+        # unlike a disconnect (network blip, refresh — where the same clientId
+        # should reconnect into the same seat), this is a deliberate "I'm done"
+        # that actually frees the seat for a different browser to take
+        if is_observer:
+            return
+        if actor_id in session.players:
+            del session.players[actor_id]
+            session.add_log(actor_id, "leave_session", {})
+            session.touch()
+            await broadcast_state(session)
+
     elif msg_type == "request_log":
         await send_to(ws, session.serialize_log())
 
@@ -747,6 +759,8 @@ async def handle_join(ws, data):
     if is_observer:
         player_id = client_id
     else:
+        if client_id not in session.players and len(session.players) >= 2:
+            return await send_error(ws, "This session already has 2 players.")
         player = session.get_or_create_player(client_id, name)
         player["connected"] = True
         player_id = client_id

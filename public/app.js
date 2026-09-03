@@ -776,14 +776,23 @@ function receptaclePoints(zoneData, score) {
 // agree on one "correct" spot, so there is no substitute for a value per
 // (viewer, owner) pair — 16 numbers total, all independently calibrated by
 // dragging in-app and reading off the coordinates (see bindPileCalibration).
+//
+// The [1][0] and [1][1] entries (both captured from a seat-1 browser window)
+// were fixed once already: the calibration tool's PREVIOUS version displayed
+// the dragged position after converting it through the old mirror formula
+// (screen -> "raw storage" space) rather than the raw screen position itself
+// — invisible from a seat-0 window (identity there) but very much not from
+// seat-1, where it silently swapped which corner the numbers described. The
+// values below are the seat-1 readings corrected back to true screen space;
+// [0][0] and [0][1] (captured from seat 0) never needed correcting.
 const PILE_SCREEN_POS = {
   0: {
     0: { deck: { x: 1194, y: 1039 }, graveyard: { x: 1366, y: 1039 }, receptacle: { x: 1192, y: 1297 }, exile: { x: 1366, y: 1297 } },
     1: { deck: { x: 210, y: 305 }, graveyard: { x: 31, y: 305 }, receptacle: { x: 209, y: 48 }, exile: { x: 31, y: 48 } },
   },
   1: {
-    0: { deck: { x: 1218, y: 1110 }, graveyard: { x: 1393, y: 1110 }, receptacle: { x: 1218, y: 1364 }, exile: { x: 1394, y: 1366 } },
-    1: { deck: { x: 234, y: 375 }, graveyard: { x: 59, y: 375 }, receptacle: { x: 235, y: 121 }, exile: { x: 62, y: 121 } },
+    0: { deck: { x: 208, y: 304 }, graveyard: { x: 33, y: 304 }, receptacle: { x: 208, y: 50 }, exile: { x: 32, y: 48 } },
+    1: { deck: { x: 1192, y: 1039 }, graveyard: { x: 1367, y: 1039 }, receptacle: { x: 1191, y: 1293 }, exile: { x: 1364, y: 1293 } },
   },
 };
 
@@ -2052,7 +2061,9 @@ function initGameControls() {
   };
 
   $("#leaveSessionBtn").onclick = () => {
-    if (confirm(t("confirmLeaveSession"))) leaveSession();
+    if (!confirm(t("confirmLeaveSession"))) return;
+    if (!isObserver) send({ type: "leave_session" }); // frees the seat for someone else to join
+    leaveSession();
   };
 
   $("#downloadLogBtn").onclick = () => send({ type: "request_log" });
