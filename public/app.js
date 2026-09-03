@@ -681,6 +681,42 @@ function openHandView(playerId) {
   }
 }
 
+// Full visual browser for a player's own deck (replaces the old "Search"
+// toggle, which just revealed a plain name-list inline in the pile popover).
+// Only ever reachable via the Search button, which only renders for the
+// deck's own owner — but stay defensive in case zones.deck is ever a
+// count-only view (e.g. this got called for someone else's deck somehow).
+function openDeckBrowser(ownerId) {
+  const player = latestState.players[ownerId];
+  const cards = player?.zones?.deck?.cards;
+  if (!player || !cards) return;
+  $("#deckBrowserHeading").textContent = `${player.name} — ${t("deck")} (${cards.length})`;
+  $("#deckBrowserCards").innerHTML =
+    cards
+      .map(
+        (cid) => `<div class="db-card" style="--owner-color:${playerColor(ownerId)}" title="${esc(cardName(cid))}">
+      <img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}">
+    </div>`
+      )
+      .join("") || `<p style="color:var(--muted);font-size:14px">${esc(t("cards"))}: 0</p>`;
+  $("#deckBrowserPanel").classList.remove("hidden");
+}
+
+const DECK_BROWSER_SIZE_KEY = "ko_deck_browser_card_w";
+
+function initDeckBrowser() {
+  $("#deckBrowserSliderLabel").textContent = t("deckBrowserSliderLabel");
+  $("#deckBrowserCloseBtn").textContent = t("close");
+  const saved = Number(localStorage.getItem(DECK_BROWSER_SIZE_KEY)) || 140;
+  $("#deckBrowserSlider").value = saved;
+  document.documentElement.style.setProperty("--db-card-w", saved + "px");
+  $("#deckBrowserSlider").oninput = () => {
+    document.documentElement.style.setProperty("--db-card-w", $("#deckBrowserSlider").value + "px");
+    localStorage.setItem(DECK_BROWSER_SIZE_KEY, $("#deckBrowserSlider").value);
+  };
+  $("#deckBrowserCloseBtn").onclick = () => $("#deckBrowserPanel").classList.add("hidden");
+}
+
 function updateHeaderCounts() {
   const el = $("#headerCounts");
   if (!el || !latestState) return;
@@ -688,8 +724,6 @@ function updateHeaderCounts() {
   const observerCount = latestState.observerCount || 0;
   el.textContent = `${playerCount} ${t("players")} · ${observerCount} ${t("observers")}`;
 }
-
-const searchMode = new Set(); // "ownerId:zone" keys where the owner has toggled Search on (own deck only)
 
 function zoneActionsHtml(ownerId, zone, canAct) {
   const buttons = [];
@@ -711,8 +745,7 @@ function zoneActionsHtml(ownerId, zone, canAct) {
         <input type="number" min="1" max="10" value="1" data-scry-n-input="${esc(ownerId)}:${zone}">
         <button data-scry="${esc(ownerId)}:${zone}">${esc(t("scry"))}</button>
       </span>`);
-      const active = searchMode.has(`${ownerId}:${zone}`);
-      buttons.push(`<button class="${active ? "active" : ""}" data-toggle-search="${esc(ownerId)}:${zone}">${esc(t("search"))}</button>`);
+      buttons.push(`<button data-open-deck-browser="${esc(ownerId)}">${esc(t("search"))}</button>`);
     }
   }
   return buttons.join("");
@@ -743,11 +776,12 @@ function zoneBlockHtml(ownerId, zone, zoneData, canView, canAct) {
   const isOpen = expanded.has(key);
   const count = zoneData.count !== undefined ? zoneData.count : (zoneData.cards || []).length;
   const label = t(zone);
+  // your own deck never reveals its list inline any more — Search now opens
+  // the full visual deck browser instead of toggling this popover's list
   const gatedBySearch = zone === "deck" && ownerId === myPlayerId;
-  const revealedBySearch = !gatedBySearch || searchMode.has(key);
   let listHtml = "";
   if (canView && isOpen) {
-    if (!revealedBySearch) {
+    if (gatedBySearch) {
       listHtml = `<div class="zone-search-hint">${esc(t("searchHint"))}</div>`;
     } else {
       const cards = zoneData.cards || [];
@@ -1194,13 +1228,10 @@ function wireZoneButtons() {
     input.onclick = (e) => e.stopPropagation();
     input.onpointerdown = (e) => e.stopPropagation();
   });
-  $$("[data-toggle-search]").forEach((btn) => {
+  $$("[data-open-deck-browser]").forEach((btn) => {
     btn.onclick = (e) => {
       e.stopPropagation();
-      const key = btn.dataset.toggleSearch;
-      if (searchMode.has(key)) searchMode.delete(key);
-      else searchMode.add(key);
-      renderBattlefield();
+      openDeckBrowser(btn.dataset.openDeckBrowser);
     };
   });
   $$("[data-zone-card]").forEach((el) => {
@@ -2389,6 +2420,7 @@ async function boot() {
   });
   paintStaticText();
   initConfirmPanel();
+  initDeckBrowser();
   await loadCardDatabase();
   await loadStarterDecks();
   renderStarterDecks();

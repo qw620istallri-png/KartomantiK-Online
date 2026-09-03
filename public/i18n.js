@@ -167,6 +167,7 @@ const ui = {
     bringToFront: "Bring to front",
     sendToBack: "Send to back",
     undo: "Undo",
+    deckBrowserSliderLabel: "Card size",
   },
 };
 
