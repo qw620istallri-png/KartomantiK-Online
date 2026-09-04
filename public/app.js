@@ -186,6 +186,7 @@ function importDeckPayload(deck, name, persist = true) {
   if (persist) saveDeckToLibrary(name || deck.name || "Deck", deck);
   $("#importPanel").classList.add("hidden");
   $("#importDeckText").value = "";
+  setMyActivity(null);
 }
 
 function renderStarterDecks() {
@@ -511,7 +512,17 @@ function handleServerMessage(msg) {
     else showToast(msg.message, true);
     console.warn("Server error:", msg.message);
   } else if (msg.type === "log") {
-    renderLog(msg.entries);
+    if (pendingPlayerLogFor) {
+      renderPlayerLog(msg.entries, pendingPlayerLogFor);
+      pendingPlayerLogFor = null;
+    } else {
+      renderLog(msg.entries);
+    }
+  } else if (msg.type === "chat_message") {
+    chatMessages.push(msg);
+    if (chatMessages.length > 200) chatMessages.shift();
+    renderChatMessages();
+    if (chatState !== "open") { unreadChatCount++; updateChatBadge(); }
   } else if (msg.type === "hand_action_request") {
     pendingIncomingRequest = msg;
     $("#handRequestHeading").textContent = t(msg.action === "discard" ? "handRequestHeadingDiscard" : "handRequestHeadingShow");
@@ -645,6 +656,7 @@ function showRevealPopup(msg) {
   $("#revealWho").textContent = `${owner ? owner.name : msg.ownerId} ${t("revealedBy")} · ${t(msg.zone)}`;
   $("#revealCards").innerHTML = cardImagesHtml(msg.cards);
   $("#revealPanel").classList.remove("hidden");
+  setMyActivity("reveal");
   wireRevealCards({ ownerId: msg.ownerId, zone: msg.zone, allowMoveToField: !isObserver && msg.ownerId === myPlayerId });
 }
 
@@ -654,6 +666,7 @@ function showScryPopup(cardIds) {
   $("#revealWho").textContent = "";
   $("#revealCards").innerHTML = cardImagesHtml(cardIds);
   $("#revealPanel").classList.remove("hidden");
+  setMyActivity("scry");
   // scry is always a private peek at your own deck, so this is always your own zone
   wireRevealCards({ ownerId: myPlayerId, zone: "deck", allowMoveToField: true });
 }
@@ -685,6 +698,7 @@ function renderAll() {
   const canEndForAll = !isObserver && mySeat() === 0;
   $("#endSessionBtn").classList.toggle("hidden", !canEndForAll);
   $("#leaveSessionBtn").classList.toggle("hidden", canEndForAll);
+  $("#resetBoardBtn").classList.toggle("hidden", !canEndForAll);
   $("#endSessionBtn").disabled = latestState.ended;
   if (latestState.ended && !sessionEndedNotified) {
     sessionEndedNotified = true;
@@ -697,6 +711,69 @@ function renderAll() {
 // Always-visible row(s), top-left: a regular player only ever needs their
 // one opponent's row (their own hand is already visible in the tray below);
 // an observer has no "own hand" to skip, so they get one row per player.
+// Broadcasts "what menu am I in" so the opponent's row can show e.g.
+// "scrying…" instead of leaving them wondering if the other side has gone
+// AFK. Never private (it's just a menu name, no card identities), so no
+// permission gate is needed either side.
+let myActivity = null;
+function setMyActivity(activity) {
+  if (myActivity === activity) return;
+  myActivity = activity;
+  send({ type: "set_activity", activity });
+}
+
+// The full action log (session.log) is comprehensive by design — it's the
+// anti-cheat record, meant to be read by whoever's debugging a dispute, not
+// glanced at mid-game. This is a much narrower, friendlier subset/format of
+// the SAME underlying entries, limited to the handful of actions the user
+// explicitly asked for: drew, discarded/moved a (nameable) card, played.
+const PLAYER_LOG_TYPES = new Set(["draw", "draw_to_limit", "move_card", "place_card"]);
+
+function isPlayerLogRelevant(e) {
+  if (!PLAYER_LOG_TYPES.has(e.type)) return false;
+  // move_card with no cardId is a private-to-private move with nothing
+  // nameable to show, so it's skipped — but place_card legitimately has no
+  // cardId for a face-down play, and that case IS still shown (redacted, see
+  // formatPlayerLogEntry), so it must not be filtered out here too.
+  if (e.type === "move_card") return Boolean(e.details && e.details.cardId);
+  return true;
+}
+
+function formatPlayerLogEntry(e) {
+  const who = e.actorName || e.actorId || "?";
+  const d = e.details || {};
+  switch (e.type) {
+    case "draw":
+    case "draw_to_limit":
+      return `${who} ${t("plDrew")} ${d.count}`;
+    case "place_card":
+      return d.faceUp ? `${who} ${t("plPlayed")} "${cardName(d.cardId)}"` : `${who} ${t("plPlayedFaceDown")}`;
+    case "move_card":
+      return d.toZone === "graveyard"
+        ? `${who} ${t("plDiscarded")} "${cardName(d.cardId)}" (${t("plFrom")} ${t(d.fromZone)})`
+        : `${who} ${t("plPutInto")} "${cardName(d.cardId)}" → ${t(d.toZone)}`;
+    default:
+      return "";
+  }
+}
+
+let pendingPlayerLogFor = null;
+
+function openPlayerLog(playerId) {
+  pendingPlayerLogFor = playerId;
+  send({ type: "request_log" });
+}
+
+function renderPlayerLog(entries, playerId) {
+  const player = latestState.players[playerId];
+  $("#playerLogHeading").textContent = player ? player.name : t("logHeader");
+  const relevant = entries.filter((e) => e.actorId === playerId && isPlayerLogRelevant(e));
+  $("#playerLogEntries").innerHTML = relevant.length
+    ? relevant.map((e) => `<div class="log-entry"><div class="t">${new Date(e.timestamp * 1000).toLocaleString()}</div><div class="what">${esc(formatPlayerLogEntry(e))}</div></div>`).join("")
+    : `<p>${esc(t("logEmpty"))}</p>`;
+  $("#playerLogPanel").classList.remove("hidden");
+}
+
 function renderOppRows() {
   const rows = $("#oppRows");
   rows.innerHTML = Object.values(latestState.players)
@@ -706,10 +783,18 @@ function renderOppRows() {
       const handCount = handZone.count !== undefined ? handZone.count : (handZone.cards || []).length;
       const viewHandLabel = isObserver ? `${esc(p.name)}: ${esc(t("viewHand"))} (${handCount})` : `${esc(t("opponentHand"))} ${handCount}`;
       const vesselPoints = receptaclePoints(p.zones.receptacle, p.score);
+      const recent = (latestState.recentLog || []).filter((e) => e.actorId === p.id && isPlayerLogRelevant(e)).slice(-3);
+      const recentHtml = recent.length
+        ? `<div class="opp-recent-log">${recent.map((e) => `<div>${esc(formatPlayerLogEntry(e))}</div>`).join("")}<button data-open-player-log="${esc(p.id)}">···</button></div>`
+        : "";
       return `<div class="opp-info-row">
-        <span class="hand-mini"><span class="mini-back" style="--owner-color:${playerColor(p.id)}"></span>${esc(p.name)}</span>
-        <button class="view-hand-btn" data-view-hand="${esc(p.id)}">${viewHandLabel}</button>
-        <span class="opp-vessel-badge" title="${esc(t("receptacle"))}">${vesselPoints} ${esc(t("vesselPoints"))}</span>
+        <div class="opp-info-main">
+          <span class="hand-mini"><span class="mini-back" style="--owner-color:${playerColor(p.id)}"></span>${esc(p.name)}</span>
+          <button class="view-hand-btn" data-view-hand="${esc(p.id)}">${viewHandLabel}</button>
+          <span class="opp-vessel-badge" title="${esc(t("receptacle"))}">${vesselPoints} ${esc(t("vesselPoints"))}</span>
+        </div>
+        ${p.activity ? `<div class="opp-activity">${esc(t("activity_" + p.activity))}</div>` : ""}
+        ${recentHtml}
       </div>`;
     })
     .join("");
@@ -717,6 +802,12 @@ function renderOppRows() {
     btn.onclick = (e) => {
       e.stopPropagation();
       openHandView(btn.dataset.viewHand);
+    };
+  });
+  $$("[data-open-player-log]").forEach((btn) => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      openPlayerLog(btn.dataset.openPlayerLog);
     };
   });
 }
@@ -830,10 +921,33 @@ function stagePileBrowserChoice(ownerId, zone, cardId, entry) {
 // this window is meant to be browsed/acted on quickly. Inspect fires
 // immediately; every other option only stages a choice (see
 // pileBrowserStaged) instead of sending it right away.
+// A position:fixed clone that tracks the card while zoomed in, so it can
+// never be clipped by the browser's own scroll container (see the CSS note
+// on .db-card-hover-clone).
+function wireDbCardHoverZoom(el) {
+  let clone = null;
+  el.addEventListener("mouseenter", () => {
+    const rect = el.getBoundingClientRect();
+    clone = el.cloneNode(true);
+    clone.className = "db-card-hover-clone";
+    clone.style.left = rect.left + "px";
+    clone.style.top = rect.top + "px";
+    clone.style.width = rect.width + "px";
+    clone.style.height = rect.height + "px";
+    document.body.appendChild(clone);
+    requestAnimationFrame(() => clone && clone.classList.add("zoomed"));
+  });
+  el.addEventListener("mouseleave", () => {
+    if (clone) clone.remove();
+    clone = null;
+  });
+}
+
 function wirePileBrowserCards(ownerId, zone) {
   $$("#deckBrowserCards [data-zone-card]").forEach((el) => {
     const cardId = el.dataset.zoneCard.split(":")[2];
     bindCardDragSource(el, { kind: "card", cardId, fromOwnerId: ownerId, fromZone: zone });
+    wireDbCardHoverZoom(el);
     el.addEventListener("click", (event) => {
       const items = [
         { label: t("inspect"), onSelect: () => showInspect(cardId) },
@@ -876,6 +990,7 @@ function initPileBrowser() {
   $("#deckBrowserCloseBtn").onclick = () => {
     $("#deckBrowserPanel").classList.add("hidden");
     pileBrowserStaged = new Map();
+    setMyActivity(null);
   };
   $("#deckBrowserValidateBtn").onclick = () => {
     const { ownerId, zone } = $("#deckBrowserPanel").dataset;
@@ -884,7 +999,8 @@ function initPileBrowser() {
       else send({ type: "move_card", fromOwnerId: ownerId, fromZone: zone, toOwnerId: ownerId, toZone: entry.toZone, cardId });
     }
     pileBrowserStaged = new Map();
-    openPileBrowser(ownerId, zone);
+    $("#deckBrowserPanel").classList.add("hidden");
+    setMyActivity(null);
   };
 }
 
@@ -1424,6 +1540,7 @@ function wireZoneButtons() {
       if (panel.classList.contains("hidden") || panel.dataset.ownerId !== ownerId || panel.dataset.zone !== zone) {
         pileBrowserStaged = new Map();
       }
+      setMyActivity("search");
       openPileBrowser(ownerId, zone);
     };
   });
@@ -1895,6 +2012,7 @@ function setDrawMode(mode) {
   $("#drawLayer").classList.toggle("mode-erase", mode === "erase");
   $("#battlefieldWrap").classList.toggle("mode-draw", mode === "draw");
   $("#battlefieldWrap").classList.toggle("mode-erase", mode === "erase");
+  setMyActivity(mode ? "drawing" : null);
 }
 
 function makeSvgEl(tag, attrs) {
@@ -1994,8 +2112,12 @@ function initTokenToolbar() {
     $$("#tokenTemperamentGrid button").forEach((b) => b.classList.remove("active"));
     $("#tokenPowerInput").value = 1;
     $("#tokenPanel").classList.remove("hidden");
+    setMyActivity("token");
   };
-  $("#tokenCancelBtn").onclick = () => $("#tokenPanel").classList.add("hidden");
+  $("#tokenCancelBtn").onclick = () => {
+    $("#tokenPanel").classList.add("hidden");
+    setMyActivity(null);
+  };
   $("#tokenCreateBtn").onclick = () => {
     if (!selectedTemperament) return;
     const power = Math.max(-20, Math.min(20, Math.round(Number($("#tokenPowerInput").value) || 0)));
@@ -2006,6 +2128,7 @@ function initTokenToolbar() {
       x: center.x - 75 + Math.random() * 60 - 30, y: center.y - 105 + Math.random() * 60 - 30,
     });
     $("#tokenPanel").classList.add("hidden");
+    setMyActivity(null);
   };
 }
 
@@ -2028,8 +2151,12 @@ function initEssenceToolbar() {
     $$("#essenceTemperamentGrid button").forEach((b) => b.classList.remove("active"));
     $("#essenceCountInput").value = 1;
     $("#essencePanel").classList.remove("hidden");
+    setMyActivity("essence");
   };
-  $("#essenceCancelBtn").onclick = () => $("#essencePanel").classList.add("hidden");
+  $("#essenceCancelBtn").onclick = () => {
+    $("#essencePanel").classList.add("hidden");
+    setMyActivity(null);
+  };
   $("#essenceCreateBtn").onclick = () => {
     if (!selectedEssenceTemperament) return;
     const count = Math.max(-99, Math.min(99, Math.round(Number($("#essenceCountInput").value) || 0)));
@@ -2040,6 +2167,7 @@ function initEssenceToolbar() {
       x: center.x - 26 + Math.random() * 60 - 30, y: center.y - 26 + Math.random() * 60 - 30,
     });
     $("#essencePanel").classList.add("hidden");
+    setMyActivity(null);
   };
 }
 
@@ -2066,12 +2194,20 @@ function initDiceToolbar() {
     $("#diceConfigView").classList.remove("hidden");
     $("#diceResultView").classList.add("hidden");
     $("#dicePanel").classList.remove("hidden");
+    setMyActivity("dice");
   };
-  $("#diceCancelBtn").onclick = () => $("#dicePanel").classList.add("hidden");
-  $("#diceResultCloseBtn").onclick = () => $("#dicePanel").classList.add("hidden");
+  $("#diceCancelBtn").onclick = () => {
+    $("#dicePanel").classList.add("hidden");
+    setMyActivity(null);
+  };
+  $("#diceResultCloseBtn").onclick = () => {
+    $("#dicePanel").classList.add("hidden");
+    setMyActivity(null);
+  };
   $("#diceRollBtn").onclick = () => {
     const count = Math.max(1, Math.min(20, Math.round(Number($("#diceCountInput").value) || 1)));
     send({ type: "roll_dice", mode: selectedDiceMode, count });
+    setMyActivity(null);
   };
 }
 
@@ -2497,9 +2633,13 @@ function bindDrag(el, onDrop) {
 function initImportPanel() {
   $("#importDeckBtn").onclick = () => {
     $("#importPanel").classList.remove("hidden");
+    setMyActivity("importing");
     renderSavedDecks();
   };
-  $("#importCancelBtn").onclick = () => $("#importPanel").classList.add("hidden");
+  $("#importCancelBtn").onclick = () => {
+    $("#importPanel").classList.add("hidden");
+    setMyActivity(null);
+  };
   $("#importConfirmBtn").onclick = async () => {
     const raw = $("#importDeckText").value.trim();
     if (!raw) return;
@@ -2530,6 +2670,69 @@ function initImportPanel() {
   };
 }
 
+// ---------------------------------------------------------------- chat
+
+let chatMessages = [];
+let chatState = "open"; // "open" | "minimized" | "closed"
+let unreadChatCount = 0;
+
+function renderChatMessages() {
+  $("#chatMessages").innerHTML = chatMessages.map((m) => `<div class="chat-msg"><b>${esc(m.byName)}:</b> ${esc(m.text)}</div>`).join("");
+  $("#chatMessages").scrollTop = $("#chatMessages").scrollHeight;
+}
+
+function updateChatBadge() {
+  const btn = $("#chatReopenBtn");
+  btn.querySelector(".chat-unread-badge")?.remove();
+  if (unreadChatCount > 0 && chatState !== "open") {
+    const badge = document.createElement("span");
+    badge.className = "chat-unread-badge";
+    badge.textContent = String(Math.min(unreadChatCount, 99));
+    btn.appendChild(badge);
+  }
+}
+
+function applyChatState() {
+  $("#chatPanel").classList.toggle("hidden", chatState === "closed");
+  $("#chatPanel").classList.toggle("minimized", chatState === "minimized");
+  $("#chatReopenBtn").classList.toggle("hidden", chatState !== "closed");
+  if (chatState === "open") {
+    unreadChatCount = 0;
+    $("#chatMessages").scrollTop = $("#chatMessages").scrollHeight;
+  }
+  updateChatBadge();
+}
+
+function sendChatMessage() {
+  const text = $("#chatInput").value.trim();
+  if (!text) return;
+  send({ type: "chat_message", text });
+  $("#chatInput").value = "";
+}
+
+function initChat() {
+  $("#chatHeading").textContent = t("chatHeading");
+  $("#chatInput").placeholder = t("chatPlaceholder");
+  $("#chatSendBtn").textContent = t("chatSend");
+  $("#chatMinimizeBtn").onclick = () => {
+    chatState = chatState === "minimized" ? "open" : "minimized";
+    applyChatState();
+  };
+  $("#chatCloseBtn").onclick = () => {
+    chatState = "closed";
+    applyChatState();
+  };
+  $("#chatReopenBtn").onclick = () => {
+    chatState = "open";
+    applyChatState();
+  };
+  $("#chatSendBtn").onclick = sendChatMessage;
+  $("#chatInput").addEventListener("keydown", (event) => {
+    if (event.key === "Enter") sendChatMessage();
+  });
+  applyChatState();
+}
+
 // ---------------------------------------------------------------- token add + end session + log
 
 function initGameControls() {
@@ -2546,6 +2749,11 @@ function initGameControls() {
     const logical = flipY((event.clientX - rect.left - panX) / zoomLevel - 26, (event.clientY - rect.top - panY) / zoomLevel - 26, TOKEN_W, TOKEN_H);
     send({ type: "add_token", x: logical.x, y: logical.y, label, color: playerColor(myPlayerId) });
   });
+
+  $("#resetBoardBtn").textContent = t("resetBoard");
+  $("#resetBoardBtn").onclick = () => {
+    showConfirm(t("confirmResetBoard"), () => send({ type: "reset_board" }));
+  };
 
   $("#endSessionBtn").onclick = () => {
     showConfirm(t("confirmEndSession"), () => {
@@ -2691,6 +2899,8 @@ function formatLogEntry(e) {
     case "remove_strokes_in_rect": return `${who} erased ${d.count} drawing(s).`;
     case "clear_own_strokes": return `${who} cleared their drawings.`;
     case "roll_dice": return d.mode === "d6" ? `${who} rolled ${d.results.length}×D6: ${d.results.join(", ")}.` : `${who} flipped ${d.results.length} coin(s): ${d.results.join(", ")}.`;
+    case "reset_board": return `${who} reset the board for a new game.`;
+    case "chat_message": return `${who} (chat): ${d.text}`;
     default: return `${who} — ${e.type}`;
   }
 }
@@ -2801,9 +3011,15 @@ async function boot() {
   initDiceToolbar();
   initPileCalibration();
   initInspectToolbar();
+  initChat();
+  $("#playerLogCloseBtn").onclick = () => $("#playerLogPanel").classList.add("hidden");
+  $("#playerLogCloseBtn").textContent = t("close");
   $("#logCloseBtn").onclick = () => $("#logPanel").classList.add("hidden");
   $("#inspectCloseBtn").onclick = () => $("#inspectPanel").classList.add("hidden");
-  $("#revealCloseBtn").onclick = () => $("#revealPanel").classList.add("hidden");
+  $("#revealCloseBtn").onclick = () => {
+    $("#revealPanel").classList.add("hidden");
+    setMyActivity(null);
+  };
   $("#handViewCloseBtn").onclick = () => $("#handViewPanel").classList.add("hidden");
   $("#handRequestAcceptBtn").onclick = () => {
     if (!pendingIncomingRequest) return;

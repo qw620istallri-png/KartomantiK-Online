@@ -46,6 +46,7 @@ def make_player(player_id, name, cluster_index=0):
         "score": 0,
         "seat": seat,
         "zones": {zone: [] for zone in ALL_ZONES},
+        "activity": None,  # transient "what menu are they in" hint, never private
     }
 
 
@@ -141,6 +142,7 @@ class Session:
                 "score": player["score"],
                 "seat": player["seat"],
                 "zones": zones_view,
+                "activity": player.get("activity"),
             }
 
         battlefield_view = []
@@ -178,6 +180,11 @@ class Session:
             "tokens": list(self.tokens),
             "strokes": list(self.strokes),
             "ended": self.ended,
+            # a small tail of the action log, piggybacked on every state sync so
+            # the opponent-row mini activity feed updates live without a
+            # separate poll — the full log (request_log) is still the
+            # authoritative, complete history used for the debug/download panel
+            "recentLog": self.log[-30:],
         }
 
     def serialize_log(self):

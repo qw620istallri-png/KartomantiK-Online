@@ -73,6 +73,7 @@
         <button id="fullscreenBtn"></button>
         <button id="importDeckBtn"></button>
         <button id="downloadLogBtn"></button>
+        <button id="resetBoardBtn" class="hidden"></button>
         <button id="endSessionBtn"></button>
         <button id="leaveSessionBtn" class="hidden"></button>
       </div>
@@ -80,7 +81,24 @@
     <p class="status-line" id="gameStatusLine"></p>
     <div class="session-ended-banner hidden" id="sessionEndedBanner"></div>
     <div class="board-field-wrap" id="battlefieldWrap">
-      <div class="opp-rows" id="oppRows"></div>
+      <div class="top-left-stack" id="topLeftStack">
+        <div class="opp-rows" id="oppRows"></div>
+        <div class="chat-panel" id="chatPanel">
+          <div class="chat-header">
+            <span id="chatHeading"></span>
+            <div class="chat-header-actions">
+              <button id="chatMinimizeBtn" title="Minimize">–</button>
+              <button id="chatCloseBtn" title="Close">×</button>
+            </div>
+          </div>
+          <div class="chat-messages" id="chatMessages"></div>
+          <div class="chat-input-row">
+            <input id="chatInput" maxlength="500">
+            <button id="chatSendBtn"></button>
+          </div>
+        </div>
+        <button class="chat-reopen-btn hidden" id="chatReopenBtn" title="Chat">💬</button>
+      </div>
       <div class="hand-view-panel hidden" id="handViewPanel">
         <button class="hand-view-close" id="handViewCloseBtn">✕</button>
         <div class="hand-view-title" id="handViewTitle"></div>
@@ -173,6 +191,16 @@
         </div>
       </div>
       <div id="logEntries"></div>
+    </div>
+  </div>
+
+  <div class="log-panel hidden" id="playerLogPanel">
+    <div class="box">
+      <h2 id="playerLogHeading"></h2>
+      <div id="playerLogEntries"></div>
+      <div style="display:flex;justify-content:flex-end;margin-top:14px">
+        <button id="playerLogCloseBtn"></button>
+      </div>
     </div>
   </div>
 

@@ -12,6 +12,7 @@ import mimetypes
 import os
 import random
 import sys
+import time
 
 from websockets.asyncio.server import serve
 from websockets.http11 import Response
@@ -727,6 +728,29 @@ async def handle_message(ws, info, data):
         session.touch()
         await broadcast_state(session)
 
+    elif msg_type == "set_activity":
+        # transient "what menu are they in" hint for the opponent's row, e.g.
+        # scrying/searching/rolling dice — never private, so no observer check
+        player = session.players.get(actor_id)
+        if player is None:
+            return
+        activity = data.get("activity")
+        player["activity"] = str(activity)[:20] if activity else None
+        await broadcast_state(session)
+
+    elif msg_type == "chat_message":
+        text = str(data.get("text") or "").strip()[:500]
+        if not text:
+            return await send_error(ws, "Empty message.")
+        actor = session.players.get(actor_id)
+        by_name = actor["name"] if actor else ("Observer" if is_observer else actor_id)
+        session.add_log(actor_id, "chat_message", {"text": text})
+        session.touch()
+        payload = {"type": "chat_message", "byId": actor_id, "byName": by_name, "text": text, "timestamp": time.time()}
+        for other_ws, other_info in list(connections.items()):
+            if other_info["session"] is session:
+                await send_to(other_ws, payload)
+
     elif msg_type == "roll_dice":
         # dice/coin results are always public by nature (no hidden info to
         # leak), so — like reveal — this is both logged (for the downloadable
@@ -759,6 +783,38 @@ async def handle_message(ws, info, data):
             return await send_error(ws, "Unknown player.")
         player["score"] = int(data.get("value") if data.get("value") is not None else player["score"] + int(data.get("delta") or 0))
         session.add_log(actor_id, "set_score", {"playerId": target_id, "score": player["score"]})
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "reset_board":
+        # Sweeps everything back into each player's own shuffled deck (battlefield
+        # cards, hand, graveyard, exile, receptacle), clears tokens/drawings, and
+        # resets scores — a fresh start without leaving the session (same codes,
+        # same connected players). Host-only, same restriction as end_session.
+        player = session.players.get(actor_id)
+        if is_observer or player is None or player.get("seat") != 0:
+            return await send_error(ws, "Only the session's first player can reset the board.")
+        for item in session.battlefield:
+            if item.get("isTokenCard"):
+                continue
+            owner = session.players.get(item["ownerId"])
+            if owner is not None:
+                owner["zones"]["deck"].append(item["cardId"])
+        for p in session.players.values():
+            p["zones"]["deck"].extend(p["zones"]["hand"])
+            p["zones"]["deck"].extend(p["zones"]["graveyard"])
+            p["zones"]["deck"].extend(p["zones"]["exile"])
+            p["zones"]["deck"].extend(p["zones"]["receptacle"])
+            p["zones"]["hand"] = []
+            p["zones"]["graveyard"] = []
+            p["zones"]["exile"] = []
+            p["zones"]["receptacle"] = []
+            random.shuffle(p["zones"]["deck"])
+            p["score"] = 0
+        session.battlefield = []
+        session.tokens = []
+        session.strokes = []
+        session.add_log(actor_id, "reset_board", {})
         session.touch()
         await broadcast_state(session)
 
