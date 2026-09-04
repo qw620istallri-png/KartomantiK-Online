@@ -136,11 +136,29 @@ input, textarea, select {
 .code-pill-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .code-pill strong { font-size: 20px; letter-spacing: .08em; }
 .share-hint { color: var(--muted); font-size: 14px; }
-.status-line { margin-top: 10px; font-size: 14px; color: var(--muted); min-height: 18px; }
-.status-line.error { color: var(--danger); }
+.status-line { margin-top: 10px; font-size: 14px; color: var(--muted); min-height: 18px; text-align: center; border-radius: 8px; }
 #gameStatusLine { margin: 0; padding: 4px 18px 0; font-size: 14px; color: var(--muted); min-height: 0; }
 #gameStatusLine:empty { display: none; }
-#gameStatusLine.error { color: var(--danger); }
+
+/* connecting/lost/reconnected get their own coloured, gently-blinking box
+   instead of just tinted text, for visibility — same three states on both
+   the join screen (light background) and in-game (dark background), so the
+   colours/backgrounds differ per context but the blink is shared */
+@keyframes ko-status-blink { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+.status-line.error, .status-line.warning, .status-line.success,
+#gameStatusLine.error, #gameStatusLine.warning, #gameStatusLine.success {
+  animation: ko-status-blink 1.6s ease-in-out infinite;
+}
+.status-line.error, .status-line.warning, .status-line.success { padding: 8px 14px; border: 1px solid; }
+.status-line.error { background: #a1322922; border-color: var(--danger); color: var(--danger); }
+.status-line.warning { background: #b5790f22; border-color: #b5790f; color: #8a5c0a; }
+.status-line.success { background: #2f8f4e22; border-color: #2f8f4e; color: #1f6b38; }
+#gameStatusLine.error, #gameStatusLine.warning, #gameStatusLine.success {
+  margin: 6px 18px; padding: 6px 14px; border-radius: 8px; border: 1px solid; text-align: center; background: #171714cc;
+}
+#gameStatusLine.error { border-color: var(--danger); color: #ff8a80; }
+#gameStatusLine.warning { border-color: #d3a942; color: #ffd479; }
+#gameStatusLine.success { border-color: #4fae6f; color: #8fe0a8; }
 
 .session-ended-banner {
   margin: 0; padding: 8px 18px; background: var(--danger); color: #fff; font-weight: 700; font-size: 14px; text-align: center;
@@ -353,7 +371,14 @@ input, textarea, select {
 /* the resize handle is the only visible "bar" here — it doubles as a grip for
    resizing the hand cards, so the toolbar and tray behind it can stay
    transparent: just the cards and buttons floating over the board */
-.hand-resize-handle { height: 10px; cursor: ns-resize; background: linear-gradient(90deg, transparent, var(--gold-deep) 50%, transparent); opacity: .5; }
+/* absolutely positioned (not a normal-flow sibling before the tray) so it can
+   sit right above the resting cards — 14px gap, same as the cards' own
+   bottom gap — instead of above the tray's full reserved hover-grow headroom,
+   which left a much bigger gap than the one below the cards */
+.hand-resize-handle {
+  position: absolute; left: 0; right: 0; height: 10px; bottom: calc(var(--hand-card-h, 170px) + 28px);
+  cursor: ns-resize; background: linear-gradient(90deg, transparent, var(--gold-deep) 50%, transparent); opacity: .5;
+}
 .hand-resize-handle:hover { opacity: .9; }
 
 .hand-toolbar { display: flex; gap: 6px; align-items: center; justify-content: center; padding: 5px 18px; background: transparent; font-size: 14px; }
@@ -494,12 +519,25 @@ input, textarea, select {
 .deck-browser-head h2 { margin: 0; flex: 1; }
 .deck-browser-slider-group { display: flex; align-items: center; gap: 8px; }
 .deck-browser-slider-group label { font-size: 14px; font-weight: 700; color: var(--muted); white-space: nowrap; }
-.deck-browser-cards { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; overflow-y: auto; max-height: 74vh; padding: 4px; }
-.deck-browser-cards .db-card {
-  width: var(--db-card-w, 140px); height: calc(var(--db-card-w, 140px) * 1.4); border-radius: 8px;
-  border: 2px solid var(--owner-color, var(--carbon)); overflow: hidden; box-shadow: 2px 4px 8px #0004;
+.deck-browser-cards {
+  display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; overflow-y: auto; max-height: 74vh; padding: 4px;
+  scrollbar-width: none;
 }
+.deck-browser-cards::-webkit-scrollbar { display: none; }
+.deck-browser-cards .db-card {
+  position: relative; width: var(--db-card-w, 140px); height: calc(var(--db-card-w, 140px) * 1.4); border-radius: 8px;
+  border: 2px solid var(--owner-color, var(--carbon)); overflow: hidden; box-shadow: 2px 4px 8px #0004; cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease;
+}
+.deck-browser-cards .db-card:not(.staged):hover { transform: scale(1.12); box-shadow: 3px 8px 20px #0006; z-index: 2; }
 .deck-browser-cards .db-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.deck-browser-cards .db-card.staged { cursor: default; }
+.deck-browser-cards .db-card.staged img { filter: grayscale(1) brightness(.5); }
+.deck-browser-cards .db-card-staged-label {
+  position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+  padding: 8px; text-align: center; color: #fff; font-size: 14px; font-weight: 700; text-shadow: 0 1px 3px #000;
+}
+.deck-browser-cards .db-card-undo-btn { font-size: 14px; padding: 5px 12px; min-height: 0; }
 
 .reveal-panel .box { width: min(90vw, 1100px); text-align: center; }
 .reveal-panel .reveal-who { color: var(--muted); font-size: 14px; margin-bottom: 12px; }

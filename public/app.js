@@ -56,6 +56,7 @@ let pendingIncomingRequest = null; // the hand_action_request currently shown in
 let expanded = new Set(); // "ownerId:zone" currently expanded in the UI
 let reconnectTimer = null;
 let intentionalClose = false;
+let wasDisconnected = false; // true while recovering from a dropped connection, for the green "Reconnected" flash
 
 function playerColor(playerId) {
   if (!colorByPlayer.has(playerId)) {
@@ -323,10 +324,13 @@ function initSocialLinks() {
 
 // ---------------------------------------------------------------- join screen
 
-function setStatus(message, isError = false) {
+// kind: "" (neutral, no box), "error" (red — lost/invalid), "warning"
+// (orange — connecting/reconnecting), "success" (green — just reconnected)
+function setStatus(message, kind = "") {
   const el = $("#gameScreen").classList.contains("hidden") ? $("#statusLine") : $("#gameStatusLine");
   el.textContent = message || "";
-  el.classList.toggle("error", Boolean(isError));
+  el.classList.remove("error", "warning", "success");
+  if (kind) el.classList.add(kind);
 }
 
 function initJoinScreen() {
@@ -356,7 +360,7 @@ function initJoinScreen() {
   $("#joinBtn").onclick = () => {
     const name = $("#joinName").value.trim() || "Player";
     const code = $("#joinCode").value.trim().toUpperCase();
-    if (!code) return setStatus(t("invalidCode"), true);
+    if (!code) return setStatus(t("invalidCode"), "error");
     localStorage.setItem("ko_name", name);
     connectAndJoin({ code, name });
   };
@@ -377,7 +381,7 @@ function initJoinScreen() {
 let pendingCreateFlow = false;
 
 function connectAndJoin(joinPayload) {
-  setStatus(t("connecting"));
+  setStatus(t("connecting"), "warning");
   intentionalClose = false;
   joinedCode = joinPayload.code || null;
   joinedName = joinPayload.name;
@@ -393,10 +397,11 @@ function connectAndJoin(joinPayload) {
   ws.onclose = () => {
     if (intentionalClose) return;
     if ($("#gameScreen").classList.contains("hidden")) {
-      setStatus(t("invalidCode"), true);
+      setStatus(t("invalidCode"), "error");
       return;
     }
-    setStatus(t("connectionLost"), true);
+    wasDisconnected = true;
+    setStatus(t("connectionLost"), "error");
     scheduleReconnect();
   };
   ws.onerror = () => {};
@@ -423,6 +428,7 @@ function showGameScreen() {
 // in both cases *this* client is done and goes back to the home screen.
 function leaveSession() {
   intentionalClose = true;
+  wasDisconnected = false;
   if (ws) ws.close();
   ws = null;
   latestState = null;
@@ -454,7 +460,12 @@ function handleServerMessage(msg) {
     if (msg.codePlayer) codePlayer = msg.codePlayer;
     codeObserver = msg.codeObserver;
     joinedCode = joinedCode || codePlayer;
-    setStatus("");
+    if (wasDisconnected) {
+      wasDisconnected = false;
+      setStatus(t("reconnected"), "success");
+    } else {
+      setStatus("");
+    }
 
     const codeItemHtml = (code, labelKey) => `<div class="code-item">
       <span class="code-item-label">${esc(t(labelKey))}</span>
@@ -496,7 +507,7 @@ function handleServerMessage(msg) {
   } else if (msg.type === "dice_result") {
     handleDiceResult(msg);
   } else if (msg.type === "error") {
-    if ($("#gameScreen").classList.contains("hidden")) setStatus(msg.message, true);
+    if ($("#gameScreen").classList.contains("hidden")) setStatus(msg.message, "error");
     else showToast(msg.message, true);
     console.warn("Server error:", msg.message);
   } else if (msg.type === "log") {
@@ -763,6 +774,34 @@ function openHandView(playerId) {
   });
 }
 
+// { cardId -> { kind: "move"|"play", toZone?, faceUp?, label } } — a choice
+// made in the browser is staged here, not sent immediately: the card just
+// greys out with an Undo, and nothing actually happens until Validate is
+// clicked. Unlike the scry/reveal popup (send-immediately-with-undo), this
+// window is often used to sort SEVERAL cards at once, so a review step
+// before anything actually moves is worth the extra click. Reset when
+// Search opens a browser (see wireZoneButtons) or the panel is closed —
+// deliberately NOT reset by renderAll's live-refresh, so an unrelated
+// server update elsewhere doesn't wipe out choices still pending Validate.
+let pileBrowserStaged = new Map();
+
+function dbCardHtml(ownerId, zone, cid) {
+  const style = `style="--owner-color:${playerColor(ownerId)}"`;
+  const staged = pileBrowserStaged.get(cid);
+  if (staged) {
+    return `<div class="db-card staged" ${style} title="${esc(cardName(cid))}">
+      <img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}">
+      <div class="db-card-staged-label">
+        <div>${esc(staged.label)}</div>
+        <button class="db-card-undo-btn" data-undo-staged="${esc(cid)}">${esc(t("undo"))}</button>
+      </div>
+    </div>`;
+  }
+  return `<div class="db-card" ${style} title="${esc(cardName(cid))}" data-zone-card="${esc(ownerId)}:${esc(zone)}:${esc(cid)}">
+    <img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}">
+  </div>`;
+}
+
 // Full visual browser for ANY pile (deck, graveyard, exile, receptacle) —
 // replaces the old "Search" toggle, which just revealed a plain name-list
 // inline in the pile popover. Only ever reachable via the Search button,
@@ -776,42 +815,48 @@ function openPileBrowser(ownerId, zone) {
   $("#deckBrowserPanel").dataset.ownerId = ownerId;
   $("#deckBrowserPanel").dataset.zone = zone;
   $("#deckBrowserHeading").textContent = `${player.name} — ${t(zone)} (${cards.length})`;
-  $("#deckBrowserCards").innerHTML =
-    cards
-      .map(
-        (cid) => `<div class="db-card" style="--owner-color:${playerColor(ownerId)}" title="${esc(cardName(cid))}" data-zone-card="${esc(ownerId)}:${esc(zone)}:${esc(cid)}">
-      <img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}">
-    </div>`
-      )
-      .join("") || `<p style="color:var(--muted);font-size:14px">${esc(t("cards"))}: 0</p>`;
+  $("#deckBrowserCards").innerHTML = cards.map((cid) => dbCardHtml(ownerId, zone, cid)).join("") || `<p style="color:var(--muted);font-size:14px">${esc(t("cards"))}: 0</p>`;
+  $("#deckBrowserValidateBtn").disabled = pileBrowserStaged.size === 0;
   $("#deckBrowserPanel").classList.remove("hidden");
   wirePileBrowserCards(ownerId, zone);
 }
 
-// Same right-click inspect/move menu as a pile's own inline list (see
-// wireZoneButtons' [data-zone-card] handling) — reachable only via Search,
-// which already gates on canAct, so no extra permission check is needed here.
+function stagePileBrowserChoice(ownerId, zone, cardId, entry) {
+  pileBrowserStaged.set(cardId, entry);
+  openPileBrowser(ownerId, zone);
+}
+
+// Left-click (not the app's usual right-click) opens the option menu here —
+// this window is meant to be browsed/acted on quickly. Inspect fires
+// immediately; every other option only stages a choice (see
+// pileBrowserStaged) instead of sending it right away.
 function wirePileBrowserCards(ownerId, zone) {
   $$("#deckBrowserCards [data-zone-card]").forEach((el) => {
     const cardId = el.dataset.zoneCard.split(":")[2];
     bindCardDragSource(el, { kind: "card", cardId, fromOwnerId: ownerId, fromZone: zone });
-    el.addEventListener("contextmenu", (event) => {
-      event.preventDefault();
+    el.addEventListener("click", (event) => {
       const items = [
         { label: t("inspect"), onSelect: () => showInspect(cardId) },
         { separator: true },
-        { label: t("playFaceUp"), onSelect: () => playFromZone(ownerId, zone, cardId, true) },
-        { label: t("playFaceDown"), onSelect: () => playFromZone(ownerId, zone, cardId, false) },
+        { label: t("playFaceUp"), onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "play", faceUp: true, label: t("battlefield") }) },
+        { label: t("playFaceDown"), onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "play", faceUp: false, label: t("battlefield") }) },
         { separator: true },
       ];
       ZONES.filter((z) => z !== zone).forEach((z) => {
         items.push({
           label: `${t("moveTo")} ${t(z)}`,
-          onSelect: () => send({ type: "move_card", fromOwnerId: ownerId, fromZone: zone, toOwnerId: ownerId, toZone: z, cardId }),
+          onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "move", toZone: z, label: t(z) }),
         });
       });
       showContextMenu(event.clientX, event.clientY, items);
     });
+  });
+  $$("#deckBrowserCards [data-undo-staged]").forEach((btn) => {
+    btn.onclick = (event) => {
+      event.stopPropagation();
+      pileBrowserStaged.delete(btn.dataset.undoStaged);
+      openPileBrowser(ownerId, zone);
+    };
   });
 }
 
@@ -820,6 +865,7 @@ const DECK_BROWSER_SIZE_KEY = "ko_deck_browser_card_w";
 function initPileBrowser() {
   $("#deckBrowserSliderLabel").textContent = t("deckBrowserSliderLabel");
   $("#deckBrowserCloseBtn").textContent = t("close");
+  $("#deckBrowserValidateBtn").textContent = t("confirm");
   const saved = Number(localStorage.getItem(DECK_BROWSER_SIZE_KEY)) || 140;
   $("#deckBrowserSlider").value = saved;
   document.documentElement.style.setProperty("--db-card-w", saved + "px");
@@ -827,7 +873,19 @@ function initPileBrowser() {
     document.documentElement.style.setProperty("--db-card-w", $("#deckBrowserSlider").value + "px");
     localStorage.setItem(DECK_BROWSER_SIZE_KEY, $("#deckBrowserSlider").value);
   };
-  $("#deckBrowserCloseBtn").onclick = () => $("#deckBrowserPanel").classList.add("hidden");
+  $("#deckBrowserCloseBtn").onclick = () => {
+    $("#deckBrowserPanel").classList.add("hidden");
+    pileBrowserStaged = new Map();
+  };
+  $("#deckBrowserValidateBtn").onclick = () => {
+    const { ownerId, zone } = $("#deckBrowserPanel").dataset;
+    for (const [cardId, entry] of pileBrowserStaged) {
+      if (entry.kind === "play") playFromZone(ownerId, zone, cardId, entry.faceUp);
+      else send({ type: "move_card", fromOwnerId: ownerId, fromZone: zone, toOwnerId: ownerId, toZone: entry.toZone, cardId });
+    }
+    pileBrowserStaged = new Map();
+    openPileBrowser(ownerId, zone);
+  };
 }
 
 function updateHeaderCounts() {
@@ -1360,6 +1418,12 @@ function wireZoneButtons() {
     btn.onclick = (e) => {
       e.stopPropagation();
       const [ownerId, zone] = btn.dataset.openPileBrowser.split(":");
+      const panel = $("#deckBrowserPanel");
+      // fresh open, or switching to a DIFFERENT pile: clear any pending
+      // staged choices. Re-clicking Search on the pile already open keeps them.
+      if (panel.classList.contains("hidden") || panel.dataset.ownerId !== ownerId || panel.dataset.zone !== zone) {
+        pileBrowserStaged = new Map();
+      }
       openPileBrowser(ownerId, zone);
     };
   });
@@ -2554,12 +2618,20 @@ function applyInspectPanelWidth() {
   document.documentElement.style.setProperty("--inspect-w", inspectPanelWidth + "px");
 }
 
+// Toggles: closes the panel if it's already open, otherwise reopens the last
+// inspected card. Shared by the toolbar button and the "I" keyboard shortcut.
+function toggleInspectPanel() {
+  if (!$("#inspectPanel").classList.contains("hidden")) {
+    $("#inspectPanel").classList.add("hidden");
+  } else if (inspectHistory.length) {
+    showInspect(inspectHistory[0]);
+  }
+}
+
 function initInspectToolbar() {
   $("#inspectReopenBtn").title = t("reopenLastInspected");
   $("#inspectReopenBtn").disabled = true;
-  $("#inspectReopenBtn").onclick = () => {
-    if (inspectHistory.length) showInspect(inspectHistory[0]);
-  };
+  $("#inspectReopenBtn").onclick = toggleInspectPanel;
   applyInspectPanelWidth();
   $("#inspectResizeHandle").addEventListener("pointerdown", (event) => {
     event.preventDefault();
@@ -2703,9 +2775,9 @@ async function boot() {
       if (!latestState || isObserver) return;
       event.preventDefault();
       toggleHandHidden();
-    } else if (event.code === "KeyI" && inspectHistory.length) {
+    } else if (event.code === "KeyI") {
       event.preventDefault();
-      showInspect(inspectHistory[0]);
+      toggleInspectPanel();
     }
   });
   paintStaticText();
