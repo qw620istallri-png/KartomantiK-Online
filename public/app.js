@@ -1674,12 +1674,25 @@ function clearDropHighlights() {
 // onto it instead of placing/moving freely — see stackedScreenPos for how
 // that's rendered. Chains are deliberately not supported (only "free" cards
 // can be an anchor), which also rules out any possibility of a cycle.
-function stackAnchorAt(el, excludeItemId) {
-  const cardEl = el.closest(".bf-card");
-  if (!cardEl || cardEl.dataset.itemId === excludeItemId) return null;
-  const anchorItem = latestState.battlefield.find((it) => it.id === cardEl.dataset.itemId);
-  if (!anchorItem || anchorItem.stackedOn) return null;
-  return { anchorEl: cardEl, anchorId: anchorItem.id };
+//
+// Uses elementsFromPoint (plural), not a single elementFromPoint passed in —
+// re-dragging a card that's already on the field (e.g. nudging an
+// already-stacked card to adjust its overlap) never moves its real element,
+// only a ghost clone follows the cursor (see bindCardDragSource), so the
+// card's own stale pre-drag position is often still sitting right under the
+// drop point. A single topmost hit would find itself there, get excluded,
+// and fall through to unstacking instead of re-stacking — walking the full
+// stack of elements at that point lets it see past its own leftover spot to
+// whatever anchor is genuinely underneath.
+function stackAnchorAt(clientX, clientY, excludeItemId) {
+  for (const el of document.elementsFromPoint(clientX, clientY)) {
+    const cardEl = el.closest(".bf-card");
+    if (!cardEl || cardEl.dataset.itemId === excludeItemId) continue;
+    const anchorItem = latestState.battlefield.find((it) => it.id === cardEl.dataset.itemId);
+    if (!anchorItem || anchorItem.stackedOn) continue;
+    return { anchorEl: cardEl, anchorId: anchorItem.id };
+  }
+  return null;
 }
 
 // Offset of a new card's top-left from the anchor's top-left, in
@@ -1710,7 +1723,7 @@ function resolveDrop(ctx, clientX, clientY) {
     } else if (handEl) {
       send({ type: "remove_battlefield_item", itemId: ctx.itemId, toOwnerId: myPlayerId, toZone: "hand" });
     } else if (fieldEl) {
-      const anchor = stackAnchorAt(el, ctx.itemId);
+      const anchor = stackAnchorAt(clientX, clientY, ctx.itemId);
       if (anchor) {
         const offset = stackOffsetFrom(anchor.anchorEl, clientX, clientY);
         send({ type: "move_battlefield_item", itemId: ctx.itemId, stackOnId: anchor.anchorId, offsetX: offset.x, offsetY: offset.y });
@@ -1739,7 +1752,7 @@ function resolveDrop(ctx, clientX, clientY) {
   } else if (fieldEl) {
     const rect = fieldEl.getBoundingClientRect();
     const logical = rotateForSeat((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
-    const anchor = stackAnchorAt(el, null);
+    const anchor = stackAnchorAt(clientX, clientY, null);
     if (anchor) {
       // x/y still sent as a fallback position (this is a BRAND NEW item, so
       // there's no earlier "before it was stacked" position to freeze on)
@@ -3084,6 +3097,12 @@ async function boot() {
     } else if (event.code === "KeyI") {
       event.preventDefault();
       toggleInspectPanel();
+    } else if (event.code === "KeyH") {
+      event.preventDefault();
+      $("#hideInterfaceBtn").click();
+    } else if (event.code === "KeyJ") {
+      event.preventDefault();
+      $("#hideCodesBtn").click();
     }
   });
   paintStaticText();

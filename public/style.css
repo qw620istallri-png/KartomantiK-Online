@@ -186,6 +186,19 @@ input, textarea, select {
 .game-header .brand img { width: 30px; height: 30px; object-fit: contain; }
 .header-center { flex: 1; display: flex; align-items: flex-end; justify-content: center; gap: 14px; }
 .game-header .actions { flex: 1; display: flex; justify-content: flex-end; gap: 8px; }
+/* Dark + gold-outlined instead of the default pale button — these sit in a
+   row of frequent, low-stakes/destructive actions (fullscreen, import, end
+   session…) that shouldn't visually compete with the actual game state, so
+   they're deliberately understated rather than eye-catching. Grouped by
+   category (view / deck & log / session) with a "|" divider between groups,
+   via the adjacent-sibling combinator so it never shows before the first
+   group or after the last. */
+.game-header .actions button, .header-view-toggles button {
+  background: var(--carbon); border: 1px solid var(--gold); color: var(--gold);
+}
+.game-header .actions button:hover, .header-view-toggles button:hover:not(.active) { background: #2a281c; }
+.header-action-group { display: flex; align-items: center; gap: 8px; }
+.header-action-group + .header-action-group::before { content: "|"; color: var(--gold-deep); font-weight: 700; font-size: 15px; }
 .game-header .codes { font-size: 14px; color: #cfc7a8; display: flex; align-items: flex-end; gap: 14px; }
 .game-header .codes .code-item { display: grid; gap: 2px; text-align: center; }
 .game-header .codes .code-item-label { font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: #8f8a6c; }
