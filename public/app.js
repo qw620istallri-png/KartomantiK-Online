@@ -468,21 +468,8 @@ function handleServerMessage(msg) {
       setStatus("");
     }
 
-    const codeItemHtml = (code, labelKey) => `<div class="code-item">
-      <span class="code-item-label">${esc(t(labelKey))}</span>
-      <button data-copy-code="${esc(code || "")}">${esc(code || "")}</button>
-    </div>`;
-    $("#headerCodes").innerHTML = isObserver
-      ? `${codeItemHtml(codeObserver, "observerCode")}<span class="count" id="headerCounts"></span>`
-      : `${codeItemHtml(codePlayer, "playerCode")}${codeItemHtml(codeObserver, "observerCode")}<span class="count" id="headerCounts"></span>`;
-    $$("#headerCodes [data-copy-code]").forEach((btn) => {
-      btn.onclick = () => {
-        navigator.clipboard?.writeText(btn.dataset.copyCode);
-        const original = btn.textContent;
-        btn.textContent = t("copied");
-        setTimeout(() => (btn.textContent = original), 1200);
-      };
-    });
+    renderHeaderCodes();
+    updateHeaderCounts();
 
     if (pendingCreateFlow) {
       pendingCreateFlow = false;
@@ -508,8 +495,20 @@ function handleServerMessage(msg) {
   } else if (msg.type === "dice_result") {
     handleDiceResult(msg);
   } else if (msg.type === "error") {
-    if ($("#gameScreen").classList.contains("hidden")) setStatus(msg.message, "error");
-    else showToast(msg.message, true);
+    if (msg.code === "session_not_found" && !$("#gameScreen").classList.contains("hidden")) {
+      // this was a reconnect attempt (gameScreen already visible) hitting a
+      // session that's genuinely gone (e.g. the server process restarted) —
+      // retrying forever would just keep re-showing "Connecting…", so stop
+      // and say so plainly instead of leaving that stuck on screen
+      intentionalClose = true;
+      if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+      if (ws) ws.close();
+      setStatus(t("sessionGone"), "error");
+    } else if ($("#gameScreen").classList.contains("hidden")) {
+      setStatus(msg.message, "error");
+    } else {
+      showToast(msg.message, true);
+    }
     console.warn("Server error:", msg.message);
   } else if (msg.type === "log") {
     if (pendingPlayerLogFor) {
@@ -743,7 +742,24 @@ function isPlayerLogRelevant(e) {
 // face-down play already gets a generic "a face-down card" instead of being
 // dropped from the feed entirely.
 function namedOrUnknownCard(cardId) {
-  return cardId ? `"${esc(cardName(cardId))}"` : esc(t("plAnUnknownCard"));
+  return cardId
+    ? `<span class="pl-card-name" data-pl-card="${esc(cardId)}">${esc(cardName(cardId))}</span>`
+    : `<span class="pl-card-unknown">${esc(t("plAnUnknownCard"))}</span>`;
+}
+
+// Wires hover-preview + click-to-inspect on every card name a formatted
+// player-log entry produced — called after inserting the HTML (both the
+// opponent-row mini-feed and the full player-log panel use this).
+function wirePlayerLogCardNames(container) {
+  container.querySelectorAll("[data-pl-card]").forEach((el) => {
+    const cardId = el.dataset.plCard;
+    el.addEventListener("mouseenter", () => showCardPreview(cardId, el));
+    el.addEventListener("mouseleave", hideCardPreview);
+    el.addEventListener("click", (event) => {
+      event.stopPropagation();
+      showInspect(cardId);
+    });
+  });
 }
 
 // Returns safe HTML (the actor's name is colour-coded), not plain text — the
@@ -784,6 +800,7 @@ function renderPlayerLog(entries, playerId) {
   $("#playerLogEntries").innerHTML = relevant.length
     ? relevant.map((e) => `<div class="log-entry"><div class="t">${new Date(e.timestamp * 1000).toLocaleString()}</div><div class="what">${formatPlayerLogEntry(e)}</div></div>`).join("")
     : `<p>${esc(t("logEmpty"))}</p>`;
+  wirePlayerLogCardNames($("#playerLogEntries"));
   $("#playerLogPanel").classList.remove("hidden");
 }
 
@@ -799,7 +816,7 @@ function renderOppRows() {
     .map((p) => {
       const handZone = p.zones.hand;
       const handCount = handZone.count !== undefined ? handZone.count : (handZone.cards || []).length;
-      const viewHandLabel = isObserver ? `${esc(p.name)}: ${esc(t("viewHand"))} (${handCount})` : `${esc(t("opponentHand"))} ${handCount}`;
+      const viewHandTitle = isObserver ? `${p.name}: ${t("viewHand")} (${handCount})` : `${t("opponentHand")} ${handCount}`;
       const vesselPoints = receptaclePoints(p.zones.receptacle, p.score);
       const recent = (latestState.recentLog || []).filter((e) => e.actorId === p.id && isPlayerLogRelevant(e)).slice(-3);
       const collapsed = recentLogCollapsed.has(p.id);
@@ -815,7 +832,14 @@ function renderOppRows() {
       return `<div class="opp-info-row">
         <div class="opp-info-main">
           <span class="hand-mini"><span class="mini-back" style="--owner-color:${playerColor(p.id)}"></span>${esc(p.name)}</span>
-          <button class="view-hand-btn" data-view-hand="${esc(p.id)}">${viewHandLabel}</button>
+          <button class="hand-stack-btn" data-view-hand="${esc(p.id)}" title="${esc(viewHandTitle)}">
+            <span class="hand-stack-icon" style="--owner-color:${playerColor(p.id)}">
+              <span class="hand-stack-card"></span>
+              <span class="hand-stack-card"></span>
+              <span class="hand-stack-card"></span>
+            </span>
+            <span class="hand-stack-count">${handCount}</span>
+          </button>
           <span class="opp-vessel-badge" title="${esc(t("receptacle"))}">${vesselPoints} ${esc(t("vesselPoints"))}</span>
         </div>
         ${p.activity ? `<div class="opp-activity">${esc(t("activity_" + p.activity))}</div>` : ""}
@@ -844,6 +868,7 @@ function renderOppRows() {
       renderOppRows();
     };
   });
+  wirePlayerLogCardNames(rows);
 }
 
 // Approximates the opponent's hand for a regular player: we only ever learn
@@ -1037,6 +1062,57 @@ function initPileBrowser() {
     $("#deckBrowserPanel").classList.add("hidden");
     setMyActivity(null);
   };
+}
+
+// Masks only the DISPLAYED code text, not data-copy-code — copying still
+// works while hidden (e.g. paste it to a co-host over voice chat), it's just
+// not shown on screen for anyone watching a stream/recording.
+let codesHidden = false;
+
+function renderHeaderCodes() {
+  const codeItemHtml = (code, labelKey) => `<div class="code-item">
+    <span class="code-item-label">${esc(t(labelKey))}</span>
+    <button data-copy-code="${esc(code || "")}">${codesHidden ? "••••••" : esc(code || "")}</button>
+  </div>`;
+  $("#headerCodes").innerHTML = isObserver
+    ? `${codeItemHtml(codeObserver, "observerCode")}<span class="count" id="headerCounts"></span>`
+    : `${codeItemHtml(codePlayer, "playerCode")}${codeItemHtml(codeObserver, "observerCode")}<span class="count" id="headerCounts"></span>`;
+  $$("#headerCodes [data-copy-code]").forEach((btn) => {
+    btn.onclick = () => {
+      navigator.clipboard?.writeText(btn.dataset.copyCode);
+      const original = btn.textContent;
+      btn.textContent = t("copied");
+      setTimeout(() => (btn.textContent = codesHidden ? "••••••" : original), 1200);
+    };
+  });
+}
+
+// Both toggles are deliberately transient (not saved to localStorage) — they
+// exist for "I'm about to stream/record, hide sensitive stuff for a bit",
+// not a persistent setting that could confusingly hide your own tools the
+// next time you open the app normally.
+let interfaceHidden = false;
+
+function initViewToggles() {
+  $("#hideCodesBtn").onclick = () => {
+    codesHidden = !codesHidden;
+    $("#hideCodesBtn").textContent = codesHidden ? "🙈" : "👁";
+    $("#hideCodesBtn").classList.toggle("active", codesHidden);
+    $("#hideCodesBtn").title = t(codesHidden ? "showCodes" : "hideCodes");
+    renderHeaderCodes();
+    updateHeaderCounts();
+  };
+  $("#hideCodesBtn").textContent = "👁";
+  $("#hideCodesBtn").title = t("hideCodes");
+
+  $("#hideInterfaceBtn").onclick = () => {
+    interfaceHidden = !interfaceHidden;
+    $("#gameScreen").classList.toggle("interface-hidden", interfaceHidden);
+    $("#hideInterfaceBtn").classList.toggle("active", interfaceHidden);
+    $("#hideInterfaceBtn").title = t(interfaceHidden ? "showInterface" : "hideInterface");
+  };
+  $("#hideInterfaceBtn").textContent = "🎥";
+  $("#hideInterfaceBtn").title = t("hideInterface");
 }
 
 function updateHeaderCounts() {
@@ -3000,6 +3076,7 @@ async function boot() {
   initPileCalibration();
   initInspectToolbar();
   initChat();
+  initViewToggles();
   $("#playerLogCloseBtn").onclick = () => $("#playerLogPanel").classList.add("hidden");
   $("#playerLogCloseBtn").textContent = t("close");
   $("#logCloseBtn").onclick = () => $("#logPanel").classList.add("hidden");

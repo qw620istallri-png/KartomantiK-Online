@@ -152,8 +152,11 @@ async def send_to(ws, payload):
         connections.pop(ws, None)
 
 
-async def send_error(ws, message):
-    await send_to(ws, {"type": "error", "message": message})
+async def send_error(ws, message, code=None):
+    payload = {"type": "error", "message": message}
+    if code:
+        payload["code"] = code
+    await send_to(ws, payload)
 
 
 # ---------------------------------------------------------------- action handlers
@@ -863,7 +866,7 @@ async def handle_join(ws, data):
     else:
         session, is_observer = find_session_by_code(code)
         if session is None:
-            return await send_error(ws, "No session found for that code.")
+            return await send_error(ws, "No session found for that code.", code="session_not_found")
 
     if is_observer:
         player_id = client_id
