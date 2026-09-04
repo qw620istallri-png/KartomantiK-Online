@@ -93,17 +93,23 @@
         <div class="token-toolbar" id="tokenToolbar">
           <button id="createTokenBtn" title="Create a token card">🃏+</button>
           <button id="createEssenceBtn" title="Create essence"></button>
+          <button id="createDiceBtn" title="Roll dice">🎲</button>
         </div>
         <div class="view-toolbar" id="viewToolbar">
           <button id="highlightOwnersBtn" title="Highlight cards by owner color">🎨</button>
         </div>
       </div>
-      <div class="zoom-controls">
-        <button id="zoomOutBtn">−</button>
-        <button id="zoomResetBtn">100%</button>
-        <button id="zoomInBtn">+</button>
-        <div class="zoom-sep"></div>
-        <button id="pileCalibrateBtn"></button>
+      <div class="board-tools-topright" id="boardToolsTopRight">
+        <div class="zoom-controls">
+          <button id="zoomOutBtn">−</button>
+          <button id="zoomResetBtn">100%</button>
+          <button id="zoomInBtn">+</button>
+        </div>
+        <div class="zoom-controls">
+          <button id="pileCalibrateBtn"></button>
+          <div class="zoom-sep"></div>
+          <button id="inspectReopenBtn">🔍</button>
+        </div>
       </div>
       <div class="battlefield" id="battlefield">
         <svg class="draw-layer" id="drawLayer"></svg>
@@ -176,15 +182,19 @@
 
   <div class="log-panel inspect-panel hidden" id="inspectPanel">
     <div class="box">
-      <div class="inspect-img"><img id="inspectImg" alt=""></div>
-      <div class="inspect-text">
-        <h2 id="inspectName"></h2>
-        <div class="meta" id="inspectMeta"></div>
-        <div class="effect" id="inspectEffect"></div>
-        <div style="display:flex;justify-content:flex-end;margin-top:14px">
-          <button id="inspectCloseBtn"></button>
+      <div class="inspect-resize-handle" id="inspectResizeHandle"></div>
+      <div class="inspect-main">
+        <div class="inspect-img"><img id="inspectImg" alt=""></div>
+        <div class="inspect-text">
+          <h2 id="inspectName"></h2>
+          <div class="meta" id="inspectMeta"></div>
+          <div class="effect" id="inspectEffect"></div>
+          <div style="display:flex;justify-content:flex-end;margin-top:14px">
+            <button id="inspectCloseBtn"></button>
+          </div>
         </div>
       </div>
+      <div class="inspect-history" id="inspectHistory"></div>
     </div>
   </div>
 
@@ -224,6 +234,28 @@
       <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
         <button id="essenceCancelBtn"></button>
         <button class="primary" id="essenceCreateBtn"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="log-panel token-panel hidden" id="dicePanel">
+    <div class="box">
+      <h2 id="dicePanelHeading"></h2>
+      <div class="dice-mode-grid" id="diceModeGrid">
+        <button data-dice-mode="d6"></button>
+        <button data-dice-mode="coin"></button>
+      </div>
+      <div class="field">
+        <label id="diceCountLabel"></label>
+        <div class="number-stepper">
+          <button type="button" class="stepper-btn" data-step="-1" data-target="diceCountInput">−</button>
+          <input id="diceCountInput" type="number" value="1" min="1" max="20">
+          <button type="button" class="stepper-btn" data-step="1" data-target="diceCountInput">+</button>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
+        <button id="diceCancelBtn"></button>
+        <button class="primary" id="diceRollBtn"></button>
       </div>
     </div>
   </div>

@@ -727,6 +727,29 @@ async def handle_message(ws, info, data):
         session.touch()
         await broadcast_state(session)
 
+    elif msg_type == "roll_dice":
+        # dice/coin results are always public by nature (no hidden info to
+        # leak), so — like reveal — this is both logged (for the downloadable
+        # record) and pushed live to everyone at the table, not just broadcast
+        # via the normal state snapshot.
+        if is_observer:
+            return await send_error(ws, "Observers cannot act.")
+        mode = data.get("mode")
+        if mode not in ("d6", "coin"):
+            return await send_error(ws, "Unknown dice mode.")
+        count = max(1, min(int(data.get("count") or 1), 20))
+        if mode == "d6":
+            results = [random.randint(1, 6) for _ in range(count)]
+        else:
+            results = [random.choice(["H", "T"]) for _ in range(count)]
+        actor = session.players.get(actor_id)
+        session.add_log(actor_id, "roll_dice", {"mode": mode, "results": results})
+        session.touch()
+        payload = {"type": "dice_result", "byName": actor["name"] if actor else actor_id, "mode": mode, "results": results}
+        for other_ws, other_info in list(connections.items()):
+            if other_info["session"] is session:
+                await send_to(other_ws, payload)
+
     elif msg_type == "set_score":
         if is_observer:
             return await send_error(ws, "Observers cannot act.")

@@ -7,17 +7,21 @@
 }
 
 :root {
-  --cream: #f8f7f1;
-  --cream-2: #efece0;
+  /* palette aligned with DeckomantiK's own "Cream" theme, so the two apps
+     read as one family — --gold already matched by coincidence; the rest
+     (warmer field, bolder line, deeper muted) are the actual shift */
+  --cream: #f5efdf;
+  --cream-2: #d8cdb2;
   --ink: #171714;
-  --muted: #6b6a63;
-  --line: #d9d5c7;
+  --muted: #5c564a;
+  --line: #8a806a;
   --gold: #d3a942;
-  --gold-deep: #85641d;
+  --gold-deep: #765516;
   --carbon: #171714;
-  --gold-pale: #f0dfa9;
+  --gold-pale: #f0d98f;
+  --ritual: #74345f;
   --danger: #a13229;
-  --field: #ffffff;
+  --field: #fbf7eb;
   --display-font: "Cinzel Decorative", Georgia, serif;
 }
 
@@ -32,25 +36,29 @@ body {
 button {
   font-family: inherit;
   cursor: pointer;
-  border-radius: 6px;
+  border-radius: 2px;
   border: 1px solid var(--line);
   background: var(--field);
   color: var(--ink);
   padding: 8px 12px;
   font-weight: 700;
   font-size: 14px;
+  box-shadow: inset 0 0 0 1px #ffffff40;
+  transition: transform .1s ease, background .1s ease;
 }
 button:hover { background: var(--cream-2); }
 button.primary { background: var(--gold); border-color: var(--gold-deep); color: var(--carbon); }
 button.primary:hover { background: #e3bc59; }
 button:disabled { opacity: .45; cursor: not-allowed; }
+/* DK's signature "physically pressed" button feel */
+button:not(:disabled):active { transform: translate(1px, 1px); box-shadow: none; }
 input, textarea, select {
   font-family: inherit;
   border: 1px solid var(--line);
   background: var(--field);
   color: var(--ink);
   padding: 8px 10px;
-  border-radius: 6px;
+  border-radius: 2px;
 }
 .hidden { display: none !important; }
 
@@ -170,7 +178,11 @@ input, textarea, select {
   background: var(--gold); border-color: var(--gold-deep); font-size: 14px; line-height: 1; min-height: 0; z-index: 1;
 }
 .hand-view-title { color: var(--gold-pale); font-size: 14px; font-weight: 700; margin-bottom: 10px; text-align: center; }
-.hand-view-cards { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; max-width: 100%; }
+.hand-view-cards {
+  display: flex; flex-wrap: nowrap; gap: 12px; justify-content: flex-start; max-width: 100%;
+  overflow-x: auto; padding-bottom: 4px; scrollbar-width: none;
+}
+.hand-view-cards::-webkit-scrollbar { display: none; }
 .hand-view-resize-handle {
   height: 12px; margin-top: 8px; cursor: ns-resize; opacity: .5;
   background: linear-gradient(90deg, transparent, var(--gold-deep) 50%, transparent);
@@ -221,7 +233,8 @@ input, textarea, select {
 }
 .board-field-wrap:active { cursor: grabbing; }
 .board-field-wrap.drop-target-active { outline: 3px dashed var(--gold-deep); outline-offset: -3px; }
-.zoom-controls { position: absolute; top: 8px; right: 8px; z-index: 20; display: flex; align-items: center; gap: 4px; background: #fffdf6cc; border: 1px solid var(--line); border-radius: 6px; padding: 3px; }
+.board-tools-topright { position: absolute; top: 8px; right: 8px; z-index: 20; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+.zoom-controls { display: flex; align-items: center; gap: 4px; background: #fffdf6cc; border: 1px solid var(--line); border-radius: 6px; padding: 3px; }
 .zoom-controls button { padding: 4px 9px; font-size: 14px; min-height: 0; }
 .zoom-sep { width: 1px; align-self: stretch; background: var(--line); margin: 0 2px; }
 #pileCalibrateBtn.active { background: var(--gold); border-color: var(--gold-deep); }
@@ -312,9 +325,10 @@ input, textarea, select {
    its cards behind the hand, not just a flat colour */
 .hand-area {
   position: absolute; z-index: 21; left: 0; right: 0; bottom: 0; display: flex; flex-direction: column; pointer-events: none;
-  /* opaque-ish behind the cards at centre, fading out to fully see-through
-     by a quarter of the screen away on either side */
-  background: linear-gradient(90deg, transparent 0%, transparent 25%, #17294bf2 50%, transparent 75%, transparent 100%);
+  /* solid, not a fade to transparent: the toolbar/tray strip blocks clicks to
+     whatever pile sits behind it across its whole width either way, and a
+     fading edge was misleading people into thinking they could click through */
+  background: #17294bf2;
 }
 .hand-area.hand-collapsed { background: none; }
 .hand-area .hand-toolbar, .hand-area .hand-resize-handle, .hand-area .hand-tray { pointer-events: auto; }
@@ -443,7 +457,8 @@ input, textarea, select {
 .bf-owner-label { transform: translate(0, 0); }
 
 .log-panel { position: fixed; inset: 0; background: #0008; display: grid; place-items: center; z-index: 50; }
-.log-panel .box { width: min(640px, 92vw); max-height: 80vh; overflow: auto; background: var(--field); border-radius: 10px; padding: 20px; }
+.log-panel .box { width: min(640px, 92vw); max-height: 80vh; overflow: auto; background: var(--field); border: 1px solid var(--line); border-radius: 10px; padding: 20px; }
+.log-panel .box > h2:first-child { margin-top: 0; padding-bottom: 10px; border-bottom: 3px double var(--line); }
 .log-entry { font-size: 14px; border-bottom: 1px solid var(--line); padding: 8px 0; }
 .log-entry .t { color: var(--muted); font-size: 14px; }
 .log-entry .who { font-weight: 700; }
@@ -505,12 +520,25 @@ input, textarea, select {
    the right-middle instead of centred, and it stays open across other
    actions until its own Close button is used. */
 .inspect-panel { background: transparent; display: flex; justify-content: flex-end; align-items: center; padding-right: 24px; pointer-events: none; }
-.inspect-panel .box { pointer-events: auto; width: min(280px, 92vw); box-shadow: 0 10px 30px #0007; }
+.inspect-panel .box {
+  pointer-events: auto; display: flex; align-items: stretch; gap: 10px;
+  width: var(--inspect-w, 280px); max-width: 92vw; max-height: none; overflow: visible; background: transparent; padding: 0; box-shadow: none; border: none;
+}
+/* handle sits on the box's LEFT edge (the box itself is right-docked), so
+   dragging further left — away from the box — is what grows it, same "away
+   from content grows it" rule as the reveal/hand-view handles below */
+.inspect-resize-handle { width: 10px; flex-shrink: 0; cursor: ew-resize; opacity: .5; border-radius: 6px; background: linear-gradient(180deg, transparent, var(--gold-deep) 50%, transparent); }
+.inspect-resize-handle:hover { opacity: .9; }
+.inspect-main { flex: 1; min-width: 0; background: var(--field); border: 1px solid var(--line); border-radius: 12px; padding: 20px; box-shadow: 0 10px 30px #0007; }
+.inspect-panel .inspect-text h2 { border-bottom: 3px double var(--line); padding-bottom: 8px; }
 .inspect-panel .inspect-img { border-radius: 12px; border: 3px solid var(--carbon); overflow: hidden; box-shadow: 4px 8px 20px #0005; margin-bottom: 12px; }
 .inspect-panel .inspect-img img { width: 100%; display: block; }
 .inspect-panel .inspect-text h2 { margin: 0 0 4px; }
 .inspect-panel .inspect-text .meta { color: var(--muted); font-size: 14px; margin-bottom: 10px; }
 .inspect-panel .inspect-text .effect { font-size: 14px; line-height: 1.5; white-space: pre-wrap; }
+.inspect-history { flex-shrink: 0; width: 60px; display: flex; flex-direction: column; gap: 8px; overflow-y: auto; max-height: 70vh; }
+.inspect-history-card { padding: 0; min-height: 0; border-radius: 6px; overflow: hidden; border: 2px solid var(--carbon); box-shadow: 2px 4px 8px #0004; }
+.inspect-history-card img { width: 100%; display: block; }
 
 .token-panel .box { width: min(460px, 92vw); }
 .token-temperament-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 12px 0; }
@@ -520,6 +548,9 @@ input, textarea, select {
 }
 .token-temperament-grid button img { width: 32px; height: 32px; object-fit: contain; }
 .token-temperament-grid button.active { background: var(--gold); border-color: var(--gold-deep); }
+.dice-mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 12px 0; }
+.dice-mode-grid button { padding: 10px 4px; font-size: 14px; font-weight: 700; }
+.dice-mode-grid button.active { background: var(--gold); border-color: var(--gold-deep); }
 
 .hand-request-panel .box { width: min(420px, 92vw); text-align: center; }
 .hand-request-panel h2 { margin-top: 0; }

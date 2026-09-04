@@ -120,6 +120,50 @@ function parseDeckListText(text) {
   return { app: "DeckomantiK", groups };
 }
 
+// DeckomantiK's own "share via URL" feature (#dk=<base64url(gzip(JSON))>,
+// format v2) — decoded here with the exact same encoding it was written with
+// (native CompressionStream/DecompressionStream gzip, no library), so a
+// player can paste that link straight in instead of a whole JSON export.
+// This never talks to DeckomantiK's origin at all: the token is fully
+// self-contained, so there's no cross-origin request and nothing to be
+// blocked by (reading DeckomantiK's actual localStorage from here would be
+// blocked — different origin — but decoding a token the user pasted isn't
+// storage access, just parsing a string).
+function extractShareToken(text) {
+  const hashMatch = text.match(/#dk=([A-Za-z0-9_-]+)/);
+  if (hashMatch) return hashMatch[1];
+  return /^[A-Za-z0-9_-]{20,}$/.test(text.trim()) ? text.trim() : null;
+}
+
+async function decodeDkShare(token) {
+  try {
+    const base64 = token.replace(/-/g, "+").replace(/_/g, "/");
+    const binary = atob(base64);
+    const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+    let jsonBytes = bytes;
+    if (typeof DecompressionStream !== "undefined") {
+      const stream = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("gzip"));
+      jsonBytes = new Uint8Array(await new Response(stream).arrayBuffer());
+    }
+    const payload = JSON.parse(new TextDecoder().decode(jsonBytes));
+    return payload && payload.v === 2 && (payload.d || payload.b) ? payload : null;
+  } catch (e) {
+    return null;
+  }
+}
+
+// DeckomantiK's card index is the array position in ITS OWN card list, which
+// is ordered by collectionNumber starting at 1 with no gaps (index =
+// collectionNumber - 1) — resolving through our own cardsByNumber map (keyed
+// the same way) sidesteps any risk of the two apps' card-id strings differing.
+function expandDkShareDeck(d) {
+  const groups = (d.g || []).map((g) => ({
+    kind: g.k || null,
+    cardIds: (g.c || []).map((index) => cardsByNumber.get(index + 1)?.id).filter(Boolean),
+  }));
+  return { app: "DeckomantiK", name: d.n, groups };
+}
+
 function getDeckLibrary() {
   try { return JSON.parse(localStorage.getItem(DECK_LIBRARY_KEY)) || []; } catch (e) { return []; }
 }
@@ -428,6 +472,8 @@ function handleServerMessage(msg) {
     showRevealPopup(msg);
   } else if (msg.type === "scry_result") {
     showScryPopup(msg.cards);
+  } else if (msg.type === "dice_result") {
+    showDiceResultToast(msg);
   } else if (msg.type === "error") {
     if ($("#gameScreen").classList.contains("hidden")) setStatus(msg.message, true);
     else showToast(msg.message, true);
@@ -599,6 +645,10 @@ function renderAll() {
     const viewingId = $("#handViewPanel").dataset.viewingPlayer;
     if (viewingId && latestState.players[viewingId]) openHandView(viewingId);
   }
+  if (!$("#deckBrowserPanel").classList.contains("hidden")) {
+    const { ownerId, zone } = $("#deckBrowserPanel").dataset;
+    if (ownerId && zone && latestState.players[ownerId]) openPileBrowser(ownerId, zone);
+  }
   updateHeaderCounts();
   const canEndForAll = !isObserver && mySeat() === 0;
   $("#endSessionBtn").classList.toggle("hidden", !canEndForAll);
@@ -652,7 +702,7 @@ function openHandView(playerId) {
   const isMine = playerId === myPlayerId && !isObserver;
   const canRequest = !isObserver && !isMine;
   const hvCardHtml = (i, cid) =>
-    `<div class="hv-card revealed" data-hv-index="${i}" style="--owner-color:${playerColor(playerId)}"><img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}" title="${esc(cardName(cid))}"></div>`;
+    `<div class="hv-card revealed" data-hv-index="${i}" data-hv-card="${esc(cid)}" style="--owner-color:${playerColor(playerId)}"><img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}" title="${esc(cardName(cid))}"></div>`;
   let count, cardsHtml;
   if (handZone.cards !== undefined) {
     count = handZone.cards.length;
@@ -668,43 +718,85 @@ function openHandView(playerId) {
   $("#handViewCards").innerHTML = cardsHtml || `<p style="color:#cfc7a8;font-size:14px">${esc(t("cards"))}: 0</p>`;
   $("#handViewPanel").dataset.viewingPlayer = playerId;
   $("#handViewPanel").classList.remove("hidden");
-  if (canRequest) {
-    $$("#handViewCards [data-hv-index]").forEach((el) => {
-      const index = Number(el.dataset.hvIndex);
+  // Inspect: an observer or the hand's own owner can inspect any card here;
+  // any other player only ever gets a real cardId on cards that have already
+  // been revealed at some point (see hvCardHtml above) — everything else is
+  // just a generic face-down placeholder with no identity to show.
+  $$("#handViewCards [data-hv-index]").forEach((el) => {
+    const index = Number(el.dataset.hvIndex);
+    const cid = el.dataset.hvCard || null;
+    if (cid) {
+      el.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+        showContextMenu(event.clientX, event.clientY, [{ label: t("inspect"), onSelect: () => showInspect(cid) }]);
+      });
+    }
+    if (canRequest) {
       el.onclick = (event) => {
         showContextMenu(event.clientX, event.clientY, [
           { label: t("requestDiscard"), onSelect: () => send({ type: "request_hand_action", targetPlayerId: playerId, index, action: "discard" }) },
           { label: t("requestShow"), onSelect: () => send({ type: "request_hand_action", targetPlayerId: playerId, index, action: "show" }) },
         ]);
       };
-    });
-  }
+    }
+  });
 }
 
-// Full visual browser for a player's own deck (replaces the old "Search"
-// toggle, which just revealed a plain name-list inline in the pile popover).
-// Only ever reachable via the Search button, which only renders for the
-// deck's own owner — but stay defensive in case zones.deck is ever a
-// count-only view (e.g. this got called for someone else's deck somehow).
-function openDeckBrowser(ownerId) {
+// Full visual browser for ANY pile (deck, graveyard, exile, receptacle) —
+// replaces the old "Search" toggle, which just revealed a plain name-list
+// inline in the pile popover. Only ever reachable via the Search button,
+// which only renders when this viewer canAct on that zone (see
+// zoneActionsHtml) — but stay defensive in case a zone is ever a count-only
+// view (e.g. this got called for someone else's private deck somehow).
+function openPileBrowser(ownerId, zone) {
   const player = latestState.players[ownerId];
-  const cards = player?.zones?.deck?.cards;
+  const cards = player?.zones?.[zone]?.cards;
   if (!player || !cards) return;
-  $("#deckBrowserHeading").textContent = `${player.name} — ${t("deck")} (${cards.length})`;
+  $("#deckBrowserPanel").dataset.ownerId = ownerId;
+  $("#deckBrowserPanel").dataset.zone = zone;
+  $("#deckBrowserHeading").textContent = `${player.name} — ${t(zone)} (${cards.length})`;
   $("#deckBrowserCards").innerHTML =
     cards
       .map(
-        (cid) => `<div class="db-card" style="--owner-color:${playerColor(ownerId)}" title="${esc(cardName(cid))}">
+        (cid) => `<div class="db-card" style="--owner-color:${playerColor(ownerId)}" title="${esc(cardName(cid))}" data-zone-card="${esc(ownerId)}:${esc(zone)}:${esc(cid)}">
       <img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}">
     </div>`
       )
       .join("") || `<p style="color:var(--muted);font-size:14px">${esc(t("cards"))}: 0</p>`;
   $("#deckBrowserPanel").classList.remove("hidden");
+  wirePileBrowserCards(ownerId, zone);
+}
+
+// Same right-click inspect/move menu as a pile's own inline list (see
+// wireZoneButtons' [data-zone-card] handling) — reachable only via Search,
+// which already gates on canAct, so no extra permission check is needed here.
+function wirePileBrowserCards(ownerId, zone) {
+  $$("#deckBrowserCards [data-zone-card]").forEach((el) => {
+    const cardId = el.dataset.zoneCard.split(":")[2];
+    bindCardDragSource(el, { kind: "card", cardId, fromOwnerId: ownerId, fromZone: zone });
+    el.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      const items = [
+        { label: t("inspect"), onSelect: () => showInspect(cardId) },
+        { separator: true },
+        { label: t("playFaceUp"), onSelect: () => playFromZone(ownerId, zone, cardId, true) },
+        { label: t("playFaceDown"), onSelect: () => playFromZone(ownerId, zone, cardId, false) },
+        { separator: true },
+      ];
+      ZONES.filter((z) => z !== zone).forEach((z) => {
+        items.push({
+          label: `${t("moveTo")} ${t(z)}`,
+          onSelect: () => send({ type: "move_card", fromOwnerId: ownerId, fromZone: zone, toOwnerId: ownerId, toZone: z, cardId }),
+        });
+      });
+      showContextMenu(event.clientX, event.clientY, items);
+    });
+  });
 }
 
 const DECK_BROWSER_SIZE_KEY = "ko_deck_browser_card_w";
 
-function initDeckBrowser() {
+function initPileBrowser() {
   $("#deckBrowserSliderLabel").textContent = t("deckBrowserSliderLabel");
   $("#deckBrowserCloseBtn").textContent = t("close");
   const saved = Number(localStorage.getItem(DECK_BROWSER_SIZE_KEY)) || 140;
@@ -745,8 +837,13 @@ function zoneActionsHtml(ownerId, zone, canAct) {
         <input type="number" min="1" max="10" value="1" data-scry-n-input="${esc(ownerId)}:${zone}">
         <button data-scry="${esc(ownerId)}:${zone}">${esc(t("scry"))}</button>
       </span>`);
-      buttons.push(`<button data-open-deck-browser="${esc(ownerId)}">${esc(t("search"))}</button>`);
     }
+  }
+  // Search opens the same full visual browser for every pile: your own deck
+  // (private, so gated to its owner) or any shared pile (already actionable
+  // by anyone here, since canAct is already true for those — see zoneBlockHtml)
+  if (zone !== "deck" || mine) {
+    buttons.push(`<button data-open-pile-browser="${esc(ownerId)}:${zone}">${esc(t("search"))}</button>`);
   }
   return buttons.join("");
 }
@@ -1068,6 +1165,7 @@ function applyHandVisibility(meId) {
     if (el.id === "handPickHint") return;
     el.classList.toggle("hidden", collapsed);
   });
+  $$(".hand-tool-sep").forEach((el) => el.classList.toggle("hidden", collapsed));
   $("#handPickHint").classList.toggle("hidden", collapsed || !handPickMode);
   $("#handHideBtn").classList.toggle("hidden", !meId);
   $("#handHideBtn").textContent = t(handHiddenByUser ? "showHand" : "hideHand");
@@ -1091,6 +1189,15 @@ function renderHandTray() {
   if (cards.length === 0 && deckCount === 0) {
     tray.innerHTML = `<button class="hand-card import-card-btn" id="handImportCardBtn"><span class="import-plus">+</span><span>${esc(t("importDeckCard"))}</span></button>`;
     $("#handImportCardBtn").onclick = () => $("#importDeckBtn").click();
+    previousHandCardIds = currentIds;
+    return;
+  }
+  if (cards.length === 0 && deckCount > 0) {
+    tray.innerHTML = `
+      <button class="hand-card import-card-btn" id="handEmptyDrawOneBtn"><span class="import-plus">+</span><span>${esc(t("drawOne"))}</span></button>
+      <button class="hand-card import-card-btn" id="handEmptyDrawHandBtn"><span class="import-plus">+</span><span>${esc(t("drawToLimit"))}</span></button>`;
+    $("#handEmptyDrawOneBtn").onclick = () => send({ type: "draw", count: 1 });
+    $("#handEmptyDrawHandBtn").onclick = () => send({ type: "draw_to_limit" });
     previousHandCardIds = currentIds;
     return;
   }
@@ -1228,13 +1335,17 @@ function wireZoneButtons() {
     input.onclick = (e) => e.stopPropagation();
     input.onpointerdown = (e) => e.stopPropagation();
   });
-  $$("[data-open-deck-browser]").forEach((btn) => {
+  $$("[data-open-pile-browser]").forEach((btn) => {
     btn.onclick = (e) => {
       e.stopPropagation();
-      openDeckBrowser(btn.dataset.openDeckBrowser);
+      const [ownerId, zone] = btn.dataset.openPileBrowser.split(":");
+      openPileBrowser(ownerId, zone);
     };
   });
-  $$("[data-zone-card]").forEach((el) => {
+  // scoped to the small inline pile lists — the deck/pile BROWSER modal wires
+  // its own (larger) copies of these same [data-zone-card] cards itself (see
+  // wirePileBrowserCards), since it isn't re-rendered by this function
+  $$(".zone-list [data-zone-card]").forEach((el) => {
     const [ownerId, zone, cardId] = el.dataset.zoneCard.split(":");
     bindCardDragSource(el, { kind: "card", cardId, fromOwnerId: ownerId, fromZone: zone });
     el.addEventListener("contextmenu", (event) => {
@@ -1847,6 +1958,52 @@ function initEssenceToolbar() {
   };
 }
 
+let selectedDiceMode = "d6";
+
+function initDiceToolbar() {
+  $("#createDiceBtn").title = t("createDice");
+  $("#dicePanelHeading").textContent = t("dicePanelHeading");
+  $("#diceCountLabel").textContent = t("diceCountLabel");
+  $("#diceRollBtn").textContent = t("diceRollBtn");
+  $("#diceCancelBtn").textContent = t("close");
+  $$("#diceModeGrid button").forEach((btn) => {
+    btn.textContent = (btn.dataset.diceMode === "d6" ? "🎲 " : "🪙 ") + t(btn.dataset.diceMode === "d6" ? "diceModeD6" : "diceModeCoin");
+    btn.onclick = () => {
+      selectedDiceMode = btn.dataset.diceMode;
+      $$("#diceModeGrid button").forEach((b) => b.classList.toggle("active", b === btn));
+    };
+  });
+  $("#createDiceBtn").onclick = () => {
+    selectedDiceMode = "d6";
+    $$("#diceModeGrid button").forEach((b) => b.classList.toggle("active", b.dataset.diceMode === "d6"));
+    $("#diceCountInput").value = 1;
+    $("#dicePanel").classList.remove("hidden");
+  };
+  $("#diceCancelBtn").onclick = () => $("#dicePanel").classList.add("hidden");
+  $("#diceRollBtn").onclick = () => {
+    const count = Math.max(1, Math.min(20, Math.round(Number($("#diceCountInput").value) || 1)));
+    send({ type: "roll_dice", mode: selectedDiceMode, count });
+    $("#dicePanel").classList.add("hidden");
+  };
+}
+
+// Broadcast to everyone at the table (like a reveal), not just the roller —
+// dice/coin results are always public by nature, and showing them as they
+// happen (on top of the permanent action-log entry) is what makes them
+// trustworthy instead of just an unverifiable claim in chat.
+function showDiceResultToast(msg) {
+  const name = msg.byName || "?";
+  let text;
+  if (msg.mode === "d6") {
+    const sum = msg.results.reduce((a, b) => a + b, 0);
+    text = `${name} ${t("diceRolledD6")} ${msg.results.length}×D6: ${msg.results.join(", ")} (${t("diceTotal")} ${sum})`;
+  } else {
+    const labels = msg.results.map((r) => t(r === "H" ? "coinHeads" : "coinTails"));
+    text = `${name} ${t("diceRolledCoin")} ${msg.results.length} — ${labels.join(", ")}`;
+  }
+  showToast(text);
+}
+
 function undoStroke() {
   const id = strokeUndoStack.pop();
   if (!id) return;
@@ -2222,9 +2379,20 @@ function initImportPanel() {
     renderSavedDecks();
   };
   $("#importCancelBtn").onclick = () => $("#importPanel").classList.add("hidden");
-  $("#importConfirmBtn").onclick = () => {
+  $("#importConfirmBtn").onclick = async () => {
     const raw = $("#importDeckText").value.trim();
     if (!raw) return;
+    const shareToken = extractShareToken(raw);
+    if (shareToken) {
+      const payload = await decodeDkShare(shareToken);
+      if (!payload || !payload.d) {
+        alert(t("importShareFailed"));
+        return;
+      }
+      const deck = expandDkShareDeck(payload.d);
+      importDeckPayload(deck, deck.name || "Imported deck");
+      return;
+    }
     let deck;
     try {
       deck = JSON.parse(raw);
@@ -2232,7 +2400,7 @@ function initImportPanel() {
       deck = parseDeckListText(raw);
     }
     if (!deck || !Array.isArray(deck.groups) || !deck.groups.some((g) => (g.cardIds || []).length)) {
-      alert("Could not read any cards from that text. Paste a DeckomantiK list (\"Copy list\") or a deck JSON export.");
+      alert("Could not read any cards from that text. Paste a DeckomantiK share link, a list (\"Copy list\"), or a deck JSON export.");
       return;
     }
     const nameMatch = raw.match(/^\[Deck\]\s*(.+)$/mi);
@@ -2283,8 +2451,19 @@ function initGameControls() {
 
 // ---------------------------------------------------------------- card inspect
 
+// Most-recent-first list of cardIds shown with a real identity at some point
+// (never a hidden/unknown peek) — lets the reopen-last-inspected toolbar
+// button and the panel's own side history revisit any of the last few, not
+// just the very last one. In-memory only: like other per-session UI state
+// (e.g. revealSentState), it isn't meant to survive a reload.
+let inspectHistory = [];
+
 function showInspect(cardId, hidden) {
   const card = cardsById.get(cardId);
+  if (!hidden && card) {
+    inspectHistory = [cardId, ...inspectHistory.filter((id) => id !== cardId)].slice(0, 12);
+    $("#inspectReopenBtn").disabled = false;
+  }
   if (hidden || !card) {
     $("#inspectImg").src = "";
     $("#inspectName").textContent = "?";
@@ -2297,7 +2476,54 @@ function showInspect(cardId, hidden) {
     $("#inspectMeta").textContent = [card.typeLabel || card.type, card.subType, card.color].filter(Boolean).join(" · ");
     $("#inspectEffect").textContent = card.effect || "";
   }
+  renderInspectHistory();
   $("#inspectPanel").classList.remove("hidden");
+}
+
+function renderInspectHistory() {
+  $("#inspectHistory").innerHTML = inspectHistory
+    .map((cid) => `<button class="inspect-history-card" data-inspect-history="${esc(cid)}" title="${esc(cardName(cid))}"><img src="${esc(cardImage(cid))}" alt=""></button>`)
+    .join("");
+  $$("#inspectHistory [data-inspect-history]").forEach((btn) => {
+    btn.onclick = () => showInspect(btn.dataset.inspectHistory);
+  });
+}
+
+const INSPECT_SIZE_KEY = "ko_inspect_card_w";
+const INSPECT_SIZE_MAX = 560;
+let inspectPanelWidth = Math.min(INSPECT_SIZE_MAX, Math.max(220, Number(localStorage.getItem(INSPECT_SIZE_KEY)) || 280));
+
+function applyInspectPanelWidth() {
+  document.documentElement.style.setProperty("--inspect-w", inspectPanelWidth + "px");
+}
+
+function initInspectToolbar() {
+  $("#inspectReopenBtn").title = t("reopenLastInspected");
+  $("#inspectReopenBtn").disabled = true;
+  $("#inspectReopenBtn").onclick = () => {
+    if (inspectHistory.length) showInspect(inspectHistory[0]);
+  };
+  applyInspectPanelWidth();
+  $("#inspectResizeHandle").addEventListener("pointerdown", (event) => {
+    event.preventDefault();
+    const startX = event.clientX;
+    const startWidth = inspectPanelWidth;
+    const move = (e) => {
+      // the handle sits on the box's LEFT edge (the box itself is right-docked
+      // near the screen edge), so dragging further left — away from the box —
+      // is what grows it: the same "drag away from content grows it" rule as
+      // the reveal/hand-view resize handles, just on the horizontal axis
+      inspectPanelWidth = Math.min(INSPECT_SIZE_MAX, Math.max(220, startWidth + (startX - e.clientX)));
+      applyInspectPanelWidth();
+    };
+    const up = () => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      localStorage.setItem(INSPECT_SIZE_KEY, String(inspectPanelWidth));
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  });
 }
 
 function formatLogEntry(e) {
@@ -2335,6 +2561,7 @@ function formatLogEntry(e) {
     case "remove_stroke": return `${who} erased a drawing.`;
     case "remove_strokes_in_rect": return `${who} erased ${d.count} drawing(s).`;
     case "clear_own_strokes": return `${who} cleared their drawings.`;
+    case "roll_dice": return d.mode === "d6" ? `${who} rolled ${d.results.length}×D6: ${d.results.join(", ")}.` : `${who} flipped ${d.results.length} coin(s): ${d.results.join(", ")}.`;
     default: return `${who} — ${e.type}`;
   }
 }
@@ -2420,7 +2647,7 @@ async function boot() {
   });
   paintStaticText();
   initConfirmPanel();
-  initDeckBrowser();
+  initPileBrowser();
   await loadCardDatabase();
   await loadStarterDecks();
   renderStarterDecks();
@@ -2435,7 +2662,9 @@ async function boot() {
   initDrawTool();
   initTokenToolbar();
   initEssenceToolbar();
+  initDiceToolbar();
   initPileCalibration();
+  initInspectToolbar();
   $("#logCloseBtn").onclick = () => $("#logPanel").classList.add("hidden");
   $("#inspectCloseBtn").onclick = () => $("#inspectPanel").classList.add("hidden");
   $("#revealCloseBtn").onclick = () => $("#revealPanel").classList.add("hidden");
