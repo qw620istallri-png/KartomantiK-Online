@@ -328,8 +328,8 @@ input, textarea, select {
    gets rotated a full 180° (see renderBattlefield), same as physically
    walking around to the other side of a real table would show; it's its own
    element, separate from #battlefield, so this rotation never touches the
-   cards/piles/tokens layered on top (those keep their own existing math —
-   see flipY and PILE_SCREEN_POS) */
+   cards/piles/tokens layered on top, which apply the SAME rotation to
+   themselves independently — see rotateForSeat and PILE_SCREEN_POS */
 .battlefield-bg {
   position: absolute; inset: 0; background-image: url('board-bg.png'); background-size: 100% 100%; pointer-events: none;
 }
@@ -345,12 +345,6 @@ input, textarea, select {
 }
 .field-pile.calibrating .pile-coords { display: block; }
 
-.center-marker-line { position: absolute; left: 0; width: 1549px; height: 0; border-top: 3px dashed #ff2d78; z-index: 40; pointer-events: none; }
-.center-marker-dot {
-  position: absolute; width: 22px; height: 22px; margin: -11px 0 0 -11px; border-radius: 50%;
-  background: #ff2d78; border: 3px solid #fff; box-shadow: 0 0 0 2px #000a; z-index: 41; cursor: grab;
-}
-.center-marker-dot:active { cursor: grabbing; }
 .field-pile .pile-card {
   width: 150px; height: 210px; border-radius: 10px; border: 3px solid var(--owner-color, var(--carbon)); display: grid; place-items: center;
   background: repeating-linear-gradient(135deg, var(--owner-color, #6b5b2f) 0 10px, #00000018 10px 20px);

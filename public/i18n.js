@@ -161,7 +161,6 @@ const ui = {
     unlockPiles: "Unlock piles (drag to reposition, just for you)",
     lockPiles: "Lock piles",
     resetPilePosition: "Reset position",
-    resetMarker: "Reset marker",
     permanentCounter: "Permanent",
     temporaryCounter: "Temporary",
     removeCounters: "Remove",

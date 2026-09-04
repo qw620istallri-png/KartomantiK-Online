@@ -1195,7 +1195,6 @@ function savePileOverrides() {
 
 function initPileCalibration() {
   loadPileOverrides();
-  loadCenterMarkerOverride();
   $("#pileCalibrateBtn").textContent = "🔒";
   $("#pileCalibrateBtn").onclick = () => {
     pilesLocked = !pilesLocked;
@@ -1243,70 +1242,9 @@ function bindPileCalibration() {
   });
 }
 
-// The flipY axis (see MIRROR_CENTER_Y above) drawn as a visible, draggable
-// line + dot, only while calibration mode is unlocked — the same idea as
-// pileOverrides, for the one other number that was ever eyeballed/measured
-// rather than directly calibrated. A local-only nudge; never sent anywhere.
-const CENTER_MARKER_KEY = "kartomantik.centerMarkerOverride";
-let centerMarkerOverride = null;
-
-function loadCenterMarkerOverride() {
-  try {
-    centerMarkerOverride = JSON.parse(localStorage.getItem(CENTER_MARKER_KEY) || "null");
-  } catch (e) {
-    centerMarkerOverride = null;
-  }
-}
-
-function effectiveMirrorCenterY() {
-  return centerMarkerOverride ? centerMarkerOverride.y : MIRROR_CENTER_Y;
-}
-
-function renderCenterMarker() {
-  $$(".center-marker").forEach((el) => el.remove());
-  if (pilesLocked) return;
-  const bf = $("#battlefield");
-  const markerX = centerMarkerOverride ? centerMarkerOverride.x : BOARD_SIZE / 2;
-  const markerY = effectiveMirrorCenterY();
-  const line = document.createElement("div");
-  line.className = "center-marker center-marker-line";
-  line.style.top = markerY + "px";
-  bf.appendChild(line);
-  const dot = document.createElement("div");
-  dot.className = "center-marker center-marker-dot";
-  dot.style.left = markerX + "px";
-  dot.style.top = markerY + "px";
-  dot.title = `${Math.round(markerX)}, ${Math.round(markerY)}`;
-  dot.addEventListener("pointerdown", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    const move = (e) => {
-      const rect = $("#battlefieldWrap").getBoundingClientRect();
-      const pos = { x: (e.clientX - rect.left - panX) / zoomLevel, y: (e.clientY - rect.top - panY) / zoomLevel };
-      centerMarkerOverride = pos;
-      dot.style.left = pos.x + "px";
-      dot.style.top = pos.y + "px";
-      dot.title = `${Math.round(pos.x)}, ${Math.round(pos.y)}`;
-      line.style.top = pos.y + "px";
-      renderBattlefield(); // live preview: cards/tokens/strokes re-mirror against the new axis immediately
-    };
-    const up = () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-      localStorage.setItem(CENTER_MARKER_KEY, JSON.stringify(centerMarkerOverride));
-    };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
-  });
-  dot.addEventListener("contextmenu", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    showContextMenu(event.clientX, event.clientY, [
-      { label: t("resetMarker"), onSelect: () => { centerMarkerOverride = null; localStorage.removeItem(CENTER_MARKER_KEY); renderBattlefield(); } },
-    ]);
-  });
-  bf.appendChild(dot);
-}
+// (The empirically-eyeballed mirror-axis marker that used to live here is
+// gone: a TRUE 180° rotation — see rotateForSeat — needs no tuning at all,
+// it's exact by construction around the board's own centre.)
 
 function renderPiles() {
   const bf = $("#battlefield");
@@ -1487,7 +1425,7 @@ function toggleHandHidden() {
 
 function playFromHand(cardId, faceUp) {
   const view = fieldCenterLogical();
-  const center = flipY(view.x, view.y);
+  const center = rotateForSeat(view.x, view.y);
   send({
     type: "place_card", fromZone: "hand", cardId, faceUp,
     x: center.x - 75 + Math.random() * 60 - 30, y: center.y - 105 + Math.random() * 60 - 30,
@@ -1613,7 +1551,7 @@ function hideCardPreview() {
 
 function playFromZone(ownerId, zone, cardId, faceUp) {
   const view = fieldCenterLogical();
-  const center = flipY(view.x, view.y);
+  const center = rotateForSeat(view.x, view.y);
   send({
     type: "place_card", ownerId, fromZone: zone, cardId, faceUp,
     x: center.x - 75 + Math.random() * 80 - 40, y: center.y - 105 + Math.random() * 80 - 40,
@@ -1657,7 +1595,7 @@ function stackAnchorAt(el, excludeItemId) {
 }
 
 // Offset of a new card's top-left from the anchor's top-left, in the same
-// board-logical units as x/y — deliberately NOT run through flipY, since the
+// board-logical units as x/y — deliberately NOT run through rotateForSeat, since the
 // whole point is that this offset must look identical to both viewers.
 function stackOffsetFrom(anchorEl, clientX, clientY) {
   const rect = anchorEl.getBoundingClientRect();
@@ -1684,7 +1622,7 @@ function resolveDrop(ctx, clientX, clientY) {
         send({ type: "move_battlefield_item", itemId: ctx.itemId, stackOnId: anchor.anchorId, offsetX: offset.x, offsetY: offset.y });
       } else {
         const rect = fieldEl.getBoundingClientRect();
-        const logical = flipY((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
+        const logical = rotateForSeat((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
         // an explicit unstack, not just an absent stackOnId: dropping in open
         // space is the "detach" gesture, unlike e.g. exhaust which also omits
         // stackOnId but must NOT detach a stacked card as a side effect
@@ -1706,7 +1644,7 @@ function resolveDrop(ctx, clientX, clientY) {
     else send({ type: "move_card", fromOwnerId: ctx.fromOwnerId, fromZone: ctx.fromZone, toOwnerId: myPlayerId, toZone: "hand", cardId: ctx.cardId });
   } else if (fieldEl) {
     const rect = fieldEl.getBoundingClientRect();
-    const logical = flipY((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
+    const logical = rotateForSeat((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
     const anchor = stackAnchorAt(el, null);
     if (anchor) {
       // x/y still sent as a fallback position (this is a BRAND NEW item, so
@@ -1862,54 +1800,49 @@ let panY = 0;
 
 // ---------------------------------------------------------------- seat-based display flip
 // Each player should see their OWN side near the bottom of the screen and
-// their opponent near the top. Two different mechanisms do that, for two
-// different kinds of object:
+// their opponent near the top — AND the printed mat itself needs to make
+// sense from wherever they're sitting, since it isn't left-right symmetric
+// (The Stack and the Stalemate Zone sit on opposite sides). The fix for both
+// is the SAME single idea, applied consistently everywhere: for the seat-1
+// viewer, the whole table — background, piles, battlefield cards
+// (incl. token-cards), tokens, draw strokes, all of it — is rotated a full
+// 180°, exactly like a real player physically walking around to the other
+// side of a real table would see the same table rotated.
 //
-// - Fixed PILE slots: the printed mat itself isn't left-right symmetric (The
-//   Stack and the Stalemate Zone sit on opposite sides), so the seat-1
-//   viewer's board image is rendered rotated a full 180° (.battlefield-bg —
-//   a separate layer from the cards/piles, so this never touches their own
-//   positioning). Once the mat itself is honestly rotated instead of shown
-//   identically to both seats, a seat-1 viewer's pile positions are just
-//   that SAME 180° rotation applied to the seat-0 numbers (PILE_SCREEN_POS,
-//   derived from PILE_SCREEN_POS_HOME) — an earlier attempt at a single
-//   mirror AXIS (flipping only x or only y) measurably didn't reproduce both
-//   viewpoints, which is expected: a single-axis mirror was never going to
-//   match what's actually needed, a full two-axis rotation.
+// - The background image is a separate layer (.battlefield-bg.rotated) that
+//   gets an actual CSS transform: rotate(180deg) — never touches the
+//   cards/piles/tokens layered on top, which are positioned independently.
+// - Fixed PILE slots derive the seat-1 numbers from the seat-0 ones
+//   (PILE_SCREEN_POS, from PILE_SCREEN_POS_HOME) via that same rotation.
+// - rotateForSeat() applies it to everything a player places freely:
+//   battlefield cards, tokens, and draw strokes.
 //
-// - flipY (vertical-only reflection, x untouched) is for everything a player
-//   places freely: battlefield cards (incl. token-cards), tokens, and draw
-//   strokes. A full 180° reflection would also mirror left/right between
-//   multiple such objects, so two cards deliberately arranged/overlapped by
-//   one player would look left-right flipped to the other. Since nothing
-//   forces these free-floating objects to match a printed slot, there's no
-//   reason to flip x for them at all — only y, so each player still sees
-//   their own side near the bottom. The mirror axis (812) was re-derived from
-//   the live-rendered slot labels' own centres, not the canvas centre
-//   (774.5) and not raw pixel-alpha sampling of the art (both tried first).
+// An EARLIER version of this only mirrored y for rotateForSeat's free-
+// floating objects (x untouched), on the theory that "nothing forces them to
+// match a printed slot, only y matters for keeping your own side near the
+// bottom." That was wrong the moment the mat stopped being shown identically
+// to both seats: play a card on the right as P1 (near the Stalemate Zone)
+// and a y-only mirror leaves it on the right for P2 too — which is now The
+// Stack, since that side rotated. Only a full rotation stays consistent with
+// a background that's actually rotating. (Stacking offsets are deliberately
+// exempt from all of this — see stackOffsetFrom — since those describe one
+// card's position RELATIVE TO ANOTHER, not relative to the printed mat, and
+// must keep looking identical to both viewers regardless of seat.)
 //
-// flipY's one extra rule: a stored (x,y) is always a box's CSS top-left,
-// never a bare point. Reflecting a box's top-left across an axis lands on
-// the OPPOSITE corner unless the box's own width/height is subtracted back
-// out — otherwise every flipped position is off by exactly that box's size.
-// Pass the object's width/height for anything box-shaped; leave them at 0
-// for bare points (stroke points, view-centres) which need no such correction.
-const MIRROR_CENTER_Y = 812;
+// rotateForSeat's one extra rule: a stored (x,y) is always a box's CSS
+// top-left, never a bare point. Rotating a box's top-left 180° around the
+// board's centre lands on the OPPOSITE corner unless the box's own
+// width/height is subtracted back out — otherwise every rotated position is
+// off by exactly that box's size. Pass the object's width/height for
+// anything box-shaped; leave them at 0 for bare points (stroke points,
+// view-centres) which need no such correction.
 const PILE_W = 150, PILE_H = 210;
 const TOKEN_W = 52, TOKEN_H = 52;
 
-// The printed mat is NOT left-right symmetric (The Stack and the Stalemate
-// Zone sit on opposite sides), and a seat-1 viewer's board image is rendered
-// rotated a full 180° to match (see .battlefield-bg.rotated) — the same
-// change that lets a real player physically walk around to the other side of
-// a table and still recognise the printed layout. Once that's true, a
-// seat-1 viewer's screen position for ANY pile is just that same 180°
-// rotation applied to the seat-0 numbers below — proven empirically against
-// the 16 independently hand-calibrated values this replaced, which already
-// agreed with this exact formula to within a few px of drag-by-hand noise.
-// (The earlier finding that "no single mirror axis reproduces both
-// viewpoints" was correct as far as it went — it just never tried a FULL
-// (both-axis) rotation, only a plain single-axis mirror.)
+// Only the seat-0 numbers are stored; seat-1's are derived below via the
+// same 180° rotation as everything else — proven empirically against the 16
+// independently hand-calibrated values this replaced, which already agreed
+// with this exact formula to within a few px of drag-by-hand noise.
 const PILE_SCREEN_POS_HOME = {
   0: { deck: { x: 1194, y: 1039 }, graveyard: { x: 1366, y: 1039 }, receptacle: { x: 1192, y: 1297 }, exile: { x: 1366, y: 1297 } },
   1: { deck: { x: 210, y: 305 }, graveyard: { x: 31, y: 305 }, receptacle: { x: 209, y: 48 }, exile: { x: 31, y: 48 } },
@@ -1930,8 +1863,8 @@ function mySeat() {
   return latestState.players[myPlayerId]?.seat || 0;
 }
 
-function flipY(x, y, w = 0, h = 0) {
-  return mySeat() === 1 ? { x, y: 2 * effectiveMirrorCenterY() - h - y } : { x, y };
+function rotateForSeat(x, y, w = 0, h = 0) {
+  return mySeat() === 1 ? { x: BOARD_SIZE - w - x, y: BOARD_SIZE - h - y } : { x, y };
 }
 
 function applyTransform() {
@@ -2038,7 +1971,7 @@ function removeGhost(ghost) {
 
 // ---------------------------------------------------------------- drawing tool
 // Strokes are stored server-side in logical/real board coordinates (like
-// battlefield items and tokens), so flipY converts both when capturing input
+// battlefield items and tokens), so rotateForSeat converts both when capturing input
 // and when rendering. The SVG layer sits inside #battlefield, so it inherits
 // the pan/zoom transform automatically — only the screen -> local-canvas step
 // needs the manual pan/zoom math.
@@ -2115,7 +2048,7 @@ function initDrawTool() {
         if (liveEl) liveEl.remove();
         if (livePoints.length > 1) {
           const id = "s" + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-          const logicalPoints = livePoints.map((p) => flipY(p.x, p.y)).map((p) => [p.x, p.y]);
+          const logicalPoints = livePoints.map((p) => rotateForSeat(p.x, p.y)).map((p) => [p.x, p.y]);
           strokeUndoStack.push(id);
           strokeRedoStack = [];
           send({ type: "add_stroke", id, points: logicalPoints, color: playerColor(myPlayerId) });
@@ -2124,8 +2057,8 @@ function initDrawTool() {
       } else {
         if (eraseRectEl) eraseRectEl.remove();
         const p = toDisplayPt(e.clientX, e.clientY);
-        const a = flipY(eraseStartDisplay.x, eraseStartDisplay.y);
-        const b = flipY(p.x, p.y);
+        const a = rotateForSeat(eraseStartDisplay.x, eraseStartDisplay.y);
+        const b = rotateForSeat(p.x, p.y);
         send({ type: "remove_strokes_in_rect", x0: a.x, y0: a.y, x1: b.x, y1: b.y });
         eraseRectEl = null; eraseStartDisplay = null;
       }
@@ -2165,7 +2098,7 @@ function initTokenToolbar() {
     if (!selectedTemperament) return;
     const power = Math.max(-20, Math.min(20, Math.round(Number($("#tokenPowerInput").value) || 0)));
     const view = fieldCenterLogical();
-    const center = flipY(view.x, view.y);
+    const center = rotateForSeat(view.x, view.y);
     send({
       type: "create_token_card", temperament: selectedTemperament, power,
       x: center.x - 75 + Math.random() * 60 - 30, y: center.y - 105 + Math.random() * 60 - 30,
@@ -2204,7 +2137,7 @@ function initEssenceToolbar() {
     if (!selectedEssenceTemperament) return;
     const count = Math.max(-99, Math.min(99, Math.round(Number($("#essenceCountInput").value) || 0)));
     const view = fieldCenterLogical();
-    const center = flipY(view.x, view.y);
+    const center = rotateForSeat(view.x, view.y);
     send({
       type: "create_essence_token", temperament: selectedEssenceTemperament, count,
       x: center.x - 26 + Math.random() * 60 - 30, y: center.y - 26 + Math.random() * 60 - 30,
@@ -2316,7 +2249,7 @@ function renderStrokes() {
   const svg = $("#drawLayer");
   svg.querySelectorAll("polyline").forEach((el) => el.remove());
   (latestState.strokes || []).forEach((s) => {
-    const pts = s.points.map(([x, y]) => flipY(x, y));
+    const pts = s.points.map(([x, y]) => rotateForSeat(x, y));
     const poly = makeSvgEl("polyline", {
       fill: "none", stroke: s.color || playerColor(s.ownerId), "stroke-width": 4,
       "stroke-linecap": "round", "stroke-linejoin": "round",
@@ -2521,14 +2454,14 @@ function counterGridMenuItem(permKey, target) {
 // A stacked card's own x/y is a frozen fallback (wherever it was before being
 // stacked — see apply_stack_fields server-side), not its live position: while
 // stacked, it's rendered relative to its anchor's CURRENT screen position
-// instead. Crucially the offset itself is never flipped (see flipY's own
+// instead. Crucially the offset itself is never rotated (see stackOffsetFrom's own
 // comment) — it's captured directly in screen pixels, so a deliberate overlap
 // arrangement looks identical to both players regardless of seat.
 function stackedScreenPos(item) {
   if (!item.stackedOn) return null;
   const anchor = latestState.battlefield.find((it) => it.id === item.stackedOn);
   if (!anchor) return null;
-  const anchorPos = stackedScreenPos(anchor) || flipY(anchor.x, anchor.y, PILE_W, PILE_H);
+  const anchorPos = stackedScreenPos(anchor) || rotateForSeat(anchor.x, anchor.y, PILE_W, PILE_H);
   return { x: anchorPos.x + item.stackOffsetX, y: anchorPos.y + item.stackOffsetY };
 }
 
@@ -2542,7 +2475,7 @@ function renderBattlefield() {
     const el = document.createElement("div");
     el.className = "bf-card";
     el.dataset.itemId = item.id;
-    const pos = stackedScreenPos(item) || flipY(item.x, item.y, PILE_W, PILE_H);
+    const pos = stackedScreenPos(item) || rotateForSeat(item.x, item.y, PILE_W, PILE_H);
     el.style.left = pos.x + "px";
     el.style.top = pos.y + "px";
     el.style.setProperty("--owner-color", playerColor(item.ownerId));
@@ -2621,7 +2554,7 @@ function renderBattlefield() {
   latestState.tokens.forEach((token) => {
     const el = document.createElement("div");
     el.className = "bf-token" + (token.isEssence ? " bf-essence" : "");
-    const tpos = flipY(token.x, token.y, TOKEN_W, TOKEN_H);
+    const tpos = rotateForSeat(token.x, token.y, TOKEN_W, TOKEN_H);
     el.style.left = tpos.x + "px";
     el.style.top = tpos.y + "px";
     if (token.isEssence) {
@@ -2634,7 +2567,7 @@ function renderBattlefield() {
     }
     if (!isObserver) {
       bindDrag(el, (x, y) => {
-        const logical = flipY(x, y, TOKEN_W, TOKEN_H);
+        const logical = rotateForSeat(x, y, TOKEN_W, TOKEN_H);
         send({ type: "move_token", tokenId: token.id, x: logical.x, y: logical.y });
       });
       el.addEventListener("contextmenu", (event) => {
@@ -2656,8 +2589,6 @@ function renderBattlefield() {
     }
     bf.appendChild(el);
   });
-
-  renderCenterMarker();
 }
 
 function bindDrag(el, onDrop) {
@@ -2803,7 +2734,7 @@ function initGameControls() {
     const label = prompt("Token label (e.g. 1/1):", "");
     if (label === null) return;
     const rect = $("#battlefieldWrap").getBoundingClientRect();
-    const logical = flipY((event.clientX - rect.left - panX) / zoomLevel - 26, (event.clientY - rect.top - panY) / zoomLevel - 26, TOKEN_W, TOKEN_H);
+    const logical = rotateForSeat((event.clientX - rect.left - panX) / zoomLevel - 26, (event.clientY - rect.top - panY) / zoomLevel - 26, TOKEN_W, TOKEN_H);
     send({ type: "add_token", x: logical.x, y: logical.y, label, color: playerColor(myPlayerId) });
   });
 
