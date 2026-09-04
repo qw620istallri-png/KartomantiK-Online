@@ -1171,32 +1171,9 @@ function receptaclePoints(zoneData, score) {
   return cardPoints + (score || 0);
 }
 
-// Pile SCREEN position, keyed by [viewer's own seat][pile owner's seat][zone].
-// This is deliberately NOT a single stored position mirrored through some
-// formula for the "away" viewer: dragging a pile while directly viewing it
-// vs. viewing that same pile from the OTHER seat (mirrored) measurably don't
-// agree on one "correct" spot, so there is no substitute for a value per
-// (viewer, owner) pair — 16 numbers total, all independently calibrated by
-// dragging in-app and reading off the coordinates (see bindPileCalibration).
-//
-// The [1][0] and [1][1] entries (both captured from a seat-1 browser window)
-// were fixed once already: the calibration tool's PREVIOUS version displayed
-// the dragged position after converting it through the old mirror formula
-// (screen -> "raw storage" space) rather than the raw screen position itself
-// — invisible from a seat-0 window (identity there) but very much not from
-// seat-1, where it silently swapped which corner the numbers described. The
-// values below are the seat-1 readings corrected back to true screen space;
-// [0][0] and [0][1] (captured from seat 0) never needed correcting.
-const PILE_SCREEN_POS = {
-  0: {
-    0: { deck: { x: 1194, y: 1039 }, graveyard: { x: 1366, y: 1039 }, receptacle: { x: 1192, y: 1297 }, exile: { x: 1366, y: 1297 } },
-    1: { deck: { x: 210, y: 305 }, graveyard: { x: 31, y: 305 }, receptacle: { x: 209, y: 48 }, exile: { x: 31, y: 48 } },
-  },
-  1: {
-    0: { deck: { x: 208, y: 304 }, graveyard: { x: 33, y: 304 }, receptacle: { x: 208, y: 50 }, exile: { x: 32, y: 48 } },
-    1: { deck: { x: 1192, y: 1039 }, graveyard: { x: 1367, y: 1039 }, receptacle: { x: 1191, y: 1293 }, exile: { x: 1364, y: 1293 } },
-  },
-};
+// Pile SCREEN position, keyed by [viewer's own seat][pile owner's seat][zone]
+// — see the derivation right after PILE_W/PILE_H below (moved there since it
+// needs those + BOARD_SIZE, both declared further down this file).
 
 // A local nudge on top of the table above — a personal display fix, never
 // synced to the server or the other player. Keyed by "viewerSeat:ownerSeat:zone".
@@ -1888,14 +1865,17 @@ let panY = 0;
 // their opponent near the top. Two different mechanisms do that, for two
 // different kinds of object:
 //
-// - Fixed PILE slots use no transform at all any more: PILE_SCREEN_POS holds
-//   a screen position per (viewer's seat, pile owner's seat, zone) directly.
-//   An earlier version derived the "away" seat's positions from the "near"
-//   seat's through a single mirror axis, but dragging a pile while actually
-//   viewing it directly vs. viewing that same pile from the OTHER seat
-//   (mirrored) measurably didn't agree on one "correct" spot — no single axis
-//   reproduces the printed art from both viewpoints, so there's a value per
-//   (viewer, owner) pair instead, with nothing computed at render time.
+// - Fixed PILE slots: the printed mat itself isn't left-right symmetric (The
+//   Stack and the Stalemate Zone sit on opposite sides), so the seat-1
+//   viewer's board image is rendered rotated a full 180° (.battlefield-bg —
+//   a separate layer from the cards/piles, so this never touches their own
+//   positioning). Once the mat itself is honestly rotated instead of shown
+//   identically to both seats, a seat-1 viewer's pile positions are just
+//   that SAME 180° rotation applied to the seat-0 numbers (PILE_SCREEN_POS,
+//   derived from PILE_SCREEN_POS_HOME) — an earlier attempt at a single
+//   mirror AXIS (flipping only x or only y) measurably didn't reproduce both
+//   viewpoints, which is expected: a single-axis mirror was never going to
+//   match what's actually needed, a full two-axis rotation.
 //
 // - flipY (vertical-only reflection, x untouched) is for everything a player
 //   places freely: battlefield cards (incl. token-cards), tokens, and draw
@@ -1917,6 +1897,33 @@ let panY = 0;
 const MIRROR_CENTER_Y = 812;
 const PILE_W = 150, PILE_H = 210;
 const TOKEN_W = 52, TOKEN_H = 52;
+
+// The printed mat is NOT left-right symmetric (The Stack and the Stalemate
+// Zone sit on opposite sides), and a seat-1 viewer's board image is rendered
+// rotated a full 180° to match (see .battlefield-bg.rotated) — the same
+// change that lets a real player physically walk around to the other side of
+// a table and still recognise the printed layout. Once that's true, a
+// seat-1 viewer's screen position for ANY pile is just that same 180°
+// rotation applied to the seat-0 numbers below — proven empirically against
+// the 16 independently hand-calibrated values this replaced, which already
+// agreed with this exact formula to within a few px of drag-by-hand noise.
+// (The earlier finding that "no single mirror axis reproduces both
+// viewpoints" was correct as far as it went — it just never tried a FULL
+// (both-axis) rotation, only a plain single-axis mirror.)
+const PILE_SCREEN_POS_HOME = {
+  0: { deck: { x: 1194, y: 1039 }, graveyard: { x: 1366, y: 1039 }, receptacle: { x: 1192, y: 1297 }, exile: { x: 1366, y: 1297 } },
+  1: { deck: { x: 210, y: 305 }, graveyard: { x: 31, y: 305 }, receptacle: { x: 209, y: 48 }, exile: { x: 31, y: 48 } },
+};
+function rotate180Pos(pos) {
+  return { x: BOARD_SIZE - PILE_W - pos.x, y: BOARD_SIZE - PILE_H - pos.y };
+}
+function rotate180Zones(zones) {
+  return Object.fromEntries(Object.entries(zones).map(([zone, pos]) => [zone, rotate180Pos(pos)]));
+}
+const PILE_SCREEN_POS = {
+  0: PILE_SCREEN_POS_HOME,
+  1: { 0: rotate180Zones(PILE_SCREEN_POS_HOME[0]), 1: rotate180Zones(PILE_SCREEN_POS_HOME[1]) },
+};
 
 function mySeat() {
   if (isObserver || !myPlayerId || !latestState) return 0;
@@ -2526,6 +2533,7 @@ function stackedScreenPos(item) {
 }
 
 function renderBattlefield() {
+  $("#battlefieldBg").classList.toggle("rotated", mySeat() === 1);
   renderPiles();
   const bf = $("#battlefield");
   bf.querySelectorAll(".bf-card, .bf-token").forEach((el) => el.remove());

@@ -321,8 +321,19 @@ input, textarea, select {
 #pileCalibrateBtn.active { background: var(--gold); border-color: var(--gold-deep); }
 .battlefield {
   position: absolute; top: 0; left: 0; width: 1549px; height: 1549px; transform-origin: 0 0;
-  background-image: url('board-bg.png'); background-size: 100% 100%; background-color: #0b1e3a;
+  background-color: #0b1e3a;
 }
+/* the printed mat itself is NOT left-right symmetric (The Stack and the
+   Stalemate Zone sit on opposite sides) — for the seat-1 viewer this layer
+   gets rotated a full 180° (see renderBattlefield), same as physically
+   walking around to the other side of a real table would show; it's its own
+   element, separate from #battlefield, so this rotation never touches the
+   cards/piles/tokens layered on top (those keep their own existing math —
+   see flipY and PILE_SCREEN_POS) */
+.battlefield-bg {
+  position: absolute; inset: 0; background-image: url('board-bg.png'); background-size: 100% 100%; pointer-events: none;
+}
+.battlefield-bg.rotated { transform: rotate(180deg); }
 
 .field-pile { position: absolute; width: 150px; text-align: center; user-select: none; }
 .field-pile .pile-trigger { cursor: pointer; }
