@@ -54,7 +54,14 @@
     <nav class="social-links">
       <a href="https://qw620istallri-png.github.io/DECKOMANTIK/" target="_blank" rel="noopener noreferrer" id="socialDeckomantik"></a>
       <a href="https://discord.gg/4YvXKyJ94p" target="_blank" rel="noopener noreferrer" id="socialDiscord"></a>
-      <a href="https://www.instagram.com/kartomantik_cardgame/" target="_blank" rel="noopener noreferrer" id="socialInstagram"></a>
+      <div class="social-instagram-wrap">
+        <button type="button" class="social-link-btn" id="socialInstagram" aria-expanded="false" aria-controls="socialInstagramMenu"></button>
+        <div class="social-instagram-menu hidden" id="socialInstagramMenu">
+          <a href="https://www.instagram.com/kartomantik_cardgame/" target="_blank" rel="noopener noreferrer"><strong id="socialInstagramOfficialLabel"></strong><span>@kartomantik_cardgame</span></a>
+          <a href="https://www.instagram.com/kartomantik_fan_france/" target="_blank" rel="noopener noreferrer"><strong id="socialInstagramFanLabel"></strong><span>@kartomantik_fan_france</span></a>
+        </div>
+      </div>
+      <button type="button" class="social-link-btn" id="socialLegal"></button>
     </nav>
   </section>
 
@@ -107,7 +114,8 @@
         </div>
         <div class="zoom-controls">
           <button id="pileCalibrateBtn"></button>
-          <div class="zoom-sep"></div>
+        </div>
+        <div class="zoom-controls">
           <button id="inspectReopenBtn">🔍</button>
         </div>
       </div>
@@ -238,24 +246,33 @@
     </div>
   </div>
 
-  <div class="log-panel token-panel hidden" id="dicePanel">
+  <div class="log-panel dice-panel hidden" id="dicePanel">
     <div class="box">
-      <h2 id="dicePanelHeading"></h2>
-      <div class="dice-mode-grid" id="diceModeGrid">
-        <button data-dice-mode="d6"></button>
-        <button data-dice-mode="coin"></button>
-      </div>
-      <div class="field">
-        <label id="diceCountLabel"></label>
-        <div class="number-stepper">
-          <button type="button" class="stepper-btn" data-step="-1" data-target="diceCountInput">−</button>
-          <input id="diceCountInput" type="number" value="1" min="1" max="20">
-          <button type="button" class="stepper-btn" data-step="1" data-target="diceCountInput">+</button>
+      <div id="diceConfigView">
+        <h2 id="dicePanelHeading"></h2>
+        <div class="dice-mode-grid" id="diceModeGrid">
+          <button data-dice-mode="d6"></button>
+          <button data-dice-mode="coin"></button>
+        </div>
+        <div class="field">
+          <label id="diceCountLabel"></label>
+          <div class="number-stepper">
+            <button type="button" class="stepper-btn" data-step="-1" data-target="diceCountInput">−</button>
+            <input id="diceCountInput" type="number" value="1" min="1" max="20">
+            <button type="button" class="stepper-btn" data-step="1" data-target="diceCountInput">+</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
+          <button id="diceCancelBtn"></button>
+          <button class="primary" id="diceRollBtn"></button>
         </div>
       </div>
-      <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
-        <button id="diceCancelBtn"></button>
-        <button class="primary" id="diceRollBtn"></button>
+      <div id="diceResultView" class="hidden">
+        <h2 id="diceResultHeading"></h2>
+        <div class="dice-result-display" id="diceResultDisplay"></div>
+        <div style="display:flex;gap:8px;margin-top:14px;justify-content:flex-end">
+          <button id="diceResultCloseBtn"></button>
+        </div>
       </div>
     </div>
   </div>
@@ -281,6 +298,16 @@
         <button id="deckBrowserCloseBtn"></button>
       </div>
       <div class="deck-browser-cards" id="deckBrowserCards"></div>
+    </div>
+  </div>
+
+  <div class="log-panel hidden" id="legalPanel">
+    <div class="box">
+      <h2 id="legalHeading"></h2>
+      <div class="legal-copy" id="legalCopy"></div>
+      <div style="display:flex;justify-content:flex-end;margin-top:14px">
+        <button id="legalCloseBtn"></button>
+      </div>
     </div>
   </div>
 

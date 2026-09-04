@@ -181,6 +181,13 @@ const ui = {
     diceTotal: "total",
     coinHeads: "Heads",
     coinTails: "Tails",
+    officialInstagram: "Official Instagram",
+    fanFranceInstagram: "Kartomantik Fan France",
+    legalNotices: "Legal notices",
+    legalP1: "KartomantiK the Card game is Copyright 2026 Michele Nitri, all rights reserved.",
+    legalP2: "And all artworks are copyright 2026 David Genchi.",
+    legalP3: "Kartomantik Online is unaffiliated with Hollow Press or KartomantiK and is Copyright 2026 by Charles \"Istallri\" Brégeon.",
+    legalP4: "This tool is a fan made tool with no commercial purpose and is free to play online.",
   },
 };
 

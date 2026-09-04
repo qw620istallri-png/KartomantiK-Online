@@ -745,7 +745,7 @@ async def handle_message(ws, info, data):
         actor = session.players.get(actor_id)
         session.add_log(actor_id, "roll_dice", {"mode": mode, "results": results})
         session.touch()
-        payload = {"type": "dice_result", "byName": actor["name"] if actor else actor_id, "mode": mode, "results": results}
+        payload = {"type": "dice_result", "byId": actor_id, "byName": actor["name"] if actor else actor_id, "mode": mode, "results": results}
         for other_ws, other_info in list(connections.items()):
             if other_info["session"] is session:
                 await send_to(other_ws, payload)

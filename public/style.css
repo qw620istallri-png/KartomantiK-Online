@@ -95,6 +95,23 @@ input, textarea, select {
   text-decoration: none;
 }
 .social-links a:hover { background: var(--gold-deep); color: var(--carbon); }
+.social-links .social-link-btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 9px 16px; border-radius: 8px;
+  background: #171714cc; border: 1px solid var(--gold-deep); color: var(--gold-pale); font-weight: 700; font-size: 14px;
+}
+.social-links .social-link-btn:hover { background: var(--gold-deep); color: var(--carbon); }
+.social-instagram-wrap { position: relative; }
+.social-instagram-menu {
+  position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%); margin-bottom: 8px;
+  background: #171714ee; border: 1px solid var(--gold-deep); border-radius: 8px; padding: 6px; display: grid; gap: 4px;
+  min-width: 230px; z-index: 5;
+}
+.social-instagram-menu a { display: grid; gap: 1px; padding: 7px 10px; border-radius: 6px; text-decoration: none; color: var(--gold-pale); }
+.social-instagram-menu a:hover { background: var(--gold-deep); color: var(--carbon); }
+.social-instagram-menu a span { font-size: 14px; color: #cfc7a8; }
+.social-instagram-menu a:hover span { color: var(--carbon); }
+.legal-copy p { margin: 0 0 10px; font-size: 14px; line-height: 1.5; }
+.legal-copy p:last-child { margin-bottom: 0; }
 #socialDeckomantik { position: relative; overflow: hidden; border-color: var(--gold); }
 #socialDeckomantik::after {
   content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
@@ -348,14 +365,13 @@ input, textarea, select {
 .hand-toolbar #handHideBtn { padding: 12px 20px; font-size: 15px; }
 
 .hand-tray {
-  display: flex; gap: 10px; padding: 56px 18px 14px; background: transparent; overflow-x: auto; overflow-y: hidden;
-  /* top padding is headroom for the hover-grow transform, not visual spacing:
-     the hover scale is capped at +40 logical px above the card's own top edge
-     (see applyHandCardHeight), plus the constant 10px translateY lift — 50px
-     worst case. Without this reserved space, overflow-y:hidden (needed so a
-     wide hand's horizontal scrollbar doesn't grow one vertically too) clips
-     the top of every hover-enlarged card. */
-  height: calc(var(--hand-card-h, 170px) + 70px); align-items: flex-end; justify-content: center;
+  display: flex; gap: 10px; padding: var(--hand-tray-top-pad, 40px) 18px 14px; background: transparent; overflow-x: auto; overflow-y: hidden;
+  /* top padding is headroom for the hover-grow transform, not visual spacing
+     (see applyHandCardHeight, which computes exactly how much is needed for
+     the current card size/scale). Without it, overflow-y:hidden (needed so a
+     wide hand's horizontal scrollbar doesn't grow one vertically too) would
+     clip the top of every hover-enlarged card. */
+  height: calc(var(--hand-card-h, 170px) + var(--hand-tray-top-pad, 40px) + 14px); align-items: flex-end; justify-content: center;
   scrollbar-width: none;
 }
 .hand-tray::-webkit-scrollbar { display: none; }
@@ -551,6 +567,34 @@ input, textarea, select {
 .dice-mode-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 12px 0; }
 .dice-mode-grid button { padding: 10px 4px; font-size: 14px; font-weight: 700; }
 .dice-mode-grid button.active { background: var(--gold); border-color: var(--gold-deep); }
+
+/* non-blocking, docked next to the left toolbar (where the dice button
+   lives) instead of a centred modal with a backdrop — rolling shouldn't stop
+   you from seeing/using the rest of the board */
+.dice-panel { background: transparent; display: flex; justify-content: flex-start; align-items: center; padding-left: 60px; pointer-events: none; }
+.dice-panel .box { pointer-events: auto; width: min(280px, 92vw); box-shadow: 0 10px 30px #0007; }
+.dice-result-display { display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 10px 0; text-align: center; }
+.dice-result-display .dice-result-who { font-size: 14px; color: var(--muted); }
+.dice-result-display .dice-result-values { font-size: 28px; font-weight: 900; letter-spacing: .04em; }
+.dice-result-display .dice-result-total { font-size: 14px; color: var(--muted); }
+
+/* other players' rolls: a small stack of persistent, individually-closeable
+   bubbles (unlike the auto-fading .ko-toast) — created lazily by
+   showDiceBubble, not pre-declared here. Top-CENTER, not top-right: the
+   top-right corner is the board-tools toolbar (now 3 stacked rows), and
+   these bubbles stay up until closed instead of fading, so they'd otherwise
+   sit on top of it indefinitely. */
+.dice-bubbles { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); z-index: 81; display: flex; flex-direction: column; gap: 8px; align-items: center; }
+.dice-bubble {
+  position: relative; max-width: 280px; background: #171714; color: var(--gold-pale); padding: 12px 30px 12px 14px;
+  border-radius: 8px; box-shadow: 0 8px 24px #0006; font-size: 14px; text-align: center;
+}
+.dice-bubble .dice-bubble-values { font-size: 20px; font-weight: 900; margin-top: 4px; }
+.dice-bubble-close {
+  position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; padding: 0; min-height: 0;
+  border-radius: 50%; background: transparent; border: 1px solid #4a4732; color: var(--gold-pale); font-size: 14px; line-height: 1;
+}
+.dice-bubble-close:hover { background: var(--gold-deep); }
 
 .hand-request-panel .box { width: min(420px, 92vw); text-align: center; }
 .hand-request-panel h2 { margin-top: 0; }

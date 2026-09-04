@@ -298,6 +298,27 @@ function paintStaticText() {
   $("#socialDeckomantik").textContent = t("socialDeckomantik");
   $("#socialDiscord").textContent = t("socialDiscord");
   $("#socialInstagram").textContent = t("socialInstagram");
+  $("#socialInstagramOfficialLabel").textContent = t("officialInstagram");
+  $("#socialInstagramFanLabel").textContent = t("fanFranceInstagram");
+  $("#socialLegal").textContent = t("legalNotices");
+  $("#legalHeading").textContent = t("legalNotices");
+  $("#legalCopy").innerHTML = ["legalP1", "legalP2", "legalP3", "legalP4"].map((k) => `<p>${esc(t(k))}</p>`).join("");
+  $("#legalCloseBtn").textContent = t("close");
+}
+
+function initSocialLinks() {
+  $("#socialInstagram").onclick = (event) => {
+    event.stopPropagation();
+    const open = $("#socialInstagramMenu").classList.toggle("hidden") === false;
+    $("#socialInstagram").setAttribute("aria-expanded", String(open));
+  };
+  document.addEventListener("click", (event) => {
+    if (event.target.closest(".social-instagram-wrap")) return;
+    $("#socialInstagramMenu").classList.add("hidden");
+    $("#socialInstagram").setAttribute("aria-expanded", "false");
+  });
+  $("#socialLegal").onclick = () => $("#legalPanel").classList.remove("hidden");
+  $("#legalCloseBtn").onclick = () => $("#legalPanel").classList.add("hidden");
 }
 
 // ---------------------------------------------------------------- join screen
@@ -473,7 +494,7 @@ function handleServerMessage(msg) {
   } else if (msg.type === "scry_result") {
     showScryPopup(msg.cards);
   } else if (msg.type === "dice_result") {
-    showDiceResultToast(msg);
+    handleDiceResult(msg);
   } else if (msg.type === "error") {
     if ($("#gameScreen").classList.contains("hidden")) setStatus(msg.message, true);
     else showToast(msg.message, true);
@@ -1966,6 +1987,7 @@ function initDiceToolbar() {
   $("#diceCountLabel").textContent = t("diceCountLabel");
   $("#diceRollBtn").textContent = t("diceRollBtn");
   $("#diceCancelBtn").textContent = t("close");
+  $("#diceResultCloseBtn").textContent = t("close");
   $$("#diceModeGrid button").forEach((btn) => {
     btn.textContent = (btn.dataset.diceMode === "d6" ? "🎲 " : "🪙 ") + t(btn.dataset.diceMode === "d6" ? "diceModeD6" : "diceModeCoin");
     btn.onclick = () => {
@@ -1977,31 +1999,59 @@ function initDiceToolbar() {
     selectedDiceMode = "d6";
     $$("#diceModeGrid button").forEach((b) => b.classList.toggle("active", b.dataset.diceMode === "d6"));
     $("#diceCountInput").value = 1;
+    $("#diceConfigView").classList.remove("hidden");
+    $("#diceResultView").classList.add("hidden");
     $("#dicePanel").classList.remove("hidden");
   };
   $("#diceCancelBtn").onclick = () => $("#dicePanel").classList.add("hidden");
+  $("#diceResultCloseBtn").onclick = () => $("#dicePanel").classList.add("hidden");
   $("#diceRollBtn").onclick = () => {
     const count = Math.max(1, Math.min(20, Math.round(Number($("#diceCountInput").value) || 1)));
     send({ type: "roll_dice", mode: selectedDiceMode, count });
-    $("#dicePanel").classList.add("hidden");
   };
 }
 
-// Broadcast to everyone at the table (like a reveal), not just the roller —
-// dice/coin results are always public by nature, and showing them as they
-// happen (on top of the permanent action-log entry) is what makes them
-// trustworthy instead of just an unverifiable claim in chat.
-function showDiceResultToast(msg) {
-  const name = msg.byName || "?";
-  let text;
+function diceResultDisplayHtml(msg) {
   if (msg.mode === "d6") {
     const sum = msg.results.reduce((a, b) => a + b, 0);
-    text = `${name} ${t("diceRolledD6")} ${msg.results.length}×D6: ${msg.results.join(", ")} (${t("diceTotal")} ${sum})`;
-  } else {
-    const labels = msg.results.map((r) => t(r === "H" ? "coinHeads" : "coinTails"));
-    text = `${name} ${t("diceRolledCoin")} ${msg.results.length} — ${labels.join(", ")}`;
+    return `<div class="dice-result-values">🎲 ${esc(msg.results.join(", "))}</div><div class="dice-result-total">${esc(t("diceTotal"))} ${sum}</div>`;
   }
-  showToast(text);
+  const labels = msg.results.map((r) => t(r === "H" ? "coinHeads" : "coinTails"));
+  return `<div class="dice-result-values">🪙 ${esc(labels.join(", "))}</div>`;
+}
+
+// Own roll: shown persistently INSIDE the (already-open, non-blocking) dice
+// panel — it stays up until closed, instead of auto-hiding, so it can be
+// reread/screenshotted mid-game. Someone else's roll: this client never had
+// that panel open, so it gets its own small bubble instead — same idea
+// (broadcast + logged, just as trustworthy as a reveal), closed individually
+// whenever they're done with it rather than auto-fading like a plain toast.
+function handleDiceResult(msg) {
+  if (!isObserver && msg.byId === myPlayerId) {
+    $("#diceResultHeading").textContent = t("dicePanelHeading");
+    $("#diceResultDisplay").innerHTML = diceResultDisplayHtml(msg);
+    $("#diceConfigView").classList.add("hidden");
+    $("#diceResultView").classList.remove("hidden");
+    $("#dicePanel").classList.remove("hidden");
+  } else {
+    showDiceBubble(msg);
+  }
+}
+
+function showDiceBubble(msg) {
+  let box = document.querySelector("#diceBubbles");
+  if (!box) {
+    box = document.createElement("div");
+    box.className = "dice-bubbles";
+    box.id = "diceBubbles";
+    document.body.appendChild(box);
+  }
+  const bubble = document.createElement("div");
+  bubble.className = "dice-bubble";
+  const modeLabel = msg.mode === "d6" ? t("diceModeD6") : t("diceModeCoin");
+  bubble.innerHTML = `<button class="dice-bubble-close">×</button><div>${esc(msg.byName || "?")} — ${esc(modeLabel)}</div>${diceResultDisplayHtml(msg)}`;
+  bubble.querySelector(".dice-bubble-close").onclick = () => bubble.remove();
+  box.appendChild(bubble);
 }
 
 function undoStroke() {
@@ -2130,6 +2180,13 @@ function applyHandCardHeight() {
   // is already large, so an already-huge hand doesn't get even huger
   const hoverScale = Math.min(1.3, (handCardHeight + 80) / handCardHeight);
   document.documentElement.style.setProperty("--hand-hover-scale", hoverScale.toFixed(3));
+  // the tray's own top padding is reserved headroom for that same hover grow
+  // (half the height increase, since the scale is centered, plus the hover's
+  // 10px lift) — computed from the current card height/scale instead of a
+  // fixed guess, so it's never more than exactly what's needed to avoid
+  // clipping the grown card against the tray's overflow:hidden
+  const topPad = Math.ceil((handCardHeight * (hoverScale - 1)) / 2 + 10 + 4);
+  document.documentElement.style.setProperty("--hand-tray-top-pad", topPad + "px");
 }
 
 function initHandResize() {
@@ -2640,13 +2697,20 @@ async function boot() {
     input.value = Math.max(min, Math.min(max, (Number(input.value) || 0) + Number(btn.dataset.step)));
   });
   document.addEventListener("keydown", (event) => {
-    if (event.code !== "Space" || event.target?.closest?.("input, textarea, select, button")) return;
-    if (!latestState || isObserver) return;
-    event.preventDefault();
-    toggleHandHidden();
+    if (event.target?.closest?.("input, textarea, select, button")) return;
+    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    if (event.code === "Space") {
+      if (!latestState || isObserver) return;
+      event.preventDefault();
+      toggleHandHidden();
+    } else if (event.code === "KeyI" && inspectHistory.length) {
+      event.preventDefault();
+      showInspect(inspectHistory[0]);
+    }
   });
   paintStaticText();
   initConfirmPanel();
+  initSocialLinks();
   initPileBrowser();
   await loadCardDatabase();
   await loadStarterDecks();
