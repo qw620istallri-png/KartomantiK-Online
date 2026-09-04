@@ -175,21 +175,26 @@ input, textarea, select {
    board instead of showing the page's pale background through them */
 #gameScreen { height: 100vh; display: flex; flex-direction: column; background: #0b1e3a; }
 .game-header {
-  display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  display: flex; align-items: center; gap: 16px;
   padding: 10px 18px; background: var(--carbon); color: var(--gold-pale); border-bottom: 3px double var(--gold-deep);
 }
-.game-header .brand { display: flex; align-items: center; gap: 8px; font-family: var(--display-font); font-weight: 700; letter-spacing: .03em; font-size: 15px; }
+/* 3 even slots (brand / codes+toggles / actions) so the middle one stays
+   visually centered on the header regardless of how wide the two side ones
+   are — a plain space-between with more than 3 children (once the view-
+   toggle buttons were added next to the codes) pushed the codes off-centre */
+.game-header .brand { flex: 1; display: flex; align-items: center; gap: 8px; font-family: var(--display-font); font-weight: 700; letter-spacing: .03em; font-size: 15px; }
 .game-header .brand img { width: 30px; height: 30px; object-fit: contain; }
+.header-center { flex: 1; display: flex; align-items: flex-end; justify-content: center; gap: 14px; }
+.game-header .actions { flex: 1; display: flex; justify-content: flex-end; gap: 8px; }
 .game-header .codes { font-size: 14px; color: #cfc7a8; display: flex; align-items: flex-end; gap: 14px; }
 .game-header .codes .code-item { display: grid; gap: 2px; text-align: center; }
 .game-header .codes .code-item-label { font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: #8f8a6c; }
 .game-header .codes button { background: transparent; border: 1px solid #4a4732; color: #cfc7a8; padding: 3px 8px; font-size: 14px; font-weight: 700; border-radius: 5px; min-height: 0; }
 .game-header .codes button:hover { background: #2a281c; }
 .game-header .codes .count { color: #8f8a6c; align-self: center; }
-.header-view-toggles { display: flex; gap: 6px; }
+.header-view-toggles { display: flex; gap: 6px; align-self: flex-end; }
 .header-view-toggles button { width: 34px; height: 34px; padding: 0; font-size: 15px; min-height: 0; }
 .header-view-toggles button.active { background: var(--gold); border-color: var(--gold-deep); }
-.game-header .actions { display: flex; gap: 8px; }
 
 /* "hide interface" (streaming mode): tools, chat, and the zoom/lock/inspect
    toolbar disappear — everything else (board, hand, opponent info) stays,
@@ -216,7 +221,8 @@ input, textarea, select {
 .opp-rows .opp-info-row .opp-info-main { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .opp-rows .opp-info-row .hand-mini { display: flex; align-items: center; gap: 5px; }
 .opp-rows .mini-back { width: 12px; height: 16px; border-radius: 2px; border: 1px solid var(--carbon); background: var(--owner-color, #777); }
-.hand-stack-btn { display: flex; align-items: center; gap: 6px; padding: 3px 10px 3px 3px; min-height: 0; }
+.hand-stack-btn { display: flex; align-items: center; gap: 6px; padding: 3px 10px 3px 3px; min-height: 0; background: transparent; border: none; box-shadow: none; }
+.hand-stack-btn:hover { background: #ffffff1a; }
 .hand-stack-icon { position: relative; width: 32px; height: 24px; flex-shrink: 0; }
 .hand-stack-icon .hand-stack-card {
   position: absolute; top: 1px; width: 16px; height: 22px; border-radius: 3px;

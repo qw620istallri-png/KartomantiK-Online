@@ -1093,6 +1093,17 @@ function renderHeaderCodes() {
 // next time you open the app normally.
 let interfaceHidden = false;
 
+// A little playing-card outline with an eye inside, open or shut — a custom
+// SVG (not emoji) so the open/closed states render consistently everywhere,
+// used only for hideInterfaceBtn (hideCodesBtn's plain eye/see-no-evil emoji
+// pairing already reads fine on its own, no card framing needed there).
+function eyeCardIconSvg(open) {
+  const eye = open
+    ? `<path d="M5 12 Q12 7.5 19 12 Q12 16.5 5 12 Z" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="12" cy="12" r="2" fill="currentColor"/>`
+    : `<path d="M5 12.5 Q12 15.5 19 12.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/>`;
+  return `<svg viewBox="0 0 24 24" width="17" height="17"><rect x="3" y="2" width="18" height="20" rx="3" fill="none" stroke="currentColor" stroke-width="1.4"/>${eye}</svg>`;
+}
+
 function initViewToggles() {
   $("#hideCodesBtn").onclick = () => {
     codesHidden = !codesHidden;
@@ -1110,8 +1121,9 @@ function initViewToggles() {
     $("#gameScreen").classList.toggle("interface-hidden", interfaceHidden);
     $("#hideInterfaceBtn").classList.toggle("active", interfaceHidden);
     $("#hideInterfaceBtn").title = t(interfaceHidden ? "showInterface" : "hideInterface");
+    $("#hideInterfaceBtn").innerHTML = eyeCardIconSvg(!interfaceHidden);
   };
-  $("#hideInterfaceBtn").textContent = "🎥";
+  $("#hideInterfaceBtn").innerHTML = eyeCardIconSvg(true);
   $("#hideInterfaceBtn").title = t("hideInterface");
 }
 
@@ -1670,12 +1682,18 @@ function stackAnchorAt(el, excludeItemId) {
   return { anchorEl: cardEl, anchorId: anchorItem.id };
 }
 
-// Offset of a new card's top-left from the anchor's top-left, in the same
-// board-logical units as x/y — deliberately NOT run through rotateForSeat, since the
-// whole point is that this offset must look identical to both viewers.
+// Offset of a new card's top-left from the anchor's top-left, in
+// board-logical direction units. Captured in the dragging player's own raw
+// screen pixels, then rotated into board-logical terms via
+// rotateVectorForSeat so it means the same thing on the mat regardless of
+// which seat dragged it — a plain screen-pixel delta would have "up" mean
+// opposite mat-relative directions for seat 0 vs seat 1, since seat 1's
+// whole board is visually rotated 180°.
 function stackOffsetFrom(anchorEl, clientX, clientY) {
   const rect = anchorEl.getBoundingClientRect();
-  return { x: (clientX - rect.left) / zoomLevel - 75, y: (clientY - rect.top) / zoomLevel - 105 };
+  const dx = (clientX - rect.left) / zoomLevel - 75;
+  const dy = (clientY - rect.top) / zoomLevel - 105;
+  return rotateVectorForSeat(dx, dy);
 }
 
 function resolveDrop(ctx, clientX, clientY) {
@@ -1900,10 +1918,12 @@ let panY = 0;
 // to both seats: play a card on the right as P1 (near the Stalemate Zone)
 // and a y-only mirror leaves it on the right for P2 too — which is now The
 // Stack, since that side rotated. Only a full rotation stays consistent with
-// a background that's actually rotating. (Stacking offsets are deliberately
-// exempt from all of this — see stackOffsetFrom — since those describe one
-// card's position RELATIVE TO ANOTHER, not relative to the printed mat, and
-// must keep looking identical to both viewers regardless of seat.)
+// a background that's actually rotating. (Stacking offsets get a lighter
+// version of the same treatment — see rotateVectorForSeat/stackOffsetFrom —
+// since those describe one card's position RELATIVE TO ANOTHER, not relative
+// to the printed mat: no BOARD_SIZE translation, just the same 180°
+// direction flip, so the arrangement stays board-relatively consistent
+// instead of merely screen-pixel-identical.)
 //
 // rotateForSeat's one extra rule: a stored (x,y) is always a box's CSS
 // top-left, never a bare point. Rotating a box's top-left 180° around the
@@ -1941,6 +1961,15 @@ function mySeat() {
 
 function rotateForSeat(x, y, w = 0, h = 0) {
   return mySeat() === 1 ? { x: BOARD_SIZE - w - x, y: BOARD_SIZE - h - y } : { x, y };
+}
+
+// Same 180° rotation as rotateForSeat, but for a direction/delta rather than
+// a box's top-left: no BOARD_SIZE/w/h translation, just a sign flip (rotating
+// a vector 180° negates both components). Used for the stacking offset,
+// which describes "how far from the anchor" rather than an absolute spot on
+// the mat — see stackOffsetFrom.
+function rotateVectorForSeat(dx, dy) {
+  return mySeat() === 1 ? { x: -dx, y: -dy } : { x: dx, y: dy };
 }
 
 function applyTransform() {
@@ -2530,15 +2559,18 @@ function counterGridMenuItem(permKey, target) {
 // A stacked card's own x/y is a frozen fallback (wherever it was before being
 // stacked — see apply_stack_fields server-side), not its live position: while
 // stacked, it's rendered relative to its anchor's CURRENT screen position
-// instead. Crucially the offset itself is never rotated (see stackOffsetFrom's own
-// comment) — it's captured directly in screen pixels, so a deliberate overlap
-// arrangement looks identical to both players regardless of seat.
+// instead. The stored offset is board-logical (see stackOffsetFrom), so it's
+// rotated back into THIS viewer's own screen space via rotateVectorForSeat
+// before being added — same direction flip, applied per-viewer instead of
+// baked in once at capture time, so the arrangement reads the same relative
+// to the mat for both seats.
 function stackedScreenPos(item) {
   if (!item.stackedOn) return null;
   const anchor = latestState.battlefield.find((it) => it.id === item.stackedOn);
   if (!anchor) return null;
   const anchorPos = stackedScreenPos(anchor) || rotateForSeat(anchor.x, anchor.y, PILE_W, PILE_H);
-  return { x: anchorPos.x + item.stackOffsetX, y: anchorPos.y + item.stackOffsetY };
+  const offset = rotateVectorForSeat(item.stackOffsetX, item.stackOffsetY);
+  return { x: anchorPos.x + offset.x, y: anchorPos.y + offset.y };
 }
 
 function renderBattlefield() {
