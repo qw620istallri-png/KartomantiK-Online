@@ -207,6 +207,7 @@ const ui = {
     plDiscarded: "discarded",
     plFrom: "from",
     plPutInto: "put",
+    plAnUnknownCard: "a card",
   },
 };
 

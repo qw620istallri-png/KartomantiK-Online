@@ -726,32 +726,45 @@ function setMyActivity(activity) {
 // anti-cheat record, meant to be read by whoever's debugging a dispute, not
 // glanced at mid-game. This is a much narrower, friendlier subset/format of
 // the SAME underlying entries, limited to the handful of actions the user
-// explicitly asked for: drew, discarded/moved a (nameable) card, played.
-const PLAYER_LOG_TYPES = new Set(["draw", "draw_to_limit", "move_card", "place_card"]);
+// explicitly asked for: drew, discarded/moved a card, played, including a
+// card leaving the battlefield straight into a pile.
+const PLAYER_LOG_TYPES = new Set(["draw", "draw_to_limit", "move_card", "place_card", "remove_battlefield_item"]);
 
 function isPlayerLogRelevant(e) {
   if (!PLAYER_LOG_TYPES.has(e.type)) return false;
-  // move_card with no cardId is a private-to-private move with nothing
-  // nameable to show, so it's skipped — but place_card legitimately has no
-  // cardId for a face-down play, and that case IS still shown (redacted, see
-  // formatPlayerLogEntry), so it must not be filtered out here too.
-  if (e.type === "move_card") return Boolean(e.details && e.details.cardId);
-  return true;
+  // a synthetic token-card has no real identity at all — nothing to show
+  return !(e.type === "remove_battlefield_item" && e.details && e.details.tokenCard);
 }
 
+// Cards that came from a private zone (e.g. what a scry decides to do with a
+// card) often have no cardId in the log at all — that's the server's own
+// privacy redaction, not a bug — but the EVENT itself ("put a card into X")
+// is still worth showing, just with the identity withheld, the same way a
+// face-down play already gets a generic "a face-down card" instead of being
+// dropped from the feed entirely.
+function namedOrUnknownCard(cardId) {
+  return cardId ? `"${esc(cardName(cardId))}"` : esc(t("plAnUnknownCard"));
+}
+
+// Returns safe HTML (the actor's name is colour-coded), not plain text — the
+// caller must NOT re-escape the result, only insert it directly.
 function formatPlayerLogEntry(e) {
-  const who = e.actorName || e.actorId || "?";
+  const who = `<b style="color:${playerColor(e.actorId)}">${esc(e.actorName || e.actorId || "?")}</b>`;
   const d = e.details || {};
   switch (e.type) {
     case "draw":
     case "draw_to_limit":
-      return `${who} ${t("plDrew")} ${d.count}`;
+      return `${who} ${esc(t("plDrew"))} ${d.count}`;
     case "place_card":
-      return d.faceUp ? `${who} ${t("plPlayed")} "${cardName(d.cardId)}"` : `${who} ${t("plPlayedFaceDown")}`;
+      return d.faceUp ? `${who} ${esc(t("plPlayed"))} ${namedOrUnknownCard(d.cardId)}` : `${who} ${esc(t("plPlayedFaceDown"))}`;
     case "move_card":
       return d.toZone === "graveyard"
-        ? `${who} ${t("plDiscarded")} "${cardName(d.cardId)}" (${t("plFrom")} ${t(d.fromZone)})`
-        : `${who} ${t("plPutInto")} "${cardName(d.cardId)}" → ${t(d.toZone)}`;
+        ? `${who} ${esc(t("plDiscarded"))} ${namedOrUnknownCard(d.cardId)} (${esc(t("plFrom"))} ${esc(t(d.fromZone))})`
+        : `${who} ${esc(t("plPutInto"))} ${namedOrUnknownCard(d.cardId)} → ${esc(t(d.toZone))}`;
+    case "remove_battlefield_item":
+      return d.toZone === "graveyard"
+        ? `${who} ${esc(t("plDiscarded"))} ${namedOrUnknownCard(d.cardId)} (${esc(t("plFrom"))} ${esc(t("battlefield"))})`
+        : `${who} ${esc(t("plPutInto"))} ${namedOrUnknownCard(d.cardId)} → ${esc(t(d.toZone))}`;
     default:
       return "";
   }
@@ -769,10 +782,15 @@ function renderPlayerLog(entries, playerId) {
   $("#playerLogHeading").textContent = player ? player.name : t("logHeader");
   const relevant = entries.filter((e) => e.actorId === playerId && isPlayerLogRelevant(e));
   $("#playerLogEntries").innerHTML = relevant.length
-    ? relevant.map((e) => `<div class="log-entry"><div class="t">${new Date(e.timestamp * 1000).toLocaleString()}</div><div class="what">${esc(formatPlayerLogEntry(e))}</div></div>`).join("")
+    ? relevant.map((e) => `<div class="log-entry"><div class="t">${new Date(e.timestamp * 1000).toLocaleString()}</div><div class="what">${formatPlayerLogEntry(e)}</div></div>`).join("")
     : `<p>${esc(t("logEmpty"))}</p>`;
   $("#playerLogPanel").classList.remove("hidden");
 }
+
+// Which players' mini activity feed is currently collapsed down to just its
+// controls (the ▸/▾ toggle + the ··· button) — a per-player choice so an
+// observer watching several players can collapse only the noisy ones.
+const recentLogCollapsed = new Set();
 
 function renderOppRows() {
   const rows = $("#oppRows");
@@ -784,8 +802,15 @@ function renderOppRows() {
       const viewHandLabel = isObserver ? `${esc(p.name)}: ${esc(t("viewHand"))} (${handCount})` : `${esc(t("opponentHand"))} ${handCount}`;
       const vesselPoints = receptaclePoints(p.zones.receptacle, p.score);
       const recent = (latestState.recentLog || []).filter((e) => e.actorId === p.id && isPlayerLogRelevant(e)).slice(-3);
+      const collapsed = recentLogCollapsed.has(p.id);
       const recentHtml = recent.length
-        ? `<div class="opp-recent-log">${recent.map((e) => `<div>${esc(formatPlayerLogEntry(e))}</div>`).join("")}<button data-open-player-log="${esc(p.id)}">···</button></div>`
+        ? `<div class="opp-recent-log${collapsed ? " collapsed" : ""}">
+            <div class="opp-recent-log-lines">${recent.map((e) => `<div>${formatPlayerLogEntry(e)}</div>`).join("")}</div>
+            <div class="opp-recent-log-controls">
+              <button data-toggle-recent-log="${esc(p.id)}">${collapsed ? "▸" : "▾"}</button>
+              <button data-open-player-log="${esc(p.id)}">···</button>
+            </div>
+          </div>`
         : "";
       return `<div class="opp-info-row">
         <div class="opp-info-main">
@@ -808,6 +833,15 @@ function renderOppRows() {
     btn.onclick = (e) => {
       e.stopPropagation();
       openPlayerLog(btn.dataset.openPlayerLog);
+    };
+  });
+  $$("[data-toggle-recent-log]").forEach((btn) => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      const pid = btn.dataset.toggleRecentLog;
+      if (recentLogCollapsed.has(pid)) recentLogCollapsed.delete(pid);
+      else recentLogCollapsed.add(pid);
+      renderOppRows();
     };
   });
 }
@@ -923,13 +957,14 @@ function stagePileBrowserChoice(ownerId, zone, cardId, entry) {
 // pileBrowserStaged) instead of sending it right away.
 // A position:fixed clone that tracks the card while zoomed in, so it can
 // never be clipped by the browser's own scroll container (see the CSS note
-// on .db-card-hover-clone).
-function wireDbCardHoverZoom(el) {
+// on .db-card-hover-clone). Generic over the clone class name so the same
+// helper covers both the pile browser's cards and the hand tray's.
+function wireCardHoverZoom(el, cloneClassName) {
   let clone = null;
   el.addEventListener("mouseenter", () => {
     const rect = el.getBoundingClientRect();
     clone = el.cloneNode(true);
-    clone.className = "db-card-hover-clone";
+    clone.className = cloneClassName;
     clone.style.left = rect.left + "px";
     clone.style.top = rect.top + "px";
     clone.style.width = rect.width + "px";
@@ -947,7 +982,7 @@ function wirePileBrowserCards(ownerId, zone) {
   $$("#deckBrowserCards [data-zone-card]").forEach((el) => {
     const cardId = el.dataset.zoneCard.split(":")[2];
     bindCardDragSource(el, { kind: "card", cardId, fromOwnerId: ownerId, fromZone: zone });
-    wireDbCardHoverZoom(el);
+    wireCardHoverZoom(el, "db-card-hover-clone");
     el.addEventListener("click", (event) => {
       const items = [
         { label: t("inspect"), onSelect: () => showInspect(cardId) },
@@ -1419,6 +1454,7 @@ function renderHandTray() {
       else if (mode === "show") send({ type: "reveal", zone: "hand", cardId });
     };
     bindCardDragSource(el, { kind: "card", cardId, fromOwnerId: meId, fromZone: "hand" });
+    wireCardHoverZoom(el, "hand-card-hover-clone");
     el.addEventListener("contextmenu", (event) => {
       event.preventDefault();
       showContextMenu(event.clientX, event.clientY, [
@@ -2365,6 +2401,20 @@ function initHandViewResize() {
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
   });
+  // the row scrolls sideways (see the single-line CSS) — without this, an
+  // un-stopped wheel bubbles up into the board's own wheel handler and zooms
+  // the field instead, same fix as the hand tray and reveal panel already have
+  $("#handViewCards").addEventListener(
+    "wheel",
+    (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      if ($("#handViewCards").scrollWidth > $("#handViewCards").clientWidth) {
+        $("#handViewCards").scrollLeft += event.deltaY;
+      }
+    },
+    { passive: false }
+  );
 }
 
 // ---------------------------------------------------------------- hand resize
@@ -2377,16 +2427,13 @@ function applyHandCardHeight() {
   document.documentElement.style.setProperty("--hand-card-h", handCardHeight + "px");
   // hover should make a card easier to read, not comically huge: a full 30%
   // bump for a normal-sized hand, but capped to +80 logical px once the hand
-  // is already large, so an already-huge hand doesn't get even huger
+  // is already large, so an already-huge hand doesn't get even huger. Applied
+  // to a position:fixed CLONE (see wireHandCardHoverZoom), not the card
+  // itself, so the tray's own top padding no longer needs to reserve any
+  // headroom for it — that used to make the gap around the resize handle
+  // much bigger than the one below the cards.
   const hoverScale = Math.min(1.3, (handCardHeight + 80) / handCardHeight);
   document.documentElement.style.setProperty("--hand-hover-scale", hoverScale.toFixed(3));
-  // the tray's own top padding is reserved headroom for that same hover grow
-  // (half the height increase, since the scale is centered, plus the hover's
-  // 10px lift) — computed from the current card height/scale instead of a
-  // fixed guess, so it's never more than exactly what's needed to avoid
-  // clipping the grown card against the tray's overflow:hidden
-  const topPad = Math.ceil((handCardHeight * (hoverScale - 1)) / 2 + 10 + 4);
-  document.documentElement.style.setProperty("--hand-tray-top-pad", topPad + "px");
 }
 
 function initHandResize() {
@@ -2677,7 +2724,9 @@ let chatState = "open"; // "open" | "minimized" | "closed"
 let unreadChatCount = 0;
 
 function renderChatMessages() {
-  $("#chatMessages").innerHTML = chatMessages.map((m) => `<div class="chat-msg"><b>${esc(m.byName)}:</b> ${esc(m.text)}</div>`).join("");
+  $("#chatMessages").innerHTML = chatMessages
+    .map((m) => `<div class="chat-msg"><b style="color:${playerColor(m.byId)}">${esc(m.byName)}:</b> ${esc(m.text)}</div>`)
+    .join("");
   $("#chatMessages").scrollTop = $("#chatMessages").scrollHeight;
 }
 

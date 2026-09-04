@@ -209,12 +209,15 @@ input, textarea, select {
   padding: 3px 9px; font-size: 14px; font-weight: 700; white-space: nowrap;
 }
 .opp-rows .opp-activity { font-size: 14px; font-style: italic; color: var(--gold); }
-.opp-rows .opp-recent-log { display: grid; gap: 1px; font-size: 14px; color: #cfc7a8; }
-.opp-rows .opp-recent-log button {
-  display: block; width: 100%; text-align: left; background: transparent; border: 0; padding: 1px 0;
-  color: var(--gold-pale); font-weight: 700; font-size: 14px; min-height: 0;
+.opp-rows .opp-recent-log { font-size: 14px; color: #cfc7a8; }
+.opp-rows .opp-recent-log-lines { display: grid; gap: 1px; }
+.opp-rows .opp-recent-log.collapsed .opp-recent-log-lines { display: none; }
+.opp-rows .opp-recent-log-controls { display: flex; justify-content: flex-end; gap: 3px; margin-top: 2px; }
+.opp-rows .opp-recent-log-controls button {
+  background: transparent; border: 1px solid #4a4732; border-radius: 4px; padding: 0 7px; min-height: 0;
+  color: var(--gold-pale); font-weight: 700; font-size: 14px; line-height: 1.6;
 }
-.opp-rows .opp-recent-log button:hover { text-decoration: underline; }
+.opp-rows .opp-recent-log-controls button:hover { background: var(--gold-deep); color: var(--carbon); }
 
 .chat-panel {
   width: 260px; background: #171714cc; border: 1px solid var(--gold-deep); border-radius: 8px; overflow: hidden;
@@ -229,7 +232,6 @@ input, textarea, select {
 .chat-messages { max-height: 160px; overflow-y: auto; padding: 6px 9px; display: grid; gap: 4px; scrollbar-width: none; }
 .chat-messages::-webkit-scrollbar { display: none; }
 .chat-messages .chat-msg { font-size: 14px; color: var(--gold-pale); line-height: 1.35; word-break: break-word; }
-.chat-messages .chat-msg b { color: var(--gold); }
 .chat-input-row { display: flex; gap: 4px; padding: 6px; border-top: 1px solid #4a4732; }
 .chat-input-row input { flex: 1; font-size: 14px; padding: 5px 8px; background: #0000004d; border-color: #4a4732; color: var(--gold-pale); }
 .chat-input-row input::placeholder { color: #8f8a6c; }
@@ -247,7 +249,10 @@ input, textarea, select {
 .hand-view-panel {
   position: absolute; z-index: 25; top: 48px; left: 50%; transform: translateX(-50%);
   background: #171714ee; border: 2px solid var(--gold-deep); border-radius: 10px; padding: 20px 24px 16px;
-  max-width: min(90%, 780px);
+  /* grows with the card size (dragging the resize handle bigger), so
+     enlarging the cards doesn't just force more sideways scrolling to see
+     the same number of them — roughly card-width * 5 + chrome */
+  max-width: min(94vw, calc(var(--hv-card-h, 182px) * 3.6 + 120px));
 }
 .hand-view-close {
   position: absolute; top: -14px; right: -14px; width: 30px; height: 30px; padding: 0; border-radius: 50%;
@@ -413,15 +418,12 @@ input, textarea, select {
    resizing the hand cards, so the toolbar and tray behind it can stay
    transparent: just the cards and buttons floating over the board */
 /* absolutely positioned (not a normal-flow sibling before the tray) so it can
-   sit right above the resting cards — 14px gap, same as the cards' own
-   bottom gap — instead of above the tray's full reserved hover-grow headroom,
-   which left a much bigger gap than the one below the cards. Its HEIGHT fills
-   the rest of that reserved headroom up to the toolbar, so there's no gap
-   left dangling above it either — the handle occupies the whole space
-   between toolbar and cards instead of floating in the middle of it. */
+   sit with a small, FIXED 14px gap on both sides — to the toolbar above and
+   to the cards below, matching the cards' own bottom gap — now that the
+   hover-grow no longer needs any reserved headroom here (see the
+   .hand-card-hover-clone note on .hand-tray below) */
 .hand-resize-handle {
-  position: absolute; left: 0; right: 0; bottom: calc(var(--hand-card-h, 170px) + 28px);
-  height: calc(var(--hand-tray-top-pad, 40px) - 14px);
+  position: absolute; left: 0; right: 0; height: 10px; bottom: calc(var(--hand-card-h, 170px) + 28px);
   cursor: ns-resize; background: linear-gradient(90deg, transparent, var(--gold-deep) 50%, transparent); opacity: .5;
 }
 .hand-resize-handle:hover { opacity: .9; }
@@ -435,13 +437,14 @@ input, textarea, select {
 .hand-toolbar #handHideBtn { padding: 12px 20px; font-size: 15px; }
 
 .hand-tray {
-  display: flex; gap: 10px; padding: var(--hand-tray-top-pad, 40px) 18px 14px; background: transparent; overflow-x: auto; overflow-y: hidden;
-  /* top padding is headroom for the hover-grow transform, not visual spacing
-     (see applyHandCardHeight, which computes exactly how much is needed for
-     the current card size/scale). Without it, overflow-y:hidden (needed so a
-     wide hand's horizontal scrollbar doesn't grow one vertically too) would
-     clip the top of every hover-enlarged card. */
-  height: calc(var(--hand-card-h, 170px) + var(--hand-tray-top-pad, 40px) + 14px); align-items: flex-end; justify-content: center;
+  display: flex; gap: 10px; padding: 38px 18px 14px; background: transparent; overflow-x: auto; overflow-y: hidden;
+  /* 38px top = 14 (gap to toolbar) + 10 (handle) + 14 (gap to cards), all
+     fixed: the hover-grow effect is a position:fixed CLONE now (see
+     .hand-card-hover-clone), so this padding no longer needs to reserve any
+     extra headroom — overflow-y:hidden (kept so a wide hand's horizontal
+     scrollbar doesn't grow one vertically too) never clips the clone, since
+     it isn't a descendant of this element at all. */
+  height: calc(var(--hand-card-h, 170px) + 52px); align-items: flex-end; justify-content: center;
   scrollbar-width: none;
 }
 .hand-tray::-webkit-scrollbar { display: none; }
@@ -449,8 +452,19 @@ input, textarea, select {
   position: relative; width: calc(var(--hand-card-h, 170px) * 0.716); height: var(--hand-card-h, 170px); border-radius: 8px; border: 2px solid var(--carbon); overflow: hidden; flex-shrink: 0;
   box-shadow: 2px 4px 8px #0004; cursor: grab; background: #fff; transition: transform .12s ease;
 }
-.hand-card:hover { transform: translateY(-10px) scale(var(--hand-hover-scale, 1.3)); box-shadow: 2px 8px 16px #0005; z-index: 3; }
 .hand-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* the grow-on-hover is a position:fixed CLONE (see wireHandCardHoverZoom),
+   not a transform on the card itself — same technique as the pile browser's
+   .db-card-hover-clone, and for the same reason: .hand-tray scrolls
+   (overflow-x:auto/overflow-y:hidden), so an in-place transform would need
+   reserved headroom to avoid being clipped, which is exactly the extra
+   space that used to sit between the resize handle and the toolbar. */
+.hand-card-hover-clone {
+  position: fixed; z-index: 60; pointer-events: none; border-radius: 8px; overflow: hidden;
+  border: 2px solid var(--carbon); box-shadow: 2px 8px 16px #0005; transition: transform .12s ease; transform: translateY(0) scale(1);
+}
+.hand-card-hover-clone.zoomed { transform: translateY(-10px) scale(var(--hand-hover-scale, 1.3)); }
+.hand-card-hover-clone img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .hand-card-revealed-icon {
   position: absolute; top: 4px; right: 4px; background: #171714cc; color: var(--gold-pale); border-radius: 50%;
   width: 22px; height: 22px; display: grid; place-items: center; font-size: 14px; line-height: 1;
@@ -574,7 +588,7 @@ input, textarea, select {
   border: 2px solid var(--owner-color, var(--carbon)); overflow: hidden; box-shadow: 2px 4px 8px #0004; cursor: pointer;
 }
 .deck-browser-cards .db-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-/* the zoom-on-hover is a position:fixed CLONE (see wireDbCardHoverZoom), not a
+/* the zoom-on-hover is a position:fixed CLONE (see wireCardHoverZoom), not a
    transform on the card itself: .deck-browser-cards scrolls (overflow-y:auto),
    so an in-place transform:scale got clipped/sliced at the container's own
    edge whenever the enlarged card neared it — a fixed clone can't be clipped
