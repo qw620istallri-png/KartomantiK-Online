@@ -6,6 +6,9 @@ const ZONES = ["deck", "hand", "graveyard", "exile", "receptacle"];
 const PRIVATE_ZONES = new Set(["deck", "hand"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
+// Keep this value in sync with index.html and style.css when a local asset changes.
+const STATIC_ASSET_VERSION = "20260905-1";
+const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 
 // the 7 temperaments, their real card-art ink colour and their symbol image
 const TEMPERAMENTS = [
@@ -21,7 +24,7 @@ function temperamentInk(key) {
   return TEMPERAMENTS.find((t2) => t2.key === key)?.ink || "#6b5b2f";
 }
 function temperamentSymbol(key) {
-  return `temperaments/${key}.png`;
+  return staticAsset(`temperaments/${key}.webp`);
 }
 function tokenCardFaceHtml(item) {
   return `<div class="token-card-face">
@@ -74,9 +77,87 @@ function cardImage(cardId) {
   return card ? card.image : "";
 }
 
+const RARITY_EFFECTS_KEY = "ko_rarity_effects_disabled";
+const RARITY_IDS = new Set(["foil", "silver", "gold", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter"]);
+let rarityEffectsDisabled = localStorage.getItem(RARITY_EFFECTS_KEY) === "1";
+
+function normalizeRarity(rarity) {
+  return RARITY_IDS.has(rarity) ? rarity : null;
+}
+function rarityBase(rarity) {
+  return rarity && rarity.endsWith("-glitter") ? rarity.slice(0, -8) : rarity;
+}
+function rarityClassAttr(rarity) {
+  const normalized = normalizeRarity(rarity);
+  if (!normalized) return "";
+  const base = rarityBase(normalized);
+  return ` ko-rarity-card rarity-${base}${base !== normalized ? " rarity-glitter-fx" : ""}`;
+}
+function rarityDecorMarkup(rarity) {
+  return normalizeRarity(rarity)?.endsWith("-glitter") ? '<i class="rarity-glitter-layer" aria-hidden="true"></i>' : "";
+}
+function rarityForCard(ownerId, cardId) {
+  return normalizeRarity(latestState?.players?.[ownerId]?.cardRarities?.[cardId]);
+}
+function rarityCosmosStyle(cardId) {
+  let hash = 0;
+  for (let i = 0; i < String(cardId).length; i++) hash = (hash * 31 + String(cardId).charCodeAt(i)) | 0;
+  const x = Math.abs(hash % 1000) / 10;
+  const y = Math.abs((hash >> 8) % 1000) / 10;
+  return `--cosmos-x:${x.toFixed(1)}%;--cosmos-y:${y.toFixed(1)}%;`;
+}
+function updateRarityPointer(el, event, tilt, source = el) {
+  if (!el || rarityEffectsDisabled) return;
+  const rect = source.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+  const x = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+  const y = Math.max(0, Math.min(1, (event.clientY - rect.top) / rect.height));
+  el.style.setProperty("--spot-x", `${(x * 100).toFixed(1)}%`);
+  el.style.setProperty("--spot-y", `${(y * 100).toFixed(1)}%`);
+  el.style.setProperty("--fx-shift-x", `${((x - .5) * 10).toFixed(1)}px`);
+  el.style.setProperty("--fx-shift-y", `${((y - .5) * 8).toFixed(1)}px`);
+  if (tilt) {
+    el.style.setProperty("--rarity-tilt-x", `${((x - .5) * 18).toFixed(2)}deg`);
+    el.style.setProperty("--rarity-tilt-y", `${((.5 - y) * 14).toFixed(2)}deg`);
+  }
+}
+function bindRarityPointer(el, tilt = false, source = el) {
+  if (!el || !source || !el.classList.contains("ko-rarity-card")) return;
+  source.addEventListener("pointermove", (event) => updateRarityPointer(el, event, tilt, source));
+  source.addEventListener("pointerleave", () => {
+    el.style.setProperty("--spot-x", "50%");
+    el.style.setProperty("--spot-y", "50%");
+    el.style.setProperty("--fx-shift-x", "0px");
+    el.style.setProperty("--fx-shift-y", "0px");
+    if (tilt) {
+      el.style.setProperty("--rarity-tilt-x", "0deg");
+      el.style.setProperty("--rarity-tilt-y", "0deg");
+    }
+  });
+}
+function applyRarityEffectsPreference() {
+  document.body.classList.toggle("rarity-effects-disabled", rarityEffectsDisabled);
+  const button = $("#rarityEffectsToggleBtn");
+  if (!button) return;
+  button.classList.toggle("active", !rarityEffectsDisabled);
+  button.setAttribute("aria-pressed", String(!rarityEffectsDisabled));
+  button.textContent = rarityEffectsDisabled ? "✧" : "✨";
+  button.title = t(rarityEffectsDisabled ? "enableRarityEffects" : "disableRarityEffects");
+}
+function initRarityEffectsToggle() {
+  const button = $("#rarityEffectsToggleBtn");
+  applyRarityEffectsPreference();
+  button.onclick = () => {
+    rarityEffectsDisabled = !rarityEffectsDisabled;
+    localStorage.setItem(RARITY_EFFECTS_KEY, rarityEffectsDisabled ? "1" : "0");
+    applyRarityEffectsPreference();
+    renderAll();
+  };
+}
+
 async function loadCardDatabase() {
   try {
-    const res = await fetch("cards-data.json");
+    const res = await fetch(staticAsset("cards-data.json"));
     const list = await res.json();
     cardsById = new Map(list.map((c) => [c.id, c]));
     cardsByNumber = new Map(list.map((c) => [Number(c.collectionNumber), c]));
@@ -87,7 +168,7 @@ async function loadCardDatabase() {
 
 async function loadStarterDecks() {
   try {
-    const res = await fetch("starter-decks.json");
+    const res = await fetch(staticAsset("starter-decks.json"));
     starterDecks = await res.json();
   } catch (e) {
     console.error("Failed to load starter decks", e);
@@ -997,7 +1078,8 @@ function wireCardHoverZoom(el, cloneClassName) {
     clearClone();
     const rect = el.getBoundingClientRect();
     clone = el.cloneNode(true);
-    clone.className = cloneClassName;
+    const rarityClasses = [...el.classList].filter((name) => name === "ko-rarity-card" || name.startsWith("rarity-"));
+    clone.className = [cloneClassName, ...rarityClasses].join(" ");
     clone.style.left = rect.left + "px";
     clone.style.top = rect.top + "px";
     clone.style.width = rect.width + "px";
@@ -1011,6 +1093,9 @@ function wireCardHoverZoom(el, cloneClassName) {
     });
     removalObserver.observe(el.parentNode, { childList: true });
     requestAnimationFrame(() => clone && clone.classList.add("zoomed"));
+  });
+  el.addEventListener("mousemove", (event) => {
+    if (clone) updateRarityPointer(clone, event, true, el);
   });
   el.addEventListener("mouseleave", clearClone);
 }
@@ -1451,8 +1536,10 @@ function renderHandTray() {
     .map((cid) => {
       const isNew = !previousHandCardIds.has(cid);
       const wasRevealed = myRevealed && myRevealed.has(cid);
-      return `<div class="hand-card ${isNew ? "ko-pop-in" : ""}" data-hand-card="${esc(cid)}" title="${esc(cardName(cid))}">
+      const rarity = rarityForCard(meId, cid);
+      return `<div class="hand-card ${isNew ? "ko-pop-in" : ""}${rarityClassAttr(rarity)}" data-hand-card="${esc(cid)}" title="${esc(cardName(cid))}" style="${rarityCosmosStyle(cid)}">
       <img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}">
+      ${rarityDecorMarkup(rarity)}
       ${wasRevealed ? `<span class="hand-card-revealed-icon" title="${esc(t("revealHeader"))}">👁</span>` : ""}
     </div>`;
     })
@@ -1469,6 +1556,7 @@ function renderHandTray() {
       else if (mode === "show") send({ type: "reveal", zone: "hand", cardId });
     };
     bindCardDragSource(el, { kind: "card", cardId, fromOwnerId: meId, fromZone: "hand" });
+    bindRarityPointer(el, false);
     wireCardHoverZoom(el, "hand-card-hover-clone");
     el.addEventListener("contextmenu", (event) => {
       event.preventDefault();
@@ -2619,7 +2707,8 @@ function renderBattlefield() {
     if (item.isTokenCard) {
       inner = `<div class="bf-card-face" style="background:${esc(temperamentInk(item.temperament))}">${tokenCardFaceHtml(item)}</div>`;
     } else if (item.faceUp && item.cardId) {
-      inner = `<div class="bf-card-face"><img src="${esc(cardImage(item.cardId))}" alt="${esc(cardName(item.cardId))}" title="${esc(cardName(item.cardId))}"></div>`;
+      const rarity = normalizeRarity(item.rarity);
+      inner = `<div class="bf-card-face${rarityClassAttr(rarity)}" style="${rarityCosmosStyle(item.cardId)}"><img src="${esc(cardImage(item.cardId))}" alt="${esc(cardName(item.cardId))}" title="${esc(cardName(item.cardId))}">${rarityDecorMarkup(rarity)}</div>`;
     } else if (canPeek && item.cardId) {
       // the owner (or an observer) gets a faint, colour-tinted peek at a face-down card
       inner = `<div class="bf-card-face"><div class="back-face owner-peek"><img src="${esc(cardImage(item.cardId))}"></div></div>`;
@@ -2682,6 +2771,7 @@ function renderBattlefield() {
       showCardLabels(el, canSeeName ? cardName(item.cardId) : null, (latestState.players[item.ownerId] || {}).name || "");
     });
     bf.appendChild(el);
+    bindRarityPointer(el.querySelector(".bf-card-face.ko-rarity-card"), false, el);
   });
 
   latestState.tokens.forEach((token) => {
@@ -3138,6 +3228,7 @@ async function boot() {
   initDiceToolbar();
   initPileCalibration();
   initInspectToolbar();
+  initRarityEffectsToggle();
   initChat();
   initViewToggles();
   $("#playerLogCloseBtn").onclick = () => $("#playerLogPanel").classList.add("hidden");

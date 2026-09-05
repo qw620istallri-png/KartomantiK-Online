@@ -46,6 +46,7 @@ def make_player(player_id, name, cluster_index=0):
         "score": 0,
         "seat": seat,
         "zones": {zone: [] for zone in ALL_ZONES},
+        "cardRarities": {},
         "activity": None,  # transient "what menu are they in" hint, never private
     }
 
@@ -142,6 +143,7 @@ class Session:
                 "score": player["score"],
                 "seat": player["seat"],
                 "zones": zones_view,
+                "cardRarities": dict(player.get("cardRarities", {})) if is_observer or pid == viewer_id else {},
                 "activity": player.get("activity"),
             }
 
@@ -167,6 +169,8 @@ class Session:
                 entry["isTokenCard"] = True
                 entry["temperament"] = item["temperament"]
                 entry["power"] = item["power"]
+            elif card_id is not None and item.get("rarity"):
+                entry["rarity"] = item["rarity"]
             if item.get("stackedOn"):
                 entry["stackedOn"] = item["stackedOn"]
                 entry["stackOffsetX"] = item["stackOffsetX"]

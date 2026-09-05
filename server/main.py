@@ -21,12 +21,18 @@ from websockets.exceptions import ConnectionClosed
 
 from session import Session, new_id, PRIVATE_ZONES, SHARED_ZONES, ALL_ZONES
 
+mimetypes.add_type("image/webp", ".webp")
+
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("kartomantik-online")
 
 PUBLIC_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "public"))
 HAND_LIMIT = 7
 TEMPERAMENTS = {"capricious", "choleric", "hollow", "melancholic", "phlegmatic", "transcendent", "vitreous"}
+RARITIES = {"foil", "silver", "gold", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter"}
+VERSIONED_CACHE = "public, max-age=31536000, immutable"
+STATIC_CACHE = "public, max-age=86400, stale-while-revalidate=604800"
+STATIC_CACHE_EXTENSIONS = {".avif", ".gif", ".ico", ".jpeg", ".jpg", ".png", ".svg", ".ttf", ".webp", ".woff", ".woff2"}
 
 
 def find_player_ws(session, player_id):
@@ -95,6 +101,7 @@ def find_session_by_code(code):
 # ---------------------------------------------------------------- static files
 
 async def serve_static(path):
+    versioned = "?v=" in path
     if path in ("", "/"):
         path = "/index.html"
     path = path.split("?", 1)[0]
@@ -116,7 +123,15 @@ async def serve_static(path):
     headers = Headers()
     headers["Content-Type"] = content_type or "application/octet-stream"
     headers["Content-Length"] = str(len(body))
-    headers["Cache-Control"] = "no-cache"
+    extension = os.path.splitext(full_path)[1].lower()
+    if safe_rel == "index.html":
+        headers["Cache-Control"] = "no-cache"
+    elif versioned:
+        headers["Cache-Control"] = VERSIONED_CACHE
+    elif extension in STATIC_CACHE_EXTENSIONS:
+        headers["Cache-Control"] = STATIC_CACHE
+    else:
+        headers["Cache-Control"] = "no-cache"
     headers["Connection"] = "close"
     return Response(200, "OK", headers, body)
 
@@ -129,6 +144,10 @@ async def process_request(connection, request):
 
 # ---------------------------------------------------------------- broadcasting
 
+def encode_message(payload):
+    return json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
+
+
 async def broadcast_state(session):
     stale = []
     observer_count = sum(1 for info in connections.values() if info["session"] is session and info["isObserver"])
@@ -138,7 +157,7 @@ async def broadcast_state(session):
         payload = session.serialize_for(info["playerId"], info["isObserver"])
         payload["observerCount"] = observer_count
         try:
-            await ws.send(json.dumps(payload))
+            await ws.send(encode_message(payload))
         except ConnectionClosed:
             stale.append(ws)
     for ws in stale:
@@ -147,7 +166,7 @@ async def broadcast_state(session):
 
 async def send_to(ws, payload):
     try:
-        await ws.send(json.dumps(payload))
+        await ws.send(encode_message(payload))
     except ConnectionClosed:
         connections.pop(ws, None)
 
@@ -172,6 +191,18 @@ def extract_deck_card_ids(deck_json):
     return ids
 
 
+def extract_deck_card_rarities(deck_json, card_ids):
+    allowed_cards = set(card_ids)
+    raw = deck_json.get("cardRarities") or {}
+    if not isinstance(raw, dict):
+        return {}
+    return {
+        card_id: rarity
+        for card_id, rarity in raw.items()
+        if card_id in allowed_cards and rarity in RARITIES
+    }
+
+
 async def handle_message(ws, info, data):
     session = info["session"]
     actor_id = info["playerId"]
@@ -184,13 +215,16 @@ async def handle_message(ws, info, data):
         player = session.players.get(actor_id)
         if player is None:
             return await send_error(ws, "Unknown player.")
-        card_ids = extract_deck_card_ids(data.get("deck") or {})
+        deck_json = data.get("deck") or {}
+        card_ids = extract_deck_card_ids(deck_json)
+        card_rarities = extract_deck_card_rarities(deck_json, card_ids)
         random.shuffle(card_ids)
         player["zones"]["deck"] = card_ids
         player["zones"]["hand"] = []
         player["zones"]["graveyard"] = []
         player["zones"]["exile"] = []
         player["zones"]["receptacle"] = []
+        player["cardRarities"] = card_rarities
         player["score"] = 0
         session.add_log(actor_id, "import_deck", {"count": len(card_ids)})
         session.touch()
@@ -412,6 +446,10 @@ async def handle_message(ws, info, data):
         if card_id not in from_player["zones"][from_zone]:
             return await send_error(ws, "Card not found in source zone.")
         from_player["zones"][from_zone].remove(card_id)
+        if from_owner != to_owner:
+            rarity = from_player.get("cardRarities", {}).pop(card_id, None)
+            if rarity:
+                to_player.setdefault("cardRarities", {})[card_id] = rarity
         position = data.get("position") or "top"
         if position == "bottom":
             to_player["zones"][to_zone].append(card_id)
@@ -452,6 +490,7 @@ async def handle_message(ws, info, data):
             "faceUp": bool(data.get("faceUp", True)),
             "rotation": float(data.get("rotation") or 0),
             "counters": {},
+            "rarity": player.get("cardRarities", {}).get(card_id),
             "stackedOn": None,
         }
         stack_error = apply_stack_fields(session, item, data)
@@ -545,6 +584,12 @@ async def handle_message(ws, info, data):
             return await send_error(ws, "Unknown destination player.")
         session.battlefield.remove(item)
         unstack_dependents(session, item["id"])
+        if to_owner != item["ownerId"]:
+            source = session.players.get(item["ownerId"])
+            if source is not None:
+                source.get("cardRarities", {}).pop(item["cardId"], None)
+            if item.get("rarity"):
+                player.setdefault("cardRarities", {})[item["cardId"]] = item["rarity"]
         # index 0 is always "the last card that entered" / the top of a deck,
         # so shared-zone piles can show it and drawing keeps working intuitively
         position = data.get("position") or "top"
@@ -924,7 +969,7 @@ async def handler(ws):
 async def main():
     host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", "8787"))
-    async with serve(handler, host, port, process_request=process_request):
+    async with serve(handler, host, port, process_request=process_request, compression="deflate"):
         log.info("Kartomantik Online listening on %s:%s", host, port)
         await asyncio.Future()
 

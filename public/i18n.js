@@ -174,6 +174,8 @@ const ui = {
     undo: "Undo",
     deckBrowserSliderLabel: "Card size",
     reopenLastInspected: "Show last inspected card",
+    disableRarityEffects: "Disable rarity effects",
+    enableRarityEffects: "Enable rarity effects",
     createDice: "Roll dice",
     dicePanelHeading: "Roll dice",
     diceCountLabel: "Count",

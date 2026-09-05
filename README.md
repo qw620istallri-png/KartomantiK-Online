@@ -29,6 +29,10 @@ py server/main.py
 No database, no persistence — sessions live in memory and expire after 6h
 of inactivity.
 
+Static client assets use versioned URLs and long-lived browser/CDN caching.
+When replacing a local asset, bump `20260905-1` in `public/index.html`,
+`public/app.js`, and `public/style.css` together.
+
 ## How it works
 
 - **Session codes**: creating a session yields a player code and a separate

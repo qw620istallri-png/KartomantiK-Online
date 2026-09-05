@@ -1,6 +1,6 @@
 @font-face {
   font-family: "Cinzel Decorative";
-  src: url('fonts/CinzelDecorative-Bold.ttf') format('truetype');
+  src: url('fonts/CinzelDecorative-Bold.ttf?v=20260905-1') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -68,7 +68,7 @@ input, textarea, select {
   display: grid;
   place-items: center;
   padding: 20px;
-  background-image: url('home-bg.png');
+  background-image: url('home-bg.webp?v=20260905-1');
   background-size: cover;
   background-position: center;
 }
@@ -317,7 +317,7 @@ input, textarea, select {
 .hand-view-resize-handle:hover { opacity: .9; }
 .hand-view-cards .hv-card {
   width: calc(var(--hv-card-h, 182px) * 0.714); height: var(--hv-card-h, 182px); border-radius: 9px; border: 3px solid var(--carbon); flex-shrink: 0;
-  background-image: url('card-back.png'); background-size: cover; background-position: center; position: relative; overflow: hidden;
+  background-image: url('card-back.webp?v=20260905-1'); background-size: cover; background-position: center; position: relative; overflow: hidden;
   cursor: pointer; box-shadow: 2px 5px 12px #0005; transition: transform .12s;
 }
 .hand-view-cards .hv-card:hover { transform: translateY(-4px); }
@@ -377,7 +377,7 @@ input, textarea, select {
    cards/piles/tokens layered on top, which apply the SAME rotation to
    themselves independently — see rotateForSeat and PILE_SCREEN_POS */
 .battlefield-bg {
-  position: absolute; inset: 0; background-image: url('board-bg.png'); background-size: 100% 100%; pointer-events: none;
+  position: absolute; inset: 0; background-image: url('board-bg.webp?v=20260905-1'); background-size: 100% 100%; pointer-events: none;
 }
 .battlefield-bg.rotated { transform: rotate(180deg); }
 
@@ -397,7 +397,7 @@ input, textarea, select {
   box-shadow: 2px 4px 0 #0003, 4px 8px 12px #0004; position: relative; overflow: hidden; z-index: 1;
 }
 .field-pile.empty .pile-card { background: #ffffff33; border-style: dashed; border-color: #ffffff99; box-shadow: none; }
-.field-pile[data-zone="deck"] .pile-card:not(.empty) { background-image: url('card-back.png'); background-size: cover; background-position: center; }
+.field-pile[data-zone="deck"] .pile-card:not(.empty) { background-image: url('card-back.webp?v=20260905-1'); background-size: cover; background-position: center; }
 .field-pile[data-zone="deck"] .pile-card:not(.empty)::before { content: ""; position: absolute; inset: 0; background: var(--owner-color, #777); mix-blend-mode: multiply; opacity: .6; }
 .field-pile .pile-card img.pile-top-card { position: relative; z-index: 1; width: 100%; height: 100%; object-fit: cover; }
 @keyframes ko-shuffle {
@@ -543,7 +543,7 @@ input, textarea, select {
 .bf-card .back-face {
   width: 100%; height: 100%; position: relative; display: grid; place-items: center;
   color: #fff; font-size: 14px; font-weight: 900; text-shadow: 0 1px 2px #0006;
-  background-image: url('card-back.png'); background-size: cover; background-position: center;
+  background-image: url('card-back.webp?v=20260905-1'); background-size: cover; background-position: center;
 }
 .bf-card .back-face::before { content: ""; position: absolute; inset: 0; background: var(--owner-color, #777); mix-blend-mode: multiply; opacity: .6; }
 .bf-card .back-face span { position: relative; z-index: 1; }
@@ -783,4 +783,78 @@ input, textarea, select {
   .field-pile { width: 100px; }
   .field-pile .pile-card { width: 100px; height: 140px; }
   .bf-card { width: 100px; height: 140px; }
+}
+
+/* DeckomantiK rarity metadata: 3D tilt is reserved for the enlarged hand
+   card; battlefield cards keep their physical position and only move light. */
+#rarityEffectsToggleBtn.active { background: var(--gold); border-color: var(--gold-deep); color: var(--carbon); }
+.ko-rarity-card { isolation: isolate; --spot-x: 50%; --spot-y: 50%; --fx-shift-x: 0px; --fx-shift-y: 0px; }
+.ko-rarity-card > img { position: relative; z-index: 0; }
+.ko-rarity-card::before,
+.ko-rarity-card::after { content: ""; position: absolute; inset: 0; z-index: 2; border-radius: inherit; pointer-events: none; }
+.rarity-foil::before,
+.rarity-silver::before,
+.rarity-gold::before,
+.rarity-galaxy::before,
+.rarity-void::before { background: #000; opacity: .18; }
+.rarity-foil::after {
+  opacity: .72; mix-blend-mode: color-dodge; filter: brightness(.62) contrast(1.08) saturate(1.2);
+  background-image: repeating-linear-gradient(115deg,#00c4e0,#7dd8ff,#c060e0,#00c4e0,#7dd8ff,#c060e0,#00c4e0),url("holo/illusion.png?v=20260905-1");
+  background-size: 155% 155%,42% 42%; background-blend-mode: screen,soft-light;
+  background-position: calc(50% + (var(--spot-x) - 50%)*1.35) calc(50% + (var(--spot-y) - 50%)*1.35),calc(var(--fx-shift-x)*.35) calc(var(--fx-shift-y)*.35);
+  mask-image: radial-gradient(ellipse 96% 94% at center,#000 0 54%,rgba(0,0,0,.72) 76%,transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 96% 94% at center,#000 0 54%,rgba(0,0,0,.72) 76%,transparent 100%);
+}
+.rarity-silver::before { opacity: 1; background: radial-gradient(circle at var(--spot-x) var(--spot-y),transparent 8%,rgba(0,0,0,.38) 100%); }
+.rarity-silver::after {
+  opacity: .46; mix-blend-mode: color-dodge; filter: brightness(.68) contrast(1.18) saturate(.8);
+  background-image: radial-gradient(ellipse 58% 24% at var(--spot-x) var(--spot-y),rgba(255,255,255,.98),rgba(190,226,255,.56) 45%,transparent 78%),repeating-linear-gradient(115deg,#8d949f,#eef6ff,#adb8c6,#8d949f,#eef6ff,#adb8c6),url("holo/metal.png?v=20260905-1"),url("holo/grain.webp?v=20260905-1");
+  background-size: 100% 100%,155% 155%,18% 18%,28% 28%; background-blend-mode: screen,soft-light,hard-light,overlay;
+  background-position: 0 0,calc(50% + (var(--spot-x) - 50%)*1.35) calc(50% + (var(--spot-y) - 50%)*1.35),calc(var(--fx-shift-x)*.4) calc(var(--fx-shift-y)*.4),calc(var(--fx-shift-x)*.2) calc(var(--fx-shift-y)*.2);
+}
+.rarity-gold::before { opacity: .52; background: radial-gradient(ellipse at 30% 72%,#fff3c680,transparent 60%),radial-gradient(ellipse at 72% 24%,#c9860055,transparent 58%); }
+.rarity-gold::after {
+  opacity: .74; mix-blend-mode: color-dodge; filter: brightness(.9) contrast(.56) saturate(1.05);
+  background-image: repeating-linear-gradient(115deg,#a56a10,#fff0a2,#dfad35,#8d5811,#fff5bd,#ca8e1f),url("holo/geometric.webp?v=20260905-1");
+  background-size: 155% 155%,55% 55%; background-blend-mode: screen,soft-light;
+  background-position: calc(50% + (var(--spot-x) - 50%)*1.35) calc(50% + (var(--spot-y) - 50%)*1.35),calc(var(--fx-shift-x)*.3) calc(var(--fx-shift-y)*.3);
+}
+@property --ko-galaxy-spin { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+.rarity-galaxy { box-shadow: 0 0 18px 5px #8a5cff9c,0 0 35px 12px #4fd3ff54; }
+.rarity-galaxy::before {
+  z-index: 2; opacity: 1; filter: brightness(.94) contrast(1.14) saturate(1.6); background-color: #1b0a31;
+  background-image: radial-gradient(ellipse 66% 68% at center,rgba(244,232,255,.2),rgba(142,92,220,.08) 52%,transparent 78%),url("cosmos/cosmos-top-trans.png?v=20260905-1"),url("cosmos/cosmos-middle-trans.png?v=20260905-1"),radial-gradient(ellipse at 30% 25%,#7a32c9cc,transparent 55%),radial-gradient(ellipse at 75% 70%,#244bb596,transparent 55%),url("cosmos/cosmos-bottom.png?v=20260905-1");
+  background-size: auto,150% 150%,150% 150%,auto,auto,150% 150%;
+  background-position: 0 0,calc(var(--cosmos-x,20%) + var(--fx-shift-x)*.35) calc(var(--cosmos-y,30%) + var(--fx-shift-y)*.35),calc(var(--cosmos-x,60%) + var(--fx-shift-x)*.22) calc(var(--cosmos-y,70%) + var(--fx-shift-y)*.22),calc(var(--fx-shift-x)*.3) calc(var(--fx-shift-y)*.3),calc(var(--fx-shift-x)*.15) calc(var(--fx-shift-y)*.15),calc(var(--cosmos-x,0%) + var(--fx-shift-x)*.1) calc(var(--cosmos-y,0%) + var(--fx-shift-y)*.1);
+  mask-image: radial-gradient(ellipse 82% 84% at center,rgba(255,255,255,.28) 0%,rgba(255,255,255,.4) 52%,rgba(255,255,255,.78) 78%,#fff 100%);
+  -webkit-mask-image: radial-gradient(ellipse 82% 84% at center,rgba(255,255,255,.28) 0%,rgba(255,255,255,.4) 52%,rgba(255,255,255,.78) 78%,#fff 100%);
+}
+.rarity-galaxy::after {
+  z-index: 3; opacity: .54; mix-blend-mode: screen; filter: brightness(.8) contrast(1.42) saturate(2);
+  background: repeating-conic-gradient(from var(--ko-galaxy-spin),#7432c9 0deg,#268fc3 40deg,#c541bd 80deg,#7432c9 120deg);
+  animation: ko-galaxy-turn 10s linear infinite;
+  mask-image: radial-gradient(ellipse 86% 88% at center,rgba(255,255,255,.14),rgba(255,255,255,.24) 48%,rgba(255,255,255,.62) 70%,transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 86% 88% at center,rgba(255,255,255,.14),rgba(255,255,255,.24) 48%,rgba(255,255,255,.62) 70%,transparent 100%);
+}
+@keyframes ko-galaxy-turn { to { --ko-galaxy-spin: 360deg; } }
+.rarity-void { box-shadow: 0 0 17px 5px #e8ffffb3,0 0 34px 12px #8eefff69; }
+.rarity-void::before { opacity: .48; background: radial-gradient(ellipse at center,transparent 36%,#9d66e09a 73%,#a9fbffbd 100%),linear-gradient(120deg,transparent 20%,#5ce7ff4a 50%,transparent 80%); mix-blend-mode: screen; }
+.rarity-void::after {
+  inset: -24%; z-index: 3; opacity: .8; mix-blend-mode: difference;
+  background: linear-gradient(112deg,transparent 35%,#fff 47%,#fff 52%,transparent 64%); filter: blur(2px) drop-shadow(0 0 8px #fff);
+  transform: translate3d(calc((var(--spot-x) - 50%)*1.5),calc((var(--spot-y) - 50%)*1.1),0) rotate(5deg);
+}
+.rarity-glitter-layer { position: absolute; inset: 0; z-index: 4; border-radius: inherit; pointer-events: none; opacity: .68; mix-blend-mode: screen; background: url("holo/glitter.webp?v=20260905-1") center/48% 48%,radial-gradient(circle at var(--spot-x) var(--spot-y),#fff8 0 1%,transparent 17%); animation: ko-glitter 2.8s steps(2,end) infinite; }
+@keyframes ko-glitter { 0%,100% { background-position: 0 0,var(--spot-x) var(--spot-y); } 50% { background-position: 28px -20px,var(--spot-x) var(--spot-y); filter: brightness(1.38); } }
+.hand-card-revealed-icon { z-index: 7; }
+.hand-card-hover-clone.ko-rarity-card { transform-style: preserve-3d; will-change: transform; }
+.hand-card-hover-clone.ko-rarity-card.zoomed { transform: perspective(760px) translateY(-10px) scale(var(--hand-hover-scale,1.3)) rotateX(var(--rarity-tilt-y,0deg)) rotateY(var(--rarity-tilt-x,0deg)); }
+.rarity-effects-disabled .ko-rarity-card { box-shadow: 2px 4px 8px #0004; }
+.rarity-effects-disabled .ko-rarity-card::before,
+.rarity-effects-disabled .ko-rarity-card::after,
+.rarity-effects-disabled .rarity-glitter-layer { display: none; }
+.rarity-effects-disabled .hand-card-hover-clone.ko-rarity-card.zoomed { transform: translateY(-10px) scale(var(--hand-hover-scale,1.3)); }
+@media (prefers-reduced-motion: reduce) {
+  .rarity-galaxy::after,.rarity-glitter-layer { animation: none; }
+  .hand-card-hover-clone.ko-rarity-card.zoomed { transform: translateY(-10px) scale(var(--hand-hover-scale,1.3)); }
 }
