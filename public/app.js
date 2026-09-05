@@ -986,7 +986,15 @@ function stagePileBrowserChoice(ownerId, zone, cardId, entry) {
 // helper covers both the pile browser's cards and the hand tray's.
 function wireCardHoverZoom(el, cloneClassName) {
   let clone = null;
+  let removalObserver = null;
+  const clearClone = () => {
+    if (clone) clone.remove();
+    clone = null;
+    if (removalObserver) removalObserver.disconnect();
+    removalObserver = null;
+  };
   el.addEventListener("mouseenter", () => {
+    clearClone();
     const rect = el.getBoundingClientRect();
     clone = el.cloneNode(true);
     clone.className = cloneClassName;
@@ -995,12 +1003,16 @@ function wireCardHoverZoom(el, cloneClassName) {
     clone.style.width = rect.width + "px";
     clone.style.height = rect.height + "px";
     document.body.appendChild(clone);
+    // State updates rebuild card containers with innerHTML. Removing a
+    // hovered source does not emit mouseleave, so clean up its fixed clone
+    // when the source node is detached as well.
+    removalObserver = new MutationObserver(() => {
+      if (!el.isConnected) clearClone();
+    });
+    removalObserver.observe(el.parentNode, { childList: true });
     requestAnimationFrame(() => clone && clone.classList.add("zoomed"));
   });
-  el.addEventListener("mouseleave", () => {
-    if (clone) clone.remove();
-    clone = null;
-  });
+  el.addEventListener("mouseleave", clearClone);
 }
 
 function wirePileBrowserCards(ownerId, zone) {
