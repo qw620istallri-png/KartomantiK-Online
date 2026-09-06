@@ -208,31 +208,111 @@ input, textarea, select {
 .header-view-toggles { display: flex; gap: 6px; align-self: flex-end; }
 .header-view-toggles button { width: 34px; height: 34px; padding: 0; font-size: 15px; min-height: 0; }
 .header-view-toggles button.active { background: var(--gold); border-color: var(--gold-deep); }
-#phaseTrackerBtn.active { background: var(--gold); border-color: var(--gold-deep); color: var(--carbon); }
+#phaseTrackerBtn {
+  background: #292a23;
+  border-color: #8d7639;
+  color: var(--gold-pale);
+  white-space: nowrap;
+}
+#phaseTrackerBtn:hover:not(.active) { background: #34352b; }
+#phaseTrackerBtn.active { background: var(--gold); border-color: #ffe39a; color: var(--carbon); }
 
 .phase-tracker {
-  flex: none; display: grid; gap: 7px; padding: 7px 14px 8px; color: var(--gold-pale);
-  background: #11110f; border-bottom: 1px solid var(--gold-deep); box-shadow: 0 4px 12px #0005; z-index: 24;
+  flex: none;
+  display: grid;
+  gap: 8px;
+  margin: 10px 14px 0;
+  padding: 9px 11px 10px;
+  color: var(--gold-pale);
+  background: linear-gradient(145deg, #202019f2, #11110ff2);
+  border: 1px solid #756333;
+  border-radius: 12px;
+  box-shadow: 0 8px 22px #0008, inset 0 1px #fff1;
+  z-index: 24;
 }
 .phase-tracker-status { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .phase-turn-counter { flex: none; min-width: 74px; padding: 4px 10px; color: #11110f; background: var(--gold); border: 1px solid #ffe39a; border-radius: 999px; box-shadow: 0 0 10px #d3a94266; text-align: center; white-space: nowrap; font-size: 13px; }
 .phase-tracker-status button { padding: 4px 9px; min-height: 0; font-size: 13px; }
-.phase-tracker-status #phaseAdvancedBtn { margin-left: auto; background: #171714; border-color: var(--gold-deep); color: var(--gold-pale); }
+.phase-tracker-status #phaseAdvancedBtn { margin-left: auto; background: #25251f; border-color: var(--gold-deep); color: var(--gold-pale); }
 .phase-tracker-status #phaseAdvancedBtn.active { background: #284a6d; border-color: #67b9ff; color: #dff2ff; }
 .phase-pass-status { display: flex; flex-wrap: wrap; gap: 5px; min-width: 0; }
 .phase-player-status { border-left: 4px solid var(--owner-color); border-radius: 5px; padding: 2px 6px; font-size: 12px; background: #ffffff12; white-space: nowrap; }
 .phase-player-status.passed { color: #91d9a7; background: #2f8f4e33; }
 .phase-player-status.waiting { color: #cfc7a8; }
-.phase-sequence { display: flex; gap: 5px; overflow-x: auto; padding: 2px 1px 3px; scrollbar-width: thin; }
+
+.phase-sequence {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  min-width: 0;
+  overflow-x: auto;
+  padding: 2px 1px 3px;
+  scrollbar-width: thin;
+}
+.phase-group { flex: var(--phase-weight) 1 0; min-width: 130px; }
+.phase-main {
+  padding: 8px 9px;
+  border: 1px solid #514a32;
+  border-radius: 8px;
+  color: #aaa384;
+  background: #191914;
+  text-align: center;
+  font-family: var(--display-font);
+  font-size: 13px;
+  font-weight: 700;
+  opacity: .72;
+}
+.phase-group.active > .phase-main {
+  color: #17120a;
+  background: linear-gradient(135deg, #f2d481, var(--gold));
+  border-color: #ffe39a;
+  box-shadow: 0 0 9px #d3a942aa, 0 0 22px #d3a94244;
+  opacity: 1;
+}
+.phase-children { display: flex; align-items: stretch; gap: 5px; margin-top: 6px; }
+.phase-subphase {
+  flex: var(--subphase-weight) 1 0;
+  min-width: 0;
+  padding: 5px;
+  background: #0e0e0bcc;
+  border: 1px solid #4e4529;
+  border-radius: 8px;
+}
+.phase-subphase-title {
+  display: block;
+  margin: -1px 0 5px;
+  color: var(--gold);
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+.phase-step-row { display: flex; align-items: stretch; gap: 4px; }
 .phase-step {
-  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; border-radius: 6px;
-  border: 1px solid #4a4732; color: #8f8a6c; background: #171714; font-size: 12px; opacity: .68;
+  flex: 1 1 0;
+  min-width: 0;
+  display: grid;
+  align-content: start;
+  gap: 3px;
+  padding: 6px 5px;
+  border: 1px solid #403d2d;
+  border-radius: 6px;
+  color: #aaa58e;
+  background: #191914;
+  text-align: center;
+  opacity: .7;
 }
-.phase-step > span { display: none; }
+.phase-step-number { color: #7f795f; font-size: 9px; font-weight: 900; letter-spacing: .05em; text-transform: uppercase; }
+.phase-step-label { overflow-wrap: anywhere; font-size: 10px; line-height: 1.18; }
 .phase-step.active {
-  opacity: 1; color: var(--carbon); background: var(--gold); border-color: #ffe39a;
-  box-shadow: 0 0 8px #d3a942aa, 0 0 18px #d3a94255; font-weight: 900;
+  color: var(--carbon);
+  background: #f2d481;
+  border-color: #fff0bd;
+  box-shadow: 0 0 8px #d3a942aa, 0 0 18px #d3a94255;
+  font-weight: 900;
+  opacity: 1;
 }
+.phase-step.active .phase-step-number { color: #654b12; }
 
 /* "hide interface" (streaming mode): tools, chat, and the zoom/lock/inspect
    toolbar disappear — everything else (board, hand, opponent info) stays,

@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20260906-2";
+const STATIC_ASSET_VERSION = "20260906-4";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 
 // the 7 temperaments, their real card-art ink colour and their symbol image
@@ -100,9 +100,10 @@ function cardImage(cardId) {
   return card ? card.image : "";
 }
 
-const RARITY_EFFECTS_KEY = "ko_rarity_effects_disabled";
+const RARITY_EFFECTS_KEY = "ko_rarity_effects_enabled.v2";
 const RARITY_IDS = new Set(["foil", "silver", "gold", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter", "gold-glitter"]);
-let rarityEffectsDisabled = localStorage.getItem(RARITY_EFFECTS_KEY) === "1";
+// Positive, versioned preference: new and existing browsers start with rarity effects enabled.
+let rarityEffectsDisabled = localStorage.getItem(RARITY_EFFECTS_KEY) === "0";
 
 function normalizeRarity(rarity) {
   return RARITY_IDS.has(rarity) ? rarity : null;
@@ -172,7 +173,7 @@ function initRarityEffectsToggle() {
   applyRarityEffectsPreference();
   button.onclick = () => {
     rarityEffectsDisabled = !rarityEffectsDisabled;
-    localStorage.setItem(RARITY_EFFECTS_KEY, rarityEffectsDisabled ? "1" : "0");
+    localStorage.setItem(RARITY_EFFECTS_KEY, rarityEffectsDisabled ? "0" : "1");
     applyRarityEffectsPreference();
     renderAll();
   };
@@ -336,43 +337,84 @@ function renderSavedDecks() {
 
 // ---------------------------------------------------------------- i18n paint
 
-const BASIC_PHASES = [
-  { id: "recovery", label: "phaseRecovery", detail: "phaseDetailRecovery" },
-  { id: "confrontation", label: "phaseConfrontation", detail: "phaseDetailConfrontation" },
-  { id: "resolution", label: "phaseResolution", detail: "phaseDetailResolution" },
-  { id: "end", label: "phaseEnd", detail: "phaseDetailEnd" },
+const PHASE_GROUPS = [
+  {
+    id: "recovery", label: "phaseRecovery", detail: "phaseDetailRecovery", weight: 3,
+    sections: [{ label: null, steps: [
+      { id: "recovery_start", label: "phaseRecoveryStart", detail: "phaseDetailRecoveryStart" },
+      { id: "recovery_draw", label: "phaseRecoveryDraw", detail: "phaseDetailRecoveryDraw" },
+      { id: "recovery_before_revelation", label: "phaseRecoveryBefore", detail: "phaseDetailRecoveryBefore" },
+    ] }],
+  },
+  {
+    id: "confrontation", label: "phaseConfrontation", detail: "phaseDetailConfrontation", weight: 5,
+    sections: [
+      { label: "phaseRevelation", steps: [
+        { id: "confrontation_choose", label: "phaseConfrontationChoose", detail: "phaseDetailConfrontationChoose" },
+        { id: "confrontation_reveal", label: "phaseConfrontationReveal", detail: "phaseDetailConfrontationReveal" },
+        { id: "confrontation_immediate", label: "phaseConfrontationImmediate", detail: "phaseDetailConfrontationImmediate" },
+        { id: "confrontation_entry", label: "phaseConfrontationEntry", detail: "phaseDetailConfrontationEntry" },
+      ] },
+      { label: "phaseReaction", steps: [
+        { id: "confrontation_reaction", label: "phaseConfrontationReaction", detail: "phaseDetailConfrontationReaction" },
+      ] },
+    ],
+  },
+  {
+    id: "resolution", label: "phaseResolution", detail: "phaseDetailResolution", weight: 3,
+    sections: [{ label: null, steps: [
+      { id: "resolution_compare", label: "phaseResolutionCompare", detail: "phaseDetailResolutionCompare" },
+      { id: "resolution_effects", label: "phaseResolutionEffects", detail: "phaseDetailResolutionEffects" },
+      { id: "resolution_move", label: "phaseResolutionMove", detail: "phaseDetailResolutionMove" },
+    ] }],
+  },
+  {
+    id: "end", label: "phaseEnd", detail: "phaseDetailEnd", weight: 3,
+    sections: [{ label: null, steps: [
+      { id: "end_actions", label: "phaseEndActions", detail: "phaseDetailEndActions" },
+      { id: "end_triggers", label: "phaseEndTriggers", detail: "phaseDetailEndTriggers" },
+      { id: "end_expire", label: "phaseEndExpire", detail: "phaseDetailEndExpire" },
+    ] }],
+  },
 ];
 
-const ADVANCED_PHASES = [
-  { id: "recovery_start", label: "phaseRecoveryStart", detail: "phaseDetailRecoveryStart" },
-  { id: "recovery_draw", label: "phaseRecoveryDraw", detail: "phaseDetailRecoveryDraw" },
-  { id: "recovery_first", label: "phaseRecoveryFirst", detail: "phaseDetailRecoveryFirst" },
-  { id: "recovery_before_revelation", label: "phaseRecoveryBefore", detail: "phaseDetailRecoveryBefore" },
-  { id: "confrontation_choose", label: "phaseConfrontationChoose", detail: "phaseDetailConfrontationChoose" },
-  { id: "confrontation_reveal", label: "phaseConfrontationReveal", detail: "phaseDetailConfrontationReveal" },
-  { id: "confrontation_immediate", label: "phaseConfrontationImmediate", detail: "phaseDetailConfrontationImmediate" },
-  { id: "confrontation_entry", label: "phaseConfrontationEntry", detail: "phaseDetailConfrontationEntry" },
-  { id: "confrontation_reaction", label: "phaseConfrontationReaction", detail: "phaseDetailConfrontationReaction" },
-  { id: "resolution_compare", label: "phaseResolutionCompare", detail: "phaseDetailResolutionCompare" },
-  { id: "resolution_effects", label: "phaseResolutionEffects", detail: "phaseDetailResolutionEffects" },
-  { id: "resolution_move", label: "phaseResolutionMove", detail: "phaseDetailResolutionMove" },
-  { id: "end_actions", label: "phaseEndActions", detail: "phaseDetailEndActions" },
-  { id: "end_triggers", label: "phaseEndTriggers", detail: "phaseDetailEndTriggers" },
-  { id: "end_expire", label: "phaseEndExpire", detail: "phaseDetailEndExpire" },
-  { id: "end_cleanup", label: "phaseEndCleanup", detail: "phaseDetailEndCleanup" },
-];
+const BASIC_PHASES = PHASE_GROUPS.map((group) => ({
+  id: group.id, label: group.label, detail: group.detail, parent: group.id,
+}));
+const ADVANCED_PHASES = PHASE_GROUPS.flatMap((group) =>
+  group.sections.flatMap((section) =>
+    section.steps.map((step) => ({ ...step, parent: group.id, subphase: section.label }))
+  )
+);
+
+function renderPhaseChildren(group, activePhaseId) {
+  return `<div class="phase-children">${group.sections.map((section) =>
+    `<section class="phase-subphase" style="--subphase-weight:${section.steps.length}">
+      ${section.label ? `<strong class="phase-subphase-title">${esc(t(section.label))}</strong>` : ""}
+      <div class="phase-step-row">${section.steps.map((step, index) =>
+        `<div class="phase-step ${step.id === activePhaseId ? "active" : ""}" title="${esc(t(step.detail))}" aria-current="${step.id === activePhaseId ? "step" : "false"}">
+          <span class="phase-step-number">${esc(t("phaseStep"))} ${index + 1}</span>
+          <span class="phase-step-label">${esc(t(step.label))}</span>
+        </div>`
+      ).join("")}</div>
+    </section>`
+  ).join("")}</div>`;
+}
 
 function renderPhaseTracker() {
   const tracker = latestState?.phaseTracker || { enabled: false, advanced: false, index: 0, turn: 1, passedPlayerIds: [] };
   const panel = $("#phaseTracker");
   panel.classList.toggle("hidden", !tracker.enabled);
-  $("#phaseTrackerBtn").textContent = t(tracker.enabled ? "deactivateGamePhases" : "activateGamePhases");
+  $("#phaseTrackerBtn").textContent = t("gamePhases");
+  $("#phaseTrackerBtn").title = t(tracker.enabled ? "deactivateGamePhases" : "activateGamePhases");
   $("#phaseTrackerBtn").classList.toggle("active", tracker.enabled);
   $("#phaseTrackerBtn").disabled = isObserver;
   if (!tracker.enabled) return;
 
   const phases = tracker.advanced ? ADVANCED_PHASES : BASIC_PHASES;
-  const activeIndex = Math.min(Number(tracker.index) || 0, phases.length - 1);
+  const activeIndex = Math.min(Math.max(Number(tracker.index) || 0, 0), phases.length - 1);
+  const activePhase = phases[activeIndex] || phases[0];
+  const activeGroupId = activePhase?.parent || activePhase?.id;
   $("#phaseTurn").textContent = `${t("turn")} ${tracker.turn || 1}`;
   $("#phaseAdvancedBtn").textContent = t(tracker.advanced ? "basicMode" : "advancedMode");
   $("#phaseAdvancedBtn").classList.toggle("active", tracker.advanced);
@@ -383,12 +425,18 @@ function renderPhaseTracker() {
   $("#phasePassStatus").innerHTML = Object.values(latestState.players)
     .map((player) => `<span class="phase-player-status ${passed.has(player.id) ? "passed" : "waiting"}" style="--owner-color:${playerColor(player.id)}">${passed.has(player.id) ? "✓" : "•"} ${esc(player.name)} — ${esc(t(passed.has(player.id) ? "phasePassed" : "phaseWaiting"))}</span>`)
     .join("");
-  $("#phaseSequence").innerHTML = phases
-    .map((phase, index) => `<div class="phase-step ${index === activeIndex ? "active" : ""}" title="${esc(t(phase.detail))}" aria-current="${index === activeIndex ? "step" : "false"}"><span>${index + 1}</span>${esc(t(phase.label))}</div>`)
+  $("#phaseSequence").innerHTML = PHASE_GROUPS
+    .map((group) => {
+      const active = group.id === activeGroupId;
+      const children = tracker.advanced && active ? renderPhaseChildren(group, activePhase?.id) : "";
+      return `<section class="phase-group ${active ? "active" : ""}" style="--phase-weight:${group.weight}">
+        <div class="phase-main" title="${esc(t(group.detail))}" aria-current="${active ? "true" : "false"}">${esc(t(group.label))}</div>
+        ${children}
+      </section>`;
+    })
     .join("");
-  $("#phaseSequence .phase-step.active")?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+  $("#phaseSequence .phase-group.active")?.scrollIntoView({ block: "nearest", inline: "center" });
 }
-
 const LANGUAGE_FLAGS = { fr: "🇫🇷", en: "🇬🇧", it: "🇮🇹" };
 const LANGUAGE_NAMES = { fr: "Français", en: "English", it: "Italiano" };
 
@@ -450,7 +498,7 @@ function paintStaticText() {
   $("#endSessionBtn").textContent = t("endSession");
   $("#leaveSessionBtn").textContent = t("leaveSession");
   $("#fullscreenBtn").textContent = t("fullscreen");
-  $("#phaseTrackerBtn").textContent = t("activateGamePhases");
+  $("#phaseTrackerBtn").textContent = t("gamePhases");
   $("#phaseAdvancedBtn").textContent = t("advancedMode");
   $("#phasePassBtn").textContent = t("passPhase");
   $("#importDeckHeading").textContent = t("importDeck");
