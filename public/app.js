@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20260906-4";
+const STATIC_ASSET_VERSION = "20260906-5";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 
 // the 7 temperaments, their real card-art ink colour and their symbol image
@@ -383,9 +383,36 @@ const BASIC_PHASES = PHASE_GROUPS.map((group) => ({
 }));
 const ADVANCED_PHASES = PHASE_GROUPS.flatMap((group) =>
   group.sections.flatMap((section) =>
-    section.steps.map((step) => ({ ...step, parent: group.id, subphase: section.label }))
+    section.steps.map((step, index) => ({
+      ...step,
+      parent: group.id,
+      subphase: section.label,
+      stepNumber: index + 1,
+    }))
   )
 );
+const PHASE_VISIBILITY_KEY = "ko_phase_tracker_visible.v2";
+let phaseTrackerVisible = localStorage.getItem(PHASE_VISIBILITY_KEY) === "1";
+
+function currentPhaseUi(tracker = latestState?.phaseTracker) {
+  const safeTracker = tracker || { enabled: false, advanced: false, index: 0, turn: 1, passedPlayerIds: [] };
+  const phases = safeTracker.advanced ? ADVANCED_PHASES : BASIC_PHASES;
+  const index = Math.min(Math.max(Number(safeTracker.index) || 0, 0), phases.length - 1);
+  const phase = phases[index] || phases[0];
+  const group = PHASE_GROUPS.find((item) => item.id === (phase?.parent || phase?.id)) || PHASE_GROUPS[0];
+  return { tracker: safeTracker, phases, index, phase, group };
+}
+
+function currentPhaseLabel(tracker = latestState?.phaseTracker) {
+  const state = currentPhaseUi(tracker);
+  if (!state.tracker.enabled || !state.phase || !state.group) return "";
+  const parts = [t(state.group.label)];
+  if (state.tracker.advanced) {
+    if (state.phase.subphase) parts.push(t(state.phase.subphase));
+    parts.push(`${t("phaseStep")} ${state.phase.stepNumber} — ${t(state.phase.label)}`);
+  }
+  return parts.join(" · ");
+}
 
 function renderPhaseChildren(group, activePhaseId) {
   return `<div class="phase-children">${group.sections.map((section) =>
@@ -402,34 +429,29 @@ function renderPhaseChildren(group, activePhaseId) {
 }
 
 function renderPhaseTracker() {
-  const tracker = latestState?.phaseTracker || { enabled: false, advanced: false, index: 0, turn: 1, passedPlayerIds: [] };
+  const { tracker, phase: activePhase, group: activeGroup } = currentPhaseUi();
   const panel = $("#phaseTracker");
-  panel.classList.toggle("hidden", !tracker.enabled);
+  const panelVisible = tracker.enabled && phaseTrackerVisible;
+  panel.classList.toggle("hidden", !panelVisible);
   $("#phaseTrackerBtn").textContent = t("gamePhases");
-  $("#phaseTrackerBtn").title = t(tracker.enabled ? "deactivateGamePhases" : "activateGamePhases");
-  $("#phaseTrackerBtn").classList.toggle("active", tracker.enabled);
-  $("#phaseTrackerBtn").disabled = isObserver;
+  $("#phaseTrackerBtn").title = t(panelVisible ? "hidePhases" : "showPhases");
+  $("#phaseTrackerBtn").classList.toggle("active", panelVisible);
+  $("#phaseTrackerBtn").disabled = isObserver && !tracker.enabled;
+  $("#phaseTurn").classList.toggle("hidden", !tracker.enabled);
+  if (tracker.enabled) $("#phaseTurn").textContent = `${t("turn")} ${tracker.turn || 1}`;
   if (!tracker.enabled) return;
 
-  const phases = tracker.advanced ? ADVANCED_PHASES : BASIC_PHASES;
-  const activeIndex = Math.min(Math.max(Number(tracker.index) || 0, 0), phases.length - 1);
-  const activePhase = phases[activeIndex] || phases[0];
-  const activeGroupId = activePhase?.parent || activePhase?.id;
-  $("#phaseTurn").textContent = `${t("turn")} ${tracker.turn || 1}`;
+  const activeGroupId = activeGroup?.id || activePhase?.parent || activePhase?.id;
   $("#phaseAdvancedBtn").textContent = t(tracker.advanced ? "basicMode" : "advancedMode");
   $("#phaseAdvancedBtn").classList.toggle("active", tracker.advanced);
-  $("#phaseAdvancedBtn").disabled = isObserver;
-  const passed = new Set(tracker.passedPlayerIds || []);
-  $("#phasePassBtn").textContent = passed.has(myPlayerId) ? t("phasePassed") : t("passPhase");
-  $("#phasePassBtn").disabled = isObserver || passed.has(myPlayerId);
-  $("#phasePassStatus").innerHTML = Object.values(latestState.players)
-    .map((player) => `<span class="phase-player-status ${passed.has(player.id) ? "passed" : "waiting"}" style="--owner-color:${playerColor(player.id)}">${passed.has(player.id) ? "✓" : "•"} ${esc(player.name)} — ${esc(t(passed.has(player.id) ? "phasePassed" : "phaseWaiting"))}</span>`)
-    .join("");
+  $("#phaseAdvancedBtn").classList.toggle("hidden", isObserver || mySeat() !== 0);
+  $("#phaseAdvancedBtn").disabled = isObserver || mySeat() !== 0;
+  $("#phaseSequence").classList.toggle("advanced", tracker.advanced);
   $("#phaseSequence").innerHTML = PHASE_GROUPS
     .map((group) => {
       const active = group.id === activeGroupId;
       const children = tracker.advanced && active ? renderPhaseChildren(group, activePhase?.id) : "";
-      return `<section class="phase-group ${active ? "active" : ""}" style="--phase-weight:${group.weight}">
+      return `<section class="phase-group ${active ? "active" : ""}">
         <div class="phase-main" title="${esc(t(group.detail))}" aria-current="${active ? "true" : "false"}">${esc(t(group.label))}</div>
         ${children}
       </section>`;
@@ -500,7 +522,6 @@ function paintStaticText() {
   $("#fullscreenBtn").textContent = t("fullscreen");
   $("#phaseTrackerBtn").textContent = t("gamePhases");
   $("#phaseAdvancedBtn").textContent = t("advancedMode");
-  $("#phasePassBtn").textContent = t("passPhase");
   $("#importDeckHeading").textContent = t("importDeck");
   $("#starterDecksHeading").textContent = t("starterDecks");
   $("#savedDecksHeading").textContent = t("savedDecks");
@@ -973,7 +994,7 @@ function setMyActivity(activity) {
 // the SAME underlying entries, limited to the handful of actions the user
 // explicitly asked for: drew, discarded/moved a card, played, including a
 // card leaving the battlefield straight into a pile.
-const PLAYER_LOG_TYPES = new Set(["draw", "draw_to_limit", "move_card", "place_card", "remove_battlefield_item"]);
+const PLAYER_LOG_TYPES = new Set(["draw", "draw_to_limit", "move_card", "place_card", "remove_battlefield_item", "pass_phase"]);
 
 function isPlayerLogRelevant(e) {
   if (!PLAYER_LOG_TYPES.has(e.type)) return false;
@@ -1008,6 +1029,18 @@ function wirePlayerLogCardNames(container) {
   });
 }
 
+function phaseLogLabel(details) {
+  const phaseId = details.phaseId || details.phase;
+  const phase = ADVANCED_PHASES.find((item) => item.id === phaseId)
+    || BASIC_PHASES.find((item) => item.id === phaseId)
+    || BASIC_PHASES.find((item) => item.id === details.phase);
+  if (!phase) return "";
+  const group = PHASE_GROUPS.find((item) => item.id === (phase.parent || phase.id));
+  if (!details.advancedMode || !phase.stepNumber) return group ? t(group.label) : t(phase.label);
+  const parts = [group ? t(group.label) : "", phase.subphase ? t(phase.subphase) : "", `${t("phaseStep")} ${phase.stepNumber} — ${t(phase.label)}`];
+  return parts.filter(Boolean).join(" · ");
+}
+
 // Returns safe HTML (the actor's name is colour-coded), not plain text — the
 // caller must NOT re-escape the result, only insert it directly.
 function formatPlayerLogEntry(e) {
@@ -1027,6 +1060,13 @@ function formatPlayerLogEntry(e) {
       return d.toZone === "graveyard"
         ? `${who} ${esc(t("plDiscarded"))} ${namedOrUnknownCard(d.cardId)} (${esc(t("plFrom"))} ${esc(t("battlefield"))})`
         : `${who} ${esc(t("plPutInto"))} ${namedOrUnknownCard(d.cardId)} → ${esc(t(d.toZone))}`;
+    case "pass_phase": {
+      if (d.action === "cancelled") return `${who} ${esc(t("plCancelledPhasePass"))}`;
+      const label = phaseLogLabel(d);
+      return d.action === "advanced"
+        ? `${who} ${esc(t("plAdvancedPhase"))} ${esc(label)}`
+        : `${who} ${esc(t("plPassedPhase"))}${label ? ` — ${esc(label)}` : ""}`;
+    }
     default:
       return "";
   }
@@ -1057,6 +1097,10 @@ const recentLogCollapsed = new Set();
 
 function renderOppRows() {
   const rows = $("#oppRows");
+  const tracker = latestState.phaseTracker || { enabled: false, advanced: false, index: 0, turn: 1, passedPlayerIds: [] };
+  const passed = new Set(tracker.passedPlayerIds || []);
+  const phaseLabel = currentPhaseLabel(tracker);
+  const myPassIsActive = passed.has(myPlayerId);
   rows.innerHTML = Object.values(latestState.players)
     .filter((p) => isObserver || p.id !== myPlayerId)
     .map((p) => {
@@ -1066,18 +1110,24 @@ function renderOppRows() {
       const vesselPoints = receptaclePoints(p.zones.receptacle, p.score);
       const recent = (latestState.recentLog || []).filter((e) => e.actorId === p.id && isPlayerLogRelevant(e)).slice(-3);
       const collapsed = recentLogCollapsed.has(p.id);
-      const recentHtml = recent.length
-        ? `<div class="opp-recent-log${collapsed ? " collapsed" : ""}">
-            <div class="opp-recent-log-lines">${recent.map((e) => `<div>${formatPlayerLogEntry(e)}</div>`).join("")}</div>
-            <div class="opp-recent-log-controls">
-              <button data-toggle-recent-log="${esc(p.id)}">${collapsed ? "▸" : "▾"}</button>
-              <button data-open-player-log="${esc(p.id)}">···</button>
-            </div>
-          </div>`
+      const passedBadge = tracker.enabled && passed.has(p.id)
+        ? `<span class="phase-player-pass-status">✓ ${esc(t("phasePassed"))}</span>`
         : "";
+      const phaseControls = tracker.enabled && !isObserver
+        ? `<span class="opp-current-phase" title="${esc(phaseLabel)}">${esc(phaseLabel)}</span>
+           <button class="phase-inline-pass ${myPassIsActive ? "active" : ""}" data-pass-phase>${esc(t(myPassIsActive ? "cancelPhasePass" : "passPhase"))}</button>`
+        : "";
+      const recentHtml = `<div class="opp-recent-log${collapsed ? " collapsed" : ""}">
+        <div class="opp-recent-log-lines">${recent.map((e) => `<div>${formatPlayerLogEntry(e)}</div>`).join("")}</div>
+        <div class="opp-recent-log-controls">
+          ${phaseControls}
+          <button data-toggle-recent-log="${esc(p.id)}" title="${esc(t(collapsed ? "expand" : "collapse"))}">${collapsed ? "▸" : "▾"}</button>
+          <button data-open-player-log="${esc(p.id)}">···</button>
+        </div>
+      </div>`;
       return `<div class="opp-info-row">
         <div class="opp-info-main">
-          <span class="hand-mini"><span class="mini-back" style="--owner-color:${playerColor(p.id)}"></span>${esc(p.name)}</span>
+          <span class="hand-mini"><span class="mini-back" style="--owner-color:${playerColor(p.id)}"></span><span>${esc(p.name)}</span>${passedBadge}</span>
           <button class="hand-stack-btn" data-view-hand="${esc(p.id)}" title="${esc(viewHandTitle)}">
             <span class="hand-stack-icon" style="--owner-color:${playerColor(p.id)}">
               <span class="hand-stack-card"></span>
@@ -1112,6 +1162,12 @@ function renderOppRows() {
       if (recentLogCollapsed.has(pid)) recentLogCollapsed.delete(pid);
       else recentLogCollapsed.add(pid);
       renderOppRows();
+    };
+  });
+  $$("[data-pass-phase]").forEach((btn) => {
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      send({ type: "pass_phase" });
     };
   });
   wirePlayerLogCardNames(rows);
@@ -3136,9 +3192,17 @@ function initChat() {
 // ---------------------------------------------------------------- token add + end session + log
 
 function initGameControls() {
-  $("#phaseTrackerBtn").onclick = () => send({ type: "configure_phases", enabled: !latestState?.phaseTracker?.enabled });
-  $("#phaseAdvancedBtn").onclick = () => send({ type: "configure_phases", advanced: !latestState?.phaseTracker?.advanced });
-  $("#phasePassBtn").onclick = () => send({ type: "pass_phase" });
+  $("#phaseTrackerBtn").onclick = () => {
+    phaseTrackerVisible = !phaseTrackerVisible;
+    localStorage.setItem(PHASE_VISIBILITY_KEY, phaseTrackerVisible ? "1" : "0");
+    if (phaseTrackerVisible && !latestState?.phaseTracker?.enabled && !isObserver) {
+      send({ type: "configure_phases", enabled: true });
+    }
+    renderPhaseTracker();
+  };
+  $("#phaseAdvancedBtn").onclick = () => {
+    if (!isObserver && mySeat() === 0) send({ type: "configure_phases", advanced: !latestState?.phaseTracker?.advanced });
+  };
 
   $("#highlightOwnersBtn").onclick = () => {
     const on = $("#battlefield").classList.toggle("highlight-owners");
@@ -3298,7 +3362,12 @@ function formatLogEntry(e) {
     case "add_counter": return `${who} adjusted a counter (${d.delta > 0 ? "+" : ""}${d.delta}).`;
     case "set_score": return `${who} set score to ${d.score}.`;
     case "configure_phases": return who + " " + (d.enabled ? "activated" : "deactivated") + " game phases" + (d.enabled && d.advanced ? " (advanced)" : "") + ".";
-    case "pass_phase": return who + " passed" + (d.advanced ? "; " + t("phaseWaiting") + " → " + t("phase" + d.phase[0].toUpperCase() + d.phase.slice(1)) : "") + ".";
+    case "pass_phase": {
+      const label = phaseLogLabel(d) || d.phaseId || d.phase || "?";
+      if (d.action === "cancelled") return `${who} cancelled their phase pass.`;
+      if (d.action === "advanced") return `${who} advanced the phase to ${label} (turn ${d.turn || 1}).`;
+      return `${who} passed for ${label}.`;
+    }
     case "end_session": return `${who} ended the session.`;
     case "add_stroke": return `${who} drew on the board.`;
     case "remove_stroke": return `${who} erased a drawing.`;

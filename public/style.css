@@ -217,51 +217,82 @@ input, textarea, select {
 #phaseTrackerBtn:hover:not(.active) { background: #34352b; }
 #phaseTrackerBtn.active { background: var(--gold); border-color: #ffe39a; color: var(--carbon); }
 
+.game-header .brand .phase-turn-counter {
+  flex: none;
+  min-width: 68px;
+  padding: 4px 9px;
+  color: #11110f;
+  background: var(--gold);
+  border: 1px solid #ffe39a;
+  border-radius: 999px;
+  box-shadow: 0 0 10px #d3a94266;
+  text-align: center;
+  white-space: nowrap;
+  font-family: var(--body-font);
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
 .phase-tracker {
   flex: none;
-  display: grid;
+  display: flex;
+  align-items: flex-start;
   gap: 8px;
-  margin: 10px 14px 0;
-  padding: 9px 11px 10px;
+  margin: 8px 14px 0;
+  padding: 0;
   color: var(--gold-pale);
-  background: linear-gradient(145deg, #202019f2, #11110ff2);
-  border: 1px solid #756333;
-  border-radius: 12px;
-  box-shadow: 0 8px 22px #0008, inset 0 1px #fff1;
+  background: transparent;
+  border: 0;
+  box-shadow: none;
   z-index: 24;
 }
-.phase-tracker-status { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.phase-turn-counter { flex: none; min-width: 74px; padding: 4px 10px; color: #11110f; background: var(--gold); border: 1px solid #ffe39a; border-radius: 999px; box-shadow: 0 0 10px #d3a94266; text-align: center; white-space: nowrap; font-size: 13px; }
-.phase-tracker-status button { padding: 4px 9px; min-height: 0; font-size: 13px; }
-.phase-tracker-status #phaseAdvancedBtn { margin-left: auto; background: #25251f; border-color: var(--gold-deep); color: var(--gold-pale); }
-.phase-tracker-status #phaseAdvancedBtn.active { background: #284a6d; border-color: #67b9ff; color: #dff2ff; }
-.phase-pass-status { display: flex; flex-wrap: wrap; gap: 5px; min-width: 0; }
-.phase-player-status { border-left: 4px solid var(--owner-color); border-radius: 5px; padding: 2px 6px; font-size: 12px; background: #ffffff12; white-space: nowrap; }
-.phase-player-status.passed { color: #91d9a7; background: #2f8f4e33; }
-.phase-player-status.waiting { color: #cfc7a8; }
+#phaseAdvancedBtn {
+  flex: none;
+  padding: 6px 9px;
+  min-height: 0;
+  background: #25251f;
+  border-color: var(--gold-deep);
+  color: var(--gold-pale);
+  font-size: 12px;
+  white-space: nowrap;
+}
+#phaseAdvancedBtn.active { background: #284a6d; border-color: #67b9ff; color: #dff2ff; }
 
 .phase-sequence {
+  flex: 1;
   display: flex;
   align-items: flex-start;
   gap: 6px;
   min-width: 0;
   overflow-x: auto;
-  padding: 2px 1px 3px;
+  padding: 1px 1px 4px;
   scrollbar-width: thin;
 }
-.phase-group { flex: var(--phase-weight) 1 0; min-width: 130px; }
+.phase-group {
+  flex: 0 0 auto;
+  min-width: 0;
+}
+.phase-sequence.advanced .phase-group.active {
+  flex: 1 1 520px;
+  min-width: min(520px, 76vw);
+}
 .phase-main {
-  padding: 8px 9px;
+  width: max-content;
+  max-width: 100%;
+  padding: 7px 10px;
   border: 1px solid #514a32;
-  border-radius: 8px;
+  border-radius: 999px;
   color: #aaa384;
   background: #191914;
   text-align: center;
   font-family: var(--display-font);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
   opacity: .72;
 }
+.phase-sequence.advanced .phase-group.active > .phase-main { width: 100%; }
 .phase-group.active > .phase-main {
   color: #17120a;
   background: linear-gradient(135deg, #f2d481, var(--gold));
@@ -269,21 +300,21 @@ input, textarea, select {
   box-shadow: 0 0 9px #d3a942aa, 0 0 22px #d3a94244;
   opacity: 1;
 }
-.phase-children { display: flex; align-items: stretch; gap: 5px; margin-top: 6px; }
+.phase-children { display: flex; align-items: stretch; gap: 5px; margin-top: 5px; }
 .phase-subphase {
   flex: var(--subphase-weight) 1 0;
   min-width: 0;
-  padding: 5px;
-  background: #0e0e0bcc;
+  padding: 4px;
+  background: #0e0e0bb8;
   border: 1px solid #4e4529;
   border-radius: 8px;
 }
 .phase-subphase-title {
   display: block;
-  margin: -1px 0 5px;
+  margin: 0 0 4px;
   color: var(--gold);
   text-align: center;
-  font-size: 11px;
+  font-size: 10px;
   letter-spacing: .05em;
   text-transform: uppercase;
 }
@@ -294,16 +325,16 @@ input, textarea, select {
   display: grid;
   align-content: start;
   gap: 3px;
-  padding: 6px 5px;
+  padding: 5px 4px;
   border: 1px solid #403d2d;
-  border-radius: 6px;
+  border-radius: 999px;
   color: #aaa58e;
   background: #191914;
   text-align: center;
   opacity: .7;
 }
-.phase-step-number { color: #7f795f; font-size: 9px; font-weight: 900; letter-spacing: .05em; text-transform: uppercase; }
-.phase-step-label { overflow-wrap: anywhere; font-size: 10px; line-height: 1.18; }
+.phase-step-number { color: #7f795f; font-size: 8px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
+.phase-step-label { overflow-wrap: anywhere; font-size: 9px; line-height: 1.15; }
 .phase-step.active {
   color: var(--carbon);
   background: #f2d481;
@@ -358,12 +389,44 @@ input, textarea, select {
 .opp-rows .opp-recent-log { font-size: 14px; color: #cfc7a8; }
 .opp-rows .opp-recent-log-lines { display: grid; gap: 1px; }
 .opp-rows .opp-recent-log.collapsed .opp-recent-log-lines { display: none; }
-.opp-rows .opp-recent-log-controls { display: flex; justify-content: flex-end; gap: 3px; margin-top: 2px; }
+.opp-rows .opp-recent-log-controls { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 3px; }
 .opp-rows .opp-recent-log-controls button {
   background: transparent; border: 1px solid #4a4732; border-radius: 4px; padding: 0 7px; min-height: 0;
-  color: var(--gold-pale); font-weight: 700; font-size: 14px; line-height: 1.6;
+  color: var(--gold-pale); font-weight: 700; font-size: 13px; line-height: 1.6;
 }
 .opp-rows .opp-recent-log-controls button:hover { background: var(--gold-deep); color: var(--carbon); }
+.opp-current-phase {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.opp-rows .opp-recent-log-controls .phase-inline-pass {
+  flex: none;
+  border-color: #8d7639;
+  color: var(--gold-pale);
+  white-space: nowrap;
+}
+.opp-rows .opp-recent-log-controls .phase-inline-pass.active {
+  background: #27543a;
+  border-color: #62bd7e;
+  color: #d9ffe4;
+}
+.phase-player-pass-status {
+  padding: 1px 5px;
+  border: 1px solid #4a9b61;
+  border-radius: 999px;
+  color: #a7e9b9;
+  background: #2f8f4e33;
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
 .pl-card-name { color: var(--gold); font-weight: 700; cursor: pointer; text-decoration: underline dotted; text-underline-offset: 2px; }
 .pl-card-name:hover { color: var(--gold-pale); }
 .pl-card-unknown { font-style: italic; opacity: .8; }
@@ -1024,6 +1087,7 @@ input, textarea, select {
   .game-header .actions { gap: 5px; }
   .header-action-group { gap: 5px; }
   .game-header .actions button { padding: 6px 8px; font-size: 12px; }
-  .phase-tracker-status { flex-wrap: wrap; }
-  .phase-tracker-status #phaseAdvancedBtn { margin-left: 0; }
+  .phase-tracker { margin-inline: 8px; }
+  .phase-sequence.advanced .phase-group.active { min-width: min(500px, 82vw); }
+  #phaseAdvancedBtn { font-size: 11px; }
 }

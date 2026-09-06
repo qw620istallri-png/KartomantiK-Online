@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kartomantik Online</title>
   <link rel="icon" type="image/webp" href="grimoire-icon.webp?v=20260905-1">
-  <link rel="stylesheet" href="style.css?v=20260906-4">
+  <link rel="stylesheet" href="style.css?v=20260906-5">
 </head>
 <body>
 
@@ -68,7 +68,7 @@
 
   <section id="gameScreen" class="hidden">
     <header class="game-header">
-      <div class="brand" id="brandLabel"><img src="grimoire-icon.webp?v=20260905-1" alt="" id="brandLogo"><span id="brandText"></span></div>
+      <div class="brand" id="brandLabel"><strong class="phase-turn-counter hidden" id="phaseTurn"></strong><img src="grimoire-icon.webp?v=20260905-1" alt="" id="brandLogo"><span id="brandText"></span></div>
       <div class="header-center">
         <div class="codes" id="headerCodes"></div>
         <div class="header-view-toggles">
@@ -94,13 +94,8 @@
       </div>
     </header>
     <section class="phase-tracker hidden" id="phaseTracker">
-      <div class="phase-tracker-status">
-        <div class="phase-pass-status" id="phasePassStatus"></div>
-        <button type="button" id="phaseAdvancedBtn"></button>
-        <button type="button" class="primary" id="phasePassBtn"></button>
-        <strong class="phase-turn-counter" id="phaseTurn"></strong>
-      </div>
       <div class="phase-sequence" id="phaseSequence"></div>
+      <button type="button" id="phaseAdvancedBtn"></button>
     </section>
     <p class="status-line" id="gameStatusLine"></p>
     <div class="session-ended-banner hidden" id="sessionEndedBanner"></div>
@@ -382,7 +377,7 @@
     </div>
   </div>
 
-  <script src="i18n.js?v=20260906-4"></script>
-  <script src="app.js?v=20260906-4"></script>
+  <script src="i18n.js?v=20260906-5"></script>
+  <script src="app.js?v=20260906-5"></script>
 </body>
 </html>
