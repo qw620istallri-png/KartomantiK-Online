@@ -13,6 +13,15 @@ PRIVATE_ZONES = {"deck", "hand"}
 SHARED_ZONES = {"graveyard", "exile", "receptacle"}
 ALL_ZONES = PRIVATE_ZONES | SHARED_ZONES
 
+NORMAL_PHASES = ("recovery", "confrontation", "resolution", "end")
+ADVANCED_PHASES = (
+    "recovery_start", "recovery_draw", "recovery_first", "recovery_before_revelation",
+    "confrontation_choose", "confrontation_reveal", "confrontation_immediate", "confrontation_entry", "confrontation_reaction",
+    "resolution_compare", "resolution_effects", "resolution_move",
+    "end_actions", "end_triggers", "end_expire", "end_cleanup",
+)
+PHASE_GROUP = {phase_id: phase_id.split("_", 1)[0] for phase_id in ADVANCED_PHASES}
+
 SESSION_TTL_SECONDS = 6 * 60 * 60  # expire an inactive session after 6h
 
 # On-field pile SCREEN positions are no longer server state at all — they're
@@ -46,6 +55,10 @@ def make_player(player_id, name, cluster_index=0):
         "score": 0,
         "seat": seat,
         "zones": {zone: [] for zone in ALL_ZONES},
+        # Cards remain owned by the player who imported them even while they
+        # sit in an opponent's Empathic Vessel. Values are keyed by card id;
+        # Kartomantik decks contain unique cards, so this stays unambiguous.
+        "zoneOwners": {zone: {} for zone in ALL_ZONES},
         "cardRarities": {},
         "activity": None,  # transient "what menu are they in" hint, never private
     }
@@ -61,6 +74,8 @@ class Session:
         self.strokes = []  # freehand annotation strokes: id, ownerId, color, points:[[x,y],...]
         self.log = []  # list of dict: timestamp, actorId, actorName, type, details
         self.pending_hand_requests = {}  # requestId -> {requesterId, targetId, index, action}
+        self.phase_tracker = {"enabled": False, "advanced": False, "index": 0, "turn": 1}
+        self.phase_passes = set()
         self.created_at = time.time()
         self.last_activity = time.time()
         self.ended = False
@@ -96,6 +111,122 @@ class Session:
 
     def other_player_ids(self, player_id):
         return [pid for pid in self.players if pid != player_id]
+
+    # -- immutable card ownership ---------------------------------------
+    def card_owner_in_zone(self, container_id, zone, card_id):
+        player = self.players.get(container_id)
+        if player is None:
+            return None
+        return player.get("zoneOwners", {}).get(zone, {}).get(card_id, container_id)
+
+    def take_zone_card(self, container_id, zone, card_id):
+        player = self.players.get(container_id)
+        if player is None or card_id not in player["zones"][zone]:
+            return None
+        owner_id = self.card_owner_in_zone(container_id, zone, card_id)
+        player["zones"][zone].remove(card_id)
+        if card_id not in player["zones"][zone]:
+            player.setdefault("zoneOwners", {}).setdefault(zone, {}).pop(card_id, None)
+        return owner_id
+
+    def put_zone_card(self, container_id, zone, card_id, owner_id, position="top"):
+        player = self.players.get(container_id)
+        if player is None:
+            return False
+        if position == "bottom":
+            player["zones"][zone].append(card_id)
+        else:
+            player["zones"][zone].insert(0, card_id)
+        player.setdefault("zoneOwners", {}).setdefault(zone, {})[card_id] = owner_id
+        return True
+
+    @staticmethod
+    def destination_error(card_owner_id, container_id, zone):
+        if zone == "receptacle":
+            if card_owner_id == container_id:
+                return "A card cannot enter its owner's Empathic Vessel."
+        elif card_owner_id != container_id:
+            return "A card can only enter its owner's Deck, Hand, Limbo, or Exile."
+        return None
+
+    def move_zone_card(self, from_container_id, from_zone, to_container_id, to_zone, card_id, position="top"):
+        owner_id = self.card_owner_in_zone(from_container_id, from_zone, card_id)
+        if owner_id is None or card_id not in self.players[from_container_id]["zones"][from_zone]:
+            return "Card not found in source zone.", None
+        error = self.destination_error(owner_id, to_container_id, to_zone)
+        if error:
+            return error, owner_id
+        self.take_zone_card(from_container_id, from_zone, card_id)
+        self.put_zone_card(to_container_id, to_zone, card_id, owner_id, position)
+        return None, owner_id
+
+    def reset_cards_to_owners(self):
+        cards_by_owner = {pid: [] for pid in self.players}
+        for container_id, player in self.players.items():
+            for zone, cards in player["zones"].items():
+                for card_id in cards:
+                    owner_id = self.card_owner_in_zone(container_id, zone, card_id)
+                    if owner_id in cards_by_owner:
+                        cards_by_owner[owner_id].append(card_id)
+        for item in self.battlefield:
+            if not item.get("isTokenCard") and item.get("ownerId") in cards_by_owner:
+                cards_by_owner[item["ownerId"]].append(item["cardId"])
+        for owner_id, player in self.players.items():
+            player["zones"] = {zone: [] for zone in ALL_ZONES}
+            player["zoneOwners"] = {zone: {} for zone in ALL_ZONES}
+            player["zones"]["deck"] = cards_by_owner[owner_id]
+            player["zoneOwners"]["deck"] = {card_id: owner_id for card_id in cards_by_owner[owner_id]}
+        self.battlefield = []
+
+    # -- shared phase tracker -------------------------------------------
+    def phase_sequence(self):
+        return ADVANCED_PHASES if self.phase_tracker["advanced"] else NORMAL_PHASES
+
+    def current_phase_group(self):
+        sequence = self.phase_sequence()
+        phase_id = sequence[min(self.phase_tracker["index"], len(sequence) - 1)]
+        return PHASE_GROUP.get(phase_id, phase_id)
+
+    def configure_phases(self, enabled=None, advanced=None):
+        if enabled is not None and bool(enabled) != self.phase_tracker["enabled"]:
+            self.phase_tracker.update({"enabled": bool(enabled), "index": 0, "turn": 1})
+            self.phase_passes.clear()
+        if advanced is not None and bool(advanced) != self.phase_tracker["advanced"]:
+            current_group = self.current_phase_group()
+            self.phase_tracker["advanced"] = bool(advanced)
+            sequence = self.phase_sequence()
+            self.phase_tracker["index"] = next(
+                (index for index, phase_id in enumerate(sequence) if PHASE_GROUP.get(phase_id, phase_id) == current_group),
+                0,
+            )
+            self.phase_passes.clear()
+
+    def pass_phase(self, player_id):
+        if not self.phase_tracker["enabled"] or player_id not in self.players:
+            return False
+        self.phase_passes.add(player_id)
+        player_ids = list(self.players)
+        if len(player_ids) < 2 or not all(pid in self.phase_passes for pid in player_ids):
+            return False
+        sequence = self.phase_sequence()
+        next_index = self.phase_tracker["index"] + 1
+        if next_index >= len(sequence):
+            next_index = 0
+            self.phase_tracker["turn"] += 1
+        self.phase_tracker["index"] = next_index
+        self.phase_passes.clear()
+        return True
+
+    def reset_phase_tracker(self):
+        self.phase_tracker["index"] = 0
+        self.phase_tracker["turn"] = 1
+        self.phase_passes.clear()
+
+    def serialize_phase_tracker(self):
+        return {
+            **self.phase_tracker,
+            "passedPlayerIds": [pid for pid in self.players if pid in self.phase_passes],
+        }
 
     # -- zone permissioning --------------------------------------------
     def can_view_zone(self, viewer_id, is_observer, owner_id, zone):
@@ -133,7 +264,10 @@ class Session:
             zones_view = {}
             for zone, cards in player["zones"].items():
                 if self.can_view_zone(viewer_id, is_observer, pid, zone):
-                    zones_view[zone] = {"cards": list(cards)}
+                    zones_view[zone] = {
+                        "cards": list(cards),
+                        "owners": {card_id: self.card_owner_in_zone(pid, zone, card_id) for card_id in cards},
+                    }
                 else:
                     zones_view[zone] = {"count": len(cards)}
             players_view[pid] = {
@@ -184,6 +318,7 @@ class Session:
             "tokens": list(self.tokens),
             "strokes": list(self.strokes),
             "ended": self.ended,
+            "phaseTracker": self.serialize_phase_tracker(),
             # a small tail of the action log, piggybacked on every state sync so
             # the opponent-row mini activity feed updates live without a
             # separate poll — the full log (request_log) is still the

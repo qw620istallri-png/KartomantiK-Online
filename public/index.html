@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kartomantik Online</title>
   <link rel="icon" type="image/webp" href="grimoire-icon.webp?v=20260905-1">
-  <link rel="stylesheet" href="style.css?v=20260905-2">
+  <link rel="stylesheet" href="style.css?v=20260906-3">
 </head>
 <body>
 
@@ -52,6 +52,7 @@
       <p class="status-line" id="statusLine"></p>
     </div>
     <nav class="social-links">
+      <button type="button" class="social-link-btn" id="languageBtn"></button>
       <a href="https://qw620istallri-png.github.io/DECKOMANTIK/" target="_blank" rel="noopener noreferrer" id="socialDeckomantik"></a>
       <a href="https://discord.gg/4YvXKyJ94p" target="_blank" rel="noopener noreferrer" id="socialDiscord"></a>
       <div class="social-instagram-wrap">
@@ -77,6 +78,8 @@
       </div>
       <div class="actions">
         <div class="header-action-group">
+          <button type="button" id="gameLanguageBtn"></button>
+          <button type="button" id="phaseTrackerBtn"></button>
           <button id="fullscreenBtn"></button>
         </div>
         <div class="header-action-group">
@@ -90,6 +93,15 @@
         </div>
       </div>
     </header>
+    <section class="phase-tracker hidden" id="phaseTracker">
+      <div class="phase-tracker-status">
+        <div class="phase-pass-status" id="phasePassStatus"></div>
+        <button type="button" id="phaseAdvancedBtn"></button>
+        <button type="button" class="primary" id="phasePassBtn"></button>
+        <strong class="phase-turn-counter" id="phaseTurn"></strong>
+      </div>
+      <div class="phase-sequence" id="phaseSequence"></div>
+    </section>
     <p class="status-line" id="gameStatusLine"></p>
     <div class="session-ended-banner hidden" id="sessionEndedBanner"></div>
     <div class="board-field-wrap" id="battlefieldWrap">
@@ -370,7 +382,7 @@
     </div>
   </div>
 
-  <script src="i18n.js?v=20260905-1"></script>
-  <script src="app.js?v=20260905-1"></script>
+  <script src="i18n.js?v=20260906-2"></script>
+  <script src="app.js?v=20260906-2"></script>
 </body>
 </html>

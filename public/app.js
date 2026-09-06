@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20260905-1";
+const STATIC_ASSET_VERSION = "20260906-2";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 
 // the 7 temperaments, their real card-art ink colour and their symbol image
@@ -68,9 +68,32 @@ function playerColor(playerId) {
   return colorByPlayer.get(playerId);
 }
 
+function cardField(card, field) {
+  return card?.translations?.[currentLanguage]?.[field] ?? card?.[field] ?? "";
+}
+
+function zoneCardOwner(containerId, zone, cardId) {
+  return latestState?.players?.[containerId]?.zones?.[zone]?.owners?.[cardId] || containerId;
+}
+
+function cardDestinationOwner(cardOwnerId, zone) {
+  if (zone !== "receptacle") return cardOwnerId;
+  return Object.keys(latestState?.players || {}).find((playerId) => playerId !== cardOwnerId) || null;
+}
+
+function cardDestinationAllowed(cardOwnerId, containerId, zone) {
+  return zone === "receptacle" ? Boolean(containerId && containerId !== cardOwnerId) : containerId === cardOwnerId;
+}
+
+function cardDestinationLabel(cardOwnerId, zone) {
+  const containerId = cardDestinationOwner(cardOwnerId, zone);
+  const ownerSuffix = zone === "receptacle" && containerId ? ` — ${(latestState.players[containerId] || {}).name || containerId}` : "";
+  return `${t("moveTo")} ${t(zone)}${ownerSuffix}`;
+}
+
 function cardName(cardId) {
   const card = cardsById.get(cardId);
-  return card ? card.name : cardId || "Unknown card";
+  return card ? cardField(card, "name") : cardId || "Unknown card";
 }
 function cardImage(cardId) {
   const card = cardsById.get(cardId);
@@ -78,7 +101,7 @@ function cardImage(cardId) {
 }
 
 const RARITY_EFFECTS_KEY = "ko_rarity_effects_disabled";
-const RARITY_IDS = new Set(["foil", "silver", "gold", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter"]);
+const RARITY_IDS = new Set(["foil", "silver", "gold", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter", "gold-glitter"]);
 let rarityEffectsDisabled = localStorage.getItem(RARITY_EFFECTS_KEY) === "1";
 
 function normalizeRarity(rarity) {
@@ -313,6 +336,95 @@ function renderSavedDecks() {
 
 // ---------------------------------------------------------------- i18n paint
 
+const BASIC_PHASES = [
+  { id: "recovery", label: "phaseRecovery", detail: "phaseDetailRecovery" },
+  { id: "confrontation", label: "phaseConfrontation", detail: "phaseDetailConfrontation" },
+  { id: "resolution", label: "phaseResolution", detail: "phaseDetailResolution" },
+  { id: "end", label: "phaseEnd", detail: "phaseDetailEnd" },
+];
+
+const ADVANCED_PHASES = [
+  { id: "recovery_start", label: "phaseRecoveryStart", detail: "phaseDetailRecoveryStart" },
+  { id: "recovery_draw", label: "phaseRecoveryDraw", detail: "phaseDetailRecoveryDraw" },
+  { id: "recovery_first", label: "phaseRecoveryFirst", detail: "phaseDetailRecoveryFirst" },
+  { id: "recovery_before_revelation", label: "phaseRecoveryBefore", detail: "phaseDetailRecoveryBefore" },
+  { id: "confrontation_choose", label: "phaseConfrontationChoose", detail: "phaseDetailConfrontationChoose" },
+  { id: "confrontation_reveal", label: "phaseConfrontationReveal", detail: "phaseDetailConfrontationReveal" },
+  { id: "confrontation_immediate", label: "phaseConfrontationImmediate", detail: "phaseDetailConfrontationImmediate" },
+  { id: "confrontation_entry", label: "phaseConfrontationEntry", detail: "phaseDetailConfrontationEntry" },
+  { id: "confrontation_reaction", label: "phaseConfrontationReaction", detail: "phaseDetailConfrontationReaction" },
+  { id: "resolution_compare", label: "phaseResolutionCompare", detail: "phaseDetailResolutionCompare" },
+  { id: "resolution_effects", label: "phaseResolutionEffects", detail: "phaseDetailResolutionEffects" },
+  { id: "resolution_move", label: "phaseResolutionMove", detail: "phaseDetailResolutionMove" },
+  { id: "end_actions", label: "phaseEndActions", detail: "phaseDetailEndActions" },
+  { id: "end_triggers", label: "phaseEndTriggers", detail: "phaseDetailEndTriggers" },
+  { id: "end_expire", label: "phaseEndExpire", detail: "phaseDetailEndExpire" },
+  { id: "end_cleanup", label: "phaseEndCleanup", detail: "phaseDetailEndCleanup" },
+];
+
+function renderPhaseTracker() {
+  const tracker = latestState?.phaseTracker || { enabled: false, advanced: false, index: 0, turn: 1, passedPlayerIds: [] };
+  const panel = $("#phaseTracker");
+  panel.classList.toggle("hidden", !tracker.enabled);
+  $("#phaseTrackerBtn").textContent = t(tracker.enabled ? "deactivateGamePhases" : "activateGamePhases");
+  $("#phaseTrackerBtn").classList.toggle("active", tracker.enabled);
+  $("#phaseTrackerBtn").disabled = isObserver;
+  if (!tracker.enabled) return;
+
+  const phases = tracker.advanced ? ADVANCED_PHASES : BASIC_PHASES;
+  const activeIndex = Math.min(Number(tracker.index) || 0, phases.length - 1);
+  $("#phaseTurn").textContent = `${t("turn")} ${tracker.turn || 1}`;
+  $("#phaseAdvancedBtn").textContent = t(tracker.advanced ? "basicMode" : "advancedMode");
+  $("#phaseAdvancedBtn").classList.toggle("active", tracker.advanced);
+  $("#phaseAdvancedBtn").disabled = isObserver;
+  const passed = new Set(tracker.passedPlayerIds || []);
+  $("#phasePassBtn").textContent = passed.has(myPlayerId) ? t("phasePassed") : t("passPhase");
+  $("#phasePassBtn").disabled = isObserver || passed.has(myPlayerId);
+  $("#phasePassStatus").innerHTML = Object.values(latestState.players)
+    .map((player) => `<span class="phase-player-status ${passed.has(player.id) ? "passed" : "waiting"}" style="--owner-color:${playerColor(player.id)}">${passed.has(player.id) ? "✓" : "•"} ${esc(player.name)} — ${esc(t(passed.has(player.id) ? "phasePassed" : "phaseWaiting"))}</span>`)
+    .join("");
+  $("#phaseSequence").innerHTML = phases
+    .map((phase, index) => `<div class="phase-step ${index === activeIndex ? "active" : ""}" title="${esc(t(phase.detail))}" aria-current="${index === activeIndex ? "step" : "false"}"><span>${index + 1}</span>${esc(t(phase.label))}</div>`)
+    .join("");
+  $("#phaseSequence .phase-step.active")?.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+}
+
+const LANGUAGE_FLAGS = { fr: "🇫🇷", en: "🇬🇧", it: "🇮🇹" };
+const LANGUAGE_NAMES = { fr: "Français", en: "English", it: "Italiano" };
+
+function updateLanguageButtons() {
+  const index = KO_LANGUAGES.indexOf(currentLanguage);
+  const next = KO_LANGUAGES[(index + 1) % KO_LANGUAGES.length];
+  [$("#languageBtn"), $("#gameLanguageBtn")].filter(Boolean).forEach((button) => {
+    button.textContent = LANGUAGE_FLAGS[currentLanguage];
+    button.title = `${LANGUAGE_NAMES[currentLanguage]} → ${LANGUAGE_NAMES[next]}`;
+    button.setAttribute("aria-label", button.title);
+  });
+}
+
+function setInterfaceLanguage(nextLanguage) {
+  currentLanguage = KO_LANGUAGES.includes(nextLanguage) ? nextLanguage : "en";
+  localStorage.setItem(KO_LANGUAGE_KEY, currentLanguage);
+  document.documentElement.lang = currentLanguage;
+  paintStaticText();
+  updateLanguageButtons();
+  renderStarterDecks();
+  renderSavedDecks();
+  renderAll();
+  if (!$("#inspectPanel").classList.contains("hidden") && inspectHistory[0]) showInspect(inspectHistory[0]);
+}
+
+function initLanguageSwitch() {
+  document.documentElement.lang = currentLanguage;
+  updateLanguageButtons();
+  [$("#languageBtn"), $("#gameLanguageBtn")].filter(Boolean).forEach((button) => {
+    button.onclick = () => {
+      const index = KO_LANGUAGES.indexOf(currentLanguage);
+      setInterfaceLanguage(KO_LANGUAGES[(index + 1) % KO_LANGUAGES.length]);
+    };
+  });
+}
+
 function paintStaticText() {
   $("#appTitle").textContent = t("appName");
   $("#tagline").textContent = t("tagline");
@@ -338,6 +450,9 @@ function paintStaticText() {
   $("#endSessionBtn").textContent = t("endSession");
   $("#leaveSessionBtn").textContent = t("leaveSession");
   $("#fullscreenBtn").textContent = t("fullscreen");
+  $("#phaseTrackerBtn").textContent = t("activateGamePhases");
+  $("#phaseAdvancedBtn").textContent = t("advancedMode");
+  $("#phasePassBtn").textContent = t("passPhase");
   $("#importDeckHeading").textContent = t("importDeck");
   $("#starterDecksHeading").textContent = t("starterDecks");
   $("#savedDecksHeading").textContent = t("savedDecks");
@@ -688,16 +803,17 @@ function wireRevealCards(ctx) {
       if (revealSentState.has(cardId)) return;
       const items = [{ label: t("inspect"), onSelect: () => showInspect(cardId) }];
       if (ctx && ctx.allowMoveToField) {
+        const cardOwnerId = ctx.cardOwnerId || zoneCardOwner(ctx.ownerId, ctx.zone, cardId);
         items.push({ separator: true });
         items.push({ label: t("playFaceUp"), onSelect: () => { playFromZone(ctx.ownerId, ctx.zone, cardId, true); markRevealCardSent(cardId, t("battlefield")); } });
         items.push({ label: t("playFaceDown"), onSelect: () => { playFromZone(ctx.ownerId, ctx.zone, cardId, false); markRevealCardSent(cardId, t("battlefield")); } });
         items.push({ separator: true });
         ["hand", "graveyard", "exile", "receptacle"].forEach((z) => {
+          const toOwnerId = cardDestinationOwner(cardOwnerId, z);
+          if (!toOwnerId) return;
           items.push({
-            label: `${t("moveTo")} ${t(z)}`,
+            label: cardDestinationLabel(cardOwnerId, z),
             onSelect: () => {
-              // Empathic Vessel always collects into the ACTOR's own vessel
-              const toOwnerId = z === "receptacle" ? myPlayerId : ctx.ownerId;
               send({ type: "move_card", fromOwnerId: ctx.ownerId, fromZone: ctx.zone, toOwnerId, toZone: z, cardId });
               markRevealCardSent(cardId, t(z), () =>
                 send({ type: "move_card", fromOwnerId: toOwnerId, fromZone: z, toOwnerId: ctx.ownerId, toZone: ctx.zone, cardId })
@@ -708,18 +824,18 @@ function wireRevealCards(ctx) {
         items.push({
           label: t("moveToDeckTop"),
           onSelect: () => {
-            send({ type: "move_card", fromOwnerId: ctx.ownerId, fromZone: ctx.zone, toOwnerId: ctx.ownerId, toZone: "deck", cardId, position: "top" });
+            send({ type: "move_card", fromOwnerId: ctx.ownerId, fromZone: ctx.zone, toOwnerId: cardOwnerId, toZone: "deck", cardId, position: "top" });
             markRevealCardSent(cardId, `${t("deck")} (${t("moveToDeckTop")})`, () =>
-              send({ type: "move_card", fromOwnerId: ctx.ownerId, fromZone: "deck", toOwnerId: ctx.ownerId, toZone: ctx.zone, cardId })
+              send({ type: "move_card", fromOwnerId: cardOwnerId, fromZone: "deck", toOwnerId: ctx.ownerId, toZone: ctx.zone, cardId })
             );
           },
         });
         items.push({
           label: t("moveToDeckBottom"),
           onSelect: () => {
-            send({ type: "move_card", fromOwnerId: ctx.ownerId, fromZone: ctx.zone, toOwnerId: ctx.ownerId, toZone: "deck", cardId, position: "bottom" });
+            send({ type: "move_card", fromOwnerId: ctx.ownerId, fromZone: ctx.zone, toOwnerId: cardOwnerId, toZone: "deck", cardId, position: "bottom" });
             markRevealCardSent(cardId, `${t("deck")} (${t("moveToDeckBottom")})`, () =>
-              send({ type: "move_card", fromOwnerId: ctx.ownerId, fromZone: "deck", toOwnerId: ctx.ownerId, toZone: ctx.zone, cardId })
+              send({ type: "move_card", fromOwnerId: cardOwnerId, fromZone: "deck", toOwnerId: ctx.ownerId, toZone: ctx.zone, cardId })
             );
           },
         });
@@ -766,6 +882,7 @@ function renderAll() {
   renderBattlefield();
   renderHandTray();
   renderOppRows();
+  renderPhaseTracker();
   if (!$("#handViewPanel").classList.contains("hidden")) {
     const viewingId = $("#handViewPanel").dataset.viewingPlayer;
     if (viewingId && latestState.players[viewingId]) openHandView(viewingId);
@@ -1017,7 +1134,8 @@ function openHandView(playerId) {
 let pileBrowserStaged = new Map();
 
 function dbCardHtml(ownerId, zone, cid) {
-  const style = `style="--owner-color:${playerColor(ownerId)}"`;
+  const cardOwnerId = zoneCardOwner(ownerId, zone, cid);
+  const style = `style="--owner-color:${playerColor(cardOwnerId)}"`;
   const staged = pileBrowserStaged.get(cid);
   if (staged) {
     return `<div class="db-card staged" ${style} title="${esc(cardName(cid))}">
@@ -1028,7 +1146,7 @@ function dbCardHtml(ownerId, zone, cid) {
       </div>
     </div>`;
   }
-  return `<div class="db-card" ${style} title="${esc(cardName(cid))}" data-zone-card="${esc(ownerId)}:${esc(zone)}:${esc(cid)}">
+  return `<div class="db-card" ${style} title="${esc(cardName(cid))}" data-zone-card="${esc(ownerId)}:${esc(zone)}:${esc(cid)}" data-card-owner="${esc(cardOwnerId)}">
     <img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}">
   </div>`;
 }
@@ -1103,7 +1221,8 @@ function wireCardHoverZoom(el, cloneClassName) {
 function wirePileBrowserCards(ownerId, zone) {
   $$("#deckBrowserCards [data-zone-card]").forEach((el) => {
     const cardId = el.dataset.zoneCard.split(":")[2];
-    bindCardDragSource(el, { kind: "card", cardId, fromOwnerId: ownerId, fromZone: zone });
+    const cardOwnerId = el.dataset.cardOwner || ownerId;
+    bindCardDragSource(el, { kind: "card", cardId, cardOwnerId, fromOwnerId: ownerId, fromZone: zone });
     wireCardHoverZoom(el, "db-card-hover-clone");
     el.addEventListener("click", (event) => {
       const items = [
@@ -1113,10 +1232,12 @@ function wirePileBrowserCards(ownerId, zone) {
         { label: t("playFaceDown"), onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "play", faceUp: false, label: t("battlefield") }) },
         { separator: true },
       ];
-      ZONES.filter((z) => z !== zone).forEach((z) => {
+      ZONES.forEach((z) => {
+        const toOwnerId = cardDestinationOwner(cardOwnerId, z);
+        if (!toOwnerId || (toOwnerId === ownerId && z === zone)) return;
         items.push({
-          label: `${t("moveTo")} ${t(z)}`,
-          onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "move", toZone: z, label: t(z) }),
+          label: cardDestinationLabel(cardOwnerId, z),
+          onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "move", toOwnerId, toZone: z, label: t(z) }),
         });
       });
       showContextMenu(event.clientX, event.clientY, items);
@@ -1153,7 +1274,7 @@ function initPileBrowser() {
     const { ownerId, zone } = $("#deckBrowserPanel").dataset;
     for (const [cardId, entry] of pileBrowserStaged) {
       if (entry.kind === "play") playFromZone(ownerId, zone, cardId, entry.faceUp);
-      else send({ type: "move_card", fromOwnerId: ownerId, fromZone: zone, toOwnerId: ownerId, toZone: entry.toZone, cardId });
+      else send({ type: "move_card", fromOwnerId: ownerId, fromZone: zone, toOwnerId: entry.toOwnerId, toZone: entry.toZone, cardId });
     }
     pileBrowserStaged = new Map();
     $("#deckBrowserPanel").classList.add("hidden");
@@ -1270,15 +1391,16 @@ function zoneCardKindBadgeHtml(cardId) {
   if (!card) return "";
   const kindLetter = card.type === "manifestation" ? "M" : "W";
   return `<img class="zone-card-temperament" src="${esc(temperamentSymbol(card.colorKey))}" alt="">
-    <span class="zone-card-kind" title="${esc(card.typeLabel || "")}">${kindLetter}</span>`;
+    <span class="zone-card-kind" title="${esc(cardField(card, "typeLabel"))}">${kindLetter}</span>`;
 }
 
-function zoneCardRowHtml(ownerId, zone, cardId, canAct) {
-  const style = `style="--owner-color:${playerColor(ownerId)}"`;
+function zoneCardRowHtml(ownerId, zone, zoneData, cardId, canAct) {
+  const cardOwnerId = zoneData?.owners?.[cardId] || ownerId;
+  const style = `style="--owner-color:${playerColor(cardOwnerId)}"`;
   if (!canAct) {
     return `<div class="zone-card-row" ${style}>${zoneCardKindBadgeHtml(cardId)}<span>${esc(cardName(cardId))}</span></div>`;
   }
-  return `<div class="zone-card-row" ${style} data-zone-card="${esc(ownerId)}:${zone}:${esc(cardId)}" data-preview-card="${esc(cardId)}">
+  return `<div class="zone-card-row" ${style} data-zone-card="${esc(ownerId)}:${zone}:${esc(cardId)}" data-card-owner="${esc(cardOwnerId)}" data-preview-card="${esc(cardId)}">
     ${zoneCardKindBadgeHtml(cardId)}<span>${esc(cardName(cardId))}</span>
   </div>`;
 }
@@ -1297,7 +1419,7 @@ function zoneBlockHtml(ownerId, zone, zoneData, canView, canAct) {
       listHtml = `<div class="zone-search-hint">${esc(t("searchHint"))}</div>`;
     } else {
       const cards = zoneData.cards || [];
-      listHtml = `<div class="zone-list">${cards.map((cid) => zoneCardRowHtml(ownerId, zone, cid, canAct)).join("") || `<div style="color:var(--muted);font-size:14px">(${t("cards")}: 0)</div>`}</div>`;
+      listHtml = `<div class="zone-list">${cards.map((cid) => zoneCardRowHtml(ownerId, zone, zoneData, cid, canAct)).join("") || `<div style="color:var(--muted);font-size:14px">(${t("cards")}: 0)</div>`}</div>`;
     }
   }
   return `<div class="zone">
@@ -1337,7 +1459,11 @@ function pileFieldHtml(ownerId, zone, zoneData, canView, canAct, pos, score, ove
   const topCardHtml = topCardId
     ? `<img class="pile-top-card" src="${esc(cardImage(topCardId))}" alt="${esc(cardName(topCardId))}" title="${esc(cardName(topCardId))}">`
     : "";
-  const pointsBadge = zone === "receptacle" ? `<div class="pile-points">${receptaclePoints(zoneData, score)} ${esc(t("vesselPoints"))}</div>` : "";
+  const cardPoints = receptacleCardPoints(zoneData);
+  const bonusPoints = Number(score) || 0;
+  const pointsBadge = zone === "receptacle"
+    ? `<div class="pile-points"><span class="pile-card-points" title="${esc(t("vesselManifestationPoints"))}">${cardPoints} ${esc(t("vesselPoints"))}</span><span class="pile-bonus-points" title="${esc(t("vesselBonusPoints"))}">${bonusPoints >= 0 ? "+" : ""}${bonusPoints}</span></div>`
+    : "";
   return `<div class="field-pile ${count === 0 ? "empty" : ""}"${dropAttr} data-field-pile="${esc(key)}" data-zone="${esc(zone)}" data-override-key="${esc(overrideKey)}" style="left:${pos.x}px;top:${pos.y}px;--owner-color:${playerColor(ownerId)}">
     ${scoreAdjust}
     <div class="pile-trigger" data-pile-trigger="${esc(key)}">
@@ -1351,9 +1477,15 @@ function pileFieldHtml(ownerId, zone, zoneData, canView, canAct, pos, score, ove
   </div>`;
 }
 
+function receptacleCardPoints(zoneData) {
+  return (zoneData.cards || []).reduce((sum, cid) => {
+    const card = cardsById.get(cid);
+    return sum + (card?.type === "manifestation" ? card.points || 0 : 0);
+  }, 0);
+}
+
 function receptaclePoints(zoneData, score) {
-  const cardPoints = (zoneData.cards || []).reduce((sum, cid) => sum + (cardsById.get(cid)?.points || 0), 0);
-  return cardPoints + (score || 0);
+  return receptacleCardPoints(zoneData) + (Number(score) || 0);
 }
 
 // Pile SCREEN position, keyed by [viewer's own seat][pile owner's seat][zone]
@@ -1362,7 +1494,7 @@ function receptaclePoints(zoneData, score) {
 
 // A local nudge on top of the table above — a personal display fix, never
 // synced to the server or the other player. Keyed by "viewerSeat:ownerSeat:zone".
-const PILE_OVERRIDES_KEY = "kartomantik.pileOverrides";
+const PILE_OVERRIDES_KEY = "kartomantik.pileOverrides.v2";
 let pileOverrides = {};
 let pilesLocked = true;
 
@@ -1553,9 +1685,8 @@ function renderHandTray() {
       handPickMode = null;
       updateHandToolbarUi();
       if (mode === "discard") send({ type: "move_card", fromZone: "hand", toZone: "graveyard", cardId });
-      else if (mode === "show") send({ type: "reveal", zone: "hand", cardId });
     };
-    bindCardDragSource(el, { kind: "card", cardId, fromOwnerId: meId, fromZone: "hand" });
+    bindCardDragSource(el, { kind: "card", cardId, cardOwnerId: meId, fromOwnerId: meId, fromZone: "hand" });
     bindRarityPointer(el, false);
     wireCardHoverZoom(el, "hand-card-hover-clone");
     el.addEventListener("contextmenu", (event) => {
@@ -1567,7 +1698,7 @@ function renderHandTray() {
         { label: t("playFaceDown"), onSelect: () => playFromHand(cardId, false) },
         { separator: true },
         { label: t("handDiscard"), onSelect: () => send({ type: "move_card", fromZone: "hand", toZone: "graveyard", cardId }) },
-        { label: t("handShow"), onSelect: () => send({ type: "reveal", zone: "hand", cardId }) },
+        { label: t("show"), onSelect: () => send({ type: "reveal", zone: "hand", cardId }) },
         { label: `${t("moveTo")} ${t("exile")}`, onSelect: () => send({ type: "move_card", fromZone: "hand", toZone: "exile", cardId }) },
         { label: t("moveToDeckTop"), onSelect: () => send({ type: "move_card", fromZone: "hand", toZone: "deck", cardId, position: "top" }) },
         { label: t("moveToDeckBottom"), onSelect: () => send({ type: "move_card", fromZone: "hand", toZone: "deck", cardId, position: "bottom" }) },
@@ -1576,16 +1707,15 @@ function renderHandTray() {
   });
 }
 
-let handPickMode = null; // null | "discard" | "show"
+let handPickMode = null; // null | "discard"
 
 function updateHandToolbarUi() {
   $("#handDiscardBtn").classList.toggle("active", handPickMode === "discard");
-  $("#handShowBtn").classList.toggle("active", handPickMode === "show");
   const tray = $("#myHandTray");
   tray.classList.toggle("picking", Boolean(handPickMode));
   const hint = $("#handPickHint");
   hint.classList.toggle("hidden", !handPickMode);
-  hint.textContent = handPickMode === "discard" ? t("pickCardToDiscard") : handPickMode === "show" ? t("pickCardToShow") : "";
+  hint.textContent = handPickMode === "discard" ? t("pickCardToDiscard") : "";
 }
 
 function initHandToolbar() {
@@ -1595,10 +1725,7 @@ function initHandToolbar() {
     handPickMode = handPickMode === "discard" ? null : "discard";
     updateHandToolbarUi();
   };
-  $("#handShowBtn").onclick = () => {
-    handPickMode = handPickMode === "show" ? null : "show";
-    updateHandToolbarUi();
-  };
+  $("#handShowBtn").onclick = () => send({ type: "reveal", zone: "hand" });
   $("#handDiscardRandomBtn").onclick = () => send({ type: "move_card", fromZone: "hand", toZone: "graveyard", random: true });
   $("#handMulliganBtn").onclick = () => {
     showConfirm(t("confirmMulligan"), () => send({ type: "mulligan" }));
@@ -1688,7 +1815,8 @@ function wireZoneButtons() {
   // wirePileBrowserCards), since it isn't re-rendered by this function
   $$(".zone-list [data-zone-card]").forEach((el) => {
     const [ownerId, zone, cardId] = el.dataset.zoneCard.split(":");
-    bindCardDragSource(el, { kind: "card", cardId, fromOwnerId: ownerId, fromZone: zone });
+    const cardOwnerId = el.dataset.cardOwner || ownerId;
+    bindCardDragSource(el, { kind: "card", cardId, cardOwnerId, fromOwnerId: ownerId, fromZone: zone });
     el.addEventListener("contextmenu", (event) => {
       event.preventDefault();
       const items = [
@@ -1698,10 +1826,12 @@ function wireZoneButtons() {
         { label: t("playFaceDown"), onSelect: () => playFromZone(ownerId, zone, cardId, false) },
         { separator: true },
       ];
-      ZONES.filter((z) => z !== zone).forEach((z) => {
+      ZONES.forEach((z) => {
+        const toOwnerId = cardDestinationOwner(cardOwnerId, z);
+        if (!toOwnerId || (toOwnerId === ownerId && z === zone)) return;
         items.push({
-          label: `${t("moveTo")} ${t(z)}`,
-          onSelect: () => send({ type: "move_card", fromOwnerId: ownerId, fromZone: zone, toOwnerId: ownerId, toZone: z, cardId }),
+          label: cardDestinationLabel(cardOwnerId, z),
+          onSelect: () => send({ type: "move_card", fromOwnerId: ownerId, fromZone: zone, toOwnerId, toZone: z, cardId }),
         });
       });
       showContextMenu(event.clientX, event.clientY, items);
@@ -1817,8 +1947,13 @@ function resolveDrop(ctx, clientX, clientY) {
   const handEl = el.closest("#myHandTray");
 
   if (ctx.kind === "battlefield") {
+    const battlefieldItem = latestState?.battlefield?.find((item) => item.id === ctx.itemId);
     if (zoneEl) {
       const [toOwnerId, toZone] = zoneEl.dataset.dropZone.split(":");
+      if (battlefieldItem && !battlefieldItem.isTokenCard && !cardDestinationAllowed(battlefieldItem.ownerId, toOwnerId, toZone)) {
+        showToast(t("invalidCardDestination"), true);
+        return;
+      }
       send({ type: "remove_battlefield_item", itemId: ctx.itemId, toOwnerId, toZone });
     } else if (handEl) {
       send({ type: "remove_battlefield_item", itemId: ctx.itemId, toOwnerId: myPlayerId, toZone: "hand" });
@@ -1842,13 +1977,19 @@ function resolveDrop(ctx, clientX, clientY) {
   // ctx.kind === "card": a card dragged from hand or from an open zone popover.
   // handEl must be checked before fieldEl: the hand area now overlays the
   // board, so #battlefieldWrap is an ancestor of the hand tray too.
+  const cardOwnerId = ctx.cardOwnerId || ctx.fromOwnerId;
   if (zoneEl) {
     const [toOwnerId, toZone] = zoneEl.dataset.dropZone.split(":");
     if (toOwnerId === ctx.fromOwnerId && toZone === ctx.fromZone) return;
+    if (!cardDestinationAllowed(cardOwnerId, toOwnerId, toZone)) {
+      showToast(t("invalidCardDestination"), true);
+      return;
+    }
     send({ type: "move_card", fromOwnerId: ctx.fromOwnerId, fromZone: ctx.fromZone, toOwnerId, toZone, cardId: ctx.cardId });
   } else if (handEl) {
     if (ctx.fromZone === "hand") reorderHandDrop(ctx.cardId, clientX);
-    else send({ type: "move_card", fromOwnerId: ctx.fromOwnerId, fromZone: ctx.fromZone, toOwnerId: myPlayerId, toZone: "hand", cardId: ctx.cardId });
+    else if (cardDestinationAllowed(cardOwnerId, myPlayerId, "hand")) send({ type: "move_card", fromOwnerId: ctx.fromOwnerId, fromZone: ctx.fromZone, toOwnerId: myPlayerId, toZone: "hand", cardId: ctx.cardId });
+    else showToast(t("invalidCardDestination"), true);
   } else if (fieldEl) {
     const rect = fieldEl.getBoundingClientRect();
     const logical = rotateForSeat((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
@@ -2751,13 +2892,13 @@ function renderBattlefield() {
       items.push({ separator: true });
       items.push(counterGridMenuItem("power", { itemId: item.id }));
       items.push({ separator: true });
-      // Empathic Vessel always collects into the ACTOR's own vessel,
-      // regardless of whose card it is — Limbo/Exile stay with the card's
-      // own owner, each player keeping their own
+      // Limbo and Exile always belong to the immutable card owner. The
+      // Empathic Vessel is necessarily the other player's.
       ["graveyard", "exile"].forEach((z) => {
-        items.push({ label: `${t("moveTo")} ${t(z)}`, onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: z }) });
+        items.push({ label: cardDestinationLabel(item.ownerId, z), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: z }) });
       });
-      items.push({ label: `${t("moveTo")} ${t("receptacle")}`, onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: myPlayerId, toZone: "receptacle" }) });
+      const vesselOwnerId = cardDestinationOwner(item.ownerId, "receptacle");
+      if (vesselOwnerId) items.push({ label: cardDestinationLabel(item.ownerId, "receptacle"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: vesselOwnerId, toZone: "receptacle" }) });
       if (isMine) {
         items.push({ label: `${t("moveTo")} ${t("hand")}`, onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: "hand" }) });
         items.push({ label: t("moveToDeckTop"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: "deck", position: "top" }) });
@@ -2947,6 +3088,10 @@ function initChat() {
 // ---------------------------------------------------------------- token add + end session + log
 
 function initGameControls() {
+  $("#phaseTrackerBtn").onclick = () => send({ type: "configure_phases", enabled: !latestState?.phaseTracker?.enabled });
+  $("#phaseAdvancedBtn").onclick = () => send({ type: "configure_phases", advanced: !latestState?.phaseTracker?.advanced });
+  $("#phasePassBtn").onclick = () => send({ type: "pass_phase" });
+
   $("#highlightOwnersBtn").onclick = () => {
     const on = $("#battlefield").classList.toggle("highlight-owners");
     $("#highlightOwnersBtn").classList.toggle("active", on);
@@ -3011,10 +3156,10 @@ function showInspect(cardId, hidden) {
     $("#inspectEffect").textContent = "";
   } else {
     $("#inspectImg").src = card.image || "";
-    $("#inspectImg").alt = card.name || "";
-    $("#inspectName").textContent = card.name || "";
-    $("#inspectMeta").textContent = [card.typeLabel || card.type, card.subType, card.color].filter(Boolean).join(" · ");
-    $("#inspectEffect").textContent = card.effect || "";
+    $("#inspectImg").alt = cardField(card, "name");
+    $("#inspectName").textContent = cardField(card, "name");
+    $("#inspectMeta").textContent = [cardField(card, "typeLabel") || card.type, cardField(card, "subType"), cardField(card, "color")].filter(Boolean).join(" · ");
+    $("#inspectEffect").textContent = cardField(card, "effect");
   }
   renderInspectHistory();
   $("#inspectPanel").classList.remove("hidden");
@@ -3104,6 +3249,8 @@ function formatLogEntry(e) {
     case "remove_token": return `${who} removed a token.`;
     case "add_counter": return `${who} adjusted a counter (${d.delta > 0 ? "+" : ""}${d.delta}).`;
     case "set_score": return `${who} set score to ${d.score}.`;
+    case "configure_phases": return who + " " + (d.enabled ? "activated" : "deactivated") + " game phases" + (d.enabled && d.advanced ? " (advanced)" : "") + ".";
+    case "pass_phase": return who + " passed" + (d.advanced ? "; " + t("phaseWaiting") + " → " + t("phase" + d.phase[0].toUpperCase() + d.phase.slice(1)) : "") + ".";
     case "end_session": return `${who} ended the session.`;
     case "add_stroke": return `${who} drew on the board.`;
     case "remove_stroke": return `${who} erased a drawing.`;
@@ -3208,6 +3355,7 @@ async function boot() {
     }
   });
   paintStaticText();
+  initLanguageSwitch();
   initConfirmPanel();
   initSocialLinks();
   initPileBrowser();

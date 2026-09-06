@@ -29,7 +29,7 @@ log = logging.getLogger("kartomantik-online")
 PUBLIC_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "public"))
 HAND_LIMIT = 7
 TEMPERAMENTS = {"capricious", "choleric", "hollow", "melancholic", "phlegmatic", "transcendent", "vitreous"}
-RARITIES = {"foil", "silver", "gold", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter"}
+RARITIES = {"foil", "silver", "gold", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter", "gold-glitter"}
 VERSIONED_CACHE = "public, max-age=31536000, immutable"
 STATIC_CACHE = "public, max-age=86400, stale-while-revalidate=604800"
 STATIC_CACHE_EXTENSIONS = {".avif", ".gif", ".ico", ".jpeg", ".jpg", ".png", ".svg", ".ttf", ".webp", ".woff", ".woff2"}
@@ -224,6 +224,8 @@ async def handle_message(ws, info, data):
         player["zones"]["graveyard"] = []
         player["zones"]["exile"] = []
         player["zones"]["receptacle"] = []
+        player["zoneOwners"] = {zone: {} for zone in ALL_ZONES}
+        player["zoneOwners"]["deck"] = {card_id: actor_id for card_id in card_ids}
         player["cardRarities"] = card_rarities
         player["score"] = 0
         session.add_log(actor_id, "import_deck", {"count": len(card_ids)})
@@ -237,10 +239,13 @@ async def handle_message(ws, info, data):
         if player is None:
             return await send_error(ws, "Unknown player.")
         count = max(1, min(int(data.get("count") or 1), 50))
-        deck = player["zones"]["deck"]
-        drawn = deck[:count]
-        player["zones"]["deck"] = deck[count:]
-        player["zones"]["hand"].extend(drawn)
+        drawn = []
+        for _ in range(min(count, len(player["zones"]["deck"]))):
+            card_id = player["zones"]["deck"][0]
+            error, _ = session.move_zone_card(actor_id, "deck", actor_id, "hand", card_id, "bottom")
+            if error:
+                return await send_error(ws, error)
+            drawn.append(card_id)
         session.add_log(actor_id, "draw", {"count": len(drawn)})
         session.touch()
         await broadcast_state(session)
@@ -252,10 +257,13 @@ async def handle_message(ws, info, data):
         if player is None:
             return await send_error(ws, "Unknown player.")
         needed = max(0, HAND_LIMIT - len(player["zones"]["hand"]))
-        deck = player["zones"]["deck"]
-        drawn = deck[:needed]
-        player["zones"]["deck"] = deck[needed:]
-        player["zones"]["hand"].extend(drawn)
+        drawn = []
+        for _ in range(min(needed, len(player["zones"]["deck"]))):
+            card_id = player["zones"]["deck"][0]
+            error, _ = session.move_zone_card(actor_id, "deck", actor_id, "hand", card_id, "bottom")
+            if error:
+                return await send_error(ws, error)
+            drawn.append(card_id)
         session.add_log(actor_id, "draw_to_limit", {"count": len(drawn)})
         session.touch()
         await broadcast_state(session)
@@ -266,12 +274,19 @@ async def handle_message(ws, info, data):
         player = session.players.get(actor_id)
         if player is None:
             return await send_error(ws, "Unknown player.")
-        player["zones"]["deck"].extend(player["zones"]["hand"])
-        player["zones"]["hand"] = []
+        while player["zones"]["hand"]:
+            card_id = player["zones"]["hand"][0]
+            error, _ = session.move_zone_card(actor_id, "hand", actor_id, "deck", card_id, "bottom")
+            if error:
+                return await send_error(ws, error)
         random.shuffle(player["zones"]["deck"])
-        drawn = player["zones"]["deck"][:HAND_LIMIT]
-        player["zones"]["deck"] = player["zones"]["deck"][HAND_LIMIT:]
-        player["zones"]["hand"] = drawn
+        drawn = []
+        for _ in range(min(HAND_LIMIT, len(player["zones"]["deck"]))):
+            card_id = player["zones"]["deck"][0]
+            error, _ = session.move_zone_card(actor_id, "deck", actor_id, "hand", card_id, "bottom")
+            if error:
+                return await send_error(ws, error)
+            drawn.append(card_id)
         session.add_log(actor_id, "mulligan", {"count": len(drawn)})
         session.touch()
         await broadcast_state(session)
@@ -400,8 +415,9 @@ async def handle_message(ws, info, data):
         card_id = hand[index]
         requester_name = (session.players.get(pending["requesterId"]) or {}).get("name") or pending["requesterId"]
         if pending["action"] == "discard":
-            hand.remove(card_id)
-            player["zones"]["graveyard"].insert(0, card_id)
+            error, _ = session.move_zone_card(actor_id, "hand", actor_id, "graveyard", card_id)
+            if error:
+                return await send_error(ws, error)
             session.add_log(actor_id, "move_card", {
                 "fromOwnerId": actor_id, "fromZone": "hand", "toOwnerId": actor_id, "toZone": "graveyard",
                 "position": "top", "cardId": card_id, "requestedBy": requester_name,
@@ -443,21 +459,14 @@ async def handle_message(ws, info, data):
             if not from_player["zones"][from_zone]:
                 return await send_error(ws, "That zone is empty.")
             card_id = from_player["zones"][from_zone][0]
-        if card_id not in from_player["zones"][from_zone]:
-            return await send_error(ws, "Card not found in source zone.")
-        from_player["zones"][from_zone].remove(card_id)
-        if from_owner != to_owner:
-            rarity = from_player.get("cardRarities", {}).pop(card_id, None)
-            if rarity:
-                to_player.setdefault("cardRarities", {})[card_id] = rarity
         position = data.get("position") or "top"
-        if position == "bottom":
-            to_player["zones"][to_zone].append(card_id)
-        else:
-            to_player["zones"][to_zone].insert(0, card_id)
+        error, card_owner_id = session.move_zone_card(from_owner, from_zone, to_owner, to_zone, card_id, position)
+        if error:
+            return await send_error(ws, error)
         move_details = {
             "fromOwnerId": from_owner, "fromZone": from_zone,
             "toOwnerId": to_owner, "toZone": to_zone, "position": position,
+            "cardOwnerId": card_owner_id,
         }
         # only name the card in the log when doing so doesn't leak a private
         # zone's contents — safe whenever either side is already public
@@ -470,34 +479,38 @@ async def handle_message(ws, info, data):
     elif msg_type == "place_card":
         if is_observer:
             return await send_error(ws, "Observers cannot act.")
-        owner_id = data.get("ownerId") or actor_id
+        source_container_id = data.get("ownerId") or actor_id
         from_zone = data.get("fromZone")
         card_id = data.get("cardId")
         if from_zone not in ALL_ZONES:
             return await send_error(ws, "Unknown zone.")
-        if not session.can_act_on_zone(actor_id, is_observer, owner_id, from_zone):
+        if not session.can_act_on_zone(actor_id, is_observer, source_container_id, from_zone):
             return await send_error(ws, "You cannot act on this zone.")
-        player = session.players.get(owner_id)
-        if player is None or card_id not in player["zones"][from_zone]:
+        source_player = session.players.get(source_container_id)
+        if source_player is None or card_id not in source_player["zones"][from_zone]:
             return await send_error(ws, "Card not found in that zone.")
-        player["zones"][from_zone].remove(card_id)
+        card_owner_id = session.card_owner_in_zone(source_container_id, from_zone, card_id)
+        owner_player = session.players.get(card_owner_id)
+        if owner_player is None:
+            return await send_error(ws, "Card owner is no longer in the session.")
         item = {
             "id": new_id(),
-            "ownerId": owner_id,
+            "ownerId": card_owner_id,
             "cardId": card_id,
             "x": float(data.get("x") or 0),
             "y": float(data.get("y") or 0),
             "faceUp": bool(data.get("faceUp", True)),
             "rotation": float(data.get("rotation") or 0),
             "counters": {},
-            "rarity": player.get("cardRarities", {}).get(card_id),
+            "rarity": owner_player.get("cardRarities", {}).get(card_id),
             "stackedOn": None,
         }
         stack_error = apply_stack_fields(session, item, data)
         if stack_error:
             return await send_error(ws, stack_error)
+        session.take_zone_card(source_container_id, from_zone, card_id)
         session.battlefield.append(item)
-        place_details = {"ownerId": owner_id, "fromZone": from_zone, "itemId": item["id"], "faceUp": item["faceUp"]}
+        place_details = {"ownerId": card_owner_id, "sourceContainerId": source_container_id, "fromZone": from_zone, "itemId": item["id"], "faceUp": item["faceUp"]}
         if item["faceUp"]:
             place_details["cardId"] = card_id
         session.add_log(actor_id, "place_card", place_details)
@@ -582,21 +595,15 @@ async def handle_message(ws, info, data):
         player = session.players.get(to_owner)
         if player is None:
             return await send_error(ws, "Unknown destination player.")
+        destination_error = session.destination_error(item["ownerId"], to_owner, to_zone)
+        if destination_error:
+            return await send_error(ws, destination_error)
         session.battlefield.remove(item)
         unstack_dependents(session, item["id"])
-        if to_owner != item["ownerId"]:
-            source = session.players.get(item["ownerId"])
-            if source is not None:
-                source.get("cardRarities", {}).pop(item["cardId"], None)
-            if item.get("rarity"):
-                player.setdefault("cardRarities", {})[item["cardId"]] = item["rarity"]
         # index 0 is always "the last card that entered" / the top of a deck,
         # so shared-zone piles can show it and drawing keeps working intuitively
         position = data.get("position") or "top"
-        if position == "bottom":
-            player["zones"][to_zone].append(item["cardId"])
-        else:
-            player["zones"][to_zone].insert(0, item["cardId"])
+        session.put_zone_card(to_owner, to_zone, item["cardId"], item["ownerId"], position)
         remove_details = {"itemId": item["id"], "toOwnerId": to_owner, "toZone": to_zone, "position": position, "faceUp": item["faceUp"]}
         # safe to name whenever it was already public (face-up) or becomes public
         # (landing in a shared zone) — same rule as move_card above
@@ -822,6 +829,28 @@ async def handle_message(ws, info, data):
             if other_info["session"] is session:
                 await send_to(other_ws, payload)
 
+    elif msg_type == "configure_phases":
+        if is_observer or actor_id not in session.players:
+            return await send_error(ws, "Observers cannot configure game phases.")
+        enabled = data.get("enabled") if "enabled" in data else None
+        advanced = data.get("advanced") if "advanced" in data else None
+        if enabled is None and advanced is None:
+            return await send_error(ws, "No phase setting supplied.")
+        session.configure_phases(enabled=enabled, advanced=advanced)
+        session.add_log(actor_id, "configure_phases", {"enabled": session.phase_tracker["enabled"], "advanced": session.phase_tracker["advanced"]})
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "pass_phase":
+        if is_observer or actor_id not in session.players:
+            return await send_error(ws, "Observers cannot pass phases.")
+        if not session.phase_tracker["enabled"]:
+            return await send_error(ws, "Game phases are not active.")
+        advanced = session.pass_phase(actor_id)
+        session.add_log(actor_id, "pass_phase", {"advanced": advanced, "phase": session.current_phase_group(), "turn": session.phase_tracker["turn"]})
+        session.touch()
+        await broadcast_state(session)
+
     elif msg_type == "set_score":
         if is_observer:
             return await send_error(ws, "Observers cannot act.")
@@ -842,24 +871,11 @@ async def handle_message(ws, info, data):
         player = session.players.get(actor_id)
         if is_observer or player is None or player.get("seat") != 0:
             return await send_error(ws, "Only the session's first player can reset the board.")
-        for item in session.battlefield:
-            if item.get("isTokenCard"):
-                continue
-            owner = session.players.get(item["ownerId"])
-            if owner is not None:
-                owner["zones"]["deck"].append(item["cardId"])
+        session.reset_cards_to_owners()
         for p in session.players.values():
-            p["zones"]["deck"].extend(p["zones"]["hand"])
-            p["zones"]["deck"].extend(p["zones"]["graveyard"])
-            p["zones"]["deck"].extend(p["zones"]["exile"])
-            p["zones"]["deck"].extend(p["zones"]["receptacle"])
-            p["zones"]["hand"] = []
-            p["zones"]["graveyard"] = []
-            p["zones"]["exile"] = []
-            p["zones"]["receptacle"] = []
             random.shuffle(p["zones"]["deck"])
             p["score"] = 0
-        session.battlefield = []
+        session.reset_phase_tracker()
         session.tokens = []
         session.strokes = []
         session.add_log(actor_id, "reset_board", {})

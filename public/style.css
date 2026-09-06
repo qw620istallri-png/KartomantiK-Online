@@ -208,6 +208,31 @@ input, textarea, select {
 .header-view-toggles { display: flex; gap: 6px; align-self: flex-end; }
 .header-view-toggles button { width: 34px; height: 34px; padding: 0; font-size: 15px; min-height: 0; }
 .header-view-toggles button.active { background: var(--gold); border-color: var(--gold-deep); }
+#phaseTrackerBtn.active { background: var(--gold); border-color: var(--gold-deep); color: var(--carbon); }
+
+.phase-tracker {
+  flex: none; display: grid; gap: 7px; padding: 7px 14px 8px; color: var(--gold-pale);
+  background: #11110f; border-bottom: 1px solid var(--gold-deep); box-shadow: 0 4px 12px #0005; z-index: 24;
+}
+.phase-tracker-status { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.phase-turn-counter { flex: none; min-width: 74px; padding: 4px 10px; color: #11110f; background: var(--gold); border: 1px solid #ffe39a; border-radius: 999px; box-shadow: 0 0 10px #d3a94266; text-align: center; white-space: nowrap; font-size: 13px; }
+.phase-tracker-status button { padding: 4px 9px; min-height: 0; font-size: 13px; }
+.phase-tracker-status #phaseAdvancedBtn { margin-left: auto; background: #171714; border-color: var(--gold-deep); color: var(--gold-pale); }
+.phase-tracker-status #phaseAdvancedBtn.active { background: #284a6d; border-color: #67b9ff; color: #dff2ff; }
+.phase-pass-status { display: flex; flex-wrap: wrap; gap: 5px; min-width: 0; }
+.phase-player-status { border-left: 4px solid var(--owner-color); border-radius: 5px; padding: 2px 6px; font-size: 12px; background: #ffffff12; white-space: nowrap; }
+.phase-player-status.passed { color: #91d9a7; background: #2f8f4e33; }
+.phase-player-status.waiting { color: #cfc7a8; }
+.phase-sequence { display: flex; gap: 5px; overflow-x: auto; padding: 2px 1px 3px; scrollbar-width: thin; }
+.phase-step {
+  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; border-radius: 6px;
+  border: 1px solid #4a4732; color: #8f8a6c; background: #171714; font-size: 12px; opacity: .68;
+}
+.phase-step > span { display: none; }
+.phase-step.active {
+  opacity: 1; color: var(--carbon); background: var(--gold); border-color: #ffe39a;
+  box-shadow: 0 0 8px #d3a942aa, 0 0 18px #d3a94255; font-weight: 900;
+}
 
 /* "hide interface" (streaming mode): tools, chat, and the zoom/lock/inspect
    toolbar disappear — everything else (board, hand, opponent info) stays,
@@ -413,7 +438,9 @@ input, textarea, select {
 .field-pile .pile-label { display: block; font-size: 14px; text-transform: uppercase; letter-spacing: .04em; color: #fff; text-shadow: 0 1px 3px #000c; margin-top: 6px; font-weight: 800; }
 .field-pile .pile-count { position: absolute; top: -10px; right: 4px; z-index: 2; background: var(--gold); border: 2px solid var(--gold-deep); border-radius: 14px; font-size: 14px; font-weight: 900; padding: 2px 8px; color: var(--carbon); }
 .field-pile.drop-target-active .pile-card { outline: 4px dashed var(--gold-deep); outline-offset: 3px; }
-.field-pile .pile-points { position: absolute; top: -10px; left: 4px; z-index: 2; background: var(--carbon); color: var(--gold-pale); border-radius: 10px; font-size: 14px; font-weight: 900; padding: 2px 9px; white-space: nowrap; }
+.field-pile .pile-points { position: absolute; top: -12px; left: 4px; z-index: 2; display: flex; align-items: center; gap: 4px; font-size: 14px; font-weight: 900; white-space: nowrap; }
+.field-pile .pile-card-points { background: var(--carbon); color: var(--gold-pale); border: 1px solid var(--gold-deep); border-radius: 10px; padding: 2px 8px; }
+.field-pile .pile-bonus-points { min-width: 34px; text-align: center; background: #163f72; color: #dff2ff; border: 1px solid #67b9ff; border-radius: 10px; padding: 2px 7px; box-shadow: 0 0 8px #2795ff55; }
 .field-pile .pile-score-adjust { position: absolute; bottom: -34px; left: 50%; transform: translateX(-50%); display: flex; gap: 2px; opacity: 0; transition: opacity .15s; }
 .field-pile:hover .pile-score-adjust { opacity: 1; }
 .field-pile .pile-score-adjust button { padding: 2px 6px; font-size: 14px; min-height: 0; }
@@ -901,4 +928,22 @@ input, textarea, select {
 @media (prefers-reduced-motion: reduce) {
   .rarity-galaxy,.rarity-void,.rarity-galaxy::after,.rarity-void::after,.rarity-glitter-layer { animation: none; }
   .hand-card-hover-clone.ko-rarity-card.zoomed { transform: translateY(-10px) scale(var(--hand-hover-scale,1.3)); }
+}
+
+
+/* At 1080p and shorter viewports, the centred drawing/tool column reaches
+   the upper-left chat. Nudge only the chat surfaces right; opponent status
+   remains anchored to the corner. */
+@media (max-height: 1080px) and (min-width: 901px) {
+  .top-left-stack .chat-panel,
+  .top-left-stack .chat-reopen-btn { margin-left: 48px; }
+}
+
+@media (max-width: 1050px) {
+  .game-header { gap: 8px; padding-inline: 10px; }
+  .game-header .actions { gap: 5px; }
+  .header-action-group { gap: 5px; }
+  .game-header .actions button { padding: 6px 8px; font-size: 12px; }
+  .phase-tracker-status { flex-wrap: wrap; }
+  .phase-tracker-status #phaseAdvancedBtn { margin-left: 0; }
 }
