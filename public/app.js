@@ -78,7 +78,7 @@ function cardImage(cardId) {
 }
 
 const RARITY_EFFECTS_KEY = "ko_rarity_effects_disabled";
-const RARITY_IDS = new Set(["foil", "silver", "gold", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter"]);
+const RARITY_IDS = new Set(["foil", "silver", "gold", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter", "gold-glitter"]);
 let rarityEffectsDisabled = localStorage.getItem(RARITY_EFFECTS_KEY) === "1";
 
 function normalizeRarity(rarity) {

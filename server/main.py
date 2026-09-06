@@ -29,7 +29,7 @@ log = logging.getLogger("kartomantik-online")
 PUBLIC_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "public"))
 HAND_LIMIT = 7
 TEMPERAMENTS = {"capricious", "choleric", "hollow", "melancholic", "phlegmatic", "transcendent", "vitreous"}
-RARITIES = {"foil", "silver", "gold", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter"}
+RARITIES = {"foil", "silver", "gold", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter", "gold-glitter"}
 VERSIONED_CACHE = "public, max-age=31536000, immutable"
 STATIC_CACHE = "public, max-age=86400, stale-while-revalidate=604800"
 STATIC_CACHE_EXTENSIONS = {".avif", ".gif", ".ico", ".jpeg", ".jpg", ".png", ".svg", ".ttf", ".webp", ".woff", ".woff2"}
