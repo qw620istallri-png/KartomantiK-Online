@@ -853,13 +853,16 @@ async def handle_message(ws, info, data):
         action = session.pass_phase(actor_id, passed=data.get("passed"))
         if action is None:
             return await send_error(ws, "Unable to update the phase pass.")
-        session.add_log(actor_id, "pass_phase", {
-            "action": action,
-            "phase": session.current_phase_group(),
-            "phaseId": session.current_phase_id(),
-            "turn": session.phase_tracker["turn"],
-            "advancedMode": session.phase_tracker["advanced"],
-        })
+        # Passing and cancelling are temporary player states. Only persist the
+        # shared transition once every player has passed.
+        if action == "advanced":
+            session.add_log(actor_id, "pass_phase", {
+                "action": action,
+                "phase": session.current_phase_group(),
+                "phaseId": session.current_phase_id(),
+                "turn": session.phase_tracker["turn"],
+                "advancedMode": session.phase_tracker["advanced"],
+            })
         session.touch()
         await broadcast_state(session)
 

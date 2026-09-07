@@ -349,20 +349,12 @@ input, textarea, select {
 .phase-pass-target { cursor: pointer; }
 .phase-pass-target:hover { filter: brightness(1.1); }
 .phase-pass-target.passed {
-  border-color: #76cf91;
-  box-shadow: 0 0 9px #62bd7eaa, 0 0 22px #62bd7e55;
+  color: #fff9df;
+  background: linear-gradient(135deg, #276f4b, #123c2a);
+  border-color: #a8ffc4;
+  box-shadow: 0 0 11px #69e695cc, 0 0 26px #42c87588, inset 0 0 0 1px #d5ffe255;
 }
-.phase-pass-action {
-  display: block;
-  margin-top: 3px;
-  color: #5d4817;
-  font-family: var(--body-font);
-  font-size: 11px;
-  font-weight: 900;
-  line-height: 1;
-  text-transform: uppercase;
-}
-.phase-pass-target.passed .phase-pass-action { color: #d9ffe4; }
+.phase-pass-target.passed .phase-step-number { color: #d8ffe5; }
 .phase-children { display: inline-flex; align-items: flex-start; gap: 8px; width: max-content; margin-top: 5px; }
 .phase-group[data-phase-group="confrontation"] .phase-children {
   display: grid;
@@ -484,9 +476,9 @@ input, textarea, select {
   line-height: 1.2;
 }
 .opp-current-step {
-  color: #cfc7a8;
+  color: var(--gold);
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 700;
 }
 .opp-rows .opp-recent-log-controls .phase-inline-pass {
   flex: none;

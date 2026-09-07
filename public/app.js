@@ -443,7 +443,7 @@ function phaseStepMarkup(step, index, active, canPass, passIsActive) {
     <span class="phase-step-label">${esc(t(step.label))}</span>`;
   if (active && canPass) {
     const action = t(passIsActive ? "cancelPhasePass" : "passPhase");
-    return `<button type="button" class="phase-step active phase-pass-target ${passIsActive ? "passed" : ""}" data-pass-phase title="${esc(t(step.detail))} — ${esc(action)}" aria-current="step" aria-pressed="${passIsActive}">${body}<span class="phase-pass-action">${esc(action)}</span></button>`;
+    return `<button type="button" class="phase-step active phase-pass-target ${passIsActive ? "passed" : ""}" data-pass-phase title="${esc(t(step.detail))}" aria-label="${esc(`${t(step.label)} — ${action}`)}" aria-current="step" aria-pressed="${passIsActive}">${body}</button>`;
   }
   return `<div class="phase-step ${active ? "active" : ""}" title="${esc(t(step.detail))}" aria-current="${active ? "step" : "false"}">${body}</div>`;
 }
@@ -491,7 +491,7 @@ function renderPhaseTracker() {
       const children = tracker.advanced && active ? renderPhaseChildren(group, activePhase?.id, canPass, passIsActive) : "";
       const action = t(passIsActive ? "cancelPhasePass" : "passPhase");
       const main = active && canPass && !tracker.advanced
-        ? `<button type="button" class="phase-main phase-pass-target ${passIsActive ? "passed" : ""}" data-pass-phase title="${esc(t(group.detail))} — ${esc(action)}" aria-current="true" aria-pressed="${passIsActive}">${esc(t(group.label))}<span class="phase-pass-action">${esc(action)}</span></button>`
+        ? `<button type="button" class="phase-main phase-pass-target ${passIsActive ? "passed" : ""}" data-pass-phase title="${esc(t(group.detail))}" aria-label="${esc(`${t(group.label)} — ${action}`)}" aria-current="true" aria-pressed="${passIsActive}">${esc(t(group.label))}</button>`
         : `<div class="phase-main" title="${esc(t(group.detail))}" aria-current="${active ? "true" : "false"}">${esc(t(group.label))}</div>`;
       return `<section class="phase-group ${active ? "active" : ""}" data-phase-group="${esc(group.id)}">
         ${main}
