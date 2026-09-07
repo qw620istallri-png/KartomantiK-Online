@@ -414,15 +414,38 @@ function currentPhaseLabel(tracker = latestState?.phaseTracker) {
   return parts.join(" · ");
 }
 
-function renderPhaseChildren(group, activePhaseId) {
+function toggleMyPhasePass() {
+  const tracker = latestState?.phaseTracker;
+  if (isObserver || !tracker?.enabled) return;
+  const passed = new Set(tracker.passedPlayerIds || []);
+  send({ type: "pass_phase", passed: !passed.has(myPlayerId) });
+}
+
+function wirePhasePassControls(root) {
+  root.querySelectorAll("[data-pass-phase]").forEach((button) => {
+    button.onclick = (event) => {
+      event.stopPropagation();
+      toggleMyPhasePass();
+    };
+  });
+}
+
+function phaseStepMarkup(step, index, active, canPass, passIsActive) {
+  const body = `<span class="phase-step-number">${esc(t("phaseStep"))} ${index + 1}</span>
+    <span class="phase-step-label">${esc(t(step.label))}</span>`;
+  if (active && canPass) {
+    const action = t(passIsActive ? "cancelPhasePass" : "passPhase");
+    return `<button type="button" class="phase-step active phase-pass-target ${passIsActive ? "passed" : ""}" data-pass-phase title="${esc(t(step.detail))} — ${esc(action)}" aria-current="step" aria-pressed="${passIsActive}">${body}</button>`;
+  }
+  return `<div class="phase-step ${active ? "active" : ""}" title="${esc(t(step.detail))}" aria-current="${active ? "step" : "false"}">${body}</div>`;
+}
+
+function renderPhaseChildren(group, activePhaseId, canPass, passIsActive) {
   return `<div class="phase-children">${group.sections.map((section) =>
     `<section class="phase-subphase" style="--subphase-weight:${section.steps.length}">
       ${section.label ? `<strong class="phase-subphase-title">${esc(t(section.label))}</strong>` : ""}
       <div class="phase-step-row">${section.steps.map((step, index) =>
-        `<div class="phase-step ${step.id === activePhaseId ? "active" : ""}" title="${esc(t(step.detail))}" aria-current="${step.id === activePhaseId ? "step" : "false"}">
-          <span class="phase-step-number">${esc(t("phaseStep"))} ${index + 1}</span>
-          <span class="phase-step-label">${esc(t(step.label))}</span>
-        </div>`
+        phaseStepMarkup(step, index, step.id === activePhaseId, canPass, passIsActive)
       ).join("")}</div>
     </section>`
   ).join("")}</div>`;
@@ -432,31 +455,43 @@ function renderPhaseTracker() {
   const { tracker, phase: activePhase, group: activeGroup } = currentPhaseUi();
   const panel = $("#phaseTracker");
   const panelVisible = tracker.enabled && phaseTrackerVisible;
+  const canConfigureAdvanced = !isObserver && mySeat() === 0;
+  const showAdvancedControl = phaseTrackerVisible && canConfigureAdvanced;
   panel.classList.toggle("hidden", !panelVisible);
   $("#phaseTrackerBtn").textContent = t("gamePhases");
   $("#phaseTrackerBtn").title = t(panelVisible ? "hidePhases" : "showPhases");
   $("#phaseTrackerBtn").classList.toggle("active", panelVisible);
   $("#phaseTrackerBtn").disabled = isObserver && !tracker.enabled;
+  $("#phaseHeaderControl").classList.toggle("expanded", showAdvancedControl);
+  $("#phaseAdvancedLabel").textContent = t("advancedMode");
+  $("#phaseAdvancedBtn").title = t("advancedMode");
+  $("#phaseAdvancedBtn").classList.toggle("hidden", !canConfigureAdvanced);
+  $("#phaseAdvancedBtn").classList.toggle("active", tracker.advanced);
+  $("#phaseAdvancedBtn").disabled = !showAdvancedControl;
+  $("#phaseAdvancedBtn").setAttribute("aria-pressed", String(Boolean(tracker.advanced)));
   $("#phaseTurn").classList.toggle("hidden", !tracker.enabled);
   if (tracker.enabled) $("#phaseTurn").textContent = `${t("turn")} ${tracker.turn || 1}`;
   if (!tracker.enabled) return;
 
   const activeGroupId = activeGroup?.id || activePhase?.parent || activePhase?.id;
-  $("#phaseAdvancedBtn").textContent = t(tracker.advanced ? "basicMode" : "advancedMode");
-  $("#phaseAdvancedBtn").classList.toggle("active", tracker.advanced);
-  $("#phaseAdvancedBtn").classList.toggle("hidden", isObserver || mySeat() !== 0);
-  $("#phaseAdvancedBtn").disabled = isObserver || mySeat() !== 0;
+  const passIsActive = new Set(tracker.passedPlayerIds || []).has(myPlayerId);
+  const canPass = !isObserver;
   $("#phaseSequence").classList.toggle("advanced", tracker.advanced);
   $("#phaseSequence").innerHTML = PHASE_GROUPS
     .map((group) => {
       const active = group.id === activeGroupId;
-      const children = tracker.advanced && active ? renderPhaseChildren(group, activePhase?.id) : "";
-      return `<section class="phase-group ${active ? "active" : ""}">
-        <div class="phase-main" title="${esc(t(group.detail))}" aria-current="${active ? "true" : "false"}">${esc(t(group.label))}</div>
+      const children = tracker.advanced && active ? renderPhaseChildren(group, activePhase?.id, canPass, passIsActive) : "";
+      const action = t(passIsActive ? "cancelPhasePass" : "passPhase");
+      const main = active && canPass
+        ? `<button type="button" class="phase-main phase-pass-target ${passIsActive ? "passed" : ""}" data-pass-phase title="${esc(t(group.detail))} — ${esc(action)}" aria-current="true" aria-pressed="${passIsActive}">${esc(t(group.label))}</button>`
+        : `<div class="phase-main" title="${esc(t(group.detail))}" aria-current="${active ? "true" : "false"}">${esc(t(group.label))}</div>`;
+      return `<section class="phase-group ${active ? "active" : ""}" data-phase-group="${esc(group.id)}">
+        ${main}
         ${children}
       </section>`;
     })
     .join("");
+  wirePhasePassControls(panel);
   $("#phaseSequence .phase-group.active")?.scrollIntoView({ block: "nearest", inline: "center" });
 }
 const LANGUAGE_FLAGS = { fr: "🇫🇷", en: "🇬🇧", it: "🇮🇹" };
@@ -521,7 +556,7 @@ function paintStaticText() {
   $("#leaveSessionBtn").textContent = t("leaveSession");
   $("#fullscreenBtn").textContent = t("fullscreen");
   $("#phaseTrackerBtn").textContent = t("gamePhases");
-  $("#phaseAdvancedBtn").textContent = t("advancedMode");
+  $("#phaseAdvancedLabel").textContent = t("advancedMode");
   $("#importDeckHeading").textContent = t("importDeck");
   $("#starterDecksHeading").textContent = t("starterDecks");
   $("#savedDecksHeading").textContent = t("savedDecks");
@@ -1118,12 +1153,12 @@ function renderOppRows() {
            <button class="phase-inline-pass ${myPassIsActive ? "active" : ""}" data-pass-phase>${esc(t(myPassIsActive ? "cancelPhasePass" : "passPhase"))}</button>`
         : "";
       const recentHtml = `<div class="opp-recent-log${collapsed ? " collapsed" : ""}">
-        <div class="opp-recent-log-lines">${recent.map((e) => `<div>${formatPlayerLogEntry(e)}</div>`).join("")}</div>
         <div class="opp-recent-log-controls">
           ${phaseControls}
           <button data-toggle-recent-log="${esc(p.id)}" title="${esc(t(collapsed ? "expand" : "collapse"))}">${collapsed ? "▸" : "▾"}</button>
           <button data-open-player-log="${esc(p.id)}">···</button>
         </div>
+        <div class="opp-recent-log-lines">${recent.map((e) => `<div>${formatPlayerLogEntry(e)}</div>`).join("")}</div>
       </div>`;
       return `<div class="opp-info-row">
         <div class="opp-info-main">
@@ -1164,12 +1199,7 @@ function renderOppRows() {
       renderOppRows();
     };
   });
-  $$("[data-pass-phase]").forEach((btn) => {
-    btn.onclick = (e) => {
-      e.stopPropagation();
-      send({ type: "pass_phase", passed: !myPassIsActive });
-    };
-  });
+  wirePhasePassControls(rows);
   wirePlayerLogCardNames(rows);
 }
 

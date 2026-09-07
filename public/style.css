@@ -216,6 +216,54 @@ input, textarea, select {
 }
 #phaseTrackerBtn:hover:not(.active) { background: #34352b; }
 #phaseTrackerBtn.active { background: var(--gold); border-color: #ffe39a; color: var(--carbon); }
+.phase-header-control { display: inline-flex; align-items: center; min-width: 0; }
+#phaseAdvancedBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 0;
+  margin-left: 0;
+  padding-inline: 0;
+  overflow: hidden;
+  border-width: 0;
+  opacity: 0;
+  white-space: nowrap;
+  pointer-events: none;
+  transform: translateX(8px);
+  transition: max-width .25s ease, margin-left .25s ease, padding .25s ease, opacity .18s ease, transform .25s ease;
+}
+.phase-header-control.expanded #phaseAdvancedBtn {
+  max-width: 180px;
+  margin-left: 6px;
+  padding-inline: 9px;
+  border-width: 1px;
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+#phaseAdvancedBtn.active { background: #284a6d; border-color: #67b9ff; color: #dff2ff; }
+.phase-mode-switch {
+  position: relative;
+  flex: none;
+  width: 27px;
+  height: 15px;
+  border: 1px solid #77725c;
+  border-radius: 999px;
+  background: #11110e;
+  transition: background .2s ease, border-color .2s ease;
+}
+.phase-mode-switch > span {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #aaa384;
+  transition: transform .2s ease, background .2s ease;
+}
+#phaseAdvancedBtn.active .phase-mode-switch { background: #225985; border-color: #8bc9ff; }
+#phaseAdvancedBtn.active .phase-mode-switch > span { background: #e8f6ff; transform: translateX(12px); }
 
 .game-header .brand .phase-turn-counter {
   flex: none;
@@ -249,21 +297,6 @@ input, textarea, select {
   z-index: 24;
   pointer-events: none;
 }
-#phaseAdvancedBtn {
-  position: absolute;
-  top: 0;
-  right: 14px;
-  padding: 6px 9px;
-  min-height: 0;
-  background: #25251f;
-  border-color: var(--gold-deep);
-  color: var(--gold-pale);
-  font-size: 12px;
-  white-space: nowrap;
-  pointer-events: auto;
-}
-#phaseAdvancedBtn.active { background: #284a6d; border-color: #67b9ff; color: #dff2ff; }
-
 .phase-sequence {
   flex: 0 1 auto;
   width: max-content;
@@ -312,7 +345,17 @@ input, textarea, select {
   box-shadow: 0 0 9px #d3a942aa, 0 0 22px #d3a94244;
   opacity: 1;
 }
+.phase-pass-target { cursor: pointer; }
+.phase-pass-target:hover { filter: brightness(1.1); }
+.phase-pass-target.passed {
+  border-color: #76cf91;
+  box-shadow: 0 0 9px #62bd7eaa, 0 0 22px #62bd7e55;
+}
 .phase-children { display: inline-flex; align-items: flex-start; gap: 8px; width: max-content; margin-top: 5px; }
+.phase-group[data-phase-group="confrontation"] .phase-children {
+  display: grid;
+  justify-items: center;
+}
 .phase-subphase {
   flex: 0 0 auto;
   width: max-content;
@@ -335,7 +378,9 @@ input, textarea, select {
 .phase-step {
   flex: 0 0 auto;
   width: max-content;
-  min-width: max-content;
+  min-width: 0;
+  max-width: 150px;
+  box-sizing: border-box;
   display: grid;
   align-content: start;
   gap: 3px;
@@ -348,7 +393,7 @@ input, textarea, select {
   opacity: .7;
 }
 .phase-step-number { color: #7f795f; font-size: 14px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
-.phase-step-label { overflow-wrap: normal; font-size: 14px; line-height: 1.15; white-space: nowrap; }
+.phase-step-label { overflow-wrap: normal; font-size: 14px; line-height: 1.15; text-wrap: balance; white-space: normal; }
 .phase-step.active {
   color: var(--carbon);
   background: #f2d481;
@@ -403,7 +448,7 @@ input, textarea, select {
 .opp-rows .opp-recent-log { font-size: 14px; color: #cfc7a8; }
 .opp-rows .opp-recent-log-lines { display: grid; gap: 1px; }
 .opp-rows .opp-recent-log.collapsed .opp-recent-log-lines { display: none; }
-.opp-rows .opp-recent-log-controls { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-top: 3px; }
+.opp-rows .opp-recent-log-controls { display: flex; align-items: center; justify-content: flex-end; gap: 4px; margin-bottom: 3px; }
 .opp-rows .opp-recent-log-controls button {
   background: transparent; border: 1px solid #4a4732; border-radius: 4px; padding: 0 7px; min-height: 0;
   color: var(--gold-pale); font-weight: 700; font-size: 13px; line-height: 1.6;
