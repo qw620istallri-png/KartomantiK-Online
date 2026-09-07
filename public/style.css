@@ -309,7 +309,7 @@ input, textarea, select {
   overflow-x: auto;
   padding: 1px 1px 4px;
   scrollbar-width: thin;
-  pointer-events: auto;
+  pointer-events: none;
 }
 .phase-group {
   flex: 0 0 auto;
@@ -336,6 +336,7 @@ input, textarea, select {
   line-height: 1.2;
   white-space: nowrap;
   opacity: .72;
+  pointer-events: auto;
 }
 .phase-sequence.advanced .phase-group.active > .phase-main { width: 100%; box-sizing: border-box; }
 .phase-group.active > .phase-main {
@@ -351,6 +352,17 @@ input, textarea, select {
   border-color: #76cf91;
   box-shadow: 0 0 9px #62bd7eaa, 0 0 22px #62bd7e55;
 }
+.phase-pass-action {
+  display: block;
+  margin-top: 3px;
+  color: #5d4817;
+  font-family: var(--body-font);
+  font-size: 11px;
+  font-weight: 900;
+  line-height: 1;
+  text-transform: uppercase;
+}
+.phase-pass-target.passed .phase-pass-action { color: #d9ffe4; }
 .phase-children { display: inline-flex; align-items: flex-start; gap: 8px; width: max-content; margin-top: 5px; }
 .phase-group[data-phase-group="confrontation"] .phase-children {
   display: grid;
@@ -367,8 +379,14 @@ input, textarea, select {
 }
 .phase-subphase-title {
   display: block;
-  margin: 0 0 4px;
+  width: max-content;
+  margin: 0 auto 5px;
+  padding: 2px 8px;
+  border: 1px solid #56779a;
+  border-radius: 999px;
   color: var(--gold);
+  background: #0b1e3acc;
+  box-shadow: 0 0 8px #0b1e3acc, 0 0 14px #41658d66;
   text-align: center;
   font-size: 14px;
   letter-spacing: .05em;
@@ -391,6 +409,7 @@ input, textarea, select {
   background: #191914;
   text-align: center;
   opacity: .7;
+  pointer-events: auto;
 }
 .phase-step-number { color: #7f795f; font-size: 14px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
 .phase-step-label { overflow-wrap: normal; font-size: 14px; line-height: 1.15; text-wrap: balance; white-space: normal; }
@@ -457,13 +476,17 @@ input, textarea, select {
 .opp-current-phase {
   flex: 1 1 auto;
   min-width: 0;
-  overflow: hidden;
+  display: grid;
+  gap: 1px;
   color: var(--gold);
-  font-size: 11px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+}
+.opp-current-step {
+  color: #cfc7a8;
+  font-size: 14px;
+  font-weight: 400;
 }
 .opp-rows .opp-recent-log-controls .phase-inline-pass {
   flex: none;
@@ -842,7 +865,8 @@ input, textarea, select {
 .log-entry { font-size: 14px; border-bottom: 1px solid var(--line); padding: 8px 0; }
 .log-entry .t { color: var(--muted); font-size: 14px; }
 .log-entry .who { font-weight: 700; }
-.log-entry .what { color: var(--ink); }
+.log-entry .what { color: var(--ink); white-space: pre-line; }
+.phase-log-step { color: #9e9677; }
 .log-entry .detail { color: var(--muted); font-size: 14px; margin-top: 2px; }
 
 #logPanel .box { display: flex; flex-direction: column; max-height: 82vh; padding: 0; }

@@ -403,15 +403,23 @@ function currentPhaseUi(tracker = latestState?.phaseTracker) {
   return { tracker: safeTracker, phases, index, phase, group };
 }
 
-function currentPhaseLabel(tracker = latestState?.phaseTracker) {
+function currentPhaseLines(tracker = latestState?.phaseTracker) {
   const state = currentPhaseUi(tracker);
-  if (!state.tracker.enabled || !state.phase || !state.group) return "";
-  const parts = [t(state.group.label)];
+  if (!state.tracker.enabled || !state.phase || !state.group) return { phase: "", step: "" };
+  const phase = t(state.group.label);
+  let step = "";
   if (state.tracker.advanced) {
+    const parts = [];
     if (state.phase.subphase) parts.push(t(state.phase.subphase));
     parts.push(`${t("phaseStep")} ${state.phase.stepNumber} — ${t(state.phase.label)}`);
+    step = parts.join(" · ");
   }
-  return parts.join(" · ");
+  return { phase, step };
+}
+
+function currentPhaseLabel(tracker = latestState?.phaseTracker) {
+  const lines = currentPhaseLines(tracker);
+  return [lines.phase, lines.step].filter(Boolean).join("\n");
 }
 
 function toggleMyPhasePass() {
@@ -435,7 +443,7 @@ function phaseStepMarkup(step, index, active, canPass, passIsActive) {
     <span class="phase-step-label">${esc(t(step.label))}</span>`;
   if (active && canPass) {
     const action = t(passIsActive ? "cancelPhasePass" : "passPhase");
-    return `<button type="button" class="phase-step active phase-pass-target ${passIsActive ? "passed" : ""}" data-pass-phase title="${esc(t(step.detail))} — ${esc(action)}" aria-current="step" aria-pressed="${passIsActive}">${body}</button>`;
+    return `<button type="button" class="phase-step active phase-pass-target ${passIsActive ? "passed" : ""}" data-pass-phase title="${esc(t(step.detail))} — ${esc(action)}" aria-current="step" aria-pressed="${passIsActive}">${body}<span class="phase-pass-action">${esc(action)}</span></button>`;
   }
   return `<div class="phase-step ${active ? "active" : ""}" title="${esc(t(step.detail))}" aria-current="${active ? "step" : "false"}">${body}</div>`;
 }
@@ -456,7 +464,7 @@ function renderPhaseTracker() {
   const panel = $("#phaseTracker");
   const panelVisible = tracker.enabled && phaseTrackerVisible;
   const canConfigureAdvanced = !isObserver && mySeat() === 0;
-  const showAdvancedControl = phaseTrackerVisible && canConfigureAdvanced;
+  const showAdvancedControl = panelVisible && canConfigureAdvanced;
   panel.classList.toggle("hidden", !panelVisible);
   $("#phaseTrackerBtn").textContent = t("gamePhases");
   $("#phaseTrackerBtn").title = t(panelVisible ? "hidePhases" : "showPhases");
@@ -482,8 +490,8 @@ function renderPhaseTracker() {
       const active = group.id === activeGroupId;
       const children = tracker.advanced && active ? renderPhaseChildren(group, activePhase?.id, canPass, passIsActive) : "";
       const action = t(passIsActive ? "cancelPhasePass" : "passPhase");
-      const main = active && canPass
-        ? `<button type="button" class="phase-main phase-pass-target ${passIsActive ? "passed" : ""}" data-pass-phase title="${esc(t(group.detail))} — ${esc(action)}" aria-current="true" aria-pressed="${passIsActive}">${esc(t(group.label))}</button>`
+      const main = active && canPass && !tracker.advanced
+        ? `<button type="button" class="phase-main phase-pass-target ${passIsActive ? "passed" : ""}" data-pass-phase title="${esc(t(group.detail))} — ${esc(action)}" aria-current="true" aria-pressed="${passIsActive}">${esc(t(group.label))}<span class="phase-pass-action">${esc(action)}</span></button>`
         : `<div class="phase-main" title="${esc(t(group.detail))}" aria-current="${active ? "true" : "false"}">${esc(t(group.label))}</div>`;
       return `<section class="phase-group ${active ? "active" : ""}" data-phase-group="${esc(group.id)}">
         ${main}
@@ -1064,16 +1072,24 @@ function wirePlayerLogCardNames(container) {
   });
 }
 
-function phaseLogLabel(details) {
+function phaseLogLines(details) {
   const phaseId = details.phaseId || details.phase;
   const phase = ADVANCED_PHASES.find((item) => item.id === phaseId)
     || BASIC_PHASES.find((item) => item.id === phaseId)
     || BASIC_PHASES.find((item) => item.id === details.phase);
-  if (!phase) return "";
+  if (!phase) return { phase: "", step: "" };
   const group = PHASE_GROUPS.find((item) => item.id === (phase.parent || phase.id));
-  if (!details.advancedMode || !phase.stepNumber) return group ? t(group.label) : t(phase.label);
-  const parts = [group ? t(group.label) : "", phase.subphase ? t(phase.subphase) : "", `${t("phaseStep")} ${phase.stepNumber} — ${t(phase.label)}`];
-  return parts.filter(Boolean).join(" · ");
+  const phaseLabel = group ? t(group.label) : t(phase.label);
+  if (!details.advancedMode || !phase.stepNumber) return { phase: phaseLabel, step: "" };
+  const step = [phase.subphase ? t(phase.subphase) : "", `${t("phaseStep")} ${phase.stepNumber} — ${t(phase.label)}`]
+    .filter(Boolean)
+    .join(" · ");
+  return { phase: phaseLabel, step };
+}
+
+function phaseLogLabel(details) {
+  const lines = phaseLogLines(details);
+  return [lines.phase, lines.step].filter(Boolean).join("\n");
 }
 
 // Returns safe HTML (the actor's name is colour-coded), not plain text — the
@@ -1097,10 +1113,11 @@ function formatPlayerLogEntry(e) {
         : `${who} ${esc(t("plPutInto"))} ${namedOrUnknownCard(d.cardId)} → ${esc(t(d.toZone))}`;
     case "pass_phase": {
       if (d.action === "cancelled") return `${who} ${esc(t("plCancelledPhasePass"))}`;
-      const label = phaseLogLabel(d);
+      const lines = phaseLogLines(d);
+      const step = lines.step ? `<br><span class="phase-log-step">${esc(lines.step)}</span>` : "";
       return d.action === "advanced"
-        ? `${who} ${esc(t("plAdvancedPhase"))} ${esc(label)}`
-        : `${who} ${esc(t("plPassedPhase"))}${label ? ` — ${esc(label)}` : ""}`;
+        ? `${who} ${esc(t("plAdvancedPhase"))} ${esc(lines.phase)}${step}`
+        : `${who} ${esc(t("plPassedPhase"))}${lines.phase ? ` — ${esc(lines.phase)}` : ""}${step}`;
     }
     default:
       return "";
@@ -1134,7 +1151,8 @@ function renderOppRows() {
   const rows = $("#oppRows");
   const tracker = latestState.phaseTracker || { enabled: false, advanced: false, index: 0, turn: 1, passedPlayerIds: [] };
   const passed = new Set(tracker.passedPlayerIds || []);
-  const phaseLabel = currentPhaseLabel(tracker);
+  const phaseLines = currentPhaseLines(tracker);
+  const phaseLabel = [phaseLines.phase, phaseLines.step].filter(Boolean).join(" · ");
   const myPassIsActive = passed.has(myPlayerId);
   rows.innerHTML = Object.values(latestState.players)
     .filter((p) => isObserver || p.id !== myPlayerId)
@@ -1149,7 +1167,7 @@ function renderOppRows() {
         ? `<span class="phase-player-pass-status">✓ ${esc(t("phasePassed"))}</span>`
         : "";
       const phaseControls = tracker.enabled && !isObserver
-        ? `<span class="opp-current-phase" title="${esc(phaseLabel)}">${esc(phaseLabel)}</span>
+        ? `<span class="opp-current-phase" title="${esc(phaseLabel)}"><span>${esc(phaseLines.phase)}</span>${phaseLines.step ? `<span class="opp-current-step">${esc(phaseLines.step)}</span>` : ""}</span>
            <button class="phase-inline-pass ${myPassIsActive ? "active" : ""}" data-pass-phase>${esc(t(myPassIsActive ? "cancelPhasePass" : "passPhase"))}</button>`
         : "";
       const recentHtml = `<div class="opp-recent-log${collapsed ? " collapsed" : ""}">
@@ -3206,9 +3224,11 @@ function initChat() {
 
 function initGameControls() {
   $("#phaseTrackerBtn").onclick = () => {
-    phaseTrackerVisible = !phaseTrackerVisible;
+    const trackerEnabled = Boolean(latestState?.phaseTracker?.enabled);
+    if (!trackerEnabled && !isObserver) phaseTrackerVisible = true;
+    else phaseTrackerVisible = !phaseTrackerVisible;
     localStorage.setItem(PHASE_VISIBILITY_KEY, phaseTrackerVisible ? "1" : "0");
-    if (phaseTrackerVisible && !latestState?.phaseTracker?.enabled && !isObserver) {
+    if (phaseTrackerVisible && !trackerEnabled && !isObserver) {
       send({ type: "configure_phases", enabled: true });
     }
     renderPhaseTracker();
