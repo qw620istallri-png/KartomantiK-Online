@@ -348,13 +348,22 @@ input, textarea, select {
 }
 .phase-pass-target { cursor: pointer; }
 .phase-pass-target:hover { filter: brightness(1.1); }
-.phase-pass-target.passed {
+.phase-group.active > .phase-pass-target.passed,
+.phase-step.active.phase-pass-target.passed {
   color: #fff9df;
-  background: linear-gradient(135deg, #276f4b, #123c2a);
-  border-color: #a8ffc4;
-  box-shadow: 0 0 11px #69e695cc, 0 0 26px #42c87588, inset 0 0 0 1px #d5ffe255;
+  background: linear-gradient(135deg, #17462f, #091f16);
+  border-color: #78bd8e;
+  box-shadow: 0 2px 4px #0008, inset 0 4px 10px #000a, inset 0 0 0 1px #c8ffda33;
+  transform: translateY(2px);
 }
-.phase-pass-target.passed .phase-step-number { color: #d8ffe5; }
+.phase-step.active.phase-pass-target.passed .phase-step-number { color: #d8ffe5; }
+.phase-group.active > .phase-pass-target.opponent-passed,
+.phase-step.active.phase-pass-target.opponent-passed {
+  border-color: #ff6670;
+  outline: 2px solid #e43e4b;
+  outline-offset: 2px;
+  box-shadow: 0 0 10px #ff4b58dd, 0 0 28px #d91f3288, inset 0 0 0 1px #fff3;
+}
 .phase-children { display: inline-flex; align-items: flex-start; gap: 8px; width: max-content; margin-top: 5px; }
 .phase-group[data-phase-group="confrontation"] .phase-children {
   display: grid;

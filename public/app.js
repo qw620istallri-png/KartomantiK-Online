@@ -438,22 +438,22 @@ function wirePhasePassControls(root) {
   });
 }
 
-function phaseStepMarkup(step, index, active, canPass, passIsActive) {
+function phaseStepMarkup(step, index, active, canPass, passIsActive, opponentPassIsActive) {
   const body = `<span class="phase-step-number">${esc(t("phaseStep"))} ${index + 1}</span>
     <span class="phase-step-label">${esc(t(step.label))}</span>`;
   if (active && canPass) {
     const action = t(passIsActive ? "cancelPhasePass" : "passPhase");
-    return `<button type="button" class="phase-step active phase-pass-target ${passIsActive ? "passed" : ""}" data-pass-phase title="${esc(t(step.detail))}" aria-label="${esc(`${t(step.label)} — ${action}`)}" aria-current="step" aria-pressed="${passIsActive}">${body}</button>`;
+    return `<button type="button" class="phase-step active phase-pass-target ${passIsActive ? "passed" : ""} ${opponentPassIsActive ? "opponent-passed" : ""}" data-pass-phase title="${esc(t(step.detail))}" aria-label="${esc(`${t(step.label)} — ${action}`)}" aria-current="step" aria-pressed="${passIsActive}">${body}</button>`;
   }
   return `<div class="phase-step ${active ? "active" : ""}" title="${esc(t(step.detail))}" aria-current="${active ? "step" : "false"}">${body}</div>`;
 }
 
-function renderPhaseChildren(group, activePhaseId, canPass, passIsActive) {
+function renderPhaseChildren(group, activePhaseId, canPass, passIsActive, opponentPassIsActive) {
   return `<div class="phase-children">${group.sections.map((section) =>
     `<section class="phase-subphase" style="--subphase-weight:${section.steps.length}">
       ${section.label ? `<strong class="phase-subphase-title">${esc(t(section.label))}</strong>` : ""}
       <div class="phase-step-row">${section.steps.map((step, index) =>
-        phaseStepMarkup(step, index, step.id === activePhaseId, canPass, passIsActive)
+        phaseStepMarkup(step, index, step.id === activePhaseId, canPass, passIsActive, opponentPassIsActive)
       ).join("")}</div>
     </section>`
   ).join("")}</div>`;
@@ -482,16 +482,18 @@ function renderPhaseTracker() {
   if (!tracker.enabled) return;
 
   const activeGroupId = activeGroup?.id || activePhase?.parent || activePhase?.id;
-  const passIsActive = new Set(tracker.passedPlayerIds || []).has(myPlayerId);
+  const passedPlayerIds = new Set(tracker.passedPlayerIds || []);
+  const passIsActive = passedPlayerIds.has(myPlayerId);
+  const opponentPassIsActive = !isObserver && [...passedPlayerIds].some((playerId) => playerId !== myPlayerId);
   const canPass = !isObserver;
   $("#phaseSequence").classList.toggle("advanced", tracker.advanced);
   $("#phaseSequence").innerHTML = PHASE_GROUPS
     .map((group) => {
       const active = group.id === activeGroupId;
-      const children = tracker.advanced && active ? renderPhaseChildren(group, activePhase?.id, canPass, passIsActive) : "";
+      const children = tracker.advanced && active ? renderPhaseChildren(group, activePhase?.id, canPass, passIsActive, opponentPassIsActive) : "";
       const action = t(passIsActive ? "cancelPhasePass" : "passPhase");
       const main = active && canPass && !tracker.advanced
-        ? `<button type="button" class="phase-main phase-pass-target ${passIsActive ? "passed" : ""}" data-pass-phase title="${esc(t(group.detail))}" aria-label="${esc(`${t(group.label)} — ${action}`)}" aria-current="true" aria-pressed="${passIsActive}">${esc(t(group.label))}</button>`
+        ? `<button type="button" class="phase-main phase-pass-target ${passIsActive ? "passed" : ""} ${opponentPassIsActive ? "opponent-passed" : ""}" data-pass-phase title="${esc(t(group.detail))}" aria-label="${esc(`${t(group.label)} — ${action}`)}" aria-current="true" aria-pressed="${passIsActive}">${esc(t(group.label))}</button>`
         : `<div class="phase-main" title="${esc(t(group.detail))}" aria-current="${active ? "true" : "false"}">${esc(t(group.label))}</div>`;
       return `<section class="phase-group ${active ? "active" : ""}" data-phase-group="${esc(group.id)}">
         ${main}
