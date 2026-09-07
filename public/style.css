@@ -273,8 +273,8 @@ input, textarea, select {
   min-width: 0;
 }
 .phase-sequence.advanced .phase-group.active {
-  flex: 1 1 520px;
-  min-width: min(520px, 76vw);
+  flex: 0 0 auto;
+  min-width: 0;
 }
 .phase-main {
   width: max-content;
@@ -292,7 +292,7 @@ input, textarea, select {
   white-space: nowrap;
   opacity: .72;
 }
-.phase-sequence.advanced .phase-group.active > .phase-main { width: 100%; }
+.phase-sequence.advanced .phase-group.active > .phase-main { width: max-content; }
 .phase-group.active > .phase-main {
   color: #17120a;
   background: linear-gradient(135deg, #f2d481, var(--gold));
@@ -300,14 +300,15 @@ input, textarea, select {
   box-shadow: 0 0 9px #d3a942aa, 0 0 22px #d3a94244;
   opacity: 1;
 }
-.phase-children { display: flex; align-items: stretch; gap: 5px; margin-top: 5px; }
+.phase-children { display: inline-flex; align-items: flex-start; gap: 8px; width: max-content; margin-top: 5px; }
 .phase-subphase {
-  flex: var(--subphase-weight) 1 0;
+  flex: 0 0 auto;
+  width: max-content;
   min-width: 0;
-  padding: 4px;
-  background: #0e0e0bb8;
-  border: 1px solid #4e4529;
-  border-radius: 8px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 }
 .phase-subphase-title {
   display: block;
@@ -318,14 +319,15 @@ input, textarea, select {
   letter-spacing: .05em;
   text-transform: uppercase;
 }
-.phase-step-row { display: flex; align-items: stretch; gap: 4px; }
+.phase-step-row { display: inline-flex; align-items: stretch; gap: 4px; width: max-content; }
 .phase-step {
-  flex: 1 1 0;
-  min-width: 0;
+  flex: 0 0 auto;
+  width: max-content;
+  min-width: max-content;
   display: grid;
   align-content: start;
   gap: 3px;
-  padding: 5px 4px;
+  padding: 5px 8px;
   border: 1px solid #403d2d;
   border-radius: 999px;
   color: #aaa58e;
@@ -334,7 +336,7 @@ input, textarea, select {
   opacity: .7;
 }
 .phase-step-number { color: #7f795f; font-size: 8px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
-.phase-step-label { overflow-wrap: anywhere; font-size: 9px; line-height: 1.15; }
+.phase-step-label { overflow-wrap: normal; font-size: 9px; line-height: 1.15; white-space: nowrap; }
 .phase-step.active {
   color: var(--carbon);
   background: #f2d481;

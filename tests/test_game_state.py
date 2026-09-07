@@ -52,11 +52,35 @@ class PhaseTrackerTests(unittest.TestCase):
         self.session.configure_phases(enabled=True)
 
     def test_both_players_must_pass_to_advance(self):
-        self.assertFalse(self.session.pass_phase("p1"))
+        self.assertEqual(self.session.pass_phase("p1"), "passed")
         self.assertEqual(self.session.phase_tracker["index"], 0)
-        self.assertTrue(self.session.pass_phase("p2"))
+        self.assertEqual(self.session.pass_phase("p2"), "advanced")
         self.assertEqual(self.session.phase_tracker["index"], 1)
         self.assertEqual(self.session.phase_passes, set())
+
+    def test_player_can_cancel_pass(self):
+        self.assertEqual(self.session.pass_phase("p1"), "passed")
+        self.assertEqual(self.session.pass_phase("p1"), "cancelled")
+        self.assertEqual(self.session.phase_tracker["index"], 0)
+        self.assertEqual(self.session.phase_passes, set())
+
+    def test_explicit_pass_state_is_idempotent_and_cancellable(self):
+        self.assertEqual(self.session.pass_phase("p1", passed=True), "passed")
+        self.assertEqual(self.session.pass_phase("p1", passed=True), "passed")
+        self.assertEqual(self.session.phase_passes, {"p1"})
+        self.assertEqual(self.session.pass_phase("p1", passed=False), "cancelled")
+        self.assertEqual(self.session.pass_phase("p1", passed=False), "cancelled")
+        self.assertEqual(self.session.phase_tracker["index"], 0)
+        self.assertEqual(self.session.phase_passes, set())
+
+    def test_enabled_toggle_preserves_phase_and_turn(self):
+        self.session.phase_tracker.update({"index": 2, "turn": 4})
+        self.session.phase_passes.add("p1")
+        self.session.configure_phases(enabled=False)
+        self.session.configure_phases(enabled=True)
+        self.assertEqual(self.session.phase_tracker["index"], 2)
+        self.assertEqual(self.session.phase_tracker["turn"], 4)
+        self.assertEqual(self.session.phase_passes, {"p1"})
 
     def test_advanced_mode_keeps_current_phase_group(self):
         self.session.pass_phase("p1")
@@ -64,7 +88,8 @@ class PhaseTrackerTests(unittest.TestCase):
         self.assertEqual(self.session.current_phase_group(), "confrontation")
         self.session.configure_phases(advanced=True)
         self.assertEqual(self.session.current_phase_group(), "confrontation")
-        self.assertEqual(self.session.phase_tracker["index"], 4)
+        self.assertEqual(self.session.phase_tracker["index"], 3)
+        self.assertEqual(len(self.session.phase_sequence()), 14)
 
 
 if __name__ == "__main__":

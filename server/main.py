@@ -836,6 +836,8 @@ async def handle_message(ws, info, data):
         advanced = data.get("advanced") if "advanced" in data else None
         if enabled is None and advanced is None:
             return await send_error(ws, "No phase setting supplied.")
+        if advanced is not None and session.players[actor_id].get("seat") != 0:
+            return await send_error(ws, "Only the first player can change the advanced phase mode.")
         session.configure_phases(enabled=enabled, advanced=advanced)
         session.add_log(actor_id, "configure_phases", {"enabled": session.phase_tracker["enabled"], "advanced": session.phase_tracker["advanced"]})
         session.touch()
@@ -846,8 +848,18 @@ async def handle_message(ws, info, data):
             return await send_error(ws, "Observers cannot pass phases.")
         if not session.phase_tracker["enabled"]:
             return await send_error(ws, "Game phases are not active.")
-        advanced = session.pass_phase(actor_id)
-        session.add_log(actor_id, "pass_phase", {"advanced": advanced, "phase": session.current_phase_group(), "turn": session.phase_tracker["turn"]})
+        if "passed" in data and not isinstance(data["passed"], bool):
+            return await send_error(ws, "Phase pass state must be a boolean.")
+        action = session.pass_phase(actor_id, passed=data.get("passed"))
+        if action is None:
+            return await send_error(ws, "Unable to update the phase pass.")
+        session.add_log(actor_id, "pass_phase", {
+            "action": action,
+            "phase": session.current_phase_group(),
+            "phaseId": session.current_phase_id(),
+            "turn": session.phase_tracker["turn"],
+            "advancedMode": session.phase_tracker["advanced"],
+        })
         session.touch()
         await broadcast_state(session)
 

@@ -1167,7 +1167,7 @@ function renderOppRows() {
   $$("[data-pass-phase]").forEach((btn) => {
     btn.onclick = (e) => {
       e.stopPropagation();
-      send({ type: "pass_phase" });
+      send({ type: "pass_phase", passed: !myPassIsActive });
     };
   });
   wirePlayerLogCardNames(rows);
