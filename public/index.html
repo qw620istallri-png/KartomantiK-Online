@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kartomantik Online</title>
   <link rel="icon" type="image/webp" href="grimoire-icon.webp?v=20260905-1">
-  <link rel="stylesheet" href="style.css?v=20260907-1">
+  <link rel="stylesheet" href="style.css?v=20260907-2">
 </head>
 <body>
 
@@ -93,13 +93,13 @@
         </div>
       </div>
     </header>
-    <section class="phase-tracker hidden" id="phaseTracker">
-      <div class="phase-sequence" id="phaseSequence"></div>
-      <button type="button" id="phaseAdvancedBtn"></button>
-    </section>
     <p class="status-line" id="gameStatusLine"></p>
     <div class="session-ended-banner hidden" id="sessionEndedBanner"></div>
     <div class="board-field-wrap" id="battlefieldWrap">
+      <section class="phase-tracker hidden" id="phaseTracker">
+        <div class="phase-sequence" id="phaseSequence"></div>
+        <button type="button" id="phaseAdvancedBtn"></button>
+      </section>
       <div class="top-left-stack" id="topLeftStack">
         <div class="opp-rows" id="oppRows"></div>
         <div class="chat-panel" id="chatPanel">
@@ -378,6 +378,6 @@
   </div>
 
   <script src="i18n.js?v=20260906-5"></script>
-  <script src="app.js?v=20260907-1"></script>
+  <script src="app.js?v=20260907-2"></script>
 </body>
 </html>

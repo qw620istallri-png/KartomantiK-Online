@@ -234,20 +234,25 @@ input, textarea, select {
 }
 
 .phase-tracker {
-  flex: none;
+  position: absolute;
+  inset: 8px 0 auto;
   display: flex;
   align-items: flex-start;
+  justify-content: safe center;
   gap: 8px;
-  margin: 8px 14px 0;
-  padding: 0;
+  margin: 0;
+  padding: 0 124px;
   color: var(--gold-pale);
   background: transparent;
   border: 0;
   box-shadow: none;
   z-index: 24;
+  pointer-events: none;
 }
 #phaseAdvancedBtn {
-  flex: none;
+  position: absolute;
+  top: 0;
+  right: 14px;
   padding: 6px 9px;
   min-height: 0;
   background: #25251f;
@@ -255,18 +260,23 @@ input, textarea, select {
   color: var(--gold-pale);
   font-size: 12px;
   white-space: nowrap;
+  pointer-events: auto;
 }
 #phaseAdvancedBtn.active { background: #284a6d; border-color: #67b9ff; color: #dff2ff; }
 
 .phase-sequence {
-  flex: 1;
+  flex: 0 1 auto;
+  width: max-content;
+  max-width: 100%;
   display: flex;
+  justify-content: safe center;
   align-items: flex-start;
   gap: 6px;
   min-width: 0;
   overflow-x: auto;
   padding: 1px 1px 4px;
   scrollbar-width: thin;
+  pointer-events: auto;
 }
 .phase-group {
   flex: 0 0 auto;
@@ -275,6 +285,8 @@ input, textarea, select {
 .phase-sequence.advanced .phase-group.active {
   flex: 0 0 auto;
   min-width: 0;
+  display: grid;
+  grid-template-columns: max-content;
 }
 .phase-main {
   width: max-content;
@@ -286,13 +298,13 @@ input, textarea, select {
   background: #191914;
   text-align: center;
   font-family: var(--display-font);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   line-height: 1.2;
   white-space: nowrap;
   opacity: .72;
 }
-.phase-sequence.advanced .phase-group.active > .phase-main { width: max-content; }
+.phase-sequence.advanced .phase-group.active > .phase-main { width: 100%; box-sizing: border-box; }
 .phase-group.active > .phase-main {
   color: #17120a;
   background: linear-gradient(135deg, #f2d481, var(--gold));
@@ -315,7 +327,7 @@ input, textarea, select {
   margin: 0 0 4px;
   color: var(--gold);
   text-align: center;
-  font-size: 10px;
+  font-size: 14px;
   letter-spacing: .05em;
   text-transform: uppercase;
 }
@@ -335,8 +347,8 @@ input, textarea, select {
   text-align: center;
   opacity: .7;
 }
-.phase-step-number { color: #7f795f; font-size: 8px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
-.phase-step-label { overflow-wrap: normal; font-size: 9px; line-height: 1.15; white-space: nowrap; }
+.phase-step-number { color: #7f795f; font-size: 14px; font-weight: 900; letter-spacing: .04em; text-transform: uppercase; }
+.phase-step-label { overflow-wrap: normal; font-size: 14px; line-height: 1.15; white-space: nowrap; }
 .phase-step.active {
   color: var(--carbon);
   background: #f2d481;
@@ -1089,7 +1101,6 @@ input, textarea, select {
   .game-header .actions { gap: 5px; }
   .header-action-group { gap: 5px; }
   .game-header .actions button { padding: 6px 8px; font-size: 12px; }
-  .phase-tracker { margin-inline: 8px; }
-  .phase-sequence.advanced .phase-group.active { min-width: min(500px, 82vw); }
+  .phase-tracker { padding-inline: 96px; }
   #phaseAdvancedBtn { font-size: 11px; }
 }
