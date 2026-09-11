@@ -6,6 +6,7 @@ zone (see session.py), applies the action, and rebroadcasts a
 permission-filtered state snapshot to every connection in the session.
 """
 import asyncio
+import copy
 import json
 import logging
 import mimetypes
@@ -29,7 +30,7 @@ log = logging.getLogger("kartomantik-online")
 PUBLIC_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "public"))
 HAND_LIMIT = 7
 TEMPERAMENTS = {"capricious", "choleric", "hollow", "melancholic", "phlegmatic", "transcendent", "vitreous"}
-RARITIES = {"foil", "silver", "gold", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter", "gold-glitter"}
+RARITIES = {"foil", "silver", "gold", "desert", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter", "gold-glitter", "desert-glitter"}
 VERSIONED_CACHE = "public, max-age=31536000, immutable"
 STATIC_CACHE = "public, max-age=86400, stale-while-revalidate=604800"
 STATIC_CACHE_EXTENSIONS = {".avif", ".gif", ".ico", ".jpeg", ".jpg", ".png", ".svg", ".ttf", ".webp", ".woff", ".woff2"}
@@ -180,15 +181,23 @@ async def send_error(ws, message, code=None):
 
 # ---------------------------------------------------------------- action handlers
 
-def extract_deck_card_ids(deck_json):
-    ids = []
+def extract_deck_card_pools(deck_json):
+    deck_ids = []
+    sideboard_ids = []
     for group in deck_json.get("groups", []) or []:
-        if group.get("kind") == "maybeboard":
+        kind = str(group.get("kind") or "").lower()
+        if kind == "maybeboard":
             continue
+        target = sideboard_ids if kind == "sideboard" else deck_ids
         for cid in group.get("cardIds", []) or []:
             if isinstance(cid, str):
-                ids.append(cid)
-    return ids
+                target.append(cid)
+    return deck_ids, sideboard_ids
+
+
+def extract_deck_card_ids(deck_json):
+    """Backward-compatible main-deck helper used by older integrations."""
+    return extract_deck_card_pools(deck_json)[0]
 
 
 def extract_deck_card_rarities(deck_json, card_ids):
@@ -216,19 +225,39 @@ async def handle_message(ws, info, data):
         if player is None:
             return await send_error(ws, "Unknown player.")
         deck_json = data.get("deck") or {}
-        card_ids = extract_deck_card_ids(deck_json)
-        card_rarities = extract_deck_card_rarities(deck_json, card_ids)
+        card_ids, sideboard_ids = extract_deck_card_pools(deck_json)
+        card_rarities = extract_deck_card_rarities(deck_json, card_ids + sideboard_ids)
+        reset_own_board = bool(data.get("resetOwnBoard"))
         random.shuffle(card_ids)
-        player["zones"]["deck"] = card_ids
-        player["zones"]["hand"] = []
-        player["zones"]["graveyard"] = []
-        player["zones"]["exile"] = []
-        player["zones"]["receptacle"] = []
-        player["zoneOwners"] = {zone: {} for zone in ALL_ZONES}
-        player["zoneOwners"]["deck"] = {card_id: actor_id for card_id in card_ids}
-        player["cardRarities"] = card_rarities
-        player["score"] = 0
+        if reset_own_board:
+            session.replace_player_deck(
+                actor_id, card_ids, sideboard_ids, card_rarities, copy.deepcopy(deck_json)
+            )
+        else:
+            player["zones"]["deck"] = card_ids
+            player["zones"]["hand"] = []
+            player["zones"]["graveyard"] = []
+            player["zones"]["exile"] = []
+            player["zones"]["receptacle"] = []
+            player["zoneOwners"] = {zone: {} for zone in ALL_ZONES}
+            player["zoneOwners"]["deck"] = {card_id: actor_id for card_id in card_ids}
+            player["cardRarities"] = card_rarities
+            player["sideboard"] = sideboard_ids
+            player["deckDefinition"] = copy.deepcopy(deck_json)
+            player["score"] = 0
         session.add_log(actor_id, "import_deck", {"count": len(card_ids)})
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "copy_card":
+        error, item = session.copy_card(
+            actor_id, is_observer, item_id=data.get("itemId"),
+            source_owner=data.get("fromOwnerId"), source_zone=data.get("fromZone"),
+            card_id=data.get("cardId"), x=data.get("x"), y=data.get("y"),
+        )
+        if error:
+            return await send_error(ws, error)
+        session.add_log(actor_id, "copy_card", {"itemId": item["id"], "cardId": item["cardId"]})
         session.touch()
         await broadcast_state(session)
 
@@ -576,6 +605,14 @@ async def handle_message(ws, info, data):
         item = session.find_battlefield_item(data.get("itemId"))
         if item is None:
             return await send_error(ws, "Item not found.")
+        if item.get("isCopy"):
+            # Copies are battlefield-only. Any attempt to send one to Deck,
+            # Hand, Limbo, Exile or EV destroys it instead.
+            session.battlefield.remove(item)
+            unstack_dependents(session, item["id"])
+            session.add_log(actor_id, "remove_battlefield_item", {"itemId": item["id"], "copyCard": True, "cardId": item.get("cardId")})
+            session.touch()
+            return await broadcast_state(session)
         if item.get("isTokenCard"):
             # a synthetic Token has no real cardId and no zone of its own —
             # "moving" it anywhere just removes it from the field
@@ -711,8 +748,9 @@ async def handle_message(ws, info, data):
     elif msg_type == "create_essence_token":
         if is_observer:
             return await send_error(ws, "Observers cannot act.")
+        neutral = bool(data.get("neutral"))
         temperament = data.get("temperament")
-        if temperament not in TEMPERAMENTS:
+        if not neutral and temperament not in TEMPERAMENTS:
             return await send_error(ws, "Unknown temperament.")
         try:
             count = int(data.get("count") or 1)
@@ -725,13 +763,28 @@ async def handle_message(ws, info, data):
             "x": float(data.get("x") or 0),
             "y": float(data.get("y") or 0),
             "isEssence": True,
-            "temperament": temperament,
-            "label": "",
+            "temperament": None if neutral else temperament,
+            "isNeutralCounter": neutral,
+            "label": str(data.get("label") or "")[:40] if neutral else "",
             "color": str(data.get("color") or "#b58a24")[:20],
             "counters": {"essence": count},
         }
         session.tokens.append(token)
-        session.add_log(actor_id, "create_essence_token", {"tokenId": token["id"], "temperament": temperament, "count": count})
+        session.add_log(actor_id, "create_essence_token", {
+            "tokenId": token["id"], "temperament": temperament, "count": count,
+            "neutral": neutral, "label": token["label"],
+        })
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "rename_token":
+        if is_observer:
+            return await send_error(ws, "Observers cannot act.")
+        token = session.find_token(data.get("tokenId"))
+        if token is None or not token.get("isNeutralCounter"):
+            return await send_error(ws, "Neutral counter not found.")
+        token["label"] = str(data.get("label") or "")[:40]
+        session.add_log(actor_id, "rename_token", {"tokenId": token["id"]})
         session.touch()
         await broadcast_state(session)
 
@@ -879,16 +932,27 @@ async def handle_message(ws, info, data):
         await broadcast_state(session)
 
     elif msg_type == "reset_board":
-        # Sweeps everything back into each player's own shuffled deck (battlefield
-        # cards, hand, graveyard, exile, receptacle), clears tokens/drawings, and
-        # resets scores — a fresh start without leaving the session (same codes,
-        # same connected players). Host-only, same restriction as end_session.
+        # Discard every live card location, then rebuild only from each player's
+        # last imported deck definition. This prevents cards from an older deck
+        # that are still on the field or in a pile from leaking into the active one.
         player = session.players.get(actor_id)
         if is_observer or player is None or player.get("seat") != 0:
             return await send_error(ws, "Only the session's first player can reset the board.")
-        session.reset_cards_to_owners()
+        active_decks = {}
+        for player_id, current_player in session.players.items():
+            deck_definition = copy.deepcopy(current_player.get("deckDefinition"))
+            deck_json = deck_definition if isinstance(deck_definition, dict) else {}
+            card_ids, sideboard_ids = extract_deck_card_pools(deck_json)
+            card_rarities = extract_deck_card_rarities(deck_json, card_ids + sideboard_ids)
+            random.shuffle(card_ids)
+            active_decks[player_id] = {
+                "cardIds": card_ids,
+                "sideboardIds": sideboard_ids,
+                "cardRarities": card_rarities,
+                "deckDefinition": deck_definition,
+            }
+        session.reset_cards_to_active_decks(active_decks)
         for p in session.players.values():
-            random.shuffle(p["zones"]["deck"])
             p["score"] = 0
         session.reset_phase_tracker()
         session.tokens = []
