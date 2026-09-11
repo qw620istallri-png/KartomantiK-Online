@@ -7,8 +7,10 @@ const PRIVATE_ZONES = new Set(["deck", "hand"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20260906-5";
+const STATIC_ASSET_VERSION = "20260910-kko-controls-desert-2";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
+const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
+const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
 
 // the 7 temperaments, their real card-art ink colour and their symbol image
 const TEMPERAMENTS = [
@@ -97,11 +99,11 @@ function cardName(cardId) {
 }
 function cardImage(cardId) {
   const card = cardsById.get(cardId);
-  return card ? card.image : "";
+  return card?.image || MISSING_CARD_IMAGE;
 }
 
 const RARITY_EFFECTS_KEY = "ko_rarity_effects_enabled.v2";
-const RARITY_IDS = new Set(["foil", "silver", "gold", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter", "gold-glitter"]);
+const RARITY_IDS = new Set(["foil", "silver", "gold", "desert", "galaxy", "void", "common-glitter", "foil-glitter", "silver-glitter", "gold-glitter", "desert-glitter"]);
 // Positive, versioned preference: new and existing browsers start with rarity effects enabled.
 let rarityEffectsDisabled = localStorage.getItem(RARITY_EFFECTS_KEY) === "0";
 
@@ -120,8 +122,22 @@ function rarityClassAttr(rarity) {
 function rarityDecorMarkup(rarity) {
   return normalizeRarity(rarity)?.endsWith("-glitter") ? '<i class="rarity-glitter-layer" aria-hidden="true"></i>' : "";
 }
+function raritySurfaceMarkup(rarity, content) {
+  const decorated = content + rarityDecorMarkup(rarity);
+  if (rarityBase(normalizeRarity(rarity)) !== "desert") return decorated;
+  return `<span class="rarity-desert-surface">${decorated}<i class="desert-grain-layer" aria-hidden="true"></i><i class="desert-diagonal-layer" aria-hidden="true"></i><i class="desert-storm-layer" aria-hidden="true"></i></span>`;
+}
 function rarityForCard(ownerId, cardId) {
   return normalizeRarity(latestState?.players?.[ownerId]?.cardRarities?.[cardId]);
+}
+function visibleRarityForCard(cardId) {
+  const battlefieldMatch = latestState?.battlefield?.find((item) => item.faceUp && item.cardId === cardId && normalizeRarity(item.rarity));
+  if (battlefieldMatch) return normalizeRarity(battlefieldMatch.rarity);
+  for (const player of Object.values(latestState?.players || {})) {
+    const rarity = normalizeRarity(player.cardRarities?.[cardId]);
+    if (rarity) return rarity;
+  }
+  return null;
 }
 function rarityCosmosStyle(cardId) {
   let hash = 0;
@@ -140,6 +156,9 @@ function updateRarityPointer(el, event, tilt, source = el) {
   el.style.setProperty("--spot-y", `${(y * 100).toFixed(1)}%`);
   el.style.setProperty("--fx-shift-x", `${((x - .5) * 10).toFixed(1)}px`);
   el.style.setProperty("--fx-shift-y", `${((y - .5) * 8).toFixed(1)}px`);
+  el.style.setProperty("--stack-shift-x", `${((x - .5) * 10).toFixed(1)}px`);
+  el.style.setProperty("--stack-shift-y", `${((y - .5) * 8).toFixed(1)}px`);
+  el.style.setProperty("--desert-tilt-glint", Math.min(1, (Math.abs((x - .5) * 18) + Math.abs((.5 - y) * 14)) / 22).toFixed(3));
   if (tilt) {
     el.style.setProperty("--rarity-tilt-x", `${((x - .5) * 18).toFixed(2)}deg`);
     el.style.setProperty("--rarity-tilt-y", `${((.5 - y) * 14).toFixed(2)}deg`);
@@ -153,6 +172,9 @@ function bindRarityPointer(el, tilt = false, source = el) {
     el.style.setProperty("--spot-y", "50%");
     el.style.setProperty("--fx-shift-x", "0px");
     el.style.setProperty("--fx-shift-y", "0px");
+    el.style.setProperty("--stack-shift-x", "0px");
+    el.style.setProperty("--stack-shift-y", "0px");
+    el.style.setProperty("--desert-tilt-glint", "0");
     if (tilt) {
       el.style.setProperty("--rarity-tilt-x", "0deg");
       el.style.setProperty("--rarity-tilt-y", "0deg");
@@ -181,8 +203,19 @@ function initRarityEffectsToggle() {
 
 async function loadCardDatabase() {
   try {
-    const res = await fetch(staticAsset("cards-data.json"));
-    const list = await res.json();
+    const sources = ["cards-data.json", "extensions/inner-desert/cards.json"];
+    const lists = await Promise.all(sources.map(async (source) => {
+      try {
+        const res = await fetch(staticAsset(source));
+        if (!res.ok) return [];
+        const value = await res.json();
+        return Array.isArray(value) ? value : [];
+      } catch (error) {
+        console.warn(`Card source unavailable: ${source}`, error);
+        return [];
+      }
+    }));
+    const list = lists.flat();
     cardsById = new Map(list.map((c) => [c.id, c]));
     cardsByNumber = new Map(list.map((c) => [Number(c.collectionNumber), c]));
   } catch (e) {
@@ -287,9 +320,10 @@ function forgetDeckFromLibrary(name) {
 }
 
 function importDeckPayload(deck, name, persist = true) {
-  send({ type: "import_deck", deck });
+  send({ type: "import_deck", deck, resetOwnBoard: Boolean(pendingDeckImport?.resetOwnBoard) });
   if (persist) saveDeckToLibrary(name || deck.name || "Deck", deck);
   $("#importPanel").classList.add("hidden");
+  $("#sideboardPanel").classList.add("hidden");
   $("#importDeckText").value = "";
   setMyActivity(null);
 }
@@ -306,7 +340,7 @@ function renderStarterDecks() {
   $$("[data-import-starter]").forEach((btn) => {
     btn.onclick = () => {
       const deck = starterDecks.find((d) => d.id === btn.dataset.importStarter);
-      if (deck) importDeckPayload(deck, deck.name, false);
+      if (deck) stageDeckImport(deck, deck.name, false);
     };
   });
 }
@@ -327,7 +361,7 @@ function renderSavedDecks() {
   $$("[data-import-saved]").forEach((btn) => {
     btn.onclick = () => {
       const entry = getDeckLibrary().find((e) => e.name === btn.dataset.importSaved);
-      if (entry) importDeckPayload(entry.deck, entry.name, false);
+      if (entry) stageDeckImport(entry.deck, entry.name, true);
     };
   });
   $$("[data-forget-saved]").forEach((btn) => {
@@ -415,6 +449,170 @@ function currentPhaseLines(tracker = latestState?.phaseTracker) {
     step = parts.join(" · ");
   }
   return { phase, step };
+}
+
+let pendingDeckImport = null;
+
+function uniqueCardIds(cardIds) {
+  return [...new Set((cardIds || []).filter((cardId) => typeof cardId === "string"))];
+}
+
+function splitDeckForEditor(deck, name, persist = true) {
+  const main = [];
+  const sideboard = [];
+  (deck.groups || []).forEach((group) => {
+    const kind = String(group.kind || "").toLowerCase();
+    if (kind === "maybeboard") return;
+    (kind === "sideboard" ? sideboard : main).push(...(group.cardIds || []));
+  });
+  const mainIds = uniqueCardIds(main);
+  const mainSet = new Set(mainIds);
+  const sideboardIds = uniqueCardIds(sideboard).filter((cardId) => !mainSet.has(cardId));
+  return {
+    sourceDeck: deck,
+    name: name || deck.name || "Imported deck",
+    persist,
+    mainIds,
+    sideboardIds,
+    originalMain: new Set(mainIds),
+    originalSideboard: new Set(sideboardIds),
+  };
+}
+
+function currentDeckForSideboard() {
+  const player = latestState?.players?.[myPlayerId];
+  if (!player) return null;
+  if (player.deckDefinition?.groups) return player.deckDefinition;
+  const mainIds = [];
+  Object.entries(latestState.players).forEach(([containerId, container]) => {
+    Object.entries(container.zones || {}).forEach(([zone, zoneData]) => {
+      (zoneData.cards || []).forEach((cardId) => {
+        if (zoneCardOwner(containerId, zone, cardId) === myPlayerId) mainIds.push(cardId);
+      });
+    });
+  });
+  (latestState.battlefield || []).forEach((item) => {
+    if (item.ownerId === myPlayerId && !item.isCopy && !item.isTokenCard && item.cardId) mainIds.push(item.cardId);
+  });
+  return {
+    name: t("currentDeck"),
+    cardRarities: { ...(player.cardRarities || {}) },
+    groups: [
+      { id: "current-deck", kind: "deck", name: t("deck"), cardIds: uniqueCardIds(mainIds) },
+      { id: "sideboard", kind: "sideboard", name: t("sideboard"), cardIds: uniqueCardIds(player.sideboard || []) },
+    ],
+  };
+}
+
+function openCurrentSideboard() {
+  const deck = currentDeckForSideboard();
+  if (!deck) return;
+  pendingDeckImport = splitDeckForEditor(deck, deck.name || t("currentDeck"), false);
+  pendingDeckImport.resetOwnBoard = true;
+  renderSideboardEditor();
+}
+
+function stageDeckImport(deck, name, persist = true) {
+  pendingDeckImport = splitDeckForEditor(deck, name, persist);
+  $("#importSelectionStatus").textContent = `${pendingDeckImport.name} · ${pendingDeckImport.mainIds.length} ${t("cards")} · ${pendingDeckImport.sideboardIds.length} ${t("sideboard")}`;
+  $("#importSideboardBtn").disabled = false;
+}
+
+function deckImportPoints(cardIds) {
+  return cardIds.reduce((total, cardId) => total + (Number(cardsById.get(cardId)?.points) || 0), 0);
+}
+
+function deckImportIsValid(pending = pendingDeckImport) {
+  return Boolean(pending && pending.mainIds.length === 30 && deckImportPoints(pending.mainIds) <= 500);
+}
+
+function buildEditedDeck(pending = pendingDeckImport) {
+  const source = pending.sourceDeck || {};
+  const mainSet = new Set(pending.mainIds);
+  const assigned = new Set();
+  const groups = (source.groups || [])
+    .filter((group) => !["sideboard", "maybeboard"].includes(String(group.kind || "").toLowerCase()))
+    .map((group) => {
+      const cardIds = uniqueCardIds(group.cardIds).filter((cardId) => mainSet.has(cardId));
+      cardIds.forEach((cardId) => assigned.add(cardId));
+      return { ...group, cardIds };
+    });
+  const newlyMain = pending.mainIds.filter((cardId) => !assigned.has(cardId));
+  if (newlyMain.length) groups.push({ id: "sideboard-additions", kind: "deck", name: t("deck"), cardIds: newlyMain });
+  groups.push({ id: "sideboard", kind: "sideboard", name: t("sideboard"), cardIds: [...pending.sideboardIds] });
+  (source.groups || []).filter((group) => String(group.kind || "").toLowerCase() === "maybeboard").forEach((group) => groups.push({ ...group, cardIds: uniqueCardIds(group.cardIds) }));
+  return { ...source, name: pending.name, groups };
+}
+
+function sideboardCardMarkup(cardId, pool) {
+  const card = cardsById.get(cardId);
+  const originalPool = pendingDeckImport.originalSideboard.has(cardId) ? "sideboard" : "deck";
+  const moved = originalPool !== pool;
+  const rarity = normalizeRarity(pendingDeckImport.sourceDeck?.cardRarities?.[cardId]);
+  return `<button type="button" class="sideboard-card${moved ? " pending-move" : ""}" data-sideboard-card="${esc(cardId)}" data-sideboard-pool="${pool}">
+    <span class="sideboard-card-art${rarityClassAttr(rarity)}" style="${rarityCosmosStyle(cardId)}">${raritySurfaceMarkup(rarity, `<img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}">`)}</span>
+    <strong>${esc(cardName(cardId))}</strong><small>${Number(card?.points) || 0} ${esc(t("points"))}${moved ? ` · ${esc(t("pendingMove"))}` : ""}</small>
+  </button>`;
+}
+
+function renderSideboardEditor() {
+  if (!pendingDeckImport) return;
+  const points = deckImportPoints(pendingDeckImport.mainIds);
+  const validCount = pendingDeckImport.mainIds.length === 30;
+  const validPoints = points <= 500;
+  $("#sideboardDeckHeading").textContent = t("deckPool");
+  $("#sideboardPoolHeading").textContent = t("sideboard");
+  $("#sideboardDeckStats").innerHTML = `<strong class="${validCount ? "valid" : "invalid"}">${pendingDeckImport.mainIds.length}/30 ${esc(t("cards"))}</strong><strong class="${validPoints ? "valid" : "invalid"}">${points}/500 ${esc(t("points"))}</strong>`;
+  $("#sideboardPoolStats").innerHTML = `<strong class="${pendingDeckImport.sideboardIds.length > 6 ? "warning" : ""}">${pendingDeckImport.sideboardIds.length}/6 ${esc(t("cards"))}</strong>`;
+  $("#sideboardDeckCards").innerHTML = pendingDeckImport.mainIds.map((cardId) => sideboardCardMarkup(cardId, "deck")).join("");
+  $("#sideboardPoolCards").innerHTML = pendingDeckImport.sideboardIds.map((cardId) => sideboardCardMarkup(cardId, "sideboard")).join("");
+  $("#sideboardValidationMessage").textContent = deckImportIsValid() ? t("deckReady") : t("deckInvalid");
+  $("#sideboardResetWarning").classList.toggle("hidden", !pendingDeckImport.resetOwnBoard);
+  $("#sideboardResetWarning").textContent = pendingDeckImport.resetOwnBoard ? t("sideboardResetWarning") : "";
+  $("#sideboardValidateBtn").disabled = !deckImportIsValid();
+  $$('[data-sideboard-card]').forEach((button) => {
+    button.onclick = () => {
+      const cardId = button.dataset.sideboardCard;
+      const from = button.dataset.sideboardPool;
+      const source = from === "deck" ? pendingDeckImport.mainIds : pendingDeckImport.sideboardIds;
+      const target = from === "deck" ? pendingDeckImport.sideboardIds : pendingDeckImport.mainIds;
+      const index = source.indexOf(cardId);
+      if (index >= 0) source.splice(index, 1);
+      target.push(cardId);
+      renderSideboardEditor();
+    };
+  });
+  $("#sideboardPanel").classList.remove("hidden");
+  $$('[data-sideboard-card] .ko-rarity-card').forEach((el) => bindRarityPointer(el, false));
+}
+
+async function readDeckImportText(raw) {
+  const shareToken = extractShareToken(raw);
+  if (shareToken) {
+    const payload = await decodeDkShare(shareToken);
+    if (!payload || !payload.d) throw new Error(t("importShareFailed"));
+    const deck = expandDkShareDeck(payload.d);
+    return { deck, name: deck.name || "Imported deck" };
+  }
+  let deck;
+  try { deck = JSON.parse(raw); } catch (e) { deck = parseDeckListText(raw); }
+  if (!deck || !Array.isArray(deck.groups) || !deck.groups.some((group) => (group.cardIds || []).length)) throw new Error(t("importReadFailed"));
+  const nameMatch = raw.match(/^\[Deck\]\s*(.+)$/mi);
+  return { deck, name: deck.name || (nameMatch && nameMatch[1].trim()) || "Imported deck" };
+}
+
+async function ensurePendingDeckImport() {
+  if (pendingDeckImport) return pendingDeckImport;
+  const raw = $("#importDeckText").value.trim();
+  if (!raw) return null;
+  try {
+    const parsed = await readDeckImportText(raw);
+    stageDeckImport(parsed.deck, parsed.name, true);
+    return pendingDeckImport;
+  } catch (error) {
+    alert(error.message || t("importReadFailed"));
+    return null;
+  }
 }
 
 function currentPhaseLabel(tracker = latestState?.phaseTracker) {
@@ -523,6 +721,12 @@ function setInterfaceLanguage(nextLanguage) {
   document.documentElement.lang = currentLanguage;
   paintStaticText();
   updateLanguageButtons();
+  const selectedEssence = selectedEssenceTemperament;
+  initEssenceToolbar();
+  if (selectedEssence) {
+    $(`#essenceTemperamentGrid [data-temperament="${selectedEssence}"]`)?.classList.add("active");
+    $("#neutralTokenNameField").classList.toggle("hidden", selectedEssence !== "neutral");
+  }
   renderStarterDecks();
   renderSavedDecks();
   renderAll();
@@ -561,6 +765,7 @@ function paintStaticText() {
   $("#joinBtn").textContent = t("joinButton");
   $("#brandText").textContent = t("appName");
   $("#importDeckBtn").textContent = t("importDeck");
+  $("#currentSideboardBtn").textContent = t("editCurrentSideboard");
   $("#downloadLogBtn").textContent = t("downloadLog");
   $("#endSessionBtn").textContent = t("endSession");
   $("#leaveSessionBtn").textContent = t("leaveSession");
@@ -573,7 +778,14 @@ function paintStaticText() {
   $("#importDeckHintText").textContent = t("importDeckHint");
   $("#importDeckText").placeholder = t("importDeckPlaceholder");
   $("#importCancelBtn").textContent = t("close");
+  $("#importSideboardBtn").textContent = t("editSideboard");
   $("#importConfirmBtn").textContent = t("import");
+  $("#sideboardEditorHeading").textContent = t("sideboardEditor");
+  $("#sideboardEditorHint").textContent = t("sideboardEditorHint");
+  $("#sideboardResetWarning").textContent = t("sideboardResetWarning");
+  $("#sideboardCancelBtn").title = t("close");
+  $("#sideboardCancelBtn").setAttribute("aria-label", t("close"));
+  $("#sideboardValidateBtn").textContent = t("confirm");
   $("#logHeading").textContent = t("logHeader");
   $("#logDownloadBtn").textContent = t("logDownload");
   $("#logCloseBtn").textContent = t("close");
@@ -603,6 +815,8 @@ function paintStaticText() {
   $("#essencePanelHeading").textContent = t("essencePanelHeading");
   $("#essencePanelHint").textContent = t("essencePanelHint");
   $("#essenceCountLabel").textContent = t("essenceCount");
+  $("#neutralTokenNameLabel").textContent = t("tokenName");
+  $("#neutralTokenNameInput").placeholder = t("neutralToken");
   $("#essenceCancelBtn").textContent = t("close");
   $("#essenceCreateBtn").textContent = t("create");
   $("#handRequestDeclineBtn").textContent = t("decline");
@@ -916,6 +1130,7 @@ function wireRevealCards(ctx) {
       // listeners), so this is what actually stops actions on a sent card
       if (revealSentState.has(cardId)) return;
       const items = [{ label: t("inspect"), onSelect: () => showInspect(cardId) }];
+      if (ctx && ctx.allowMoveToField) items.push(copyCardMenuItem(cardId, ctx.ownerId, ctx.zone));
       if (ctx && ctx.allowMoveToField) {
         const cardOwnerId = ctx.cardOwnerId || zoneCardOwner(ctx.ownerId, ctx.zone, cardId);
         items.push({ separator: true });
@@ -1010,6 +1225,7 @@ function renderAll() {
   $("#endSessionBtn").classList.toggle("hidden", !canEndForAll);
   $("#leaveSessionBtn").classList.toggle("hidden", canEndForAll);
   $("#resetBoardBtn").classList.toggle("hidden", !canEndForAll);
+  $("#currentSideboardBtn").classList.toggle("hidden", isObserver || !latestState.players?.[myPlayerId]);
   $("#endSessionBtn").disabled = latestState.ended;
   if (latestState.ended && !sessionEndedNotified) {
     sessionEndedNotified = true;
@@ -1378,9 +1594,11 @@ function wirePileBrowserCards(ownerId, zone) {
     const cardOwnerId = el.dataset.cardOwner || ownerId;
     bindCardDragSource(el, { kind: "card", cardId, cardOwnerId, fromOwnerId: ownerId, fromZone: zone });
     wireCardHoverZoom(el, "db-card-hover-clone");
-    el.addEventListener("click", (event) => {
+    const openMenu = (event) => {
+      event.preventDefault();
       const items = [
         { label: t("inspect"), onSelect: () => showInspect(cardId) },
+        copyCardMenuItem(cardId, ownerId, zone),
         { separator: true },
         { label: t("playFaceUp"), onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "play", faceUp: true, label: t("battlefield") }) },
         { label: t("playFaceDown"), onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "play", faceUp: false, label: t("battlefield") }) },
@@ -1395,7 +1613,9 @@ function wirePileBrowserCards(ownerId, zone) {
         });
       });
       showContextMenu(event.clientX, event.clientY, items);
-    });
+    };
+    el.addEventListener("click", openMenu);
+    el.addEventListener("contextmenu", openMenu);
   });
   $$("#deckBrowserCards [data-undo-staged]").forEach((btn) => {
     btn.onclick = (event) => {
@@ -1824,8 +2044,7 @@ function renderHandTray() {
       const wasRevealed = myRevealed && myRevealed.has(cid);
       const rarity = rarityForCard(meId, cid);
       return `<div class="hand-card ${isNew ? "ko-pop-in" : ""}${rarityClassAttr(rarity)}" data-hand-card="${esc(cid)}" title="${esc(cardName(cid))}" style="${rarityCosmosStyle(cid)}">
-      <img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}">
-      ${rarityDecorMarkup(rarity)}
+      ${raritySurfaceMarkup(rarity, `<img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}">`)}
       ${wasRevealed ? `<span class="hand-card-revealed-icon" title="${esc(t("revealHeader"))}">👁</span>` : ""}
     </div>`;
     })
@@ -1847,6 +2066,7 @@ function renderHandTray() {
       event.preventDefault();
       showContextMenu(event.clientX, event.clientY, [
         { label: t("inspect"), onSelect: () => showInspect(cardId) },
+        copyCardMenuItem(cardId, meId, "hand"),
         { separator: true },
         { label: t("playFaceUp"), onSelect: () => playFromHand(cardId, true) },
         { label: t("playFaceDown"), onSelect: () => playFromHand(cardId, false) },
@@ -1975,6 +2195,7 @@ function wireZoneButtons() {
       event.preventDefault();
       const items = [
         { label: t("inspect"), onSelect: () => showInspect(cardId) },
+        copyCardMenuItem(cardId, ownerId, zone),
         { separator: true },
         { label: t("playFaceUp"), onSelect: () => playFromZone(ownerId, zone, cardId, true) },
         { label: t("playFaceDown"), onSelect: () => playFromZone(ownerId, zone, cardId, false) },
@@ -2613,18 +2834,23 @@ function initEssenceToolbar() {
   $("#createEssenceBtn").textContent = "✨";
   $("#essenceTemperamentGrid").innerHTML = TEMPERAMENTS.map(
     (temp) => `<button data-temperament="${esc(temp.key)}"><img src="${esc(temperamentSymbol(temp.key))}" alt="">${esc(t("temperament" + temp.key[0].toUpperCase() + temp.key.slice(1)))}</button>`
-  ).join("");
+  ).join("") + `<button data-temperament="neutral" class="neutral-token-choice"><span></span>${esc(t("neutralToken"))}</button>`;
   $$("#essenceTemperamentGrid button").forEach((btn) => {
     btn.onclick = () => {
       selectedEssenceTemperament = btn.dataset.temperament;
       $$("#essenceTemperamentGrid button").forEach((b) => b.classList.toggle("active", b === btn));
+      $("#neutralTokenNameField").classList.toggle("hidden", selectedEssenceTemperament !== "neutral");
+      if (selectedEssenceTemperament === "neutral") $("#neutralTokenNameInput").focus();
     };
   });
 
   $("#createEssenceBtn").onclick = () => {
     selectedEssenceTemperament = null;
     $$("#essenceTemperamentGrid button").forEach((b) => b.classList.remove("active"));
+    $("#essenceTemperamentGrid .neutral-token-choice span").style.setProperty("--neutral-color", playerColor(myPlayerId));
     $("#essenceCountInput").value = 1;
+    $("#neutralTokenNameInput").value = t("neutralToken");
+    $("#neutralTokenNameField").classList.add("hidden");
     $("#essencePanel").classList.remove("hidden");
     setMyActivity("essence");
   };
@@ -2638,7 +2864,11 @@ function initEssenceToolbar() {
     const view = fieldCenterLogical();
     const center = rotateForSeat(view.x, view.y);
     send({
-      type: "create_essence_token", temperament: selectedEssenceTemperament, count,
+      type: "create_essence_token",
+      temperament: selectedEssenceTemperament === "neutral" ? null : selectedEssenceTemperament,
+      neutral: selectedEssenceTemperament === "neutral",
+      label: selectedEssenceTemperament === "neutral" ? $("#neutralTokenNameInput").value.trim() : "",
+      color: playerColor(myPlayerId), count,
       x: center.x - 26 + Math.random() * 60 - 30, y: center.y - 26 + Math.random() * 60 - 30,
     });
     $("#essencePanel").classList.add("hidden");
@@ -2964,6 +3194,37 @@ function stackedScreenPos(item) {
   return { x: anchorPos.x + item.stackOffsetX, y: anchorPos.y + item.stackOffsetY };
 }
 
+function copyCardToField(cardId, fromOwnerId, fromZone) {
+  const view = fieldCenterLogical();
+  const center = rotateForSeat(view.x, view.y);
+  send({
+    type: "copy_card", cardId, fromOwnerId, fromZone,
+    x: center.x - 75 + Math.random() * 60 - 30,
+    y: center.y - 105 + Math.random() * 60 - 30,
+  });
+}
+
+function copyCardMenuItem(cardId, fromOwnerId, fromZone) {
+  return { label: t("copyCard"), onSelect: () => copyCardToField(cardId, fromOwnerId, fromZone) };
+}
+
+function essenceTokenMenuItems(token) {
+  const items = [
+    { label: "+1", onSelect: () => send({ type: "add_counter", tokenId: token.id, counterKey: "essence", delta: 1 }) },
+    { label: "−1", onSelect: () => send({ type: "add_counter", tokenId: token.id, counterKey: "essence", delta: -1 }) },
+  ];
+  if (token.isNeutralCounter) items.push({
+    label: t("renameToken"),
+    onSelect: () => {
+      const label = prompt(t("tokenName"), token.label || t("neutralToken"));
+      if (label !== null) send({ type: "rename_token", tokenId: token.id, label: label.trim() });
+    },
+  });
+  items.push({ separator: true });
+  items.push({ label: t("remove"), onSelect: () => send({ type: "remove_token", tokenId: token.id }) });
+  return items;
+}
+
 function renderBattlefield() {
   $("#battlefieldBg").classList.toggle("rotated", mySeat() === 1);
   renderPiles();
@@ -2972,7 +3233,7 @@ function renderBattlefield() {
 
   latestState.battlefield.forEach((item) => {
     const el = document.createElement("div");
-    el.className = "bf-card";
+    el.className = `bf-card${item.isCopy ? " is-copy" : ""}`;
     el.dataset.itemId = item.id;
     const pos = stackedScreenPos(item) || rotateForSeat(item.x, item.y, PILE_W, PILE_H);
     el.style.left = pos.x + "px";
@@ -2986,14 +3247,14 @@ function renderBattlefield() {
       inner = `<div class="bf-card-face" style="background:${esc(temperamentInk(item.temperament))}">${tokenCardFaceHtml(item)}</div>`;
     } else if (item.faceUp && item.cardId) {
       const rarity = normalizeRarity(item.rarity);
-      inner = `<div class="bf-card-face${rarityClassAttr(rarity)}" style="${rarityCosmosStyle(item.cardId)}"><img src="${esc(cardImage(item.cardId))}" alt="${esc(cardName(item.cardId))}" title="${esc(cardName(item.cardId))}">${rarityDecorMarkup(rarity)}</div>`;
+      inner = `<div class="bf-card-face${rarityClassAttr(rarity)}" style="${rarityCosmosStyle(item.cardId)}">${raritySurfaceMarkup(rarity, `<img src="${esc(cardImage(item.cardId))}" alt="${esc(cardName(item.cardId))}" title="${esc(cardName(item.cardId))}">`)}</div>`;
     } else if (canPeek && item.cardId) {
       // the owner (or an observer) gets a faint, colour-tinted peek at a face-down card
       inner = `<div class="bf-card-face"><div class="back-face owner-peek"><img src="${esc(cardImage(item.cardId))}"></div></div>`;
     } else {
       inner = `<div class="bf-card-face"><div class="back-face"></div></div>`;
     }
-    el.innerHTML = `<div class="bf-card-inner" style="transform:rotate(${item.rotation || 0}deg)">${inner}</div><div class="counters">${counterCircles(item.counters)}</div>`;
+    el.innerHTML = `<div class="bf-card-inner" style="transform:rotate(${item.rotation || 0}deg)">${inner}${item.isCopy ? `<span class="copy-card-stamp">${esc(t("copyStamp"))}</span>` : ""}</div><div class="counters">${counterCircles(item.counters)}</div>`;
     if (!isObserver) bindCardDragSource(el, { kind: "battlefield", itemId: item.id });
     el.addEventListener("contextmenu", (event) => {
       event.preventDefault();
@@ -3020,8 +3281,18 @@ function renderBattlefield() {
         ]);
         return;
       }
+      if (item.isCopy) {
+        showContextMenu(event.clientX, event.clientY, [
+          { label: t("inspect"), onSelect: () => showInspect(item.cardId, false) },
+          { separator: true },
+          { label: t("removeCopy"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toZone: "graveyard" }) },
+        ]);
+        showCardLabels(el, cardName(item.cardId), t("copyStamp"));
+        return;
+      }
       const items = [];
       items.push({ label: t("inspect"), onSelect: () => showInspect(item.cardId, !item.faceUp && !canPeek) });
+      if (item.faceUp) items.push({ label: t("copyCard"), onSelect: () => send({ type: "copy_card", itemId: item.id }) });
       items.push({ separator: true });
       if (isMine) items.push({ label: t("flip"), onSelect: () => send({ type: "flip_card", itemId: item.id }), highlight: !item.faceUp });
       items.push({ label: t("exhaust"), onSelect: () => send({ type: "move_battlefield_item", itemId: item.id, x: item.x, y: item.y, rotation: item.rotation ? 0 : 90 }) });
@@ -3059,9 +3330,11 @@ function renderBattlefield() {
     el.style.left = tpos.x + "px";
     el.style.top = tpos.y + "px";
     if (token.isEssence) {
-      el.style.background = temperamentInk(token.temperament);
+      el.style.background = token.isNeutralCounter ? (token.color || playerColor(token.ownerId)) : temperamentInk(token.temperament);
       const count = token.counters?.essence || 0;
-      el.innerHTML = `<img src="${esc(temperamentSymbol(token.temperament))}" alt=""><span class="bf-essence-count">${count > 0 ? "+" : ""}${count}</span>`;
+      el.innerHTML = token.isNeutralCounter
+        ? `<span class="bf-neutral-label">${esc(token.label || t("neutralToken"))}</span><span class="bf-essence-count">${count > 0 ? "+" : ""}${count}</span>`
+        : `<img src="${esc(temperamentSymbol(token.temperament))}" alt=""><span class="bf-essence-count">${count > 0 ? "+" : ""}${count}</span>`;
     } else {
       el.style.background = token.color || playerColor(token.ownerId);
       el.innerHTML = `<span>${esc(token.label || "")}</span><div class="counters">${counterCircles(token.counters)}</div>`;
@@ -3074,11 +3347,7 @@ function renderBattlefield() {
       el.addEventListener("contextmenu", (event) => {
         event.preventDefault();
         if (token.isEssence) {
-          showContextMenu(event.clientX, event.clientY, [
-            counterGridMenuItem("essence", { tokenId: token.id }),
-            { separator: true },
-            { label: t("remove"), onSelect: () => send({ type: "remove_token", tokenId: token.id }) },
-          ]);
+          showContextMenu(event.clientX, event.clientY, essenceTokenMenuItems(token));
           return;
         }
         showContextMenu(event.clientX, event.clientY, [
@@ -3119,6 +3388,9 @@ function bindDrag(el, onDrop) {
 
 function initImportPanel() {
   $("#importDeckBtn").onclick = () => {
+    pendingDeckImport = null;
+    $("#importSideboardBtn").disabled = !(latestState?.players?.[myPlayerId]);
+    $("#importSelectionStatus").textContent = "";
     $("#importPanel").classList.remove("hidden");
     setMyActivity("importing");
     renderSavedDecks();
@@ -3127,33 +3399,36 @@ function initImportPanel() {
     $("#importPanel").classList.add("hidden");
     setMyActivity(null);
   };
+  $("#importDeckText").addEventListener("input", () => {
+    pendingDeckImport = null;
+    $("#importSideboardBtn").disabled = false;
+    $("#importSelectionStatus").textContent = "";
+  });
+  $("#importSideboardBtn").onclick = async () => {
+    if (!$("#importDeckText").value.trim() && latestState?.players?.[myPlayerId]) {
+      openCurrentSideboard();
+      return;
+    }
+    if (await ensurePendingDeckImport()) {
+      pendingDeckImport.resetOwnBoard = false;
+      renderSideboardEditor();
+    }
+  };
+  $("#currentSideboardBtn").onclick = openCurrentSideboard;
+  $("#sideboardCancelBtn").onclick = () => $("#sideboardPanel").classList.add("hidden");
+  $("#sideboardValidateBtn").onclick = () => {
+    if (!deckImportIsValid()) return;
+    const apply = () => importDeckPayload(buildEditedDeck(), pendingDeckImport.name, pendingDeckImport.persist);
+    if (pendingDeckImport.resetOwnBoard) showConfirm(t("confirmCurrentSideboardReset"), apply);
+    else apply();
+  };
   $("#importConfirmBtn").onclick = async () => {
-    const raw = $("#importDeckText").value.trim();
-    if (!raw) return;
-    const shareToken = extractShareToken(raw);
-    if (shareToken) {
-      const payload = await decodeDkShare(shareToken);
-      if (!payload || !payload.d) {
-        alert(t("importShareFailed"));
-        return;
-      }
-      const deck = expandDkShareDeck(payload.d);
-      importDeckPayload(deck, deck.name || "Imported deck");
+    if (!(await ensurePendingDeckImport())) return;
+    if (!deckImportIsValid()) {
+      renderSideboardEditor();
       return;
     }
-    let deck;
-    try {
-      deck = JSON.parse(raw);
-    } catch (e) {
-      deck = parseDeckListText(raw);
-    }
-    if (!deck || !Array.isArray(deck.groups) || !deck.groups.some((g) => (g.cardIds || []).length)) {
-      alert("Could not read any cards from that text. Paste a DeckomantiK share link, a list (\"Copy list\"), or a deck JSON export.");
-      return;
-    }
-    const nameMatch = raw.match(/^\[Deck\]\s*(.+)$/mi);
-    const deckName = deck.name || (nameMatch && nameMatch[1].trim()) || "Imported deck";
-    importDeckPayload(deck, deckName);
+    importDeckPayload(buildEditedDeck(), pendingDeckImport.name, pendingDeckImport.persist);
   };
 }
 
@@ -3292,18 +3567,24 @@ let inspectHistory = [];
 
 function showInspect(cardId, hidden) {
   const card = cardsById.get(cardId);
+  const art = $("#inspectPanel .inspect-img");
+  const rarity = !hidden && card ? visibleRarityForCard(cardId) : null;
+  art.className = `inspect-img${rarityClassAttr(rarity)}`;
+  art.setAttribute("style", rarityCosmosStyle(cardId || ""));
+  art.innerHTML = raritySurfaceMarkup(
+    rarity,
+    `<img id="inspectImg" src="${hidden || !card ? "" : esc(card.image || "")}" alt="${hidden || !card ? "" : esc(cardField(card, "name"))}">`
+  );
+  bindRarityPointer(art, false);
   if (!hidden && card) {
     inspectHistory = [cardId, ...inspectHistory.filter((id) => id !== cardId)].slice(0, 12);
     $("#inspectReopenBtn").disabled = false;
   }
   if (hidden || !card) {
-    $("#inspectImg").src = "";
     $("#inspectName").textContent = "?";
     $("#inspectMeta").textContent = "";
     $("#inspectEffect").textContent = "";
   } else {
-    $("#inspectImg").src = card.image || "";
-    $("#inspectImg").alt = cardField(card, "name");
     $("#inspectName").textContent = cardField(card, "name");
     $("#inspectMeta").textContent = [cardField(card, "typeLabel") || card.type, cardField(card, "subType"), cardField(card, "color")].filter(Boolean).join(" · ");
     $("#inspectEffect").textContent = cardField(card, "effect");
@@ -3385,11 +3666,15 @@ function formatLogEntry(e) {
     case "scry": return `${who} scried ${d.count} card(s) privately.`;
     case "move_card": return `${who} moved a card${named(d.cardId)}: ${z(d.fromZone)} → ${z(d.toZone)}${viaRequest(d.requestedBy)}.`;
     case "place_card": return `${who} played a card${named(d.cardId)} from ${z(d.fromZone)} onto the field${faceState(d.faceUp)}.`;
+    case "copy_card": return `${who} created a copy of${named(d.cardId)}.`;
     case "move_battlefield_item": return `${who} moved a card on the field.`;
     case "flip_card": return `${who} flipped a card${named(d.cardId)}${faceState(d.faceUp)}.`;
-    case "remove_battlefield_item": return d.tokenCard ? `${who} removed a token card.` : `${who} sent a field card${named(d.cardId)} to ${z(d.toZone)}${faceState(d.faceUp)}.`;
+    case "remove_battlefield_item": return d.copyCard ? `${who} removed a card copy${named(d.cardId)}.` : d.tokenCard ? `${who} removed a token card.` : `${who} sent a field card${named(d.cardId)} to ${z(d.toZone)}${faceState(d.faceUp)}.`;
     case "create_token_card": return `${who} created a ${t("temperament" + d.temperament[0].toUpperCase() + d.temperament.slice(1))} token (${d.power > 0 ? "+" : ""}${d.power}).`;
-    case "create_essence_token": return `${who} created ${d.count} ${t("temperament" + d.temperament[0].toUpperCase() + d.temperament.slice(1))} essence.`;
+    case "create_essence_token":
+      if (d.neutral) return `${who} created the counter "${d.label || t("neutralToken")}" (${d.count > 0 ? "+" : ""}${d.count}).`;
+      return `${who} created ${d.count} ${t("temperament" + d.temperament[0].toUpperCase() + d.temperament.slice(1))} essence.`;
+    case "rename_token": return `${who} renamed a neutral counter.`;
     case "mulligan": return `${who} took a mulligan (drew ${d.count} new card(s)).`;
     case "add_token": return `${who} added a token.`;
     case "move_token": return `${who} moved a token.`;

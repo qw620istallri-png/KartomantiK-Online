@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kartomantik Online</title>
   <link rel="icon" type="image/webp" href="grimoire-icon.webp?v=20260905-1">
-  <link rel="stylesheet" href="style.css?v=20260907-6">
+  <link rel="stylesheet" href="style.css?v=20260910-kko-controls-desert-2">
 </head>
 <body>
 
@@ -90,6 +90,7 @@
         </div>
         <div class="header-action-group">
           <button id="importDeckBtn"></button>
+          <button id="currentSideboardBtn" class="hidden"></button>
           <button id="downloadLogBtn"></button>
         </div>
         <div class="header-action-group">
@@ -202,9 +203,36 @@
 
       <p id="importDeckHintText" style="color:var(--muted);font-size:14px"></p>
       <textarea id="importDeckText" rows="10" style="width:100%"></textarea>
+      <p id="importSelectionStatus" class="import-selection-status" aria-live="polite"></p>
       <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
         <button id="importCancelBtn"></button>
+        <button id="importSideboardBtn" disabled></button>
         <button class="primary" id="importConfirmBtn"></button>
+      </div>
+    </div>
+  </div>
+
+  <div class="log-panel sideboard-panel hidden" id="sideboardPanel">
+    <div class="box">
+      <div class="sideboard-editor-head">
+        <div><span class="eyebrow">DeckomantiK</span><h2 id="sideboardEditorHeading"></h2></div>
+        <button id="sideboardCancelBtn" aria-label="Close">×</button>
+      </div>
+      <p id="sideboardEditorHint" class="sideboard-editor-hint"></p>
+      <p id="sideboardResetWarning" class="sideboard-reset-warning hidden"></p>
+      <div class="sideboard-editor-grid">
+        <section class="sideboard-pool">
+          <header><h3 id="sideboardDeckHeading"></h3><div id="sideboardDeckStats" class="sideboard-stats"></div></header>
+          <div id="sideboardDeckCards" class="sideboard-cards"></div>
+        </section>
+        <section class="sideboard-pool">
+          <header><h3 id="sideboardPoolHeading"></h3><div id="sideboardPoolStats" class="sideboard-stats"></div></header>
+          <div id="sideboardPoolCards" class="sideboard-cards"></div>
+        </section>
+      </div>
+      <div class="sideboard-editor-footer">
+        <p id="sideboardValidationMessage" aria-live="polite"></p>
+        <button class="primary" id="sideboardValidateBtn"></button>
       </div>
     </div>
   </div>
@@ -287,6 +315,10 @@
       <h2 id="essencePanelHeading"></h2>
       <p id="essencePanelHint" style="color:var(--muted);font-size:14px"></p>
       <div class="token-temperament-grid" id="essenceTemperamentGrid"></div>
+      <div class="field hidden" id="neutralTokenNameField">
+        <label id="neutralTokenNameLabel" for="neutralTokenNameInput"></label>
+        <input id="neutralTokenNameInput" maxlength="40">
+      </div>
       <div class="field">
         <label id="essenceCountLabel"></label>
         <div class="number-stepper">
@@ -382,7 +414,7 @@
     </div>
   </div>
 
-  <script src="i18n.js?v=20260907-4"></script>
-  <script src="app.js?v=20260907-6"></script>
+  <script src="i18n.js?v=20260910-kko-clean-reset-3"></script>
+  <script src="app.js?v=20260910-kko-controls-desert-2"></script>
 </body>
 </html>
