@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20260910-kko-controls-desert-2";
+const STATIC_ASSET_VERSION = "20260915-kko-wide-board-1";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -1830,8 +1830,10 @@ function pileFieldHtml(ownerId, zone, zoneData, canView, canAct, pos, score, ove
   // recently entered card (index 0, same "top" convention as the deck); the
   // deck itself always stays card-back regardless of who's viewing
   const topCardId = zone !== "deck" && count > 0 ? (zoneData.cards || [])[0] : null;
+  const topCardOwnerId = topCardId ? (zoneData?.owners?.[topCardId] || ownerId) : null;
+  const canDragTop = pilesLocked && !isObserver && ownerId === myPlayerId && ["graveyard", "exile", "receptacle"].includes(zone);
   const topCardHtml = topCardId
-    ? `<img class="pile-top-card" src="${esc(cardImage(topCardId))}" alt="${esc(cardName(topCardId))}" title="${esc(cardName(topCardId))}">`
+    ? `<img class="pile-top-card" src="${esc(cardImage(topCardId))}" alt="${esc(cardName(topCardId))}" title="${esc(cardName(topCardId))}"${canDragTop ? ` data-pile-top-card="${esc(topCardId)}" data-card-owner="${esc(topCardOwnerId)}"` : ""}>`
     : "";
   const cardPoints = receptacleCardPoints(zoneData);
   const bonusPoints = Number(score) || 0;
@@ -1955,6 +1957,14 @@ function renderPiles() {
   wireZoneButtons();
   $$("[data-pile-trigger]").forEach((el) => {
     el.onclick = () => toggleZone(el.dataset.pileTrigger);
+  });
+  $$("[data-pile-top-card]").forEach((el) => {
+    const pile = el.closest("[data-field-pile]");
+    const [fromOwnerId, fromZone] = pile.dataset.fieldPile.split(":");
+    bindCardDragSource(el, {
+      kind: "card", cardId: el.dataset.pileTopCard, cardOwnerId: el.dataset.cardOwner || fromOwnerId,
+      fromOwnerId, fromZone,
+    });
   });
   $$("[data-score-delta]").forEach((btn) => {
     btn.onclick = (event) => {
@@ -2510,11 +2520,12 @@ function showContextMenu(clientX, clientY, items) {
 
 // ---------------------------------------------------------------- zoom + pan
 // The whole board (background + piles + cards + tokens) lives in #battlefield,
-// a fixed 1549x1549 layer (matching the playmat art's native resolution) that
+// a fixed 1741x1549 layer (matching the playmat art's native resolution) that
 // is translated/scaled as one unit. There is no native scrolling anywhere —
 // the wheel zooms (anchored on the cursor) and dragging empty field space pans.
 
-const BOARD_SIZE = 1549;
+const BOARD_WIDTH = 1741;
+const BOARD_HEIGHT = 1549;
 let zoomLevel = 1;
 let panX = 0;
 let panY = 0;
@@ -2533,8 +2544,8 @@ let panY = 0;
 // - The background image is a separate layer (.battlefield-bg.rotated) that
 //   gets an actual CSS transform: rotate(180deg) — never touches the
 //   cards/piles/tokens layered on top, which are positioned independently.
-// - Fixed PILE slots derive the seat-1 numbers from the seat-0 ones
-//   (PILE_SCREEN_POS, from PILE_SCREEN_POS_HOME) via that same rotation.
+// - Fixed PILE slots use the independently calibrated coordinates in
+//   PILE_SCREEN_POS for each viewer and owner pair.
 // - rotateForSeat() applies it to everything a player places freely:
 //   battlefield cards, tokens, and draw strokes.
 //
@@ -2559,23 +2570,18 @@ let panY = 0;
 const PILE_W = 150, PILE_H = 210;
 const TOKEN_W = 52, TOKEN_H = 52;
 
-// Only the seat-0 numbers are stored; seat-1's are derived below via the
-// same 180° rotation as everything else — proven empirically against the 16
-// independently hand-calibrated values this replaced, which already agreed
-// with this exact formula to within a few px of drag-by-hand noise.
-const PILE_SCREEN_POS_HOME = {
-  0: { deck: { x: 1194, y: 1039 }, graveyard: { x: 1366, y: 1039 }, receptacle: { x: 1192, y: 1297 }, exile: { x: 1366, y: 1297 } },
-  1: { deck: { x: 210, y: 305 }, graveyard: { x: 31, y: 305 }, receptacle: { x: 209, y: 48 }, exile: { x: 31, y: 48 } },
-};
 function rotate180Pos(pos) {
-  return { x: BOARD_SIZE - PILE_W - pos.x, y: BOARD_SIZE - PILE_H - pos.y };
-}
-function rotate180Zones(zones) {
-  return Object.fromEntries(Object.entries(zones).map(([zone, pos]) => [zone, rotate180Pos(pos)]));
+  return { x: BOARD_WIDTH - PILE_W - pos.x, y: BOARD_HEIGHT - PILE_H - pos.y };
 }
 const PILE_SCREEN_POS = {
-  0: PILE_SCREEN_POS_HOME,
-  1: { 0: rotate180Zones(PILE_SCREEN_POS_HOME[0]), 1: rotate180Zones(PILE_SCREEN_POS_HOME[1]) },
+  0: {
+    0: { deck: { x: 1368, y: 1038 }, graveyard: { x: 1539, y: 1038 }, receptacle: { x: 1368, y: 1295 }, exile: { x: 1539, y: 1295 } },
+    1: { deck: { x: 225, y: 300 }, graveyard: { x: 47, y: 300 }, receptacle: { x: 225, y: 20 }, exile: { x: 47, y: 50 } },
+  },
+  1: {
+    0: { deck: { x: 226, y: 303 }, graveyard: { x: 52, y: 303 }, receptacle: { x: 226, y: 48 }, exile: { x: 52, y: 48 } },
+    1: { deck: { x: 1368, y: 1040 }, graveyard: { x: 1542, y: 1040 }, receptacle: { x: 1368, y: 1296 }, exile: { x: 1542, y: 1296 } },
+  },
 };
 
 function mySeat() {
@@ -2584,7 +2590,7 @@ function mySeat() {
 }
 
 function rotateForSeat(x, y, w = 0, h = 0) {
-  return mySeat() === 1 ? { x: BOARD_SIZE - w - x, y: BOARD_SIZE - h - y } : { x, y };
+  return mySeat() === 1 ? { x: BOARD_WIDTH - w - x, y: BOARD_HEIGHT - h - y } : { x, y };
 }
 
 function applyTransform() {
@@ -2618,9 +2624,9 @@ function fieldCenterLogical() {
 function centerBoardInView() {
   const wrap = $("#battlefieldWrap");
   // fit the whole board in view on first load, then centre it
-  zoomLevel = Math.min(3, Math.max(0.3, Math.min(wrap.clientWidth / BOARD_SIZE, wrap.clientHeight / BOARD_SIZE)));
-  panX = wrap.clientWidth / 2 - (BOARD_SIZE / 2) * zoomLevel;
-  panY = wrap.clientHeight / 2 - (BOARD_SIZE / 2) * zoomLevel;
+  zoomLevel = Math.min(3, Math.max(0.3, Math.min(wrap.clientWidth / BOARD_WIDTH, wrap.clientHeight / BOARD_HEIGHT)));
+  panX = wrap.clientWidth / 2 - (BOARD_WIDTH / 2) * zoomLevel;
+  panY = wrap.clientHeight / 2 - (BOARD_HEIGHT / 2) * zoomLevel;
   applyTransform();
 }
 
@@ -2719,7 +2725,7 @@ function makeSvgEl(tag, attrs) {
 
 function initDrawTool() {
   const svg = $("#drawLayer");
-  svg.setAttribute("viewBox", `0 0 ${BOARD_SIZE} ${BOARD_SIZE}`);
+  svg.setAttribute("viewBox", `0 0 ${BOARD_WIDTH} ${BOARD_HEIGHT}`);
 
   $("#drawPenBtn").onclick = () => setDrawMode(drawMode === "draw" ? null : "draw");
   $("#drawEraseBtn").onclick = () => setDrawMode(drawMode === "erase" ? null : "erase");
@@ -3285,6 +3291,8 @@ function renderBattlefield() {
         showContextMenu(event.clientX, event.clientY, [
           { label: t("inspect"), onSelect: () => showInspect(item.cardId, false) },
           { separator: true },
+          counterGridMenuItem("power", { itemId: item.id }),
+          { separator: true },
           { label: t("removeCopy"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toZone: "graveyard" }) },
         ]);
         showCardLabels(el, cardName(item.cardId), t("copyStamp"));
@@ -3478,10 +3486,6 @@ function initChat() {
   $("#chatHeading").textContent = t("chatHeading");
   $("#chatInput").placeholder = t("chatPlaceholder");
   $("#chatSendBtn").textContent = t("chatSend");
-  $("#chatMinimizeBtn").onclick = () => {
-    chatState = chatState === "minimized" ? "open" : "minimized";
-    applyChatState();
-  };
   $("#chatCloseBtn").onclick = () => {
     chatState = "closed";
     applyChatState();
