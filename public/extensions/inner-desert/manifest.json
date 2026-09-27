@@ -1,0 +1,10 @@
+{
+  "id": "inner-desert",
+  "code": "ID",
+  "name": "Inner Deserts",
+  "cardCount": 150,
+  "cards": "cards.json",
+  "missingImage": "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert/Missing_Card_Image.png",
+  "assetBase": "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert/",
+  "status": "prepared"
+}

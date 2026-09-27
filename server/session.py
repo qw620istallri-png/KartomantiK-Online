@@ -60,6 +60,11 @@ def make_player(player_id, name, cluster_index=0):
         # Kartomantik decks contain unique cards, so this stays unambiguous.
         "zoneOwners": {zone: {} for zone in ALL_ZONES},
         "cardRarities": {},
+        "deckDefinition": None,
+        # The sideboard is deliberately not a game zone: it stays private,
+        # does not count as the Deck, and cards can only enter play after a
+        # fresh validated deck import.
+        "sideboard": [],
         "activity": None,  # transient "what menu are they in" hint, never private
     }
 
@@ -169,7 +174,7 @@ class Session:
                     if owner_id in cards_by_owner:
                         cards_by_owner[owner_id].append(card_id)
         for item in self.battlefield:
-            if not item.get("isTokenCard") and item.get("ownerId") in cards_by_owner:
+            if not item.get("isTokenCard") and not item.get("isCopy") and item.get("ownerId") in cards_by_owner:
                 cards_by_owner[item["ownerId"]].append(item["cardId"])
         for owner_id, player in self.players.items():
             player["zones"] = {zone: [] for zone in ALL_ZONES}
@@ -177,6 +182,41 @@ class Session:
             player["zones"]["deck"] = cards_by_owner[owner_id]
             player["zoneOwners"]["deck"] = {card_id: owner_id for card_id in cards_by_owner[owner_id]}
         self.battlefield = []
+
+    def reset_cards_to_active_decks(self, decks_by_player):
+        """Discard every live card location and rebuild from saved deck definitions."""
+        self.battlefield = []
+        for player_id, player in self.players.items():
+            active = decks_by_player.get(player_id) or {}
+            card_ids = list(active.get("cardIds") or [])
+            player["zones"] = {zone: [] for zone in ALL_ZONES}
+            player["zoneOwners"] = {zone: {} for zone in ALL_ZONES}
+            player["zones"]["deck"] = card_ids
+            player["zoneOwners"]["deck"] = {card_id: player_id for card_id in card_ids}
+            player["cardRarities"] = dict(active.get("cardRarities") or {})
+            player["sideboard"] = list(active.get("sideboardIds") or [])
+            player["deckDefinition"] = active.get("deckDefinition")
+
+    def replace_player_deck(self, player_id, card_ids, sideboard_ids, card_rarities, deck_definition):
+        """Reset one player's physical cards without disturbing the opponent's board."""
+        player = self.players[player_id]
+        for container_id, container in self.players.items():
+            for zone, cards in container["zones"].items():
+                kept = [
+                    card_id for card_id in cards
+                    if self.card_owner_in_zone(container_id, zone, card_id) != player_id
+                ]
+                container["zones"][zone] = kept
+                owners = container.setdefault("zoneOwners", {}).setdefault(zone, {})
+                container["zoneOwners"][zone] = {
+                    card_id: owners.get(card_id, container_id) for card_id in kept
+                }
+        player["zones"]["deck"] = list(card_ids)
+        player["zoneOwners"]["deck"] = {card_id: player_id for card_id in card_ids}
+        self.battlefield = [item for item in self.battlefield if item.get("ownerId") != player_id]
+        player["cardRarities"] = dict(card_rarities)
+        player["sideboard"] = list(sideboard_ids)
+        player["deckDefinition"] = deck_definition
 
     # -- shared phase tracker -------------------------------------------
     def phase_sequence(self):
@@ -269,6 +309,43 @@ class Session:
                 return token
         return None
 
+    def copy_card(self, actor_id, is_observer, item_id=None, source_owner=None, source_zone=None,
+                  card_id=None, x=None, y=None):
+        if is_observer:
+            return "Observers cannot act.", None
+        source = self.find_battlefield_item(item_id)
+        if source is not None:
+            if source.get("isTokenCard") or source.get("isCopy"):
+                return "Only a real card can be copied.", None
+            if not source.get("faceUp") or not source.get("cardId"):
+                return "A face-down card cannot be copied.", None
+            card_id = source["cardId"]
+            rarity = source.get("rarity")
+            default_x, default_y = source["x"] + 24, source["y"] + 24
+            rotation = float(source.get("rotation") or 0)
+        else:
+            source_owner = source_owner or actor_id
+            if source_zone not in ALL_ZONES:
+                return "Unknown source zone.", None
+            if not self.can_act_on_zone(actor_id, is_observer, source_owner, source_zone):
+                return "You cannot copy from that zone.", None
+            source_player = self.players.get(source_owner)
+            if source_player is None or card_id not in source_player["zones"][source_zone]:
+                return "Card not found in that zone.", None
+            card_owner = self.card_owner_in_zone(source_owner, source_zone, card_id)
+            rarity = (self.players.get(card_owner) or {}).get("cardRarities", {}).get(card_id)
+            default_x, default_y = 0, 0
+            rotation = 0.0
+        item = {
+            "id": new_id(), "ownerId": actor_id, "cardId": card_id,
+            "x": float(default_x if x is None else x),
+            "y": float(default_y if y is None else y),
+            "faceUp": True, "rotation": rotation, "counters": {},
+            "rarity": rarity, "stackedOn": None, "isCopy": True,
+        }
+        self.battlefield.append(item)
+        return None, item
+
     # -- serialization (permission-filtered per viewer) ------------------
     def serialize_for(self, viewer_id, is_observer):
         players_view = {}
@@ -290,6 +367,8 @@ class Session:
                 "seat": player["seat"],
                 "zones": zones_view,
                 "cardRarities": dict(player.get("cardRarities", {})) if is_observer or pid == viewer_id else {},
+                "deckDefinition": player.get("deckDefinition") if is_observer or pid == viewer_id else None,
+                "sideboard": list(player.get("sideboard", [])) if is_observer or pid == viewer_id else {"count": len(player.get("sideboard", []))},
                 "activity": player.get("activity"),
             }
 
@@ -315,6 +394,10 @@ class Session:
                 entry["isTokenCard"] = True
                 entry["temperament"] = item["temperament"]
                 entry["power"] = item["power"]
+            elif item.get("isCopy"):
+                entry["isCopy"] = True
+                if card_id is not None and item.get("rarity"):
+                    entry["rarity"] = item["rarity"]
             elif card_id is not None and item.get("rarity"):
                 entry["rarity"] = item["rarity"]
             if item.get("stackedOn"):
