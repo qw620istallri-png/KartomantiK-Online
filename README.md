@@ -30,7 +30,7 @@ No database, no persistence — sessions live in memory and expire after 6h
 of inactivity.
 
 Static client assets use versioned URLs and long-lived browser/CDN caching.
-When replacing a local asset, bump `20260927-zen-rarity-1` in `public/index.html`,
+When replacing a local asset, bump `20261005-tournament-2` in `public/index.html`,
 `public/app.js`, and `public/style.css` together.
 
 ## How it works
@@ -38,6 +38,25 @@ When replacing a local asset, bump `20260927-zen-rarity-1` in `public/index.html
 - **Session codes**: creating a session yields a player code and a separate
   observer code. Anyone with the player code can play; the observer code is
   read-only.
+- **Tournament sessions**: creating a tournament opens a control room instead
+  of taking a player seat. It produces fixed Player 1 and Player 2 codes, a
+  redacted spectator code, and a judge code. The organizer can verify both
+  30-card decks, start/end the match, follow the live audit trail, and export
+  the full log. Judges begin in the control room and can switch to a read-only
+  full-information table view, then return to monitoring. The organizer can
+  also open the live table from the control room without gaining access to
+  hidden information.
+- **Tournament privacy**: spectator payloads are filtered on the server. They
+  receive counts for hands/decks/sideboards, no deck definitions or rarity
+  maps, no face-down identities, and redacted log card IDs. Judge access is
+  read-only but includes all hidden information. There is no spectator delay.
+- **Tournament deck lock**: before the match, the server validates 30 unique
+  known cards, a maximum of 500 points, and a sideboard of at most 6 unique
+  cards. It also applies the organizer's editable banned-card list and
+  restricted groups across the main deck and sideboard. The proposed defaults
+  ban Freenya (082), Ergorath (128), and Imitate (086); the first restricted
+  group contains Ponder (267), Martyrize (284), and Pray the Ether (281).
+  Imports and restrictions lock when the organizer starts the match.
 - **Zone permissions** (enforced server-side, not just hidden in the UI):
   `deck` and `hand` are private to their owner — others only see a card
   count. Limbo, Exile and the Empathic Vessel are shared — any player can
@@ -57,10 +76,13 @@ When replacing a local asset, bump `20260927-zen-rarity-1` in `public/index.html
 - **Drawing**: draw one card, or use "Draw hand (7)" to top up to the
   7-card hand limit from the Recovery Phase rule in one click (also the way
   to deal your opening hand right after importing a deck).
-- **Action log**: every validated action is recorded server-side. The log
-  view/download button is always visible, but it only unlocks once the
-  session has ended — this is deliberate, so it can't be used as a live
-  information-leak channel mid-game — and it's the anti-cheat trail.
+- **Action log**: every validated action is recorded server-side with a
+  sequence number, turn, and phase. During a tournament, the complete log is
+  available live only to organizers and judges; spectators get a redacted
+  feed and players can export the full log once the match has ended. Searching
+  a deck creates a visible staff alert until that same deck is shuffled; play
+  continuing first escalates the alert for a human ruling. Downloaded logs are
+  always written in English for consistent tournament records.
 
 ## Not in scope (yet)
 

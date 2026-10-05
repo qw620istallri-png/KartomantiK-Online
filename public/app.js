@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20260927-zen-rarity-1";
+const STATIC_ASSET_VERSION = "20261005-tournament-2";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -50,14 +50,25 @@ if (!clientId) {
 
 let myPlayerId = null;
 let isObserver = false;
+let connectionRole = "player";
+let connectionMode = "casual";
 let codePlayer = null;
 let codeObserver = null;
+let codeOrganizer = null;
+let tournamentCodes = null;
+let judgeMatchView = false;
 let joinedCode = null;
 let joinedName = null;
 let latestState = null;
 let colorByPlayer = new Map();
 const revealedHandCards = new Map(); // playerId -> Set(cardId) ever revealed from their hand, for the hand-view popup
 let pendingIncomingRequest = null; // the hand_action_request currently shown in #handRequestPanel
+let pendingTournamentLogDownload = false;
+let tournamentAlertTimer = null;
+let lastTournamentNoticeStatus = null;
+let tournamentPolicyDraft = null;
+let tournamentPolicyDirty = false;
+let openPresenceRole = null;
 let expanded = new Set(); // "ownerId:zone" currently expanded in the UI
 let reconnectTimer = null;
 let intentionalClose = false;
@@ -720,7 +731,7 @@ const LANGUAGE_NAMES = { fr: "Français", en: "English", it: "Italiano" };
 function updateLanguageButtons() {
   const index = KO_LANGUAGES.indexOf(currentLanguage);
   const next = KO_LANGUAGES[(index + 1) % KO_LANGUAGES.length];
-  [$("#languageBtn"), $("#gameLanguageBtn")].filter(Boolean).forEach((button) => {
+  [$("#languageBtn"), $("#gameLanguageBtn"), $("#tournamentLanguageBtn")].filter(Boolean).forEach((button) => {
     button.textContent = LANGUAGE_FLAGS[currentLanguage];
     button.title = `${LANGUAGE_NAMES[currentLanguage]} → ${LANGUAGE_NAMES[next]}`;
     button.setAttribute("aria-label", button.title);
@@ -748,7 +759,7 @@ function setInterfaceLanguage(nextLanguage) {
 function initLanguageSwitch() {
   document.documentElement.lang = currentLanguage;
   updateLanguageButtons();
-  [$("#languageBtn"), $("#gameLanguageBtn")].filter(Boolean).forEach((button) => {
+  [$("#languageBtn"), $("#gameLanguageBtn"), $("#tournamentLanguageBtn")].filter(Boolean).forEach((button) => {
     button.onclick = () => {
       const index = KO_LANGUAGES.indexOf(currentLanguage);
       setInterfaceLanguage(KO_LANGUAGES[(index + 1) % KO_LANGUAGES.length]);
@@ -766,6 +777,9 @@ function paintStaticText() {
   $("#createName").placeholder = t("namePlaceholder");
   $("#joinName").placeholder = t("namePlaceholder");
   $("#createBtn").textContent = t("createButton");
+  $("#tournamentToggleLabel").textContent = t("tournamentMode");
+  $("#createTournamentLabel").textContent = t("createTournament");
+  $("#createTournamentHint").textContent = t("createTournamentHint");
   $("#playerCodeLabel").textContent = t("playerCode");
   $("#observerCodeLabel").textContent = t("observerCode");
   $("#copyPlayerCode").textContent = t("copy");
@@ -781,6 +795,7 @@ function paintStaticText() {
   $("#downloadLogBtn").textContent = t("downloadLog");
   $("#endSessionBtn").textContent = t("endSession");
   $("#leaveSessionBtn").textContent = t("leaveSession");
+  $("#judgeReturnBtn").textContent = t("returnToTournamentConsole");
   $("#fullscreenBtn").textContent = t("fullscreen");
   $("#phaseTrackerBtn").textContent = t("gamePhases");
   $("#phaseAdvancedLabel").textContent = t("advancedMode");
@@ -842,6 +857,24 @@ function paintStaticText() {
   $("#legalHeading").textContent = t("legalNotices");
   $("#legalCopy").innerHTML = ["legalP1", "legalP2", "legalP3", "legalP4"].map((k) => `<p>${esc(t(k))}</p>`).join("");
   $("#legalCloseBtn").textContent = t("close");
+  $("#tournamentTitle").textContent = t("tournamentConsole");
+  $("#tournamentMatchHeading").textContent = t("tournamentControlRoom");
+  $("#tournamentAccessHeading").textContent = t("accessCodes");
+  $("#tournamentPlayersHeading").textContent = t("playersAndState");
+  $("#tournamentLogHeading").textContent = t("liveTournamentLog");
+  $("#tournamentExportLogBtn").textContent = t("extractFullLog");
+  $("#tournamentStartBtn").textContent = t("startMatch");
+  $("#tournamentEndBtn").textContent = t("endMatch");
+  $("#tournamentLeaveBtn").textContent = t("leaveConsole");
+  $("#tournamentViewMatchBtn").textContent = t("viewMatch");
+  $("#tournamentRulesSummary").textContent = t("tournamentDeckRules");
+  $("#bannedCardsLabel").textContent = t("bannedCards");
+  $("#bannedCardInput").placeholder = t("cardNameOrNumber");
+  $("#bannedCardAddBtn").textContent = t("add");
+  $("#restrictedGroupAddBtn").textContent = t("addRestrictedGroup");
+  $("#tournamentRulesSaveBtn").textContent = t("saveRules");
+  $("#tournamentPlayerAlertTitle").textContent = t("tournamentAlert");
+  renderTournamentConsole();
 }
 
 function initSocialLinks() {
@@ -871,6 +904,12 @@ function setStatus(message, kind = "") {
 }
 
 function initJoinScreen() {
+  $("#tournamentToggleBtn").onclick = () => {
+    const action = $("#createTournamentBtn");
+    const expanded = action.classList.toggle("hidden") === false;
+    action.setAttribute("aria-hidden", String(!expanded));
+    $("#tournamentToggleBtn").setAttribute("aria-expanded", String(expanded));
+  };
   $("#tabCreate").onclick = () => {
     $("#tabCreate").classList.add("active");
     $("#tabJoin").classList.remove("active");
@@ -894,6 +933,12 @@ function initJoinScreen() {
     connectAndJoin({ createNew: true, name });
   };
 
+  $("#createTournamentBtn").onclick = () => {
+    const name = $("#createName").value.trim() || t("organizer");
+    localStorage.setItem("ko_name", name);
+    connectAndJoin({ createTournament: true, name });
+  };
+
   $("#joinBtn").onclick = () => {
     const name = $("#joinName").value.trim() || "Player";
     const code = $("#joinCode").value.trim().toUpperCase();
@@ -915,7 +960,7 @@ function initJoinScreen() {
   $("#continueBtn").onclick = () => showGameScreen();
 }
 
-let pendingCreateFlow = false;
+let pendingCreateFlow = null;
 
 function connectAndJoin(joinPayload) {
   setStatus(t("connecting"), "warning");
@@ -923,22 +968,24 @@ function connectAndJoin(joinPayload) {
   joinedCode = joinPayload.code || null;
   joinedName = joinPayload.name;
   const createNew = Boolean(joinPayload.createNew);
-  pendingCreateFlow = createNew;
+  const createTournament = Boolean(joinPayload.createTournament);
+  pendingCreateFlow = createTournament ? "tournament" : (createNew ? "casual" : null);
 
   const proto = location.protocol === "https:" ? "wss:" : "ws:";
   ws = new WebSocket(`${proto}//${location.host}/ws`);
   ws.onopen = () => {
-    ws.send(JSON.stringify({ type: "join", createNew, code: joinedCode, name: joinedName, clientId }));
+    ws.send(JSON.stringify({ type: "join", createNew, createTournament, code: joinedCode, name: joinedName, clientId }));
   };
   ws.onmessage = (event) => handleServerMessage(JSON.parse(event.data));
   ws.onclose = () => {
     if (intentionalClose) return;
-    if ($("#gameScreen").classList.contains("hidden")) {
+    if ($("#gameScreen").classList.contains("hidden") && $("#tournamentScreen").classList.contains("hidden")) {
       setStatus(t("invalidCode"), "error");
       return;
     }
     wasDisconnected = true;
-    setStatus(t("connectionLost"), "error");
+    if (!$("#tournamentScreen").classList.contains("hidden")) showToast(t("connectionLost"), true);
+    else setStatus(t("connectionLost"), "error");
     scheduleReconnect();
   };
   ws.onerror = () => {};
@@ -954,10 +1001,27 @@ function scheduleReconnect() {
 
 function showGameScreen() {
   $("#joinScreen").classList.add("hidden");
+  $("#tournamentScreen").classList.add("hidden");
   $("#gameScreen").classList.remove("hidden");
   // #battlefieldWrap is zero-sized while #gameScreen is display:none, so the
   // fit-and-centre math only works once it's actually visible
   centerBoardInView();
+}
+
+function showTournamentScreen() {
+  judgeMatchView = false;
+  $("#joinScreen").classList.add("hidden");
+  $("#gameScreen").classList.add("hidden");
+  $("#tournamentScreen").classList.remove("hidden");
+  renderTournamentConsole();
+}
+
+function showTournamentMatch() {
+  if (!["judge", "organizer"].includes(connectionRole)) return;
+  judgeMatchView = true;
+  showGameScreen();
+  $("#judgeReturnBtn").classList.remove("hidden");
+  renderAll();
 }
 
 // Used both when P2/an observer simply leaves (the session carries on for
@@ -971,8 +1035,17 @@ function leaveSession() {
   latestState = null;
   myPlayerId = null;
   isObserver = false;
+  connectionRole = "player";
+  connectionMode = "casual";
   codePlayer = null;
   codeObserver = null;
+  codeOrganizer = null;
+  tournamentCodes = null;
+  judgeMatchView = false;
+  tournamentPolicyDraft = null;
+  tournamentPolicyDirty = false;
+  openPresenceRole = null;
+  lastTournamentNoticeStatus = null;
   joinedCode = null;
   joinedName = null;
   sessionEndedNotified = false;
@@ -981,6 +1054,7 @@ function leaveSession() {
   $("#handRequestPanel").classList.add("hidden");
   $("#sessionEndedBanner").classList.add("hidden");
   $("#gameScreen").classList.add("hidden");
+  $("#tournamentScreen").classList.add("hidden");
   $("#joinScreen").classList.remove("hidden");
   $("#codesBox").classList.add("hidden");
   setStatus("");
@@ -991,15 +1065,20 @@ function leaveSession() {
 function handleServerMessage(msg) {
   if (msg.type === "joined") {
     myPlayerId = msg.playerId;
+    connectionRole = msg.role || (msg.isObserver ? "observer" : "player");
+    connectionMode = msg.mode || "casual";
     isObserver = msg.isObserver;
     $("#drawToolbar").classList.toggle("hidden", isObserver);
     $("#tokenToolbar").classList.toggle("hidden", isObserver);
     if (msg.codePlayer) codePlayer = msg.codePlayer;
     codeObserver = msg.codeObserver;
-    joinedCode = joinedCode || codePlayer;
+    if (msg.codeOrganizer) codeOrganizer = msg.codeOrganizer;
+    if (msg.tournamentCodes) tournamentCodes = msg.tournamentCodes;
+    joinedCode = joinedCode || codeOrganizer || codePlayer;
     if (wasDisconnected) {
       wasDisconnected = false;
-      setStatus(t("reconnected"), "success");
+      if (!$("#tournamentScreen").classList.contains("hidden")) showToast(t("reconnected"));
+      else setStatus(t("reconnected"), "success");
     } else {
       setStatus("");
     }
@@ -1007,18 +1086,32 @@ function handleServerMessage(msg) {
     renderHeaderCodes();
     updateHeaderCounts();
 
-    if (pendingCreateFlow) {
-      pendingCreateFlow = false;
+    if (pendingCreateFlow === "casual") {
+      pendingCreateFlow = null;
       $("#playerCodeValue").textContent = codePlayer;
       $("#observerCodeValue").textContent = codeObserver;
       $("#codesBox").classList.remove("hidden");
+    } else if (pendingCreateFlow === "tournament" || connectionRole === "organizer" || connectionRole === "judge") {
+      pendingCreateFlow = null;
+      showTournamentScreen();
     } else if ($("#gameScreen").classList.contains("hidden")) {
       showGameScreen();
     }
   } else if (msg.type === "state") {
     latestState = msg;
-    renderAll();
-    renderStrokes();
+    if (connectionMode === "tournament" && connectionRole === "player") {
+      const status = msg.tournament?.status;
+      if (status && status !== "active" && status !== lastTournamentNoticeStatus) {
+        showTournamentPlayerAlert(t(status === "ended" ? "tournamentMatchEnded" : "tournamentWaitingForStart"), status === "ended");
+      }
+      lastTournamentNoticeStatus = status;
+    }
+    if ((connectionRole === "organizer" || connectionRole === "judge") && !judgeMatchView) {
+      renderTournamentConsole();
+    } else {
+      renderAll();
+      renderStrokes();
+    }
   } else if (msg.type === "reveal") {
     if (msg.zone === "hand") {
       if (!revealedHandCards.has(msg.ownerId)) revealedHandCards.set(msg.ownerId, new Set());
@@ -1040,14 +1133,19 @@ function handleServerMessage(msg) {
       if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
       if (ws) ws.close();
       setStatus(t("sessionGone"), "error");
-    } else if ($("#gameScreen").classList.contains("hidden")) {
+    } else if ($("#gameScreen").classList.contains("hidden") && $("#tournamentScreen").classList.contains("hidden")) {
       setStatus(msg.message, "error");
+    } else if (connectionMode === "tournament" && connectionRole === "player") {
+      showTournamentPlayerAlert(localizeServerError(msg.message), true);
     } else {
-      showToast(msg.message, true);
+      showToast(localizeServerError(msg.message), true);
     }
     console.warn("Server error:", msg.message);
   } else if (msg.type === "log") {
-    if (pendingPlayerLogFor) {
+    if (pendingTournamentLogDownload) {
+      pendingTournamentLogDownload = false;
+      downloadLog(msg.entries);
+    } else if (pendingPlayerLogFor) {
       renderPlayerLog(msg.entries, pendingPlayerLogFor);
       pendingPlayerLogFor = null;
     } else {
@@ -1233,11 +1331,21 @@ function renderAll() {
     if (ownerId && zone && latestState.players[ownerId]) openPileBrowser(ownerId, zone);
   }
   updateHeaderCounts();
-  const canEndForAll = !isObserver && mySeat() === 0;
+  const isTournament = latestState.mode === "tournament";
+  const canEndForAll = !isTournament && !isObserver && mySeat() === 0;
   $("#endSessionBtn").classList.toggle("hidden", !canEndForAll);
-  $("#leaveSessionBtn").classList.toggle("hidden", canEndForAll);
+  $("#leaveSessionBtn").classList.toggle("hidden", canEndForAll || ["judge", "organizer"].includes(connectionRole));
   $("#resetBoardBtn").classList.toggle("hidden", !canEndForAll);
-  $("#currentSideboardBtn").classList.toggle("hidden", isObserver || !latestState.players?.[myPlayerId]);
+  $("#currentSideboardBtn").classList.toggle("hidden", isObserver || !latestState.players?.[myPlayerId] || (isTournament && latestState.tournament?.status !== "lobby"));
+  $("#importDeckBtn").classList.toggle("hidden", isObserver || (isTournament && latestState.tournament?.status !== "lobby"));
+  $("#downloadLogBtn").classList.toggle("hidden", isTournament && !["judge", "organizer"].includes(connectionRole));
+  $("#judgeReturnBtn").classList.toggle("hidden", !(["judge", "organizer"].includes(connectionRole) && judgeMatchView));
+  const tournamentLocked = isTournament && latestState.tournament?.status !== "active";
+  $("#gameScreen").classList.toggle("tournament-locked", tournamentLocked);
+  $("#tournamentWaitingBanner").classList.toggle("hidden", !tournamentLocked);
+  if (tournamentLocked) {
+    $("#tournamentWaitingBanner").textContent = t(latestState.tournament?.status === "ended" ? "tournamentMatchEnded" : "tournamentWaitingForStart");
+  }
   $("#endSessionBtn").disabled = latestState.ended;
   if (latestState.ended && !sessionEndedNotified) {
     sessionEndedNotified = true;
@@ -1302,19 +1410,217 @@ function wirePlayerLogCardNames(container) {
   });
 }
 
-function phaseLogLines(details) {
+function translateFor(key, language = currentLanguage) {
+  return (ui[language] && ui[language][key]) ?? ui.en[key] ?? key;
+}
+
+function phaseLogLinesFor(details, language = currentLanguage) {
   const phaseId = details.phaseId || details.phase;
   const phase = ADVANCED_PHASES.find((item) => item.id === phaseId)
     || BASIC_PHASES.find((item) => item.id === phaseId)
     || BASIC_PHASES.find((item) => item.id === details.phase);
   if (!phase) return { phase: "", step: "" };
   const group = PHASE_GROUPS.find((item) => item.id === (phase.parent || phase.id));
-  const phaseLabel = group ? t(group.label) : t(phase.label);
+  const phaseLabel = group ? translateFor(group.label, language) : translateFor(phase.label, language);
   if (!details.advancedMode || !phase.stepNumber) return { phase: phaseLabel, step: "" };
-  const step = [phase.subphase ? t(phase.subphase) : "", `${t("phaseStep")} ${phase.stepNumber} — ${t(phase.label)}`]
+  const step = [phase.subphase ? translateFor(phase.subphase, language) : "", `${translateFor("phaseStep", language)} ${phase.stepNumber} — ${translateFor(phase.label, language)}`]
     .filter(Boolean)
     .join(" · ");
   return { phase: phaseLabel, step };
+}
+
+function phaseLogLines(details) {
+  return phaseLogLinesFor(details, currentLanguage);
+}
+
+function localizeServerError(message) {
+  const known = {
+    "The tournament match has not started yet.": "tournamentNotStartedError",
+    "The tournament match has ended.": "tournamentMatchEnded",
+    "Tournament decks are locked once the match starts.": "tournamentDecksLocked",
+  };
+  return known[message] ? t(known[message]) : message;
+}
+
+function showTournamentPlayerAlert(message, isError = false) {
+  const alert = $("#tournamentPlayerAlert");
+  $("#tournamentPlayerAlertText").textContent = message;
+  alert.classList.toggle("error", isError);
+  alert.classList.remove("hidden");
+  if (tournamentAlertTimer) clearTimeout(tournamentAlertTimer);
+  tournamentAlertTimer = setTimeout(() => alert.classList.add("hidden"), 5200);
+}
+
+function tournamentStatusLabel(status) {
+  return t(status === "active" ? "statusActive" : status === "ended" ? "statusEnded" : "statusLobby");
+}
+
+function tournamentPhaseLabel(phaseId) {
+  return phaseLogLines({ phase: phaseId }).phase || phaseId || "—";
+}
+
+function tournamentRoleIcon(role) {
+  if (role === "spectator") return `<svg viewBox="0 0 24 24"><path d="M3 12s3.5-5 9-5 9 5 9 5-3.5 5-9 5-9-5-9-5Z"/><circle cx="12" cy="12" r="2.5"/></svg>`;
+  if (role === "judge") return `<svg viewBox="0 0 24 24"><path d="M12 3v17M6 6h12M4 20h16M7 6l-3 6h6L7 6Zm10 0-3 6h6l-3-6Z"/></svg>`;
+  return `<svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="3"/><path d="M6 20c.5-5 2.5-7 6-7s5.5 2 6 7"/></svg>`;
+}
+
+function tournamentLogTone(entry) {
+  if (entry.type === "search_without_shuffle") return "critical";
+  if (entry.type === "search_zone") return "warning";
+  if (["create_tournament", "role_joined", "start_tournament", "end_tournament", "update_tournament_policy"].includes(entry.type)) return "system";
+  if (["shuffle", "search_followed_by_shuffle", "draw", "draw_to_limit", "place_card", "move_card", "reveal", "scry", "mulligan"].includes(entry.type)) return "action";
+  return "info";
+}
+
+function tournamentCardLabel(cardId) {
+  const card = cardsById.get(cardId);
+  return card ? `${String(card.collectionNumber || "").padStart(3, "0")} — ${cardName(cardId)}` : cardId;
+}
+
+function resolveTournamentCard(value) {
+  const normalized = String(value || "").trim();
+  const numberMatch = normalized.match(/^#?(\d{1,3})/);
+  if (numberMatch) return cardsByNumber.get(Number(numberMatch[1]))?.id || null;
+  const lower = normalized.toLocaleLowerCase();
+  return [...cardsById.values()].find((card) => card.id === normalized || cardName(card.id).toLocaleLowerCase() === lower)?.id || null;
+}
+
+function tournamentRuleChip(cardId, removeAttrs) {
+  return `<span class="tournament-rule-chip"><span>${esc(tournamentCardLabel(cardId))}</span><button type="button" ${removeAttrs} aria-label="${esc(`${t("remove")} ${cardName(cardId)}`)}">×</button></span>`;
+}
+
+function renderTournamentRules(tournament, organizer) {
+  const panel = $("#tournamentRulesPanel");
+  panel.classList.toggle("hidden", !organizer);
+  if (!organizer) return;
+  if (!tournamentPolicyDraft || !tournamentPolicyDirty) {
+    tournamentPolicyDraft = JSON.parse(JSON.stringify(tournament.policy || { bannedCardIds: [], restrictedGroups: [] }));
+  }
+  $("#tournamentCardOptions").innerHTML = [...cardsById.values()]
+    .sort((a, b) => Number(a.collectionNumber) - Number(b.collectionNumber))
+    .map((card) => `<option value="${esc(`${String(card.collectionNumber).padStart(3, "0")} — ${cardName(card.id)}`)}"></option>`)
+    .join("");
+  $("#bannedCardsList").innerHTML = tournamentPolicyDraft.bannedCardIds.map((cardId, index) => tournamentRuleChip(cardId, `data-remove-banned="${index}"`)).join("");
+  $("#restrictedGroups").innerHTML = tournamentPolicyDraft.restrictedGroups.map((group, groupIndex) => `
+    <section class="restricted-group">
+      <div class="restricted-group-head"><input value="${esc(group.name || `${t("restrictedGroup")} ${groupIndex + 1}`)}" data-restricted-name="${groupIndex}" aria-label="${esc(t("restrictedGroupName"))}"><button type="button" data-remove-restricted-group="${groupIndex}">${esc(t("remove"))}</button></div>
+      <div class="tournament-rule-chips">${(group.cardIds || []).map((cardId, cardIndex) => tournamentRuleChip(cardId, `data-remove-restricted-card="${groupIndex}:${cardIndex}"`)).join("")}</div>
+      <div class="tournament-rule-add"><input data-restricted-card-input="${groupIndex}" list="tournamentCardOptions" placeholder="${esc(t("cardNameOrNumber"))}"><button type="button" data-add-restricted-card="${groupIndex}">${esc(t("add"))}</button></div>
+    </section>`).join("");
+
+  $$('[data-remove-banned]').forEach((button) => button.onclick = () => {
+    tournamentPolicyDraft.bannedCardIds.splice(Number(button.dataset.removeBanned), 1);
+    tournamentPolicyDirty = true;
+    renderTournamentRules(tournament, organizer);
+  });
+  $$('[data-restricted-name]').forEach((input) => input.oninput = () => {
+    tournamentPolicyDraft.restrictedGroups[Number(input.dataset.restrictedName)].name = input.value;
+    tournamentPolicyDirty = true;
+  });
+  $$('[data-remove-restricted-group]').forEach((button) => button.onclick = () => {
+    tournamentPolicyDraft.restrictedGroups.splice(Number(button.dataset.removeRestrictedGroup), 1);
+    tournamentPolicyDirty = true;
+    renderTournamentRules(tournament, organizer);
+  });
+  $$('[data-remove-restricted-card]').forEach((button) => button.onclick = () => {
+    const [groupIndex, cardIndex] = button.dataset.removeRestrictedCard.split(":").map(Number);
+    tournamentPolicyDraft.restrictedGroups[groupIndex].cardIds.splice(cardIndex, 1);
+    tournamentPolicyDirty = true;
+    renderTournamentRules(tournament, organizer);
+  });
+  $$('[data-add-restricted-card]').forEach((button) => button.onclick = () => {
+    const groupIndex = Number(button.dataset.addRestrictedCard);
+    const input = $(`[data-restricted-card-input="${groupIndex}"]`);
+    const cardId = resolveTournamentCard(input.value);
+    if (!cardId) return showToast(t("unknownCard"), true);
+    const group = tournamentPolicyDraft.restrictedGroups[groupIndex];
+    if (!group.cardIds.includes(cardId)) group.cardIds.push(cardId);
+    tournamentPolicyDirty = true;
+    renderTournamentRules(tournament, organizer);
+  });
+  $("#tournamentRulesSaveBtn").disabled = tournament.status !== "lobby" || !tournamentPolicyDirty;
+  $("#tournamentRulesStatus").textContent = tournament.status === "lobby" ? (tournamentPolicyDirty ? t("unsavedRules") : t("rulesSaved")) : t("rulesLocked");
+}
+
+function renderTournamentConsole() {
+  const consoleScreen = $("#tournamentScreen");
+  if (!consoleScreen || !latestState?.tournament) return;
+  const tournament = latestState.tournament;
+  const roleKey = connectionRole === "judge" ? "judge" : "organizer";
+  $("#tournamentRoleLabel").textContent = t(roleKey);
+  const stateBadge = $("#tournamentStateBadge");
+  stateBadge.textContent = tournamentStatusLabel(tournament.status);
+  stateBadge.className = `tournament-state-badge ${tournament.status}`;
+
+  const organizer = connectionRole === "organizer";
+  $("#tournamentCodeSection").classList.toggle("hidden", !organizer);
+  $("#tournamentActions").classList.remove("hidden");
+  $$(".organizer-only").forEach((element) => element.classList.toggle("hidden", !organizer));
+  if (organizer && tournamentCodes) {
+    const accessRoles = [
+      ["player1", "playerOneCode", "playerAccessPermission", "#d3654a"],
+      ["player2", "playerTwoCode", "playerAccessPermission", "#3fc9a8"],
+      ["spectator", "spectatorCode", "spectatorAccessPermission", "#8bb5d8"],
+      ["judge", "judgeCode", "judgeAccessPermission", "#d3a942"],
+    ];
+    $("#tournamentCodeGrid").innerHTML = accessRoles.map(([key, label, permission, accent]) => `
+      <article class="tournament-access-card role-${key}" style="--access-accent:${accent}">
+        <div class="tournament-access-head"><span class="tournament-role-icon">${tournamentRoleIcon(key)}</span><span class="tournament-access-label">${esc(t(label))}</span></div>
+        <p class="tournament-access-permission">${esc(t(permission))}</p>
+        <div class="tournament-access-row"><strong class="tournament-access-code">${esc(tournamentCodes[key])}</strong><button class="tournament-access-copy" data-tournament-copy="${esc(tournamentCodes[key])}" title="${esc(t("copy"))}" aria-label="${esc(`${t("copy")} ${t(label)}`)}">${esc(t("copy"))}</button></div>
+      </article>`).join("");
+    $$('[data-tournament-copy]').forEach((button) => {
+      button.onclick = () => {
+        navigator.clipboard?.writeText(button.dataset.tournamentCopy);
+        button.textContent = t("copied");
+        setTimeout(() => (button.textContent = t("copy")), 1200);
+      };
+    });
+  }
+
+  $("#tournamentSeats").innerHTML = tournament.seats.map((seat) => `
+    <article class="tournament-seat">
+      <span class="tournament-seat-number">P${seat.seat + 1}</span>
+      <div class="tournament-seat-name"><strong>${esc(seat.name || t("seatAvailable"))}</strong><span>${esc(seat.deckReady ? t("deckReadyShort") : seat.name ? (seat.deckError || t("deckMissing")) : t("waitingForPlayer"))}</span></div>
+      <span class="connection-dot${seat.connected ? " connected" : ""}" title="${esc(t(seat.connected ? "connected" : "disconnected"))}"></span>
+    </article>`).join("");
+
+  const counts = latestState.roleCounts || {};
+  const phase = latestState.phaseTracker || { turn: 1 };
+  const currentPhaseId = currentPhaseUi(phase).phase?.id || "recovery";
+  $("#tournamentMetrics").innerHTML = `
+    <button class="tournament-metric" data-presence-role="spectator" aria-expanded="${openPresenceRole === "spectator"}"><strong>${Number(counts.spectator || 0)}</strong><span>${esc(t("spectators"))}</span></button>
+    <button class="tournament-metric" data-presence-role="judge" aria-expanded="${openPresenceRole === "judge"}"><strong>${Number(counts.judge || 0)}</strong><span>${esc(t("judges"))}</span></button>
+    <div class="tournament-metric"><strong>${Number(phase.turn || 1)}</strong><span>${esc(t("turn"))}</span></div>
+    <div class="tournament-metric"><strong>${esc(tournamentPhaseLabel(currentPhaseId))}</strong><span>${esc(t("phaseCurrent"))}</span></div>`;
+  $$('[data-presence-role]').forEach((button) => button.onclick = () => {
+    openPresenceRole = openPresenceRole === button.dataset.presenceRole ? null : button.dataset.presenceRole;
+    renderTournamentConsole();
+  });
+  const presenceList = $("#tournamentPresenceList");
+  const presenceNames = openPresenceRole ? (latestState.roleParticipants?.[openPresenceRole] || []) : [];
+  presenceList.classList.toggle("hidden", !openPresenceRole);
+  if (openPresenceRole) presenceList.innerHTML = `<strong>${esc(t(openPresenceRole === "judge" ? "connectedJudges" : "connectedSpectators"))}</strong>${presenceNames.length ? `<ul>${presenceNames.map((name) => `<li>${esc(name)}</li>`).join("")}</ul>` : `<p>${esc(t("nobodyConnected"))}</p>`}`;
+
+  const activeAlerts = (tournament.auditAlerts || []).filter((alert) => alert.status !== "resolved");
+  $("#tournamentAuditAlerts").innerHTML = activeAlerts.map((alert) => `<div class="tournament-alert-chip ${alert.severity === "critical" ? "" : "warning"}">${esc(alert.severity === "critical" ? t("unshuffledSearchAlert") : t("pendingShuffleAlert")).replace("{player}", esc(alert.actorName))}</div>`).join("");
+
+  const canStart = tournament.status === "lobby" && tournament.seats.every((seat) => seat.connected && seat.deckReady);
+  $("#tournamentStartBtn").disabled = !canStart;
+  $("#tournamentStartBtn").classList.toggle("hidden", tournament.status !== "lobby");
+  $("#tournamentEndBtn").disabled = tournament.status === "ended";
+  $("#tournamentEndBtn").classList.toggle("hidden", tournament.status === "ended");
+  $("#tournamentViewMatchBtn").disabled = tournament.status === "lobby";
+  renderTournamentRules(tournament, organizer);
+
+  const entries = latestState.recentLog || [];
+  $("#tournamentLiveLog").innerHTML = entries.length ? [...entries].reverse().map((entry) => `
+    <article class="tournament-log-entry" data-tone="${tournamentLogTone(entry)}">
+      <div class="tournament-log-sequence">#${String(entry.sequence || 0).padStart(3, "0")}</div>
+      <div class="tournament-log-content"><p>${formatLogEntry(entry, { html: true })}</p><small>${new Date(entry.timestamp * 1000).toLocaleTimeString()} · ${esc(t("turn"))} ${entry.turn || 1} · ${esc(tournamentPhaseLabel(entry.phase))}</small></div>
+    </article>`).join("") : `<div class="tournament-log-empty">${esc(t("logEmpty"))}</div>`;
+  wireLogCardNames($("#tournamentLiveLog"));
 }
 
 function phaseLogLabel(details) {
@@ -1678,7 +1984,9 @@ function renderHeaderCodes() {
     <span class="code-item-label">${esc(t(labelKey))}</span>
     <button data-copy-code="${esc(code || "")}">${codesHidden ? "••••••" : esc(code || "")}</button>
   </div>`;
-  $("#headerCodes").innerHTML = isObserver
+  if (connectionMode === "tournament") {
+    $("#headerCodes").innerHTML = `<span class="count" id="headerCounts"></span>`;
+  } else $("#headerCodes").innerHTML = isObserver
     ? `${codeItemHtml(codeObserver, "observerCode")}<span class="count" id="headerCounts"></span>`
     : `${codeItemHtml(codePlayer, "playerCode")}${codeItemHtml(codeObserver, "observerCode")}<span class="count" id="headerCounts"></span>`;
   $$("#headerCodes [data-copy-code]").forEach((btn) => {
@@ -2202,6 +2510,7 @@ function wireZoneButtons() {
       if (panel.classList.contains("hidden") || panel.dataset.ownerId !== ownerId || panel.dataset.zone !== zone) {
         pileBrowserStaged = new Map();
       }
+      send({ type: "search_zone", ownerId, zone });
       setMyActivity("search");
       openPileBrowser(ownerId, zone);
     };
@@ -3516,6 +3825,7 @@ function initChat() {
 // ---------------------------------------------------------------- token add + end session + log
 
 function initGameControls() {
+  $("#judgeReturnBtn").onclick = () => showTournamentScreen();
   $("#phaseTrackerBtn").onclick = () => {
     const trackerEnabled = Boolean(latestState?.phaseTracker?.enabled);
     if (!trackerEnabled && !isObserver) phaseTrackerVisible = true;
@@ -3570,6 +3880,37 @@ function initGameControls() {
     if (document.fullscreenElement) document.exitFullscreen();
     else document.documentElement.requestFullscreen?.();
   };
+}
+
+function initTournamentControls() {
+  $("#tournamentViewMatchBtn").onclick = () => showTournamentMatch();
+  $("#tournamentStartBtn").onclick = () => send({ type: "start_tournament" });
+  $("#tournamentEndBtn").onclick = () => {
+    showConfirm(t("confirmEndTournament"), () => send({ type: "end_tournament" }), t("endMatch"));
+  };
+  $("#tournamentExportLogBtn").onclick = () => {
+    pendingTournamentLogDownload = true;
+    send({ type: "request_log" });
+  };
+  $("#bannedCardAddBtn").onclick = () => {
+    const cardId = resolveTournamentCard($("#bannedCardInput").value);
+    if (!cardId) return showToast(t("unknownCard"), true);
+    if (!tournamentPolicyDraft.bannedCardIds.includes(cardId)) tournamentPolicyDraft.bannedCardIds.push(cardId);
+    $("#bannedCardInput").value = "";
+    tournamentPolicyDirty = true;
+    renderTournamentRules(latestState.tournament, true);
+  };
+  $("#restrictedGroupAddBtn").onclick = () => {
+    tournamentPolicyDraft.restrictedGroups.push({ id: `restricted-${Date.now()}`, name: `${t("restrictedGroup")} ${tournamentPolicyDraft.restrictedGroups.length + 1}`, cardIds: [] });
+    tournamentPolicyDirty = true;
+    renderTournamentRules(latestState.tournament, true);
+  };
+  $("#tournamentRulesSaveBtn").onclick = () => {
+    send({ type: "update_tournament_policy", policy: tournamentPolicyDraft });
+    tournamentPolicyDirty = false;
+    $("#tournamentRulesStatus").textContent = t("rulesSaved");
+  };
+  $("#tournamentLeaveBtn").onclick = () => leaveSession();
 }
 
 // ---------------------------------------------------------------- card inspect
@@ -3663,57 +4004,99 @@ function initInspectToolbar() {
   });
 }
 
-function formatLogEntry(e) {
-  const who = e.actorName || e.actorId || "?";
+function logCardName(cardId, language) {
+  const card = cardsById.get(cardId);
+  return card?.translations?.[language]?.name || card?.name || cardId;
+}
+
+function logTemplate(key, values, language, htmlKeys = new Set(), escapeValues = false) {
+  return String(translateFor(key, language)).replace(/\{(\w+)\}/g, (_match, name) => {
+    const value = values[name] ?? "";
+    return !escapeValues || htmlKeys.has(name) ? String(value) : esc(value);
+  });
+}
+
+function formatLogEntry(e, options = {}) {
+  const language = options.language || currentLanguage;
+  const html = Boolean(options.html);
+  const rawWho = e.actorName || e.actorId || "?";
+  const who = html ? `<b style="color:${playerColor(e.actorId)}">${esc(rawWho)}</b>` : rawWho;
   const d = e.details || {};
-  const z = (key) => t(key) || key;
+  const z = (key) => translateFor(key, language) || key;
   const ownerName = (pid) => latestState?.players?.[pid]?.name || pid;
-  const cross = d.ownerId && d.ownerId !== e.actorId ? ` (${ownerName(d.ownerId)}'s)` : "";
-  const named = (cardId) => (cardId ? ` "${cardName(cardId)}"` : "");
-  const faceState = (faceUp) => (faceUp === undefined ? "" : faceUp ? " (face up)" : " (face down)");
-  const viaRequest = (requestedBy) => (requestedBy ? ` (requested by ${requestedBy})` : "");
+  const cross = d.ownerId && d.ownerId !== e.actorId ? logTemplate("logOwnerSuffix", { owner: ownerName(d.ownerId) }, language) : "";
+  const card = (cardId) => {
+    if (!cardId) return translateFor("plAnUnknownCard", language);
+    const name = logCardName(cardId, language);
+    return html ? `<span class="log-card-ref" data-log-card="${esc(cardId)}">${esc(name)}</span>` : name;
+  };
+  const faceState = (faceUp) => (faceUp === undefined ? "" : translateFor(faceUp ? "logFaceUp" : "logFaceDown", language));
+  const viaRequest = (requestedBy) => requestedBy ? logTemplate("logRequestedBy", { requester: requestedBy }, language) : "";
+  const f = (key, values = {}, markup = []) => logTemplate(key, { who, ...values }, language, new Set(html ? ["who", ...markup] : []), html);
   switch (e.type) {
-    case "import_deck": return `${who} imported a deck (${d.count} cards).`;
-    case "draw": return `${who} drew ${d.count} card(s).`;
-    case "draw_to_limit": return `${who} drew up to hand size (+${d.count}).`;
-    case "shuffle": return `${who} shuffled ${z(d.zone)}${cross}.`;
-    case "reorder": return `${who} reordered ${z(d.zone)}${cross}.`;
-    case "reveal": return `${who} revealed ${d.count} card(s) from ${z(d.zone)}${cross}${viaRequest(d.requestedBy)}.`;
-    case "scry": return `${who} scried ${d.count} card(s) privately.`;
-    case "move_card": return `${who} moved a card${named(d.cardId)}: ${z(d.fromZone)} → ${z(d.toZone)}${viaRequest(d.requestedBy)}.`;
-    case "place_card": return `${who} played a card${named(d.cardId)} from ${z(d.fromZone)} onto the field${faceState(d.faceUp)}.`;
-    case "copy_card": return `${who} created a copy of${named(d.cardId)}.`;
-    case "move_battlefield_item": return `${who} moved a card on the field.`;
-    case "flip_card": return `${who} flipped a card${named(d.cardId)}${faceState(d.faceUp)}.`;
-    case "remove_battlefield_item": return d.copyCard ? `${who} removed a card copy${named(d.cardId)}.` : d.tokenCard ? `${who} removed a token card.` : `${who} sent a field card${named(d.cardId)} to ${z(d.toZone)}${faceState(d.faceUp)}.`;
-    case "create_token_card": return `${who} created a ${t("temperament" + d.temperament[0].toUpperCase() + d.temperament.slice(1))} token (${d.power > 0 ? "+" : ""}${d.power}).`;
+    case "import_deck": return f("logImportDeck", { count: d.count });
+    case "draw": return f("logDraw", { count: d.count });
+    case "draw_to_limit": return f("logDrawToLimit", { count: d.count });
+    case "shuffle": return f("logShuffle", { zone: z(d.zone), cross });
+    case "reorder": return f("logReorder", { zone: z(d.zone), cross });
+    case "reveal": return f("logReveal", { count: d.count, zone: z(d.zone), cross, request: viaRequest(d.requestedBy) });
+    case "scry": return f("logScry", { count: d.count });
+    case "search_zone": return f("logSearch", { zone: z(d.zone), count: d.count, warning: d.requiresShuffle ? translateFor("logShuffleExpected", language) : "" });
+    case "search_followed_by_shuffle": return f("logSearchResolved", { zone: z(d.zone) });
+    case "search_without_shuffle": return f("logSearchUnshuffled", { zone: z(d.zone), action: translateFor(`logAction_${d.followupAction}`, language) || d.followupAction });
+    case "move_card": return f("logMoveCard", { card: card(d.cardId), from: z(d.fromZone), to: z(d.toZone), request: viaRequest(d.requestedBy) }, ["card"]);
+    case "place_card": return f("logPlaceCard", { card: card(d.cardId), from: z(d.fromZone), face: faceState(d.faceUp) }, ["card"]);
+    case "copy_card": return f("logCopyCard", { card: card(d.cardId) }, ["card"]);
+    case "move_battlefield_item": return f("logMoveFieldCard");
+    case "reorder_battlefield_item": return f("logReorderFieldCard");
+    case "flip_card": return f("logFlipCard", { card: card(d.cardId), face: faceState(d.faceUp) }, ["card"]);
+    case "remove_battlefield_item": return d.copyCard ? f("logRemoveCopy", { card: card(d.cardId) }, ["card"]) : d.tokenCard ? f("logRemoveTokenCard") : f("logRemoveFieldCard", { card: card(d.cardId), to: z(d.toZone), face: faceState(d.faceUp) }, ["card"]);
+    case "create_token_card": return f("logCreateTokenCard", { temperament: translateFor("temperament" + d.temperament[0].toUpperCase() + d.temperament.slice(1), language), power: `${d.power > 0 ? "+" : ""}${d.power}` });
     case "create_essence_token":
-      if (d.neutral) return `${who} created the counter "${d.label || t("neutralToken")}" (${d.count > 0 ? "+" : ""}${d.count}).`;
-      return `${who} created ${d.count} ${t("temperament" + d.temperament[0].toUpperCase() + d.temperament.slice(1))} essence.`;
-    case "rename_token": return `${who} renamed a neutral counter.`;
-    case "mulligan": return `${who} took a mulligan (drew ${d.count} new card(s)).`;
-    case "add_token": return `${who} added a token.`;
-    case "move_token": return `${who} moved a token.`;
-    case "remove_token": return `${who} removed a token.`;
-    case "add_counter": return `${who} adjusted a counter (${d.delta > 0 ? "+" : ""}${d.delta}).`;
-    case "set_score": return `${who} set score to ${d.score}.`;
-    case "configure_phases": return who + " " + (d.enabled ? "activated" : "deactivated") + " game phases" + (d.enabled && d.advanced ? " (advanced)" : "") + ".";
+      if (d.neutral) return f("logCreateNeutralCounter", { label: d.label || translateFor("neutralToken", language), count: `${d.count > 0 ? "+" : ""}${d.count}` });
+      return f("logCreateEssence", { count: d.count, temperament: translateFor("temperament" + d.temperament[0].toUpperCase() + d.temperament.slice(1), language) });
+    case "rename_token": return f("logRenameToken");
+    case "mulligan": return f("logMulligan", { count: d.count });
+    case "add_token": return f("logAddToken");
+    case "move_token": return f("logMoveToken");
+    case "remove_token": return f("logRemoveToken");
+    case "add_counter": return f("logAdjustCounter", { delta: `${d.delta > 0 ? "+" : ""}${d.delta}` });
+    case "reset_counter": return f("logResetCounter");
+    case "set_score": return f("logSetScore", { score: d.score });
+    case "configure_phases": return f(d.enabled ? "logActivatePhases" : "logDeactivatePhases", { advanced: d.enabled && d.advanced ? translateFor("logAdvancedSuffix", language) : "" });
     case "pass_phase": {
-      const label = phaseLogLabel(d) || d.phaseId || d.phase || "?";
-      if (d.action === "cancelled") return `${who} cancelled their phase pass.`;
-      if (d.action === "advanced") return `${who} advanced the phase to ${label} (turn ${d.turn || 1}).`;
-      return `${who} passed for ${label}.`;
+      const lines = phaseLogLinesFor(d, language);
+      const label = [lines.phase, lines.step].filter(Boolean).join(" · ") || d.phaseId || d.phase || "?";
+      if (d.action === "cancelled") return f("logCancelPass");
+      if (d.action === "advanced") return f("logAdvancePhase", { phase: label, turn: d.turn || 1 });
+      return f("logPassPhase", { phase: label });
     }
-    case "end_session": return `${who} ended the session.`;
-    case "add_stroke": return `${who} drew on the board.`;
-    case "remove_stroke": return `${who} erased a drawing.`;
-    case "remove_strokes_in_rect": return `${who} erased ${d.count} drawing(s).`;
-    case "clear_own_strokes": return `${who} cleared their drawings.`;
-    case "roll_dice": return d.mode === "d6" ? `${who} rolled ${d.results.length}×D6: ${d.results.join(", ")}.` : `${who} flipped ${d.results.length} coin(s): ${d.results.join(", ")}.`;
-    case "reset_board": return `${who} reset the board for a new game.`;
-    case "chat_message": return `${who} (chat): ${d.text}`;
-    default: return `${who} — ${e.type}`;
+    case "end_session": return f("logEndSession");
+    case "create_tournament": return f("logCreateTournament");
+    case "role_joined": return f("logRoleJoined", { role: translateFor(d.role || "participant", language), seat: Number.isInteger(d.seat) ? ` (P${d.seat + 1})` : "" });
+    case "leave_session": return f("logLeftSession");
+    case "player_disconnected": return f("logDisconnected");
+    case "start_tournament": return f("logStartTournament");
+    case "end_tournament": return f("logEndTournament");
+    case "update_tournament_policy": return f("logUpdatePolicy", { banned: d.bannedCount, groups: d.restrictedGroupCount });
+    case "add_stroke": return f("logAddStroke");
+    case "remove_stroke": return f("logRemoveStroke");
+    case "remove_strokes_in_rect": return f("logRemoveStrokes", { count: d.count });
+    case "clear_own_strokes": return f("logClearStrokes");
+    case "roll_dice": return d.mode === "d6" ? f("logRollDice", { count: d.results.length, results: d.results.join(", ") }) : f("logFlipCoin", { count: d.results.length, results: d.results.join(", ") });
+    case "reset_board": return f("logResetBoard");
+    case "chat_message": return f("logChat", { text: d.text });
+    default: return f("logUnknown", { type: e.type });
   }
+}
+
+function wireLogCardNames(container) {
+  container.querySelectorAll("[data-log-card]").forEach((element) => {
+    const cardId = element.dataset.logCard;
+    element.addEventListener("mouseenter", () => showCardPreview(cardId, element));
+    element.addEventListener("mouseleave", hideCardPreview);
+    element.addEventListener("click", () => showInspect(cardId));
+  });
 }
 
 let latestLogEntries = [];
@@ -3726,17 +4109,18 @@ function renderLog(entries) {
         .map(
           (e) => `<div class="log-entry">
       <div class="t">${new Date(e.timestamp * 1000).toLocaleString()}</div>
-      <div class="what">${esc(formatLogEntry(e))}</div>
+      <div class="what">${formatLogEntry(e, { html: true })}</div>
       <div class="detail">${esc(JSON.stringify(e.details || {}))}</div>
     </div>`
         )
         .join("")
     : `<p>${esc(t("logEmpty"))}</p>`;
+  wireLogCardNames(box);
   $("#logPanel").classList.remove("hidden");
 }
 
 function downloadLog(entries) {
-  const lines = entries.map((e) => `[${new Date(e.timestamp * 1000).toLocaleString()}] ${formatLogEntry(e)} ${JSON.stringify(e.details || {})}`);
+  const lines = entries.map((e) => `[${new Date(e.timestamp * 1000).toLocaleString("en-GB")}] ${formatLogEntry(e, { language: "en" })} ${JSON.stringify(e.details || {})}`);
   const blob = new Blob([lines.join("\n")], { type: "text/plain" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
@@ -3816,6 +4200,7 @@ async function boot() {
   await loadStarterDecks();
   renderStarterDecks();
   initJoinScreen();
+  initTournamentControls();
   initImportPanel();
   initGameControls();
   initZoomControls();

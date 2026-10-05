@@ -20,7 +20,7 @@ from websockets.http11 import Response
 from websockets.datastructures import Headers
 from websockets.exceptions import ConnectionClosed
 
-from session import Session, new_id, PRIVATE_ZONES, SHARED_ZONES, ALL_ZONES
+from session import Session, new_id, validate_tournament_deck, PRIVATE_ZONES, SHARED_ZONES, ALL_ZONES
 
 mimetypes.add_type("image/webp", ".webp")
 
@@ -36,9 +36,28 @@ STATIC_CACHE = "public, max-age=86400, stale-while-revalidate=604800"
 STATIC_CACHE_EXTENSIONS = {".avif", ".gif", ".ico", ".jpeg", ".jpg", ".png", ".svg", ".ttf", ".webp", ".woff", ".woff2"}
 
 
+def load_card_data():
+    with open(os.path.join(PUBLIC_DIR, "cards-data.json"), "r", encoding="utf-8") as card_file:
+        return json.load(card_file)
+
+
+CARD_DATA = load_card_data()
+CARD_POINTS = {card["id"]: int(card.get("points") or 0) for card in CARD_DATA}
+CARD_LABELS = {card["id"]: f'{card.get("name") or card["id"]} ({int(card.get("collectionNumber") or 0):03d})' for card in CARD_DATA}
+CARD_ID_BY_NUMBER = {int(card.get("collectionNumber") or 0): card["id"] for card in CARD_DATA}
+DEFAULT_TOURNAMENT_POLICY = {
+    "bannedCardIds": [CARD_ID_BY_NUMBER[number] for number in (82, 128, 86)],
+    "restrictedGroups": [{
+        "id": "restricted-1",
+        "name": "Restricted group 1",
+        "cardIds": [CARD_ID_BY_NUMBER[number] for number in (267, 284, 281)],
+    }],
+}
+
+
 def find_player_ws(session, player_id):
     for ws, info in connections.items():
-        if info["session"] is session and info["playerId"] == player_id and not info["isObserver"]:
+        if info["session"] is session and info["playerId"] == player_id and info.get("role") == "player":
             return ws
     return None
 
@@ -83,20 +102,32 @@ def unstack_dependents(session, removed_item_id):
         if other.get("stackedOn") == removed_item_id:
             other["stackedOn"] = None
 
-sessions: dict[str, Session] = {}  # keyed by a canonical session id (player code)
-connections: dict[object, dict] = {}  # websocket -> {"session": Session, "playerId": str, "isObserver": bool}
+sessions: dict[str, Session] = {}  # keyed by the session's creator/player code
+connections: dict[object, dict] = {}  # websocket -> session, playerId, role, isObserver
 
 
 def find_session_by_code(code):
     code = (code or "").strip().upper()
     if not code:
-        return None, False
+        return None, None, None
     for session in sessions.values():
-        if session.code_player == code:
-            return session, False
-        if session.code_observer == code:
-            return session, True
-    return None, False
+        if session.mode == "casual":
+            if session.code_player == code:
+                return session, "player", None
+            if session.code_observer == code:
+                return session, "observer", None
+        else:
+            role_codes = {
+                session.code_player1: ("player", 0),
+                session.code_player2: ("player", 1),
+                session.code_spectator: ("spectator", None),
+                session.code_judge: ("judge", None),
+                session.code_organizer: ("organizer", None),
+            }
+            if code in role_codes:
+                role, seat = role_codes[code]
+                return session, role, seat
+    return None, None, None
 
 
 # ---------------------------------------------------------------- static files
@@ -151,12 +182,25 @@ def encode_message(payload):
 
 async def broadcast_state(session):
     stale = []
-    observer_count = sum(1 for info in connections.values() if info["session"] is session and info["isObserver"])
+    role_counts = {
+        role: sum(1 for info in connections.values() if info["session"] is session and info.get("role") == role)
+        for role in ("observer", "spectator", "judge", "organizer")
+    }
+    role_participants = {
+        role: [
+            info.get("displayName") or role.title()
+            for info in connections.values()
+            if info["session"] is session and info.get("role") == role
+        ]
+        for role in ("spectator", "judge", "organizer")
+    }
     for ws, info in list(connections.items()):
         if info["session"] is not session:
             continue
-        payload = session.serialize_for(info["playerId"], info["isObserver"])
-        payload["observerCount"] = observer_count
+        payload = session.serialize_for(info["playerId"], info.get("role", "player"))
+        payload["observerCount"] = sum(role_counts.values())
+        payload["roleCounts"] = role_counts
+        payload["roleParticipants"] = role_participants if info.get("role") in {"organizer", "judge"} else {}
         try:
             await ws.send(encode_message(payload))
         except ConnectionClosed:
@@ -215,17 +259,43 @@ def extract_deck_card_rarities(deck_json, card_ids):
 async def handle_message(ws, info, data):
     session = info["session"]
     actor_id = info["playerId"]
-    is_observer = info["isObserver"]
+    role = info.get("role", "observer" if info.get("isObserver") else "player")
+    is_observer = role != "player"
     msg_type = data.get("type")
+
+    if session.mode == "tournament" and role == "player":
+        lobby_messages = {"import_deck", "set_activity", "chat_message", "leave_session", "request_log"}
+        ended_messages = {"chat_message", "leave_session", "request_log"}
+        if session.status == "lobby" and msg_type not in lobby_messages:
+            return await send_error(ws, "The tournament match has not started yet.")
+        if session.status == "ended" and msg_type not in ended_messages:
+            return await send_error(ws, "The tournament match has ended.")
+        search_followup_actions = {
+            "draw", "draw_to_limit", "mulligan", "pass_phase", "move_card", "place_card",
+            "copy_card", "reorder", "reveal", "scry", "request_hand_action", "respond_hand_action",
+        }
+        if session.status == "active" and msg_type in search_followup_actions:
+            for alert in session.escalate_pending_searches(actor_id, msg_type):
+                session.add_log(actor_id, "search_without_shuffle", {
+                    "ownerId": alert["ownerId"], "zone": alert["zone"], "followupAction": msg_type,
+                })
 
     if msg_type == "import_deck":
         if is_observer:
             return await send_error(ws, "Observers cannot import a deck.")
+        if session.mode == "tournament" and session.status != "lobby":
+            return await send_error(ws, "Tournament decks are locked once the match starts.")
         player = session.players.get(actor_id)
         if player is None:
             return await send_error(ws, "Unknown player.")
         deck_json = data.get("deck") or {}
         card_ids, sideboard_ids = extract_deck_card_pools(deck_json)
+        if session.mode == "tournament":
+            validation_error = validate_tournament_deck(
+                card_ids, sideboard_ids, CARD_POINTS, session.tournament_policy, CARD_LABELS
+            )
+            if validation_error:
+                return await send_error(ws, validation_error)
         card_rarities = extract_deck_card_rarities(deck_json, card_ids + sideboard_ids)
         reset_own_board = bool(data.get("resetOwnBoard"))
         random.shuffle(card_ids)
@@ -363,6 +433,9 @@ async def handle_message(ws, info, data):
         if msg_type == "shuffle":
             random.shuffle(player["zones"][zone])
             session.add_log(actor_id, "shuffle", {"ownerId": owner_id, "zone": zone})
+            resolved_search = session.resolve_search(actor_id, owner_id, zone)
+            if resolved_search:
+                session.add_log(actor_id, "search_followed_by_shuffle", {"ownerId": owner_id, "zone": zone})
         else:  # reorder
             order = data.get("order") or []
             current = player["zones"][zone]
@@ -851,8 +924,8 @@ async def handle_message(ws, info, data):
         if not text:
             return await send_error(ws, "Empty message.")
         actor = session.players.get(actor_id)
-        by_name = actor["name"] if actor else ("Observer" if is_observer else actor_id)
-        session.add_log(actor_id, "chat_message", {"text": text})
+        by_name = actor["name"] if actor else role.title()
+        session.add_log(actor_id, "chat_message", {"text": text}, actor_name=by_name)
         session.touch()
         payload = {"type": "chat_message", "byId": actor_id, "byName": by_name, "text": text, "timestamp": time.time()}
         for other_ws, other_info in list(connections.items()):
@@ -936,6 +1009,8 @@ async def handle_message(ws, info, data):
         # last imported deck definition. This prevents cards from an older deck
         # that are still on the field or in a pile from leaking into the active one.
         player = session.players.get(actor_id)
+        if session.mode == "tournament":
+            return await send_error(ws, "Tournament matches cannot be reset by a player.")
         if is_observer or player is None or player.get("seat") != 0:
             return await send_error(ws, "Only the session's first player can reset the board.")
         active_decks = {}
@@ -963,6 +1038,8 @@ async def handle_message(ws, info, data):
 
     elif msg_type == "end_session":
         player = session.players.get(actor_id)
+        if session.mode == "tournament":
+            return await send_error(ws, "Only the tournament organizer can end this match.")
         if is_observer or player is None or player.get("seat") != 0:
             return await send_error(ws, "Only the session's first player can end it for everyone.")
         session.ended = True
@@ -977,13 +1054,123 @@ async def handle_message(ws, info, data):
         if is_observer:
             return
         if actor_id in session.players:
-            del session.players[actor_id]
-            session.add_log(actor_id, "leave_session", {})
+            leaving_player = session.players[actor_id]
+            seat = leaving_player.get("seat")
+            leaving_name = leaving_player.get("name")
+            if session.mode == "tournament" and session.status != "lobby":
+                session.players[actor_id]["connected"] = False
+            else:
+                del session.players[actor_id]
+                if session.mode == "tournament":
+                    session.seat_claims[seat] = None
+            info["left"] = True
+            session.add_log(actor_id, "leave_session", {}, actor_name=leaving_name)
             session.touch()
             await broadcast_state(session)
 
+    elif msg_type == "update_tournament_policy":
+        if session.mode != "tournament" or role != "organizer":
+            return await send_error(ws, "Only the tournament organizer can edit deck restrictions.")
+        if session.status != "lobby":
+            return await send_error(ws, "Deck restrictions lock when the match starts.")
+        raw_policy = data.get("policy") or {}
+        if not isinstance(raw_policy, dict):
+            return await send_error(ws, "Deck restrictions must be an object.")
+        raw_banned_ids = raw_policy.get("bannedCardIds") or []
+        raw_restricted_groups = raw_policy.get("restrictedGroups") or []
+        if not isinstance(raw_banned_ids, list) or not isinstance(raw_restricted_groups, list):
+            return await send_error(ws, "Deck restriction lists are invalid.")
+        if any(not isinstance(card_id, str) for card_id in raw_banned_ids):
+            return await send_error(ws, "The banned list contains an invalid card.")
+        banned_ids = list(dict.fromkeys(raw_banned_ids))[:100]
+        if any(card_id not in CARD_POINTS for card_id in banned_ids):
+            return await send_error(ws, "The banned list contains an unknown card.")
+        restricted_groups = []
+        for index, raw_group in enumerate(raw_restricted_groups[:20]):
+            if not isinstance(raw_group, dict) or not isinstance(raw_group.get("cardIds") or [], list):
+                return await send_error(ws, "A restricted group is invalid.")
+            raw_card_ids = raw_group.get("cardIds") or []
+            if any(not isinstance(card_id, str) for card_id in raw_card_ids):
+                return await send_error(ws, "A restricted group contains an invalid card.")
+            card_ids = list(dict.fromkeys(raw_card_ids))[:100]
+            if any(card_id not in CARD_POINTS for card_id in card_ids):
+                return await send_error(ws, "A restricted group contains an unknown card.")
+            if set(card_ids) & set(banned_ids):
+                return await send_error(ws, "A banned card cannot also belong to a restricted group.")
+            restricted_groups.append({
+                "id": str(raw_group.get("id") or f"restricted-{index + 1}")[:40],
+                "name": str(raw_group.get("name") or f"Restricted group {index + 1}")[:60],
+                "cardIds": card_ids,
+            })
+        session.tournament_policy = {"bannedCardIds": banned_ids, "restrictedGroups": restricted_groups}
+        session.add_log(actor_id, "update_tournament_policy", {
+            "bannedCount": len(banned_ids), "restrictedGroupCount": len(restricted_groups),
+        }, actor_name="Organizer")
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "start_tournament":
+        if session.mode != "tournament" or role != "organizer":
+            return await send_error(ws, "Only the tournament organizer can start this match.")
+        seats = session.tournament_summary()["seats"]
+        if not all(seat["connected"] for seat in seats):
+            return await send_error(ws, "Both players must be connected before the match starts.")
+        if not all(seat["deckReady"] for seat in seats):
+            return await send_error(ws, "Both players must import a valid 30-card deck before the match starts.")
+        session.status = "active"
+        session.add_log(actor_id, "start_tournament", {}, actor_name="Organizer")
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "search_zone":
+        if is_observer:
+            return await send_error(ws, "Observers cannot search a pile.")
+        owner_id = data.get("ownerId") or actor_id
+        zone = data.get("zone")
+        if zone not in ALL_ZONES or owner_id not in session.players:
+            return await send_error(ws, "Unknown pile.")
+        if not session.can_view_zone(actor_id, role, owner_id, zone):
+            return await send_error(ws, "You cannot search this pile.")
+        count = len(session.players[owner_id]["zones"][zone])
+        requires_shuffle = zone == "deck"
+        session.add_log(actor_id, "search_zone", {
+            "ownerId": owner_id, "zone": zone, "count": count, "requiresShuffle": requires_shuffle,
+        })
+        if session.mode == "tournament" and requires_shuffle:
+            previous = session.pending_searches.get((actor_id, owner_id, zone))
+            if previous:
+                previous["status"] = "unshuffled"
+                previous["severity"] = "critical"
+                session.add_log(actor_id, "search_without_shuffle", {
+                    "ownerId": owner_id, "zone": zone, "followupAction": "search_zone",
+                })
+            session.record_search(actor_id, owner_id, zone)
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "end_tournament":
+        if session.mode != "tournament" or role != "organizer":
+            return await send_error(ws, "Only the tournament organizer can end this match.")
+        if session.status == "ended":
+            return
+        for alert in list(session.pending_searches.values()):
+            if alert.get("status") == "pending":
+                alert["status"] = "unshuffled"
+                alert["severity"] = "critical"
+                session.add_log(alert["actorId"], "search_without_shuffle", {
+                    "ownerId": alert["ownerId"], "zone": alert["zone"], "followupAction": "end_tournament",
+                })
+        session.status = "ended"
+        session.ended = True
+        session.add_log(actor_id, "end_tournament", {}, actor_name="Organizer")
+        session.touch()
+        await broadcast_state(session)
+
     elif msg_type == "request_log":
-        await send_to(ws, session.serialize_log())
+        if session.mode == "tournament" and role not in {"organizer", "judge"} and session.status != "ended":
+            return await send_error(ws, "The full tournament log is restricted to organizers and judges during the match.")
+        log_role = "judge" if session.mode == "tournament" and session.status == "ended" and role == "player" else role
+        await send_to(ws, session.serialize_log(log_role))
 
     else:
         await send_error(ws, f"Unknown message type: {msg_type}")
@@ -998,34 +1185,66 @@ async def handle_join(ws, data):
     if not client_id:
         return await send_error(ws, "Missing clientId.")
 
-    if data.get("createNew"):
+    if data.get("createTournament"):
+        session = Session(
+            mode="tournament",
+            tournament_policy=copy.deepcopy(DEFAULT_TOURNAMENT_POLICY),
+            card_points=CARD_POINTS,
+            card_labels=CARD_LABELS,
+        )
+        sessions[session.code_organizer] = session
+        role = "organizer"
+        seat = None
+        session.add_log(client_id, "create_tournament", {}, actor_name=name)
+        log.info("Tournament created: organizer=%s", session.code_organizer)
+    elif data.get("createNew"):
         session = Session()
         sessions[session.code_player] = session
-        is_observer = False
+        role = "player"
+        seat = None
         log.info("Session created: player=%s observer=%s", session.code_player, session.code_observer)
     else:
-        session, is_observer = find_session_by_code(code)
+        session, role, seat = find_session_by_code(code)
         if session is None:
             return await send_error(ws, "No session found for that code.", code="session_not_found")
 
+    is_observer = role != "player"
     if is_observer:
         player_id = client_id
     else:
-        if client_id not in session.players and len(session.players) >= 2:
+        if session.mode == "tournament":
+            claimed_by = session.seat_claims.get(seat)
+            if claimed_by and claimed_by != client_id:
+                return await send_error(ws, "This tournament seat has already been claimed.")
+            if client_id in session.players and session.players[client_id].get("seat") != seat:
+                return await send_error(ws, "This browser is already assigned to the other tournament seat.")
+            session.seat_claims[seat] = client_id
+        elif client_id not in session.players and len(session.players) >= 2:
             return await send_error(ws, "This session already has 2 players.")
-        player = session.get_or_create_player(client_id, name)
+        player = session.get_or_create_player(client_id, name, seat=seat)
         player["connected"] = True
         player_id = client_id
 
-    connections[ws] = {"session": session, "playerId": player_id, "isObserver": is_observer}
+    connections[ws] = {
+        "session": session,
+        "playerId": player_id,
+        "displayName": name,
+        "role": role,
+        "isObserver": is_observer,
+    }
+    session.add_log(player_id, "role_joined", {"role": role, "seat": seat}, actor_name=name)
     session.touch()
 
     await send_to(ws, {
         "type": "joined",
         "playerId": player_id,
         "isObserver": is_observer,
+        "role": role,
+        "mode": session.mode,
         "codePlayer": session.code_player if not is_observer else None,
         "codeObserver": session.code_observer,
+        "codeOrganizer": session.code_organizer if role == "organizer" else None,
+        "tournamentCodes": session.tournament_codes() if role == "organizer" else None,
     })
     await broadcast_state(session)
 
@@ -1054,11 +1273,13 @@ async def handler(ws):
         pass
     finally:
         info = connections.pop(ws, None)
-        if info and not info["isObserver"]:
-            player = info["session"].players.get(info["playerId"])
-            if player:
-                player["connected"] = False
-                await broadcast_state(info["session"])
+        if info:
+            if info.get("role") == "player" and not info.get("left"):
+                player = info["session"].players.get(info["playerId"])
+                if player:
+                    player["connected"] = False
+                    info["session"].add_log(info["playerId"], "player_disconnected", {"seat": player.get("seat")})
+            await broadcast_state(info["session"])
 
 
 async def main():

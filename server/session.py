@@ -35,6 +35,8 @@ SESSION_TTL_SECONDS = 6 * 60 * 60  # expire an inactive session after 6h
 # The only fix is a value per (viewer, owner, zone) triple, which needs no
 # server involvement since it depends on nothing session-specific.
 NUM_SEATS = 2
+READ_ONLY_ROLES = {"observer", "spectator", "judge", "organizer"}
+PRIVILEGED_VIEW_ROLES = {"observer", "judge"}
 
 
 def gen_code(length=6):
@@ -46,8 +48,41 @@ def new_id():
     return uuid.uuid4().hex[:12]
 
 
-def make_player(player_id, name, cluster_index=0):
-    seat = cluster_index % NUM_SEATS
+def validate_tournament_deck(card_ids, sideboard_ids, card_points, policy=None, card_labels=None):
+    policy = policy or {}
+    card_labels = card_labels or {}
+    label = lambda card_id: card_labels.get(card_id, card_id)
+    if len(card_ids) != 30 or len(set(card_ids)) != 30:
+        return "A tournament deck must contain exactly 30 unique cards."
+    if len(sideboard_ids) > 6 or len(set(sideboard_ids)) != len(sideboard_ids):
+        return "A tournament sideboard may contain at most 6 unique cards."
+    if set(card_ids) & set(sideboard_ids):
+        return "A card cannot be in both the tournament deck and sideboard."
+    if any(card_id not in card_points for card_id in card_ids + sideboard_ids):
+        return "The tournament deck contains an unknown card."
+    if sum(card_points[card_id] for card_id in card_ids) > 500:
+        return "A tournament deck cannot exceed 500 points."
+    combined = set(card_ids + sideboard_ids)
+    banned = [card_id for card_id in policy.get("bannedCardIds", []) if card_id in combined]
+    if banned:
+        return "Banned card(s): " + ", ".join(label(card_id) for card_id in banned) + "."
+    for group in policy.get("restrictedGroups", []):
+        present = [card_id for card_id in group.get("cardIds", []) if card_id in combined]
+        if len(present) > 1:
+            group_name = group.get("name") or "Restricted group"
+            return f'{group_name}: only one of these cards is allowed across deck and sideboard ({", ".join(label(card_id) for card_id in present)}).'
+    return None
+
+
+def normalize_role(role):
+    """Accept the old observer boolean while newer callers use named roles."""
+    if isinstance(role, bool):
+        return "observer" if role else "player"
+    return role or "player"
+
+
+def make_player(player_id, name, cluster_index=0, seat=None):
+    seat = cluster_index % NUM_SEATS if seat is None else int(seat)
     return {
         "id": player_id,
         "name": name,
@@ -70,17 +105,31 @@ def make_player(player_id, name, cluster_index=0):
 
 
 class Session:
-    def __init__(self):
-        self.code_player = gen_code()
-        self.code_observer = gen_code()
+    def __init__(self, mode="casual", tournament_policy=None, card_points=None, card_labels=None):
+        self.mode = "tournament" if mode == "tournament" else "casual"
+        self.status = "lobby" if self.mode == "tournament" else "active"
+        self.code_player = gen_code() if self.mode == "casual" else None
+        self.code_observer = gen_code() if self.mode == "casual" else None
+        self.code_player1 = gen_code(8) if self.mode == "tournament" else None
+        self.code_player2 = gen_code(8) if self.mode == "tournament" else None
+        self.code_spectator = gen_code(8) if self.mode == "tournament" else None
+        self.code_judge = gen_code(8) if self.mode == "tournament" else None
+        self.code_organizer = gen_code(10) if self.mode == "tournament" else None
+        self.seat_claims = {0: None, 1: None}
+        self.tournament_policy = tournament_policy or {"bannedCardIds": [], "restrictedGroups": []}
+        self.card_points = card_points
+        self.card_labels = card_labels or {}
         self.players = {}  # player_id -> player dict, in join order
         self.battlefield = []  # list of dict: id, ownerId, cardId, x, y, faceUp, rotation, counters
         self.tokens = []  # list of dict: id, ownerId, x, y, label, color, counters
         self.strokes = []  # freehand annotation strokes: id, ownerId, color, points:[[x,y],...]
-        self.log = []  # list of dict: timestamp, actorId, actorName, type, details
+        self.log = []  # chronological, sequence-numbered audit trail
+        self.log_sequence = 0
         self.pending_hand_requests = {}  # requestId -> {requesterId, targetId, index, action}
         self.phase_tracker = {"enabled": False, "advanced": False, "index": 0, "turn": 1}
         self.phase_passes = set()
+        self.pending_searches = {}
+        self.audit_alerts = []
         self.created_at = time.time()
         self.last_activity = time.time()
         self.ended = False
@@ -92,27 +141,124 @@ class Session:
     def is_expired(self):
         return (time.time() - self.last_activity) > SESSION_TTL_SECONDS
 
-    def add_log(self, actor_id, action_type, details=None):
+    def add_log(self, actor_id, action_type, details=None, actor_name=None):
         actor = self.players.get(actor_id)
+        self.log_sequence += 1
         self.log.append(
             {
+                "sequence": self.log_sequence,
                 "timestamp": time.time(),
                 "actorId": actor_id,
-                "actorName": actor["name"] if actor else None,
+                "actorName": actor["name"] if actor else actor_name,
                 "type": action_type,
                 "details": details or {},
+                "turn": self.phase_tracker["turn"],
+                "phase": self.current_phase_id(),
             }
         )
 
     # -- players ------------------------------------------------------
-    def get_or_create_player(self, player_id, name):
+    def get_or_create_player(self, player_id, name, seat=None):
         player = self.players.get(player_id)
         if player is None:
-            player = make_player(player_id, name, cluster_index=len(self.players))
+            player = make_player(player_id, name, cluster_index=len(self.players), seat=seat)
             self.players[player_id] = player
         elif name:
             player["name"] = name
         return player
+
+    def player_for_seat(self, seat):
+        return next((player for player in self.players.values() if player.get("seat") == seat), None)
+
+    def tournament_codes(self):
+        if self.mode != "tournament":
+            return {}
+        return {
+            "player1": self.code_player1,
+            "player2": self.code_player2,
+            "spectator": self.code_spectator,
+            "judge": self.code_judge,
+        }
+
+    def tournament_summary(self, role=None):
+        seats = []
+        for seat in range(NUM_SEATS):
+            player = self.player_for_seat(seat)
+            deck_definition = player.get("deckDefinition") if player else None
+            if isinstance(deck_definition, dict):
+                deck_count = sum(
+                    len(group.get("cardIds") or [])
+                    for group in (deck_definition.get("groups") or [])
+                    if str(group.get("kind") or "").lower() not in {"sideboard", "maybeboard"}
+                )
+            else:
+                deck_count = 0
+            deck_error = None
+            if player and isinstance(deck_definition, dict) and self.card_points is not None:
+                main_cards = []
+                sideboard_cards = []
+                for group in deck_definition.get("groups") or []:
+                    kind = str(group.get("kind") or "").lower()
+                    if kind == "maybeboard":
+                        continue
+                    target = sideboard_cards if kind == "sideboard" else main_cards
+                    target.extend(group.get("cardIds") or [])
+                deck_error = validate_tournament_deck(
+                    main_cards, sideboard_cards, self.card_points,
+                    self.tournament_policy, self.card_labels,
+                )
+            seats.append(
+                {
+                    "seat": seat,
+                    "name": player["name"] if player else None,
+                    "connected": bool(player and player["connected"]),
+                    "deckCount": deck_count,
+                    "deckReady": deck_count == 30 and deck_error is None,
+                    "deckError": deck_error,
+                }
+            )
+        summary = {
+            "enabled": True,
+            "status": self.status,
+            "seats": seats,
+            "policy": self.tournament_policy,
+            "auditAlerts": self.audit_alerts[-20:] if role is None or normalize_role(role) in {"organizer", "judge"} else [],
+        }
+        return summary
+
+    def record_search(self, actor_id, owner_id, zone):
+        key = (actor_id, owner_id, zone)
+        alert = {
+            "id": new_id(),
+            "actorId": actor_id,
+            "actorName": (self.players.get(actor_id) or {}).get("name") or actor_id,
+            "ownerId": owner_id,
+            "zone": zone,
+            "timestamp": time.time(),
+            "status": "pending",
+            "severity": "warning",
+        }
+        self.pending_searches[key] = alert
+        self.audit_alerts.append(alert)
+        return alert
+
+    def resolve_search(self, actor_id, owner_id, zone):
+        alert = self.pending_searches.pop((actor_id, owner_id, zone), None)
+        if alert:
+            alert["status"] = "resolved"
+            alert["resolvedAt"] = time.time()
+        return alert
+
+    def escalate_pending_searches(self, actor_id, action_type):
+        escalated = []
+        for (search_actor, _owner_id, _zone), alert in self.pending_searches.items():
+            if search_actor != actor_id or alert.get("status") != "pending":
+                continue
+            alert["status"] = "unshuffled"
+            alert["severity"] = "critical"
+            alert["followupAction"] = action_type
+            escalated.append(alert)
+        return escalated
 
     def other_player_ids(self, player_id):
         return [pid for pid in self.players if pid != player_id]
@@ -281,16 +427,18 @@ class Session:
         }
 
     # -- zone permissioning --------------------------------------------
-    def can_view_zone(self, viewer_id, is_observer, owner_id, zone):
+    def can_view_zone(self, viewer_id, role, owner_id, zone):
+        role = normalize_role(role)
         if zone in SHARED_ZONES:
             return True
         # private zone: the owner, or a trusted read-only observer, but never another player
-        if is_observer:
+        if role in PRIVILEGED_VIEW_ROLES:
             return True
         return viewer_id == owner_id
 
-    def can_act_on_zone(self, actor_id, is_observer, owner_id, zone):
-        if is_observer:
+    def can_act_on_zone(self, actor_id, role, owner_id, zone):
+        role = normalize_role(role)
+        if role in READ_ONLY_ROLES:
             return False
         if zone in SHARED_ZONES:
             return True
@@ -347,12 +495,14 @@ class Session:
         return None, item
 
     # -- serialization (permission-filtered per viewer) ------------------
-    def serialize_for(self, viewer_id, is_observer):
+    def serialize_for(self, viewer_id, role):
+        role = normalize_role(role)
+        can_view_hidden = role in PRIVILEGED_VIEW_ROLES
         players_view = {}
         for pid, player in self.players.items():
             zones_view = {}
             for zone, cards in player["zones"].items():
-                if self.can_view_zone(viewer_id, is_observer, pid, zone):
+                if self.can_view_zone(viewer_id, role, pid, zone):
                     zones_view[zone] = {
                         "cards": list(cards),
                         "owners": {card_id: self.card_owner_in_zone(pid, zone, card_id) for card_id in cards},
@@ -366,16 +516,16 @@ class Session:
                 "score": player["score"],
                 "seat": player["seat"],
                 "zones": zones_view,
-                "cardRarities": dict(player.get("cardRarities", {})) if is_observer or pid == viewer_id else {},
-                "deckDefinition": player.get("deckDefinition") if is_observer or pid == viewer_id else None,
-                "sideboard": list(player.get("sideboard", [])) if is_observer or pid == viewer_id else {"count": len(player.get("sideboard", []))},
+                "cardRarities": dict(player.get("cardRarities", {})) if can_view_hidden or pid == viewer_id else {},
+                "deckDefinition": player.get("deckDefinition") if can_view_hidden or pid == viewer_id else None,
+                "sideboard": list(player.get("sideboard", [])) if can_view_hidden or pid == viewer_id else {"count": len(player.get("sideboard", []))},
                 "activity": player.get("activity"),
             }
 
         battlefield_view = []
         for item in self.battlefield:
             # the owner sees their own hidden cards; a trusted observer sees everything too
-            can_peek = is_observer or item["ownerId"] == viewer_id
+            can_peek = can_view_hidden or item["ownerId"] == viewer_id
             if item["faceUp"] or can_peek:
                 card_id = item["cardId"]
             else:
@@ -413,13 +563,25 @@ class Session:
             "tokens": list(self.tokens),
             "strokes": list(self.strokes),
             "ended": self.ended,
+            "mode": self.mode,
+            "tournament": self.tournament_summary(role) if self.mode == "tournament" else None,
             "phaseTracker": self.serialize_phase_tracker(),
             # a small tail of the action log, piggybacked on every state sync so
             # the opponent-row mini activity feed updates live without a
             # separate poll — the full log (request_log) is still the
             # authoritative, complete history used for the debug/download panel
-            "recentLog": self.log[-30:],
+            "recentLog": [self.log_entry_for_role(entry, role) for entry in self.log[-30:]],
         }
 
-    def serialize_log(self):
-        return {"type": "log", "entries": self.log}
+    def log_entry_for_role(self, entry, role):
+        if self.mode != "tournament" or normalize_role(role) not in {"player", "spectator"}:
+            return entry
+        redacted = dict(entry)
+        details = dict(entry.get("details") or {})
+        for key in ("cardId", "cardIds", "cards", "deck", "deckDefinition", "sideboard"):
+            details.pop(key, None)
+        redacted["details"] = details
+        return redacted
+
+    def serialize_log(self, role="observer"):
+        return {"type": "log", "entries": [self.log_entry_for_role(entry, role) for entry in self.log]}

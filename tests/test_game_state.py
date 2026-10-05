@@ -6,7 +6,7 @@ SERVER_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "serv
 if SERVER_DIR not in sys.path:
     sys.path.insert(0, SERVER_DIR)
 
-from session import Session
+from session import Session, validate_tournament_deck
 
 
 class CardOwnershipTests(unittest.TestCase):
@@ -215,6 +215,113 @@ class PhaseTrackerTests(unittest.TestCase):
         self.assertEqual(self.session.current_phase_group(), "confrontation")
         self.assertEqual(self.session.phase_tracker["index"], 3)
         self.assertEqual(len(self.session.phase_sequence()), 14)
+
+
+class TournamentModeTests(unittest.TestCase):
+    def setUp(self):
+        self.session = Session(mode="tournament")
+        cards = [f"card-{index}" for index in range(30)]
+        self.p1 = self.session.get_or_create_player("p1", "P1", seat=0)
+        self.p2 = self.session.get_or_create_player("p2", "P2", seat=1)
+        self.p1["connected"] = True
+        self.p2["connected"] = True
+        self.p1["zones"]["deck"] = list(cards)
+        self.p1["zones"]["hand"] = ["secret-hand"]
+        self.p1["zoneOwners"]["deck"] = {card_id: "p1" for card_id in cards}
+        self.p1["zoneOwners"]["hand"] = {"secret-hand": "p1"}
+        self.p1["sideboard"] = ["secret-sideboard"]
+        self.p1["cardRarities"] = {"secret-hand": "void"}
+        self.p1["deckDefinition"] = {"groups": [{"kind": "deck", "cardIds": cards}]}
+        self.session.battlefield = [{
+            "id": "hidden-field", "ownerId": "p1", "cardId": "secret-field",
+            "x": 10, "y": 20, "faceUp": False, "rotation": 0, "counters": {},
+        }]
+
+    def test_tournament_has_distinct_role_codes_and_starts_in_lobby(self):
+        codes = self.session.tournament_codes()
+        self.assertEqual(set(codes), {"player1", "player2", "spectator", "judge"})
+        self.assertEqual(len(set(codes.values())), 4)
+        self.assertNotIn(self.session.code_organizer, codes.values())
+        self.assertEqual(self.session.status, "lobby")
+
+    def test_tournament_summary_keeps_fixed_seats_and_deck_readiness(self):
+        summary = self.session.tournament_summary()
+        self.assertEqual([seat["name"] for seat in summary["seats"]], ["P1", "P2"])
+        self.assertTrue(summary["seats"][0]["deckReady"])
+        self.assertFalse(summary["seats"][1]["deckReady"])
+
+    def test_spectator_never_receives_hidden_cards_or_deck_metadata(self):
+        view = self.session.serialize_for("spectator-client", "spectator")
+        p1 = view["players"]["p1"]
+        self.assertEqual(p1["zones"]["hand"], {"count": 1})
+        self.assertEqual(p1["zones"]["deck"], {"count": 30})
+        self.assertEqual(p1["sideboard"], {"count": 1})
+        self.assertEqual(p1["cardRarities"], {})
+        self.assertIsNone(p1["deckDefinition"])
+        self.assertIsNone(view["battlefield"][0]["cardId"])
+        self.assertFalse(self.session.can_act_on_zone("spectator-client", "spectator", "p1", "graveyard"))
+
+    def test_judge_sees_everything_but_cannot_act(self):
+        view = self.session.serialize_for("judge-client", "judge")
+        p1 = view["players"]["p1"]
+        self.assertEqual(p1["zones"]["hand"]["cards"], ["secret-hand"])
+        self.assertEqual(p1["sideboard"], ["secret-sideboard"])
+        self.assertEqual(view["battlefield"][0]["cardId"], "secret-field")
+        self.assertFalse(self.session.can_act_on_zone("judge-client", "judge", "p1", "graveyard"))
+
+    def test_spectator_log_removes_card_identity_but_judge_log_keeps_it(self):
+        self.session.add_log("p1", "move_card", {"cardId": "secret-hand", "fromZone": "hand", "toZone": "deck"})
+        spectator_entry = self.session.serialize_log("spectator")["entries"][0]
+        player_entry = self.session.serialize_for("p2", "player")["recentLog"][0]
+        judge_entry = self.session.serialize_log("judge")["entries"][0]
+        self.assertNotIn("cardId", spectator_entry["details"])
+        self.assertNotIn("cardId", player_entry["details"])
+        self.assertEqual(judge_entry["details"]["cardId"], "secret-hand")
+        self.assertEqual(judge_entry["sequence"], 1)
+        self.assertEqual(judge_entry["turn"], 1)
+
+    def test_tournament_deck_validation_is_server_authoritative(self):
+        card_ids = [f"card-{index}" for index in range(30)]
+        points = {card_id: 10 for card_id in card_ids}
+        points.update({"side-card": 1, "banned-card": 1, "restricted-a": 1, "restricted-b": 1})
+        policy = {
+            "bannedCardIds": ["banned-card"],
+            "restrictedGroups": [{
+                "id": "restricted-1", "name": "Opening tutors",
+                "cardIds": ["restricted-a", "restricted-b"],
+            }],
+        }
+        labels = {"banned-card": "Freenya (082)", "restricted-a": "Ponder (267)", "restricted-b": "Martyrize (284)"}
+        self.assertIsNone(validate_tournament_deck(card_ids, ["side-card"], points))
+        self.assertIn("30 unique", validate_tournament_deck(card_ids[:-1], [], points))
+        duplicated = card_ids[:-1] + [card_ids[0]]
+        self.assertIn("30 unique", validate_tournament_deck(duplicated, [], points))
+        expensive = dict(points)
+        expensive.update({card_id: 20 for card_id in card_ids})
+        self.assertIn("500 points", validate_tournament_deck(card_ids, [], expensive))
+        self.assertIn("both", validate_tournament_deck(card_ids, [card_ids[0]], points))
+        self.assertIn("Freenya (082)", validate_tournament_deck(card_ids, ["banned-card"], points, policy, labels))
+        self.assertIn("Opening tutors", validate_tournament_deck(card_ids, ["restricted-a", "restricted-b"], points, policy, labels))
+        self.assertIsNone(validate_tournament_deck(card_ids, ["restricted-a"], points, policy, labels))
+
+    def test_tournament_search_alert_tracks_shuffle_and_is_private_to_staff(self):
+        alert = self.session.record_search("p1", "p1", "deck")
+        self.assertEqual(alert["status"], "pending")
+        self.assertEqual(self.session.tournament_summary("judge")["auditAlerts"][0]["severity"], "warning")
+        self.assertEqual(self.session.tournament_summary("organizer")["auditAlerts"][0]["status"], "pending")
+        self.assertEqual(self.session.tournament_summary("player")["auditAlerts"], [])
+        self.assertEqual(self.session.tournament_summary("spectator")["auditAlerts"], [])
+        resolved = self.session.resolve_search("p1", "p1", "deck")
+        self.assertEqual(resolved["status"], "resolved")
+        self.assertEqual(self.session.pending_searches, {})
+
+    def test_tournament_search_becomes_critical_when_play_continues(self):
+        self.session.record_search("p1", "p1", "deck")
+        escalated = self.session.escalate_pending_searches("p1", "draw")
+        self.assertEqual(len(escalated), 1)
+        self.assertEqual(escalated[0]["status"], "unshuffled")
+        self.assertEqual(escalated[0]["severity"], "critical")
+        self.assertEqual(escalated[0]["followupAction"], "draw")
 
 
 if __name__ == "__main__":

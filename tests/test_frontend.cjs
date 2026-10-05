@@ -292,6 +292,79 @@ function startServer() {
     const glowing = await snap();
     assert.notDeepEqual(sample(glowing, .35, .5), sample(behind, .35, .5), "The exterior halo must remain visible through the cutout");
 
+    const tournament = await page.evaluate(() => {
+      const launcherInitiallyHidden = document.querySelector("#createTournamentBtn").classList.contains("hidden");
+      document.querySelector("#tournamentToggleBtn").click();
+      const launcherExpanded = !document.querySelector("#createTournamentBtn").classList.contains("hidden")
+        && document.querySelector("#tournamentToggleBtn").getAttribute("aria-expanded") === "true";
+      connectionRole = "organizer";
+      isObserver = true;
+      tournamentCodes = { player1: "PLAYER01", player2: "PLAYER02", spectator: "WATCH001", judge: "JUDGE001" };
+      const catalog = [...cardsById.values()];
+      const byNumber = (number) => catalog.find((card) => Number(card.collectionNumber) === number)?.id;
+      const hoverCardId = byNumber(82) || catalog[0].id;
+      latestState.mode = "tournament";
+      latestState.tournament = {
+        enabled: true,
+        status: "lobby",
+        seats: [
+          { seat: 0, name: "P1", connected: true, deckCount: 30, deckReady: true },
+          { seat: 1, name: "P2", connected: true, deckCount: 30, deckReady: true },
+        ],
+        policy: {
+          bannedCardIds: [byNumber(82), byNumber(128), byNumber(86)].filter(Boolean),
+          restrictedGroups: [{ id: "restricted-1", name: "Restricted group 1", cardIds: [byNumber(267), byNumber(284), byNumber(281)].filter(Boolean) }],
+        },
+        auditAlerts: [{ id: "alert-1", actorName: "P1", status: "pending", severity: "warning", zone: "deck" }],
+      };
+      latestState.roleCounts = { spectator: 2, judge: 1, organizer: 1, observer: 0 };
+      latestState.roleParticipants = { spectator: ["Alice", "Bob"], judge: ["Judge Jane"], organizer: ["Organizer"] };
+      latestState.recentLog = [
+        { sequence: 1, timestamp: Date.now() / 1000, actorId: "host", actorName: "Organizer", type: "create_tournament", details: {}, turn: 1, phase: "recovery" },
+        { sequence: 2, timestamp: Date.now() / 1000, actorId: "p1", actorName: "P1", type: "move_card", details: { cardId: hoverCardId, fromZone: "hand", toZone: "graveyard" }, turn: 1, phase: "recovery" },
+      ];
+      showTournamentScreen();
+      document.querySelector('[data-presence-role="spectator"]').click();
+      const organizer = {
+        visible: !document.querySelector("#tournamentScreen").classList.contains("hidden"),
+        codeCards: document.querySelectorAll(".tournament-access-card").length,
+        distinctRoleCards: new Set([...document.querySelectorAll(".tournament-access-card")].map((card) => card.className)).size,
+        seats: document.querySelectorAll(".tournament-seat").length,
+        startEnabled: !document.querySelector("#tournamentStartBtn").disabled,
+        logEntries: document.querySelectorAll(".tournament-log-entry").length,
+        hasCardHover: Boolean(document.querySelector('[data-log-card]')),
+        hasSearchAlert: Boolean(document.querySelector(".tournament-alert-chip.warning")),
+        spectatorNames: document.querySelector("#tournamentPresenceList").textContent,
+        bannedCards: document.querySelectorAll("#bannedCardsList .tournament-rule-chip").length,
+        restrictedGroups: document.querySelectorAll("#restrictedGroups .restricted-group").length,
+        minLogFont: Math.min(...[...document.querySelectorAll(".tournament-log-entry, .tournament-log-entry *")].map((element) => parseFloat(getComputedStyle(element).fontSize))),
+      };
+      const frenchLog = formatLogEntry({ actorId: "p1", actorName: "P1", type: "search_zone", details: { zone: "deck", count: 30, requiresShuffle: true } }, { language: "fr" });
+      const englishExportLog = formatLogEntry({ actorId: "p1", actorName: "P1", type: "search_zone", details: { zone: "deck", count: 30, requiresShuffle: true } }, { language: "en" });
+      latestState.tournament.status = "active";
+      renderTournamentConsole();
+      organizer.viewButtonEnabled = !document.querySelector("#tournamentViewMatchBtn").disabled;
+      connectionRole = "judge";
+      renderTournamentConsole();
+      const judge = {
+        codesHidden: document.querySelector("#tournamentCodeSection").classList.contains("hidden"),
+        viewButtonVisible: !document.querySelector("#tournamentViewMatchBtn").classList.contains("hidden"),
+      };
+      document.querySelector("#tournamentViewMatchBtn").click();
+      judge.matchVisible = !document.querySelector("#gameScreen").classList.contains("hidden");
+      judge.returnVisible = !document.querySelector("#judgeReturnBtn").classList.contains("hidden");
+      document.querySelector("#judgeReturnBtn").click();
+      judge.returnedToConsole = !document.querySelector("#tournamentScreen").classList.contains("hidden");
+      return { organizer, judge, launcherInitiallyHidden, launcherExpanded, frenchLog, englishExportLog };
+    });
+    await page.setViewportSize({ width: 390, height: 844 });
+    const tournamentMobile = await page.evaluate(() => ({
+      noHorizontalOverflow: document.documentElement.scrollWidth <= window.innerWidth,
+      headerVisible: document.querySelector(".tournament-header").getBoundingClientRect().height > 0,
+      seatsVisible: document.querySelectorAll(".tournament-seat").length === 2,
+    }));
+    await page.setViewportSize({ width: 1440, height: 1000 });
+
     assert(result.handLabels.includes(result.copyText));
     assert.equal(result.sent[0].type, "copy_card");
     assert.equal(result.sent[0].cardId, result.cardId);
@@ -361,6 +434,28 @@ function startServer() {
     assert.match(result.silver.afterBackground, /repeating-linear-gradient/);
     assert.doesNotMatch(result.silver.afterBackground, /metal\.png|grain\.webp/);
     assert.equal(result.silver.afterOpacity, "0.62");
+    assert.equal(tournament.launcherInitiallyHidden, true);
+    assert.equal(tournament.launcherExpanded, true);
+    assert.equal(tournament.organizer.visible, true);
+    assert.equal(tournament.organizer.codeCards, 4);
+    assert.equal(tournament.organizer.distinctRoleCards, 4);
+    assert.equal(tournament.organizer.seats, 2);
+    assert.equal(tournament.organizer.startEnabled, true);
+    assert.equal(tournament.organizer.logEntries, 2);
+    assert.equal(tournament.organizer.hasCardHover, true);
+    assert.equal(tournament.organizer.hasSearchAlert, true);
+    assert.match(tournament.organizer.spectatorNames, /Alice/);
+    assert.match(tournament.organizer.spectatorNames, /Bob/);
+    assert.equal(tournament.organizer.bannedCards, 3);
+    assert.equal(tournament.organizer.restrictedGroups, 1);
+    assert.equal(tournament.organizer.viewButtonEnabled, true);
+    assert(tournament.organizer.minLogFont >= 14);
+    assert.match(tournament.frenchLog, /fouillé|mélange/);
+    assert.match(tournament.englishExportLog, /searched|shuffle/);
+    assert.deepEqual(tournament.judge, {
+      codesHidden: true, viewButtonVisible: true, matchVisible: true, returnVisible: true, returnedToConsole: true,
+    });
+    assert.deepEqual(tournamentMobile, { noHorizontalOverflow: true, headerVisible: true, seatsVisible: true });
     assert.deepEqual(errors, []);
     if (process.env.SCREENSHOT_PATH) {
       await page.evaluate(() => {

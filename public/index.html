@@ -5,11 +5,21 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kartomantik Online</title>
   <link rel="icon" type="image/webp" href="grimoire-icon.webp?v=20260905-1">
-  <link rel="stylesheet" href="style.css?v=20260927-zen-rarity-1">
+  <link rel="stylesheet" href="style.css?v=20261005-tournament-2">
 </head>
 <body>
 
   <section id="joinScreen">
+    <div class="tournament-create-launcher" id="tournamentCreateLauncher">
+      <button type="button" class="tournament-launcher-toggle" id="tournamentToggleBtn" aria-expanded="false" aria-controls="tournamentLauncherAction">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5c0 3.2-2.1 5.7-5 6.4C9.1 14.7 7 12.2 7 9V4Z"/><path d="M7 7H4v2c0 2 1.4 3.5 3.5 3.8M17 7h3v2c0 2-1.4 3.5-3.5 3.8M12 15.5V20M8.5 20h7"/></svg>
+        <span id="tournamentToggleLabel"></span>
+      </button>
+      <button class="tournament-create-action hidden" id="createTournamentBtn" aria-hidden="true">
+        <strong id="createTournamentLabel"></strong>
+        <span id="createTournamentHint"></span>
+      </button>
+    </div>
     <div class="join-hero">
       <img src="grimoire.webp?v=20260905-1" alt="" id="joinHero">
       <h1 id="appTitle"></h1>
@@ -44,7 +54,7 @@
         </div>
         <div class="field">
           <label id="codeLabel"></label>
-          <input id="joinCode" maxlength="8" style="text-transform:uppercase">
+          <input id="joinCode" maxlength="10" style="text-transform:uppercase">
         </div>
         <button class="primary" id="joinBtn"></button>
       </div>
@@ -66,6 +76,62 @@
     </nav>
   </section>
 
+  <section id="tournamentScreen" class="hidden">
+    <header class="tournament-header">
+      <div class="tournament-brand"><img src="grimoire-icon.webp?v=20260905-1" alt=""><div><strong id="tournamentTitle"></strong><span id="tournamentRoleLabel"></span></div></div>
+      <div class="tournament-header-actions">
+        <button type="button" id="tournamentLanguageBtn"></button>
+        <button type="button" id="tournamentLeaveBtn"></button>
+      </div>
+    </header>
+    <main class="tournament-shell">
+      <section class="tournament-hero-panel">
+        <div>
+          <h1 id="tournamentMatchHeading"></h1>
+        </div>
+        <div class="tournament-state-badge" id="tournamentStateBadge"></div>
+      </section>
+
+      <section class="tournament-code-section" id="tournamentCodeSection">
+        <div class="section-heading"><div><h2 id="tournamentAccessHeading"></h2></div></div>
+        <div class="tournament-code-grid" id="tournamentCodeGrid"></div>
+      </section>
+
+      <div class="tournament-dashboard-grid">
+        <section class="tournament-panel tournament-players-panel">
+          <div class="section-heading compact"><div><h2 id="tournamentPlayersHeading"></h2></div></div>
+          <div class="tournament-seats" id="tournamentSeats"></div>
+          <div class="tournament-metrics" id="tournamentMetrics"></div>
+          <div class="tournament-presence-list hidden" id="tournamentPresenceList"></div>
+          <div class="tournament-audit-alerts" id="tournamentAuditAlerts"></div>
+          <div class="tournament-actions" id="tournamentActions">
+            <button id="tournamentViewMatchBtn"></button>
+            <button class="primary organizer-only" id="tournamentStartBtn"></button>
+            <button class="danger-button organizer-only" id="tournamentEndBtn"></button>
+          </div>
+          <details class="tournament-rules hidden" id="tournamentRulesPanel">
+            <summary id="tournamentRulesSummary"></summary>
+            <div class="tournament-rules-body">
+              <label id="bannedCardsLabel"></label>
+              <div class="tournament-rule-chips" id="bannedCardsList"></div>
+              <div class="tournament-rule-add"><input id="bannedCardInput" list="tournamentCardOptions"><button id="bannedCardAddBtn"></button></div>
+              <div class="restricted-groups" id="restrictedGroups"></div>
+              <button id="restrictedGroupAddBtn"></button>
+              <button class="primary" id="tournamentRulesSaveBtn"></button>
+              <p class="tournament-rules-status" id="tournamentRulesStatus"></p>
+            </div>
+          </details>
+        </section>
+
+        <section class="tournament-panel tournament-log-panel">
+          <div class="section-heading compact tournament-log-heading"><div><h2 id="tournamentLogHeading"></h2></div><button id="tournamentExportLogBtn"></button></div>
+          <div class="tournament-log" id="tournamentLiveLog"></div>
+        </section>
+      </div>
+    </main>
+  </section>
+  <datalist id="tournamentCardOptions"></datalist>
+
   <section id="gameScreen" class="hidden">
     <header class="game-header">
       <div class="brand" id="brandLabel"><strong class="phase-turn-counter hidden" id="phaseTurn"></strong><img src="grimoire-icon.webp?v=20260905-1" alt="" id="brandLogo"><span id="brandText"></span></div>
@@ -78,6 +144,7 @@
       </div>
       <div class="actions">
         <div class="header-action-group">
+          <button type="button" class="hidden" id="judgeReturnBtn"></button>
           <button type="button" id="gameLanguageBtn"></button>
           <span class="phase-header-control" id="phaseHeaderControl">
             <button type="button" id="phaseTrackerBtn"></button>
@@ -101,6 +168,7 @@
       </div>
     </header>
     <p class="status-line" id="gameStatusLine"></p>
+    <div class="tournament-waiting-banner hidden" id="tournamentWaitingBanner"></div>
     <div class="session-ended-banner hidden" id="sessionEndedBanner"></div>
     <div class="board-field-wrap" id="battlefieldWrap">
       <section class="phase-tracker hidden" id="phaseTracker">
@@ -413,7 +481,12 @@
     </div>
   </div>
 
-  <script src="i18n.js?v=20260910-kko-clean-reset-3"></script>
-  <script src="app.js?v=20260927-zen-rarity-1"></script>
+  <div class="tournament-player-alert hidden" id="tournamentPlayerAlert" role="alert" aria-live="assertive">
+    <strong id="tournamentPlayerAlertTitle"></strong>
+    <p id="tournamentPlayerAlertText"></p>
+  </div>
+
+  <script src="i18n.js?v=20261005-tournament-2"></script>
+  <script src="app.js?v=20261005-tournament-2"></script>
 </body>
 </html>
