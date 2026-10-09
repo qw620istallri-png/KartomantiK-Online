@@ -9844,6 +9844,106 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertEqual(item["counters"]["Block"], 0)
         self.assertTrue(session.rules_card_can_enter_support(item, "interzone"))
 
+    def test_manual_lot_two_tribute_and_trigger_effects(self):
+        filth, zozok, zuto, flower = (
+            "0tcphe9viq39a5b_en", "inner-deserts-130", "5h7k3m44jsn0esy_en", "inner-deserts-142",
+        )
+        session, p1, p2 = self.manual_batch_session(filth, zozok, zuto, flower, card_type="manifestation")
+        self.put(p2, "hand", ["m-1", "m-2"])
+        payload, _ = self.run_ability(session, filth, [{"kind": "player", "playerId": "p2"}])
+        self.assertEqual(payload["choiceKind"], "discard_from_hand")
+        session.rules_engine["pendingChoice"] = None
+        for roll, expected in ((1, 1), (2, 1), (3, 2), (6, 3)):
+            with unittest.mock.patch("random.randint", return_value=roll):
+                payload, _ = self.run_ability(session, zozok)
+            self.assertEqual(payload["essences"], expected)
+        retained = [t for t in session.tokens if t.get("isEssence") and t["ownerId"] == "p1"]
+        self.assertTrue(all(t["expiresTurn"] == 0 for t in retained))
+        self.assertEqual(sum(t["counters"]["essence"] for t in retained), 1 + 1 + 2 + 3)
+        session.battlefield = [
+            self.field_item("iz", "p1", "m-3", field_zone="interzone"),
+            self.field_item("conf", "p1", zuto),
+        ]
+        payload, _ = self.run_ability(session, zuto, [self.card_target("iz", "m-3")])
+        iz = session.find_battlefield_item("iz")
+        self.assertTrue(iz["isSupport"])
+        self.assertEqual(session.rules_field_zone(iz), "confrontation")
+        session.battlefield = [self.field_item("fl", "p1", flower)]
+        ability_enter, ability_burst = self.ABILITIES[flower]
+        session.apply_rules_action_result({
+            "id": "a", "controllerId": "p1", "source": {"cardId": flower, "itemId": "fl"},
+            "targets": [], "ability": {"result": ability_enter["result"]},
+        })
+        self.assertEqual(session.battlefield[0]["counters"]["Berry"], 5)
+        before = p2["score"]
+        session.apply_rules_action_result({
+            "id": "b", "controllerId": "p1", "source": {"cardId": flower, "itemId": "fl"},
+            "targets": [], "ability": {"result": ability_burst["result"]},
+        })
+        self.assertEqual(p2["score"], before + 5)
+
+    def test_manual_lot_two_shattered_memory_compensate_ohmom_walk_quorum(self):
+        memory, compensate, ohmom, walk, quorum = (
+            "inner-deserts-136", "inner-deserts-149", "bx0uyxxb3c6pas2_en",
+            "inner-deserts-071", "201ug66mqu6gslx_en",
+        )
+        session, p1, p2 = self.manual_batch_session(memory, compensate, ohmom, walk, quorum)
+        self.put(p2, "graveyard", ["m-1"])
+        self.run_ability(session, memory, [
+            {"kind": "zone_card", "containerId": "p2", "zone": "graveyard", "cardId": "m-1", "ownerId": "p2"}
+        ])
+        self.assertIn("m-1", p2["zones"]["exile"])
+        self.assertEqual(self.ABILITIES[memory][1]["sacrificeDestination"], "exile")
+        # Compensate refunds the neutralized Persistent Will's tribute as excess essence.
+        session.card_rules["pw"] = {"type": "persistent_will", "cost": 3, "temperaments": ["vitreous"]}
+        stack_action = {
+            "id": "stk", "controllerId": "p2", "kind": "play_card", "sourceOnStack": True,
+            "source": {"cardId": "pw", "zone": "hand", "ownerId": "p2", "cardType": "persistent_will"},
+            "targets": [], "ability": None, "cost": {},
+        }
+        session.rules_engine["actionStack"] = [stack_action]
+        payload, _ = self.run_ability(
+            session, compensate, [{"kind": "stack_action", "actionId": "stk", "cardId": "pw"}]
+        )
+        self.assertEqual(payload["status"], "neutralized")
+        pool = {t["temperament"]: t["counters"]["essence"] for t in session.tokens if t.get("isEssence") and t["ownerId"] == "p2"}
+        self.assertEqual(pool, {"vitreous": 3})
+        # Walk the Oblivion: discard any number, then lose 5 per card still in hand.
+        self.put(p2, "hand", ["m-2", "m-3", "m-4"])
+        payload, _ = self.run_ability(session, walk, [{"kind": "player", "playerId": "p2"}])
+        self.assertEqual(payload["choiceKind"], "discard_from_hand")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual((choice["count"], choice["upTo"]), (3, True))
+        before = p2.get("score", 0)
+        error, resolved = session.resolve_rules_choice("p2", choice["id"], card_ids=["m-2"])
+        self.assertIsNone(error)
+        self.assertEqual(p2["score"], before - 10)
+        self.assertEqual(p2["zones"]["hand"], ["m-3", "m-4"])
+        # Quorum: only Wills may be discarded; +3 power each until end of turn.
+        session.card_rules["q"] = {"type": "manifestation", "power": 1}
+        session.battlefield = [self.field_item("qu", "p1", quorum)]
+        session.card_rules[quorum]["power"] = 2
+        session.card_rules["will-ephemeral"] = {"type": "ephemeral_will"}
+        session.card_rules["will-persistent"] = {"type": "persistent_will"}
+        self.put(p1, "hand", ["will-ephemeral", "will-persistent", "m-5"])
+        action = {
+            "id": "qa", "controllerId": "p1", "optionalAccepted": True,
+            "source": {"cardId": quorum, "itemId": "qu"}, "targets": [],
+            "ability": {"result": self.ABILITIES[quorum][0]["result"]},
+        }
+        payload = session.apply_rules_action_result(action)
+        self.assertEqual(payload.get("count"), 2, payload)
+        choice_id = session.rules_engine["pendingChoice"]["id"]
+        error, _ = session.resolve_rules_choice("p1", choice_id, card_ids=["m-5"])
+        self.assertIsNotNone(error)
+        error, resolved = session.resolve_rules_choice("p1", choice_id, card_ids=["will-ephemeral", "will-persistent"])
+        self.assertIsNone(error)
+        self.assertEqual(resolved["powerGain"]["value"], 6)
+        self.assertEqual(self.power_of(session, "qu"), 8)
+        # Ohmom is wired to its own Will plays from the Interzone.
+        trigger = self.ABILITIES[ohmom][0]["trigger"]
+        self.assertEqual((trigger["event"], trigger["zone"], trigger["eventController"]), ("will_played", "interzone", "owner"))
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")

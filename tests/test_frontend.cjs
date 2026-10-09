@@ -1339,6 +1339,21 @@ function startServer() {
 
       window.__sent = [];
       latestState.rulesEngine.pendingChoice = {
+        id: "choice-multi", kind: "discard_from_hand", playerId: "p1", count: 2, upTo: true,
+        sourceCardId: "a058t24med4h5nx_en",
+      };
+      renderAll();
+      const multiDiscardStep = {
+        confirmEnabledBeforePick: !document.querySelector("#rulesDiscardConfirm").disabled,
+      };
+      document.querySelector('[data-rules-discard-index="0"]').click();
+      document.querySelector('[data-rules-discard-index="1"]').click();
+      multiDiscardStep.selectedCount = document.querySelectorAll("[data-rules-discard-index].selected").length;
+      document.querySelector("#rulesDiscardConfirm").click();
+      multiDiscardStep.payload = window.__sent.find((payload) => payload.type === "resolve_rules_choice");
+
+      window.__sent = [];
+      latestState.rulesEngine.pendingChoice = {
         id: "choice-recovery", kind: "recovery_shared_choice", playerId: "p1",
         sourceCardId: "dc44xrlrhikfvlr_en",
         options: ["discard_deck_bottom_3", "lose_points_10"],
@@ -1410,7 +1425,7 @@ function startServer() {
       latestState.rulesEngine.pendingChoice = null;
       latestState.rulesEngine.confrontationResult = null;
       closeRulesChoicePanel(true);
-      return { darkApparitionId, discardCardId, targetStep, discardStep, conditionalStep, recoveryStep, comparison, destinationStep, replacementStep };
+      return { darkApparitionId, discardCardId, targetStep, discardStep, conditionalStep, multiDiscardStep, recoveryStep, comparison, destinationStep, replacementStep };
     });
     const rulesVfx = await page.evaluate(async ({ tributeCardId, encodedCardId, sacrificeCardId, gracefulCardId, moveTargetCardId, exileTargetCardId, destroyTargetCardId }) => {
       renderAll();
@@ -3195,6 +3210,10 @@ function startServer() {
       type: "resolve_rules_choice", choiceId: "choice-1", cardIds: [rulesChoice.discardCardId],
     });
     assert.match(rulesChoice.conditionalStep.text, /2/);
+    assert.equal(rulesChoice.multiDiscardStep.confirmEnabledBeforePick, true);
+    assert.equal(rulesChoice.multiDiscardStep.selectedCount, 2);
+    assert.equal(rulesChoice.multiDiscardStep.payload.choiceId, "choice-multi");
+    assert.equal(rulesChoice.multiDiscardStep.payload.cardIds.length, 2);
     assert.deepEqual(rulesChoice.conditionalStep.payload, {
       type: "resolve_rules_choice", choiceId: "choice-2", cardIds: [rulesChoice.darkApparitionId],
     });

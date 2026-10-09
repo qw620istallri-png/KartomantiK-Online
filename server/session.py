@@ -1400,6 +1400,8 @@ class Session:
             clean = {"kind": kind}
             if result.get("destination") == "hand":
                 clean["destination"] = "hand"
+            if result.get("refundEssence"):
+                clean["refundEssence"] = True
             return clean
         if kind == "counter_stack_action_unless_payment":
             payment = str(result.get("payment") or "")
@@ -1420,6 +1422,8 @@ class Session:
             return {"kind": kind}
         if kind == "score_owner_silent":
             return {"kind": kind, "value": max(-999, min(int(result.get("value") or 0), 999))}
+        if kind == "optional_discard_wills_for_power":
+            return {"kind": kind, "value": max(1, min(int(result.get("value") or 1), 20))}
         if kind == "optional_discard_up_to":
             return {"kind": kind, "value": max(1, min(int(result.get("value") or 1), 7))}
         if kind in {
@@ -1443,6 +1447,10 @@ class Session:
             "optional_discard_manifestation_weaken_target",
             "return_source_to_hand_restricted",
             "chain_discarded_manifestation_from_target_deck",
+            "roll_d6_gain_half_essence",
+            "interzone_target_to_support",
+            "flower_of_evil_burst",
+            "discard_any_then_lose_per_remaining",
         }:
             clean = {"kind": kind}
             if kind == "play_limbo_target_as_support":
@@ -2550,6 +2558,19 @@ class Session:
                 limbo_source.get("id") if limbo_count and limbo_source else None
             ),
         }
+
+    def rules_refund_stack_action_essence(self, stack_action):
+        """Give the Will's controller excess essence equal to its Tribute cost."""
+        card_id = (stack_action.get("source") or {}).get("cardId")
+        metadata = self.card_rules.get(card_id, {})
+        owner_id = stack_action.get("controllerId")
+        cost = int(metadata.get("cost") or 0)
+        if owner_id not in self.players or cost <= 0:
+            return []
+        temperament = next(iter(metadata.get("temperaments") or []), "hollow")
+        return self.add_rules_excess_essence(
+            owner_id, [{"temperament": temperament, "amount": cost}]
+        )
 
     def add_rules_excess_essence(self, player_id, generated):
         seat = self.players[player_id].get("seat")
@@ -7234,6 +7255,100 @@ class Session:
                 observe=False,
             )
             return {"kind": result.get("kind"), "status": "scored", "delta": delta}
+        if result.get("kind") == "roll_d6_gain_half_essence":
+            roll = random.randint(1, 6)
+            amount = (roll + 1) // 2
+            owner_id = action.get("controllerId") or player_id
+            self.add_rules_excess_essence(
+                owner_id, [{"temperament": "transcendent", "amount": amount, "retained": True}]
+            )
+            return {
+                "kind": result.get("kind"), "status": "rolled",
+                "roll": roll, "essences": amount, "playerId": owner_id,
+            }
+        if result.get("kind") == "interzone_target_to_support":
+            target = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "card"
+            ), None)
+            item = self.find_battlefield_item((target or {}).get("itemId"))
+            if item is None or self.rules_field_zone(item) != "interzone":
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            item["stackedOn"] = None
+            self.mark_rules_support_entry(item)
+            triggered = self.queue_rules_support_entry_triggers(
+                item, played=False, from_zone="interzone", defer=True,
+            )
+            if triggered:
+                self.queue_rules_simultaneous_actions(triggered)
+            return {
+                "kind": result.get("kind"), "status": "support",
+                "itemId": item["id"], "cardId": item.get("cardId"),
+            }
+        if result.get("kind") == "flower_of_evil_burst":
+            owner_id = action.get("controllerId") or player_id
+            gained = {}
+            for pid in self.players:
+                if pid != owner_id:
+                    gained[pid] = self.adjust_rules_score(pid, 5)
+            self.add_rules_excess_essence(
+                owner_id, [{"temperament": "transcendent", "amount": 1}]
+            )
+            return {
+                "kind": result.get("kind"), "status": "resolved",
+                "opponentGains": gained, "essences": 1,
+            }
+        if result.get("kind") == "discard_any_then_lose_per_remaining":
+            target = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "player"
+            ), None)
+            target_id = (target or {}).get("playerId")
+            if target_id not in self.players:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            if self.rules_hand_is_immune(target_id, player_id):
+                return {"kind": result.get("kind"), "status": "prevented_immunity"}
+            hand = self.players[target_id]["zones"]["hand"]
+            if not hand:
+                return {"kind": result.get("kind"), "status": "no_hand_card"}
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "discard_from_hand",
+                "playerId": target_id, "count": len(hand), "upTo": True,
+                "lossPerRemaining": 5,
+                "actionId": action.get("id"),
+                "controllerId": action.get("controllerId"),
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "discard_from_hand", "playerId": target_id,
+                "count": len(hand), "upTo": True,
+            }
+        if result.get("kind") == "optional_discard_wills_for_power":
+            hand = player["zones"]["hand"]
+            wills = [c for c in hand if self.card_rules.get(c, {}).get("type") in RULES_WILL_TYPES]
+            if not wills:
+                return {"kind": result.get("kind"), "status": "no_hand_card"}
+            if not action.get("optionalAccepted"):
+                return {"kind": result.get("kind"), "status": "declined"}
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "discard_from_hand",
+                "playerId": player_id, "count": len(wills), "upTo": True,
+                "requireTypes": sorted(RULES_WILL_TYPES),
+                "sourcePowerPerDiscard": int(result.get("value") or 1),
+                "sourceItemId": (action.get("source") or {}).get("itemId"),
+                "actionId": action.get("id"),
+                "controllerId": action.get("controllerId"),
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "discard_from_hand", "playerId": player_id,
+                "count": len(wills), "upTo": True,
+                "requireTypes": sorted(RULES_WILL_TYPES),
+            }
         if result.get("kind") == "double_target_base_power":
             target = next((
                 entry for entry in action.get("targets") or []
@@ -9216,12 +9331,17 @@ class Session:
                     "actionId": target.get("actionId") if target else None,
                     "cardId": target.get("cardId") if target else None,
                 }
+            countered = self.counter_rules_stack_action(
+                target_action, "neutralize",
+                result.get("destination") or "graveyard",
+            )
+            if result.get("refundEssence"):
+                refunded = self.rules_refund_stack_action_essence(target_action)
+                if refunded:
+                    countered["refundedEssence"] = refunded
             return {
                 "kind": "neutralize_stack_action",
-                **self.counter_rules_stack_action(
-                    target_action, "neutralize",
-                    result.get("destination") or "graveyard",
-                ),
+                **countered,
             }
         if result.get("kind") == "counter_stack_action_unless_payment":
             target = next((
@@ -11273,6 +11393,11 @@ class Session:
             for card_id in selected
         ):
             return "Choose a manifestation from your hand.", None
+        if choice.get("requireTypes") and any(
+            self.card_rules.get(card_id, {}).get("type") not in choice["requireTypes"]
+            for card_id in selected
+        ):
+            return "Choose a valid card type from your hand.", None
         for card_id in selected:
             error, _owner_id = self.move_zone_card(
                 player_id, "hand", player_id, "graveyard", card_id, "top"
@@ -11287,6 +11412,35 @@ class Session:
                 counters = weak_item.setdefault("counters", {})
                 counters["power"] = int(counters.get("power") or 0) - base
                 weakened = {"itemId": weak_item["id"], "value": -base}
+        power_gain = None
+        if choice.get("sourcePowerPerDiscard") and selected:
+            source_item = self.find_battlefield_item(choice.get("sourceItemId"))
+            if source_item is not None:
+                value = len(selected) * int(choice["sourcePowerPerDiscard"])
+                self.rules_engine["ongoingEffects"].append({
+                    "id": new_id(), "actionId": choice.get("actionId"),
+                    "abilityId": "discard-wills-for-power",
+                    "controllerId": choice.get("controllerId") or player_id,
+                    "source": {
+                        "cardId": choice.get("sourceCardId"),
+                        "itemId": choice.get("sourceItemId"), "zone": "battlefield",
+                    },
+                    "target": {
+                        "kind": "card", "itemId": source_item["id"],
+                        "cardId": source_item.get("cardId"),
+                        "ownerId": source_item.get("ownerId"),
+                    },
+                    "kind": "power_modifier", "value": value,
+                    "duration": "until_end_of_turn",
+                    "startedTurn": self.phase_tracker["turn"],
+                })
+                power_gain = {"itemId": source_item["id"], "value": value}
+        points_lost = 0
+        if choice.get("lossPerRemaining"):
+            remaining = len(self.players[player_id]["zones"]["hand"])
+            points_lost = -self.adjust_rules_score(
+                player_id, -int(choice["lossPerRemaining"]) * remaining
+            ) if remaining else 0
         drawn = 0
         requested_draw = max(0, min(int(choice.get("drawAfter") or 0), 50))
         for _index in range(min(requested_draw, len(self.players[player_id]["zones"]["deck"]))):
@@ -11309,6 +11463,8 @@ class Session:
             "controllerId": choice.get("controllerId"),
             "sourceCardId": choice.get("sourceCardId"),
             **({"weakened": weakened} if weakened else {}),
+            **({"powerGain": power_gain} if power_gain else {}),
+            **({"pointsLost": points_lost} if points_lost else {}),
         }
 
     def resolve_rules_top_action(self):

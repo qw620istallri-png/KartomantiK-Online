@@ -2897,5 +2897,98 @@
       "trigger": { "event": "will_played", "eventController": "owner" },
       "result": { "kind": "add_counter_source", "counter": "Block", "value": -1 }
     }
+  ],
+  "0tcphe9viq39a5b_en": [
+    {
+      "id": "filth-eater-discard-on-tribute",
+      "trigger": { "event": "used_as_tribute" },
+      "targets": { "kind": "player", "min": 1, "max": 1 },
+      "result": { "kind": "discard_hand_target", "value": 1 }
+    }
+  ],
+  "inner-deserts-130": [
+    {
+      "id": "zozok-rolls-for-retained-essences",
+      "trigger": { "event": "used_as_tribute" },
+      "result": { "kind": "roll_d6_gain_half_essence" }
+    }
+  ],
+  "5h7k3m44jsn0esy_en": [
+    {
+      "id": "pan-zuto-raises-interzone-manifestation-to-support",
+      "optional": true,
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "fieldZone": "interzone", "controller": "self"
+      },
+      "result": { "kind": "interzone_target_to_support" }
+    }
+  ],
+  "inner-deserts-142": [
+    {
+      "id": "flower-of-evil-berries",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": { "kind": "add_counter_source", "counter": "Berry", "value": 5 }
+    },
+    {
+      "id": "flower-of-evil-burst",
+      "removeCountersFromSource": { "name": "Berry", "amount": 1 },
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "flower_of_evil_burst" }
+    }
+  ],
+  "inner-deserts-136": [
+    {
+      "id": "shattered-memory-exile-limbo-card",
+      "exhaustSource": true,
+      "targets": {
+        "kind": "zone_card", "min": 1, "max": 1, "zones": ["graveyard"]
+      },
+      "result": { "kind": "move_target", "zone": "exile", "position": "top", "reason": "exile" }
+    },
+    {
+      "id": "shattered-memory-sacrifice-for-essence",
+      "sacrificeSource": true,
+      "sacrificeDestination": "exile",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "create_essence", "temperament": "transcendent", "value": 1 }
+    }
+  ],
+  "inner-deserts-149": [
+    {
+      "id": "compensate",
+      "action": "play_card",
+      "targets": {
+        "kind": "stack_action", "min": 1, "max": 1, "cardTypes": ["persistent_will"]
+      },
+      "result": { "kind": "neutralize_stack_action", "refundEssence": true }
+    }
+  ],
+  "bx0uyxxb3c6pas2_en": [
+    {
+      "id": "ohmom-boosts-on-own-will",
+      "trigger": { "event": "will_played", "eventController": "owner", "zone": "interzone" },
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"]
+      },
+      "ongoingEffect": { "kind": "power_modifier", "value": 1, "duration": "until_end_of_turn" }
+    }
+  ],
+  "inner-deserts-071": [
+    {
+      "id": "walk-the-oblivion",
+      "action": "play_card",
+      "targets": { "kind": "player", "min": 1, "max": 1, "controller": "opponent" },
+      "result": { "kind": "discard_any_then_lose_per_remaining" }
+    }
+  ],
+  "201ug66mqu6gslx_en": [
+    {
+      "id": "quorum-discards-wills-for-power",
+      "optional": true,
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": { "kind": "optional_discard_wills_for_power", "value": 3 }
+    }
   ]
 }

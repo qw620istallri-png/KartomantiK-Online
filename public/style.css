@@ -2863,3 +2863,4 @@ input, textarea, select {
   .hand-card { transition: none; }
   .rules-activate-badge { animation: none; }
 }
+.rules-choice-card.selected { outline: 3px solid var(--accent, #d4af37); outline-offset: 2px; }

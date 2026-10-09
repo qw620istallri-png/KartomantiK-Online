@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 221,
-    "explicitAbilities": 261,
+    "explicitCards": 230,
+    "explicitAbilities": 272,
     "statuses": {
-      "automated": 284,
+      "automated": 293,
       "generic": 0,
-      "manual": 161,
+      "manual": 152,
       "partial": 5
     }
   },
@@ -286,10 +286,19 @@
       "collectionNumber": 20,
       "name": "Pan Zuto, the Beckoner",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "pan-zuto-raises-interzone-manifestation-to-support"
+      ],
+      "mechanics": [
+        "result:interzone_target_to_support",
+        "target:card",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "skh6d780jne193w_en": {
       "collectionNumber": 21,
@@ -952,10 +961,19 @@
       "collectionNumber": 64,
       "name": "Ohmom, the Azure",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "ohmom-boosts-on-own-will"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "target:card",
+        "trigger:will_played"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "qn8r98kyqqma972_en": {
       "collectionNumber": 65,
@@ -1513,10 +1531,19 @@
       "collectionNumber": 105,
       "name": "Filth-eater",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "filth-eater-discard-on-tribute"
+      ],
+      "mechanics": [
+        "result:discard_hand_target",
+        "target:player",
+        "trigger:used_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "wbyjru9luc175ak_en": {
       "collectionNumber": 106,
@@ -2989,10 +3016,18 @@
       "collectionNumber": 211,
       "name": "Quorum, the Untouchable",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "quorum-discards-wills-for-power"
+      ],
+      "mechanics": [
+        "result:optional_discard_wills_for_power",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "unk0z0mamdx1el5_en": {
       "collectionNumber": 212,
@@ -5235,10 +5270,18 @@
       "collectionNumber": 371,
       "name": "Walk the Oblivion",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "walk-the-oblivion"
+      ],
+      "mechanics": [
+        "result:discard_any_then_lose_per_remaining",
+        "target:player"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-072": {
       "collectionNumber": 372,
@@ -6072,10 +6115,18 @@
       "collectionNumber": 430,
       "name": "Zozok, the Void",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "zozok-rolls-for-retained-essences"
+      ],
+      "mechanics": [
+        "result:roll_d6_gain_half_essence",
+        "trigger:used_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-131": {
       "collectionNumber": 431,
@@ -6146,10 +6197,22 @@
       "collectionNumber": 436,
       "name": "Shattered Memory",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "shattered-memory-exile-limbo-card",
+        "shattered-memory-sacrifice-for-essence"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:sacrificeSource",
+        "result:create_essence",
+        "result:move_target",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-137": {
       "collectionNumber": 437,
@@ -6222,10 +6285,20 @@
       "collectionNumber": 442,
       "name": "Flower of Evil",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "flower-of-evil-berries",
+        "flower-of-evil-burst"
+      ],
+      "mechanics": [
+        "result:add_counter_source",
+        "result:flower_of_evil_burst",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-143": {
       "collectionNumber": 443,
@@ -6322,10 +6395,18 @@
       "collectionNumber": 449,
       "name": "Compensate",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "compensate"
+      ],
+      "mechanics": [
+        "result:neutralize_stack_action",
+        "target:stack_action"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-150": {
       "collectionNumber": 450,

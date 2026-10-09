@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261009-rules-beta-97";
+const STATIC_ASSET_VERSION = "20261009-rules-beta-98";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -6527,6 +6527,37 @@ function renderRulesChoice() {
       <img src="${esc(cardImage(cardId))}" alt="">
       <span>${esc(cardName(cardId))}</span>
     </button>`).join("");
+  if (Number(choice.count || 1) > 1 || choice.upTo) {
+    const selected = new Set();
+    const limit = Number(choice.count || 1);
+    options.insertAdjacentHTML("beforeend", `
+      <button type="button" class="primary" id="rulesDiscardConfirm" disabled>${esc(t("confirm"))}</button>`);
+    const confirm = $("#rulesDiscardConfirm");
+    const refresh = () => {
+      confirm.disabled = choice.upTo ? selected.size > limit : selected.size !== limit;
+    };
+    if (choice.upTo) confirm.disabled = false;
+    $$('[data-rules-discard-index]').forEach((button) => {
+      button.onclick = () => {
+        const index = Number(button.dataset.rulesDiscardIndex);
+        if (selected.has(index)) selected.delete(index);
+        else if (selected.size < limit) selected.add(index);
+        button.classList.toggle("selected", selected.has(index));
+        button.setAttribute("aria-pressed", selected.has(index) ? "true" : "false");
+        refresh();
+      };
+    });
+    confirm.onclick = () => {
+      confirm.disabled = true;
+      send({
+        type: "resolve_rules_choice",
+        choiceId: choice.id,
+        cardIds: [...selected].map((index) => cards[index]).filter(Boolean),
+      });
+    };
+    panel.classList.remove("hidden");
+    return;
+  }
   $$('[data-rules-discard-index]').forEach((button) => {
     button.onclick = () => {
       const cardId = cards[Number(button.dataset.rulesDiscardIndex)];

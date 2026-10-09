@@ -690,3 +690,7 @@ Lament, Nameless Arcane, Ononok, Lilitha, Mamelath, Silem, Timidette, Drildrill 
 ### Cartes partielles, lot 2
 
 Makaboon (`deck_cards_discarded`), Denblew (`cards_drawn`, `oncePerTurn`), Atavic Oppression (`optional_discard_up_to`), Tigrolione (`lossDestination: winner_interzone`), Absent Trinket (`manifestation_targeted_by_will`, `return_source_to_hand_restricted`), Yzzit (`vesselEntryRoll`), Jesterina (`chain_discarded_manifestation_from_target_deck`), Linoleus (`points_gained`, `score_owner_silent`) et Inert Anchorstone (`supportWhenNoCounter`) sont automatisées. Les événements observés `cards_drawn` sont détectés par un mouvement deck vers main en position `bottom` hors phase de Récupération.
+
+### Cartes manuelles, lot 2
+
+Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmom, Walk the Oblivion et Quorum sont automatisées. Le choix de défausse `discard_from_hand` accepte désormais `upTo` (jusqu'à N cartes), `requireTypes`, `sourcePowerPerDiscard` et `lossPerRemaining`, avec une sélection multiple côté client. `neutralize_stack_action` accepte `refundEssence`.
