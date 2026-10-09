@@ -2724,5 +2724,100 @@
       },
       "result": { "kind": "neutralize_stack_action", "destination": "hand" }
     }
+  ],
+  "lmjn89wobbttfop_en": [
+    {
+      "id": "lament-mills-per-confrontation-manifestation",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "targets": { "kind": "player", "min": 1, "max": 1 },
+      "result": { "kind": "mill_deck_per_confrontation_manifestation" }
+    }
+  ],
+  "inner-deserts-059": [
+    {
+      "id": "nameless-arcane-sacrifices-others",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "sacrifice_other_confrontation_for_essence" }
+    }
+  ],
+  "tzoadjk7wb5qj5f_en": [
+    {
+      "id": "ononok-scatters-limbo-and-interzone",
+      "trigger": { "event": "enters_field_zone", "zone": "interzone" },
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "exile_source_then_shuffle_limbo_and_interzone" }
+    }
+  ],
+  "inner-deserts-113": [
+    {
+      "id": "lilitha-dismembers-confrontation-manifestation",
+      "optional": true,
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "fieldZone": "confrontation", "excludeEventSource": true
+      },
+      "result": { "kind": "destroy_target_tokens_for_controller" }
+    },
+    {
+      "id": "lilitha-exiles-after-win",
+      "trigger": { "event": "wins_confrontation" },
+      "result": { "kind": "move_source_to_owner_exile" }
+    }
+  ],
+  "inner-deserts-017": [
+    {
+      "id": "mamelath-first-manifestations-become-tokens",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "first_manifestations_to_interzone_tokens" }
+    },
+    {
+      "id": "mamelath-exiles-after-win",
+      "trigger": { "event": "wins_confrontation" },
+      "result": { "kind": "move_source_to_owner_exile" }
+    }
+  ],
+  "inner-deserts-089": [
+    {
+      "id": "silem-supports-stalemate-manifestations",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "stalemate_to_support_disabled" }
+    },
+    {
+      "id": "silem-exiles-after-win",
+      "trigger": { "event": "wins_confrontation" },
+      "result": { "kind": "move_source_to_owner_exile" }
+    }
+  ],
+  "inner-deserts-041": [
+    {
+      "id": "timidette-clears-support",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "targets": {
+        "kind": "card", "min": 0, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "supportOnly": true, "controller": "opponent"
+      },
+      "result": { "kind": "timidette_support_to_deck_bottom" }
+    },
+    {
+      "id": "timidette-exiles-after-win",
+      "trigger": { "event": "wins_confrontation" },
+      "result": { "kind": "move_source_to_owner_exile" }
+    }
+  ],
+  "inner-deserts-131": [
+    {
+      "id": "drildrill-destroys-persistent-will",
+      "exhaustSource": true,
+      "extraEssenceByTargetCount": { "targetCount": 1, "amount": 2 },
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "persistent_will",
+        "zones": ["battlefield"]
+      },
+      "result": { "kind": "destroy_persistent_will_refund_essence" }
+    }
   ]
 }

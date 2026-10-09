@@ -1410,6 +1410,14 @@ class Session:
             "play_limbo_target_as_support",
             "resolve_target_stack_immediately",
             "choose_target_score_delta",
+            "mill_deck_per_confrontation_manifestation",
+            "sacrifice_other_confrontation_for_essence",
+            "exile_source_then_shuffle_limbo_and_interzone",
+            "destroy_target_tokens_for_controller",
+            "first_manifestations_to_interzone_tokens",
+            "stalemate_to_support_disabled",
+            "timidette_support_to_deck_bottom",
+            "destroy_persistent_will_refund_essence",
         }:
             clean = {"kind": kind}
             if kind == "play_limbo_target_as_support":
@@ -6772,6 +6780,232 @@ class Session:
             return {
                 "kind": result.get("kind"), "status": "humiliated",
                 "itemId": item["id"], "controllerId": controller_id,
+            }
+        if result.get("kind") == "mill_deck_per_confrontation_manifestation":
+            target = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "player"
+            ), None)
+            target_id = (target or {}).get("playerId")
+            if target_id not in self.players:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            count = len([
+                item for item in self.rules_confrontation_items(target_id, ("confrontation",))
+                if not item.get("isTokenCard") and not item.get("isTokenCopy")
+            ])
+            for _index in range(count):
+                deck = self.players[target_id]["zones"]["deck"]
+                if not deck:
+                    break
+                error, _owner, replacement = self.move_zone_card_by_effect(
+                    target_id, "deck", target_id, "graveyard", deck[0], "top"
+                )
+                if error:
+                    break
+            return {
+                "kind": result.get("kind"),
+                "status": "discarded" if count else "nothing",
+                "count": count, "targetPlayerId": target_id,
+            }
+        if result.get("kind") == "sacrifice_other_confrontation_for_essence":
+            source_id = (action.get("source") or {}).get("itemId")
+            sacrificed, limbo = [], 0
+            for item in list(self.rules_confrontation_items(player_id, ("confrontation",))):
+                if item.get("id") == source_id:
+                    continue
+                movement = self._rules_remove_field_item(
+                    item, item.get("ownerId"), "graveyard", "top"
+                )
+                if movement.get("status") == "moved":
+                    limbo += 1
+                if movement.get("status") in {"moved", "removed_copy"}:
+                    sacrificed.append(item["id"])
+            self.prune_rules_ongoing_effects()
+            if limbo:
+                self.add_rules_excess_essence(
+                    player_id, [{"temperament": "transcendent", "amount": limbo}]
+                )
+            return {
+                "kind": result.get("kind"),
+                "status": "sacrificed" if sacrificed else "nothing",
+                "itemIds": sacrificed, "essences": limbo,
+            }
+        if result.get("kind") == "exile_source_then_shuffle_limbo_and_interzone":
+            source = self.find_battlefield_item((action.get("source") or {}).get("itemId"))
+            if source is not None:
+                self._rules_remove_field_item(source, source.get("ownerId"), "exile", "top")
+            moved = []
+            for item in list(self.rules_confrontation_items(zones=("interzone",))):
+                movement = self._rules_remove_field_item(
+                    item, item.get("ownerId"), "deck", "top"
+                )
+                if movement.get("status") == "moved":
+                    moved.append(item.get("cardId"))
+            for pid in self.players:
+                for card_id in list(self.players[pid]["zones"]["graveyard"]):
+                    error, _owner, replacement = self.move_zone_card_by_effect(
+                        pid, "graveyard", pid, "deck", card_id, "top"
+                    )
+                    if not error and not replacement:
+                        moved.append(card_id)
+            for pid in self.players:
+                random.shuffle(self.players[pid]["zones"]["deck"])
+            self.prune_rules_ongoing_effects()
+            return {"kind": result.get("kind"), "status": "shuffled", "cardIds": moved}
+        if result.get("kind") == "destroy_target_tokens_for_controller":
+            target = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "card"
+            ), None)
+            item = self.find_battlefield_item((target or {}).get("itemId"))
+            if item is None:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            controller_id = self.rules_item_controller_id(item)
+            if item.get("isTokenCard"):
+                base = int(item.get("power") or 0)
+            else:
+                base = int(self.card_rules.get(item.get("cardId"), {}).get("power") or 0)
+            movement = self._rules_remove_field_item_by_effect(
+                item, item.get("ownerId"), "graveyard", "top", reason="destroy"
+            )
+            self.prune_rules_ongoing_effects()
+            if movement.get("status") not in {"moved", "removed_copy"}:
+                return {"kind": result.get("kind"), "status": movement.get("status")}
+            created = [
+                self.create_rules_token_copy(
+                    (action.get("source") or {}).get("cardId"), controller_id,
+                    source_item_id=(action.get("source") or {}).get("itemId"),
+                    hollow=True, effects_disabled=True, generic_power=1,
+                )
+                for _index in range(max(0, base))
+            ]
+            return {
+                "kind": result.get("kind"), "status": "destroyed",
+                "controllerId": controller_id, "tokens": len(created),
+            }
+        if result.get("kind") == "first_manifestations_to_interzone_tokens":
+            counts = {}
+            for pid in self.players:
+                first = self.find_battlefield_item(
+                    self.rules_engine.get("firstManifestationItemIds", {}).get(pid)
+                )
+                if (
+                    first is None
+                    or self.rules_item_controller_id(first) != pid
+                    or self.rules_field_zone(first) != "confrontation"
+                ):
+                    continue
+                base = (
+                    int(first.get("power") or 0) if first.get("isTokenCard")
+                    else int(self.card_rules.get(first.get("cardId"), {}).get("power") or 0)
+                )
+                if self.rules_interzone_slot_count(pid) >= self.rules_interzone_capacity(pid):
+                    anchor = self.rules_interzone_share_anchor(pid, first)
+                    if anchor:
+                        first.update({
+                            "stackedOn": anchor, "stackOffsetX": 18.0,
+                            "stackOffsetY": 18.0,
+                        })
+                    else:
+                        first["stackedOn"] = None
+                else:
+                    first["stackedOn"] = None
+                first["fieldZone"] = "interzone"
+                first["isSupport"] = False
+                self.mark_rules_interzone_entry(first)
+                counts[pid] = max(0, base)
+            source = action.get("source") or {}
+            created = {}
+            for pid, count in counts.items():
+                created[pid] = [
+                    self.create_rules_token_copy(
+                        source.get("cardId"), pid,
+                        source_item_id=source.get("itemId"),
+                        hollow=True, effects_disabled=True, generic_power=1,
+                    )["id"]
+                    for _index in range(count)
+                ]
+            return {
+                "kind": result.get("kind"),
+                "status": "resolved" if counts else "nothing",
+                "tokens": {pid: len(ids) for pid, ids in created.items()},
+            }
+        if result.get("kind") == "stalemate_to_support_disabled":
+            moved = []
+            for item in list(self.rules_confrontation_items(player_id, ("stalemate",))):
+                item["stackedOn"] = None
+                self.mark_rules_support_entry(item)
+                moved.append(item["id"])
+            effects = []
+            for item_id in moved:
+                item = self.find_battlefield_item(item_id)
+                effects.extend(self.create_rules_ongoing_effects({
+                    **action,
+                    "targets": [{
+                        "kind": "card", "itemId": item_id,
+                        "cardId": item.get("cardId"), "ownerId": item.get("ownerId"),
+                    }],
+                    "ability": {
+                        "id": f'{(action.get("ability") or {}).get("id")}:disabled',
+                        "ongoingEffect": {
+                            "kind": "lose_effects", "duration": "until_end_of_turn",
+                        },
+                    },
+                }))
+            return {
+                "kind": result.get("kind"),
+                "status": "supported" if moved else "nothing",
+                "itemIds": moved, "effects": len(effects),
+            }
+        if result.get("kind") == "timidette_support_to_deck_bottom":
+            source_id = (action.get("source") or {}).get("itemId")
+            kept = {source_id} | {
+                entry.get("itemId") for entry in action.get("targets") or []
+                if entry.get("kind") == "card"
+            }
+            moved = []
+            for item in list(self.battlefield):
+                if (
+                    not item.get("isSupport") or item.get("id") in kept
+                    or not item.get("faceUp", True)
+                ):
+                    continue
+                movement = self._rules_remove_field_item(
+                    item, item.get("ownerId"), "deck", "bottom"
+                )
+                if movement.get("status") in {"moved", "removed_copy"}:
+                    moved.append(item["id"])
+            self.prune_rules_ongoing_effects()
+            return {
+                "kind": result.get("kind"),
+                "status": "moved" if moved else "nothing", "itemIds": moved,
+            }
+        if result.get("kind") == "destroy_persistent_will_refund_essence":
+            target = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "card"
+            ), None)
+            item = self.find_battlefield_item((target or {}).get("itemId"))
+            metadata = self.card_rules.get((item or {}).get("cardId"), {})
+            if item is None or metadata.get("type") != "persistent_will":
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            controller_id = self.rules_item_controller_id(item)
+            cost = int(metadata.get("cost") or 0)
+            temperament = next(iter(metadata.get("temperaments") or []), "hollow")
+            movement = self._rules_remove_field_item_by_effect(
+                item, item.get("ownerId"), "graveyard", "top", reason="destroy"
+            )
+            self.prune_rules_ongoing_effects()
+            if movement.get("status") not in {"moved", "removed_copy"}:
+                return {"kind": result.get("kind"), "status": movement.get("status")}
+            if cost > 0:
+                self.add_rules_excess_essence(
+                    controller_id, [{"temperament": temperament, "amount": cost}]
+                )
+            return {
+                "kind": result.get("kind"), "status": "destroyed",
+                "controllerId": controller_id, "essences": cost,
+                "temperament": temperament,
             }
         if result.get("kind") == "double_target_base_power":
             target = next((

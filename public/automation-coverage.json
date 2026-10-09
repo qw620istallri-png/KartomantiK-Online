@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 206,
-    "explicitAbilities": 239,
+    "explicitCards": 214,
+    "explicitAbilities": 251,
     "statuses": {
-      "automated": 266,
+      "automated": 274,
       "generic": 0,
       "manual": 161,
-      "partial": 23
+      "partial": 15
     }
   },
   "cards": {
@@ -1639,14 +1639,21 @@
       "collectionNumber": 114,
       "name": "Lament, Thought-nullifier",
       "setName": "Beta",
-      "status": "partial",
-      "abilityIds": [],
+      "status": "automated",
+      "abilityIds": [
+        "lament-mills-per-confrontation-manifestation"
+      ],
       "mechanics": [
         "first-restriction",
-        "support-from-hand"
+        "result:mill_deck_per_confrontation_manifestation",
+        "support-from-hand",
+        "target:player",
+        "trigger:enters_field_zone"
       ],
-      "testRefs": [],
-      "notes": "The entry trigger that mills a target player for each non-token Confrontation manifestation is not automated."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "d6jip43i66i34xk_en": {
       "collectionNumber": 115,
@@ -3474,13 +3481,19 @@
       "collectionNumber": 247,
       "name": "Ononok, Chaotic Scatterer",
       "setName": "Beta",
-      "status": "partial",
-      "abilityIds": [],
-      "mechanics": [
-        "support-from-hand"
+      "status": "automated",
+      "abilityIds": [
+        "ononok-scatters-limbo-and-interzone"
       ],
-      "testRefs": [],
-      "notes": "The Interzone-entry exile and per-player Limbo/Interzone shuffle into decks are not automated."
+      "mechanics": [
+        "result:exile_source_then_shuffle_limbo_and_interzone",
+        "support-from-hand",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "40lqhpf5xr5v5sk_en": {
       "collectionNumber": 248,
@@ -4454,14 +4467,23 @@
       "collectionNumber": 317,
       "name": "Mamelath, the Polymancer",
       "setName": "Inner Deserts",
-      "status": "partial",
-      "abilityIds": [],
+      "status": "automated",
+      "abilityIds": [
+        "mamelath-first-manifestations-become-tokens",
+        "mamelath-exiles-after-win"
+      ],
       "mechanics": [
         "first-restriction",
-        "support-from-hand"
+        "result:first_manifestations_to_interzone_tokens",
+        "result:move_source_to_owner_exile",
+        "support-from-hand",
+        "trigger:enters_field_zone",
+        "trigger:wins_confrontation"
       ],
-      "testRefs": [],
-      "notes": "Moving First Manifestations to Interzone, creating base-power token counts, and exiling Mamelath after a win are not automated."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-018": {
       "collectionNumber": 318,
@@ -4760,14 +4782,24 @@
       "collectionNumber": 341,
       "name": "Timidette, the Elusive",
       "setName": "Inner Deserts",
-      "status": "partial",
-      "abilityIds": [],
+      "status": "automated",
+      "abilityIds": [
+        "timidette-clears-support",
+        "timidette-exiles-after-win"
+      ],
       "mechanics": [
         "first-restriction",
-        "support-from-hand"
+        "result:move_source_to_owner_exile",
+        "result:timidette_support_to_deck_bottom",
+        "support-from-hand",
+        "target:card",
+        "trigger:enters_field_zone",
+        "trigger:wins_confrontation"
       ],
-      "testRefs": [],
-      "notes": "Selecting one opposing Support per opponent, returning all other Support to deck bottoms in order, and win exile are not automated."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-042": {
       "collectionNumber": 342,
@@ -5012,14 +5044,20 @@
       "collectionNumber": 359,
       "name": "Nameless Arcane",
       "setName": "Inner Deserts",
-      "status": "partial",
-      "abilityIds": [],
-      "mechanics": [
-        "support-from-hand",
-        "support-from-interzone"
+      "status": "automated",
+      "abilityIds": [
+        "nameless-arcane-sacrifices-others"
       ],
-      "testRefs": [],
-      "notes": "Sacrificing all other controlled Confrontation manifestations and gaining one transcendent essence per card moved are not automated."
+      "mechanics": [
+        "result:sacrifice_other_confrontation_for_essence",
+        "support-from-hand",
+        "support-from-interzone",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-060": {
       "collectionNumber": 360,
@@ -5383,14 +5421,23 @@
       "collectionNumber": 389,
       "name": "Silem, the Magnetic",
       "setName": "Inner Deserts",
-      "status": "partial",
-      "abilityIds": [],
+      "status": "automated",
+      "abilityIds": [
+        "silem-supports-stalemate-manifestations",
+        "silem-exiles-after-win"
+      ],
       "mechanics": [
         "first-restriction",
-        "support-from-hand"
+        "result:move_source_to_owner_exile",
+        "result:stalemate_to_support_disabled",
+        "support-from-hand",
+        "trigger:enters_field_zone",
+        "trigger:wins_confrontation"
       ],
-      "testRefs": [],
-      "notes": "Moving all controlled Stalemate manifestations to Support, suppressing their effects, and exiling Silem after a win are not automated."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-090": {
       "collectionNumber": 390,
@@ -5709,14 +5756,24 @@
       "collectionNumber": 413,
       "name": "Lilitha, the Dismemberer",
       "setName": "Inner Deserts",
-      "status": "partial",
-      "abilityIds": [],
+      "status": "automated",
+      "abilityIds": [
+        "lilitha-dismembers-confrontation-manifestation",
+        "lilitha-exiles-after-win"
+      ],
       "mechanics": [
         "first-restriction",
-        "support-from-hand"
+        "result:destroy_target_tokens_for_controller",
+        "result:move_source_to_owner_exile",
+        "support-from-hand",
+        "target:card",
+        "trigger:enters_field_zone",
+        "trigger:wins_confrontation"
       ],
-      "testRefs": [],
-      "notes": "Optional target destruction, base-power token creation for its controller, and exile after winning are not automated."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-114": {
       "collectionNumber": 414,
@@ -5963,13 +6020,20 @@
       "collectionNumber": 431,
       "name": "Drildrill",
       "setName": "Inner Deserts",
-      "status": "partial",
-      "abilityIds": [],
-      "mechanics": [
-        "support-from-hand"
+      "status": "automated",
+      "abilityIds": [
+        "drildrill-destroys-persistent-will"
       ],
-      "testRefs": [],
-      "notes": "The exhaust plus neutral-essence activation, Persistent Will destruction, and refund of its printed Tribute as matching essences are not automated."
+      "mechanics": [
+        "cost:exhaustSource",
+        "result:destroy_persistent_will_refund_essence",
+        "support-from-hand",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-132": {
       "collectionNumber": 432,

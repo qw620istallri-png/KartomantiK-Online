@@ -9530,6 +9530,97 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
             self.ABILITIES[husk][0]["ongoingEffect"]["duration"], "while_source_and_target_on_field"
         )
 
+    def test_partial_batch_lament_nameless_arcane_and_ononok(self):
+        lament, arcane, ononok = "lmjn89wobbttfop_en", "inner-deserts-059", "tzoadjk7wb5qj5f_en"
+        session, p1, p2 = self.manual_batch_session(lament, arcane, ononok, card_type="manifestation")
+        self.put(p2, "deck", [f"m-{i}" for i in range(1, 9)])
+        session.battlefield = [
+            self.field_item("a", "p2", "m-10"),
+            self.field_item("b", "p2", "m-11", isSupport=True),
+            self.field_item("tok", "p2", "m-12", isTokenCard=True),
+        ]
+        self.run_ability(session, lament, [{"kind": "player", "playerId": "p2"}])
+        self.assertEqual(len(p2["zones"]["graveyard"]), 2)
+        self.assertEqual(len(p2["zones"]["deck"]), 6)
+        session.battlefield = [
+            self.field_item("src", "p1", arcane),
+            self.field_item("x", "p1", "m-1"),
+            self.field_item("y", "p1", "m-2", isSupport=True),
+            self.field_item("z", "p2", "m-3"),
+        ]
+        self.run_ability(session, arcane, item_id="src")
+        self.assertEqual(sorted(i["id"] for i in session.battlefield), ["src", "z"])
+        pool = {t["temperament"]: t["counters"]["essence"] for t in session.tokens if t.get("isEssence")}
+        self.assertEqual(pool, {"transcendent": 2})
+        self.put(p1, "graveyard", ["m-4"])
+        self.put(p1, "deck", ["m-5"])
+        session.battlefield = [
+            self.field_item("on", "p1", ononok, field_zone="interzone"),
+            self.field_item("iz", "p2", "m-6", field_zone="interzone"),
+        ]
+        self.run_ability(session, ononok, item_id="on")
+        self.assertEqual(session.battlefield, [])
+        self.assertIn(ononok, p1["zones"]["exile"])
+        self.assertEqual(sorted(p1["zones"]["deck"]), ["m-4", "m-5"])
+        self.assertIn("m-6", p2["zones"]["deck"])
+
+    def test_partial_batch_lilitha_mamelath_silem_timidette(self):
+        lilitha, mamelath, silem, timidette = (
+            "inner-deserts-113", "inner-deserts-017", "inner-deserts-089", "inner-deserts-041",
+        )
+        session, p1, p2 = self.manual_batch_session(lilitha, mamelath, silem, timidette, card_type="manifestation")
+        for cid in (lilitha, mamelath, silem, timidette):
+            self.assertEqual(self.ABILITIES[cid][-1]["result"], {"kind": "move_source_to_owner_exile"})
+        session.card_rules["m-1"]["power"] = 3
+        session.battlefield = [self.field_item("t", "p2", "m-1")]
+        self.run_ability(session, lilitha, [self.card_target("t", "m-1")], item_id="src")
+        tokens = [i for i in session.battlefield if i.get("isTokenCard")]
+        self.assertEqual(len(tokens), 3)
+        self.assertTrue(all(i["ownerId"] == "p2" and i["power"] == 1 for i in tokens))
+        self.assertIn("m-1", p2["zones"]["graveyard"])
+        session.battlefield = [
+            self.field_item("f1", "p1", "m-2"), self.field_item("f2", "p2", "m-3"),
+        ]
+        session.card_rules["m-2"]["power"] = 2
+        session.card_rules["m-3"]["power"] = 4
+        session.rules_engine["firstManifestationItemIds"] = {"p1": "f1", "p2": "f2"}
+        self.run_ability(session, mamelath, item_id="src")
+        self.assertEqual(session.rules_field_zone(session.find_battlefield_item("f1")), "interzone")
+        counts = {pid: len([i for i in session.battlefield if i.get("isTokenCard") and i["ownerId"] == pid]) for pid in ("p1", "p2")}
+        self.assertEqual(counts, {"p1": 2, "p2": 4})
+        session.battlefield = [
+            self.field_item("s1", "p1", "m-4", field_zone="stalemate"),
+            self.field_item("s2", "p2", "m-5", field_zone="stalemate"),
+        ]
+        self.run_ability(session, silem, item_id="src")
+        s1 = session.find_battlefield_item("s1")
+        self.assertTrue(s1["isSupport"])
+        self.assertEqual(session.rules_field_zone(s1), "confrontation")
+        self.assertEqual(session.rules_field_zone(session.find_battlefield_item("s2")), "stalemate")
+        self.assertFalse(session.rules_item_effects_active(s1))
+        session.battlefield = [
+            self.field_item("src", "p1", timidette, isSupport=True),
+            self.field_item("keep", "p2", "m-6", isSupport=True),
+            self.field_item("gone", "p2", "m-7", isSupport=True),
+            self.field_item("mine", "p1", "m-8", isSupport=True),
+        ]
+        self.run_ability(session, timidette, [self.card_target("keep", "m-6")], item_id="src")
+        self.assertEqual(sorted(i["id"] for i in session.battlefield), ["keep", "src"])
+        self.assertEqual(p2["zones"]["deck"][-1], "m-7")
+        self.assertEqual(p1["zones"]["deck"][-1], "m-8")
+
+    def test_partial_batch_drildrill_refunds_the_tribute_as_essence(self):
+        drildrill = "inner-deserts-131"
+        session, p1, _p2 = self.manual_batch_session(drildrill, card_type="manifestation")
+        session.card_rules["pw"] = {"type": "persistent_will", "cost": 3, "temperaments": ["choleric"]}
+        session.battlefield = [self.field_item("pw", "p2", "pw", field_zone="field")]
+        self.run_ability(session, drildrill, [self.card_target("pw", "pw")], item_id="src")
+        self.assertEqual(session.battlefield, [])
+        pool = {t["temperament"]: t["counters"]["essence"] for t in session.tokens if t.get("isEssence") and t["ownerId"] == "p2"}
+        self.assertEqual(pool, {"choleric": 3})
+        ability = self.ABILITIES[drildrill][0]
+        self.assertEqual(ability["extraEssenceByTargetCount"], {"targetCount": 1, "amount": 2})
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")

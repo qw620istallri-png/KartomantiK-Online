@@ -1148,8 +1148,11 @@
       ]
     },
     "lmjn89wobbttfop_en": {
-      "status": "partial",
-      "notes": "The entry trigger that mills a target player for each non-token Confrontation manifestation is not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "axsr1earxwcrta3_en": {
       "status": "automated",
@@ -1231,8 +1234,11 @@
       ]
     },
     "tzoadjk7wb5qj5f_en": {
-      "status": "partial",
-      "notes": "The Interzone-entry exile and per-player Limbo/Interzone shuffle into decks are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "8te5ovk08ul6fve_en": {
       "status": "automated",
@@ -1300,8 +1306,11 @@
       "notes": "The extra 5-point gain and target manifestation power bonus after other card/effect scoring are not automated."
     },
     "inner-deserts-017": {
-      "status": "partial",
-      "notes": "Moving First Manifestations to Interzone, creating base-power token counts, and exiling Mamelath after a win are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-026": {
       "status": "partial",
@@ -1328,8 +1337,11 @@
       ]
     },
     "inner-deserts-041": {
-      "status": "partial",
-      "notes": "Selecting one opposing Support per opponent, returning all other Support to deck bottoms in order, and win exile are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-051": {
       "status": "automated",
@@ -1356,8 +1368,11 @@
       ]
     },
     "inner-deserts-059": {
-      "status": "partial",
-      "notes": "Sacrificing all other controlled Confrontation manifestations and gaining one transcendent essence per card moved are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-065": {
       "status": "partial",
@@ -1399,8 +1414,11 @@
       "notes": "Conditional play requires a Will on top of the Stack, then interrupts and locks the Stack and grants power; generic recognition incorrectly grants unconditional Support from hand."
     },
     "inner-deserts-089": {
-      "status": "partial",
-      "notes": "Moving all controlled Stalemate manifestations to Support, suppressing their effects, and exiling Silem after a win are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-105": {
       "status": "automated",
@@ -1421,8 +1439,11 @@
       "notes": "The optional revealed hand discard and base-power reduction of a target Confrontation manifestation are not automated."
     },
     "inner-deserts-113": {
-      "status": "partial",
-      "notes": "Optional target destruction, base-power token creation for its controller, and exile after winning are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-125": {
       "status": "automated",
@@ -1432,8 +1453,11 @@
       ]
     },
     "inner-deserts-131": {
-      "status": "partial",
-      "notes": "The exhaust plus neutral-essence activation, Persistent Will destruction, and refund of its printed Tribute as matching essences are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "icxqhki0ivfgqu0_en": {
       "status": "automated",
