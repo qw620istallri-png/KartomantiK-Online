@@ -9647,6 +9647,203 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertEqual(self.power_of(session, "t"), 3)
         self.assertIn("m-2", p1["zones"]["graveyard"])
 
+    def test_partial_batch_makaboon_and_denblew_watch_discard_and_draw(self):
+        makaboon, denblew = "inner-deserts-056", "inner-deserts-026"
+        session, p1, p2 = self.make_session(makaboon, denblew)
+        session.battlefield = [
+            self.field_item("mk", "p1", makaboon, field_zone="interzone"),
+            self.field_item("dn", "p1", denblew, field_zone="confrontation"),
+        ]
+        self.put(p2, "deck", ["m-1", "m-2", "m-3"])
+        self.put(p2, "hand", ["m-4", "m-5"])
+        self.put(p1, "deck", ["m-6", "m-7"])
+        session.rules_engine["observedEvents"] = []
+        session.move_zone_card("p2", "deck", "p2", "graveyard", "m-1", "top")
+        session.move_zone_card("p2", "deck", "p2", "graveyard", "m-2", "top")
+        queued = session.queue_rules_observed_event_triggers(defer=True)
+        self.assertEqual(len(queued), 1)
+        self.assertEqual(queued[0]["targets"], [{"kind": "player", "playerId": "p2"}])
+        payload = session.apply_rules_action_result({
+            **queued[0], "ability": {"result": queued[0]["ability"]["result"]},
+        })
+        self.assertEqual(payload["choiceKind"], "discard_from_hand")
+        self.assertEqual(session.rules_engine["pendingChoice"]["playerId"], "p2")
+        session.rules_engine["pendingChoice"] = None
+        # Denblew: only draws outside the Recovery Phase, once per turn, opponents only.
+        session.current_phase_id = lambda: "recovery_draw"
+        session.move_zone_card("p2", "deck", "p2", "hand", "m-3", "bottom")
+        self.assertEqual(session.queue_rules_observed_event_triggers(defer=True), [])
+        session.current_phase_id = lambda: "confrontation_reaction"
+        self.put(p2, "deck", ["m-8", "m-9"])
+        session.move_zone_card("p2", "deck", "p2", "hand", "m-8", "bottom")
+        queued = session.queue_rules_observed_event_triggers(defer=True)
+        self.assertEqual([q["source"]["cardId"] for q in queued], [denblew])
+        session.move_zone_card("p2", "deck", "p2", "hand", "m-9", "bottom")
+        self.assertEqual(session.queue_rules_observed_event_triggers(defer=True), [])
+        session.move_zone_card("p1", "deck", "p1", "hand", "m-6", "bottom")
+        self.assertEqual(session.queue_rules_observed_event_triggers(defer=True), [])
+
+    def test_partial_batch_atavic_oppression_end_of_turn_discard_needs_ten_fatigue(self):
+        oppression = "a058t24med4h5nx_en"
+        session, p1, _p2 = self.make_session(oppression)
+        session.card_rules[oppression]["type"] = "persistent_will"
+        session.battlefield = [self.field_item("op", "p1", oppression, field_zone="field")]
+        session.battlefield[0]["counters"] = {"Fatigue": 9}
+        self.assertEqual(session.build_rules_end_turn_field_triggers(), [])
+        session.battlefield[0]["counters"] = {"Fatigue": 10}
+        queued = session.build_rules_end_turn_field_triggers()
+        self.assertEqual(len(queued), 1)
+        self.assertTrue(queued[0]["optional"])
+        self.put(p1, "hand", ["m-1", "m-2", "m-3"])
+        payload = session.apply_rules_action_result({
+            **queued[0], "optionalAccepted": True,
+            "ability": {"result": queued[0]["ability"]["result"]},
+        })
+        self.assertEqual(payload["count"], 2)
+        choice_id = session.rules_engine["pendingChoice"]["id"]
+        error, _ = session.resolve_rules_choice("p1", choice_id, card_ids=["m-1", "m-2", "m-3"])
+        self.assertIsNotNone(error)
+        error, resolved = session.resolve_rules_choice("p1", choice_id, card_ids=["m-1"])
+        self.assertIsNone(error)
+        self.assertEqual(resolved["count"], 1)
+        self.assertEqual(p1["zones"]["hand"], ["m-2", "m-3"])
+
+    def test_partial_batch_tigrolione_goes_to_the_winner_interzone_instead_of_a_vessel(self):
+        session, p1, p2 = self.make_session()
+        session.phase_tracker["index"] = session.phase_sequence().index("resolution_compare")
+        session.card_rules["m-0"]["power"] = 4
+        session.card_rules["tiger"] = {
+            "type": "manifestation", "power": 1, "temperaments": ["phlegmatic"],
+            "lossDestination": "winner_interzone",
+        }
+        winner = {"id": "winner", "ownerId": "p1", "cardId": "m-0", "faceUp": True, "fieldZone": "confrontation", "confrontationOrder": 1, "counters": {}}
+        loser = {"id": "loser", "ownerId": "p2", "cardId": "tiger", "faceUp": True, "fieldZone": "confrontation", "confrontationOrder": 2, "counters": {}}
+        session.battlefield = [winner, loser]
+        session.prepare_rules_confrontation_result()
+        session.phase_tracker["index"] = session.phase_sequence().index("resolution_move")
+        session.begin_rules_confrontation_cleanup()
+        self.assertIn(loser, session.battlefield)
+        self.assertEqual(loser["controllerId"], "p1")
+        self.assertEqual(loser["ownerId"], "p2")
+        self.assertEqual(session.rules_field_zone(loser), "interzone")
+        self.assertEqual(p1["zones"]["receptacle"], [])
+
+    def test_partial_batch_absent_trinket_returns_when_a_friendly_manifestation_is_targeted(self):
+        trinket = "ptwyrc2a26wqwc8_en"
+        session, p1, p2 = self.make_session(trinket)
+        session.battlefield = [
+            self.field_item("tr", "p1", trinket, field_zone="confrontation", isSupport=True),
+            self.field_item("mine", "p1", "m-1"),
+            self.field_item("theirs", "p2", "m-2"),
+        ]
+        will_action = {
+            "id": "w1", "controllerId": "p2", "kind": "play_card",
+            "targets": [self.card_target("theirs", "m-2")],
+        }
+        self.assertEqual(session.queue_rules_will_target_watchers(will_action), [])
+        will_action["targets"] = [self.card_target("mine", "m-1")]
+        queued = session.rules_engine["actionStack"]
+        before = len(queued)
+        result = session.queue_rules_will_target_watchers(will_action)
+        self.assertEqual(len(result), 1)
+        self.assertEqual(result[0]["source"]["cardId"], trinket)
+        payload = session.apply_rules_action_result({
+            **result[0], "ability": {"result": result[0]["ability"]["result"]},
+        })
+        self.assertEqual(payload["status"], "moved")
+        self.assertIn(trinket, p1["zones"]["hand"])
+        self.assertEqual(
+            [r["cardId"] for r in session.rules_engine["playRestrictions"]], [trinket]
+        )
+
+    def test_partial_batch_yzzit_rolls_before_entering_a_vessel(self):
+        session, p1, p2 = self.make_session()
+        session.card_rules["yz"] = {
+            "type": "manifestation", "power": 1, "temperaments": ["phlegmatic"],
+            "vesselEntryRoll": True,
+        }
+        for roll, zone in ((3, "hand"), (4, "receptacle")):
+            item = self.field_item("y", "p2", "yz")
+            session.battlefield = [item]
+            for target in (p1, p2):
+                for z in ("hand", "receptacle"):
+                    target["zones"][z] = []
+                    target["zoneOwners"][z] = {}
+            with unittest.mock.patch("random.randint", return_value=roll):
+                movement = session._rules_remove_field_item(item, "p1", "receptacle", "top")
+            self.assertEqual(movement["vesselRoll"], roll)
+            expected = (p2 if zone == "hand" else p1)["zones"][zone]
+            self.assertEqual(expected, ["yz"])
+        session.battlefield = [self.field_item("n", "p2", "m-1")]
+        movement = session._rules_remove_field_item(session.battlefield[0], "p1", "receptacle", "top")
+        self.assertNotIn("vesselRoll", movement)
+
+    def test_partial_batch_jesterina_chains_the_first_manifestation_of_the_opponent_deck(self):
+        jesterina = "inner-deserts-065"
+        session, p1, p2 = self.manual_batch_session(jesterina, card_type="manifestation")
+        self.assertEqual(self.ABILITIES[jesterina][1]["result"], {"kind": "move_source_to_owner_exile"})
+        session.card_rules["w1"] = {"type": "ephemeral_will"}
+        session.card_rules["w2"] = {"type": "persistent_will"}
+        self.put(p2, "deck", ["w1", "w2", "m-3", "m-4"])
+        payload, _action = self.run_ability(session, jesterina, [{"kind": "player", "playerId": "p2"}])
+        self.assertEqual(payload["status"], "chained")
+        self.assertEqual(payload["discarded"], ["w1", "w2"])
+        self.assertEqual(sorted(p2["zones"]["graveyard"]), ["w1", "w2"])
+        self.assertEqual(p2["zones"]["deck"], ["m-4"])
+        chained = next(i for i in session.battlefield if i["cardId"] == "m-3")
+        self.assertEqual(chained["controllerId"], "p1")
+        self.assertEqual(chained["ownerId"], "p2")
+        self.assertTrue(chained["isSupport"])
+        self.put(p2, "deck", ["w1"])
+        payload, _action = self.run_ability(session, jesterina, [{"kind": "player", "playerId": "p2"}])
+        self.assertEqual(payload["status"], "no_manifestation")
+
+    def test_partial_batch_linoleus_adds_points_and_power_without_looping(self):
+        linoleus = "inner-deserts-016"
+        session, p1, p2 = self.make_session(linoleus)
+        session.battlefield = [
+            self.field_item("li", "p1", linoleus, field_zone="interzone"),
+            self.field_item("ally", "p1", "m-1"),
+        ]
+        session.rules_engine["observedEvents"] = []
+        session.adjust_rules_score("p2", 10)
+        self.assertEqual(session.queue_rules_observed_event_triggers(defer=True), [])
+        session.adjust_rules_score("p1", 10)
+        queued = session.queue_rules_observed_event_triggers(defer=True)
+        self.assertEqual(len(queued), 1)
+        action = queued[0]
+        self.assertEqual(action["targets"], [self.card_target("ally", "m-1")] if action["targets"] else [])
+        before = p1["score"]
+        session.apply_rules_action_result({
+            **action, "ability": {"result": action["ability"]["result"]},
+        })
+        self.assertEqual(p1["score"], before + 5)
+        self.assertEqual(session.rules_engine["observedEvents"], [])
+
+    def test_partial_batch_inert_anchorstone_gains_support_when_its_block_counters_run_out(self):
+        stone = "3oiehnpbub1byg6_en"
+        session, p1, _p2 = self.make_session(stone)
+        session.card_rules[stone]["supportWhenNoCounter"] = "Block"
+        item = self.field_item("st", "p1", stone, field_zone="interzone")
+        session.battlefield = [item]
+        enter, remove = self.ABILITIES[stone]
+        def fire(ability):
+            session.apply_rules_action_result({
+                "id": "a", "controllerId": "p1",
+                "source": {"cardId": stone, "itemId": "st"}, "targets": [],
+                "ability": {"result": ability["result"]},
+            })
+        fire(enter)
+        self.assertEqual(item["counters"]["Block"], 4)
+        self.assertFalse(session.rules_card_can_enter_support(item, "interzone"))
+        for _ in range(3):
+            fire(remove)
+        self.assertFalse(session.rules_card_can_enter_support(item, "interzone"))
+        fire(remove)
+        fire(remove)
+        self.assertEqual(item["counters"]["Block"], 0)
+        self.assertTrue(session.rules_card_can_enter_support(item, "interzone"))
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")

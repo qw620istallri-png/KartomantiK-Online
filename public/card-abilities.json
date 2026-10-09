@@ -2024,6 +2024,12 @@
       "removeCountersFromSource": {"name": "Fatigue", "amount": 5},
       "targets": {"min": 0, "max": 0},
       "result": {"kind": "discard_hand_each_opponent", "value": 1, "drawOwner": 1}
+    },
+    {
+      "id": "fatigue-ten-discard-up-to-two-at-end-of-turn",
+      "optional": true,
+      "trigger": {"event": "end_of_turn", "zone": "field", "sourceCounterMin": {"name": "Fatigue", "min": 10}},
+      "result": {"kind": "optional_discard_up_to", "value": 2}
     }
   ],
   "rqvzo3iji2a1l65_en": [
@@ -2830,6 +2836,66 @@
         "zones": ["battlefield"], "fieldZone": "confrontation"
       },
       "result": { "kind": "optional_discard_manifestation_weaken_target" }
+    }
+  ],
+  "inner-deserts-056": [
+    {
+      "id": "makaboon-extra-hand-discard",
+      "trigger": { "event": "deck_cards_discarded", "target": "event_controller" },
+      "targets": { "kind": "player", "min": 1, "max": 1 },
+      "result": { "kind": "discard_hand_target", "value": 1 }
+    }
+  ],
+  "inner-deserts-026": [
+    {
+      "id": "denblew-grows-when-opponent-draws",
+      "trigger": { "event": "cards_drawn", "eventController": "opponent", "oncePerTurn": true },
+      "targets": { "min": 0, "max": 0 },
+      "ongoingEffect": { "kind": "power_modifier", "value": 1, "duration": "until_end_of_turn", "scope": "source" }
+    }
+  ],
+  "ptwyrc2a26wqwc8_en": [
+    {
+      "id": "trinket-returns-when-friendly-manifestation-is-targeted",
+      "trigger": { "event": "manifestation_targeted_by_will", "eventController": "owner" },
+      "result": { "kind": "return_source_to_hand_restricted" }
+    }
+  ],
+  "inner-deserts-065": [
+    {
+      "id": "jesterina-chains-opponent-manifestation",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "targets": { "kind": "player", "min": 1, "max": 1, "controller": "opponent" },
+      "result": { "kind": "chain_discarded_manifestation_from_target_deck" }
+    },
+    {
+      "id": "jesterina-exiles-after-win",
+      "trigger": { "event": "wins_confrontation" },
+      "result": { "kind": "move_source_to_owner_exile" }
+    }
+  ],
+  "inner-deserts-016": [
+    {
+      "id": "linoleus-doubles-down-on-point-gains",
+      "trigger": { "event": "points_gained", "eventController": "owner" },
+      "targets": {
+        "kind": "card", "min": 0, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "controller": "self", "excludeEventSource": true
+      },
+      "result": { "kind": "score_owner_silent", "value": 5 },
+      "ongoingEffect": { "kind": "power_modifier", "value": 1, "duration": "until_end_of_turn" }
+    }
+  ],
+  "3oiehnpbub1byg6_en": [
+    {
+      "id": "anchorstone-enters-with-block-counters",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": { "kind": "add_counter_source", "counter": "Block", "value": 4 }
+    },
+    {
+      "id": "anchorstone-loses-block-counter-on-will",
+      "trigger": { "event": "will_played", "eventController": "owner" },
+      "result": { "kind": "add_counter_source", "counter": "Block", "value": -1 }
     }
   ]
 }

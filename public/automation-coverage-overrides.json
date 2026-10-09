@@ -103,8 +103,11 @@
       ]
     },
     "a058t24med4h5nx_en": {
-      "status": "partial",
-      "notes": "The optional end-of-turn discard of up to two cards at ten Fatigue counters is not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "rqvzo3iji2a1l65_en": {
       "status": "partial",
@@ -1112,8 +1115,11 @@
       "notes": "The loss trigger that suppresses replacement and effects in an opponent's Interzone through the next turn is not automated."
     },
     "3oiehnpbub1byg6_en": {
-      "status": "partial",
-      "notes": "Entering with Block counters, removing one when a Will is played, and gaining Support at zero counters are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "zozynivu4tbojjg_en": {
       "status": "automated",
@@ -1162,8 +1168,11 @@
       ]
     },
     "ptwyrc2a26wqwc8_en": {
-      "status": "partial",
-      "notes": "The targeted-Will watcher, return to hand, and until-end-of-turn replay lock are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "zdn6urrd7eo3idt_en": {
       "status": "automated",
@@ -1173,8 +1182,11 @@
       ]
     },
     "93gvk0hy12hylm6_en": {
-      "status": "partial",
-      "notes": "The Empathic Vessel replacement roll and odd-result return to hand are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "mqkrekbfu4tybu9_en": {
       "status": "automated",
@@ -1202,8 +1214,11 @@
       ]
     },
     "xw1fbhs6hwz6thc_en": {
-      "status": "partial",
-      "notes": "Preventing capture after a loss and moving Tigrolione to the winner's Interzone under their control are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "29iv35lxz08ygim_en": {
       "status": "automated",
@@ -1302,8 +1317,11 @@
       ]
     },
     "inner-deserts-016": {
-      "status": "partial",
-      "notes": "The extra 5-point gain and target manifestation power bonus after other card/effect scoring are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-017": {
       "status": "automated",
@@ -1313,8 +1331,11 @@
       ]
     },
     "inner-deserts-026": {
-      "status": "partial",
-      "notes": "The once-per-turn off-Recovery draw watcher and +1 power gain are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-027": {
       "status": "automated",
@@ -1357,8 +1378,11 @@
       ]
     },
     "inner-deserts-056": {
-      "status": "partial",
-      "notes": "The field watcher adding a hand discard whenever a player discards from their deck is not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-058": {
       "status": "automated",
@@ -1375,8 +1399,11 @@
       ]
     },
     "inner-deserts-065": {
-      "status": "partial",
-      "notes": "Revealing until a manifestation, discarding the revealed cards, Chaining that manifestation under your control, and win exile are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-074": {
       "status": "automated",

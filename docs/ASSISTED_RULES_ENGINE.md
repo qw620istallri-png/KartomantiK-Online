@@ -686,3 +686,7 @@ périmètre tant que le mode deux joueurs n'est pas stabilisé.
 ### Cartes partielles passées en automatique
 
 Lament, Nameless Arcane, Ononok, Lilitha, Mamelath, Silem, Timidette, Drildrill et Phalanx Tower ont des résultats dédiés (`mill_deck_per_confrontation_manifestation`, `sacrifice_other_confrontation_for_essence`, `exile_source_then_shuffle_limbo_and_interzone`, `destroy_target_tokens_for_controller`, `first_manifestations_to_interzone_tokens`, `stalemate_to_support_disabled`, `timidette_support_to_deck_bottom`, `destroy_persistent_will_refund_essence`, `optional_discard_manifestation_weaken_target`). Timidette range les Supports dans l'ordre du plateau (l'ordre choisi par le joueur n'est pas demandé).
+
+### Cartes partielles, lot 2
+
+Makaboon (`deck_cards_discarded`), Denblew (`cards_drawn`, `oncePerTurn`), Atavic Oppression (`optional_discard_up_to`), Tigrolione (`lossDestination: winner_interzone`), Absent Trinket (`manifestation_targeted_by_will`, `return_source_to_hand_restricted`), Yzzit (`vesselEntryRoll`), Jesterina (`chain_discarded_manifestation_from_target_deck`), Linoleus (`points_gained`, `score_owner_silent`) et Inert Anchorstone (`supportWhenNoCounter`) sont automatisées. Les événements observés `cards_drawn` sont détectés par un mouvement deck vers main en position `bottom` hors phase de Récupération.

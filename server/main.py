@@ -228,6 +228,26 @@ def build_card_rules(cards, abilities_by_card):
                 "can only be played while the Stack is empty"
                 in (card.get("effect") or "")
             ),
+            "vesselEntryRoll": bool(re.search(
+                r"about to enter an Empathic Vessel, roll a D6",
+                card.get("effect") or "",
+                re.IGNORECASE,
+            )),
+            "supportWhenNoCounter": (
+                (re.search(
+                    r"as long as there are no (\w+) counters on it, it has Support",
+                    card.get("effect") or "", re.IGNORECASE,
+                ) or [None, None])[1]
+            ),
+            "lossDestination": (
+                "winner_interzone"
+                if re.search(
+                    r"loses the confrontation, the winner puts it into the Interzone under their control",
+                    card.get("effect") or "",
+                    re.IGNORECASE,
+                )
+                else None
+            ),
             "supportWinDestination": (
                 "exile"
                 if re.search(

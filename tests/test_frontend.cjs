@@ -609,6 +609,7 @@ function startServer() {
       };
       const sourceCard = [...cardsById.values()].find((card) => (
         card.type === "ephemeral_will"
+        && /target manifestation/i.test(String(card.effect || ""))
         && !(playedAbilitiesByCard.get(card.id) || []).length
       ));
       const tributeCard = [...cardsById.values()].find((card) => card.type === "manifestation"

@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 215,
-    "explicitAbilities": 252,
+    "explicitCards": 221,
+    "explicitAbilities": 261,
     "statuses": {
-      "automated": 275,
+      "automated": 284,
       "generic": 0,
       "manual": 161,
-      "partial": 14
+      "partial": 5
     }
   },
   "cards": {
@@ -995,13 +995,21 @@
       "collectionNumber": 67,
       "name": "Inert Anchorstone",
       "setName": "Beta",
-      "status": "partial",
-      "abilityIds": [],
-      "mechanics": [
-        "support-win:exile"
+      "status": "automated",
+      "abilityIds": [
+        "anchorstone-enters-with-block-counters",
+        "anchorstone-loses-block-counter-on-will"
       ],
-      "testRefs": [],
-      "notes": "Entering with Block counters, removing one when a Will is played, and gaining Support at zero counters are not automated."
+      "mechanics": [
+        "result:add_counter_source",
+        "support-win:exile",
+        "trigger:enters_field",
+        "trigger:will_played"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "i7h2c7ku2gt1yvg_en": {
       "collectionNumber": 68,
@@ -2047,18 +2055,23 @@
       "collectionNumber": 141,
       "name": "Atavic Oppression",
       "setName": "Beta",
-      "status": "partial",
+      "status": "automated",
       "abilityIds": [
         "fatigue-counter-on-own-purple-card",
-        "spend-fatigues-to-make-opponent-discard"
+        "spend-fatigues-to-make-opponent-discard",
+        "fatigue-ten-discard-up-to-two-at-end-of-turn"
       ],
       "mechanics": [
         "result:add_counter_source",
         "result:discard_hand_each_opponent",
-        "trigger:card_played"
+        "result:optional_discard_up_to",
+        "trigger:card_played",
+        "trigger:end_of_turn"
       ],
-      "testRefs": [],
-      "notes": "The optional end-of-turn discard of up to two cards at ten Fatigue counters is not automated."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "axsr1earxwcrta3_en": {
       "collectionNumber": 142,
@@ -2079,14 +2092,20 @@
       "collectionNumber": 143,
       "name": "Absent Trinket",
       "setName": "Beta",
-      "status": "partial",
-      "abilityIds": [],
-      "mechanics": [
-        "support-from-hand",
-        "support-from-interzone"
+      "status": "automated",
+      "abilityIds": [
+        "trinket-returns-when-friendly-manifestation-is-targeted"
       ],
-      "testRefs": [],
-      "notes": "The targeted-Will watcher, return to hand, and until-end-of-turn replay lock are not automated."
+      "mechanics": [
+        "result:return_source_to_hand_restricted",
+        "support-from-hand",
+        "support-from-interzone",
+        "trigger:manifestation_targeted_by_will"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "easl4l3aiiim2qg_en": {
       "collectionNumber": 144,
@@ -2118,14 +2137,16 @@
       "collectionNumber": 146,
       "name": "Yzzit, the Gambler",
       "setName": "Beta",
-      "status": "partial",
+      "status": "automated",
       "abilityIds": [],
       "mechanics": [
         "first-restriction",
         "support-from-hand"
       ],
-      "testRefs": [],
-      "notes": "The Empathic Vessel replacement roll and odd-result return to hand are not automated."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "mqkrekbfu4tybu9_en": {
       "collectionNumber": 147,
@@ -2719,14 +2740,16 @@
       "collectionNumber": 191,
       "name": "Tigrolione",
       "setName": "Beta",
-      "status": "partial",
+      "status": "automated",
       "abilityIds": [],
       "mechanics": [
         "support-from-hand",
         "support-from-interzone"
       ],
-      "testRefs": [],
-      "notes": "Preventing capture after a loss and moving Tigrolione to the winner's Interzone under their control are not automated."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "29iv35lxz08ygim_en": {
       "collectionNumber": 192,
@@ -4455,13 +4478,21 @@
       "collectionNumber": 316,
       "name": "Linoleus, the Verdant",
       "setName": "Inner Deserts",
-      "status": "partial",
-      "abilityIds": [],
-      "mechanics": [
-        "adamant"
+      "status": "automated",
+      "abilityIds": [
+        "linoleus-doubles-down-on-point-gains"
       ],
-      "testRefs": [],
-      "notes": "The extra 5-point gain and target manifestation power bonus after other card/effect scoring are not automated."
+      "mechanics": [
+        "adamant",
+        "ongoing:power_modifier",
+        "result:score_owner_silent",
+        "target:card",
+        "trigger:points_gained"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-017": {
       "collectionNumber": 317,
@@ -4599,15 +4630,21 @@
       "collectionNumber": 326,
       "name": "Denblew, the Puritan",
       "setName": "Inner Deserts",
-      "status": "partial",
-      "abilityIds": [],
+      "status": "automated",
+      "abilityIds": [
+        "denblew-grows-when-opponent-draws"
+      ],
       "mechanics": [
         "first-restriction",
+        "ongoing:power_modifier",
         "support-from-hand",
-        "support-from-interzone"
+        "support-from-interzone",
+        "trigger:cards_drawn"
       ],
-      "testRefs": [],
-      "notes": "The once-per-turn off-Recovery draw watcher and +1 power gain are not automated."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-027": {
       "collectionNumber": 327,
@@ -5003,13 +5040,20 @@
       "collectionNumber": 356,
       "name": "Makaboon",
       "setName": "Inner Deserts",
-      "status": "partial",
-      "abilityIds": [],
-      "mechanics": [
-        "float"
+      "status": "automated",
+      "abilityIds": [
+        "makaboon-extra-hand-discard"
       ],
-      "testRefs": [],
-      "notes": "The field watcher adding a hand discard whenever a player discards from their deck is not automated."
+      "mechanics": [
+        "float",
+        "result:discard_hand_target",
+        "target:player",
+        "trigger:deck_cards_discarded"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-057": {
       "collectionNumber": 357,
@@ -5116,14 +5160,24 @@
       "collectionNumber": 365,
       "name": "Jesterina, the Decadent",
       "setName": "Inner Deserts",
-      "status": "partial",
-      "abilityIds": [],
+      "status": "automated",
+      "abilityIds": [
+        "jesterina-chains-opponent-manifestation",
+        "jesterina-exiles-after-win"
+      ],
       "mechanics": [
         "first-restriction",
-        "support-from-hand"
+        "result:chain_discarded_manifestation_from_target_deck",
+        "result:move_source_to_owner_exile",
+        "support-from-hand",
+        "target:player",
+        "trigger:enters_field_zone",
+        "trigger:wins_confrontation"
       ],
-      "testRefs": [],
-      "notes": "Revealing until a manifestation, discarding the revealed cards, Chaining that manifestation under your control, and win exile are not automated."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-066": {
       "collectionNumber": 366,

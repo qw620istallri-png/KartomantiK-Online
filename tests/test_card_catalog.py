@@ -1009,6 +1009,11 @@ class CardCatalogTests(unittest.TestCase):
         self.assertEqual(
             rules["inner-deserts-051"]["supportWinDestination"], "exile"
         )
+        self.assertEqual(
+            rules["xw1fbhs6hwz6thc_en"]["lossDestination"], "winner_interzone"
+        )
+        self.assertTrue(rules["93gvk0hy12hylm6_en"]["vesselEntryRoll"])
+        self.assertEqual(rules["3oiehnpbub1byg6_en"]["supportWhenNoCounter"], "Block")
         expected = {
             "0kcy08a6jd7ez7k_en",
             "inner-deserts-010",
