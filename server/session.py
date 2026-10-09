@@ -1418,6 +1418,7 @@ class Session:
             "stalemate_to_support_disabled",
             "timidette_support_to_deck_bottom",
             "destroy_persistent_will_refund_essence",
+            "optional_discard_manifestation_weaken_target",
         }:
             clean = {"kind": kind}
             if kind == "play_limbo_target_as_support":
@@ -7007,6 +7008,34 @@ class Session:
                 "controllerId": controller_id, "essences": cost,
                 "temperament": temperament,
             }
+        if result.get("kind") == "optional_discard_manifestation_weaken_target":
+            target = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "card"
+            ), None)
+            hand = player["zones"]["hand"]
+            if (
+                target is None
+                or not any(self.card_rules.get(c, {}).get("type") == "manifestation" for c in hand)
+            ):
+                return {"kind": result.get("kind"), "status": "no_hand_card"}
+            if not action.get("optionalAccepted"):
+                return {"kind": result.get("kind"), "status": "declined"}
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "discard_from_hand",
+                "playerId": player_id, "count": 1,
+                "requireManifestation": True,
+                "weakenTargetItemId": target.get("itemId"),
+                "actionId": action.get("id"),
+                "controllerId": action.get("controllerId"),
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "discard_from_hand", "playerId": player_id,
+                "count": 1, "requireManifestation": True,
+            }
         if result.get("kind") == "double_target_base_power":
             target = next((
                 entry for entry in action.get("targets") or []
@@ -11041,12 +11070,25 @@ class Session:
             if card_id not in hand_remaining:
                 return "A selected card is no longer in your hand.", None
             hand_remaining.remove(card_id)
+        if choice.get("requireManifestation") and any(
+            self.card_rules.get(card_id, {}).get("type") != "manifestation"
+            for card_id in selected
+        ):
+            return "Choose a manifestation from your hand.", None
         for card_id in selected:
             error, _owner_id = self.move_zone_card(
                 player_id, "hand", player_id, "graveyard", card_id, "top"
             )
             if error:
                 return error, None
+        weakened = None
+        if choice.get("weakenTargetItemId"):
+            weak_item = self.find_battlefield_item(choice["weakenTargetItemId"])
+            base = int(self.card_rules.get(selected[0], {}).get("power") or 0) if selected else 0
+            if weak_item is not None and base:
+                counters = weak_item.setdefault("counters", {})
+                counters["power"] = int(counters.get("power") or 0) - base
+                weakened = {"itemId": weak_item["id"], "value": -base}
         drawn = 0
         requested_draw = max(0, min(int(choice.get("drawAfter") or 0), 50))
         for _index in range(min(requested_draw, len(self.players[player_id]["zones"]["deck"]))):
@@ -11068,6 +11110,7 @@ class Session:
             "actionId": choice.get("actionId"),
             "controllerId": choice.get("controllerId"),
             "sourceCardId": choice.get("sourceCardId"),
+            **({"weakened": weakened} if weakened else {}),
         }
 
     def resolve_rules_top_action(self):

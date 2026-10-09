@@ -9621,6 +9621,32 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         ability = self.ABILITIES[drildrill][0]
         self.assertEqual(ability["extraEssenceByTargetCount"], {"targetCount": 1, "amount": 2})
 
+    def test_partial_batch_phalanx_tower_discards_a_manifestation_to_weaken(self):
+        tower = "inner-deserts-111"
+        session, p1, _p2 = self.manual_batch_session(tower, card_type="manifestation")
+        session.card_rules["m-1"]["power"] = 6
+        session.card_rules["m-2"]["power"] = 3
+        session.battlefield = [self.field_item("t", "p2", "m-1")]
+        self.put(p1, "hand", ["will-ephemeral"])
+        ability = self.ABILITIES[tower][0]
+        action = {
+            "id": "ph", "controllerId": "p1", "optionalAccepted": True,
+            "source": {"cardId": tower}, "targets": [self.card_target("t", "m-1")],
+            "ability": {"result": ability["result"]},
+        }
+        self.assertEqual(session.apply_rules_action_result(action)["status"], "no_hand_card")
+        self.put(p1, "hand", ["will-ephemeral", "m-2"])
+        payload = session.apply_rules_action_result(action)
+        self.assertEqual(payload["choiceKind"], "discard_from_hand")
+        choice_id = session.rules_engine["pendingChoice"]["id"]
+        error, _ = session.resolve_rules_choice("p1", choice_id, card_ids=["will-ephemeral"])
+        self.assertIsNotNone(error)
+        error, resolved = session.resolve_rules_choice("p1", choice_id, card_ids=["m-2"])
+        self.assertIsNone(error)
+        self.assertEqual(resolved["weakened"]["value"], -3)
+        self.assertEqual(self.power_of(session, "t"), 3)
+        self.assertIn("m-2", p1["zones"]["graveyard"])
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")

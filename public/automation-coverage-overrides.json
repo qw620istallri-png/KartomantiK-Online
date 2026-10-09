@@ -1435,8 +1435,11 @@
       ]
     },
     "inner-deserts-111": {
-      "status": "partial",
-      "notes": "The optional revealed hand discard and base-power reduction of a target Confrontation manifestation are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-113": {
       "status": "automated",

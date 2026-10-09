@@ -2819,5 +2819,17 @@
       },
       "result": { "kind": "destroy_persistent_will_refund_essence" }
     }
+  ],
+  "inner-deserts-111": [
+    {
+      "id": "phalanx-tower-discard-to-weaken",
+      "optional": true,
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "fieldZone": "confrontation"
+      },
+      "result": { "kind": "optional_discard_manifestation_weaken_target" }
+    }
   ]
 }

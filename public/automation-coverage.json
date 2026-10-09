@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 214,
-    "explicitAbilities": 251,
+    "explicitCards": 215,
+    "explicitAbilities": 252,
     "statuses": {
-      "automated": 274,
+      "automated": 275,
       "generic": 0,
       "manual": 161,
-      "partial": 15
+      "partial": 14
     }
   },
   "cards": {
@@ -5723,14 +5723,21 @@
       "collectionNumber": 411,
       "name": "Phalanx Tower",
       "setName": "Inner Deserts",
-      "status": "partial",
-      "abilityIds": [],
+      "status": "automated",
+      "abilityIds": [
+        "phalanx-tower-discard-to-weaken"
+      ],
       "mechanics": [
         "first-restriction",
-        "support-from-hand"
+        "result:optional_discard_manifestation_weaken_target",
+        "support-from-hand",
+        "target:card",
+        "trigger:enters_field"
       ],
-      "testRefs": [],
-      "notes": "The optional revealed hand discard and base-power reduction of a target Confrontation manifestation are not automated."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-112": {
       "collectionNumber": 412,
