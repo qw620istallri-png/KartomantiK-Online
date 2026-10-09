@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 230,
-    "explicitAbilities": 272,
+    "explicitCards": 240,
+    "explicitAbilities": 283,
     "statuses": {
-      "automated": 293,
+      "automated": 303,
       "generic": 0,
-      "manual": 152,
-      "partial": 5
+      "manual": 143,
+      "partial": 4
     }
   },
   "cards": {
@@ -1489,13 +1489,19 @@
       "collectionNumber": 102,
       "name": "Tenebro, Night Assailant",
       "setName": "Beta",
-      "status": "partial",
-      "abilityIds": [],
-      "mechanics": [
-        "support-win:exile"
+      "status": "automated",
+      "abilityIds": [
+        "tenebro-rises-into-support-when-discarded"
       ],
-      "testRefs": [],
-      "notes": "The optional discard replacement that puts Tenebro in Support is not automated."
+      "mechanics": [
+        "result:limbo_source_to_support",
+        "support-win:exile",
+        "trigger:discarded"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "g3zumpyf623hto6_en": {
       "collectionNumber": 103,
@@ -1614,10 +1620,19 @@
       "collectionNumber": 110,
       "name": "Zombieswing",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "zombieswing-recovers-limbo-manifestation"
+      ],
+      "mechanics": [
+        "result:return_other_limbo_card_to_hand",
+        "target:zone_card",
+        "trigger:enters_limbo"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "0kcy08a6jd7ez7k_en": {
       "collectionNumber": 111,
@@ -2904,10 +2919,18 @@
       "collectionNumber": 202,
       "name": "Fintus, the Spectacular",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "fintus-destroys-next-opposing-entry"
+      ],
+      "mechanics": [
+        "result:destroy_next_opponent_confrontation_entry",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "03jzw541k0af8x3_en": {
       "collectionNumber": 203,
@@ -2948,10 +2971,18 @@
       "collectionNumber": 206,
       "name": "Gorb, the Musclebound",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "gorb-locks-your-support-entries"
+      ],
+      "mechanics": [
+        "result:lock_support_entries",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "6huhkc5cydtlzgo_en": {
       "collectionNumber": 207,
@@ -3357,10 +3388,19 @@
       "collectionNumber": 234,
       "name": "Wretched Arena",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "wretched-arena-locks-support-entries"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "phase-window",
+        "result:lock_support_entries"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "m2l3v60n0iakrm2_en": {
       "collectionNumber": 235,
@@ -3521,10 +3561,22 @@
       "collectionNumber": 245,
       "name": "Watchtower",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "watchtower-weakens-on-own-will",
+        "watchtower-gains-essence-on-opposing-destruction"
+      ],
+      "mechanics": [
+        "result:add_power_counter_target",
+        "result:create_essence",
+        "target:card",
+        "trigger:manifestation_destroyed",
+        "trigger:will_played"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "zhzp6kenpqrym9h_en": {
       "collectionNumber": 246,
@@ -4581,10 +4633,18 @@
       "collectionNumber": 320,
       "name": "Healing Bond",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "healing-bond-after-revelation"
+      ],
+      "mechanics": [
+        "result:healing_bond",
+        "trigger:revelation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-021": {
       "collectionNumber": 321,
@@ -4999,10 +5059,20 @@
       "collectionNumber": 350,
       "name": "Tombloom",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "tombloom-exiles-itself-and-weakens"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "result:exile_source_card_from_limbo",
+        "target:card",
+        "trigger:discarded"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-051": {
       "collectionNumber": 351,
@@ -5169,10 +5239,19 @@
       "collectionNumber": 363,
       "name": "Memento, the Fallen",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "memento-shuffles-limbo-into-deck"
+      ],
+      "mechanics": [
+        "result:shuffle_limbo_targets_into_deck",
+        "target:zone_card",
+        "trigger:enters_limbo"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-064": {
       "collectionNumber": 364,
@@ -5777,10 +5856,19 @@
       "collectionNumber": 408,
       "name": "Horned Augustus",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "horned-augustus-exiles-limbo-for-tokens"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "result:exile_limbo_targets_create_tokens",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-109": {
       "collectionNumber": 409,

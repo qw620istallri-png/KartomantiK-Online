@@ -694,3 +694,11 @@ Makaboon (`deck_cards_discarded`), Denblew (`cards_drawn`, `oncePerTurn`), Atavi
 ### Cartes manuelles, lot 2
 
 Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmom, Walk the Oblivion et Quorum sont automatisées. Le choix de défausse `discard_from_hand` accepte désormais `upTo` (jusqu'à N cartes), `requireTypes`, `sourcePowerPerDiscard` et `lossPerRemaining`, avec une sélection multiple côté client. `neutralize_stack_action` accepte `refundEssence`.
+
+### Lot 3 (entrées en Limbo, verrous de Support)
+
+- Nouvel évènement observé `card_entered_limbo` : déclenche `enters_limbo` et, si la raison est une défausse, `discarded` sur la carte elle-même (Zombieswing, Memento, Tombloom, Tenebro).
+- Tenebro : approximation, la carte passe par le Limbo puis remonte en Support (le remplacement de défausse n'est pas modélisé).
+- Fintus (`destroyNextEntries`) détruit la prochaine entrée adverse sans déclencher les effets propres de la carte entrante.
+- Gorb / Wretched Arena : `lock_support_entries` ne couvre que les jeux en Support déclarés.
+- Healing Bond, Watchtower, Horned Augustus automatisés.

@@ -2990,5 +2990,104 @@
       "trigger": { "event": "enters_field", "visibility": "face_up" },
       "result": { "kind": "optional_discard_wills_for_power", "value": 3 }
     }
+  ],
+  "bu1y6jwy7iaywqu_en": [
+    {
+      "id": "zombieswing-recovers-limbo-manifestation",
+      "optional": true,
+      "trigger": { "event": "enters_limbo" },
+      "targets": {
+        "kind": "zone_card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["graveyard"], "owner": "self"
+      },
+      "result": { "kind": "return_other_limbo_card_to_hand" }
+    }
+  ],
+  "inner-deserts-063": [
+    {
+      "id": "memento-shuffles-limbo-into-deck",
+      "optional": true,
+      "trigger": { "event": "enters_limbo" },
+      "targets": {
+        "kind": "zone_card", "min": 0, "max": 3, "zones": ["graveyard"], "owner": "self"
+      },
+      "result": { "kind": "shuffle_limbo_targets_into_deck" }
+    }
+  ],
+  "inner-deserts-050": [
+    {
+      "id": "tombloom-exiles-itself-and-weakens",
+      "trigger": { "event": "discarded" },
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"]
+      },
+      "ongoingEffect": { "kind": "power_modifier", "value": -2, "duration": "until_end_of_turn" },
+      "result": { "kind": "exile_source_card_from_limbo" }
+    }
+  ],
+  "kl0n8mt9m1fwly0_en": [
+    {
+      "id": "tenebro-rises-into-support-when-discarded",
+      "optional": true,
+      "trigger": { "event": "discarded" },
+      "result": { "kind": "limbo_source_to_support" }
+    }
+  ],
+  "tm9kt43d14h9ub1_en": [
+    {
+      "id": "watchtower-weakens-on-own-will",
+      "trigger": { "event": "will_played", "eventController": "owner" },
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "controller": "opponent"
+      },
+      "result": { "kind": "add_power_counter_target", "value": -1 }
+    },
+    {
+      "id": "watchtower-gains-essence-on-opposing-destruction",
+      "trigger": { "event": "manifestation_destroyed", "eventController": "opponent" },
+      "result": { "kind": "create_essence", "temperament": "transcendent", "value": 1 }
+    }
+  ],
+  "inner-deserts-020": [
+    {
+      "id": "healing-bond-after-revelation",
+      "trigger": { "event": "revelation" },
+      "result": { "kind": "healing_bond" }
+    }
+  ],
+  "0um05ree31uu6e2_en": [
+    {
+      "id": "fintus-destroys-next-opposing-entry",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "destroy_next_opponent_confrontation_entry" }
+    }
+  ],
+  "o4p1r7347u6sff2_en": [
+    {
+      "id": "gorb-locks-your-support-entries",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": { "kind": "lock_support_entries", "scope": "controller" }
+    }
+  ],
+  "4phs0d8l223jk7t_en": [
+    {
+      "id": "wretched-arena-locks-support-entries",
+      "tribute": "{H}{H}{H}",
+      "phaseIds": ["confrontation_before_revelation"],
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "lock_support_entries", "scope": "all" }
+    }
+  ],
+  "inner-deserts-108": [
+    {
+      "id": "horned-augustus-exiles-limbo-for-tokens",
+      "exhaustSource": true,
+      "targets": {
+        "kind": "zone_card", "min": 0, "max": 3, "zones": ["graveyard"], "owner": "self"
+      },
+      "result": { "kind": "exile_limbo_targets_create_tokens" }
+    }
   ]
 }

@@ -9944,6 +9944,103 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         trigger = self.ABILITIES[ohmom][0]["trigger"]
         self.assertEqual((trigger["event"], trigger["zone"], trigger["eventController"]), ("will_played", "interzone", "owner"))
 
+    def test_manual_lot_three_limbo_entry_triggers(self):
+        zombie, memento, tombloom, tenebro = (
+            "bu1y6jwy7iaywqu_en", "inner-deserts-063", "inner-deserts-050", "kl0n8mt9m1fwly0_en",
+        )
+        session, p1, p2 = self.make_session(zombie, memento, tombloom, tenebro)
+        session.rules_engine["observedEvents"] = []
+        # A discard fires "discarded" and "enters_limbo" for the card itself.
+        self.put(p1, "hand", [tombloom])
+        session.move_zone_card("p1", "hand", "p1", "graveyard", tombloom, "top")
+        queued = session.queue_rules_observed_event_triggers(defer=True)
+        # Tombloom's mandatory target opens a target choice instead of queueing directly.
+        pending = session.rules_engine["pendingChoice"]
+        self.assertEqual(pending["kind"], "trigger_targets")
+        queued = [pending["_triggerAction"]]
+        session.rules_engine["pendingChoice"] = None
+        self.assertEqual([a["ability"]["id"] for a in queued], ["tombloom-exiles-itself-and-weakens"])
+        self.assertEqual(queued[0]["source"]["ownerId"], "p1")
+        payload = session.apply_rules_action_result({
+            **queued[0], "ability": {"result": queued[0]["ability"]["result"]},
+        })
+        self.assertEqual(payload["status"], "exiled")
+        self.assertIn(tombloom, p1["zones"]["exile"])
+        self.assertNotIn(tombloom, p1["zones"]["graveyard"])
+        # Tenebro rises into Support when discarded.
+        self.put(p1, "hand", [tenebro])
+        session.move_zone_card("p1", "hand", "p1", "graveyard", tenebro, "top")
+        queued = session.queue_rules_observed_event_triggers(defer=True)
+        self.assertEqual(len(queued), 1)
+        self.assertTrue(queued[0]["optional"])
+        session.apply_rules_action_result({
+            **queued[0], "optionalAccepted": True,
+            "ability": {"result": queued[0]["ability"]["result"]},
+        })
+        support = next(i for i in session.battlefield if i["cardId"] == tenebro)
+        self.assertTrue(support["isSupport"])
+        self.assertNotIn(tenebro, p1["zones"]["graveyard"])
+        # Zombieswing and Memento only react to entering Limbo, never to other cards.
+        self.put(p1, "graveyard", ["m-1", "m-2", "m-3"])
+        session.rules_engine["observedEvents"] = []
+        self.run_ability(session, zombie, [
+            {"kind": "zone_card", "containerId": "p1", "zone": "graveyard", "cardId": "m-1", "ownerId": "p1"}
+        ])
+        self.assertIn("m-1", p1["zones"]["hand"])
+        self.put(p1, "deck", ["m-9"])
+        self.run_ability(session, memento, [
+            {"kind": "zone_card", "containerId": "p1", "zone": "graveyard", "cardId": cid, "ownerId": "p1"}
+            for cid in ("m-2", "m-3", memento)
+        ][:2])
+        self.assertEqual(sorted(p1["zones"]["deck"]), ["m-2", "m-3", "m-9"])
+        self.assertEqual(self.ABILITIES[zombie][0]["trigger"]["event"], "enters_limbo")
+
+    def test_manual_lot_three_board_effects(self):
+        watchtower, bond, fintus, gorb, arena, augustus = (
+            "tm9kt43d14h9ub1_en", "inner-deserts-020", "0um05ree31uu6e2_en",
+            "o4p1r7347u6sff2_en", "4phs0d8l223jk7t_en", "inner-deserts-108",
+        )
+        session, p1, p2 = self.manual_batch_session(watchtower, bond, fintus, gorb, arena, augustus, card_type="manifestation")
+        ability = self.ABILITIES[watchtower][0]
+        session.battlefield = [self.field_item("e", "p2", "m-1")]
+        session.apply_rules_action_result({
+            "id": "w", "controllerId": "p1", "source": {"cardId": watchtower},
+            "targets": [self.card_target("e", "m-1")], "ability": {"result": ability["result"]},
+        })
+        self.assertEqual(self.power_of(session, "e"), 0)
+        # Healing Bond: the First Manifestation below the highest base power gets +2 and 10 points.
+        session.card_rules["m-2"]["power"] = 5
+        session.card_rules["m-3"]["power"] = 2
+        session.battlefield = [self.field_item("f1", "p1", "m-2"), self.field_item("f2", "p2", "m-3")]
+        session.rules_engine["firstManifestationItemIds"] = {"p1": "f1", "p2": "f2"}
+        payload, _ = self.run_ability(session, bond)
+        self.assertEqual(payload["playerIds"], ["p2"])
+        self.assertEqual(self.power_of(session, "f2"), 4)
+        self.assertEqual(p2["score"], 10)
+        # Fintus: the next opposing entry into the Confrontation Zone is destroyed.
+        self.run_ability(session, fintus)
+        entering = self.field_item("enter", "p2", "m-4")
+        session.battlefield = [entering]
+        self.assertEqual(session.queue_rules_field_zone_entry_triggers(entering, "confrontation"), [])
+        self.assertEqual(session.battlefield, [])
+        self.assertIn("m-4", p2["zones"]["graveyard"])
+        # Gorb locks the controller's Support entries; Wretched Arena locks everyone's.
+        self.run_ability(session, gorb)
+        self.assertTrue(session.rules_support_entry_locked("p1"))
+        self.assertFalse(session.rules_support_entry_locked("p2"))
+        self.run_ability(session, arena)
+        self.assertTrue(session.rules_support_entry_locked("p2"))
+        # Horned Augustus: exile up to three Limbo cards, one 1-power Support token each.
+        self.put(p1, "graveyard", ["m-5", "m-6"])
+        session.battlefield = []
+        self.run_ability(session, augustus, [
+            {"kind": "zone_card", "containerId": "p1", "zone": "graveyard", "cardId": cid, "ownerId": "p1"}
+            for cid in ("m-5", "m-6")
+        ])
+        tokens = [i for i in session.battlefield if i.get("isTokenCard")]
+        self.assertEqual((len(tokens), sorted(p1["zones"]["exile"])), (2, ["m-5", "m-6"]))
+        self.assertTrue(all(t["isSupport"] and t["power"] == 1 for t in tokens))
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")
