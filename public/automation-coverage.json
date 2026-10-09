@@ -1,0 +1,6222 @@
+{
+  "schemaVersion": 1,
+  "summary": {
+    "catalogCards": 450,
+    "explicitCards": 206,
+    "explicitAbilities": 239,
+    "statuses": {
+      "automated": 266,
+      "generic": 0,
+      "manual": 161,
+      "partial": 23
+    }
+  },
+  "cards": {
+    "6jz7otalrdq0q8u_en": {
+      "collectionNumber": 1,
+      "name": "Wind Sprout",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "l4suqymyd2ehsue_en": {
+      "collectionNumber": 2,
+      "name": "Sated Swineheart",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "8lion52jjnmxvko_en": {
+      "collectionNumber": 3,
+      "name": "Merciful Pago",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "support-from-hand",
+        "support-from-interzone",
+        "support-win-effect:opponent_vessel_score"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "gbvulprmpw89ohr_en": {
+      "collectionNumber": 4,
+      "name": "Tiptup, the Whistler",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "raqiu9b3kwaw622_en": {
+      "collectionNumber": 5,
+      "name": "Slumber Planner",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "alternate-tribute-temperament"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "vlpn4livpqnoid1_en": {
+      "collectionNumber": 6,
+      "name": "Tidying Torment",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "alternate-tribute-temperament"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "jh2nsqxr9x2ii1l_en": {
+      "collectionNumber": 7,
+      "name": "World Spore",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "support-from-hand"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "aumzs91roqg77y1_en": {
+      "collectionNumber": 8,
+      "name": "Graceful Petal",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "gain-points-in-opponent-vessel"
+      ],
+      "mechanics": [
+        "result:score_owner",
+        "trigger:enters_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "nlbgn1ranlrd09r_en": {
+      "collectionNumber": 9,
+      "name": "The Slumberer",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "nu1ycheygeru344_en": {
+      "collectionNumber": 10,
+      "name": "Amiable Blockhead",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "4rnpxnnceu8x9o9_en": {
+      "collectionNumber": 11,
+      "name": "First Stone",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "first-stone-opponents-chain"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "result:chain_from_zone",
+        "support-from-hand",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "85kx4sk1y809276_en": {
+      "collectionNumber": 12,
+      "name": "Sprawling Tentacle",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power",
+        "first-restriction",
+        "support-from-hand",
+        "support-from-interzone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "6xfwhr4h38wvm4u_en": {
+      "collectionNumber": 13,
+      "name": "Flower Tender",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "boost-low-power-on-support-entry"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "support-from-hand",
+        "support-from-interzone",
+        "target:card",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "5xurdeiiyq7kgir_en": {
+      "collectionNumber": 14,
+      "name": "Pinpia Psychobulb",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "pinpia-retained-essences-on-win"
+      ],
+      "mechanics": [
+        "result:create_essence",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "fr1414jedqssttr_en": {
+      "collectionNumber": 15,
+      "name": "Floating Dancer",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "score-per-interzone-manifestation-on-win"
+      ],
+      "mechanics": [
+        "result:score_owner",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "6b4f3yh4tk4091p_en": {
+      "collectionNumber": 16,
+      "name": "Echo of the Wilds",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "iuqpdn4gvjiu25v_en": {
+      "collectionNumber": 17,
+      "name": "Stoic Snoozer",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "xzb2jwtkunq5tys_en": {
+      "collectionNumber": 18,
+      "name": "Guart, the Slinger",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "dbevnzpvngas8pg_en": {
+      "collectionNumber": 19,
+      "name": "Jondo, the Pure Heart",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "gain-support-when-stronger-than-own-first"
+      ],
+      "mechanics": [
+        "result:grant_source_support_if_base_higher_than_own_first",
+        "support-win:exile",
+        "trigger:revelation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py"
+      ]
+    },
+    "5h7k3m44jsn0esy_en": {
+      "collectionNumber": 20,
+      "name": "Pan Zuto, the Beckoner",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "skh6d780jne193w_en": {
+      "collectionNumber": 21,
+      "name": "Spontaneous Incubator",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "gain-points-at-beginning-of-turn"
+      ],
+      "mechanics": [
+        "result:score_owner",
+        "trigger:beginning_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "xf03zroy4tigefr_en": {
+      "collectionNumber": 22,
+      "name": "Urocione, the Anarchist",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "chain-from-hand-on-enter-field"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "bf94i4ttvl7r4mt_en": {
+      "collectionNumber": 23,
+      "name": "Lady of the Humps",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "chain-deck-manifestation-with-win-exile"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "je9rwgrjwk97oes_en": {
+      "collectionNumber": 24,
+      "name": "Stampeding Brood",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "j2a7x783j5ql0ab_en": {
+      "collectionNumber": 25,
+      "name": "Agrupol, Ponderer of Fields",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "gain-per-owned-vessel-manifestation"
+      ],
+      "mechanics": [
+        "result:score_owner",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "47c5eb6xe7wj614_en": {
+      "collectionNumber": 26,
+      "name": "Prospero of the Bushes",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "46id1c09q8inlkz_en": {
+      "collectionNumber": 27,
+      "name": "Advocate of Catharsis",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "advocate-all-chain"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "276sz8daqngt2dh_en": {
+      "collectionNumber": 28,
+      "name": "Mobile Sanctuary",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "protect-other-friendly-confrontation"
+      ],
+      "mechanics": [
+        "passive:protect_other_friendly_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "57ahe6ngzq5c013_en": {
+      "collectionNumber": 29,
+      "name": "Herbaceous Whisperer",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "b5ge92hr33pdwc7_en": {
+      "collectionNumber": 30,
+      "name": "Rinq, Shameless Slacker",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "ibf2epfw6eap5x3_en": {
+      "collectionNumber": 31,
+      "name": "Forest Guide",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "support-from-hand",
+        "support-from-interzone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "h8xzt2gkg2ax241_en": {
+      "collectionNumber": 32,
+      "name": "Mazzolong, the Log-chief",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "draw-when-support-played"
+      ],
+      "mechanics": [
+        "result:draw_owner",
+        "trigger:enters_support"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "5enwyodanyu1it8_en": {
+      "collectionNumber": 33,
+      "name": "Tong, the Expansive",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "interzone-gains-three-spaces"
+      ],
+      "mechanics": [
+        "passive:extend_interzone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "k6l96o0xphpycpm_en": {
+      "collectionNumber": 34,
+      "name": "Peropero, the Spirophant",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "msif6nhq0v1zbh0_en": {
+      "collectionNumber": 35,
+      "name": "Gargullo, King of the Woods",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "nzyipkk7u6vrd4a_en": {
+      "collectionNumber": 36,
+      "name": "Unite Impulses",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "grant-interzone-support-until-end-turn"
+      ],
+      "mechanics": [
+        "result:grant_friendly_interzone_support_until_end_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "31k2b7hz7ockvvn_en": {
+      "collectionNumber": 37,
+      "name": "Plea for Generosity",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "score-per-target-player-confrontation-manifestation"
+      ],
+      "mechanics": [
+        "result:score_owner",
+        "target:player"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "8g5pn3mukkuniog_en": {
+      "collectionNumber": 38,
+      "name": "Armored Husk",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "armored-husk-protect",
+        "armored-husk-retarget"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:tribute",
+        "ongoing:protection",
+        "phase-window",
+        "result:retarget_source_effect",
+        "target:card",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "5liq0tcj7m9ebqr_en": {
+      "collectionNumber": 39,
+      "name": "Intoxicating Blossom",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "gain-petal-on-friendly-manifestation-entry",
+        "spend-petals-for-power"
+      ],
+      "mechanics": [
+        "cost:removeAllCountersFromSource",
+        "cost:tribute",
+        "ongoing:power_modifier",
+        "result:add_counter_source",
+        "trigger:manifestation_enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ud9clfoj2c6x96o_en": {
+      "collectionNumber": 40,
+      "name": "Entrust",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "entrust-double-base-power"
+      ],
+      "mechanics": [
+        "result:double_target_base_power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "i6oj7gtnkfd1jja_en": {
+      "collectionNumber": 41,
+      "name": "Compensating Orchard",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "gain-when-own-manifestation-enters-opponent-vessel"
+      ],
+      "mechanics": [
+        "result:score_owner",
+        "trigger:manifestation_enters_opponent_vessel"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "vt3extxbwd6gybn_en": {
+      "collectionNumber": 42,
+      "name": "Altruistic Inflorescence",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "gybb0ktsth7clz5_en": {
+      "collectionNumber": 43,
+      "name": "Cozy Bunk",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "interzone-gains-one-space"
+      ],
+      "mechanics": [
+        "passive:extend_interzone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "5q6t7i5pzctbi8s_en": {
+      "collectionNumber": 44,
+      "name": "Rally",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "rally-extra-essence-tokens"
+      ],
+      "mechanics": [
+        "result:create_support_tokens_from_optional_extra_essence"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "8xi4zh0ekdl42me_en": {
+      "collectionNumber": 45,
+      "name": "Reap What You’ve Sown",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "score-per-interzone-manifestation-then-draw-per-free-space"
+      ],
+      "mechanics": [
+        "result:interzone_score_and_draw"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "n9olbthp7vtmypo_en": {
+      "collectionNumber": 46,
+      "name": "Heartening Monument",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "erkwir53va9m8gm_en": {
+      "collectionNumber": 47,
+      "name": "Atavic Welcome",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "union-counter-on-own-green-card",
+        "spend-unions-for-support-tokens",
+        "gain-points-when-support-enters-with-ten-unions"
+      ],
+      "mechanics": [
+        "result:add_counter_source",
+        "result:create_support_tokens",
+        "result:score_owner",
+        "trigger:card_played",
+        "trigger:enters_support"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "tpnlqhi6o8evklz_en": {
+      "collectionNumber": 48,
+      "name": "Concealed Manta",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "01ynsddc9h2r6wc_en": {
+      "collectionNumber": 49,
+      "name": "Artificial Thinker",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "fro1wz8eln9t49l_en": {
+      "collectionNumber": 50,
+      "name": "Isolated Wordsmith",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "2mmrj3qrziaf9w2_en": {
+      "collectionNumber": 51,
+      "name": "Scrutinizing Figure",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "alternate-tribute-temperament"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "fvk7w9y8xidbuwa_en": {
+      "collectionNumber": 52,
+      "name": "Keen-eyed Seeker",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "draw-on-enter-field"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "result:draw_owner",
+        "support-from-hand",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "yaisrjb3a26wr7r_en": {
+      "collectionNumber": 53,
+      "name": "Witty Scribe",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "alternate-tribute-temperament"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "vus7jchkjhws8lu_en": {
+      "collectionNumber": 54,
+      "name": "Hurlon, Thought-implanter",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "dxl82w4oxzcg1eg_en": {
+      "collectionNumber": 55,
+      "name": "Chitinous Repeller",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "return-friendly-confrontation-card"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "result:move_target",
+        "support-from-hand",
+        "target:card",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "24pwcptuijem6tw_en": {
+      "collectionNumber": 56,
+      "name": "Refrain Repeater",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "remember-self-return-at-end-turn"
+      ],
+      "mechanics": [
+        "result:create_effect_memory",
+        "trigger:used_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "yy29lowj25q1z5y_en": {
+      "collectionNumber": 57,
+      "name": "Reliable Ammonite",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "draw-when-used-as-tribute"
+      ],
+      "mechanics": [
+        "result:draw_owner",
+        "trigger:used_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "m3it0ajngl4nlo3_en": {
+      "collectionNumber": 58,
+      "name": "Chiff and Chaff",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "return-opposing-support-card"
+      ],
+      "mechanics": [
+        "conditional-support",
+        "result:move_target",
+        "target:card",
+        "trigger:enters_support"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "rm8d0h0v6eu7ho7_en": {
+      "collectionNumber": 59,
+      "name": "Rigid Omen",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "3gy8gbbbmamc8d0_en": {
+      "collectionNumber": 60,
+      "name": "Venerable Viper",
+      "setName": "Beta",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "support-from-hand"
+      ],
+      "testRefs": [],
+      "notes": "The loss trigger that suppresses replacement and effects in an opponent's Interzone through the next turn is not automated."
+    },
+    "rl4ppd0wsyov7lw_en": {
+      "collectionNumber": 61,
+      "name": "Gar Fild, the Malleable",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "gar-fild-retained-essences-on-win"
+      ],
+      "mechanics": [
+        "result:create_essence",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "pxp1zvyxfv16bdd_en": {
+      "collectionNumber": 62,
+      "name": "Arcane Teapot",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "reduce-controller-will-tribute"
+      ],
+      "mechanics": [
+        "passive:reduce_will_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "shiox5powdvu5nl_en": {
+      "collectionNumber": 63,
+      "name": "Inspired Nimbus",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "bx0uyxxb3c6pas2_en": {
+      "collectionNumber": 64,
+      "name": "Ohmom, the Azure",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "qn8r98kyqqma972_en": {
+      "collectionNumber": 65,
+      "name": "Coral Skull",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "remember-paid-will-return-at-end-turn"
+      ],
+      "mechanics": [
+        "result:create_effect_memory",
+        "trigger:used_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "7g0495fr3188or9_en": {
+      "collectionNumber": 66,
+      "name": "Skysailing Triad",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "resolve-top-deck-by-card-type"
+      ],
+      "mechanics": [
+        "result:resolve_top_deck_by_type",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "3oiehnpbub1byg6_en": {
+      "collectionNumber": 67,
+      "name": "Inert Anchorstone",
+      "setName": "Beta",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "support-win:exile"
+      ],
+      "testRefs": [],
+      "notes": "Entering with Block counters, removing one when a Will is played, and gaining Support at zero counters are not automated."
+    },
+    "i7h2c7ku2gt1yvg_en": {
+      "collectionNumber": 68,
+      "name": "Shababba, Divining Cube",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "shababba-reorder-at-end-of-turn"
+      ],
+      "mechanics": [
+        "result:reorder_top_decks",
+        "trigger:end_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "t9yazjrbj1d37yu_en": {
+      "collectionNumber": 69,
+      "name": "Jurat, the Strategist",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "xzaw511oz4g4km9_en": {
+      "collectionNumber": 70,
+      "name": "Hermeto, the Observer",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "qapv47r7rz6gqah_en": {
+      "collectionNumber": 71,
+      "name": "Ju Lien, the Provocateur",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "twn0cer0tjbw09n_en": {
+      "collectionNumber": 72,
+      "name": "Tipson, the Mediator",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "xoo3jxtiy1sonm1_en": {
+      "collectionNumber": 73,
+      "name": "Expansive Ponderer",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "nt0bixroxp0ftnk_en": {
+      "collectionNumber": 74,
+      "name": "Dew Invoker",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "xfgbjv2gjb09fj9_en": {
+      "collectionNumber": 75,
+      "name": "Gomeran, Echo Mistress",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "n0natbzt0nfylml_en": {
+      "collectionNumber": 76,
+      "name": "Shymon, the Mastermind",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "tzizek39tj8rqq5_en": {
+      "collectionNumber": 77,
+      "name": "Callus, the Thought-stirrer",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "draw-after-own-will"
+      ],
+      "mechanics": [
+        "result:draw_owner",
+        "trigger:will_played"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "2oka6j26ibu19l9_en": {
+      "collectionNumber": 78,
+      "name": "Pigon, the Apprentice",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "pigon-return-support-card"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:tribute",
+        "result:move_target",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "oq88mu68bnbqe0w_en": {
+      "collectionNumber": 79,
+      "name": "Rajas, Great Aegis",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "protect-friendly-interzone-and-persistent-wills"
+      ],
+      "mechanics": [
+        "passive:protect_friendly_interzone_and_wills"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "nbms08jb9t9eqbh_en": {
+      "collectionNumber": 80,
+      "name": "Blue Entity",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "friendly-confrontation-bonus-on-own-will"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "trigger:will_played"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "7yu566ip7zuqdoc_en": {
+      "collectionNumber": 81,
+      "name": "Malaleuco, the Will-shaper",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "b6ebpyb30urtas2_en": {
+      "collectionNumber": 82,
+      "name": "Freenya, Heartless Songstress",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "9yylrq6xancbn0m_en": {
+      "collectionNumber": 83,
+      "name": "Glimpse the Omens",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "glimpse-the-omens"
+      ],
+      "mechanics": [
+        "result:reorder_top_decks"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ek1bng9r7vhriwt_en": {
+      "collectionNumber": 84,
+      "name": "Defer",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "defer-to-deck-top"
+      ],
+      "mechanics": [
+        "result:move_target"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "72zvsiuky5ytolh_en": {
+      "collectionNumber": 85,
+      "name": "Mirror the Impulse",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "copy-friendly-manifestation-in-support"
+      ],
+      "mechanics": [
+        "result:create_target_token_copy_in_support",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "q6rha5kz42bkxle_en": {
+      "collectionNumber": 86,
+      "name": "Imitate",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "copy-target-will-on-stack"
+      ],
+      "mechanics": [
+        "result:copy_stack_action",
+        "target:stack_action"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ufujqhwlpmaw12y_en": {
+      "collectionNumber": 87,
+      "name": "Nullifying Hat",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "ignore-support-power"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:tribute",
+        "ongoing:power_ignored"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "9c7s9dn3sa5dcko_en": {
+      "collectionNumber": 88,
+      "name": "Consult",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "consult"
+      ],
+      "mechanics": [
+        "result:consult_support",
+        "target:player"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "fwccphp46678238_en": {
+      "collectionNumber": 89,
+      "name": "Persist",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "grant-persist-until-end-of-turn"
+      ],
+      "mechanics": [
+        "ongoing:grant_persist"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "z2gm0fc6fxlnsb1_en": {
+      "collectionNumber": 90,
+      "name": "Scrambling Beacon",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "0r7k88v71vvx7kk_en": {
+      "collectionNumber": 91,
+      "name": "Suspend Judgment",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "zk76fhtep0wm3hh_en": {
+      "collectionNumber": 92,
+      "name": "Dominate the Aspects",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "exchange-confrontation-control-until-resolution"
+      ],
+      "mechanics": [
+        "result:exchange_control_targets"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "xav48hincrnl32d_en": {
+      "collectionNumber": 93,
+      "name": "Banish",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "banish-to-deck-bottom"
+      ],
+      "mechanics": [
+        "result:move_target"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "265f4wdooq43pjn_en": {
+      "collectionNumber": 94,
+      "name": "Atavic Introspection",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "control-counter-on-own-blue-card",
+        "spend-controls-to-bounce-manifestation",
+        "split-two-limbo-cards-at-end-of-turn-with-ten-controls"
+      ],
+      "mechanics": [
+        "result:add_counter_source",
+        "result:move_target",
+        "result:split_targeted_limbo_cards",
+        "trigger:card_played",
+        "trigger:end_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "zozynivu4tbojjg_en": {
+      "collectionNumber": 95,
+      "name": "Little Abhorrence",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "5zgq2zcogt4g4d0_en": {
+      "collectionNumber": 96,
+      "name": "Timid Brain",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "h3qquea83b813t9_en": {
+      "collectionNumber": 97,
+      "name": "Repudiated Orphan",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "k7bnhqhxkij5lsl_en": {
+      "collectionNumber": 98,
+      "name": "Mourning Offal",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "2kz0soujsn2nitf_en": {
+      "collectionNumber": 99,
+      "name": "Skin-shifting Tearer",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "alternate-tribute-temperament"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "yd24yzcekygt7v4_en": {
+      "collectionNumber": 100,
+      "name": "Ridiculous Persecutor",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "alternate-tribute-temperament"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "o2vng99wk76o072_en": {
+      "collectionNumber": 101,
+      "name": "Yurfuq, Sad Lily",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "kl0n8mt9m1fwly0_en": {
+      "collectionNumber": 102,
+      "name": "Tenebro, Night Assailant",
+      "setName": "Beta",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "support-win:exile"
+      ],
+      "testRefs": [],
+      "notes": "The optional discard replacement that puts Tenebro in Support is not automated."
+    },
+    "g3zumpyf623hto6_en": {
+      "collectionNumber": 103,
+      "name": "Forgotten Pile",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "7e2ppf4rfgkdfms_en": {
+      "collectionNumber": 104,
+      "name": "Dark Apparition",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "target-player-discards-on-enter-field"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "result:discard_hand_target",
+        "support-from-hand",
+        "support-from-interzone",
+        "target:player",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "0tcphe9viq39a5b_en": {
+      "collectionNumber": 105,
+      "name": "Filth-eater",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "wbyjru9luc175ak_en": {
+      "collectionNumber": 106,
+      "name": "Underground Snail",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "wfxxi0znaojxiti_en": {
+      "collectionNumber": 107,
+      "name": "Soul-borer",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "vessel-owner-loses-five-each-turn"
+      ],
+      "mechanics": [
+        "result:score_source_container",
+        "trigger:beginning_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "icxqhki0ivfgqu0_en": {
+      "collectionNumber": 108,
+      "name": "Solenero, the Contrite",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "return-limbo-card-on-loss"
+      ],
+      "mechanics": [
+        "result:move_target",
+        "target:zone_card",
+        "trigger:loses_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "tw4am6bjl3z323v_en": {
+      "collectionNumber": 109,
+      "name": "Possessed Pyramid",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "reduce-next-turn-hand-limit"
+      ],
+      "mechanics": [
+        "result:schedule_next_turn_hand_limit",
+        "support-from-hand",
+        "trigger:enters_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "bu1y6jwy7iaywqu_en": {
+      "collectionNumber": 110,
+      "name": "Zombieswing",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "0kcy08a6jd7ez7k_en": {
+      "collectionNumber": 111,
+      "name": "Diabolical Giant",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "lose-ten-to-gain-support"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "result:grant_source_support_until_end_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ydijk2x1ne8w93g_en": {
+      "collectionNumber": 112,
+      "name": "Mind Parasite",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "chain-from-limbo-with-win-exile"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "16hmmz3fw32r27q_en": {
+      "collectionNumber": 113,
+      "name": "Shuk, the Bile-filled",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "others-lose-five-when-you-lose-points"
+      ],
+      "mechanics": [
+        "result:score_each_opponent",
+        "trigger:points_lost"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "lmjn89wobbttfop_en": {
+      "collectionNumber": 114,
+      "name": "Lament, Thought-nullifier",
+      "setName": "Beta",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [],
+      "notes": "The entry trigger that mills a target player for each non-token Confrontation manifestation is not automated."
+    },
+    "d6jip43i66i34xk_en": {
+      "collectionNumber": 115,
+      "name": "Forfog, the Hanged",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "opponent-loses-five-when-it-discards"
+      ],
+      "mechanics": [
+        "result:score_target",
+        "target:player",
+        "trigger:cards_discarded"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "oftdgsrobaqgst7_en": {
+      "collectionNumber": 116,
+      "name": "Lerxur, the Black Moon",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "fknxa83uens94ju_en": {
+      "collectionNumber": 117,
+      "name": "Ehgog, the Livid",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "shrink-opponent-manifestation-on-any-discard"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "target:card",
+        "trigger:cards_discarded"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "k4m0j5h0l3f61hs_en": {
+      "collectionNumber": 118,
+      "name": "Zrutrug, the Indebted",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "zrutrug-chain-and-discard"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "gpxqooqq57loyb8_en": {
+      "collectionNumber": 119,
+      "name": "Reviving Cage",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "reviving-cage"
+      ],
+      "mechanics": [
+        "cost:sacrificeSource",
+        "result:move_zone_target_to_field_zone",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "86nfr2vhox3l6y2_en": {
+      "collectionNumber": 120,
+      "name": "Repelling Urn",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "zh4rjhzon9qes6m_en": {
+      "collectionNumber": 121,
+      "name": "Carcass Devourer",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "carcass-devourer-eats-limbo"
+      ],
+      "mechanics": [
+        "result:exile_limbo_targets_add_power",
+        "target:zone_card",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "9ypw4x4igfon1qi_en": {
+      "collectionNumber": 122,
+      "name": "Armored Pachywyrm",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "opponent-loses-per-excess-power-over-its-first"
+      ],
+      "mechanics": [
+        "result:score_target",
+        "target:player",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "acf0sr2crn8bykg_en": {
+      "collectionNumber": 123,
+      "name": "Red Plague",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "choose-points-or-five-card-hand"
+      ],
+      "mechanics": [
+        "result:choose_points_or_hand_limit",
+        "trigger:beginning_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "tvjlvc3vj3r2zws_en": {
+      "collectionNumber": 124,
+      "name": "Otranth, the Bloodthirsty",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "pekwxpsy3c0ro3l_en": {
+      "collectionNumber": 125,
+      "name": "Urolong, Rueful Necromancer",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "urolong-raises-limbo-manifestation"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:tribute",
+        "result:play_limbo_target_as_support",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "874751ghrblya5j_en": {
+      "collectionNumber": 126,
+      "name": "Pale Entity",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "gain-when-player-discards",
+        "gain-when-player-loses-points"
+      ],
+      "mechanics": [
+        "result:score_owner",
+        "trigger:cards_discarded",
+        "trigger:points_lost"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "v6slubph4q5ijfb_en": {
+      "collectionNumber": 127,
+      "name": "Quasimillenary",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "e1zg2gsn0tfqo1y_en": {
+      "collectionNumber": 128,
+      "name": "Ergorath, Scribe of the Limbo",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "de3meyzl13rpqo5_en": {
+      "collectionNumber": 129,
+      "name": "Half Han, the Renegade",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "lose-points-on-enter-field",
+        "negative-score-alternate-victory"
+      ],
+      "mechanics": [
+        "passive:negative_score_victory",
+        "result:score_owner",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "jy05w4j8zcuvezq_en": {
+      "collectionNumber": 130,
+      "name": "Disfigure",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "disfigure-destroy-manifestation"
+      ],
+      "mechanics": [
+        "result:move_target"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "zd6h16he0m4kuwb_en": {
+      "collectionNumber": 131,
+      "name": "Claim the Forsaken",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "claim-recent-opponent-limbo-manifestation"
+      ],
+      "mechanics": [
+        "result:move_zone_target_to_own_vessel",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "gu9rppos4r9ucsr_en": {
+      "collectionNumber": 132,
+      "name": "Twist the Soul",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "ul1tffi1wn5l3q5_en": {
+      "collectionNumber": 133,
+      "name": "Cognitive Fog",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "nupb1i59d98g3md_en": {
+      "collectionNumber": 134,
+      "name": "Punish the Winners",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "destroy-confrontation-winners"
+      ],
+      "mechanics": [
+        "result:destroy_matching_on_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "k7dq8ye448xwj54_en": {
+      "collectionNumber": 135,
+      "name": "Shattering the Self",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "shattering-the-self"
+      ],
+      "mechanics": [
+        "result:deck_discard_then_weaken"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "z2fen73ktw8pbqz_en": {
+      "collectionNumber": 136,
+      "name": "Reforging Fate",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "reforging-fate-support-from-limbo"
+      ],
+      "mechanics": [
+        "result:play_limbo_target_as_support",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "cwgofw6qsn7aplc_en": {
+      "collectionNumber": 137,
+      "name": "Parasitic Drill",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "y6g3tex9ypttk8u_en": {
+      "collectionNumber": 138,
+      "name": "Flaying Jaw",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "flaying-jaw-power-link",
+        "flaying-jaw-retarget"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:tribute",
+        "ongoing:power_modifier",
+        "phase-window",
+        "result:retarget_source_effect"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "5r7g2e0r6q17lur_en": {
+      "collectionNumber": 139,
+      "name": "Traumatize",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "uin3dxt3bc50z6q_en": {
+      "collectionNumber": 140,
+      "name": "Revive",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "revive-limbo-manifestation-to-interzone"
+      ],
+      "mechanics": [
+        "result:move_zone_target_to_field_zone",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "a058t24med4h5nx_en": {
+      "collectionNumber": 141,
+      "name": "Atavic Oppression",
+      "setName": "Beta",
+      "status": "partial",
+      "abilityIds": [
+        "fatigue-counter-on-own-purple-card",
+        "spend-fatigues-to-make-opponent-discard"
+      ],
+      "mechanics": [
+        "result:add_counter_source",
+        "result:discard_hand_each_opponent",
+        "trigger:card_played"
+      ],
+      "testRefs": [],
+      "notes": "The optional end-of-turn discard of up to two cards at ten Fatigue counters is not automated."
+    },
+    "axsr1earxwcrta3_en": {
+      "collectionNumber": 142,
+      "name": "Auriwings",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ptwyrc2a26wqwc8_en": {
+      "collectionNumber": 143,
+      "name": "Absent Trinket",
+      "setName": "Beta",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "support-from-hand",
+        "support-from-interzone"
+      ],
+      "testRefs": [],
+      "notes": "The targeted-Will watcher, return to hand, and until-end-of-turn replay lock are not automated."
+    },
+    "easl4l3aiiim2qg_en": {
+      "collectionNumber": 144,
+      "name": "Roly-polymancer",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "zdn6urrd7eo3idt_en": {
+      "collectionNumber": 145,
+      "name": "Exalted Jester",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "alternate-tribute-temperament"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "93gvk0hy12hylm6_en": {
+      "collectionNumber": 146,
+      "name": "Yzzit, the Gambler",
+      "setName": "Beta",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [],
+      "notes": "The Empathic Vessel replacement roll and odd-result return to hand are not automated."
+    },
+    "mqkrekbfu4tybu9_en": {
+      "collectionNumber": 147,
+      "name": "Peevish Sapling",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "alternate-tribute-temperament"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "girck4py9u1vrke_en": {
+      "collectionNumber": 148,
+      "name": "Pok, the Teaser",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "o6fsczgrftd88lz_en": {
+      "collectionNumber": 149,
+      "name": "Incoherent Pard",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "a9bsslut738hm0k_en": {
+      "collectionNumber": 150,
+      "name": "Unpredictable Loudmouth",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "stalemate-if-last-entry"
+      ],
+      "mechanics": [
+        "passive:stalemate_if_last_confrontation_entry",
+        "support-from-hand"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "7badn4v9w72srad_en": {
+      "collectionNumber": 151,
+      "name": "Static Scuttler",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "1a8wzhi7xhbcenj_en": {
+      "collectionNumber": 152,
+      "name": "Loop, the Insistent",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "rngwnb4y158ya2q_en": {
+      "collectionNumber": 153,
+      "name": "Cimba, the Boisterous",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power",
+        "first-restriction",
+        "support-from-hand",
+        "support-from-interzone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "pwsjhnw4vpvqgkv_en": {
+      "collectionNumber": 154,
+      "name": "Mimer",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "copy-first-manifestation"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "ongoing:copy_power_temperament"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "uycbbilf0zlttb9_en": {
+      "collectionNumber": 155,
+      "name": "Rogue Tadpole",
+      "setName": "Beta",
+      "status": "partial",
+      "abilityIds": [
+        "tadpole-return-target-interzone-to-deck-top"
+      ],
+      "mechanics": [
+        "result:return_target_player_interzone_to_deck_top",
+        "target:player",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [],
+      "notes": "The owners' choice of the order in which their Interzone manifestations go back on top of their decks is not automated (the engine uses board order)."
+    },
+    "fw18tebi26jwiqb_en": {
+      "collectionNumber": 156,
+      "name": "Juggling Amphora",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "dq529rojumn98fp_en": {
+      "collectionNumber": 157,
+      "name": "Gnarlipuff, the Slimy",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "h67753m250gg2h6_en": {
+      "collectionNumber": 158,
+      "name": "Wandering Outcast",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "o1b1hf2xpmkt8j2_en": {
+      "collectionNumber": 159,
+      "name": "Knobbly Colossus",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "destroy-opponent-will-or-manifestation-on-win"
+      ],
+      "mechanics": [
+        "result:move_target",
+        "target:card",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "s4dofvhan101mew_en": {
+      "collectionNumber": 160,
+      "name": "Soup, the Graceful",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "fdnhc537c4xu2wo_en": {
+      "collectionNumber": 161,
+      "name": "Ranba, Silent Abductor",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "rgjdtrcaw4o9381_en": {
+      "collectionNumber": 162,
+      "name": "Sallow Thief",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "retrieve-owned-card-from-opponent-vessel"
+      ],
+      "mechanics": [
+        "result:move_target",
+        "target:zone_card",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "tdy2112mspb7u97_en": {
+      "collectionNumber": 163,
+      "name": "Unruly Flail",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [],
+      "notes": "Conditional Support requires an opponent's targeting Will and must neutralize one; generic recognition incorrectly grants unconditional Support from hand."
+    },
+    "vt30v1v8anw5hib_en": {
+      "collectionNumber": 164,
+      "name": "Bloatuba",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "kaw822pzpzd2l9k_en": {
+      "collectionNumber": 165,
+      "name": "Planar Beak",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "6vxm454ffuni41x_en": {
+      "collectionNumber": 166,
+      "name": "Obtrusive Mass",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "om4qbiofb0ihq6p_en": {
+      "collectionNumber": 167,
+      "name": "The Stomper",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "immediate-force-win-at-revelation"
+      ],
+      "mechanics": [
+        "result:force_win_if_highest_base_first",
+        "trigger:revelation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ymcx9cg62eg0vgm_en": {
+      "collectionNumber": 168,
+      "name": "Thought Saboteur",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "control-opponent-card-while-source-on-field"
+      ],
+      "mechanics": [
+        "ongoing:control_link",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ei33difzdc81zha_en": {
+      "collectionNumber": 169,
+      "name": "Starkaz, the Brilliant",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "starkaz-disable-other-manifestations"
+      ],
+      "mechanics": [
+        "ongoing:lose_effects",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "z6awx4mwwkfrvdd_en": {
+      "collectionNumber": 170,
+      "name": "Jigon, the Trap Setter",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "l9enna0sfy13yab_en": {
+      "collectionNumber": 171,
+      "name": "Zaguor, Greedy Pedal",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "3bq6ahxkf9435k5_en": {
+      "collectionNumber": 172,
+      "name": "Vexing Thorn",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "vexing-thorn-disable-target"
+      ],
+      "mechanics": [
+        "ongoing:lose_effects"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "411u4asiunisv9l_en": {
+      "collectionNumber": 173,
+      "name": "Logos, the Lost",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "7jaany95hy1h5pz_en": {
+      "collectionNumber": 174,
+      "name": "Worm Bomb",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "kw78e3qfnqw6sms_en": {
+      "collectionNumber": 175,
+      "name": "Katun, the Inconsistent",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "lk1xxhvwvrie2r2_en": {
+      "collectionNumber": 176,
+      "name": "Bratto, Tyrannical Scoundrel",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "capture-stalemate-and-create-support-copy"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "result:capture_stalemate_and_copy"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "t42gc95tma8uhzm_en": {
+      "collectionNumber": 177,
+      "name": "Trim the Excess",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "qahv0guk18jyo6i_en": {
+      "collectionNumber": 178,
+      "name": "Equalize",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "2y961kgs0crdict_en": {
+      "collectionNumber": 179,
+      "name": "Neutralize",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "neutralize-stack-card"
+      ],
+      "mechanics": [
+        "result:neutralize_stack_action",
+        "target:stack_action"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "7gd19pmexrjlrap_en": {
+      "collectionNumber": 180,
+      "name": "Annihilating Nectar",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "nectar-disable-target",
+        "nectar-retarget-disable"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:tribute",
+        "ongoing:lose_effects",
+        "result:retarget_source_effect"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "xeeg6rdiy9xeew5_en": {
+      "collectionNumber": 181,
+      "name": "Salvage the Fragments",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "stalemate-recent-opponent-vessel-manifestation"
+      ],
+      "mechanics": [
+        "result:move_zone_target_to_field_zone",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "cny6n2v2tap5jnm_en": {
+      "collectionNumber": 182,
+      "name": "Wheel of Retribution",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "support-controller-discards"
+      ],
+      "mechanics": [
+        "result:discard_hand_target",
+        "target:player",
+        "trigger:enters_support"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "kmyzmxtakzhj58p_en": {
+      "collectionNumber": 183,
+      "name": "Pin Down",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "ynp0apjx1risrpt_en": {
+      "collectionNumber": 184,
+      "name": "Deviate",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "deviate-destroy-loser"
+      ],
+      "mechanics": [
+        "result:move_target"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "0ujeinffs84nrvq_en": {
+      "collectionNumber": 185,
+      "name": "Invert Emotions",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "exchange-interzone-control"
+      ],
+      "mechanics": [
+        "result:exchange_control_targets"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "b4yyd5uut0ga9df_en": {
+      "collectionNumber": 186,
+      "name": "Hot Potato",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "enter-under-opponent-control-with-burn",
+        "pass-control-with-more-burn",
+        "controller-loses-forty-then-destroy"
+      ],
+      "mechanics": [
+        "result:change_source_control",
+        "result:score_controller_then_destroy_source",
+        "target:player",
+        "trigger:end_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "343xggqp4a0zfw1_en": {
+      "collectionNumber": 187,
+      "name": "Manipulate Intellect",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "manipulate-recent-opponent-interzone-manifestation"
+      ],
+      "mechanics": [
+        "result:move_target_to_own_vessel"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "rqvzo3iji2a1l65_en": {
+      "collectionNumber": 188,
+      "name": "Atavic Volatility",
+      "setName": "Beta",
+      "status": "partial",
+      "abilityIds": [
+        "coil-counter-on-own-yellow-card",
+        "disable-target-at-turn-start-with-ten-coils"
+      ],
+      "mechanics": [
+        "ongoing:lose_effects",
+        "result:add_counter_source",
+        "trigger:beginning_of_turn",
+        "trigger:card_played"
+      ],
+      "testRefs": [],
+      "notes": "The effect that makes each player put one of their Confrontation Manifestations into stalemate is not automated."
+    },
+    "43faoiy4cmoxmaw_en": {
+      "collectionNumber": 189,
+      "name": "Candle Serpent",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "qs29rt3f6w1jx4o_en": {
+      "collectionNumber": 190,
+      "name": "Ancient Bicep",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "xw1fbhs6hwz6thc_en": {
+      "collectionNumber": 191,
+      "name": "Tigrolione",
+      "setName": "Beta",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "support-from-hand",
+        "support-from-interzone"
+      ],
+      "testRefs": [],
+      "notes": "Preventing capture after a loss and moving Tigrolione to the winner's Interzone under their control are not automated."
+    },
+    "29iv35lxz08ygim_en": {
+      "collectionNumber": 192,
+      "name": "Shimmering Seaguide",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "alternate-tribute-temperament"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ymsp3bnm3142ji3_en": {
+      "collectionNumber": 193,
+      "name": "Twin-headed Druid",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "zo4rbgcnww4pxg0_en": {
+      "collectionNumber": 194,
+      "name": "Blunt Leaf",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "alternate-tribute-temperament"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "jfzgsewuzsgn7hu_en": {
+      "collectionNumber": 195,
+      "name": "Fiery Furybeast",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "qairavs7la5qg39_en": {
+      "collectionNumber": 196,
+      "name": "Perfidious Baranchio",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "iwpmdq754ew0mw7_en": {
+      "collectionNumber": 197,
+      "name": "Wandering Veteran",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "support-from-limbo-this-turn"
+      ],
+      "mechanics": [
+        "play-permission",
+        "support-win:exile"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "v1mhtnl7jec5xby_en": {
+      "collectionNumber": 198,
+      "name": "Skapus, the Vile",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power",
+        "first-restriction",
+        "support-from-hand",
+        "support-from-interzone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "1a0vuhn4xwybszo_en": {
+      "collectionNumber": 199,
+      "name": "Titan of the Blazing Womb",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "x15xumjqqhrnrds_en": {
+      "collectionNumber": 200,
+      "name": "Glabron, the Oppressing",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "gz2zjrxqc2rbcwq_en": {
+      "collectionNumber": 201,
+      "name": "Bullyboo",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "0um05ree31uu6e2_en": {
+      "collectionNumber": 202,
+      "name": "Fintus, the Spectacular",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "03jzw541k0af8x3_en": {
+      "collectionNumber": 203,
+      "name": "Thornmaster",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "ng6w09m6mrjq3xc_en": {
+      "collectionNumber": 204,
+      "name": "Pimbo",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "sacrifice-field-power-loss"
+      ],
+      "mechanics": [
+        "cost:sacrificeSource",
+        "ongoing:power_modifier"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "2z1svoyvo77ta03_en": {
+      "collectionNumber": 205,
+      "name": "Piercing Lover",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "o4p1r7347u6sff2_en": {
+      "collectionNumber": 206,
+      "name": "Gorb, the Musclebound",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "6huhkc5cydtlzgo_en": {
+      "collectionNumber": 207,
+      "name": "Lucerco the Reckless",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "wer3o71zo9myece_en": {
+      "collectionNumber": 208,
+      "name": "Numbi, the Irritating",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "mxbi84phhueeolc_en": {
+      "collectionNumber": 209,
+      "name": "Tardigramo",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "exile-random-vessel-manifestation-on-win"
+      ],
+      "mechanics": [
+        "result:move_random_zone_card",
+        "target:player",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "70wsdfb29mmcsqf_en": {
+      "collectionNumber": 210,
+      "name": "Borombo, the Mad",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "destroy-opposing-confrontation-manifestation-on-loss"
+      ],
+      "mechanics": [
+        "result:move_target",
+        "target:card",
+        "trigger:loses_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "201ug66mqu6gslx_en": {
+      "collectionNumber": 211,
+      "name": "Quorum, the Untouchable",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "unk0z0mamdx1el5_en": {
+      "collectionNumber": 212,
+      "name": "Rude Exterminator",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "rude-exterminator-destroys-random-interzone"
+      ],
+      "mechanics": [
+        "result:destroy_random_interzone_target_player",
+        "target:player",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "6hhl878fytgjf77_en": {
+      "collectionNumber": 213,
+      "name": "Vengeful Vilupera",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "e769fgfnxo63e2t_en": {
+      "collectionNumber": 214,
+      "name": "Bell, Ardent Fanatic",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "2hszv736kwwmi7n_en": {
+      "collectionNumber": 215,
+      "name": "Grudge Weaver",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "7j3udrfh5t8vl25_en": {
+      "collectionNumber": 216,
+      "name": "Solar Apparition",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "pgvrly9397pua77_en": {
+      "collectionNumber": 217,
+      "name": "Bolbakazim, the Cursed",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "reduce-manifestation-power"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:tribute",
+        "ongoing:power_modifier"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "l6ragmkyw5oyued_en": {
+      "collectionNumber": 218,
+      "name": "Friendly Presence",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "weaken-opposing-confrontation-on-entry"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "support-from-hand",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "1bbl0f2xi1u5rgi_en": {
+      "collectionNumber": 219,
+      "name": "Migmomirf",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "az5wblp5x1div9e_en": {
+      "collectionNumber": 220,
+      "name": "Gornagor, the Magnificent",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "gain-persist-until-end-of-turn"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "ongoing:grant_persist"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "kae4oy2v7jtkgn2_en": {
+      "collectionNumber": 221,
+      "name": "Imgurd, Flame Craver",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "02y2r5cvbw1mauv_en": {
+      "collectionNumber": 222,
+      "name": "Jija, Matron Bomb",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "create-hollow-tokens-for-target-interzone",
+        "sacrifice-created-token-for-power-loss"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "result:create_tokens_for_target_interzone_count",
+        "target:player",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ny6t2mdwbxfvwxw_en": {
+      "collectionNumber": 223,
+      "name": "Sermon, Obscene Quadrumane",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "immediate-skip-confrontation-unless-points"
+      ],
+      "mechanics": [
+        "result:skip_confrontation_unless_points",
+        "trigger:revelation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "36l7iw5m5hk1pmr_en": {
+      "collectionNumber": 224,
+      "name": "Nullify Reason",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "4naoqbqz6ebozj5_en": {
+      "collectionNumber": 225,
+      "name": "Incinerate",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "destroy-manifestations-that-entered-support"
+      ],
+      "mechanics": [
+        "result:destroy_matching_on_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "w3jt07uuk00nmaj_en": {
+      "collectionNumber": 226,
+      "name": "Corrode",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "reduce-all-confrontation-power"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "goxjkkrwos0lhx4_en": {
+      "collectionNumber": 227,
+      "name": "Damage",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "obn1uv72ewxv3y5_en": {
+      "collectionNumber": 228,
+      "name": "Oppress",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "oppress-power-modifier"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "bc3esblt60j7at5_en": {
+      "collectionNumber": 229,
+      "name": "Incite to Sacrifice",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "incite-to-sacrifice"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "result:exile_target_on_win"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "yk0ic6ev7465bxo_en": {
+      "collectionNumber": 230,
+      "name": "Repress the Self",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "repress-the-self"
+      ],
+      "mechanics": [
+        "result:destroy_target_gain_points"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "y4muuingw5y9l7z_en": {
+      "collectionNumber": 231,
+      "name": "Honor and Respect",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "gain-ten-when-winning-with-a-single-manifestation"
+      ],
+      "mechanics": [
+        "result:score_owner",
+        "trigger:player_wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "s6mezxrq1zp2958_en": {
+      "collectionNumber": 232,
+      "name": "Rematch!",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "schedule-rematch-after-resolution"
+      ],
+      "mechanics": [
+        "condition:controller_lost_confrontation",
+        "result:schedule_rematch"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "my6shp6k59b1eig_en": {
+      "collectionNumber": 233,
+      "name": "Life Sustainer",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "sustain-manifestations-at-exact-zero"
+      ],
+      "mechanics": [
+        "passive:sustain_exact_zero"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "4phs0d8l223jk7t_en": {
+      "collectionNumber": 234,
+      "name": "Wretched Arena",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "m2l3v60n0iakrm2_en": {
+      "collectionNumber": 235,
+      "name": "Atavic Fury",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "violence-counter-on-own-red-card",
+        "spend-violence-to-shrink-manifestation",
+        "gain-points-on-win-with-ten-violence"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "result:add_counter_source",
+        "result:score_owner",
+        "trigger:card_played",
+        "trigger:player_wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "dc44xrlrhikfvlr_en": {
+      "collectionNumber": 236,
+      "name": "Soul-devouring Dunes",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "each-player-recovery-choice"
+      ],
+      "mechanics": [
+        "result:each_player_recovery_choice",
+        "trigger:beginning_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "lmx5uff1z53fo0g_en": {
+      "collectionNumber": 237,
+      "name": "Hermetic Hourglass",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "67009ud077sgz7b_en": {
+      "collectionNumber": 238,
+      "name": "Everspring",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "9bkn03sc9veaa88_en": {
+      "collectionNumber": 239,
+      "name": "Obelisk of Friendship",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "mwby5hp16qdnjpj_en": {
+      "collectionNumber": 240,
+      "name": "Conflux of Catastrophe",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "shrink-opponent-manifestation-on-discard",
+        "gain-when-opponent-manifestation-destroyed"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "result:score_owner",
+        "target:card",
+        "trigger:cards_discarded",
+        "trigger:manifestation_destroyed"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ze99bj8uw2oisfx_en": {
+      "collectionNumber": 241,
+      "name": "Alchemical Press",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "enter-with-formula-counters",
+        "use-limbo-manifestations-as-tribute",
+        "discard-to-draw-after-will"
+      ],
+      "mechanics": [
+        "passive:allow_limbo_tribute_with_counter",
+        "result:add_counter_source",
+        "result:optional_discard_then_draw",
+        "trigger:enters_field",
+        "trigger:will_played"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "wx7y64eaa0wlvuk_en": {
+      "collectionNumber": 242,
+      "name": "Melancholic Mirror",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "exhaust-to-copy-tribute-manifestation"
+      ],
+      "mechanics": [
+        "result:copy_related_tribute_if_exhaust",
+        "trigger:manifestation_used_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "9phkl58pqrs2j2f_en": {
+      "collectionNumber": 243,
+      "name": "Greed Trap",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "capture-opponent-manifestation-at-exact-zero",
+        "roll-against-opponent-will"
+      ],
+      "mechanics": [
+        "passive:capture_opponent_exact_zero",
+        "result:roll_d6_target_table",
+        "trigger:will_played"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "3diq2d6oy35zoey_en": {
+      "collectionNumber": 244,
+      "name": "Extortionist Womb",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "tm9kt43d14h9ub1_en": {
+      "collectionNumber": 245,
+      "name": "Watchtower",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "zhzp6kenpqrym9h_en": {
+      "collectionNumber": 246,
+      "name": "Brabataba, the Unambitious",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "tzoadjk7wb5qj5f_en": {
+      "collectionNumber": 247,
+      "name": "Ononok, Chaotic Scatterer",
+      "setName": "Beta",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "support-from-hand"
+      ],
+      "testRefs": [],
+      "notes": "The Interzone-entry exile and per-player Limbo/Interzone shuffle into decks are not automated."
+    },
+    "40lqhpf5xr5v5sk_en": {
+      "collectionNumber": 248,
+      "name": "Kox, the Amoral",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "9d2y8uy9ut7omyo_en": {
+      "collectionNumber": 249,
+      "name": "Karma Bro",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [],
+      "notes": "Physical throw, rotation, and touched-card detection remain player-applied."
+    },
+    "rf5srmnqyh235tm_en": {
+      "collectionNumber": 250,
+      "name": "Qu Lom, Haphazard Martyr",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "kmvhsfddh84cpq6_en": {
+      "collectionNumber": 251,
+      "name": "Buddhan the Transcended",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "282b0n6ldnzdp0p_en": {
+      "collectionNumber": 252,
+      "name": "Zum, the Manifold",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "ir09smkker8rgxd_en": {
+      "collectionNumber": 253,
+      "name": "Zizek, the Immolated",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "w8364ml7m6erl8s_en": {
+      "collectionNumber": 254,
+      "name": "Gorte, Timeless",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "birhlimm9e8lq3d_en": {
+      "collectionNumber": 255,
+      "name": "Orator of the Absurd",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "ghb6i1uoiqq12o2_en": {
+      "collectionNumber": 256,
+      "name": "Pluff",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "discard-top-card-on-enter-field"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "result:discard_deck_owner",
+        "support-from-hand",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "8te5ovk08ul6fve_en": {
+      "collectionNumber": 257,
+      "name": "Rocky Heartcrystal",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "alternate-tribute-temperament"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "3k3i91mo61xgl24_en": {
+      "collectionNumber": 258,
+      "name": "Granite Mass",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand",
+        "support-from-interzone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "b0amfkmb3xewx7x_en": {
+      "collectionNumber": 259,
+      "name": "Kaos Bro",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [],
+      "notes": "Physical throw, rotation, and touched-card detection remain player-applied."
+    },
+    "chj7vmavn3d5c4s_en": {
+      "collectionNumber": 260,
+      "name": "Plinius, Risk-taker",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "roll-parity-power"
+      ],
+      "mechanics": [
+        "result:roll_d6_power_by_parity",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "0e7afy7zmyhbfal_en": {
+      "collectionNumber": 261,
+      "name": "Mirrorbeast",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "mirrorbeast-copy-power-and-effects"
+      ],
+      "mechanics": [
+        "ongoing:copy_power_effects",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ypvac71teuck2za_en": {
+      "collectionNumber": 262,
+      "name": "Worn Old Shape",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "lose-power-after-interzone-support-entry"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "ongoing:power_modifier",
+        "support-from-hand",
+        "support-from-interzone",
+        "trigger:enters_support"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "dm0hz9sb5i737gx_en": {
+      "collectionNumber": 263,
+      "name": "Hogma, the Petty",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "hogma-suppresses-other-friendly-confrontation-manifestations"
+      ],
+      "mechanics": [
+        "ongoing:lose_effects",
+        "support-from-hand",
+        "support-from-interzone",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py"
+      ]
+    },
+    "hcgvp7lbadlng1h_en": {
+      "collectionNumber": 264,
+      "name": "Gummo",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "g02zvmqx3loxlcv_en": {
+      "collectionNumber": 265,
+      "name": "Buddhan the Dark",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "lo85kdsow36bymu_en": {
+      "collectionNumber": 266,
+      "name": "Strengthen",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "strengthen-power-modifier"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "ryg8e3lgopl6z52_en": {
+      "collectionNumber": 267,
+      "name": "Ponder",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "draw-three-cards"
+      ],
+      "mechanics": [
+        "result:draw_owner"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ivx8jr1o6utm32a_en": {
+      "collectionNumber": 268,
+      "name": "Essence Forager",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "gain-transcendent-essence-each-turn"
+      ],
+      "mechanics": [
+        "result:create_essence",
+        "trigger:beginning_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "u9blfiufeef8djr_en": {
+      "collectionNumber": 269,
+      "name": "Reveal the Hidden",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "put-hand-manifestation-in-interzone"
+      ],
+      "mechanics": [
+        "result:move_zone_target_to_field_zone",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "0coh7nrbvcvan1i_en": {
+      "collectionNumber": 270,
+      "name": "Recover from the Abyss",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "return-limbo-card-to-hand"
+      ],
+      "mechanics": [
+        "result:move_target",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "fwh3yrkvg9n09vg_en": {
+      "collectionNumber": 271,
+      "name": "Nullify",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "bithch9c4vi77cu_en": {
+      "collectionNumber": 272,
+      "name": "Weaken",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "weaken-power-modifier"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py"
+      ]
+    },
+    "f18fccv1k2co206_en": {
+      "collectionNumber": 273,
+      "name": "Deny Fate",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "deny-fate"
+      ],
+      "mechanics": [
+        "result:shuffle_hand_into_deck_and_draw"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "odqcx9kkqe029se_en": {
+      "collectionNumber": 274,
+      "name": "Mutate Uncontrollably",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "roll-mutation-table"
+      ],
+      "mechanics": [
+        "result:roll_d6_target_table"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ztunjt1msq1ofsv_en": {
+      "collectionNumber": 275,
+      "name": "Accentuate",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "accentuate-power-modifier"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py"
+      ]
+    },
+    "g0mtnp4zbhwj7cb_en": {
+      "collectionNumber": 276,
+      "name": "Deny",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "deny-stack-card-unless-paid"
+      ],
+      "mechanics": [
+        "result:counter_stack_action_unless_payment",
+        "target:stack_action"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "cnqaie6oq458qgq_en": {
+      "collectionNumber": 277,
+      "name": "Recall",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "mv2vad6gwrfbi1l_en": {
+      "collectionNumber": 278,
+      "name": "Help!",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "help-lose-points-then-chain"
+      ],
+      "mechanics": [
+        "result:chain_from_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "dly528oj65qnznh_en": {
+      "collectionNumber": 279,
+      "name": "Duel Honorably",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "op83bq67vaf368q_en": {
+      "collectionNumber": 280,
+      "name": "Censor",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "zni76s4aabicqag_en": {
+      "collectionNumber": 281,
+      "name": "Pray the Ether",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "discard-one-then-draw-two"
+      ],
+      "mechanics": [
+        "result:discard_hand_owner_then_draw"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "1q6crbc7nwugrgs_en": {
+      "collectionNumber": 282,
+      "name": "Exile",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "exile-manifestation"
+      ],
+      "mechanics": [
+        "result:move_target"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "f2cj2wys3jhbzci_en": {
+      "collectionNumber": 283,
+      "name": "Destroy",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "destroy-field-will-or-interzone-manifestation"
+      ],
+      "mechanics": [
+        "result:move_target"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "3gqrmx5jegwz8kb_en": {
+      "collectionNumber": 284,
+      "name": "Martyrize",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "ey6fuk5gguasrb0_en": {
+      "collectionNumber": 285,
+      "name": "Ignore",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "ignore-stack-effect-unless-paid"
+      ],
+      "mechanics": [
+        "result:counter_stack_action_unless_payment",
+        "target:stack_effect"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "knnq85hihrxuafj_en": {
+      "collectionNumber": 286,
+      "name": "Abandon",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "abandon-return-target-player-support"
+      ],
+      "mechanics": [
+        "result:return_target_player_support",
+        "target:player"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "l3ne0zha51w387z_en": {
+      "collectionNumber": 287,
+      "name": "Purifying Ritual",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "protect-controller-hand"
+      ],
+      "mechanics": [
+        "passive:protect_controller_hand"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "yca1lsjic3cktj1_en": {
+      "collectionNumber": 288,
+      "name": "Nullifying Radiance",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "1ixfmjkfewc0o42_en": {
+      "collectionNumber": 289,
+      "name": "Empathic Mask",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "7gaov0c4cjndl9w_en": {
+      "collectionNumber": 290,
+      "name": "Unreachable Pillar",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "xzh48oy0ramirce_en": {
+      "collectionNumber": 291,
+      "name": "Trap",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "pqi88s5ytyfnalf_en": {
+      "collectionNumber": 292,
+      "name": "Humiliate",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "humiliate"
+      ],
+      "mechanics": [
+        "result:humiliate_target",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "dey791sghwx2ee3_en": {
+      "collectionNumber": 293,
+      "name": "Remove by Chance",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "destroy-random-vessel-manifestation"
+      ],
+      "mechanics": [
+        "result:move_random_zone_card",
+        "target:player"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "90cwtv2us78k76w_en": {
+      "collectionNumber": 294,
+      "name": "Essence Cauldron",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "retain-excess-essences"
+      ],
+      "mechanics": [
+        "passive:retain_excess_essence"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "5x4aca4v6w9ma1f_en": {
+      "collectionNumber": 295,
+      "name": "Eliminate the Profane",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "destroy-vessel-manifestation"
+      ],
+      "mechanics": [
+        "result:move_target"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "e049wxg2j24nczl_en": {
+      "collectionNumber": 296,
+      "name": "Karmapult",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "omhqwnu5tvwlzzg_en": {
+      "collectionNumber": 297,
+      "name": "Grimoire",
+      "setName": "Beta",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "5hpmlq50blbf3y6_en": {
+      "collectionNumber": 298,
+      "name": "Will-punishing Cannon",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "will-controller-loses-five"
+      ],
+      "mechanics": [
+        "result:score_target",
+        "target:player",
+        "trigger:will_played"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "whwfrjzl6flgww9_en": {
+      "collectionNumber": 299,
+      "name": "Protect",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "protect-friendly-field-until-end-turn"
+      ],
+      "mechanics": [
+        "ongoing:protection"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "2xqczn7vzkm5n50_en": {
+      "collectionNumber": 300,
+      "name": "Volcano",
+      "setName": "Beta",
+      "status": "automated",
+      "abilityIds": [
+        "volcano-exile"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "result:exile_all_wills_and_interzones"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-001": {
+      "collectionNumber": 301,
+      "name": "Flem",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-002": {
+      "collectionNumber": 302,
+      "name": "Buuz, the Helicoidal",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "create-phlegmatic-support-token-on-entry"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "result:create_support_token",
+        "support-from-hand",
+        "support-from-interzone",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-003": {
+      "collectionNumber": 303,
+      "name": "Zam-za, the Prosperous",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-004": {
+      "collectionNumber": 304,
+      "name": "Quper, the Bestower",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-005": {
+      "collectionNumber": 305,
+      "name": "Manibirbo",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "ignore-power-after-hand-support-entry"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "ongoing:power_ignored",
+        "support-from-hand",
+        "support-from-interzone",
+        "trigger:enters_support"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-006": {
+      "collectionNumber": 306,
+      "name": "Faroc-Ko, the Insipid",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-007": {
+      "collectionNumber": 307,
+      "name": "Eorthoda, the Limpid",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-008": {
+      "collectionNumber": 308,
+      "name": "Larman Doz, the Upright",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "larman-chain-and-boost"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-009": {
+      "collectionNumber": 309,
+      "name": "Berta, the Peaceful",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "other-manifestations-cannot-fall-below-base"
+      ],
+      "mechanics": [
+        "adamant",
+        "passive:other_power_minimum_base"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-010": {
+      "collectionNumber": 310,
+      "name": "Gusted Nebula",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "sacrifice-to-return-supports"
+      ],
+      "mechanics": [
+        "cost:sacrificeSource",
+        "float",
+        "result:return_supports_and_boost_firsts",
+        "support-from-hand"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-011": {
+      "collectionNumber": 311,
+      "name": "Chobariki, of the Shiny Muscles",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "enter-under-chosen-control",
+        "pay-phlegmatic-essence-for-support",
+        "owner-scores-after-loss",
+        "return-after-win"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "result:change_source_control",
+        "result:grant_source_support_until_end_turn",
+        "result:move_source_to_owner_deck_top",
+        "result:score_source_owner",
+        "support-from-hand",
+        "target:player",
+        "trigger:loses_confrontation",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-012": {
+      "collectionNumber": 312,
+      "name": "Mukkabell",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "mukkabell-chain-from-hand"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-013": {
+      "collectionNumber": 313,
+      "name": "Ycar, the Fleeting Flow",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-014": {
+      "collectionNumber": 314,
+      "name": "Lombriculpop",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "gain-per-excess-power-over-opponent-first"
+      ],
+      "mechanics": [
+        "result:score_owner",
+        "target:player",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-015": {
+      "collectionNumber": 315,
+      "name": "Zborh, the Eternal",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "zborh-returns-after-controller-loses"
+      ],
+      "mechanics": [
+        "adamant",
+        "result:move_source_to_owner_hand",
+        "trigger:player_loses_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py"
+      ]
+    },
+    "inner-deserts-016": {
+      "collectionNumber": 316,
+      "name": "Linoleus, the Verdant",
+      "setName": "Inner Deserts",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "adamant"
+      ],
+      "testRefs": [],
+      "notes": "The extra 5-point gain and target manifestation power bonus after other card/effect scoring are not automated."
+    },
+    "inner-deserts-017": {
+      "collectionNumber": 317,
+      "name": "Mamelath, the Polymancer",
+      "setName": "Inner Deserts",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [],
+      "notes": "Moving First Manifestations to Interzone, creating base-power token counts, and exiling Mamelath after a win are not automated."
+    },
+    "inner-deserts-018": {
+      "collectionNumber": 318,
+      "name": "Paciphint, the Pious",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-019": {
+      "collectionNumber": 319,
+      "name": "Dissolve and Coagulate",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "dissolve-and-coagulate"
+      ],
+      "mechanics": [
+        "result:dissolve_vessel_targets",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-020": {
+      "collectionNumber": 320,
+      "name": "Healing Bond",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-021": {
+      "collectionNumber": 321,
+      "name": "Convert the Pain",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "convert-the-pain"
+      ],
+      "mechanics": [
+        "result:destroy_support_targets_draw",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-022": {
+      "collectionNumber": 322,
+      "name": "Psychowall",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "mutual-opponent-immunity",
+        "any-player-destroy-psychowall"
+      ],
+      "mechanics": [
+        "activation:any-player",
+        "cost:tribute",
+        "passive:mutual_opponent_immunity",
+        "result:destroy_source"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-023": {
+      "collectionNumber": 323,
+      "name": "Simulacrum of Clemency",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-024": {
+      "collectionNumber": 324,
+      "name": "Caress the Dawn",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "split-recent-limbo-cards-between-deck-ends"
+      ],
+      "mechanics": [
+        "result:split_targeted_limbo_cards"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-025": {
+      "collectionNumber": 325,
+      "name": "Viter",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-026": {
+      "collectionNumber": 326,
+      "name": "Denblew, the Puritan",
+      "setName": "Inner Deserts",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand",
+        "support-from-interzone"
+      ],
+      "testRefs": [],
+      "notes": "The once-per-turn off-Recovery draw watcher and +1 power gain are not automated."
+    },
+    "inner-deserts-027": {
+      "collectionNumber": 327,
+      "name": "Glob-glob",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "tribute-destination:deck_bottom"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-028": {
+      "collectionNumber": 328,
+      "name": "Alakazim, the Magician",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-029": {
+      "collectionNumber": 329,
+      "name": "Bivalv, the Circumspect",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-030": {
+      "collectionNumber": 330,
+      "name": "Philfer, the Sharp",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-031": {
+      "collectionNumber": 331,
+      "name": "Brioski, the Aerial",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "float",
+        "support-from-hand",
+        "support-from-interzone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-032": {
+      "collectionNumber": 332,
+      "name": "Poopom, the Hydromancer",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-033": {
+      "collectionNumber": 333,
+      "name": "Gladionimbus",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "sacrifice-to-grant-friendly-interzone-float"
+      ],
+      "mechanics": [
+        "cost:sacrificeSource",
+        "float",
+        "ongoing:grant_float",
+        "support-from-hand"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-034": {
+      "collectionNumber": 334,
+      "name": "Bonzai, the Unexpected",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-035": {
+      "collectionNumber": 335,
+      "name": "Phimosino",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-036": {
+      "collectionNumber": 336,
+      "name": "Looj, Cautious Agitator",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "looj-chain-from-hand"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-037": {
+      "collectionNumber": 337,
+      "name": "Tut, Rhythmic Whirlwind",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-038": {
+      "collectionNumber": 338,
+      "name": "Referen-Doom, the Dreamer",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-039": {
+      "collectionNumber": 339,
+      "name": "Denegath, the Regulator",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-040": {
+      "collectionNumber": 340,
+      "name": "Ippokridal, of Icy Fervor",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "create-vitreous-support-token-on-reaction-will"
+      ],
+      "mechanics": [
+        "adamant",
+        "result:create_support_token",
+        "trigger:will_played"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py"
+      ]
+    },
+    "inner-deserts-041": {
+      "collectionNumber": 341,
+      "name": "Timidette, the Elusive",
+      "setName": "Inner Deserts",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [],
+      "notes": "Selecting one opposing Support per opponent, returning all other Support to deck bottoms in order, and win exile are not automated."
+    },
+    "inner-deserts-042": {
+      "collectionNumber": 342,
+      "name": "Ababash, the Ambassador",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-043": {
+      "collectionNumber": 343,
+      "name": "Obscure",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "obscure-card-until-end-turn"
+      ],
+      "mechanics": [
+        "ongoing:obscure_lock"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-044": {
+      "collectionNumber": 344,
+      "name": "Veer the Will",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "veer-the-will"
+      ],
+      "mechanics": [
+        "result:neutralize_stack_action",
+        "target:stack_action"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-045": {
+      "collectionNumber": 345,
+      "name": "Hyperuranic Tower",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "enter-with-abstraction-counters",
+        "move-abstraction-counter",
+        "float-with-abstraction-counter",
+        "friendly-float-power-bonus"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "passive:float_with_counter",
+        "passive:friendly_float_power_bonus",
+        "result:add_counter_source",
+        "result:move_counter",
+        "target:counter",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-046": {
+      "collectionNumber": 346,
+      "name": "Pass Judgment",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "pass-judgment"
+      ],
+      "mechanics": [
+        "result:weaken_target_per_hand_card",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-047": {
+      "collectionNumber": 347,
+      "name": "Dissect",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "reorder-top-three-of-each-deck"
+      ],
+      "mechanics": [
+        "result:reorder_top_decks"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-048": {
+      "collectionNumber": 348,
+      "name": "Wish Upon the Stars",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-049": {
+      "collectionNumber": 349,
+      "name": "Mal",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-050": {
+      "collectionNumber": 350,
+      "name": "Tombloom",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-051": {
+      "collectionNumber": 351,
+      "name": "Bakato, the Obsessive",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "play-from-limbo-at-beginning"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "play-permission",
+        "support-from-hand",
+        "support-win:exile"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-052": {
+      "collectionNumber": 352,
+      "name": "Kanopo, the Headless",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-053": {
+      "collectionNumber": 353,
+      "name": "Manymaws",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "sacrifice-friendly-confrontation-manifestation-on-entry"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "result:move_target",
+        "support-from-hand",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py"
+      ]
+    },
+    "inner-deserts-054": {
+      "collectionNumber": 354,
+      "name": "Quasimolg, the Hunched",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-055": {
+      "collectionNumber": 355,
+      "name": "Nghoul-ong, the Tormented",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-056": {
+      "collectionNumber": 356,
+      "name": "Makaboon",
+      "setName": "Inner Deserts",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "float"
+      ],
+      "testRefs": [],
+      "notes": "The field watcher adding a hand discard whenever a player discards from their deck is not automated."
+    },
+    "inner-deserts-057": {
+      "collectionNumber": 357,
+      "name": "Sangen, the Relic",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-058": {
+      "collectionNumber": 358,
+      "name": "Leadenshroud",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "sacrifice-to-reanimate-recent-manifestation"
+      ],
+      "mechanics": [
+        "cost:sacrificeSource",
+        "float",
+        "result:play_limbo_target_as_support",
+        "support-from-hand",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-059": {
+      "collectionNumber": 359,
+      "name": "Nameless Arcane",
+      "setName": "Inner Deserts",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "support-from-hand",
+        "support-from-interzone"
+      ],
+      "testRefs": [],
+      "notes": "Sacrificing all other controlled Confrontation manifestations and gaining one transcendent essence per card moved are not automated."
+    },
+    "inner-deserts-060": {
+      "collectionNumber": 360,
+      "name": "Tebebe, Taken by the Dunes",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-061": {
+      "collectionNumber": 361,
+      "name": "Dol, the Aching",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-062": {
+      "collectionNumber": 362,
+      "name": "Gigabonblade",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-063": {
+      "collectionNumber": 363,
+      "name": "Memento, the Fallen",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-064": {
+      "collectionNumber": 364,
+      "name": "Kanon, the Deathdealer",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "replace-opponent-nonrecovery-draw"
+      ],
+      "mechanics": [
+        "adamant",
+        "passive:replace_opponent_nonrecovery_draw"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-065": {
+      "collectionNumber": 365,
+      "name": "Jesterina, the Decadent",
+      "setName": "Inner Deserts",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [],
+      "notes": "Revealing until a manifestation, discarding the revealed cards, Chaining that manifestation under your control, and win exile are not automated."
+    },
+    "inner-deserts-066": {
+      "collectionNumber": 366,
+      "name": "Mejik, the Labyrinther",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-067": {
+      "collectionNumber": 367,
+      "name": "Regurgitating Catacomb",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-068": {
+      "collectionNumber": 368,
+      "name": "Eviscerate Morality",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "eviscerate-morality"
+      ],
+      "mechanics": [
+        "result:reorder_top_decks"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-069": {
+      "collectionNumber": 369,
+      "name": "Tax of the Malignant",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-070": {
+      "collectionNumber": 370,
+      "name": "Cradle the Putrescence",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-071": {
+      "collectionNumber": 371,
+      "name": "Walk the Oblivion",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-072": {
+      "collectionNumber": 372,
+      "name": "Recall the Consumed",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "exile-limbos-create-hollow-copies"
+      ],
+      "mechanics": [
+        "result:exile_limbos_create_token_copies"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-073": {
+      "collectionNumber": 373,
+      "name": "Capry",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-074": {
+      "collectionNumber": 374,
+      "name": "Sly Frog",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "tribute-destination:stalemate"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-075": {
+      "collectionNumber": 375,
+      "name": "Ozzit, the Unwary",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "roll-and-move-to-stalemate-on-odd"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "result:roll_d6_move_source_to_stalemate_on_odd",
+        "support-from-hand",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py"
+      ]
+    },
+    "inner-deserts-076": {
+      "collectionNumber": 376,
+      "name": "Nubilung, the Elder",
+      "setName": "Inner Deserts",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand",
+        "support-win:exile"
+      ],
+      "testRefs": [],
+      "notes": "Entering Support from Stalemate, the +2 power through Resolution, and exile after a Support win are not automated."
+    },
+    "inner-deserts-077": {
+      "collectionNumber": 377,
+      "name": "Swindley, the Festive",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-078": {
+      "collectionNumber": 378,
+      "name": "Proboscidon, the Boor",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-079": {
+      "collectionNumber": 379,
+      "name": "Pegasso",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "gain-power-through-resolution-on-entry",
+        "exile-after-winning-confrontation"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "ongoing:power_modifier",
+        "result:move_source_to_owner_exile",
+        "support-from-hand",
+        "trigger:enters_field_zone",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-080": {
+      "collectionNumber": 380,
+      "name": "Cirrocumulus",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "sacrifice-to-resolve-controlled-stack-item"
+      ],
+      "mechanics": [
+        "cost:sacrificeSource",
+        "float",
+        "result:resolve_target_stack_immediately",
+        "support-from-hand",
+        "target:stack_item"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-081": {
+      "collectionNumber": 381,
+      "name": "Mollino, the Repeller",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "mollino-repel-and-chain"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-082": {
+      "collectionNumber": 382,
+      "name": "Gorlok, the Blinded Indiscreet",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-083": {
+      "collectionNumber": 383,
+      "name": "Auction Profiteer",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-084": {
+      "collectionNumber": 384,
+      "name": "Chabak, the Ungrateful",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-085": {
+      "collectionNumber": 385,
+      "name": "Fee-fee, the Afflicted",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-086": {
+      "collectionNumber": 386,
+      "name": "Thoughtcutter",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [],
+      "notes": "Conditional play requires a Will on top of the Stack, then interrupts and locks the Stack and grants power; generic recognition incorrectly grants unconditional Support from hand."
+    },
+    "inner-deserts-087": {
+      "collectionNumber": 387,
+      "name": "Moaning Consul",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-088": {
+      "collectionNumber": 388,
+      "name": "Gobres, the Collector",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "suspend-opponent-will-before-revelation"
+      ],
+      "mechanics": [
+        "adamant",
+        "result:suspend_opponent_hand_will",
+        "target:player",
+        "trigger:before_revelation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-089": {
+      "collectionNumber": 389,
+      "name": "Silem, the Magnetic",
+      "setName": "Inner Deserts",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [],
+      "notes": "Moving all controlled Stalemate manifestations to Support, suppressing their effects, and exiling Silem after a win are not automated."
+    },
+    "inner-deserts-090": {
+      "collectionNumber": 390,
+      "name": "Pescojolero, the Ringing King",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-091": {
+      "collectionNumber": 391,
+      "name": "Embottle",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "embottle-disable-card"
+      ],
+      "mechanics": [
+        "ongoing:lose_effects"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-092": {
+      "collectionNumber": 392,
+      "name": "Discombobulator",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-093": {
+      "collectionNumber": 393,
+      "name": "Bizarre Mechanism",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-094": {
+      "collectionNumber": 394,
+      "name": "Pontificate Heresy",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "immediate-shuffle-hands-draw-four"
+      ],
+      "mechanics": [
+        "result:shuffle_hands_then_draw"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-095": {
+      "collectionNumber": 395,
+      "name": "Mock Fate",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "stalemate-recent-limbo-manifestation"
+      ],
+      "mechanics": [
+        "result:move_zone_target_to_field_zone",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-096": {
+      "collectionNumber": 396,
+      "name": "Lunar Liturgy",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-097": {
+      "collectionNumber": 397,
+      "name": "Chol",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-098": {
+      "collectionNumber": 398,
+      "name": "Crickelob, the Vile",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "shuffle-after-used-as-tribute"
+      ],
+      "mechanics": [
+        "result:shuffle_owner_deck",
+        "trigger:used_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-099": {
+      "collectionNumber": 399,
+      "name": "Palgonphio",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-100": {
+      "collectionNumber": 400,
+      "name": "Juggernut, the Overwhelming",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-101": {
+      "collectionNumber": 401,
+      "name": "Sticky Fasces-fly",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "fasces-fly-enters-confrontation",
+        "fasces-fly-wins-weaken-interzone"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "result:add_power_counter_target",
+        "target:card",
+        "trigger:enters_field_zone",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-102": {
+      "collectionNumber": 402,
+      "name": "Orzo, the Greatmace",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-103": {
+      "collectionNumber": 403,
+      "name": "Punitive Tripod",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-104": {
+      "collectionNumber": 404,
+      "name": "Dulfer, the Touchy",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-105": {
+      "collectionNumber": 405,
+      "name": "Stormmace",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "sacrifice-to-empower-first"
+      ],
+      "mechanics": [
+        "cost:sacrificeSource",
+        "float",
+        "support-from-hand",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-106": {
+      "collectionNumber": 406,
+      "name": "Kelona, the Anchorite",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [],
+      "mechanics": [
+        "continuous-power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-107": {
+      "collectionNumber": 407,
+      "name": "Lugione, the Hungry",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "sacrifice-to-destroy-power-four"
+      ],
+      "mechanics": [
+        "adamant",
+        "cost:sacrificeSource",
+        "result:move_target",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-108": {
+      "collectionNumber": 408,
+      "name": "Horned Augustus",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-109": {
+      "collectionNumber": 409,
+      "name": "Rah-kio, the Flyswatter",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "rah-kio-swat-tokens"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:sacrificeSource",
+        "result:destroy_all_tokens"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-110": {
+      "collectionNumber": 410,
+      "name": "Solitary Combhand",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "draw-for-empty-interzone-spaces"
+      ],
+      "mechanics": [
+        "passive:extra_recovery_draw_per_empty_interzone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-111": {
+      "collectionNumber": 411,
+      "name": "Phalanx Tower",
+      "setName": "Inner Deserts",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [],
+      "notes": "The optional revealed hand discard and base-power reduction of a target Confrontation manifestation are not automated."
+    },
+    "inner-deserts-112": {
+      "collectionNumber": 412,
+      "name": "Kazadur, the Fiery",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "kazadur-opponents-chain"
+      ],
+      "mechanics": [
+        "adamant",
+        "continuous-power",
+        "result:chain_from_zone",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-113": {
+      "collectionNumber": 413,
+      "name": "Lilitha, the Dismemberer",
+      "setName": "Inner Deserts",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "first-restriction",
+        "support-from-hand"
+      ],
+      "testRefs": [],
+      "notes": "Optional target destruction, base-power token creation for its controller, and exile after winning are not automated."
+    },
+    "inner-deserts-114": {
+      "collectionNumber": 414,
+      "name": "Sandokaron, Banners Bearer",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-115": {
+      "collectionNumber": 415,
+      "name": "Extinguish Nostalgia",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "immediate-exile-all-limbos"
+      ],
+      "mechanics": [
+        "result:exile_all_limbos"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-116": {
+      "collectionNumber": 416,
+      "name": "Kiss of the Myrmillo!",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "immediate-end-confrontation-unless-payment"
+      ],
+      "mechanics": [
+        "result:end_confrontation_unless_payment"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-117": {
+      "collectionNumber": 417,
+      "name": "Spiked Pit",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-118": {
+      "collectionNumber": 418,
+      "name": "Inflate the Ego",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "reduce-cost-and-set-first-power"
+      ],
+      "mechanics": [
+        "ongoing:power_set_maximum"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-119": {
+      "collectionNumber": 419,
+      "name": "Drain the Substance",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-120": {
+      "collectionNumber": 420,
+      "name": "Overwhelming Persuasion",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-121": {
+      "collectionNumber": 421,
+      "name": "Donmo, the Truth-Bender",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-122": {
+      "collectionNumber": 422,
+      "name": "Jeovak, the Illusory",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "end-confrontation-and-relocate"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "result:end_confrontation_relocate_all",
+        "support-from-hand",
+        "support-from-interzone",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-123": {
+      "collectionNumber": 423,
+      "name": "Sacred Mountain",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-124": {
+      "collectionNumber": 424,
+      "name": "Tuxnu, the Transparent",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "copy-entering-persistent-will-for-other-players"
+      ],
+      "mechanics": [
+        "result:copy_entering_persistent_will_for_others",
+        "trigger:persistent_will_enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-125": {
+      "collectionNumber": 425,
+      "name": "Haltan, the Favored",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "exhaust-to-change-points",
+        "exhaust-sacrifice-to-prevent-point-changes"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:sacrificeSource",
+        "float",
+        "ongoing:prevent_point_changes",
+        "result:choose_target_score_delta",
+        "support-from-hand",
+        "target:player"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-126": {
+      "collectionNumber": 426,
+      "name": "Jodorosk, the Psychomage",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "guess-opponent-top-card-characteristics"
+      ],
+      "mechanics": [
+        "result:guess_top_card",
+        "target:player",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-127": {
+      "collectionNumber": 427,
+      "name": "Bibi, the Confused",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "enter-under-chosen-control",
+        "roll-on-enter-field",
+        "lose-by-roll-then-exile"
+      ],
+      "mechanics": [
+        "first-restriction",
+        "result:change_source_control",
+        "result:roll_d6_conditional_source",
+        "result:score_controller_by_source_roll_then_exile",
+        "support-from-hand",
+        "target:player",
+        "trigger:enters_field",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-128": {
+      "collectionNumber": 428,
+      "name": "Pillarpede",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "roll-five-for-power-and-discard"
+      ],
+      "mechanics": [
+        "result:roll_multiple_even_power_odd_discard",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-129": {
+      "collectionNumber": 429,
+      "name": "Powerful Pidue",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-130": {
+      "collectionNumber": 430,
+      "name": "Zozok, the Void",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-131": {
+      "collectionNumber": 431,
+      "name": "Drildrill",
+      "setName": "Inner Deserts",
+      "status": "partial",
+      "abilityIds": [],
+      "mechanics": [
+        "support-from-hand"
+      ],
+      "testRefs": [],
+      "notes": "The exhaust plus neutral-essence activation, Persistent Will destruction, and refund of its printed Tribute as matching essences are not automated."
+    },
+    "inner-deserts-132": {
+      "collectionNumber": 432,
+      "name": "Losers' Chariot",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-133": {
+      "collectionNumber": 433,
+      "name": "Tricephalous Oil-Dog",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-134": {
+      "collectionNumber": 434,
+      "name": "BOB",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "gain-three-power-at-beginning-of-turn"
+      ],
+      "mechanics": [
+        "persist",
+        "result:add_counter_source",
+        "suspension-thresholds",
+        "trigger:beginning_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-135": {
+      "collectionNumber": 435,
+      "name": "Asciugoth, the Absorbent",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-136": {
+      "collectionNumber": 436,
+      "name": "Shattered Memory",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-137": {
+      "collectionNumber": 437,
+      "name": "Balance of the Spirit",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-138": {
+      "collectionNumber": 438,
+      "name": "Multicastigate",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "destroy-one-or-two-support-manifestations"
+      ],
+      "mechanics": [
+        "result:move_targets"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-139": {
+      "collectionNumber": 439,
+      "name": "Hermetic Threshold",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "draw-on-first-will-of-turn"
+      ],
+      "mechanics": [
+        "result:draw_owner",
+        "trigger:will_played"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-140": {
+      "collectionNumber": 440,
+      "name": "Subjugate",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "exile-by-essence-total"
+      ],
+      "mechanics": [
+        "result:move_target"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-141": {
+      "collectionNumber": 441,
+      "name": "Explosive Rancor",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-142": {
+      "collectionNumber": 442,
+      "name": "Flower of Evil",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-143": {
+      "collectionNumber": 443,
+      "name": "Temperamental Splendor",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-144": {
+      "collectionNumber": 444,
+      "name": "Palm Coercer",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "limit-each-hand-to-six"
+      ],
+      "mechanics": [
+        "passive:hand_limit_all"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-145": {
+      "collectionNumber": 445,
+      "name": "Cleanse",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "remove-target-modifiers"
+      ],
+      "mechanics": [
+        "result:cleanse_target",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-146": {
+      "collectionNumber": 446,
+      "name": "Wall off",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "protect-field-card-until-end-turn"
+      ],
+      "mechanics": [
+        "ongoing:protection",
+        "target:card_or_stack_action"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-147": {
+      "collectionNumber": 447,
+      "name": "Float",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "grant-float"
+      ],
+      "mechanics": [
+        "ongoing:grant_float"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-148": {
+      "collectionNumber": 448,
+      "name": "Induce Desertion",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "induce-desertion"
+      ],
+      "mechanics": [
+        "result:power_counter_from_other_target"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-149": {
+      "collectionNumber": 449,
+      "name": "Compensate",
+      "setName": "Inner Deserts",
+      "status": "manual",
+      "abilityIds": [],
+      "mechanics": [],
+      "testRefs": []
+    },
+    "inner-deserts-150": {
+      "collectionNumber": 450,
+      "name": "Sever the Ascent",
+      "setName": "Inner Deserts",
+      "status": "automated",
+      "abilityIds": [
+        "remove-float-from-all-field-manifestations"
+      ],
+      "mechanics": [
+        "ongoing:remove_float"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    }
+  }
+}
