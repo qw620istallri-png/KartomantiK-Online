@@ -1,9 +1,9 @@
 """Kartomantik Online — relay server.
 
 Serves the static client from ../public and relays game actions over
-WebSocket. Holds no game rules: it only enforces WHO may see/touch WHICH
-zone (see session.py), applies the action, and rebroadcasts a
-permission-filtered state snapshot to every connection in the session.
+WebSocket. It owns transport, role permissions, message dispatch and card-rule
+catalog compilation. The authoritative game and assisted-rules state lives in
+session.py; every broadcast is filtered for the recipient's permissions.
 """
 import asyncio
 import copy
@@ -12,6 +12,7 @@ import logging
 import mimetypes
 import os
 import random
+import re
 import sys
 import time
 
@@ -20,7 +21,11 @@ from websockets.http11 import Response
 from websockets.datastructures import Headers
 from websockets.exceptions import ConnectionClosed
 
-from session import Session, new_id, validate_tournament_deck, PRIVATE_ZONES, SHARED_ZONES, ALL_ZONES
+from session import (
+    Session, new_id, validate_tournament_deck,
+    PRIVATE_ZONES, SHARED_ZONES, ALL_ZONES,
+    TRIBUTE_SYMBOL_TEMPERAMENT,
+)
 
 mimetypes.add_type("image/webp", ".webp")
 
@@ -37,13 +42,241 @@ STATIC_CACHE_EXTENSIONS = {".avif", ".gif", ".ico", ".jpeg", ".jpg", ".png", ".s
 
 
 def load_card_data():
-    with open(os.path.join(PUBLIC_DIR, "cards-data.json"), "r", encoding="utf-8") as card_file:
-        return json.load(card_file)
+    cards = []
+    for relative_path in ("cards-data.json", os.path.join("extensions", "inner-desert", "cards.json")):
+        with open(os.path.join(PUBLIC_DIR, relative_path), "r", encoding="utf-8") as card_file:
+            cards.extend(json.load(card_file))
+    return cards
+
+
+def load_card_abilities():
+    with open(os.path.join(PUBLIC_DIR, "card-abilities.json"), "r", encoding="utf-8") as ability_file:
+        return json.load(ability_file)
 
 
 CARD_DATA = load_card_data()
+CARD_ABILITIES = load_card_abilities()
 CARD_POINTS = {card["id"]: int(card.get("points") or 0) for card in CARD_DATA}
 CARD_LABELS = {card["id"]: f'{card.get("name") or card["id"]} ({int(card.get("collectionNumber") or 0):03d})' for card in CARD_DATA}
+CARD_MANIFESTATION_IDS = {card["id"] for card in CARD_DATA if card.get("type") == "manifestation"}
+
+
+def continuous_power_rules_for_card(card):
+    effect = card.get("effect") or ""
+    rules = []
+    if "gets +1 power if there are at least 4 manifestations in the Confrontation Zone" in effect:
+        rules.append({"kind": "self_min_confrontation_count", "minimum": 4, "value": 1})
+    if "manifestations in Support you control get +1 power" in effect:
+        rules.append({"kind": "friendly_support_flat", "value": 1})
+    if "each non-token manifestation in Support you control gets +1 power for each other non-token manifestation you control in the Confrontation Zone" in effect:
+        rules.append({"kind": "friendly_support_per_other_non_token_confrontation", "value": 1})
+    if "Skapus is the only manifestation in Support you control, it gets +2 power" in effect:
+        rules.append({"kind": "self_only_friendly_support", "value": 2})
+    if "there is at least one manifestation in a stalemate, Cimba gets +1 power" in effect:
+        rules.append({"kind": "self_any_stalemate", "value": 1})
+    if "manifestations you control get +1 power as long as they are in the Confrontation Zone" in effect:
+        rules.append({"kind": "friendly_confrontation_flat", "value": 1})
+    if "it gets +1 power for each card in your hand" in effect:
+        rules.append({"kind": "self_per_controller_hand_card", "value": 1})
+    if "it gets +1 power for each manifestation in stalemate" in effect:
+        rules.append({"kind": "self_per_stalemate_manifestation", "value": 1})
+    if "it gets +1 power for each manifestation in your Limbo" in effect:
+        rules.append({"kind": "self_per_controller_limbo_manifestation", "value": 1})
+    if "it gets -1 power for each card in your Limbo, up to a maximum of -6" in effect:
+        rules.append({"kind": "self_per_controller_limbo_card", "value": -1, "floor": -6})
+    if "it gets +1 power for each manifestation in the Confrontation Zone controlled by the opponent who controls the most" in effect:
+        rules.append({"kind": "self_per_opponent_confrontation_manifestation", "value": 1})
+    if "gets +1 power for each manifestation controlled by opponents in the Confrontation Zone, up to a maximum of +3" in effect:
+        rules.append({"kind": "self_per_opponent_confrontation_total", "value": 1, "cap": 3})
+    if "it gets +1 power for each of your manifestations present in each Empathic Vessel" in effect:
+        rules.append({"kind": "self_per_owned_vessel_manifestation", "value": 1})
+    if "the First Manifestation you control gets +1 power for each manifestation in your Interzone" in effect:
+        rules.append({"kind": "first_manifestation_per_interzone_manifestation", "value": 1})
+    if "you control only one manifestation in the Confrontation Zone, that manifestation gets +2 power" in effect:
+        rules.append({"kind": "only_friendly_confrontation_manifestation", "value": 2})
+    return rules
+
+
+def play_phases_for_card(card):
+    effect = card.get("effect") or ""
+    if card.get("type") != "ephemeral_will":
+        return None
+    if re.search(r"only during the Reaction\b", effect):
+        return ["confrontation_reaction"]
+    if re.search(r"only during the Resolution\b", effect):
+        return ["resolution_compare", "resolution_effects", "resolution_move"]
+    if re.search(r"only before the Revelation\b", effect):
+        return ["confrontation_before_revelation"]
+    return None
+
+
+def interzone_tribute_power_for_card(card):
+    effect = card.get("effect") or ""
+    match = re.search(
+        r"used as tribute.*?considered to have a base power of ([^\n.]+)",
+        effect,
+        re.IGNORECASE | re.DOTALL,
+    ) or re.search(
+        r"used as tribute.*?considered of base power ([^\n.]+)",
+        effect,
+        re.IGNORECASE | re.DOTALL,
+    )
+    if not match:
+        return None
+    symbols = re.findall(r"\{[A-Z]\}", match.group(1))
+    icons = re.findall(r"[🔥🌿💧🔮⚡🌈]", match.group(1))
+    return len(symbols or icons) or None
+
+
+def build_card_rules(cards, abilities_by_card):
+    return {
+        card["id"]: {
+            "type": card.get("type"),
+            "placeholder": bool(card.get("placeholder") or card.get("type") == "placeholder"),
+            "cost": card.get("cost"),
+            "powerCost": card.get("powerCost") or "",
+            "power": card.get("power"),
+            "temperaments": list(card.get("temperaments") or []),
+            "tributeTemperaments": list(dict.fromkeys([
+                *(card.get("temperaments") or []),
+                *[
+                    TRIBUTE_SYMBOL_TEMPERAMENT[symbol]
+                    for symbol in re.findall(
+                        r"used as tribute.*?considered of \{([A-Z])\} temperament",
+                        card.get("effect") or "",
+                        re.IGNORECASE | re.DOTALL,
+                    )
+                    if symbol in TRIBUTE_SYMBOL_TEMPERAMENT
+                ],
+            ])),
+            "adamant": bool(re.search(
+                r"(?:^|\n)Adamant\.",
+                card.get("effect") or "",
+            )),
+            "float": bool(re.search(
+                r"(?:^|;\s*|\n)Float\.",
+                card.get("effect") or "",
+            )),
+            "persist": bool(re.search(
+                r"(?:^|\n)Persist\.",
+                card.get("effect") or "",
+            )),
+            "tributeDestination": (
+                "deck_bottom"
+                if "used as tribute, it is put on the bottom of its owner's deck instead of entering the Limbo"
+                in (card.get("effect") or "")
+                else "stalemate"
+                if "used as tribute, it is put into the Stalemate Zone instead of entering the Limbo"
+                in (card.get("effect") or "")
+                else "graveyard"
+            ),
+            "shuffleWhenPutDeckBottom": (
+                "put at the bottom of the deck, shuffle it"
+                in (card.get("effect") or "").lower()
+            ),
+            "suspensionThresholds": ({
+                "deck": 2,
+                "graveyard": 5,
+                "handImmunity": 8,
+                "exile": 11,
+            } if (
+                "Cards that are about to enter or leave a deck due to cards or effects are Suspended instead"
+                in (card.get("effect") or "")
+                and "If BOB reaches 11 power or more" in (card.get("effect") or "")
+            ) else {}),
+            "canBeFirstManifestation": "Cannot be played as First Manifestation" not in (card.get("effect") or ""),
+            "canPayTribute": not re.search(
+                r"^Cannot be used (?:to pay tributes|as tribute)\.?",
+                card.get("effect") or "",
+                re.IGNORECASE | re.MULTILINE,
+            ),
+            "canPayTributeFromInterzone": bool(re.search(
+                r"\bcan be used as tribute from the Interzone\.",
+                card.get("effect") or "",
+                re.IGNORECASE,
+            )),
+            "interzoneTributePower": interzone_tribute_power_for_card(card),
+            "playBeforeRevelation": bool(re.search(
+                r"\bcan be played before the Revelation\.",
+                card.get("effect") or "",
+            )),
+            "playPhases": play_phases_for_card(card),
+            "reactionEmptyStackOnly": bool(re.search(
+                r"You may only play this card during Reaction, while the Stack is empty\.",
+                card.get("effect") or "",
+            )),
+            "endPhaseInterzonePlay": bool(re.search(
+                r"^In the End Phase, [^\n]*? can be played into the Interzone\.",
+                card.get("effect") or "",
+                re.MULTILINE,
+            )),
+            "supportFromHand": bool(
+                re.search(
+                    r"^Support(?: from hand)?[.;]",
+                    card.get("effect") or "",
+                )
+            ),
+            "supportFromHandCondition": (
+                {"kind": "opponent_support_from_interzone_this_turn"}
+                if "an opponent has put a manifestation into Support from their Interzone" in (card.get("effect") or "")
+                else None
+            ),
+            "supportFromInterzone": bool(
+                re.search(r"^Support[.;]", card.get("effect") or "")
+            ),
+            "playOnlyEmptyStack": (
+                "can only be played while the Stack is empty"
+                in (card.get("effect") or "")
+            ),
+            "supportWinDestination": (
+                "exile"
+                if re.search(
+                    r"wins a confrontation (?:as|in) Support, exile it",
+                    card.get("effect") or "",
+                    re.IGNORECASE,
+                )
+                else None
+            ),
+            "supportWinEffect": (
+                {"kind": "opponent_vessel_score", "value": 10}
+                if (
+                    "wins a confrontation as Support, it enters the Empathic Vessel of a target opponent"
+                    in (card.get("effect") or "")
+                    and "that player gains 10 points" in (card.get("effect") or "")
+                ) else None
+            ),
+            "continuousPowerRules": continuous_power_rules_for_card(card),
+            "activatedAbilities": [
+                ability for ability in abilities_by_card.get(card["id"], [])
+                if not ability.get("trigger")
+                and not ability.get("playPermission")
+                and not ability.get("passiveEffect")
+                and ability.get("action") != "play_card"
+            ],
+            "playedAbilities": [
+                ability for ability in abilities_by_card.get(card["id"], [])
+                if not ability.get("trigger") and not ability.get("playPermission") and ability.get("action") == "play_card"
+            ],
+            "triggeredAbilities": [
+                ability for ability in abilities_by_card.get(card["id"], [])
+                if ability.get("trigger")
+            ],
+            "playPermissions": [
+                ability for ability in abilities_by_card.get(card["id"], [])
+                if ability.get("playPermission")
+            ],
+            "passiveEffects": [
+                ability.get("passiveEffect")
+                for ability in abilities_by_card.get(card["id"], [])
+                if isinstance(ability.get("passiveEffect"), dict)
+                and ability["passiveEffect"].get("kind")
+            ],
+        }
+        for card in cards
+    }
+
+
+CARD_RULES = build_card_rules(CARD_DATA, CARD_ABILITIES)
 CARD_ID_BY_NUMBER = {int(card.get("collectionNumber") or 0): card["id"] for card in CARD_DATA}
 DEFAULT_TOURNAMENT_POLICY = {
     "bannedCardIds": [CARD_ID_BY_NUMBER[number] for number in (82, 128, 86)],
@@ -53,6 +286,27 @@ DEFAULT_TOURNAMENT_POLICY = {
         "cardIds": [CARD_ID_BY_NUMBER[number] for number in (267, 284, 281)],
     }],
 }
+
+
+def normalized_deck_policy(raw_policy):
+    if not isinstance(raw_policy, dict):
+        return copy.deepcopy(DEFAULT_TOURNAMENT_POLICY)
+    banned = [card_id for card_id in dict.fromkeys(raw_policy.get("bannedCardIds") or []) if card_id in CARD_POINTS][:100]
+    banned_set = set(banned)
+    groups = []
+    for index, raw_group in enumerate((raw_policy.get("restrictedGroups") or [])[:20]):
+        if not isinstance(raw_group, dict):
+            continue
+        card_ids = [
+            card_id for card_id in dict.fromkeys(raw_group.get("cardIds") or [])
+            if card_id in CARD_POINTS and card_id not in banned_set
+        ][:100]
+        groups.append({
+            "id": str(raw_group.get("id") or f"restricted-{index + 1}")[:40],
+            "name": str(raw_group.get("name") or f"Restricted group {index + 1}")[:60],
+            "cardIds": card_ids,
+        })
+    return {"bannedCardIds": banned, "restrictedGroups": groups}
 
 
 def find_player_ws(session, player_id):
@@ -101,6 +355,90 @@ def unstack_dependents(session, removed_item_id):
     for other in session.battlefield:
         if other.get("stackedOn") == removed_item_id:
             other["stackedOn"] = None
+
+
+def log_rules_triggered_actions(session, actions, caused_by_actor_id):
+    for action in actions:
+        session.add_log(action["controllerId"], "rules_action_triggered", {
+            "actionId": action["id"],
+            "label": action["label"],
+            "kind": action["kind"],
+            "source": action["source"],
+            "target": action["target"],
+            "targets": action["targets"],
+            "ability": action["ability"],
+            "phaseId": action["phaseId"],
+            "stackDepth": len(session.rules_engine["actionStack"]),
+            "causedByActorId": caused_by_actor_id,
+        })
+
+
+async def record_rules_resolution(session, result, actor_id):
+    resolved = result["action"]
+    session.add_log(actor_id, "rules_action_resolved", {
+        "actionId": resolved["id"],
+        "controllerId": resolved["controllerId"],
+        "label": resolved["label"],
+        "source": resolved.get("source"),
+        "sourceResolution": resolved.get("sourceResolution"),
+        "effectResult": resolved.get("effectResult"),
+        "ongoingEffects": resolved.get("ongoingEffects") or [],
+        "stackDepth": result["stackDepth"],
+        "immediate": bool(resolved.get("immediate")),
+    })
+    log_rules_triggered_actions(
+        session, result.get("triggeredActions") or [], actor_id
+    )
+    effect_result = resolved.get("effectResult") or {}
+    proofs = list(effect_result.get("handProofs") or [])
+    if not proofs and "handProof" in effect_result:
+        proofs = [{
+            "playerId": effect_result.get("handProofPlayerId"),
+            "cardIds": list(effect_result.get("handProof") or []),
+        }]
+    for proof in proofs:
+        proof_player_id = proof.get("playerId")
+        proof_cards = list(proof.get("cardIds") or [])
+        session.add_log(actor_id, "reveal", {
+            "ownerId": proof_player_id,
+            "zone": "hand",
+            "count": len(proof_cards),
+            "reason": "unresolvable_hand_action",
+        })
+        reveal_payload = {
+            "type": "reveal",
+            "ownerId": proof_player_id,
+            "zone": "hand",
+            "cards": proof_cards,
+        }
+        for other_ws, other_info in list(connections.items()):
+            if other_info["session"] is session:
+                await send_to(other_ws, reveal_payload)
+
+
+def log_rules_opening_sequence(session, result, caused_by_actor_id):
+    opening = (result or {}).get("opening") or {}
+    for player_id, count in (opening.get("draws") or {}).items():
+        session.add_log(player_id, "opening_hand_draw", {"count": count})
+    for player_id in opening.get("mulliganRequiredPlayerIds") or []:
+        session.add_log(player_id, "rules_opening_mulligan_required", {})
+    if opening.get("started"):
+        session.add_log(caused_by_actor_id, "rules_match_started", {})
+
+
+def log_rules_recovery_sequence(session, recovery, caused_by_actor_id):
+    if not recovery:
+        return
+    session.add_log(caused_by_actor_id, "recovery_draw", {
+        "draws": recovery.get("draws") or {},
+        "handLimits": recovery.get("handLimits") or {},
+    })
+    for player_id in recovery.get("mulliganRequiredPlayerIds") or []:
+        session.add_log(player_id, "rules_recovery_mulligan_required", {
+            "turn": session.phase_tracker["turn"],
+        })
+    if recovery.get("outcome"):
+        session.add_log(caused_by_actor_id, "rules_game_end", recovery["outcome"])
 
 sessions: dict[str, Session] = {}  # keyed by the session's creator/player code
 connections: dict[object, dict] = {}  # websocket -> session, playerId, role, isObserver
@@ -263,6 +601,11 @@ async def handle_message(ws, info, data):
     is_observer = role != "player"
     msg_type = data.get("type")
 
+    if session.ended and msg_type not in {
+        "chat_message", "leave_session", "request_log", "reset_board",
+    }:
+        return await send_error(ws, "The game has already ended.")
+
     if session.mode == "tournament" and role == "player":
         lobby_messages = {"import_deck", "set_activity", "chat_message", "leave_session", "request_log"}
         ended_messages = {"chat_message", "leave_session", "request_log"}
@@ -271,8 +614,10 @@ async def handle_message(ws, info, data):
         if session.status == "ended" and msg_type not in ended_messages:
             return await send_error(ws, "The tournament match has ended.")
         search_followup_actions = {
-            "draw", "draw_to_limit", "mulligan", "pass_phase", "move_card", "place_card",
+            "draw", "draw_to_limit", "mulligan", "pass_phase", "pass_priority",
+            "declare_rules_action", "move_card", "place_card",
             "copy_card", "reorder", "reveal", "scry", "request_hand_action", "respond_hand_action",
+            "resolve_rules_choice",
         }
         if session.status == "active" and msg_type in search_followup_actions:
             for alert in session.escalate_pending_searches(actor_id, msg_type):
@@ -280,19 +625,64 @@ async def handle_message(ws, info, data):
                     "ownerId": alert["ownerId"], "zone": alert["zone"], "followupAction": msg_type,
                 })
 
+    if (
+        role == "player"
+        and session.status == "active"
+        and session.rules_pregame_active()
+    ):
+        pregame_messages = {
+            "import_deck", "set_rules_deck_confirmed", "draw_to_limit", "mulligan", "set_rules_ready",
+            "set_activity", "chat_message", "leave_session", "request_log",
+            "reset_board",
+        }
+        if msg_type not in pregame_messages:
+            return await send_error(ws, "Finish the opening-hand setup before playing.")
+
+    if (
+        role == "player"
+        and session.status == "active"
+        and session.rules_recovery_mulligan_active()
+    ):
+        recovery_mulligan_messages = {
+            "mulligan", "set_activity", "chat_message", "leave_session", "request_log",
+            "reset_board",
+        }
+        if msg_type not in recovery_mulligan_messages:
+            return await send_error(ws, "Complete the required Recovery Mulligan before playing.")
+
+    if (
+        role == "player"
+        and session.status == "active"
+        and session.rules_engine["enabled"]
+        and session.rules_engine.get("pendingChoice")
+    ):
+        pending_choice_messages = {
+            "resolve_rules_choice", "set_activity", "chat_message",
+            "leave_session", "request_log", "reset_board",
+        }
+        if msg_type not in pending_choice_messages:
+            return await send_error(ws, "Complete the required card choice before playing.")
+
     if msg_type == "import_deck":
         if is_observer:
             return await send_error(ws, "Observers cannot import a deck.")
-        if session.mode == "tournament" and session.status != "lobby":
+        deck_setup_open = session.rules_engine["enabled"] and session.rules_pregame_active()
+        if session.mode == "tournament" and session.status != "lobby" and not deck_setup_open:
             return await send_error(ws, "Tournament decks are locked once the match starts.")
         player = session.players.get(actor_id)
         if player is None:
             return await send_error(ws, "Unknown player.")
+        confirmed_ids = session.rules_engine.get("deckConfirmedPlayerIds", [])
+        if session.rules_engine["enabled"] and len(session.players) >= 2 and all(pid in confirmed_ids for pid in session.players):
+            return await send_error(ws, "Decks are locked after both players validate.")
         deck_json = data.get("deck") or {}
         card_ids, sideboard_ids = extract_deck_card_pools(deck_json)
-        if session.mode == "tournament":
+        should_validate = session.mode == "tournament" or session.ban_list_enabled or bool(data.get("confirmDeck"))
+        if should_validate:
             validation_error = validate_tournament_deck(
-                card_ids, sideboard_ids, CARD_POINTS, session.tournament_policy, CARD_LABELS
+                card_ids, sideboard_ids, CARD_POINTS,
+                session.tournament_policy if session.ban_list_enabled else None,
+                CARD_LABELS,
             )
             if validation_error:
                 return await send_error(ws, validation_error)
@@ -316,6 +706,21 @@ async def handle_message(ws, info, data):
             player["deckDefinition"] = copy.deepcopy(deck_json)
             player["score"] = 0
         session.add_log(actor_id, "import_deck", {"count": len(card_ids)})
+        session.reset_rules_pregame_player(actor_id)
+        if data.get("confirmDeck"):
+            if session.rules_engine["enabled"]:
+                error, result = session.set_rules_deck_confirmed(actor_id, True)
+                if error:
+                    return await send_error(ws, error)
+                session.add_log(actor_id, "rules_deck_confirmed", {})
+                log_rules_opening_sequence(session, result, actor_id)
+            elif session.mode == "casual":
+                error, result = session.confirm_casual_deck(actor_id, HAND_LIMIT)
+                if error:
+                    return await send_error(ws, error)
+                session.add_log(actor_id, "rules_deck_confirmed", {})
+                for opening_player_id, count in result["draws"].items():
+                    session.add_log(opening_player_id, "opening_hand_draw", {"count": count})
         session.touch()
         await broadcast_state(session)
 
@@ -355,15 +760,31 @@ async def handle_message(ws, info, data):
         player = session.players.get(actor_id)
         if player is None:
             return await send_error(ws, "Unknown player.")
-        needed = max(0, HAND_LIMIT - len(player["zones"]["hand"]))
-        drawn = []
-        for _ in range(min(needed, len(player["zones"]["deck"]))):
-            card_id = player["zones"]["deck"][0]
-            error, _ = session.move_zone_card(actor_id, "deck", actor_id, "hand", card_id, "bottom")
-            if error:
-                return await send_error(ws, error)
-            drawn.append(card_id)
-        session.add_log(actor_id, "draw_to_limit", {"count": len(drawn)})
+        if session.rules_engine["enabled"]:
+            is_opening_draw = (
+                session.phase_tracker["turn"] == 1
+                and session.current_phase_id() == "recovery_start"
+            )
+            if is_opening_draw:
+                error, result = session.draw_opening_hand(actor_id, HAND_LIMIT)
+                if error:
+                    return await send_error(ws, error)
+                session.add_log(actor_id, "opening_hand_draw", {"count": result["count"]})
+            else:
+                error, result = session.resolve_recovery_draw(HAND_LIMIT)
+                if error:
+                    return await send_error(ws, error)
+                log_rules_recovery_sequence(session, result, actor_id)
+        else:
+            needed = max(0, HAND_LIMIT - len(player["zones"]["hand"]))
+            drawn = []
+            for _ in range(min(needed, len(player["zones"]["deck"]))):
+                card_id = player["zones"]["deck"][0]
+                error, _ = session.move_zone_card(actor_id, "deck", actor_id, "hand", card_id, "bottom")
+                if error:
+                    return await send_error(ws, error)
+                drawn.append(card_id)
+            session.add_log(actor_id, "draw_to_limit", {"count": len(drawn)})
         session.touch()
         await broadcast_state(session)
 
@@ -373,20 +794,71 @@ async def handle_message(ws, info, data):
         player = session.players.get(actor_id)
         if player is None:
             return await send_error(ws, "Unknown player.")
-        while player["zones"]["hand"]:
-            card_id = player["zones"]["hand"][0]
-            error, _ = session.move_zone_card(actor_id, "hand", actor_id, "deck", card_id, "bottom")
+        if session.rules_engine["enabled"]:
+            recovery_mulligan = session.rules_recovery_mulligan_active()
+            if recovery_mulligan:
+                error, result = session.mulligan_recovery_hand(actor_id, HAND_LIMIT)
+            else:
+                error, result = session.mulligan_opening_hand(actor_id, HAND_LIMIT)
             if error:
                 return await send_error(ws, error)
-        random.shuffle(player["zones"]["deck"])
-        drawn = []
-        for _ in range(min(HAND_LIMIT, len(player["zones"]["deck"]))):
-            card_id = player["zones"]["deck"][0]
-            error, _ = session.move_zone_card(actor_id, "deck", actor_id, "hand", card_id, "bottom")
-            if error:
-                return await send_error(ws, error)
-            drawn.append(card_id)
-        session.add_log(actor_id, "mulligan", {"count": len(drawn)})
+            session.add_log(actor_id, "mulligan", result)
+            if result["outcome"]:
+                loser_ids = result["outcome"].get("loserIds") or []
+                log_actor_id = loser_ids[0] if len(loser_ids) == 1 else actor_id
+                session.add_log(
+                    log_actor_id,
+                    "rules_recovery_defeat" if recovery_mulligan else "rules_opening_defeat",
+                    result["outcome"],
+                )
+            elif recovery_mulligan and result["resumed"]:
+                session.add_log(actor_id, "rules_recovery_resumed", {
+                    "turn": session.phase_tracker["turn"],
+                })
+            elif not recovery_mulligan and result["started"]:
+                session.add_log(actor_id, "rules_match_started", {})
+        else:
+            while player["zones"]["hand"]:
+                card_id = player["zones"]["hand"][0]
+                error, _ = session.move_zone_card(actor_id, "hand", actor_id, "deck", card_id, "bottom")
+                if error:
+                    return await send_error(ws, error)
+            random.shuffle(player["zones"]["deck"])
+            drawn = []
+            for _ in range(min(HAND_LIMIT, len(player["zones"]["deck"]))):
+                card_id = player["zones"]["deck"][0]
+                error, _ = session.move_zone_card(actor_id, "deck", actor_id, "hand", card_id, "bottom")
+                if error:
+                    return await send_error(ws, error)
+                drawn.append(card_id)
+            session.add_log(actor_id, "mulligan", {"count": len(drawn)})
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "set_rules_deck_confirmed":
+        if is_observer:
+            return await send_error(ws, "Observers cannot validate player decks.")
+        confirmed = data.get("confirmed", True)
+        if not isinstance(confirmed, bool):
+            return await send_error(ws, "Deck validation state must be a boolean.")
+        error, result = session.set_rules_deck_confirmed(actor_id, confirmed)
+        if error:
+            return await send_error(ws, error)
+        session.add_log(actor_id, "rules_deck_confirmed" if confirmed else "rules_deck_unconfirmed", {})
+        if confirmed:
+            log_rules_opening_sequence(session, result, actor_id)
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "set_rules_ready":
+        if is_observer:
+            return await send_error(ws, "Observers cannot confirm player readiness.")
+        error, result = session.set_rules_ready(actor_id)
+        if error:
+            return await send_error(ws, error)
+        session.add_log(actor_id, "rules_player_ready", {})
+        if result["started"]:
+            session.add_log(actor_id, "rules_match_started", {})
         session.touch()
         await broadcast_state(session)
 
@@ -534,6 +1006,25 @@ async def handle_message(ws, info, data):
                 if other_info["session"] is session:
                     await send_to(other_ws, reveal_payload)
 
+    elif msg_type == "resolve_rules_choice":
+        if is_observer or actor_id not in session.players:
+            return await send_error(ws, "Observers cannot resolve card choices.")
+        error, result = session.resolve_rules_choice(
+            actor_id, data.get("choiceId"), data.get("cardIds"),
+            option=data.get("option"), item_id=data.get("itemId"),
+            placement=data.get("placement"), targets=data.get("targets"),
+        )
+        if error:
+            return await send_error(ws, error)
+        triggered_actions = result.pop("triggeredActions", [])
+        session.add_log(actor_id, "rules_choice_resolved", result)
+        log_rules_triggered_actions(session, triggered_actions, actor_id)
+        session.flush_rules_deferred_simultaneous_actions()
+        for immediate_result in session.resolve_rules_immediate_actions():
+            await record_rules_resolution(session, immediate_result, actor_id)
+        session.touch()
+        await broadcast_state(session)
+
     elif msg_type == "move_card":
         if is_observer:
             return await send_error(ws, "Observers cannot act.")
@@ -575,6 +1066,12 @@ async def handle_message(ws, info, data):
         if from_zone in SHARED_ZONES or to_zone in SHARED_ZONES:
             move_details["cardId"] = card_id
         session.add_log(actor_id, "move_card", move_details)
+        triggered_actions = session.queue_rules_zone_entry_triggers(
+            card_id, card_owner_id, to_owner, to_zone
+        )
+        log_rules_triggered_actions(session, triggered_actions, actor_id)
+        for immediate_result in session.resolve_rules_immediate_actions():
+            await record_rules_resolution(session, immediate_result, actor_id)
         session.touch()
         await broadcast_state(session)
 
@@ -584,6 +1081,7 @@ async def handle_message(ws, info, data):
         source_container_id = data.get("ownerId") or actor_id
         from_zone = data.get("fromZone")
         card_id = data.get("cardId")
+        manual_bypass = bool(data.get("manualBypass"))
         if from_zone not in ALL_ZONES:
             return await send_error(ws, "Unknown zone.")
         if not session.can_act_on_zone(actor_id, is_observer, source_container_id, from_zone):
@@ -591,17 +1089,84 @@ async def handle_message(ws, info, data):
         source_player = session.players.get(source_container_id)
         if source_player is None or card_id not in source_player["zones"][from_zone]:
             return await send_error(ws, "Card not found in that zone.")
+        reservation_error = session.rules_source_reservation_error(source_container_id, from_zone, card_id)
+        if reservation_error:
+            return await send_error(ws, reservation_error)
         card_owner_id = session.card_owner_in_zone(source_container_id, from_zone, card_id)
         owner_player = session.players.get(card_owner_id)
         if owner_player is None:
             return await send_error(ws, "Card owner is no longer in the session.")
+        if manual_bypass and (
+            source_container_id != actor_id or from_zone != "hand"
+        ):
+            return await send_error(
+                ws, "Manual play is only available for your Hand."
+            )
+        if manual_bypass:
+            zone_play_permission = None
+        else:
+            permission_error, zone_play_permission = session.rules_zone_play_permission(
+                actor_id, source_container_id, from_zone, card_id
+            )
+            if permission_error:
+                return await send_error(ws, permission_error)
+        first_manifestation = (
+            False if manual_bypass
+            else session.rules_first_manifestation_active()
+        )
+        if first_manifestation and (source_container_id != actor_id or from_zone != "hand"):
+            return await send_error(ws, "Choose your first Manifestation from your hand.")
+        if first_manifestation and not session.rules_card_can_be_first_manifestation(card_id):
+            return await send_error(ws, "Your first play must be a Manifestation.")
+        if (
+            from_zone == "hand"
+            and not first_manifestation
+            and not manual_bypass
+        ):
+            restriction_error = session.rules_card_play_restriction_error(actor_id, card_id)
+            if restriction_error:
+                return await send_error(ws, restriction_error)
+            support_error = session.rules_support_from_hand_error(actor_id, card_id)
+            if support_error:
+                return await send_error(ws, support_error)
+        face_up = False if first_manifestation else (
+            True if zone_play_permission else bool(data.get("faceUp", True))
+        )
+        if not manual_bypass:
+            trigger_target_error = session.rules_trigger_target_error(
+                card_id, "enters_field", data.get("triggerTargetPlayerId"), face_up=face_up,
+                trigger_targets=data.get("triggerTargets"), controller_id=actor_id,
+            )
+            if trigger_target_error:
+                return await send_error(ws, trigger_target_error)
+        will_enter_support = bool(
+            zone_play_permission
+            or (
+                session.rules_engine["enabled"] and not first_manifestation
+                and card_id in session.manifestation_ids and from_zone == "hand"
+                and session.current_phase_id() == "confrontation_reaction"
+            )
+        )
+        if (
+            will_enter_support
+            and session.rules_engine["enabled"]
+            and not manual_bypass
+        ):
+            return await send_error(ws, "A Support play must be declared on the Stack.")
+        if will_enter_support and not manual_bypass:
+            trigger_target_error = session.rules_trigger_target_error(
+                card_id, "enters_support", face_up=face_up,
+                trigger_targets=data.get("triggerTargets"), controller_id=actor_id,
+            )
+            if trigger_target_error:
+                return await send_error(ws, trigger_target_error)
         item = {
             "id": new_id(),
             "ownerId": card_owner_id,
             "cardId": card_id,
             "x": float(data.get("x") or 0),
             "y": float(data.get("y") or 0),
-            "faceUp": bool(data.get("faceUp", True)),
+            "faceUp": face_up,
             "rotation": float(data.get("rotation") or 0),
             "counters": {},
             "rarity": owner_player.get("cardRarities", {}).get(card_id),
@@ -610,12 +1175,71 @@ async def handle_message(ws, info, data):
         stack_error = apply_stack_fields(session, item, data)
         if stack_error:
             return await send_error(ws, stack_error)
+        first_manifestation_error = (
+            None if manual_bypass
+            else session.register_first_manifestation(actor_id, item)
+        )
+        if first_manifestation_error:
+            return await send_error(ws, first_manifestation_error)
+        if zone_play_permission:
+            if zone_play_permission.get("temperamentOverride"):
+                item["temperamentOverride"] = zone_play_permission["temperamentOverride"]
+            if zone_play_permission.get("winAsSupportDestination") == "exile":
+                item["supportWinDestination"] = "exile"
+            session.mark_rules_support_entry(item)
+        elif (
+            session.rules_engine["enabled"]
+            and not first_manifestation
+            and card_id in session.manifestation_ids
+        ):
+            if from_zone == "hand" and session.current_phase_id() == "confrontation_reaction":
+                session.mark_rules_support_entry(item)
+            elif session.current_phase_group() == "confrontation":
+                session.mark_rules_confrontation_entry(item)
+            else:
+                item["fieldZone"] = "interzone"
         session.take_zone_card(source_container_id, from_zone, card_id)
+        if zone_play_permission:
+            session.consume_rules_zone_play_permission(zone_play_permission["id"])
         session.battlefield.append(item)
         place_details = {"ownerId": card_owner_id, "sourceContainerId": source_container_id, "fromZone": from_zone, "itemId": item["id"], "faceUp": item["faceUp"]}
+        if item.get("isSupport"):
+            place_details["asSupport"] = item.get("isSupport", False)
+        if zone_play_permission:
+            place_details["temperamentOverride"] = item.get("temperamentOverride")
         if item["faceUp"]:
             place_details["cardId"] = card_id
+        if manual_bypass:
+            place_details["manualBypass"] = True
         session.add_log(actor_id, "place_card", place_details)
+        triggered_actions = []
+        if not manual_bypass:
+            triggered_actions.extend(
+                session.queue_rules_battlefield_entry_triggers(
+                    card_id, card_owner_id, item["id"], item["faceUp"],
+                    target_player_id=data.get("triggerTargetPlayerId"),
+                    event_targets=data.get("triggerTargets"),
+                    defer=True,
+                )
+            )
+            if item.get("isSupport"):
+                triggered_actions.extend(session.queue_rules_support_entry_triggers(
+                    item, played=True, from_zone=from_zone,
+                    event_targets=data.get("triggerTargets"),
+                    defer=True,
+                ))
+            triggered_actions.extend(session.queue_rules_field_zone_entry_triggers(
+                item, session.rules_field_zone(item),
+                event_targets=data.get("triggerTargets"), defer=True,
+            ))
+            triggered_actions.extend(
+                session.queue_rules_manifestation_entry_watchers(
+                    item, defer=True
+                )
+            )
+        if triggered_actions:
+            session.queue_rules_simultaneous_actions(triggered_actions)
+        log_rules_triggered_actions(session, triggered_actions, actor_id)
         session.touch()
         await broadcast_state(session)
 
@@ -633,6 +1257,43 @@ async def handle_message(ws, info, data):
         if stack_error:
             return await send_error(ws, stack_error)
         session.add_log(actor_id, "move_battlefield_item", {"itemId": item["id"]})
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "set_rules_field_zone":
+        if is_observer or actor_id not in session.players:
+            return await send_error(ws, "Observers cannot move Manifestations between field zones.")
+        if session.rules_engine["enabled"]:
+            return await send_error(ws, "A Support play must be declared on the Stack.")
+        item = session.find_battlefield_item(data.get("itemId"))
+        if item is not None:
+            trigger_target_error = session.rules_trigger_target_error(
+                item.get("cardId"), "enters_support", face_up=bool(item.get("faceUp")),
+                trigger_targets=data.get("triggerTargets"), controller_id=actor_id,
+                event_item_id=item.get("id"),
+            )
+            if trigger_target_error:
+                return await send_error(ws, trigger_target_error)
+        error, result = session.set_rules_field_zone(
+            actor_id, data.get("itemId"), data.get("fieldZone")
+        )
+        if error:
+            return await send_error(ws, error)
+        session.add_log(actor_id, "rules_field_zone_changed", result)
+        item = session.find_battlefield_item(result.get("itemId"))
+        triggered_actions = session.queue_rules_support_entry_triggers(
+            item, played=True, from_zone="interzone",
+            event_targets=data.get("triggerTargets"), defer=True,
+        )
+        triggered_actions.extend(session.queue_rules_field_zone_entry_triggers(
+            item, "confrontation",
+            event_targets=data.get("triggerTargets"), defer=True,
+        ))
+        if triggered_actions:
+            session.queue_rules_simultaneous_actions(triggered_actions)
+        log_rules_triggered_actions(session, triggered_actions, actor_id)
+        for immediate_result in session.resolve_rules_immediate_actions():
+            await record_rules_resolution(session, immediate_result, actor_id)
         session.touch()
         await broadcast_state(session)
 
@@ -683,6 +1344,7 @@ async def handle_message(ws, info, data):
             # Hand, Limbo, Exile or EV destroys it instead.
             session.battlefield.remove(item)
             unstack_dependents(session, item["id"])
+            session.prune_rules_ongoing_effects()
             session.add_log(actor_id, "remove_battlefield_item", {"itemId": item["id"], "copyCard": True, "cardId": item.get("cardId")})
             session.touch()
             return await broadcast_state(session)
@@ -693,6 +1355,7 @@ async def handle_message(ws, info, data):
                 return await send_error(ws, "Only the owner can remove this token.")
             session.battlefield.remove(item)
             unstack_dependents(session, item["id"])
+            session.prune_rules_ongoing_effects()
             session.add_log(actor_id, "remove_battlefield_item", {"itemId": item["id"], "tokenCard": True})
             session.touch()
             return await broadcast_state(session)
@@ -710,6 +1373,7 @@ async def handle_message(ws, info, data):
             return await send_error(ws, destination_error)
         session.battlefield.remove(item)
         unstack_dependents(session, item["id"])
+        session.prune_rules_ongoing_effects()
         # index 0 is always "the last card that entered" / the top of a deck,
         # so shared-zone piles can show it and drawing keeps working intuitively
         position = data.get("position") or "top"
@@ -720,6 +1384,10 @@ async def handle_message(ws, info, data):
         if item["faceUp"] or to_zone in SHARED_ZONES:
             remove_details["cardId"] = item["cardId"]
         session.add_log(actor_id, "remove_battlefield_item", remove_details)
+        triggered_actions = session.queue_rules_zone_entry_triggers(
+            item["cardId"], item["ownerId"], to_owner, to_zone
+        )
+        log_rules_triggered_actions(session, triggered_actions, actor_id)
         session.touch()
         await broadcast_state(session)
 
@@ -969,11 +1637,195 @@ async def handle_message(ws, info, data):
         session.touch()
         await broadcast_state(session)
 
-    elif msg_type == "pass_phase":
+    elif msg_type == "declare_rules_action":
         if is_observer or actor_id not in session.players:
-            return await send_error(ws, "Observers cannot pass phases.")
+            return await send_error(ws, "Observers cannot declare Stack actions.")
+        error, action = session.declare_rules_action(
+            actor_id,
+            data.get("label"),
+            kind=data.get("kind"),
+            source=data.get("source"),
+            target=data.get("target"),
+            targets=data.get("targets"),
+            cost_note=data.get("costNote"),
+            payment_card_ids=data.get("paymentCardIds"),
+            ability_id=data.get("abilityId"),
+            placement=data.get("placement"),
+            as_support=data.get("asSupport", False),
+            extra_essence_count=data.get("extraEssenceCount"),
+        )
+        if error:
+            return await send_error(ws, error)
+        session.add_log(actor_id, "rules_action_declared", {
+            "actionId": action["id"],
+            "label": action["label"],
+            "kind": action["kind"],
+            "source": action["source"],
+            "target": action["target"],
+            "targets": action["targets"],
+            "ability": action["ability"],
+            "cost": action["cost"],
+            "asSupport": bool(action.get("asSupport")),
+            "phaseId": action["phaseId"],
+            "stackDepth": len(session.rules_engine["actionStack"]),
+        })
+        triggered_actions = session.queue_rules_tribute_triggers(
+            action["cost"].get("tributeCardIds") or [], actor_id,
+            simultaneous_action_id=action["id"],
+            tribute_movements=action["cost"].get("tributeMovements") or [],
+        )
+        log_rules_triggered_actions(session, triggered_actions, actor_id)
+        for immediate_result in session.resolve_rules_immediate_actions():
+            await record_rules_resolution(session, immediate_result, actor_id)
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "validate_first_manifestation":
+        if is_observer:
+            return await send_error(ws, "Observers cannot validate a Manifestation.")
+        validated = data.get("validated", True)
+        if not isinstance(validated, bool):
+            return await send_error(ws, "First Manifestation validation state must be a boolean.")
+        error, result = session.validate_first_manifestation(actor_id, validated=validated)
+        if error:
+            return await send_error(ws, error)
+        session.add_log(
+            actor_id,
+            "rules_first_manifestation_validated" if validated else "rules_first_manifestation_validation_cancelled",
+            {
+                "selectionComplete": bool(result.get("selectionComplete")),
+                "revealed": bool(result.get("revealed")),
+            },
+        )
+        if result["revealed"]:
+            session.add_log(actor_id, "rules_first_manifestations_revealed", {})
+        if result.get("selectionComplete"):
+            triggered_actions = session.queue_rules_before_revelation_triggers()
+            log_rules_triggered_actions(session, triggered_actions, actor_id)
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type in {"pass_priority", "pass_phase"}:
+        if is_observer or actor_id not in session.players:
+            return await send_error(ws, "Observers cannot pass priority or phases.")
         if not session.phase_tracker["enabled"]:
             return await send_error(ws, "Game phases are not active.")
+        if session.rules_engine["enabled"]:
+            if session.rules_first_manifestation_active():
+                return await send_error(ws, "Play and validate your first Manifestation instead of passing priority.")
+            if "passed" in data and not isinstance(data["passed"], bool):
+                return await send_error(ws, "Priority pass state must be a boolean.")
+            error, result = session.pass_rules_priority(actor_id, passed=data.get("passed"))
+            if error:
+                return await send_error(ws, error)
+            if result["status"] == "passed":
+                session.add_log(actor_id, "rules_priority_passed", {
+                    "phaseId": session.current_phase_id(),
+                    "stackDepth": result["stackDepth"],
+                })
+            elif result["status"] == "cancelled":
+                session.add_log(actor_id, "rules_priority_cancelled", {
+                    "phaseId": session.current_phase_id(),
+                    "stackDepth": result["stackDepth"],
+                })
+            elif result["status"] == "resolved":
+                await record_rules_resolution(session, result, actor_id)
+            else:
+                if result.get("revealedItemIds"):
+                    session.add_log(actor_id, "rules_first_manifestations_revealed", {
+                        "itemIds": result["revealedItemIds"],
+                    })
+                if result["phaseId"] == "confrontation_immediate" and not session.rules_engine["firstManifestationTriggersQueued"]:
+                    triggered_actions = session.queue_rules_revelation_triggers(
+                        defer=True
+                    )
+                    revelation_order, revelation_priority, priority_rolls = session.rules_revelation_order()
+                    for item_id in revelation_order:
+                        item = session.find_battlefield_item(item_id)
+                        if item and not item.get("persistedFirst"):
+                            triggered_actions.extend(session.queue_rules_battlefield_entry_triggers(
+                                item["cardId"], item["ownerId"], item["id"], True,
+                                defer=True,
+                            ))
+                            triggered_actions.extend(
+                                session.queue_rules_manifestation_entry_watchers(
+                                    item, defer=True
+                                )
+                            )
+                            triggered_actions.extend(
+                                session.queue_rules_field_zone_entry_triggers(
+                                    item, "confrontation", defer=True
+                                )
+                            )
+                    if triggered_actions:
+                        session.queue_rules_simultaneous_actions(
+                            triggered_actions,
+                            priority_player_id=revelation_priority,
+                        )
+                    elif revelation_priority:
+                        session.rules_engine["priorityPlayerId"] = revelation_priority
+                    session.rules_engine["firstManifestationTriggersQueued"] = True
+                    log_rules_triggered_actions(session, triggered_actions, actor_id)
+                    for immediate_result in session.resolve_rules_immediate_actions():
+                        await record_rules_resolution(
+                            session, immediate_result, actor_id
+                        )
+                    if priority_rolls:
+                        session.add_log(actor_id, "rules_priority_rolled", {
+                            "playerId": revelation_priority, "rolls": priority_rolls,
+                            "reason": "revelation_tie",
+                        })
+                session.add_log(actor_id, "rules_phase_advanced", {
+                    "previousPhaseId": result["previousPhaseId"],
+                    "phaseId": result["phaseId"],
+                    "turn": result["turn"],
+                    "advancedMode": True,
+                    "expiredEffectIds": result.get("expiredEffectIds") or [],
+                    "expiredEssenceTokenIds": result.get("expiredEssenceTokenIds") or [],
+                    "readiedItemIds": result.get("readiedItemIds") or [],
+                    "rematchStarted": bool(result.get("rematchStarted")),
+                })
+                log_rules_triggered_actions(
+                    session, result.get("beginningTriggeredActions") or [], actor_id
+                )
+                log_rules_triggered_actions(
+                    session, result.get("endTriggeredActions") or [], actor_id
+                )
+                log_rules_triggered_actions(
+                    session, result.get("resolutionTriggeredActions") or [],
+                    actor_id,
+                )
+                log_rules_recovery_sequence(
+                    session, result.get("automaticRecovery"), actor_id
+                )
+                confrontation = result.get("confrontationResult")
+                if confrontation and result["phaseId"] == "resolution_compare":
+                    session.add_log(actor_id, "rules_confrontation_compared", {
+                        "winnerId": confrontation.get("winnerId"),
+                        "loserId": confrontation.get("loserId"),
+                        "stalemate": confrontation.get("stalemate"),
+                        "reason": confrontation.get("reason"),
+                        "totals": confrontation.get("totals"),
+                        "lastTemperaments": confrontation.get("lastTemperaments"),
+                        "priorityPlayerId": confrontation.get("priorityPlayerId"),
+                        "priorityRolls": confrontation.get("priorityRolls"),
+                        "destroyed": confrontation.get("destroyed") or [],
+                    })
+                elif confrontation and result["phaseId"] == "resolution_move":
+                    session.add_log(actor_id, "rules_confrontation_cleanup", {
+                        "winnerId": confrontation.get("winnerId"),
+                        "stalemate": confrontation.get("stalemate"),
+                        "captured": confrontation.get("captured") or [],
+                        "returned": confrontation.get("returned") or [],
+                        "supportExiled": confrontation.get("supportExiled") or [],
+                        "supportResolved": confrontation.get("supportResolved") or [],
+                        "persisted": confrontation.get("persisted") or [],
+                    })
+            session.touch()
+            await broadcast_state(session)
+            return
+        if msg_type == "pass_priority":
+            return await send_error(ws, "Priority is available only with assisted rules.")
         if "passed" in data and not isinstance(data["passed"], bool):
             return await send_error(ws, "Phase pass state must be a boolean.")
         action = session.pass_phase(actor_id, passed=data.get("passed"))
@@ -999,6 +1851,8 @@ async def handle_message(ws, info, data):
         player = session.players.get(target_id)
         if player is None:
             return await send_error(ws, "Unknown player.")
+        if session.rules_engine.get("enabled") and session.rules_points_changes_prevented():
+            return await send_error(ws, "Points cannot currently be gained or lost.")
         player["score"] = int(data.get("value") if data.get("value") is not None else player["score"] + int(data.get("delta") or 0))
         session.add_log(actor_id, "set_score", {"playerId": target_id, "score": player["score"]})
         session.touch()
@@ -1029,7 +1883,8 @@ async def handle_message(ws, info, data):
         session.reset_cards_to_active_decks(active_decks)
         for p in session.players.values():
             p["score"] = 0
-        session.reset_phase_tracker()
+        session.reset_phase_tracker(return_stack_sources=False)
+        session.ended = False
         session.tokens = []
         session.strokes = []
         session.add_log(actor_id, "reset_board", {})
@@ -1191,6 +2046,10 @@ async def handle_join(ws, data):
             tournament_policy=copy.deepcopy(DEFAULT_TOURNAMENT_POLICY),
             card_points=CARD_POINTS,
             card_labels=CARD_LABELS,
+            manifestation_ids=CARD_MANIFESTATION_IDS,
+            card_rules=CARD_RULES,
+            rules_beta=bool(data.get("rulesBeta")),
+            ban_list_enabled=True,
         )
         sessions[session.code_organizer] = session
         role = "organizer"
@@ -1198,7 +2057,15 @@ async def handle_join(ws, data):
         session.add_log(client_id, "create_tournament", {}, actor_name=name)
         log.info("Tournament created: organizer=%s", session.code_organizer)
     elif data.get("createNew"):
-        session = Session()
+        session = Session(
+            tournament_policy=normalized_deck_policy(data.get("deckPolicy")) if data.get("banListEnabled") else None,
+            card_points=CARD_POINTS,
+            card_labels=CARD_LABELS,
+            manifestation_ids=CARD_MANIFESTATION_IDS,
+            card_rules=CARD_RULES,
+            rules_beta=bool(data.get("rulesBeta")),
+            ban_list_enabled=bool(data.get("banListEnabled")),
+        )
         sessions[session.code_player] = session
         role = "player"
         seat = None
@@ -1241,6 +2108,7 @@ async def handle_join(ws, data):
         "isObserver": is_observer,
         "role": role,
         "mode": session.mode,
+        "rulesBeta": session.rules_engine["enabled"],
         "codePlayer": session.code_player if not is_observer else None,
         "codeObserver": session.code_observer,
         "codeOrganizer": session.code_organizer if role == "organizer" else None,

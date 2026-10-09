@@ -11850,7 +11850,7 @@
     "type": "manifestation",
     "typeLabel": "Manifestation",
     "subType": "of Emulation",
-    "effect": "As long as Gummo is in the Interzone, at the end of the turn you may choose a manifestation in your Empathic Vessel. If you do, Gummo copies its base power and gains its effects in addition to its own until this effect is reused.\r\nBefore the Revelation, you may pay {H}{H}{H}: Gummo enters the Confrontation Zone as First Manifestation from the Interzone.",
+    "effect": "As long as Gummo is in the Interzone, at the end of the turn you may choose a manifestation in your Empathic Vessel. If you do, Gummo copies its base power and gains its effects in addition to its own until this effect is reused.\r\nUpon the End of Recovery, you may pay {H}{H}{H}: Gummo enters the Confrontation Zone as First Manifestation from the Interzone.",
     "originalEffect": "",
     "cost": null,
     "power": 3,
@@ -11872,7 +11872,7 @@
         "name": "Gummo",
         "typeLabel": "Manifestazione",
         "subType": "dell'Emulazione",
-        "effect": "Fintanto che Gummo è nell’Interzona, alla fine del turno puoi scegliere una manifestazione nel tuo Bacino Empatico. Se lo fai, Gummo ne copia la forza base e ne ottiene gli effetti in aggiunta ai propri finché non viene riutilizzato questo effetto.\r\nPrima della Rivelazione, puoi pagare {H}{H}{H}: Gummo entra nell’Area di Confronto come Prima Manifestazione dall’Interzona.",
+        "effect": "Fintanto che Gummo è nell’Interzona, alla fine del turno puoi scegliere una manifestazione nel tuo Bacino Empatico. Se lo fai, Gummo ne copia la forza base e ne ottiene gli effetti in aggiunta ai propri finché non viene riutilizzato questo effetto.\r\nAlla fine del Recupero, puoi pagare {H}{H}{H}: Gummo entra nell’Area di Confronto come Prima Manifestazione dall’Interzona.",
         "originalEffect": "",
         "color": "Vacuo",
         "setName": "Beta",
@@ -11885,7 +11885,7 @@
         "setName": "Beta",
         "searchTerms": "Manifestation · Première Manifestation · Puissance · Puissance de base · Creux / Creuse · Zone de Confrontation · Interzone · Réceptacle Empathique · effet · Révélation · Confrontation",
         "name": "Gummo",
-        "effect": "Tant que Gummo est dans l’Interzone, à la fin du tour, vous pouvez choisir une Manifestation dans votre Réceptacle Empathique. Si vous le faites, Gummo copie sa puissance de base et gagne ses effets en plus des siens jusqu’à la prochaine utilisation de cet effet.\nAvant la Révélation, vous pouvez payer 🔘🔘🔘 : Gummo entre dans la Zone de Confrontation comme Première Manifestation depuis l’Interzone."
+        "effect": "Tant que Gummo est dans l’Interzone, à la fin du tour, vous pouvez choisir une Manifestation dans votre Réceptacle Empathique. Si vous le faites, Gummo copie sa puissance de base et gagne ses effets en plus des siens jusqu’à la prochaine utilisation de cet effet.\nÀ la fin de la Récupération, vous pouvez payer 🔘🔘🔘 : Gummo entre dans la Zone de Confrontation comme Première Manifestation depuis l’Interzone."
       }
     }
   },

@@ -2,9 +2,9 @@
 
 A minimal online game table for Kartomantik. Two players (+ observers) join a
 session with a code and share zones (deck/hand/Limbo/exile/Empathic Vessel),
-a free-form battlefield, counters, tokens and score. The app enforces no card
-rules — players manage those themselves; it only handles state sync,
-visibility permissions, and an anti-cheat action log.
+a free-form battlefield, counters, tokens and score. An optional beta rules
+assistant manages the turn flow, priority, stack, costs and reusable card
+mechanics while leaving unsupported card text under player control.
 
 ## Run locally
 
@@ -27,11 +27,19 @@ py server/main.py
 ```
 
 No database, no persistence — sessions live in memory and expire after 6h
-of inactivity.
+of inactivity once a cleanup loop calls the existing expiration predicate.
+They are always lost when the process restarts.
 
 Static client assets use versioned URLs and long-lived browser/CDN caching.
-When replacing a local asset, bump `20261005-tournament-2` in `public/index.html`,
-`public/app.js`, and `public/style.css` together.
+Current assisted-rules asset version: `20261009-rules-beta-96`.
+When replacing a local asset, bump `20261009-rules-beta-96` in `public/index.html`
+and `public/app.js` together.
+
+## Assisted-rules documentation
+
+- [Engine architecture and handoff](docs/ASSISTED_RULES_ENGINE.md)
+- [Adding card automation](docs/ADDING_CARD_AUTOMATION.md)
+- `public/automation-coverage.json` is the generated per-card coverage registry.
 
 ## How it works
 
@@ -58,14 +66,14 @@ When replacing a local asset, bump `20261005-tournament-2` in `public/index.html
   group contains Ponder (267), Martyrize (284), and Pray the Ether (281).
   Imports and restrictions lock when the organizer starts the match.
 - **Zone permissions** (enforced server-side, not just hidden in the UI):
-  `deck` and `hand` are private to their owner — others only see a card
-  count. Limbo, Exile and the Empathic Vessel are shared — any player can
-  view and act on anyone's.
+  `deck`, `hand` and `exile` are private to their owner — opponents only see
+  a card count. Judges retain full information; spectators follow the role
+  configured by the tournament organizer.
 - **Battlefield**: cards are placed face up or face down; face-down cards
   show only the owner's color to everyone except the owner, who can flip
   them at any time.
-- **Deck import**: paste a deck list copied from DeckomantiK ("Copy list") or
-  a JSON export; `maybeboard` groups are excluded automatically. The 5
+- **Deck import**: paste either DeckomantiK format ("Copy list" or "Copy for
+  KKO") or a JSON export; `maybeboard` groups are excluded automatically. The 5
   official mono-temperament starter decks (30 cards / 400 points each, from
   the rulebook) are offered as one-click presets, and every deck you import
   is kept in a local library (this browser only) so you can reload it next
@@ -73,9 +81,34 @@ When replacing a local asset, bump `20261005-tournament-2` in `public/index.html
   decks directly — browsers isolate storage per site, so the two apps can't
   share it; the "Copy list" export plus this local library is the practical
   bridge between them.
-- **Drawing**: draw one card, or use "Draw hand (7)" to top up to the
-  7-card hand limit from the Recovery Phase rule in one click (also the way
-  to deal your opening hand right after importing a deck).
+- **Pregame**: with rules assistance enabled, both players first select and
+  validate a legal deck. They can still edit its sideboard or cancel their
+  validation until both decks lock. Only then do they draw seven cards,
+  optionally mulligan for 10 points, and mark themselves ready.
+- **First Manifestation**: both players place it face down without priority,
+  then validate simultaneously. After both choices lock, a dedicated
+  Before-Revelation priority window opens while both cards remain face down.
+  The two cards reveal together only after that window closes, then their
+  simultaneous entry effects are queued. This choice reopens every turn except
+  for a player whose winning Manifestation remained through Persist.
+- **Confrontation resolution**: the assisted beta totals current Power,
+  applies the last-entered Temperament tiebreak, fixes the winner before
+  win/loss effects, and then performs the official movement. Opposing
+  Manifestations enter the winner's Empathic Vessel; the winner chooses
+  Interzone or Deck bottom for each of their own cards, including a guided
+  replacement when the Interzone is full. A true tie creates a Stalemate.
+  Voluntary Will/effect actions are accepted only during their legal response
+  windows, and the Hand aura uses the same phase, payment, and target checks.
+  Neutralize is the first encoded Stack interaction: it can be dragged only
+  while another played card is a legal Stack target, then sends that card to
+  its owner's Limbo without resolving it. Deny and Ignore extend that model to
+  conditional counters: the affected owner/controller may pay the requested
+  Hollow Tribute directly from their Hand and excess Essences, or let the card
+  be neutralized / the effect be cancelled. Imitate can copy a played Will in
+  the Stack without paying its cost again; its controller may keep the locked
+  target or select a new legal one before the virtual copy is added on top.
+  At the start of a new turn, Recovery also readies every exhausted battlefield
+  card before beginning-of-turn effects are queued.
 - **Action log**: every validated action is recorded server-side with a
   sequence number, turn, and phase. During a tournament, the complete log is
   available live only to organizers and judges; spectators get a redacted
@@ -86,6 +119,6 @@ When replacing a local asset, bump `20261005-tournament-2` in `public/index.html
 
 ## Not in scope (yet)
 
-Card-specific mechanics/automation — this is a generic table, not a rules
-engine. A later pass will look at whether any of the 300 cards need
-dedicated primitives beyond draw/shuffle/reorder/reveal/counters/tokens.
+Complete card-specific automation. The beta now provides a rules engine and a
+growing library of encoded reusable mechanics, but unsupported card text can
+still require player-applied movement, costs, or results.

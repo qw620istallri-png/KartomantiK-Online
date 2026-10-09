@@ -1,0 +1,2559 @@
+{
+  "skh6d780jne193w_en": [
+    {
+      "id": "gain-points-at-beginning-of-turn",
+      "trigger": { "event": "beginning_of_turn", "zone": "interzone" },
+      "result": { "kind": "score_owner", "value": 10 }
+    }
+  ],
+  "xf03zroy4tigefr_en": [
+    {
+      "id": "chain-from-hand-on-enter-field",
+      "optional": true,
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": {
+        "kind": "chain_from_zone",
+        "zone": "hand",
+        "optional": true,
+        "winDestination": "opponent_receptacle"
+      }
+    }
+  ],
+  "dc44xrlrhikfvlr_en": [
+    {
+      "id": "each-player-recovery-choice",
+      "trigger": { "event": "beginning_of_turn" },
+      "result": { "kind": "each_player_recovery_choice" }
+    }
+  ],
+  "iwpmdq754ew0mw7_en": [
+    {
+      "id": "support-from-limbo-this-turn",
+      "playPermission": {
+        "conditionEvent": "beginning_of_turn",
+        "requiredZone": "graveyard",
+        "playFromZone": "graveyard",
+        "phaseIds": ["confrontation_reaction"],
+        "asSupport": true,
+        "temperamentOverride": "hollow",
+        "winAsSupportDestination": "exile",
+        "duration": "until_end_of_turn"
+      }
+    }
+  ],
+  "h8xzt2gkg2ax241_en": [
+    {
+      "id": "draw-when-support-played",
+      "trigger": { "event": "enters_support", "sourceZone": "interzone", "played": true, "eventController": "owner" },
+      "result": { "kind": "draw_owner", "value": 1 }
+    }
+  ],
+  "cny6n2v2tap5jnm_en": [
+    {
+      "id": "support-controller-discards",
+      "trigger": { "event": "enters_support", "target": "event_controller" },
+      "targets": { "kind": "player", "min": 1, "max": 1 },
+      "result": { "kind": "discard_hand_target", "value": 1 }
+    }
+  ],
+  "6xfwhr4h38wvm4u_en": [
+    {
+      "id": "boost-low-power-on-support-entry",
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "confrontation"
+      },
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "fieldZone": "confrontation", "maxPower": 2,
+        "excludeEventSource": true
+      },
+      "ongoingEffect": { "kind": "power_modifier", "value": 2, "duration": "until_end_of_turn" }
+    }
+  ],
+  "bf94i4ttvl7r4mt_en": [
+    {
+      "id": "chain-deck-manifestation-with-win-exile",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": {
+        "kind": "chain_from_zone",
+        "zone": "deck",
+        "optional": false,
+        "winDestination": "exile",
+        "shuffleAfter": true
+      }
+    }
+  ],
+  "24pwcptuijem6tw_en": [
+    {
+      "id": "remember-self-return-at-end-turn",
+      "trigger": { "event": "used_as_tribute" },
+      "result": {
+        "kind": "create_effect_memory",
+        "memoryKind": "return_from_limbo_end_turn",
+        "attachTo": "event_card",
+        "opponentPayment": "{H}"
+      }
+    }
+  ],
+  "qn8r98kyqqma972_en": [
+    {
+      "id": "remember-paid-will-return-at-end-turn",
+      "trigger": { "event": "used_as_tribute" },
+      "result": {
+        "kind": "create_effect_memory",
+        "memoryKind": "return_from_limbo_end_turn",
+        "attachTo": "paid_action_source",
+        "optional": true
+      }
+    }
+  ],
+  "5liq0tcj7m9ebqr_en": [
+    {
+      "id": "gain-petal-on-friendly-manifestation-entry",
+      "trigger": {
+        "event": "manifestation_enters_field",
+        "eventController": "owner"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Petal",
+        "value": 1
+      }
+    },
+    {
+      "id": "spend-petals-for-power",
+      "tribute": "{H}{H}",
+      "removeAllCountersFromSource": "Petal",
+      "targets": {
+        "min": 1, "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"]
+      },
+      "ongoingEffect": {
+        "kind": "power_modifier",
+        "valuePerRemovedCounter": 1,
+        "duration": "until_end_of_turn"
+      }
+    }
+  ],
+  "w3jt07uuk00nmaj_en": [
+    {
+      "id": "reduce-all-confrontation-power",
+      "action": "play_card",
+      "targets": {"min": 0, "max": 0},
+      "ongoingEffect": {
+        "kind": "power_modifier",
+        "value": -1,
+        "duration": "until_end_of_turn",
+        "scope": "all_manifestations_in_confrontation"
+      }
+    }
+  ],
+  "s6mezxrq1zp2958_en": [
+    {
+      "id": "schedule-rematch-after-resolution",
+      "action": "play_card",
+      "condition": "controller_lost_confrontation",
+      "targets": {"min": 0, "max": 0},
+      "result": {"kind": "schedule_rematch"}
+    }
+  ],
+  "inner-deserts-134": [
+    {
+      "id": "gain-three-power-at-beginning-of-turn",
+      "trigger": {
+        "event": "beginning_of_turn",
+        "zone": "confrontation"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "power",
+        "value": 3
+      }
+    }
+  ],
+  "my6shp6k59b1eig_en": [
+    {
+      "id": "sustain-manifestations-at-exact-zero",
+      "passiveEffect": {
+        "kind": "sustain_exact_zero"
+      }
+    }
+  ],
+  "9phkl58pqrs2j2f_en": [
+    {
+      "id": "capture-opponent-manifestation-at-exact-zero",
+      "passiveEffect": {
+        "kind": "capture_opponent_exact_zero"
+      }
+    },
+    {
+      "id": "roll-against-opponent-will",
+      "optional": true,
+      "trigger": {
+        "event": "will_played",
+        "eventController": "opponent"
+      },
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"],
+        "fieldZone": "confrontation",
+        "controller": "opponent"
+      },
+      "result": {
+        "kind": "roll_d6_target_table",
+        "table": "greed"
+      }
+    }
+  ],
+  "inner-deserts-009": [
+    {
+      "id": "other-manifestations-cannot-fall-below-base",
+      "passiveEffect": {
+        "kind": "other_power_minimum_base"
+      }
+    }
+  ],
+  "b4yyd5uut0ga9df_en": [
+    {
+      "id": "enter-under-opponent-control-with-burn",
+      "action": "play_card",
+      "targets": {
+        "kind": "player",
+        "min": 1,
+        "max": 1,
+        "controller": "opponent"
+      },
+      "result": {
+        "kind": "change_source_control",
+        "counter": "Burn",
+        "counterValue": 1
+      }
+    },
+    {
+      "id": "pass-control-with-more-burn",
+      "tributeFromSourceCounter": "Burn",
+      "targets": {
+        "kind": "player",
+        "min": 1,
+        "max": 1,
+        "controller": "opponent"
+      },
+      "result": {
+        "kind": "change_source_control",
+        "counter": "Burn",
+        "counterValue": 1,
+        "incrementCounter": true
+      }
+    },
+    {
+      "id": "controller-loses-forty-then-destroy",
+      "trigger": {
+        "event": "end_of_turn",
+        "zone": "field"
+      },
+      "result": {
+        "kind": "score_controller_then_destroy_source",
+        "value": -40
+      }
+    }
+  ],
+  "ymcx9cg62eg0vgm_en": [
+    {
+      "id": "control-opponent-card-while-source-on-field",
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "interzone"
+      },
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardTypes": ["manifestation", "persistent_will"],
+        "zones": ["battlefield"],
+        "controller": "opponent",
+        "fieldZonesByType": {
+          "manifestation": ["interzone"],
+          "persistent_will": ["field"]
+        }
+      },
+      "ongoingEffect": {
+        "kind": "control_link",
+        "duration": "while_source_and_target_on_field"
+      }
+    }
+  ],
+  "0ujeinffs84nrvq_en": [
+    {
+      "id": "exchange-interzone-control",
+      "action": "play_card",
+      "targetGroups": [
+        {
+          "min": 1,
+          "max": 1,
+          "cardType": "manifestation",
+          "zones": ["battlefield"],
+          "fieldZone": "interzone",
+          "controller": "opponent"
+        },
+        {
+          "min": 1,
+          "max": 1,
+          "cardType": "manifestation",
+          "zones": ["battlefield"],
+          "fieldZone": "interzone",
+          "controller": "self"
+        }
+      ],
+      "result": {
+        "kind": "exchange_control_targets"
+      }
+    }
+  ],
+  "zk76fhtep0wm3hh_en": [
+    {
+      "id": "exchange-confrontation-control-until-resolution",
+      "action": "play_card",
+      "targetGroups": [
+        {
+          "min": 1,
+          "max": 1,
+          "cardType": "manifestation",
+          "zones": ["battlefield"],
+          "fieldZone": "confrontation",
+          "controller": "self"
+        },
+        {
+          "min": 1,
+          "max": 1,
+          "cardType": "manifestation",
+          "zones": ["battlefield"],
+          "fieldZone": "confrontation",
+          "controller": "opponent"
+        }
+      ],
+      "result": {
+        "kind": "exchange_control_targets",
+        "rememberAtResolution": true
+      }
+    }
+  ],
+  "7gd19pmexrjlrap_en": [
+    {
+      "id": "nectar-disable-target",
+      "action": "play_card",
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"]
+      },
+      "ongoingEffect": {
+        "kind": "lose_effects",
+        "duration": "while_source_and_target_on_field"
+      }
+    },
+    {
+      "id": "nectar-retarget-disable",
+      "tribute": "{Y}",
+      "exhaustSource": true,
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"]
+      },
+      "result": {
+        "kind": "retarget_source_effect",
+        "effectKind": "lose_effects"
+      }
+    }
+  ],
+  "inner-deserts-091": [
+    {
+      "id": "embottle-disable-card",
+      "action": "play_card",
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardTypes": ["manifestation", "persistent_will"],
+        "zones": ["battlefield"]
+      },
+      "ongoingEffect": {
+        "kind": "lose_effects",
+        "duration": "while_target_on_field"
+      }
+    }
+  ],
+  "inner-deserts-043": [
+    {
+      "id": "obscure-card-until-end-turn",
+      "action": "play_card",
+      "resolveSourceTo": "exile",
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardTypes": ["manifestation", "persistent_will"],
+        "zones": ["battlefield"]
+      },
+      "ongoingEffect": {
+        "kind": "obscure_lock",
+        "duration": "until_end_of_turn"
+      }
+    }
+  ],
+  "ei33difzdc81zha_en": [
+    {
+      "id": "starkaz-disable-other-manifestations",
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "confrontation"
+      },
+      "targets": {"min": 0, "max": 0},
+      "ongoingEffect": {
+        "kind": "lose_effects",
+        "duration": "until_end_of_turn",
+        "scope": "all_manifestations_on_field",
+        "excludeSource": true
+      }
+    }
+  ],
+  "3bq6ahxkf9435k5_en": [
+    {
+      "id": "vexing-thorn-disable-target",
+      "sourceFieldZone": "interzone",
+      "reduceSourcePower": 2,
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"]
+      },
+      "ongoingEffect": {
+        "kind": "lose_effects",
+        "duration": "while_target_on_field"
+      }
+    }
+  ],
+  "0e7afy7zmyhbfal_en": [
+    {
+      "id": "mirrorbeast-copy-power-and-effects",
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "confrontation"
+      },
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"],
+        "fieldZone": "confrontation",
+        "excludeEventSource": true
+      },
+      "ongoingEffect": {
+        "kind": "copy_power_effects",
+        "duration": "until_resolution"
+      }
+    }
+  ],
+  "276sz8daqngt2dh_en": [
+    {
+      "id": "protect-other-friendly-confrontation",
+      "passiveEffect": {
+        "kind": "protect_other_friendly_confrontation"
+      }
+    }
+  ],
+  "oq88mu68bnbqe0w_en": [
+    {
+      "id": "protect-friendly-interzone-and-persistent-wills",
+      "passiveEffect": {
+        "kind": "protect_friendly_interzone_and_wills"
+      }
+    }
+  ],
+  "l3ne0zha51w387z_en": [
+    {
+      "id": "protect-controller-hand",
+      "passiveEffect": {
+        "kind": "protect_controller_hand"
+      }
+    }
+  ],
+  "inner-deserts-022": [
+    {
+      "id": "mutual-opponent-immunity",
+      "passiveEffect": {
+        "kind": "mutual_opponent_immunity"
+      }
+    },
+    {
+      "id": "any-player-destroy-psychowall",
+      "anyPlayer": true,
+      "tribute": "{H}{H}{H}{H}",
+      "targets": {"min": 0, "max": 0},
+      "result": {"kind": "destroy_source"}
+    }
+  ],
+  "whwfrjzl6flgww9_en": [
+    {
+      "id": "protect-friendly-field-until-end-turn",
+      "action": "play_card",
+      "targets": {"min": 0, "max": 0},
+      "ongoingEffect": {
+        "kind": "protection",
+        "duration": "until_end_of_turn",
+        "scope": "friendly_cards_on_field",
+        "fromOpponents": true
+      }
+    }
+  ],
+  "inner-deserts-146": [
+    {
+      "id": "protect-field-card-until-end-turn",
+      "action": "play_card",
+      "targets": {
+        "kind": "card_or_stack_action",
+        "min": 1,
+        "max": 1,
+        "cardTypes": ["manifestation", "persistent_will"],
+        "zones": ["battlefield"]
+      },
+      "ongoingEffect": {
+        "kind": "protection",
+        "duration": "until_end_of_turn"
+      }
+    }
+  ],
+  "inner-deserts-094": [
+    {
+      "id": "immediate-shuffle-hands-draw-four",
+      "action": "play_card",
+      "immediate": true,
+      "targets": {"min": 0, "max": 0},
+      "result": {
+        "kind": "shuffle_hands_then_draw",
+        "value": 4
+      }
+    }
+  ],
+  "inner-deserts-115": [
+    {
+      "id": "immediate-exile-all-limbos",
+      "action": "play_card",
+      "immediate": true,
+      "targets": {"min": 0, "max": 0},
+      "result": {
+        "kind": "exile_all_limbos"
+      }
+    }
+  ],
+  "inner-deserts-116": [
+    {
+      "id": "immediate-end-confrontation-unless-payment",
+      "action": "play_card",
+      "immediate": true,
+      "targets": {"min": 0, "max": 0},
+      "result": {
+        "kind": "end_confrontation_unless_payment",
+        "payment": "{H}{H}{H}",
+        "exileOnDecline": true,
+        "reduceWinnerManifestationOnControllerDefeat": true
+      }
+    }
+  ],
+  "dxl82w4oxzcg1eg_en": [
+    {
+      "id": "return-friendly-confrontation-card",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "fieldZone": "confrontation", "controller": "self"
+      },
+      "result": {
+        "kind": "move_target", "zone": "hand", "position": "top", "reason": "return",
+        "restrictPlayUntilEndOfTurn": true
+      }
+    }
+  ],
+  "m3it0ajngl4nlo3_en": [
+    {
+      "id": "return-opposing-support-card",
+      "trigger": { "event": "enters_support" },
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "supportOnly": true, "controller": "opponent"
+      },
+      "result": {
+        "kind": "move_target", "zone": "hand", "position": "top", "reason": "return",
+        "restrictPlayUntilEndOfTurn": true
+      }
+    }
+  ],
+  "aumzs91roqg77y1_en": [
+    {
+      "id": "gain-points-in-opponent-vessel",
+      "trigger": { "event": "enters_zone", "zone": "receptacle", "container": "opponent" },
+      "result": { "kind": "score_owner", "value": 20 }
+    }
+  ],
+  "fvk7w9y8xidbuwa_en": [
+    {
+      "id": "draw-on-enter-field",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": { "kind": "draw_owner", "value": 1 }
+    }
+  ],
+  "yy29lowj25q1z5y_en": [
+    {
+      "id": "draw-when-used-as-tribute",
+      "trigger": { "event": "used_as_tribute" },
+      "result": { "kind": "draw_owner", "value": 1 }
+    }
+  ],
+  "de3meyzl13rpqo5_en": [
+    {
+      "id": "lose-points-on-enter-field",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": { "kind": "score_owner", "value": -20 }
+    },
+    {
+      "id": "negative-score-alternate-victory",
+      "passiveEffect": {
+        "kind": "negative_score_victory"
+      }
+    }
+  ],
+  "ghb6i1uoiqq12o2_en": [
+    {
+      "id": "discard-top-card-on-enter-field",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": { "kind": "discard_deck_owner", "value": 1 }
+    }
+  ],
+  "ryg8e3lgopl6z52_en": [
+    {
+      "id": "draw-three-cards",
+      "action": "play_card",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "draw_owner", "value": 3 }
+    }
+  ],
+  "zni76s4aabicqag_en": [
+    {
+      "id": "discard-one-then-draw-two",
+      "action": "play_card",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "discard_hand_owner_then_draw", "discard": 1, "draw": 2 }
+    }
+  ],
+  "7e2ppf4rfgkdfms_en": [
+    {
+      "id": "target-player-discards-on-enter-field",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "targets": { "kind": "player", "min": 1, "max": 1 },
+      "result": { "kind": "discard_hand_target", "value": 1 }
+    }
+  ],
+  "q6rha5kz42bkxle_en": [
+    {
+      "id": "copy-target-will-on-stack",
+      "action": "play_card",
+      "targets": {
+        "kind": "stack_action", "min": 1, "max": 1,
+        "cardTypes": ["ephemeral_will", "persistent_will"]
+      },
+      "result": { "kind": "copy_stack_action" }
+    }
+  ],
+  "obn1uv72ewxv3y5_en": [
+    {
+      "id": "oppress-power-modifier",
+      "action": "play_card",
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation" },
+      "ongoingEffect": { "kind": "power_modifier", "value": -3, "duration": "until_end_of_turn" }
+    }
+  ],
+  "lo85kdsow36bymu_en": [
+    {
+      "id": "strengthen-power-modifier",
+      "action": "play_card",
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation" },
+      "ongoingEffect": { "kind": "power_modifier", "value": 3, "duration": "until_end_of_turn" }
+    }
+  ],
+  "bithch9c4vi77cu_en": [
+    {
+      "id": "weaken-power-modifier",
+      "action": "play_card",
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation" },
+      "ongoingEffect": { "kind": "power_modifier", "value": -1, "duration": "until_end_of_turn" }
+    }
+  ],
+  "ztunjt1msq1ofsv_en": [
+    {
+      "id": "accentuate-power-modifier",
+      "action": "play_card",
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation" },
+      "ongoingEffect": { "kind": "power_modifier", "value": 1, "duration": "until_end_of_turn" }
+    }
+  ],
+  "xav48hincrnl32d_en": [
+    {
+      "id": "banish-to-deck-bottom",
+      "action": "play_card",
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation" },
+      "result": { "kind": "move_target", "zone": "deck", "position": "bottom" }
+    }
+  ],
+  "ek1bng9r7vhriwt_en": [
+    {
+      "id": "defer-to-deck-top",
+      "action": "play_card",
+      "targets": { "min": 1, "max": 1, "cardTypes": ["manifestation", "persistent_will"] },
+      "result": { "kind": "move_target", "zone": "deck", "position": "top" }
+    }
+  ],
+  "1q6crbc7nwugrgs_en": [
+    {
+      "id": "exile-manifestation",
+      "action": "play_card",
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield", "graveyard"] },
+      "result": { "kind": "move_target", "zone": "exile", "position": "top", "reason": "exile" }
+    }
+  ],
+  "jy05w4j8zcuvezq_en": [
+    {
+      "id": "disfigure-destroy-manifestation",
+      "action": "play_card",
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield", "receptacle"], "maxPoints": 20 },
+      "result": { "kind": "move_target", "zone": "graveyard", "position": "top", "reason": "destroy" }
+    }
+  ],
+  "dey791sghwx2ee3_en": [
+    {
+      "id": "destroy-random-vessel-manifestation",
+      "action": "play_card",
+      "targets": { "kind": "player", "min": 1, "max": 1 },
+      "result": {
+        "kind": "move_random_zone_card", "fromZone": "receptacle",
+        "cardType": "manifestation", "zone": "graveyard", "position": "top", "reason": "destroy"
+      }
+    }
+  ],
+  "5x4aca4v6w9ma1f_en": [
+    {
+      "id": "destroy-vessel-manifestation",
+      "action": "play_card",
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["receptacle"] },
+      "result": { "kind": "move_target", "zone": "graveyard", "position": "top", "reason": "destroy" }
+    }
+  ],
+  "2y961kgs0crdict_en": [
+    {
+      "id": "neutralize-stack-card",
+      "action": "play_card",
+      "targets": { "kind": "stack_action", "min": 1, "max": 1 },
+      "result": { "kind": "neutralize_stack_action" }
+    }
+  ],
+  "g0mtnp4zbhwj7cb_en": [
+    {
+      "id": "deny-stack-card-unless-paid",
+      "action": "play_card",
+      "targets": { "kind": "stack_action", "min": 1, "max": 1 },
+      "result": {
+        "kind": "counter_stack_action_unless_payment",
+        "payment": "{H}{H}",
+        "payer": "owner",
+        "mode": "neutralize"
+      }
+    }
+  ],
+  "ey6fuk5gguasrb0_en": [
+    {
+      "id": "ignore-stack-effect-unless-paid",
+      "action": "play_card",
+      "targets": { "kind": "stack_effect", "min": 1, "max": 1 },
+      "result": {
+        "kind": "counter_stack_action_unless_payment",
+        "payment": "{H}{H}",
+        "payer": "controller",
+        "mode": "cancel"
+      }
+    }
+  ],
+  "y6g3tex9ypttk8u_en": [
+    {
+      "id": "flaying-jaw-power-link",
+      "action": "play_card",
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation" },
+      "ongoingEffect": {
+        "kind": "power_modifier",
+        "value": -2,
+        "duration": "while_source_and_target_on_field"
+      }
+    },
+    {
+      "id": "flaying-jaw-retarget",
+      "tribute": "{P}",
+      "exhaustSource": true,
+      "phaseIds": ["end_actions"],
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"]
+      },
+      "result": {
+        "kind": "retarget_source_effect",
+        "effectKind": "power_modifier"
+      }
+    }
+  ],
+  "ufujqhwlpmaw12y_en": [
+    {
+      "id": "ignore-support-power",
+      "tribute": "{H}{H}",
+      "exhaustSource": true,
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"],
+        "supportOnly": true
+      },
+      "ongoingEffect": { "kind": "power_ignored", "duration": "until_end_of_turn" }
+    }
+  ],
+  "pwsjhnw4vpvqgkv_en": [
+    {
+      "id": "copy-first-manifestation",
+      "tribute": "{H}",
+      "exhaustSource": false,
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"],
+        "fieldZone": "confrontation",
+        "controller": "opponent",
+        "firstManifestationOnly": true
+      },
+      "ongoingEffect": { "kind": "copy_power_temperament", "duration": "while_source_and_target_on_field" }
+    }
+  ],
+  "pgvrly9397pua77_en": [
+    {
+      "id": "reduce-manifestation-power",
+      "tribute": "{H}{H}",
+      "exhaustSource": true,
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation" },
+      "ongoingEffect": { "kind": "power_modifier", "value": -2, "duration": "until_end_of_turn" }
+    }
+  ],
+  "fwccphp46678238_en": [
+    {
+      "id": "grant-persist-until-end-of-turn",
+      "action": "play_card",
+      "targets": {
+        "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "fieldZone": "confrontation"
+      },
+      "ongoingEffect": {
+        "kind": "grant_persist",
+        "duration": "until_end_of_turn"
+      }
+    }
+  ],
+  "az5wblp5x1div9e_en": [
+    {
+      "id": "gain-persist-until-end-of-turn",
+      "tribute": "{H}{H}{H}",
+      "sourceFieldZone": "confrontation",
+      "targets": {
+        "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "fieldZone": "confrontation",
+        "controller": "self", "sourceOnly": true
+      },
+      "ongoingEffect": {
+        "kind": "grant_persist",
+        "duration": "until_end_of_turn"
+      }
+    }
+  ],
+  "ng6w09m6mrjq3xc_en": [
+    {
+      "id": "sacrifice-field-power-loss",
+      "tribute": "",
+      "exhaustSource": false,
+      "sacrificeSource": true,
+      "sourceFieldZone": "interzone",
+      "targets": { "min": 0, "max": 0 },
+      "ongoingEffect": {
+        "kind": "power_modifier",
+        "value": -1,
+        "duration": "until_end_of_turn",
+        "scope": "all_manifestations_on_field"
+      }
+    }
+  ],
+  "7g0495fr3188or9_en": [
+    {
+      "id": "resolve-top-deck-by-card-type",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": {
+        "kind": "resolve_top_deck_by_type",
+        "manifestation": "chain",
+        "will": "draw"
+      }
+    }
+  ],
+  "inner-deserts-047": [
+    {
+      "id": "reorder-top-three-of-each-deck",
+      "action": "play_card",
+      "targets": { "min": 0, "max": 0 },
+      "result": {
+        "kind": "reorder_top_decks",
+        "count": 3,
+        "eachPlayer": true
+      }
+    }
+  ],
+  "inner-deserts-024": [
+    {
+      "id": "split-recent-limbo-cards-between-deck-ends",
+      "action": "play_card",
+      "targets": {
+        "min": 0,
+        "max": 4,
+        "cardTypes": ["manifestation", "persistent_will", "ephemeral_will"],
+        "zones": ["graveyard"],
+        "enteredThisTurn": true
+      },
+      "result": { "kind": "split_targeted_limbo_cards" }
+    }
+  ],
+  "inner-deserts-126": [
+    {
+      "id": "guess-opponent-top-card-characteristics",
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "confrontation"
+      },
+      "targets": {
+        "kind": "player",
+        "min": 1,
+        "max": 1,
+        "controller": "opponent"
+      },
+      "result": { "kind": "guess_top_card" }
+    }
+  ],
+  "02y2r5cvbw1mauv_en": [
+    {
+      "id": "create-hollow-tokens-for-target-interzone",
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "confrontation"
+      },
+      "targets": {
+        "kind": "player",
+        "min": 1,
+        "max": 1
+      },
+      "result": {
+        "kind": "create_tokens_for_target_interzone_count"
+      }
+    },
+    {
+      "id": "sacrifice-created-token-for-power-loss",
+      "tribute": "",
+      "sourceFieldZone": "confrontation",
+      "sacrificeTokenCreatedBySource": true,
+      "loseScore": 5,
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"]
+      },
+      "ongoingEffect": {
+        "kind": "power_modifier",
+        "value": -2,
+        "duration": "until_end_of_turn"
+      }
+    }
+  ],
+  "lk1xxhvwvrie2r2_en": [
+    {
+      "id": "capture-stalemate-and-create-support-copy",
+      "tribute": "{H}{H}",
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"],
+        "fieldZone": "stalemate",
+        "owner": "opponent"
+      },
+      "result": {
+        "kind": "capture_stalemate_and_copy"
+      }
+    }
+  ],
+  "wx7y64eaa0wlvuk_en": [
+    {
+      "id": "exhaust-to-copy-tribute-manifestation",
+      "optional": true,
+      "trigger": {
+        "event": "manifestation_used_as_tribute"
+      },
+      "result": {
+        "kind": "copy_related_tribute_if_exhaust"
+      }
+    }
+  ],
+  "inner-deserts-072": [
+    {
+      "id": "exile-limbos-create-hollow-copies",
+      "action": "play_card",
+      "targets": { "min": 0, "max": 0 },
+      "result": {
+        "kind": "exile_limbos_create_token_copies"
+      }
+    }
+  ],
+  "inner-deserts-124": [
+    {
+      "id": "copy-entering-persistent-will-for-other-players",
+      "trigger": {
+        "event": "persistent_will_enters_field"
+      },
+      "result": {
+        "kind": "copy_entering_persistent_will_for_others"
+      }
+    }
+  ],
+  "tw4am6bjl3z323v_en": [
+    {
+      "id": "reduce-next-turn-hand-limit",
+      "trigger": {
+        "event": "enters_zone",
+        "zone": "receptacle",
+        "container": "opponent"
+      },
+      "result": {
+        "kind": "schedule_next_turn_hand_limit",
+        "delta": -1,
+        "overflowDestination": "graveyard"
+      }
+    }
+  ],
+  "acf0sr2crn8bykg_en": [
+    {
+      "id": "choose-points-or-five-card-hand",
+      "trigger": {
+        "event": "beginning_of_turn",
+        "zone": "receptacle"
+      },
+      "result": {
+        "kind": "choose_points_or_hand_limit",
+        "points": 10,
+        "limit": 5
+      }
+    }
+  ],
+  "inner-deserts-144": [
+    {
+      "id": "limit-each-hand-to-six",
+      "passiveEffect": {
+        "kind": "hand_limit_all",
+        "value": 6,
+        "overflowDestination": "deck_bottom"
+      }
+    }
+  ],
+  "inner-deserts-110": [
+    {
+      "id": "draw-for-empty-interzone-spaces",
+      "passiveEffect": {
+        "kind": "extra_recovery_draw_per_empty_interzone"
+      }
+    }
+  ],
+  "inner-deserts-064": [
+    {
+      "id": "replace-opponent-nonrecovery-draw",
+      "passiveEffect": {
+        "kind": "replace_opponent_nonrecovery_draw"
+      }
+    }
+  ],
+  "pxp1zvyxfv16bdd_en": [
+    {
+      "id": "reduce-controller-will-tribute",
+      "passiveEffect": {
+        "kind": "reduce_will_tribute",
+        "value": 1
+      }
+    }
+  ],
+  "ze99bj8uw2oisfx_en": [
+    {
+      "id": "enter-with-formula-counters",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Formula",
+        "value": 5
+      }
+    },
+    {
+      "id": "use-limbo-manifestations-as-tribute",
+      "passiveEffect": {
+        "kind": "allow_limbo_tribute_with_counter",
+        "counter": "Formula"
+      }
+    },
+    {
+      "id": "discard-to-draw-after-will",
+      "optional": true,
+      "trigger": {
+        "event": "will_played",
+        "eventController": "owner"
+      },
+      "result": {
+        "kind": "optional_discard_then_draw",
+        "draw": 1
+      }
+    }
+  ],
+  "inner-deserts-118": [
+    {
+      "id": "reduce-cost-and-set-first-power",
+      "action": "play_card",
+      "costReduction": {
+        "kind": "half_first_base_power"
+      },
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"],
+        "controller": "self",
+        "firstManifestationOnly": true
+      },
+      "ongoingEffect": {
+        "kind": "power_set_maximum",
+        "value": 10,
+        "duration": "until_end_of_turn"
+      }
+    }
+  ],
+  "inner-deserts-138": [
+    {
+      "id": "destroy-one-or-two-support-manifestations",
+      "action": "play_card",
+      "extraEssenceByTargetCount": {
+        "targetCount": 2,
+        "amount": 3
+      },
+      "targets": {
+        "min": 1,
+        "max": 2,
+        "cardType": "manifestation",
+        "zones": ["battlefield"],
+        "supportOnly": true
+      },
+      "result": {
+        "kind": "move_targets",
+        "zone": "graveyard",
+        "position": "top",
+        "reason": "destroy"
+      }
+    }
+  ],
+  "inner-deserts-140": [
+    {
+      "id": "exile-by-essence-total",
+      "action": "play_card",
+      "extraEssenceForTargetPoints": {
+        "multiplier": 10,
+        "maxExtra": 4
+      },
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"],
+        "maxPoints": 50
+      },
+      "result": {
+        "kind": "move_target",
+        "zone": "exile",
+        "position": "top",
+        "reason": "exile"
+      }
+    }
+  ],
+  "90cwtv2us78k76w_en": [
+    {
+      "id": "retain-excess-essences",
+      "passiveEffect": {
+        "kind": "retain_excess_essence"
+      }
+    }
+  ],
+  "chj7vmavn3d5c4s_en": [
+    {
+      "id": "roll-parity-power",
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "confrontation"
+      },
+      "result": {
+        "kind": "roll_d6_power_by_parity",
+        "even": 4,
+        "odd": -4
+      }
+    }
+  ],
+  "odqcx9kkqe029se_en": [
+    {
+      "id": "roll-mutation-table",
+      "action": "play_card",
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"]
+      },
+      "result": {
+        "kind": "roll_d6_target_table",
+        "table": "mutation"
+      }
+    }
+  ],
+  "inner-deserts-127": [
+    {
+      "id": "enter-under-chosen-control",
+      "action": "play_card",
+      "targets": {
+        "kind": "player",
+        "min": 0,
+        "max": 1
+      },
+      "result": {
+        "kind": "change_source_control"
+      }
+    },
+    {
+      "id": "roll-on-enter-field",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "roll_d6_conditional_source"
+      }
+    },
+    {
+      "id": "lose-by-roll-then-exile",
+      "trigger": {
+        "event": "wins_confrontation"
+      },
+      "result": {
+        "kind": "score_controller_by_source_roll_then_exile"
+      }
+    }
+  ],
+  "inner-deserts-128": [
+    {
+      "id": "roll-five-for-power-and-discard",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "roll_multiple_even_power_odd_discard",
+        "rolls": 5
+      }
+    }
+  ],
+  "om4qbiofb0ihq6p_en": [
+    {
+      "id": "immediate-force-win-at-revelation",
+      "trigger": {
+        "event": "revelation"
+      },
+      "immediate": true,
+      "result": {
+        "kind": "force_win_if_highest_base_first"
+      }
+    }
+  ],
+  "ny6t2mdwbxfvwxw_en": [
+    {
+      "id": "immediate-skip-confrontation-unless-points",
+      "trigger": {
+        "event": "revelation"
+      },
+      "immediate": true,
+      "result": {
+        "kind": "skip_confrontation_unless_points",
+        "points": 10
+      }
+    }
+  ],
+  "a9bsslut738hm0k_en": [
+    {
+      "id": "stalemate-if-last-entry",
+      "passiveEffect": {
+        "kind": "stalemate_if_last_confrontation_entry"
+      }
+    }
+  ],
+  "inner-deserts-122": [
+    {
+      "id": "end-confrontation-and-relocate",
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "confrontation"
+      },
+      "result": {
+        "kind": "end_confrontation_relocate_all"
+      }
+    }
+  ],
+  "inner-deserts-147": [
+    {
+      "id": "grant-float",
+      "action": "play_card",
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"]
+      },
+      "ongoingEffect": {
+        "kind": "grant_float",
+        "duration": "while_target_on_field"
+      }
+    }
+  ],
+  "inner-deserts-033": [
+    {
+      "id": "sacrifice-to-grant-friendly-interzone-float",
+      "tribute": "",
+      "sourceFieldZone": "interzone",
+      "sacrificeSource": true,
+      "targets": { "min": 0, "max": 0 },
+      "ongoingEffect": {
+        "kind": "grant_float",
+        "duration": "while_target_on_field",
+        "scope": "friendly_manifestations_in_interzone"
+      }
+    }
+  ],
+  "inner-deserts-045": [
+    {
+      "id": "enter-with-abstraction-counters",
+      "trigger": {"event": "enters_field", "visibility": "face_up"},
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Abstraction",
+        "value": 3
+      }
+    },
+    {
+      "id": "move-abstraction-counter",
+      "tribute": "{B}",
+      "targetGroups": [
+        {
+          "min": 1,
+          "max": 1,
+          "cardTypes": ["manifestation", "persistent_will"],
+          "zones": ["battlefield"],
+          "controller": "self",
+          "counter": "Abstraction",
+          "minCounters": 1
+        },
+        {
+          "min": 1,
+          "max": 1,
+          "cardType": "manifestation",
+          "zones": ["battlefield"]
+        }
+      ],
+      "result": {
+        "kind": "move_counter",
+        "counter": "Abstraction",
+        "value": 1
+      }
+    },
+    {
+      "id": "float-with-abstraction-counter",
+      "passiveEffect": {
+        "kind": "float_with_counter",
+        "counter": "Abstraction"
+      }
+    },
+    {
+      "id": "friendly-float-power-bonus",
+      "passiveEffect": {
+        "kind": "friendly_float_power_bonus",
+        "value": 1
+      }
+    }
+  ],
+  "inner-deserts-150": [
+    {
+      "id": "remove-float-from-all-field-manifestations",
+      "action": "play_card",
+      "targets": { "min": 0, "max": 0 },
+      "ongoingEffect": {
+        "kind": "remove_float",
+        "duration": "while_target_on_field",
+        "scope": "all_manifestations_on_field"
+      }
+    }
+  ],
+  "inner-deserts-088": [
+    {
+      "id": "suspend-opponent-will-before-revelation",
+      "trigger": {
+        "event": "before_revelation"
+      },
+      "targets": {
+        "kind": "player",
+        "min": 1,
+        "max": 1,
+        "controller": "opponent"
+      },
+      "result": {
+        "kind": "suspend_opponent_hand_will"
+      }
+    }
+  ],
+  "0kcy08a6jd7ez7k_en": [
+    {
+      "id": "lose-ten-to-gain-support",
+      "sourceZones": ["hand", "battlefield"],
+      "sourceFieldZone": "interzone",
+      "loseScore": 10,
+      "targets": { "min": 0, "max": 0 },
+      "result": {
+        "kind": "grant_source_support_until_end_turn"
+      }
+    }
+  ],
+  "inner-deserts-010": [
+    {
+      "id": "sacrifice-to-return-supports",
+      "sourceFieldZone": "interzone",
+      "sacrificeSource": true,
+      "targets": { "min": 0, "max": 0 },
+      "result": {
+        "kind": "return_supports_and_boost_firsts"
+      }
+    }
+  ],
+  "inner-deserts-011": [
+    {
+      "id": "enter-under-chosen-control",
+      "action": "play_card",
+      "targets": {
+        "kind": "player",
+        "min": 0,
+        "max": 1
+      },
+      "result": {
+        "kind": "change_source_control"
+      }
+    },
+    {
+      "id": "pay-phlegmatic-essence-for-support",
+      "sourceFieldZone": "interzone",
+      "essenceCost": "{G}",
+      "targets": { "min": 0, "max": 0 },
+      "result": {
+        "kind": "grant_source_support_until_end_turn"
+      }
+    },
+    {
+      "id": "owner-scores-after-loss",
+      "trigger": {
+        "event": "loses_confrontation",
+        "sourceController": "not_owner"
+      },
+      "result": {
+        "kind": "score_source_owner",
+        "value": 10
+      }
+    },
+    {
+      "id": "return-after-win",
+      "trigger": {
+        "event": "wins_confrontation",
+        "sourceController": "not_owner"
+      },
+      "result": {
+        "kind": "move_source_to_owner_deck_top"
+      }
+    }
+  ],
+  "inner-deserts-051": [
+    {
+      "id": "play-from-limbo-at-beginning",
+      "playPermission": {
+        "conditionEvent": "beginning_of_turn",
+        "requiredZone": "graveyard",
+        "playFromZone": "graveyard",
+        "phaseIds": ["confrontation_reaction"],
+        "asSupport": true,
+        "winAsSupportDestination": "exile",
+        "duration": "until_end_of_turn"
+      }
+    }
+  ],
+  "inner-deserts-058": [
+    {
+      "id": "sacrifice-to-reanimate-recent-manifestation",
+      "sourceFieldZone": "interzone",
+      "sacrificeSource": true,
+      "targets": {
+        "kind": "zone_card",
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["graveyard"],
+        "enteredThisTurn": true,
+        "limboReasons": ["destroy", "discard"]
+      },
+      "result": {
+        "kind": "play_limbo_target_as_support",
+        "winDestination": "exile"
+      }
+    }
+  ],
+  "inner-deserts-080": [
+    {
+      "id": "sacrifice-to-resolve-controlled-stack-item",
+      "sourceFieldZone": "interzone",
+      "sacrificeSource": true,
+      "targets": {
+        "kind": "stack_item",
+        "min": 1,
+        "max": 1,
+        "controller": "self"
+      },
+      "result": {
+        "kind": "resolve_target_stack_immediately"
+      }
+    }
+  ],
+  "inner-deserts-105": [
+    {
+      "id": "sacrifice-to-empower-first",
+      "sourceFieldZone": "interzone",
+      "sacrificeSource": true,
+      "targets": {
+        "kind": "card",
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"],
+        "controller": "self",
+        "firstManifestationOnly": true
+      },
+      "ongoingEffects": [
+        {
+          "kind": "power_modifier",
+          "value": 2,
+          "duration": "until_end_of_turn"
+        },
+        {
+          "kind": "protection",
+          "duration": "until_end_of_turn",
+          "fromOpponents": true
+        }
+      ]
+    }
+  ],
+  "inner-deserts-107": [
+    {
+      "id": "sacrifice-to-destroy-power-four",
+      "sourceFieldZone": "interzone",
+      "sacrificeSource": true,
+      "targets": {
+        "kind": "card",
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"],
+        "minPower": 4
+      },
+      "result": {
+        "kind": "move_target",
+        "zone": "graveyard",
+        "position": "top",
+        "reason": "destroy"
+      }
+    }
+  ],
+  "inner-deserts-125": [
+    {
+      "id": "exhaust-to-change-points",
+      "exhaustSource": true,
+      "targets": {
+        "kind": "player",
+        "min": 1,
+        "max": 1
+      },
+      "result": {
+        "kind": "choose_target_score_delta",
+        "value": 10
+      }
+    },
+    {
+      "id": "exhaust-sacrifice-to-prevent-point-changes",
+      "exhaustSource": true,
+      "sacrificeSource": true,
+      "immediate": true,
+      "targets": { "min": 0, "max": 0 },
+      "ongoingEffect": {
+        "kind": "prevent_point_changes",
+        "duration": "until_end_of_turn",
+        "scope": "global"
+      }
+    }
+  ],
+  "f2cj2wys3jhbzci_en": [
+    {
+      "id": "destroy-field-will-or-interzone-manifestation",
+      "action": "play_card",
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardTypes": [
+          "manifestation",
+          "ephemeral_will",
+          "persistent_will"
+        ],
+        "zones": ["battlefield"],
+        "fieldZonesByType": {
+          "manifestation": ["interzone"],
+          "ephemeral_will": ["field"],
+          "persistent_will": ["field"]
+        }
+      },
+      "result": {
+        "kind": "move_target",
+        "zone": "graveyard",
+        "position": "top",
+        "reason": "destroy"
+      }
+    }
+  ],
+  "tzizek39tj8rqq5_en": [
+    {
+      "id": "draw-after-own-will",
+      "trigger": {
+        "event": "will_played",
+        "eventController": "owner",
+        "zone": "interzone"
+      },
+      "result": {
+        "kind": "draw_owner",
+        "value": 1
+      }
+    }
+  ],
+  "5hpmlq50blbf3y6_en": [
+    {
+      "id": "will-controller-loses-five",
+      "trigger": {
+        "event": "will_played",
+        "target": "event_controller"
+      },
+      "targets": {
+        "kind": "player",
+        "min": 1,
+        "max": 1
+      },
+      "result": {
+        "kind": "score_target",
+        "value": -5
+      }
+    }
+  ],
+  "inner-deserts-098": [
+    {
+      "id": "shuffle-after-used-as-tribute",
+      "trigger": {
+        "event": "used_as_tribute"
+      },
+      "result": {
+        "kind": "shuffle_owner_deck"
+      }
+    }
+  ],
+  "ivx8jr1o6utm32a_en": [
+    {
+      "id": "gain-transcendent-essence-each-turn",
+      "trigger": {
+        "event": "beginning_of_turn",
+        "zone": "field"
+      },
+      "result": {
+        "kind": "create_essence",
+        "temperament": "transcendent",
+        "value": 1
+      }
+    }
+  ],
+  "0coh7nrbvcvan1i_en": [
+    {
+      "id": "return-limbo-card-to-hand",
+      "action": "play_card",
+      "targets": {
+        "kind": "zone_card",
+        "min": 1,
+        "max": 1,
+        "zones": ["graveyard"],
+        "owner": "self"
+      },
+      "result": {
+        "kind": "move_target",
+        "zone": "hand",
+        "position": "top",
+        "reason": "return"
+      }
+    }
+  ],
+  "uin3dxt3bc50z6q_en": [
+    {
+      "id": "revive-limbo-manifestation-to-interzone",
+      "action": "play_card",
+      "targets": {
+        "kind": "zone_card",
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["graveyard"],
+        "owner": "self"
+      },
+      "result": {
+        "kind": "move_zone_target_to_field_zone",
+        "fieldZone": "interzone"
+      }
+    }
+  ],
+  "u9blfiufeef8djr_en": [
+    {
+      "id": "put-hand-manifestation-in-interzone",
+      "action": "play_card",
+      "targets": {
+        "kind": "zone_card",
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["hand"],
+        "owner": "self"
+      },
+      "result": {
+        "kind": "move_zone_target_to_field_zone",
+        "fieldZone": "interzone"
+      }
+    }
+  ],
+  "72zvsiuky5ytolh_en": [
+    {
+      "id": "copy-friendly-manifestation-in-support",
+      "action": "play_card",
+      "targets": {
+        "kind": "card",
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": ["battlefield"],
+        "controller": "self"
+      },
+      "result": {
+        "kind": "create_target_token_copy_in_support"
+      }
+    }
+  ],
+  "nzyipkk7u6vrd4a_en": [
+    {
+      "id": "grant-interzone-support-until-end-turn",
+      "action": "play_card",
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "result": {
+        "kind": "grant_friendly_interzone_support_until_end_turn"
+      }
+    }
+  ],
+  "inner-deserts-145": [
+    {
+      "id": "remove-target-modifiers",
+      "action": "play_card",
+      "targets": {
+        "kind": "card",
+        "min": 1,
+        "max": 1,
+        "zones": ["battlefield"]
+      },
+      "result": {
+        "kind": "cleanse_target"
+      }
+    }
+  ],
+  "5q6t7i5pzctbi8s_en": [
+    {
+      "id": "rally-extra-essence-tokens",
+      "action": "play_card",
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "optionalExtraEssence": {
+        "temperament": "hollow",
+        "max": 20
+      },
+      "result": {
+        "kind": "create_support_tokens_from_optional_extra_essence"
+      }
+    }
+  ],
+  "icxqhki0ivfgqu0_en": [
+    {
+      "id": "return-limbo-card-on-loss",
+      "optional": true,
+      "trigger": {"event": "loses_confrontation"},
+      "targets": {"kind": "zone_card", "min": 1, "max": 1, "zones": ["graveyard"], "owner": "self"},
+      "result": {"kind": "move_target", "zone": "hand", "position": "top", "reason": "return"}
+    }
+  ],
+  "rgjdtrcaw4o9381_en": [
+    {
+      "id": "retrieve-owned-card-from-opponent-vessel",
+      "optional": true,
+      "trigger": {"event": "wins_confrontation"},
+      "targets": {"kind": "zone_card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["receptacle"], "owner": "self", "container": "opponent"},
+      "result": {"kind": "move_target", "zone": "hand", "position": "top", "reason": "return"}
+    }
+  ],
+  "o1b1hf2xpmkt8j2_en": [
+    {
+      "id": "destroy-opponent-will-or-manifestation-on-win",
+      "optional": true,
+      "trigger": {"event": "wins_confrontation"},
+      "targets": {"kind": "card", "min": 1, "max": 1, "cardTypes": ["manifestation", "persistent_will"], "zones": ["battlefield"], "controller": "opponent"},
+      "result": {"kind": "move_target", "zone": "graveyard", "position": "top", "reason": "destroy"}
+    }
+  ],
+  "70wsdfb29mmcsqf_en": [
+    {
+      "id": "destroy-opposing-confrontation-manifestation-on-loss",
+      "trigger": {"event": "loses_confrontation"},
+      "targets": {"kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"], "fieldZone": "confrontation", "controller": "opponent"},
+      "result": {"kind": "move_target", "zone": "graveyard", "position": "top", "reason": "destroy"}
+    }
+  ],
+  "mxbi84phhueeolc_en": [
+    {
+      "id": "exile-random-vessel-manifestation-on-win",
+      "trigger": {"event": "wins_confrontation"},
+      "targets": {"kind": "player", "min": 1, "max": 1, "controller": "opponent"},
+      "result": {"kind": "move_random_zone_card", "fromZone": "receptacle", "cardType": "manifestation", "zone": "exile", "position": "top", "reason": "exile"}
+    }
+  ],
+  "fr1414jedqssttr_en": [
+    {
+      "id": "score-per-interzone-manifestation-on-win",
+      "trigger": {"event": "wins_confrontation"},
+      "result": {"kind": "score_owner", "value": 5, "perCount": "own_interzone_manifestations"}
+    }
+  ],
+  "ydijk2x1ne8w93g_en": [
+    {
+      "id": "chain-from-limbo-with-win-exile",
+      "optional": true,
+      "trigger": {"event": "enters_field_zone", "zone": "confrontation"},
+      "result": {"kind": "chain_from_zone", "zone": "graveyard", "optional": true, "winDestination": "exile"}
+    }
+  ],
+  "z2fen73ktw8pbqz_en": [
+    {
+      "id": "reforging-fate-support-from-limbo",
+      "action": "play_card",
+      "targets": {"kind": "zone_card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["graveyard"]},
+      "result": {"kind": "play_limbo_target_as_support", "winDestination": "exile"}
+    }
+  ],
+  "31k2b7hz7ockvvn_en": [
+    {
+      "id": "score-per-target-player-confrontation-manifestation",
+      "action": "play_card",
+      "targets": {"kind": "player", "min": 1, "max": 1},
+      "result": {"kind": "score_owner", "value": 5, "perCount": "target_player_confrontation_non_token_manifestations"}
+    }
+  ],
+  "inner-deserts-139": [
+    {
+      "id": "draw-on-first-will-of-turn",
+      "trigger": {"event": "will_played", "firstWillOfTurn": true},
+      "result": {"kind": "draw_owner", "value": 1}
+    }
+  ],
+  "nbms08jb9t9eqbh_en": [
+    {
+      "id": "friendly-confrontation-bonus-on-own-will",
+      "trigger": {"event": "will_played", "eventController": "owner", "zone": "confrontation"},
+      "ongoingEffect": {
+        "kind": "power_modifier", "value": 1, "duration": "until_end_of_turn",
+        "scope": "friendly_manifestations_in_confrontation", "excludeSource": true
+      }
+    }
+  ],
+  "874751ghrblya5j_en": [
+    {
+      "id": "gain-when-player-discards",
+      "trigger": {"event": "cards_discarded", "zone": "interzone"},
+      "result": {"kind": "score_owner", "value": 5}
+    },
+    {
+      "id": "gain-when-player-loses-points",
+      "trigger": {"event": "points_lost", "zone": "interzone"},
+      "result": {"kind": "score_owner", "value": 5}
+    }
+  ],
+  "mwby5hp16qdnjpj_en": [
+    {
+      "id": "shrink-opponent-manifestation-on-discard",
+      "trigger": {"event": "cards_discarded"},
+      "targets": {"kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"], "controller": "opponent"},
+      "ongoingEffect": {"kind": "power_modifier", "value": -1, "duration": "until_end_of_turn"}
+    },
+    {
+      "id": "gain-when-opponent-manifestation-destroyed",
+      "trigger": {"event": "manifestation_destroyed", "eventController": "opponent"},
+      "result": {"kind": "score_owner", "value": 5}
+    }
+  ],
+  "i6oj7gtnkfd1jja_en": [
+    {
+      "id": "gain-when-own-manifestation-enters-opponent-vessel",
+      "trigger": {"event": "manifestation_enters_opponent_vessel", "eventController": "owner"},
+      "result": {"kind": "score_owner", "value": 5}
+    }
+  ],
+  "nupb1i59d98g3md_en": [
+    {
+      "id": "destroy-confrontation-winners",
+      "action": "play_card",
+      "targets": {"min": 0, "max": 0},
+      "result": {"kind": "destroy_matching_on_field", "match": "won_confrontation_this_turn"}
+    }
+  ],
+  "4naoqbqz6ebozj5_en": [
+    {
+      "id": "destroy-manifestations-that-entered-support",
+      "action": "play_card",
+      "targets": {"min": 0, "max": 0},
+      "result": {"kind": "destroy_matching_on_field", "match": "entered_support_this_turn"}
+    }
+  ],
+  "erkwir53va9m8gm_en": [
+    {
+      "id": "union-counter-on-own-green-card",
+      "trigger": {"event": "card_played", "eventController": "owner", "cardTemperament": "phlegmatic"},
+      "result": {"kind": "add_counter_source", "counter": "Union", "value": 1}
+    },
+    {
+      "id": "spend-unions-for-support-tokens",
+      "removeCountersFromSource": {"name": "Union", "amount": 5},
+      "targets": {"min": 0, "max": 0},
+      "result": {"kind": "create_support_tokens", "count": 2, "power": 1, "temperament": "phlegmatic"}
+    },
+    {
+      "id": "gain-points-when-support-enters-with-ten-unions",
+      "trigger": {"event": "enters_support", "eventController": "owner", "sourceCounterMin": {"name": "Union", "min": 10}},
+      "result": {"kind": "score_owner", "value": 5}
+    }
+  ],
+  "265f4wdooq43pjn_en": [
+    {
+      "id": "control-counter-on-own-blue-card",
+      "trigger": {"event": "card_played", "eventController": "owner", "cardTemperament": "vitreous"},
+      "result": {"kind": "add_counter_source", "counter": "Control", "value": 1}
+    },
+    {
+      "id": "spend-controls-to-bounce-manifestation",
+      "removeCountersFromSource": {"name": "Control", "amount": 5},
+      "targets": {"min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"]},
+      "result": {"kind": "move_target", "zone": "hand", "position": "top", "restrictPlayUntilEndOfTurn": true}
+    },
+    {
+      "id": "split-two-limbo-cards-at-end-of-turn-with-ten-controls",
+      "optional": true,
+      "trigger": {"event": "end_of_turn", "zone": "field", "sourceCounterMin": {"name": "Control", "min": 10}},
+      "targets": {"min": 2, "max": 2, "cardTypes": ["manifestation", "persistent_will", "ephemeral_will"], "zones": ["graveyard"]},
+      "result": {"kind": "split_targeted_limbo_cards"}
+    }
+  ],
+  "a058t24med4h5nx_en": [
+    {
+      "id": "fatigue-counter-on-own-purple-card",
+      "trigger": {"event": "card_played", "eventController": "owner", "cardTemperament": "melancholic"},
+      "result": {"kind": "add_counter_source", "counter": "Fatigue", "value": 1}
+    },
+    {
+      "id": "spend-fatigues-to-make-opponent-discard",
+      "removeCountersFromSource": {"name": "Fatigue", "amount": 5},
+      "targets": {"min": 0, "max": 0},
+      "result": {"kind": "discard_hand_each_opponent", "value": 1, "drawOwner": 1}
+    }
+  ],
+  "rqvzo3iji2a1l65_en": [
+    {
+      "id": "coil-counter-on-own-yellow-card",
+      "trigger": {"event": "card_played", "eventController": "owner", "cardTemperament": "capricious"},
+      "result": {"kind": "add_counter_source", "counter": "Coil", "value": 1}
+    },
+    {
+      "id": "disable-target-at-turn-start-with-ten-coils",
+      "optional": true,
+      "trigger": {"event": "beginning_of_turn", "zone": "field", "sourceCounterMin": {"name": "Coil", "min": 10}},
+      "targets": {"min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"]},
+      "ongoingEffect": {"kind": "lose_effects", "duration": "until_end_of_turn"}
+    }
+  ],
+  "m2l3v60n0iakrm2_en": [
+    {
+      "id": "violence-counter-on-own-red-card",
+      "trigger": {"event": "card_played", "eventController": "owner", "cardTemperament": "choleric"},
+      "result": {"kind": "add_counter_source", "counter": "Violence", "value": 1}
+    },
+    {
+      "id": "spend-violence-to-shrink-manifestation",
+      "removeCountersFromSource": {"name": "Violence", "amount": 5},
+      "targets": {"min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"]},
+      "ongoingEffect": {"kind": "power_modifier", "value": -2, "duration": "until_end_of_turn"}
+    },
+    {
+      "id": "gain-points-on-win-with-ten-violence",
+      "trigger": {"event": "player_wins_confrontation", "eventController": "owner", "sourceCounterMin": {"name": "Violence", "min": 10}},
+      "result": {"kind": "score_owner", "value": 10}
+    }
+  ],
+  "d6jip43i66i34xk_en": [
+    {
+      "id": "opponent-loses-five-when-it-discards",
+      "trigger": {"event": "cards_discarded", "zone": "interzone", "eventController": "opponent", "target": "event_controller"},
+      "targets": {"kind": "player", "min": 1, "max": 1},
+      "result": {"kind": "score_target", "value": -5}
+    }
+  ],
+  "fknxa83uens94ju_en": [
+    {
+      "id": "shrink-opponent-manifestation-on-any-discard",
+      "trigger": {"event": "cards_discarded", "zone": "interzone"},
+      "targets": {"kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"], "controller": "opponent"},
+      "ongoingEffect": {"kind": "power_modifier", "value": -1, "duration": "until_end_of_turn"}
+    }
+  ],
+  "16hmmz3fw32r27q_en": [
+    {
+      "id": "others-lose-five-when-you-lose-points",
+      "trigger": {"event": "points_lost", "zone": "interzone", "eventController": "owner"},
+      "result": {"kind": "score_each_opponent", "value": -5}
+    }
+  ],
+  "j2a7x783j5ql0ab_en": [
+    {
+      "id": "gain-per-owned-vessel-manifestation",
+      "trigger": {"event": "wins_confrontation"},
+      "result": {"kind": "score_owner", "value": 5, "perCount": "own_manifestations_in_vessels"}
+    }
+  ],
+  "8xi4zh0ekdl42me_en": [
+    {
+      "id": "score-per-interzone-manifestation-then-draw-per-free-space",
+      "action": "play_card",
+      "targets": {"min": 0, "max": 0},
+      "result": {"kind": "interzone_score_and_draw", "score": 5}
+    }
+  ],
+  "inner-deserts-014": [
+    {
+      "id": "gain-per-excess-power-over-opponent-first",
+      "trigger": {"event": "wins_confrontation"},
+      "targets": {"kind": "player", "min": 1, "max": 1, "controller": "opponent"},
+      "result": {"kind": "score_owner", "value": 5, "perCount": "excess_power_over_target_first_manifestation"}
+    }
+  ],
+  "9ypw4x4igfon1qi_en": [
+    {
+      "id": "opponent-loses-per-excess-power-over-its-first",
+      "trigger": {"event": "wins_confrontation"},
+      "targets": {"kind": "player", "min": 1, "max": 1, "controller": "opponent"},
+      "result": {"kind": "score_target", "value": -5, "perCount": "excess_power_over_target_first_manifestation"}
+    }
+  ],
+  "y4muuingw5y9l7z_en": [
+    {
+      "id": "gain-ten-when-winning-with-a-single-manifestation",
+      "trigger": {"event": "player_wins_confrontation", "eventController": "owner", "controllerConfrontationManifestations": 1},
+      "result": {"kind": "score_owner", "value": 10}
+    }
+  ],
+  "wfxxi0znaojxiti_en": [
+    {
+      "id": "vessel-owner-loses-five-each-turn",
+      "trigger": {"event": "beginning_of_turn", "zone": "receptacle", "container": "opponent"},
+      "result": {"kind": "score_source_container", "value": -5}
+    }
+  ],
+  "5enwyodanyu1it8_en": [
+    {
+      "id": "interzone-gains-three-spaces",
+      "passiveEffect": {"kind": "extend_interzone", "value": 3}
+    }
+  ],
+  "gybb0ktsth7clz5_en": [
+    {
+      "id": "interzone-gains-one-space",
+      "passiveEffect": {"kind": "extend_interzone", "value": 1}
+    }
+  ],
+  "inner-deserts-036": [
+    {
+      "id": "looj-chain-from-hand",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": {
+        "kind": "chain_from_zone", "zone": "hand", "optional": false,
+        "chainAbilities": [
+          {
+            "id": "looj-chained-loses",
+            "trigger": { "event": "loses_confrontation" },
+            "result": { "kind": "move_source_to_owner_hand" }
+          },
+          {
+            "id": "looj-chained-loses-points",
+            "trigger": { "event": "loses_confrontation" },
+            "result": { "kind": "score_each_opponent", "value": 1, "perCount": "source_card_points" }
+          }
+        ]
+      }
+    }
+  ],
+  "inner-deserts-012": [
+    {
+      "id": "mukkabell-chain-from-hand",
+      "optional": true,
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": {
+        "kind": "chain_from_zone", "zone": "hand", "optional": true,
+        "chainAbilities": [
+          {
+            "id": "mukkabell-chained-wins",
+            "trigger": { "event": "wins_confrontation" },
+            "result": { "kind": "score_owner", "value": 5, "perCount": "source_base_power" }
+          }
+        ]
+      }
+    }
+  ],
+  "k4m0j5h0l3f61hs_en": [
+    {
+      "id": "zrutrug-chain-and-discard",
+      "optional": true,
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": {
+        "kind": "chain_from_zone", "zone": "hand", "optional": true,
+        "afterChain": { "kind": "discard_deck_per_base_power" }
+      }
+    }
+  ],
+  "inner-deserts-008": [
+    {
+      "id": "larman-chain-and-boost",
+      "optional": true,
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "targets": {
+        "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "fieldZone": "confrontation", "controller": "opponent"
+      },
+      "result": {
+        "kind": "chain_from_zone", "zone": "hand", "optional": true,
+        "afterChain": { "kind": "power_counter_target_per_base_power" }
+      }
+    }
+  ],
+  "mv2vad6gwrfbi1l_en": [
+    {
+      "id": "help-lose-points-then-chain",
+      "action": "play_card",
+      "result": {
+        "kind": "chain_from_zone", "zone": "hand", "optional": false,
+        "scoreCost": -10, "winDestination": "exile"
+      }
+    }
+  ],
+  "4rnpxnnceu8x9o9_en": [
+    {
+      "id": "first-stone-opponents-chain",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "result": { "kind": "chain_from_zone", "zone": "hand", "optional": false, "players": "each_opponent" }
+    }
+  ],
+  "46id1c09q8inlkz_en": [
+    {
+      "id": "advocate-all-chain",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "result": { "kind": "chain_from_zone", "zone": "hand", "optional": false, "players": "all" }
+    }
+  ],
+  "inner-deserts-112": [
+    {
+      "id": "kazadur-opponents-chain",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "result": { "kind": "chain_from_zone", "zone": "hand", "optional": false, "players": "each_opponent" }
+    }
+  ],
+  "inner-deserts-081": [
+    {
+      "id": "mollino-repel-and-chain",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "result": {
+        "kind": "chain_from_zone", "zone": "hand", "optional": false,
+        "players": "each_opponent", "preMove": "first_manifestation_to_deck_bottom"
+      }
+    }
+  ],
+  "zd6h16he0m4kuwb_en": [
+    {
+      "id": "claim-recent-opponent-limbo-manifestation",
+      "action": "play_card",
+      "targets": {
+        "kind": "zone_card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["graveyard"], "container": "opponent", "owner": "opponent",
+        "enteredThisTurn": true
+      },
+      "result": { "kind": "move_zone_target_to_own_vessel" }
+    }
+  ],
+  "xeeg6rdiy9xeew5_en": [
+    {
+      "id": "stalemate-recent-opponent-vessel-manifestation",
+      "action": "play_card",
+      "targets": {
+        "kind": "zone_card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["receptacle"], "container": "opponent", "enteredThisTurn": true
+      },
+      "result": { "kind": "move_zone_target_to_field_zone", "fieldZone": "stalemate" }
+    }
+  ],
+  "inner-deserts-095": [
+    {
+      "id": "stalemate-recent-limbo-manifestation",
+      "action": "play_card",
+      "targets": {
+        "kind": "zone_card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["graveyard"], "enteredThisTurn": true
+      },
+      "result": { "kind": "move_zone_target_to_field_zone", "fieldZone": "stalemate" }
+    }
+  ],
+  "knnq85hihrxuafj_en": [
+    {
+      "id": "abandon-return-target-player-support",
+      "action": "play_card",
+      "targets": { "kind": "player", "min": 1, "max": 1 },
+      "result": { "kind": "return_target_player_support" }
+    }
+  ],
+  "uycbbilf0zlttb9_en": [
+    {
+      "id": "tadpole-return-target-interzone-to-deck-top",
+      "trigger": { "event": "wins_confrontation" },
+      "targets": { "kind": "player", "min": 1, "max": 1 },
+      "result": { "kind": "return_target_player_interzone_to_deck_top" }
+    }
+  ],
+  "343xggqp4a0zfw1_en": [
+    {
+      "id": "manipulate-recent-opponent-interzone-manifestation",
+      "action": "play_card",
+      "targets": {
+        "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"],
+        "fieldZone": "interzone", "controller": "opponent", "owner": "opponent",
+        "enteredInterzoneThisTurn": true
+      },
+      "result": { "kind": "move_target_to_own_vessel" }
+    }
+  ],
+  "l6ragmkyw5oyued_en": [
+    {
+      "id": "weaken-opposing-confrontation-on-entry",
+      "trigger": {"event": "enters_field_zone", "zone": "confrontation"},
+      "ongoingEffect": {
+        "kind": "power_modifier", "value": -2,
+        "duration": "until_end_of_turn",
+        "scope": "opponent_manifestations_in_confrontation"
+      }
+    }
+  ],
+  "ypvac71teuck2za_en": [
+    {
+      "id": "lose-power-after-interzone-support-entry",
+      "trigger": {
+        "event": "enters_support", "enteredFromZone": "interzone",
+        "eventSourceOnly": true
+      },
+      "ongoingEffect": {
+        "kind": "power_modifier", "value": -1,
+        "duration": "while_target_on_field", "scope": "source"
+      }
+    }
+  ],
+  "dbevnzpvngas8pg_en": [
+    {
+      "id": "gain-support-when-stronger-than-own-first",
+      "trigger": {"event": "revelation", "zone": "interzone"},
+      "result": {"kind": "grant_source_support_if_base_higher_than_own_first"}
+    }
+  ],
+  "dm0hz9sb5i737gx_en": [
+    {
+      "id": "hogma-suppresses-other-friendly-confrontation-manifestations",
+      "trigger": {"event": "enters_field_zone", "zone": "confrontation"},
+      "ongoingEffect": {
+        "kind": "lose_effects", "duration": "until_end_of_turn",
+        "scope": "friendly_manifestations_in_confrontation",
+        "excludeSource": true
+      }
+    }
+  ],
+  "inner-deserts-015": [
+    {
+      "id": "zborh-returns-after-controller-loses",
+      "trigger": {
+        "event": "player_loses_confrontation", "zone": "interzone",
+        "eventController": "owner"
+      },
+      "result": {"kind": "move_source_to_owner_hand"}
+    }
+  ],
+  "inner-deserts-040": [
+    {
+      "id": "create-vitreous-support-token-on-reaction-will",
+      "trigger": {
+        "event": "will_played", "eventController": "owner",
+        "phaseIds": ["confrontation_reaction"]
+      },
+      "result": {
+        "kind": "create_support_token", "power": 1,
+        "temperament": "vitreous"
+      }
+    }
+  ],
+  "inner-deserts-053": [
+    {
+      "id": "sacrifice-friendly-confrontation-manifestation-on-entry",
+      "trigger": {"event": "enters_field_zone", "zone": "confrontation"},
+      "targets": {
+        "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "controller": "self",
+        "fieldZone": "confrontation", "excludeEventSource": true
+      },
+      "result": {
+        "kind": "move_target", "zone": "graveyard",
+        "position": "top", "reason": "sacrifice"
+      }
+    }
+  ],
+  "inner-deserts-075": [
+    {
+      "id": "roll-and-move-to-stalemate-on-odd",
+      "trigger": {"event": "enters_field_zone", "zone": "confrontation"},
+      "result": {"kind": "roll_d6_move_source_to_stalemate_on_odd"}
+    }
+  ],
+  "inner-deserts-002": [
+    {
+      "id": "create-phlegmatic-support-token-on-entry",
+      "trigger": {"event": "enters_field", "visibility": "face_up"},
+      "result": {
+        "kind": "create_support_token", "power": 1,
+        "temperament": "phlegmatic"
+      }
+    }
+  ],
+  "inner-deserts-005": [
+    {
+      "id": "ignore-power-after-hand-support-entry",
+      "trigger": {
+        "event": "enters_support", "enteredFromZone": "hand",
+        "eventSourceOnly": true
+      },
+      "ongoingEffect": {
+        "kind": "power_ignored", "duration": "until_resolution",
+        "scope": "source"
+      }
+    }
+  ],
+  "inner-deserts-079": [
+    {
+      "id": "gain-power-through-resolution-on-entry",
+      "trigger": {"event": "enters_field_zone", "zone": "confrontation"},
+      "ongoingEffect": {
+        "kind": "power_modifier", "value": 1,
+        "duration": "until_resolution", "scope": "source"
+      }
+    },
+    {
+      "id": "exile-after-winning-confrontation",
+      "trigger": {"event": "wins_confrontation"},
+      "result": {"kind": "move_source_to_owner_exile"}
+    }
+  ],
+  "5xurdeiiyq7kgir_en": [
+    {
+      "id": "pinpia-retained-essences-on-win",
+      "trigger": { "event": "wins_confrontation" },
+      "result": {
+        "kind": "create_essence", "temperament": "transcendent", "value": 1,
+        "perCount": "own_interzone_manifestations", "retained": true
+      }
+    }
+  ],
+  "rl4ppd0wsyov7lw_en": [
+    {
+      "id": "gar-fild-retained-essences-on-win",
+      "trigger": { "event": "wins_confrontation" },
+      "result": { "kind": "create_essence", "temperament": "transcendent", "value": 4, "retained": true }
+    }
+  ],
+  "ud9clfoj2c6x96o_en": [
+    {
+      "id": "entrust-double-base-power",
+      "action": "play_card",
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"] },
+      "result": { "kind": "double_target_base_power" }
+    }
+  ],
+  "9yylrq6xancbn0m_en": [
+    {
+      "id": "glimpse-the-omens",
+      "action": "play_card",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "reorder_top_decks", "count": 4, "afterDraw": 1 }
+    }
+  ],
+  "i7h2c7ku2gt1yvg_en": [
+    {
+      "id": "shababba-reorder-at-end-of-turn",
+      "trigger": { "event": "end_of_turn", "zone": "interzone" },
+      "result": { "kind": "reorder_top_decks", "count": 4 }
+    }
+  ],
+  "unk0z0mamdx1el5_en": [
+    {
+      "id": "rude-exterminator-destroys-random-interzone",
+      "trigger": { "event": "wins_confrontation" },
+      "targets": { "kind": "player", "min": 1, "max": 1, "controller": "opponent" },
+      "result": { "kind": "destroy_random_interzone_target_player" }
+    }
+  ],
+  "k7dq8ye448xwj54_en": [
+    {
+      "id": "shattering-the-self",
+      "action": "play_card",
+      "targets": {
+        "groups": [
+          { "kind": "player", "min": 1, "max": 1 },
+          { "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"], "controller": "opponent" }
+        ],
+        "min": 2, "max": 2
+      },
+      "result": { "kind": "deck_discard_then_weaken", "count": 3 }
+    }
+  ],
+  "ynp0apjx1risrpt_en": [
+    {
+      "id": "deviate-destroy-loser",
+      "action": "play_card",
+      "targets": {
+        "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"],
+        "fieldZone": "confrontation", "confrontationOutcome": "lost"
+      },
+      "result": { "kind": "move_target", "zone": "graveyard", "position": "top", "reason": "destroy" }
+    }
+  ],
+  "yk0ic6ev7465bxo_en": [
+    {
+      "id": "repress-the-self",
+      "action": "play_card",
+      "targets": {
+        "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"],
+        "fieldZone": "confrontation", "controller": "self", "confrontationOutcome": "won"
+      },
+      "result": { "kind": "destroy_target_gain_points" }
+    }
+  ],
+  "bc3esblt60j7at5_en": [
+    {
+      "id": "incite-to-sacrifice",
+      "action": "play_card",
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"], "fieldZone": "confrontation" },
+      "ongoingEffect": { "kind": "power_modifier", "value": 6, "duration": "until_end_of_turn" },
+      "result": { "kind": "exile_target_on_win" }
+    }
+  ],
+  "zh4rjhzon9qes6m_en": [
+    {
+      "id": "carcass-devourer-eats-limbo",
+      "optional": true,
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "targets": {
+        "kind": "zone_card", "min": 0, "max": 2, "cardType": "manifestation",
+        "zones": ["graveyard"], "owner": "self"
+      },
+      "result": { "kind": "exile_limbo_targets_add_power" }
+    }
+  ],
+  "f18fccv1k2co206_en": [
+    {
+      "id": "deny-fate",
+      "action": "play_card",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "shuffle_hand_into_deck_and_draw" }
+    }
+  ],
+  "pekwxpsy3c0ro3l_en": [
+    {
+      "id": "urolong-raises-limbo-manifestation",
+      "tribute": "{H}{H}",
+      "exhaustSource": true,
+      "sourceFieldZone": "interzone",
+      "targets": {
+        "kind": "zone_card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["graveyard"], "owner": "self"
+      },
+      "result": { "kind": "play_limbo_target_as_support", "winDestination": "exile", "losesEffects": true }
+    }
+  ]
+}

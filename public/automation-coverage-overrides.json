@@ -1,0 +1,1127 @@
+{
+  "schemaVersion": 1,
+  "cards": {
+    "d6jip43i66i34xk_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "fknxa83uens94ju_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "16hmmz3fw32r27q_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "8xi4zh0ekdl42me_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-014": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "9ypw4x4igfon1qi_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "y4muuingw5y9l7z_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "wfxxi0znaojxiti_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "5enwyodanyu1it8_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "gybb0ktsth7clz5_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "j2a7x783j5ql0ab_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "erkwir53va9m8gm_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "265f4wdooq43pjn_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "m2l3v60n0iakrm2_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "a058t24med4h5nx_en": {
+      "status": "partial",
+      "notes": "The optional end-of-turn discard of up to two cards at ten Fatigue counters is not automated."
+    },
+    "rqvzo3iji2a1l65_en": {
+      "status": "partial",
+      "notes": "The effect that makes each player put one of their Confrontation Manifestations into stalemate is not automated."
+    },
+    "nupb1i59d98g3md_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "4naoqbqz6ebozj5_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "874751ghrblya5j_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "mwby5hp16qdnjpj_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "i6oj7gtnkfd1jja_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "nbms08jb9t9eqbh_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-139": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "5q6t7i5pzctbi8s_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-102": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-006": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-030": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-054": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-078": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "tzizek39tj8rqq5_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "5hpmlq50blbf3y6_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-098": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ivx8jr1o6utm32a_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "0coh7nrbvcvan1i_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "uin3dxt3bc50z6q_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "u9blfiufeef8djr_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "72zvsiuky5ytolh_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "nzyipkk7u6vrd4a_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "n9olbthp7vtmypo_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "twn0cer0tjbw09n_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "kaw822pzpzd2l9k_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "86nfr2vhox3l6y2_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-145": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "f2cj2wys3jhbzci_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "2y961kgs0crdict_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "bithch9c4vi77cu_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py"]
+    },
+    "0ujeinffs84nrvq_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "b4yyd5uut0ga9df_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ey6fuk5gguasrb0_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "fwccphp46678238_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "g0mtnp4zbhwj7cb_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "lo85kdsow36bymu_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_websocket_integration.py"]
+    },
+    "my6shp6k59b1eig_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "7gd19pmexrjlrap_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "3bq6ahxkf9435k5_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ei33difzdc81zha_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "l3ne0zha51w387z_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "oq88mu68bnbqe0w_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "whwfrjzl6flgww9_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "276sz8daqngt2dh_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-043": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-091": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ymcx9cg62eg0vgm_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "s6mezxrq1zp2958_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "w3jt07uuk00nmaj_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ztunjt1msq1ofsv_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py"]
+    },
+    "zk76fhtep0wm3hh_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-009": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-094": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_websocket_integration.py"
+      ]
+    },
+    "inner-deserts-115": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "7g0495fr3188or9_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "bf94i4ttvl7r4mt_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-047": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-024": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-126": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "02y2r5cvbw1mauv_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "lk1xxhvwvrie2r2_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "wx7y64eaa0wlvuk_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-072": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-124": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "tw4am6bjl3z323v_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "acf0sr2crn8bykg_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-144": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-110": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-064": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "pxp1zvyxfv16bdd_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ze99bj8uw2oisfx_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-118": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-138": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-140": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "90cwtv2us78k76w_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "9phkl58pqrs2j2f_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "chj7vmavn3d5c4s_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "odqcx9kkqe029se_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-127": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-128": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "9d2y8uy9ut7omyo_en": {
+      "status": "manual",
+      "notes": "Physical throw, rotation, and touched-card detection remain player-applied.",
+      "testRefs": []
+    },
+    "b0amfkmb3xewx7x_en": {
+      "status": "manual",
+      "notes": "Physical throw, rotation, and touched-card detection remain player-applied.",
+      "testRefs": []
+    },
+    "om4qbiofb0ihq6p_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ny6t2mdwbxfvwxw_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "a9bsslut738hm0k_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "de3meyzl13rpqo5_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-122": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-147": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-033": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "aumzs91roqg77y1_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "6xfwhr4h38wvm4u_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "skh6d780jne193w_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "xf03zroy4tigefr_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "h8xzt2gkg2ax241_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "5liq0tcj7m9ebqr_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "fvk7w9y8xidbuwa_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "dxl82w4oxzcg1eg_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "24pwcptuijem6tw_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "yy29lowj25q1z5y_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "m3it0ajngl4nlo3_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "qn8r98kyqqma972_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ek1bng9r7vhriwt_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "q6rha5kz42bkxle_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ufujqhwlpmaw12y_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "xav48hincrnl32d_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "7e2ppf4rfgkdfms_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "jy05w4j8zcuvezq_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "y6g3tex9ypttk8u_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "pwsjhnw4vpvqgkv_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "cny6n2v2tap5jnm_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "iwpmdq754ew0mw7_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ng6w09m6mrjq3xc_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "pgvrly9397pua77_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "az5wblp5x1div9e_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "obn1uv72ewxv3y5_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "dc44xrlrhikfvlr_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ghb6i1uoiqq12o2_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "0e7afy7zmyhbfal_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ryg8e3lgopl6z52_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "zni76s4aabicqag_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "1q6crbc7nwugrgs_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "dey791sghwx2ee3_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "5x4aca4v6w9ma1f_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-022": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-045": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-116": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "inner-deserts-134": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-146": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-150": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-088": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "6jz7otalrdq0q8u_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "8lion52jjnmxvko_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "raqiu9b3kwaw622_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "vlpn4livpqnoid1_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "jh2nsqxr9x2ii1l_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "85kx4sk1y809276_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "dbevnzpvngas8pg_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py"]
+    },
+    "57ahe6ngzq5c013_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ibf2epfw6eap5x3_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "msif6nhq0v1zbh0_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "tpnlqhi6o8evklz_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "2mmrj3qrziaf9w2_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "yaisrjb3a26wr7r_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "3gy8gbbbmamc8d0_en": {
+      "status": "partial",
+      "notes": "The loss trigger that suppresses replacement and effects in an opponent's Interzone through the next turn is not automated."
+    },
+    "3oiehnpbub1byg6_en": {
+      "status": "partial",
+      "notes": "Entering with Block counters, removing one when a Will is played, and gaining Support at zero counters are not automated."
+    },
+    "zozynivu4tbojjg_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "2kz0soujsn2nitf_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "yd24yzcekygt7v4_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "kl0n8mt9m1fwly0_en": {
+      "status": "partial",
+      "notes": "The optional discard replacement that puts Tenebro in Support is not automated."
+    },
+    "0kcy08a6jd7ez7k_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "lmjn89wobbttfop_en": {
+      "status": "partial",
+      "notes": "The entry trigger that mills a target player for each non-token Confrontation manifestation is not automated."
+    },
+    "axsr1earxwcrta3_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ptwyrc2a26wqwc8_en": {
+      "status": "partial",
+      "notes": "The targeted-Will watcher, return to hand, and until-end-of-turn replay lock are not automated."
+    },
+    "zdn6urrd7eo3idt_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "93gvk0hy12hylm6_en": {
+      "status": "partial",
+      "notes": "The Empathic Vessel replacement roll and odd-result return to hand are not automated."
+    },
+    "mqkrekbfu4tybu9_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "rngwnb4y158ya2q_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "tdy2112mspb7u97_en": {
+      "status": "manual",
+      "notes": "Conditional Support requires an opponent's targeting Will and must neutralize one; generic recognition incorrectly grants unconditional Support from hand."
+    },
+    "43faoiy4cmoxmaw_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "xw1fbhs6hwz6thc_en": {
+      "status": "partial",
+      "notes": "Preventing capture after a loss and moving Tigrolione to the winner's Interzone under their control are not automated."
+    },
+    "29iv35lxz08ygim_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "zo4rbgcnww4pxg0_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "v1mhtnl7jec5xby_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "l6ragmkyw5oyued_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "tzoadjk7wb5qj5f_en": {
+      "status": "partial",
+      "notes": "The Interzone-entry exile and per-player Limbo/Interzone shuffle into decks are not automated."
+    },
+    "8te5ovk08ul6fve_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "3k3i91mo61xgl24_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ypvac71teuck2za_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "dm0hz9sb5i737gx_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py"]
+    },
+    "inner-deserts-002": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-005": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-010": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-011": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-015": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py"]
+    },
+    "inner-deserts-016": {
+      "status": "partial",
+      "notes": "The extra 5-point gain and target manifestation power bonus after other card/effect scoring are not automated."
+    },
+    "inner-deserts-017": {
+      "status": "partial",
+      "notes": "Moving First Manifestations to Interzone, creating base-power token counts, and exiling Mamelath after a win are not automated."
+    },
+    "inner-deserts-026": {
+      "status": "partial",
+      "notes": "The once-per-turn off-Recovery draw watcher and +1 power gain are not automated."
+    },
+    "inner-deserts-027": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-031": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-040": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py"]
+    },
+    "inner-deserts-041": {
+      "status": "partial",
+      "notes": "Selecting one opposing Support per opponent, returning all other Support to deck bottoms in order, and win exile are not automated."
+    },
+    "inner-deserts-051": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-053": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py"]
+    },
+    "inner-deserts-056": {
+      "status": "partial",
+      "notes": "The field watcher adding a hand discard whenever a player discards from their deck is not automated."
+    },
+    "inner-deserts-058": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-059": {
+      "status": "partial",
+      "notes": "Sacrificing all other controlled Confrontation manifestations and gaining one transcendent essence per card moved are not automated."
+    },
+    "inner-deserts-065": {
+      "status": "partial",
+      "notes": "Revealing until a manifestation, discarding the revealed cards, Chaining that manifestation under your control, and win exile are not automated."
+    },
+    "inner-deserts-074": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-075": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py"]
+    },
+    "inner-deserts-076": {
+      "status": "partial",
+      "notes": "Entering Support from Stalemate, the +2 power through Resolution, and exile after a Support win are not automated."
+    },
+    "inner-deserts-079": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-080": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-086": {
+      "status": "manual",
+      "notes": "Conditional play requires a Will on top of the Stack, then interrupts and locks the Stack and grants power; generic recognition incorrectly grants unconditional Support from hand."
+    },
+    "inner-deserts-089": {
+      "status": "partial",
+      "notes": "Moving all controlled Stalemate manifestations to Support, suppressing their effects, and exiling Silem after a win are not automated."
+    },
+    "inner-deserts-105": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-107": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-111": {
+      "status": "partial",
+      "notes": "The optional revealed hand discard and base-power reduction of a target Confrontation manifestation are not automated."
+    },
+    "inner-deserts-113": {
+      "status": "partial",
+      "notes": "Optional target destruction, base-power token creation for its controller, and exile after winning are not automated."
+    },
+    "inner-deserts-125": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-131": {
+      "status": "partial",
+      "notes": "The exhaust plus neutral-essence activation, Persistent Will destruction, and refund of its printed Tribute as matching essences are not automated."
+    },
+    "icxqhki0ivfgqu0_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "rgjdtrcaw4o9381_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "o1b1hf2xpmkt8j2_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "70wsdfb29mmcsqf_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "mxbi84phhueeolc_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "fr1414jedqssttr_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ydijk2x1ne8w93g_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "z2fen73ktw8pbqz_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-001": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "inner-deserts-025": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "inner-deserts-049": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "inner-deserts-073": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "inner-deserts-097": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "47c5eb6xe7wj614_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "6huhkc5cydtlzgo_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "6hhl878fytgjf77_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "e769fgfnxo63e2t_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-106": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "l4suqymyd2ehsue_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "gbvulprmpw89ohr_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "nu1ycheygeru344_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "fro1wz8eln9t49l_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "vus7jchkjhws8lu_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "rm8d0h0v6eu7ho7_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "h3qquea83b813t9_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "o2vng99wk76o072_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "wbyjru9luc175ak_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "easl4l3aiiim2qg_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "girck4py9u1vrke_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "o6fsczgrftd88lz_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "qs29rt3f6w1jx4o_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "jfzgsewuzsgn7hu_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "1a0vuhn4xwybszo_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "1bbl0f2xi1u5rgi_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "31k2b7hz7ockvvn_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-036": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "inner-deserts-012": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "k4m0j5h0l3f61hs_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "inner-deserts-008": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "mv2vad6gwrfbi1l_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "4rnpxnnceu8x9o9_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "46id1c09q8inlkz_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "inner-deserts-112": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "inner-deserts-081": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py", "tests/test_websocket_integration.py"]
+    },
+    "zd6h16he0m4kuwb_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "xeeg6rdiy9xeew5_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "inner-deserts-095": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "knnq85hihrxuafj_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "343xggqp4a0zfw1_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "uycbbilf0zlttb9_en": {
+      "status": "partial",
+      "notes": "The owners' choice of the order in which their Interzone manifestations go back on top of their decks is not automated (the engine uses board order)."
+    },
+    "5xurdeiiyq7kgir_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "rl4ppd0wsyov7lw_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ud9clfoj2c6x96o_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "9yylrq6xancbn0m_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "i7h2c7ku2gt1yvg_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "unk0z0mamdx1el5_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "k7dq8ye448xwj54_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "ynp0apjx1risrpt_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "yk0ic6ev7465bxo_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "bc3esblt60j7at5_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "zh4rjhzon9qes6m_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "f18fccv1k2co206_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    },
+    "pekwxpsy3c0ro3l_en": {
+      "status": "automated",
+      "testRefs": ["tests/test_game_state.py", "tests/test_card_catalog.py"]
+    }
+  }
+}

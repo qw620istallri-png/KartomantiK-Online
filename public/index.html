@@ -5,20 +5,33 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kartomantik Online</title>
   <link rel="icon" type="image/webp" href="grimoire-icon.webp?v=20260905-1">
-  <link rel="stylesheet" href="style.css?v=20261005-tournament-2">
+  <link rel="stylesheet" href="style.css?v=20261009-rules-beta-96">
 </head>
 <body>
 
   <section id="joinScreen">
     <div class="tournament-create-launcher" id="tournamentCreateLauncher">
-      <button type="button" class="tournament-launcher-toggle" id="tournamentToggleBtn" aria-expanded="false" aria-controls="tournamentLauncherAction">
+      <button type="button" class="tournament-launcher-toggle" id="tournamentToggleBtn" aria-expanded="false" aria-controls="tournamentLauncherOptions">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4h10v5c0 3.2-2.1 5.7-5 6.4C9.1 14.7 7 12.2 7 9V4Z"/><path d="M7 7H4v2c0 2 1.4 3.5 3.5 3.8M17 7h3v2c0 2-1.4 3.5-3.5 3.8M12 15.5V20M8.5 20h7"/></svg>
         <span id="tournamentToggleLabel"></span>
       </button>
-      <button class="tournament-create-action hidden" id="createTournamentBtn" aria-hidden="true">
-        <strong id="createTournamentLabel"></strong>
-        <span id="createTournamentHint"></span>
-      </button>
+      <div class="tournament-launcher-options hidden" id="tournamentLauncherOptions" aria-hidden="true">
+        <button class="tournament-create-action" id="createTournamentBtn">
+          <strong id="createTournamentLabel"></strong>
+          <span id="createTournamentHint"></span>
+        </button>
+        <label class="rules-beta-option" for="rulesBetaInput">
+          <input type="checkbox" id="rulesBetaInput">
+          <span><strong id="rulesBetaLabel"></strong><small id="rulesBetaHint"></small></span>
+        </label>
+        <div class="ban-list-launcher-row">
+          <label class="rules-beta-option" for="banListInput">
+            <input type="checkbox" id="banListInput">
+            <span><strong id="banListToggleLabel"></strong><small id="banListToggleHint"></small></span>
+          </label>
+          <button type="button" id="editBanListBtn"></button>
+        </div>
+      </div>
     </div>
     <div class="join-hero">
       <img src="grimoire.webp?v=20260905-1" alt="" id="joinHero">
@@ -132,7 +145,20 @@
   </section>
   <datalist id="tournamentCardOptions"></datalist>
 
+  <div class="log-panel hidden" id="homePolicyPanel">
+    <div class="box tournament-rules-body">
+      <div class="log-toolbar"><h2 id="homePolicyHeading"></h2><button id="homePolicyCloseBtn">×</button></div>
+      <label id="homeBannedCardsLabel"></label>
+      <div class="tournament-rule-chips" id="homeBannedCardsList"></div>
+      <div class="tournament-rule-add"><input id="homeBannedCardInput" list="tournamentCardOptions"><button id="homeBannedCardAddBtn"></button></div>
+      <div class="restricted-groups" id="homeRestrictedGroups"></div>
+      <button id="homeRestrictedGroupAddBtn"></button>
+      <button class="primary" id="homePolicyDoneBtn"></button>
+    </div>
+  </div>
+
   <section id="gameScreen" class="hidden">
+    <div class="game-header-hot-zone" id="gameHeaderHotZone" aria-hidden="true"></div>
     <header class="game-header">
       <div class="brand" id="brandLabel"><strong class="phase-turn-counter hidden" id="phaseTurn"></strong><img src="grimoire-icon.webp?v=20260905-1" alt="" id="brandLogo"><span id="brandText"></span></div>
       <div class="header-center">
@@ -140,30 +166,32 @@
         <div class="header-view-toggles">
           <button id="hideCodesBtn" title=""></button>
           <button id="hideInterfaceBtn" title=""></button>
+          <button type="button" id="rarityEffectsToggleBtn" aria-pressed="false"></button>
+          <button type="button" id="gameLanguageBtn"></button>
+          <button type="button" id="fullscreenBtn"></button>
         </div>
       </div>
       <div class="actions">
         <div class="header-action-group">
           <button type="button" class="hidden" id="judgeReturnBtn"></button>
-          <button type="button" id="gameLanguageBtn"></button>
-          <span class="phase-header-control" id="phaseHeaderControl">
-            <button type="button" id="phaseTrackerBtn"></button>
-            <button type="button" id="phaseAdvancedBtn">
-              <span id="phaseAdvancedLabel"></span>
-              <span class="phase-mode-switch" aria-hidden="true"><span></span></span>
-            </button>
-          </span>
-          <button id="fullscreenBtn"></button>
-        </div>
-        <div class="header-action-group">
           <button id="importDeckBtn"></button>
-          <button id="currentSideboardBtn" class="hidden"></button>
           <button id="downloadLogBtn"></button>
-        </div>
-        <div class="header-action-group">
-          <button id="resetBoardBtn" class="hidden"></button>
-          <button id="endSessionBtn"></button>
-          <button id="leaveSessionBtn" class="hidden"></button>
+          <details class="game-more-menu" id="gameMoreMenu">
+            <summary><span id="gameMoreLabel"></span></summary>
+            <div class="game-more-popover">
+              <span class="phase-header-control" id="phaseHeaderControl">
+                <button type="button" id="phaseTrackerBtn"></button>
+                <button type="button" id="phaseAdvancedBtn">
+                  <span id="phaseAdvancedLabel"></span>
+                  <span class="phase-mode-switch" aria-hidden="true"><span></span></span>
+                </button>
+              </span>
+              <button id="currentSideboardBtn" class="hidden"></button>
+              <button id="resetBoardBtn" class="hidden"></button>
+              <button id="endSessionBtn"></button>
+              <button id="leaveSessionBtn" class="hidden"></button>
+            </div>
+          </details>
         </div>
       </div>
     </header>
@@ -171,8 +199,60 @@
     <div class="tournament-waiting-banner hidden" id="tournamentWaitingBanner"></div>
     <div class="session-ended-banner hidden" id="sessionEndedBanner"></div>
     <div class="board-field-wrap" id="battlefieldWrap">
+      <section class="rules-pregame-panel hidden" id="rulesPregamePanel" aria-labelledby="rulesPregameTitle" aria-live="polite">
+        <div class="rules-pregame-copy">
+          <span id="rulesPregameTurn"></span>
+          <h2 id="rulesPregameTitle"></h2>
+          <p id="rulesPregameHint"></p>
+        </div>
+        <div class="rules-pregame-players" id="rulesPregamePlayers"></div>
+        <div class="rules-pregame-actions" id="rulesPregameActions">
+          <button type="button" id="rulesOpeningHandBtn"></button>
+          <button type="button" id="rulesPregameMulliganBtn"></button>
+          <button type="button" class="primary" id="rulesPregameReadyBtn"></button>
+        </div>
+      </section>
       <section class="phase-tracker hidden" id="phaseTracker">
         <div class="phase-sequence" id="phaseSequence"></div>
+        <div class="phase-current-label" id="phaseCurrentLabel">
+          <strong id="phaseCurrentMain"></strong>
+          <span id="phaseCurrentStep"></span>
+        </div>
+        <span class="rules-confrontation-summary hidden" id="rulesConfrontationSummary" aria-live="polite"></span>
+        <span class="rules-priority" id="rulesPriority" aria-live="polite"></span>
+        <button type="button" class="phase-pass-button primary" id="passPriorityBtn"></button>
+        <div class="rules-turn-context hidden" id="rulesTurnContext"></div>
+      </section>
+      <section class="rules-stack-panel hidden" id="rulesStackPanel" aria-labelledby="rulesStackTitle">
+        <div class="rules-turn-rail">
+          <div class="rules-stack-status">
+            <span class="rules-stack-title" id="rulesStackTitle"></span>
+          </div>
+        </div>
+        <div class="rules-stack-body hidden" id="rulesStackBody" aria-live="polite">
+          <ol class="rules-stack-list" id="rulesStackList"></ol>
+        </div>
+        <p class="rules-stack-hint hidden" id="rulesStackHint"></p>
+      </section>
+      <section class="rules-board-flow hidden" id="rulesBoardFlow" aria-live="polite">
+        <svg class="rules-target-arrow" id="rulesTargetArrow" aria-hidden="true">
+          <defs><marker id="rulesTargetArrowHead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M 0 0 L 10 5 L 0 10 z"></path></marker></defs>
+          <path class="rules-target-arrow-line" marker-end="url(#rulesTargetArrowHead)"></path>
+        </svg>
+        <div class="rules-board-essence hidden" id="rulesBoardEssence"></div>
+        <div class="rules-floating-card" id="rulesFloatingCard">
+          <button type="button" class="rules-flow-cancel" id="rulesFlowCancelBtn" aria-label="Cancel">×</button>
+          <img id="rulesFloatingCardImg" alt="">
+          <div class="rules-floating-copy">
+            <strong id="rulesFloatingCardName"></strong>
+            <span id="rulesFlowInstruction"></span>
+            <div class="rules-flow-cost" id="rulesFlowCost"></div>
+            <div class="rules-flow-choice-actions hidden" id="rulesFlowChoiceActions">
+              <button type="button" id="rulesFlowDeclineBtn"></button>
+              <button type="button" class="primary" id="rulesFlowPayBtn"></button>
+            </div>
+          </div>
+        </div>
       </section>
       <div class="top-left-stack" id="topLeftStack">
         <div class="opp-rows" id="oppRows"></div>
@@ -214,6 +294,9 @@
         </div>
         <div class="view-toolbar" id="viewToolbar">
           <button id="highlightOwnersBtn" title="Highlight cards by owner color">🎨</button>
+          <button id="inspectReopenBtn">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path></svg>
+          </button>
         </div>
       </div>
       <div class="board-tools-topright" id="boardToolsTopRight">
@@ -225,31 +308,36 @@
         <div class="zoom-controls">
           <button id="pileCalibrateBtn"></button>
         </div>
-        <div class="zoom-controls">
-          <button id="inspectReopenBtn">🔍</button>
-        </div>
-        <div class="zoom-controls">
-          <button id="rarityEffectsToggleBtn" aria-pressed="false">✨</button>
-        </div>
       </div>
+      <div class="opponent-hand-fan" id="opponentHandFan" aria-live="polite"></div>
       <div class="battlefield" id="battlefield">
         <div class="battlefield-bg" id="battlefieldBg"></div>
+        <svg class="rules-effect-layer" id="rulesEffectLayer" viewBox="0 0 1741 1549" aria-hidden="true"></svg>
         <svg class="draw-layer" id="drawLayer"></svg>
       </div>
       <div class="hand-area" id="handArea">
-        <div class="hand-toolbar" id="handToolbar">
-          <button class="primary" id="handHideBtn"></button>
-          <button class="hand-tool-btn" id="handDrawOneBtn"></button>
-          <button class="hand-tool-btn" id="handDrawHandBtn"></button>
-          <span class="hand-tool-btn hand-card-count" id="handCardCount"></span>
-          <div class="hand-tool-sep"></div>
-          <button class="hand-tool-btn" id="handDiscardBtn"></button>
-          <button class="hand-tool-btn" id="handDiscardRandomBtn"></button>
-          <div class="hand-tool-sep"></div>
-          <button class="hand-tool-btn" id="handShowBtn"></button>
-          <div class="hand-tool-sep"></div>
-          <button class="hand-tool-btn" id="handMulliganBtn"></button>
-          <span class="hint hand-tool-btn hidden" id="handPickHint"></span>
+        <div class="hand-tools-dock" id="handToolsDock">
+          <div class="hand-tools-row">
+            <button type="button" class="hand-tools-toggle" id="handToolsToggleBtn" aria-expanded="false" aria-controls="handToolbar">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="11" height="14" rx="2"/><path d="m9 6 2-2h7a2 2 0 0 1 2 2v10l-5 4"/><path d="M7.5 10h4M7.5 13h4M7.5 16h2.5"/></svg>
+              <span id="handToolsToggleLabel"></span>
+            </button>
+            <button type="button" class="hand-visibility-toggle" id="handVisibilityBtn" aria-pressed="false"></button>
+            <div class="hand-essence-strip hidden" id="handEssenceStrip" role="status"></div>
+          </div>
+          <div class="hand-toolbar hidden" id="handToolbar">
+            <button class="hand-tool-btn" id="handDrawOneBtn"></button>
+            <button class="hand-tool-btn" id="handDrawHandBtn"></button>
+            <span class="hand-tool-btn hand-card-count" id="handCardCount"></span>
+            <div class="hand-tool-sep"></div>
+            <button class="hand-tool-btn" id="handDiscardBtn"></button>
+            <button class="hand-tool-btn" id="handDiscardRandomBtn"></button>
+            <div class="hand-tool-sep"></div>
+            <button class="hand-tool-btn" id="handShowBtn"></button>
+            <div class="hand-tool-sep"></div>
+            <button class="hand-tool-btn" id="handMulliganBtn"></button>
+            <span class="hint hand-tool-btn hidden" id="handPickHint"></span>
+          </div>
         </div>
         <div class="hand-resize-handle" id="handResizeHandle"></div>
         <div class="hand-tray" id="myHandTray"></div>
@@ -268,8 +356,14 @@
       <h3 id="savedDecksHeading" class="import-subhead"></h3>
       <div id="savedDeckList" class="deck-pick-list"></div>
 
+      <h3 id="currentDeckHeading" class="import-subhead"></h3>
+      <div id="currentDeckSummary" class="current-deck-summary"></div>
+
       <p id="importDeckHintText" style="color:var(--muted);font-size:14px"></p>
-      <textarea id="importDeckText" rows="10" style="width:100%"></textarea>
+      <div class="import-paste-frame">
+        <textarea id="importDeckText" rows="10"></textarea>
+        <button type="button" id="importPasteBtn"></button>
+      </div>
       <p id="importSelectionStatus" class="import-selection-status" aria-live="polite"></p>
       <div style="display:flex;gap:8px;margin-top:10px;justify-content:flex-end">
         <button id="importCancelBtn"></button>
@@ -341,7 +435,6 @@
 
   <div class="log-panel inspect-panel hidden" id="inspectPanel">
     <div class="box">
-      <div class="inspect-resize-handle" id="inspectResizeHandle"></div>
       <div class="inspect-main">
         <div class="inspect-img"><img id="inspectImg" alt=""></div>
         <div class="inspect-text">
@@ -354,6 +447,7 @@
         </div>
       </div>
       <div class="inspect-history" id="inspectHistory"></div>
+      <div class="inspect-resize-handle" id="inspectResizeHandle"></div>
     </div>
   </div>
 
@@ -481,12 +575,64 @@
     </div>
   </div>
 
+  <div class="log-panel rules-choice-panel hidden" id="rulesChoicePanel" role="dialog" aria-modal="true" aria-labelledby="rulesChoiceHeading">
+    <div class="box">
+      <div class="rules-choice-head">
+        <h2 id="rulesChoiceHeading"></h2>
+        <button type="button" id="rulesChoiceCloseBtn" aria-label="Close">×</button>
+      </div>
+      <p id="rulesChoiceText"></p>
+      <div class="rules-choice-options" id="rulesChoiceOptions"></div>
+    </div>
+  </div>
+
+  <div class="log-panel rules-action-declare-panel hidden" id="rulesActionPanel" role="dialog" aria-modal="true" aria-labelledby="rulesActionHeading">
+    <div class="box">
+      <div class="rules-action-head">
+        <h2 id="rulesActionHeading"></h2>
+        <button type="button" id="rulesActionCloseBtn" aria-label="Close">×</button>
+      </div>
+      <div class="rules-action-source">
+        <img id="rulesActionSourceImg" alt="">
+        <div>
+          <strong id="rulesActionSourceName"></strong>
+          <span id="rulesActionSourceMeta"></span>
+          <p id="rulesActionSourceEffect"></p>
+        </div>
+      </div>
+      <form id="rulesActionDeclareForm">
+        <div class="rules-action-fields">
+          <label><span id="rulesActionKindLabel"></span><select id="rulesActionKind"></select></label>
+          <label><span id="rulesActionDescriptionLabel"></span><input id="rulesActionDescription" maxlength="160"></label>
+          <label><span id="rulesActionTargetLabel"></span><input id="rulesActionTarget" maxlength="240"></label>
+          <label><span id="rulesActionCostLabel"></span><input id="rulesActionCostNote" maxlength="240"></label>
+        </div>
+        <fieldset class="rules-target-fieldset">
+          <legend id="rulesTargetLegend"></legend>
+          <p id="rulesTargetHint"></p>
+          <div class="rules-target-list" id="rulesTargetList"></div>
+        </fieldset>
+        <fieldset class="rules-tribute-fieldset">
+          <legend id="rulesTributeLegend"></legend>
+          <p id="rulesTributeHint"></p>
+          <div class="rules-tribute-summary hidden" id="rulesTributeSummary"></div>
+          <div class="rules-tribute-list" id="rulesTributeList"></div>
+        </fieldset>
+        <p class="rules-action-warning" id="rulesActionWarning"></p>
+        <div class="rules-action-footer">
+          <button type="button" id="rulesActionCancelBtn"></button>
+          <button type="submit" class="primary" id="rulesActionDeclareBtn"></button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <div class="tournament-player-alert hidden" id="tournamentPlayerAlert" role="alert" aria-live="assertive">
     <strong id="tournamentPlayerAlertTitle"></strong>
     <p id="tournamentPlayerAlertText"></p>
   </div>
 
-  <script src="i18n.js?v=20261005-tournament-2"></script>
-  <script src="app.js?v=20261005-tournament-2"></script>
+  <script src="i18n.js?v=20261009-rules-beta-96"></script>
+  <script src="app.js?v=20261009-rules-beta-96"></script>
 </body>
 </html>
