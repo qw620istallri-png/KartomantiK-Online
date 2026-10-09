@@ -1283,6 +1283,11 @@ class Session:
                 "fieldZone": field_zone,
                 "asSupport": bool(result.get("asSupport")),
             }
+        if kind in {"add_power_counter_target", "dissolve_vessel_targets"}:
+            value = result.get("value")
+            if not isinstance(value, (int, float)):
+                return None
+            return {"kind": kind, "value": max(-99, min(int(value), 99))}
         if kind == "deck_discard_then_weaken":
             return {
                 "kind": kind,
@@ -1292,6 +1297,13 @@ class Session:
             "move_zone_target_to_own_vessel",
             "move_target_to_own_vessel",
             "double_target_base_power",
+            "weaken_target_per_hand_card",
+            "destroy_support_targets_draw",
+            "power_counter_from_other_target",
+            "destroy_all_tokens",
+            "exile_all_wills_and_interzones",
+            "consult_support",
+            "humiliate_target",
             "destroy_random_interzone_target_player",
             "destroy_target_gain_points",
             "exile_target_on_win",
@@ -1367,7 +1379,10 @@ class Session:
                 clean["reason"] = reason
             return clean
         if kind == "neutralize_stack_action":
-            return {"kind": kind}
+            clean = {"kind": kind}
+            if result.get("destination") == "hand":
+                clean["destination"] = "hand"
+            return clean
         if kind == "counter_stack_action_unless_payment":
             payment = str(result.get("payment") or "")
             symbols = re.findall(r"\{([A-Z])\}", payment)
@@ -1488,6 +1503,8 @@ class Session:
             }
             if isinstance(result.get("afterDraw"), (int, float)):
                 clean["afterDraw"] = max(0, min(int(result["afterDraw"]), 10))
+            if isinstance(result.get("afterDiscard"), (int, float)):
+                clean["afterDiscard"] = max(0, min(int(result["afterDiscard"]), 10))
             return clean
         if kind == "split_targeted_limbo_cards":
             return {"kind": kind}
@@ -2009,6 +2026,9 @@ class Session:
             "exhaustSource": bool(ability.get("exhaustSource")),
             "anyPlayer": bool(ability.get("anyPlayer")),
             "sacrificeSource": bool(ability.get("sacrificeSource")),
+            "sacrificeDestination": (
+                "exile" if ability.get("sacrificeDestination") == "exile" else None
+            ),
             "sacrificeTokenCreatedBySource": bool(
                 ability.get("sacrificeTokenCreatedBySource")
             ),
@@ -2671,10 +2691,14 @@ class Session:
             for other in self.battlefield:
                 if other.get("stackedOn") == item.get("id"):
                     other["stackedOn"] = None
-            self.put_zone_card(item["ownerId"], "graveyard", item["cardId"], item["ownerId"], "top")
+            sacrifice_zone = "exile" if ability.get("sacrificeDestination") == "exile" else "graveyard"
+            if item.get("isCopy") or item.get("isTokenCard"):
+                sacrifice_zone = None
+            if sacrifice_zone:
+                self.put_zone_card(item["ownerId"], sacrifice_zone, item["cardId"], item["ownerId"], "top")
             result["sacrificedCards"].append({
                 "itemId": item["id"], "cardId": item["cardId"], "ownerId": item["ownerId"],
-                "destination": "graveyard",
+                "destination": sacrifice_zone or "removed",
             })
             self.prune_rules_ongoing_effects()
         if ability.get("sacrificeTokenCreatedBySource"):
@@ -2846,7 +2870,7 @@ class Session:
                     "ownerId": item.get("ownerId"),
                 }
 
-    def neutralize_rules_action_source(self, action):
+    def neutralize_rules_action_source(self, action, destination="graveyard"):
         """Move a neutralized played card from the Stack to its owner's Limbo."""
         source = action.get("source") or {}
         if action.get("kind") != "play_card" or not action.get("sourceOnStack"):
@@ -2855,14 +2879,16 @@ class Session:
         card_id = source.get("cardId")
         if owner_id not in self.players or not card_id:
             return {"status": "source_missing", "destination": "graveyard"}
-        if not self.put_zone_card(owner_id, "graveyard", card_id, owner_id, "top"):
-            return {"status": "source_missing", "destination": "graveyard"}
+        if destination not in {"graveyard", "hand"}:
+            destination = "graveyard"
+        if not self.put_zone_card(owner_id, destination, card_id, owner_id, "top"):
+            return {"status": "source_missing", "destination": destination}
         return {
-            "status": "moved", "destination": "graveyard",
+            "status": "moved", "destination": destination,
             "ownerId": owner_id, "cardId": card_id,
         }
 
-    def counter_rules_stack_action(self, target_action, mode):
+    def counter_rules_stack_action(self, target_action, mode, destination="graveyard"):
         """Remove one validated Stack entry while preserving already-paid costs."""
         if target_action not in self.rules_engine.get("actionStack", []):
             return None
@@ -2873,7 +2899,7 @@ class Session:
             != target_action.get("id")
         ]
         source_resolution = (
-            self.neutralize_rules_action_source(target_action)
+            self.neutralize_rules_action_source(target_action, destination)
             if target_action.get("kind") == "play_card" else None
         )
         result = {
@@ -6545,6 +6571,208 @@ class Session:
             return {"kind": result.get("kind"), "status": movement.get("status"),
                     "cardId": item.get("cardId"), "itemId": item.get("id"),
                     "containerId": player_id, "zone": "receptacle"}
+        if result.get("kind") == "add_power_counter_target":
+            target = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "card"
+            ), None)
+            item = self.find_battlefield_item((target or {}).get("itemId"))
+            if item is None:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            counters = item.setdefault("counters", {})
+            counters["power"] = int(counters.get("power") or 0) + int(result.get("value") or 0)
+            return {
+                "kind": result.get("kind"), "status": "changed",
+                "itemId": item["id"], "value": int(result.get("value") or 0),
+            }
+        if result.get("kind") == "weaken_target_per_hand_card":
+            target = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "card"
+            ), None)
+            count = len(self.players[player_id]["zones"]["hand"])
+            if target is None or count <= 0:
+                return {"kind": result.get("kind"), "status": "nothing", "count": count}
+            effects = self.create_rules_ongoing_effects({
+                **action,
+                "targets": [target],
+                "ability": {
+                    "id": f'{(action.get("ability") or {}).get("id")}:weaken',
+                    "ongoingEffect": {
+                        "kind": "power_modifier", "value": -count,
+                        "duration": "until_end_of_turn",
+                    },
+                },
+            })
+            return {
+                "kind": result.get("kind"), "status": "weakened",
+                "count": count, "effects": len(effects),
+            }
+        if result.get("kind") == "dissolve_vessel_targets":
+            moved, gained = [], 0
+            for target in action.get("targets") or []:
+                if target.get("kind") != "zone_card" or target.get("zone") != "receptacle":
+                    continue
+                container_id = target.get("containerId")
+                card_id = target.get("cardId")
+                owner_id = self.card_owner_in_zone(container_id, "receptacle", card_id)
+                if owner_id is None or container_id != player_id:
+                    continue
+                error, _owner, replacement = self.move_zone_card_by_effect(
+                    container_id, "receptacle", owner_id, "deck", card_id, "top"
+                )
+                if error:
+                    continue
+                random.shuffle(self.players[owner_id]["zones"]["deck"])
+                moved.append(card_id)
+                if not replacement:
+                    gained += int(result.get("value") or 0)
+            if gained:
+                self.adjust_rules_score(player_id, gained)
+            return {
+                "kind": result.get("kind"),
+                "status": "moved" if moved else "nothing",
+                "cardIds": moved, "points": gained,
+            }
+        if result.get("kind") == "destroy_support_targets_draw":
+            draws = {}
+            destroyed = []
+            for target in action.get("targets") or []:
+                item = self.find_battlefield_item(target.get("itemId"))
+                if item is None or not item.get("isSupport"):
+                    continue
+                controller_id = self.rules_item_controller_id(item)
+                movement = self._rules_remove_field_item_by_effect(
+                    item, item.get("ownerId"), "graveyard", "top", reason="destroy"
+                )
+                if movement.get("status") in {"moved", "removed_copy"}:
+                    destroyed.append(item["id"])
+                    draws[controller_id] = draws.get(controller_id, 0) + 2
+            self.prune_rules_ongoing_effects()
+            for pid, count in draws.items():
+                self.draw_rules_cards(pid, count)
+            return {
+                "kind": result.get("kind"),
+                "status": "destroyed" if destroyed else "nothing",
+                "itemIds": destroyed, "draws": draws,
+            }
+        if result.get("kind") == "power_counter_from_other_target":
+            cards = [
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "card"
+            ]
+            if len(cards) != 2:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            weakened = self.find_battlefield_item(cards[0].get("itemId"))
+            reference = self.find_battlefield_item(cards[1].get("itemId"))
+            if (
+                weakened is None or reference is None
+                or self.rules_item_controller_id(weakened)
+                != self.rules_item_controller_id(reference)
+                or not reference.get("isSupport")
+            ):
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            base = int(self.card_rules.get(reference.get("cardId"), {}).get("power") or 0)
+            counters = weakened.setdefault("counters", {})
+            counters["power"] = int(counters.get("power") or 0) - base
+            return {
+                "kind": result.get("kind"), "status": "weakened",
+                "itemId": weakened["id"], "value": -base,
+            }
+        if result.get("kind") == "destroy_all_tokens":
+            removed = []
+            for item in list(self.battlefield):
+                if item.get("isTokenCard"):
+                    movement = self._rules_remove_field_item(
+                        item, item.get("ownerId"), "graveyard", "top"
+                    )
+                    if movement.get("status") in {"moved", "removed_copy"}:
+                        removed.append(item["id"])
+            self.prune_rules_ongoing_effects()
+            return {
+                "kind": result.get("kind"),
+                "status": "destroyed" if removed else "nothing",
+                "itemIds": removed,
+            }
+        if result.get("kind") == "exile_all_wills_and_interzones":
+            removed = []
+            for item in list(self.battlefield):
+                card_type = self.card_rules.get(item.get("cardId"), {}).get("type")
+                in_interzone = (
+                    card_type == "manifestation"
+                    and self.rules_field_zone(item) == "interzone"
+                )
+                if card_type not in RULES_WILL_TYPES and not in_interzone:
+                    continue
+                movement = self._rules_remove_field_item(
+                    item, item.get("ownerId"), "exile", "top"
+                )
+                if movement.get("status") in {"moved", "removed_copy"}:
+                    removed.append(item["id"])
+            self.prune_rules_ongoing_effects()
+            return {
+                "kind": result.get("kind"),
+                "status": "exiled" if removed else "nothing",
+                "itemIds": removed,
+            }
+        if result.get("kind") == "consult_support":
+            target = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "player"
+            ), None)
+            target_id = (target or {}).get("playerId")
+            if target_id not in self.players:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            deck = self.players[target_id]["zones"]["deck"]
+            discarded, found = [], None
+            while deck:
+                top_card = deck[0]
+                if self.card_rules.get(top_card, {}).get("type") == "manifestation":
+                    found = top_card
+                    break
+                error, _owner, replacement = self.move_zone_card_by_effect(
+                    target_id, "deck", target_id, "graveyard", top_card, "top"
+                )
+                if error:
+                    break
+                if not replacement:
+                    discarded.append(top_card)
+            if found is None:
+                return {
+                    "kind": result.get("kind"), "status": "no_manifestation",
+                    "discarded": discarded,
+                }
+            owner_id = self.take_zone_card(target_id, "deck", found)
+            seat = self.players[target_id].get("seat")
+            item = {
+                "id": new_id(), "ownerId": owner_id, "controllerId": target_id,
+                "cardId": found, "x": 740.0, "y": 620.0 if seat != 1 else 880.0,
+                "faceUp": True, "rotation": 0.0, "counters": {}, "stackedOn": None,
+            }
+            self.mark_rules_support_entry(item)
+            self.battlefield.append(item)
+            return {
+                "kind": result.get("kind"), "status": "support",
+                "cardId": found, "itemId": item["id"],
+                "controllerId": target_id, "discarded": discarded,
+            }
+        if result.get("kind") == "humiliate_target":
+            target = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "card"
+            ), None)
+            item = self.find_battlefield_item((target or {}).get("itemId"))
+            if item is None:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            item["temperamentOverride"] = "hollow"
+            counters = item.setdefault("counters", {})
+            counters["power"] = int(counters.get("power") or 0) - 1
+            controller_id = self.rules_item_controller_id(item)
+            self.adjust_rules_score(controller_id, -5)
+            return {
+                "kind": result.get("kind"), "status": "humiliated",
+                "itemId": item["id"], "controllerId": controller_id,
+            }
         if result.get("kind") == "double_target_base_power":
             target = next((
                 entry for entry in action.get("targets") or []
@@ -7571,6 +7799,7 @@ class Session:
                 "groups": groups,
                 "_groups": groups,
                 "_afterDraw": int(result.get("afterDraw") or 0),
+                "_afterDiscard": int(result.get("afterDiscard") or 0),
             }
             return {
                 "kind": "choice_required",
@@ -8528,7 +8757,10 @@ class Session:
                 }
             return {
                 "kind": "neutralize_stack_action",
-                **self.counter_rules_stack_action(target_action, "neutralize"),
+                **self.counter_rules_stack_action(
+                    target_action, "neutralize",
+                    result.get("destination") or "graveyard",
+                ),
             }
         if result.get("kind") == "counter_stack_action_unless_payment":
             target = next((
@@ -9490,6 +9722,19 @@ class Session:
                 "groups": resolved_groups,
                 "sourceCardId": choice.get("sourceCardId"),
             }
+            if int(choice.get("_afterDiscard") or 0) > 0:
+                discard_deck = self.players[player_id]["zones"]["deck"]
+                discarded_cards = []
+                for _index in range(min(int(choice["_afterDiscard"]), len(discard_deck))):
+                    top_card = discard_deck[0]
+                    move_error, _owner, replaced = self.move_zone_card_by_effect(
+                        player_id, "deck", player_id, "graveyard", top_card, "top"
+                    )
+                    if move_error:
+                        break
+                    if not replaced:
+                        discarded_cards.append(top_card)
+                payload["discarded"] = discarded_cards
             if int(choice.get("_afterDraw") or 0) > 0:
                 payload["draw"] = self.draw_rules_cards(
                     player_id, int(choice["_afterDraw"])

@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 192,
-    "explicitAbilities": 223,
+    "explicitCards": 206,
+    "explicitAbilities": 239,
     "statuses": {
-      "automated": 252,
+      "automated": 266,
       "generic": 0,
-      "manual": 175,
+      "manual": 161,
       "partial": 23
     }
   },
@@ -547,10 +547,24 @@
       "collectionNumber": 38,
       "name": "Armored Husk",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "armored-husk-protect",
+        "armored-husk-retarget"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:tribute",
+        "ongoing:protection",
+        "phase-window",
+        "result:retarget_source_effect",
+        "target:card",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "5liq0tcj7m9ebqr_en": {
       "collectionNumber": 39,
@@ -1104,10 +1118,20 @@
       "collectionNumber": 78,
       "name": "Pigon, the Apprentice",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "pigon-return-support-card"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:tribute",
+        "result:move_target",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "oq88mu68bnbqe0w_en": {
       "collectionNumber": 79,
@@ -1248,10 +1272,18 @@
       "collectionNumber": 88,
       "name": "Consult",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "consult"
+      ],
+      "mechanics": [
+        "result:consult_support",
+        "target:player"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "fwccphp46678238_en": {
       "collectionNumber": 89,
@@ -1683,10 +1715,19 @@
       "collectionNumber": 119,
       "name": "Reviving Cage",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "reviving-cage"
+      ],
+      "mechanics": [
+        "cost:sacrificeSource",
+        "result:move_zone_target_to_field_zone",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "86nfr2vhox3l6y2_en": {
       "collectionNumber": 120,
@@ -4031,10 +4072,18 @@
       "collectionNumber": 292,
       "name": "Humiliate",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "humiliate"
+      ],
+      "mechanics": [
+        "result:humiliate_target",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "dey791sghwx2ee3_en": {
       "collectionNumber": 293,
@@ -4141,10 +4190,18 @@
       "collectionNumber": 300,
       "name": "Volcano",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "volcano-exile"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "result:exile_all_wills_and_interzones"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-001": {
       "collectionNumber": 301,
@@ -4419,10 +4476,18 @@
       "collectionNumber": 319,
       "name": "Dissolve and Coagulate",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "dissolve-and-coagulate"
+      ],
+      "mechanics": [
+        "result:dissolve_vessel_targets",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-020": {
       "collectionNumber": 320,
@@ -4437,10 +4502,18 @@
       "collectionNumber": 321,
       "name": "Convert the Pain",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "convert-the-pain"
+      ],
+      "mechanics": [
+        "result:destroy_support_targets_draw",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-022": {
       "collectionNumber": 322,
@@ -4725,10 +4798,18 @@
       "collectionNumber": 344,
       "name": "Veer the Will",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "veer-the-will"
+      ],
+      "mechanics": [
+        "result:neutralize_stack_action",
+        "target:stack_action"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-045": {
       "collectionNumber": 345,
@@ -4759,10 +4840,18 @@
       "collectionNumber": 346,
       "name": "Pass Judgment",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "pass-judgment"
+      ],
+      "mechanics": [
+        "result:weaken_target_per_hand_card",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-047": {
       "collectionNumber": 347,
@@ -5020,10 +5109,17 @@
       "collectionNumber": 368,
       "name": "Eviscerate Morality",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "eviscerate-morality"
+      ],
+      "mechanics": [
+        "result:reorder_top_decks"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-069": {
       "collectionNumber": 369,
@@ -5434,10 +5530,22 @@
       "collectionNumber": 401,
       "name": "Sticky Fasces-fly",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "fasces-fly-enters-confrontation",
+        "fasces-fly-wins-weaken-interzone"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "result:add_power_counter_target",
+        "target:card",
+        "trigger:enters_field_zone",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-102": {
       "collectionNumber": 402,
@@ -5534,10 +5642,19 @@
       "collectionNumber": 409,
       "name": "Rah-kio, the Flyswatter",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "rah-kio-swat-tokens"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:sacrificeSource",
+        "result:destroy_all_tokens"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-110": {
       "collectionNumber": 410,
@@ -6064,10 +6181,17 @@
       "collectionNumber": 448,
       "name": "Induce Desertion",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "induce-desertion"
+      ],
+      "mechanics": [
+        "result:power_counter_from_other_target"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-149": {
       "collectionNumber": 449,

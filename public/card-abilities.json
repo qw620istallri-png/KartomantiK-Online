@@ -2555,5 +2555,174 @@
       },
       "result": { "kind": "play_limbo_target_as_support", "winDestination": "exile", "losesEffects": true }
     }
+  ],
+  "2oka6j26ibu19l9_en": [
+    {
+      "id": "pigon-return-support-card",
+      "tribute": "{H}{H}",
+      "exhaustSource": true,
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "supportOnly": true
+      },
+      "result": {
+        "kind": "move_target", "zone": "hand", "position": "top", "reason": "return",
+        "restrictPlayUntilEndOfTurn": true
+      }
+    }
+  ],
+  "inner-deserts-101": [
+    {
+      "id": "fasces-fly-enters-confrontation",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "targets": { "min": 0, "max": 0 },
+      "ongoingEffect": { "kind": "power_modifier", "value": 4, "duration": "until_end_of_turn", "scope": "source" }
+    },
+    {
+      "id": "fasces-fly-wins-weaken-interzone",
+      "trigger": { "event": "wins_confrontation" },
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "fieldZone": "interzone", "controller": "self"
+      },
+      "result": { "kind": "add_power_counter_target", "value": -2 }
+    }
+  ],
+  "inner-deserts-046": [
+    {
+      "id": "pass-judgment",
+      "action": "play_card",
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"]
+      },
+      "result": { "kind": "weaken_target_per_hand_card" }
+    }
+  ],
+  "inner-deserts-019": [
+    {
+      "id": "dissolve-and-coagulate",
+      "action": "play_card",
+      "targets": {
+        "kind": "zone_card", "min": 0, "max": 2, "cardType": "manifestation",
+        "zones": ["receptacle"], "owner": "self"
+      },
+      "result": { "kind": "dissolve_vessel_targets", "value": 30 }
+    }
+  ],
+  "inner-deserts-021": [
+    {
+      "id": "convert-the-pain",
+      "action": "play_card",
+      "targets": {
+        "kind": "card", "min": 0, "max": 2, "cardType": "manifestation",
+        "zones": ["battlefield"], "supportOnly": true
+      },
+      "result": { "kind": "destroy_support_targets_draw" }
+    }
+  ],
+  "inner-deserts-068": [
+    {
+      "id": "eviscerate-morality",
+      "action": "play_card",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "reorder_top_decks", "count": 4, "afterDiscard": 2 }
+    }
+  ],
+  "inner-deserts-148": [
+    {
+      "id": "induce-desertion",
+      "action": "play_card",
+      "targets": {
+        "groups": [
+          { "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"], "fieldZone": "confrontation" },
+          { "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"], "supportOnly": true }
+        ],
+        "min": 2, "max": 2
+      },
+      "result": { "kind": "power_counter_from_other_target" }
+    }
+  ],
+  "inner-deserts-109": [
+    {
+      "id": "rah-kio-swat-tokens",
+      "exhaustSource": true,
+      "sacrificeSource": true,
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "destroy_all_tokens" }
+    }
+  ],
+  "2xqczn7vzkm5n50_en": [
+    {
+      "id": "volcano-exile",
+      "tribute": "{H}{H}{H}{H}",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "exile_all_wills_and_interzones" }
+    }
+  ],
+  "9c7s9dn3sa5dcko_en": [
+    {
+      "id": "consult",
+      "action": "play_card",
+      "targets": { "kind": "player", "min": 1, "max": 1 },
+      "result": { "kind": "consult_support" }
+    }
+  ],
+  "gpxqooqq57loyb8_en": [
+    {
+      "id": "reviving-cage",
+      "sourceFieldZone": "interzone",
+      "sacrificeSource": true,
+      "sacrificeDestination": "exile",
+      "targets": {
+        "kind": "zone_card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["graveyard"], "owner": "self"
+      },
+      "result": { "kind": "move_zone_target_to_field_zone", "fieldZone": "interzone" }
+    }
+  ],
+  "8g5pn3mukkuniog_en": [
+    {
+      "id": "armored-husk-protect",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"]
+      },
+      "ongoingEffect": {
+        "kind": "protection", "fromOpponents": true,
+        "duration": "while_source_and_target_on_field"
+      }
+    },
+    {
+      "id": "armored-husk-retarget",
+      "tribute": "{G}",
+      "exhaustSource": true,
+      "phaseIds": ["end_actions"],
+      "targets": {
+        "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"]
+      },
+      "result": { "kind": "retarget_source_effect", "effectKind": "protection" }
+    }
+  ],
+  "pqi88s5ytyfnalf_en": [
+    {
+      "id": "humiliate",
+      "action": "play_card",
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"]
+      },
+      "result": { "kind": "humiliate_target" }
+    }
+  ],
+  "inner-deserts-044": [
+    {
+      "id": "veer-the-will",
+      "action": "play_card",
+      "targets": {
+        "kind": "stack_action", "min": 1, "max": 1,
+        "cardTypes": ["ephemeral_will", "persistent_will"]
+      },
+      "result": { "kind": "neutralize_stack_action", "destination": "hand" }
+    }
   ]
 }

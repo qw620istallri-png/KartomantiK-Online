@@ -9422,6 +9422,114 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertTrue(item["effectsDisabled"])
         self.assertEqual(item["supportWinDestination"], "exile")
 
+    def card_target(self, item_id, card_id):
+        return {"kind": "card", "itemId": item_id, "cardId": card_id}
+
+    def test_easy_batch_power_effects(self):
+        judgment, fly, desertion, humiliate = (
+            "inner-deserts-046", "inner-deserts-101", "inner-deserts-148", "pqi88s5ytyfnalf_en",
+        )
+        session, p1, _p2 = self.manual_batch_session(judgment, fly, desertion, humiliate)
+        session.card_rules["m-1"] = {"type": "manifestation", "power": 6, "temperaments": ["phlegmatic"]}
+        session.battlefield = [
+            self.field_item("t", "p2", "m-1"),
+            self.field_item("s", "p2", "m-2", isSupport=True),
+        ]
+        session.card_rules["m-2"] = {"type": "manifestation", "power": 3, "temperaments": ["phlegmatic"]}
+        self.put(p1, "hand", ["m-3", "m-4", "m-5"])
+        self.run_ability(session, judgment, [self.card_target("t", "m-1")])
+        self.assertEqual(self.power_of(session, "t"), 3)
+        self.run_ability(session, desertion, [self.card_target("t", "m-1"), self.card_target("s", "m-2")])
+        self.assertEqual(self.power_of(session, "t"), 0)
+        session.battlefield.append(self.field_item("w", "p1", "m-6", field_zone="interzone"))
+        fly_ability = self.ABILITIES[fly][1]
+        self.assertEqual(fly_ability["result"], {"kind": "add_power_counter_target", "value": -2})
+        session.apply_rules_action_result({
+            "id": "fly", "controllerId": "p1", "source": {"cardId": fly},
+            "targets": [self.card_target("w", "m-6")],
+            "ability": {"result": fly_ability["result"]},
+        })
+        self.assertEqual(self.power_of(session, "w"), -1)
+        self.run_ability(session, humiliate, [self.card_target("t", "m-1")])
+        item = session.find_battlefield_item("t")
+        self.assertEqual(item["temperamentOverride"], "hollow")
+        self.assertEqual(session.players["p2"].get("score"), -5)
+
+    def test_easy_batch_dissolve_convert_and_rah_kio(self):
+        dissolve, convert, rah = "inner-deserts-019", "inner-deserts-021", "inner-deserts-109"
+        session, p1, p2 = self.manual_batch_session(dissolve, convert, rah)
+        self.put(p1, "receptacle", ["m-1", "m-2"])
+        targets = [
+            {"kind": "zone_card", "containerId": "p1", "zone": "receptacle", "cardId": cid, "ownerId": "p1"}
+            for cid in ("m-1", "m-2")
+        ]
+        self.run_ability(session, dissolve, targets)
+        self.assertEqual(p1["zones"]["receptacle"], [])
+        self.assertEqual(sorted(p1["zones"]["deck"]), ["m-1", "m-2"])
+        self.assertEqual(p1.get("score"), 60)
+        self.put(p1, "deck", [f"m-{i}" for i in range(5, 12)])
+        self.put(p2, "deck", [f"m-{i}" for i in range(12, 19)])
+        session.battlefield = [
+            self.field_item("a", "p1", "m-3", isSupport=True),
+            self.field_item("b", "p2", "m-4", isSupport=True),
+            self.field_item("tok", "p2", "captured", isTokenCard=True),
+        ]
+        self.run_ability(session, convert, [self.card_target("a", "m-3"), self.card_target("b", "m-4")])
+        self.assertEqual(len(p1["zones"]["hand"]), 2)
+        self.assertEqual(len(p2["zones"]["hand"]), 2)
+        self.assertEqual(session.battlefield[0]["id"], "tok")
+        self.run_ability(session, rah)
+        self.assertEqual(session.battlefield, [])
+
+    def test_easy_batch_volcano_and_consult(self):
+        volcano, consult = "2xqczn7vzkm5n50_en", "9c7s9dn3sa5dcko_en"
+        session, p1, _p2 = self.manual_batch_session(volcano, consult)
+        session.card_rules["w"] = {"type": "persistent_will"}
+        session.battlefield = [
+            self.field_item("w", "p2", "w", field_zone="field"),
+            self.field_item("i", "p2", "m-1", field_zone="interzone"),
+            self.field_item("c", "p2", "m-2", field_zone="confrontation"),
+        ]
+        self.run_ability(session, volcano)
+        self.assertEqual([i["id"] for i in session.battlefield], ["c"])
+        session.card_rules["will-x"] = {"type": "ephemeral_will"}
+        self.put(p1, "deck", ["will-x", "will-ephemeral", "m-5", "m-6"])
+        self.run_ability(session, consult, [{"kind": "player", "playerId": "p1"}])
+        self.assertEqual(sorted(p1["zones"]["graveyard"]), ["will-ephemeral", "will-x"])
+        support = next(i for i in session.battlefield if i["cardId"] == "m-5")
+        self.assertTrue(support["isSupport"])
+
+    def test_easy_batch_eviscerate_discards_after_reorder(self):
+        card = "inner-deserts-068"
+        session, p1, _p2 = self.manual_batch_session(card)
+        self.put(p1, "deck", [f"m-{i}" for i in range(1, 9)])
+        result, action = self.run_ability(session, card)
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["kind"], "deck_reorder")
+        self.assertEqual(choice.get("_afterDiscard"), 2)
+
+    def test_easy_batch_pigon_cage_veer_and_husk_definitions(self):
+        pigon, cage, veer, husk = (
+            "2oka6j26ibu19l9_en", "gpxqooqq57loyb8_en", "inner-deserts-044", "8g5pn3mukkuniog_en",
+        )
+        session, p1, _p2 = self.manual_batch_session(pigon, cage, veer, husk)
+        session.battlefield = [self.field_item("s", "p2", "m-1", isSupport=True)]
+        self.run_ability(session, pigon, [self.card_target("s", "m-1")])
+        self.assertEqual(session.battlefield, [])
+        self.assertIn("m-1", session.players["p2"]["zones"]["hand"])
+        self.put(p1, "graveyard", ["m-2"])
+        session.rules_engine["zoneEntryTurns"] = {}
+        self.run_ability(session, cage, [
+            {"kind": "zone_card", "containerId": "p1", "zone": "graveyard", "cardId": "m-2", "ownerId": "p1"}
+        ])
+        entered = next(i for i in session.battlefield if i["cardId"] == "m-2")
+        self.assertEqual(session.rules_field_zone(entered), "interzone")
+        self.assertEqual(self.ABILITIES[cage][0]["sacrificeDestination"], "exile")
+        self.assertEqual(self.ABILITIES[veer][0]["result"]["destination"], "hand")
+        self.assertEqual(
+            self.ABILITIES[husk][0]["ongoingEffect"]["duration"], "while_source_and_target_on_field"
+        )
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")
