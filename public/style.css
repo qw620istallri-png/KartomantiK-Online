@@ -2957,3 +2957,11 @@ input, textarea, select {
   .rules-activate-badge { animation: none; }
 }
 .rules-choice-card.selected { outline: 3px solid var(--accent, #d4af37); outline-offset: 2px; }
+
+.limbo-play-btn { position: absolute; left: 50%; top: 100%; transform: translateX(-50%); margin-top: 4px; white-space: nowrap; font-size: 13px; padding: 3px 8px; min-height: 0; z-index: 5; }
+#limboPlaySearch { width: 100%; box-sizing: border-box; margin: 10px 0; padding: 8px; font-size: 15px; }
+.limbo-play-list { display: flex; flex-wrap: wrap; gap: 10px; max-height: 55vh; overflow: auto; }
+.limbo-play-card { width: 120px; padding: 4px; background: transparent; border: 2px solid transparent; border-radius: 8px; color: #2e281d; cursor: pointer; }
+.limbo-play-card:hover, .limbo-play-card:focus-visible { border-color: #b8860b; }
+.limbo-play-card img { display: block; width: 100%; border-radius: 6px; }
+.limbo-play-card span { display: block; font-size: 12px; margin-top: 4px; }

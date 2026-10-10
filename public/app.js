@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261010-rules-beta-114";
+const STATIC_ASSET_VERSION = "20261010-rules-beta-115";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -3266,6 +3266,41 @@ function limboWillIsPlayable(cardId) {
   return rulesEphemeralPhasesClient(card).includes(phaseId);
 }
 
+$("#limboPlayCloseBtn").onclick = () => closeLimboPlayPanel();
+$("#limboPlaySearch").oninput = () => renderLimboPlayList();
+
+function openLimboPlayPanel() {
+  $("#limboPlayHeading").textContent = t("limboPlayHeading");
+  $("#limboPlaySearch").placeholder = t("limboPlaySearch");
+  $("#limboPlaySearch").value = "";
+  $("#limboPlayPanel").classList.remove("hidden");
+  renderLimboPlayList();
+  $("#limboPlaySearch").focus();
+}
+
+function closeLimboPlayPanel() {
+  $("#limboPlayPanel").classList.add("hidden");
+}
+
+function renderLimboPlayList() {
+  const list = $("#limboPlayList");
+  const query = $("#limboPlaySearch").value.trim().toLocaleLowerCase();
+  const cards = [...new Set(latestState?.players?.[myPlayerId]?.zones?.graveyard?.cards || [])]
+    .filter((cardId) => limboWillIsPlayable(cardId))
+    .filter((cardId) => !query || cardName(cardId).toLocaleLowerCase().includes(query));
+  list.innerHTML = cards.length
+    ? cards.map((cardId) => `<button type="button" class="limbo-play-card" data-limbo-play-card="${esc(cardId)}" title="${esc(cardName(cardId))}">
+        <img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"><span>${esc(cardName(cardId))}</span></button>`).join("")
+    : `<p>${esc(t("limboPlayEmpty"))}</p>`;
+  list.querySelectorAll("[data-limbo-play-card]").forEach((button) => {
+    button.onclick = () => {
+      const cardId = button.dataset.limboPlayCard;
+      closeLimboPlayPanel();
+      beginRulesBoardAction({ cardId, zone: "graveyard", placement: { x: 700, y: 300 } });
+    };
+  });
+}
+
 function rulesActionPaymentDraft(source, card, encodedAbility) {
   const limboPlay = source.zone === "graveyard"
     && ["ephemeral_will", "persistent_will"].includes(card?.type)
@@ -5576,6 +5611,9 @@ function pileFieldHtml(ownerId, zone, zoneData, canView, canAct, pos, score, ove
       <img src="${esc(cardImage(zonePermission.cardId))}" alt="${esc(cardName(zonePermission.cardId))}">
       <span>${esc(t("rulesSupportBadge"))}</span>
     </div>` : "";
+  const limboPlayButton = zone === "graveyard" && ownerId === myPlayerId && !isObserver
+    && latestState?.rulesEngine?.enabled && rulesLimboPlayMode()
+    ? `<button type="button" class="limbo-play-btn" data-limbo-play-open>${esc(t("limboPlayButton"))}</button>` : "";
   return `<div class="field-pile ${count === 0 ? "empty" : ""}"${dropAttr} data-field-pile="${esc(key)}" data-zone="${esc(zone)}" data-override-key="${esc(overrideKey)}" style="left:${pos.x}px;top:${pos.y}px;--owner-color:${playerColor(ownerId)}">
     ${scoreAdjust}
     <div class="pile-trigger" data-pile-trigger="${esc(key)}">
@@ -5585,6 +5623,7 @@ function pileFieldHtml(ownerId, zone, zoneData, canView, canAct, pos, score, ove
       ${pointsBadge}
     </div>
     ${conditionalCard}
+    ${limboPlayButton}
     <span class="pile-coords">${esc(zone)}: ${Math.round(rawPos.x)}, ${Math.round(rawPos.y)}</span>
     ${isOpen ? `<div class="zone-popover">${zoneBlockHtml(ownerId, zone, zoneData, canView, canAct)}</div>` : ""}
   </div>`;
@@ -5702,6 +5741,13 @@ function renderPiles() {
       kind: "card", cardId: el.dataset.pileTopCard, cardOwnerId: el.dataset.cardOwner || fromOwnerId,
       fromOwnerId, fromZone,
     });
+  });
+  $$("[data-limbo-play-open]").forEach((el) => {
+    el.onclick = (event) => {
+      event.stopPropagation();
+      openLimboPlayPanel();
+    };
+    el.onpointerdown = (event) => event.stopPropagation();
   });
   $$("[data-rules-zone-play-card]").forEach((el) => {
     const cardId = el.dataset.rulesZonePlayCard;

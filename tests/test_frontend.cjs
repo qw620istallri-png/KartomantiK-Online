@@ -1456,6 +1456,36 @@ function startServer() {
     assert.deepEqual(limboUi.freeReq, {});
     assert.deepEqual(limboUi.hollowReq, { hollow: 1 });
     assert.deepEqual(limboUi.passive, ["play_wills_from_limbo_hollow_tribute"]);
+    const limboPicker = await page.evaluate(() => {
+      const will = [...cardsById.values()].find((card) => card.type === "ephemeral_will" && Object.keys(printedTributeRequirements(card)).length);
+      const saved = JSON.parse(JSON.stringify({
+        permissions: latestState.rulesEngine.playPermissions || [], priority: latestState.rulesEngine.priorityPlayerId,
+        stack: latestState.rulesEngine.actionStack || [], limbo: latestState.players[myPlayerId].zones.graveyard,
+        phase: latestState.phaseTracker.index,
+      }));
+      const phaseIds = rulesEphemeralPhasesClient(will);
+      const phaseId = currentPhaseUi().phase?.id;
+      latestState.rulesEngine.priorityPlayerId = myPlayerId;
+      latestState.rulesEngine.playPermissions = [{
+        id: "pf", playerId: myPlayerId, fromZone: "graveyard", anyWill: true, noTribute: true, exileOnLeave: true,
+        phaseIds: [phaseId], turn: Number(latestState.phaseTracker?.turn || 0),
+      }];
+      latestState.players[myPlayerId].zones.graveyard = { ...saved.limbo, cards: [will.id], count: 1 };
+      openLimboPlayPanel();
+      const playable = limboWillIsPlayable(will.id);
+      const shown = document.querySelectorAll("[data-limbo-play-card]").length;
+      const search = document.querySelector("#limboPlaySearch");
+      search.value = "zzzzqqq";
+      search.dispatchEvent(new Event("input"));
+      const filtered = document.querySelectorAll("[data-limbo-play-card]").length;
+      closeLimboPlayPanel();
+      latestState.rulesEngine.playPermissions = saved.permissions;
+      latestState.rulesEngine.priorityPlayerId = saved.priority;
+      latestState.players[myPlayerId].zones.graveyard = saved.limbo;
+      return { playable, shown, filtered, phaseIds, phaseId };
+    });
+    assert.equal(limboPicker.shown, limboPicker.playable ? 1 : 0, JSON.stringify(limboPicker));
+    assert.equal(limboPicker.filtered, 0);
     const temperamentUi = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
       const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };
