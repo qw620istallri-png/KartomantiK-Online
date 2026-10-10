@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261010-rules-beta-106";
+const STATIC_ASSET_VERSION = "20261010-rules-beta-108";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -110,7 +110,10 @@ function rulesTributeCandidate(reference) {
   }
   const cardId = value.includes("|") ? value.split("|").at(-1) : value;
   const card = cardsById.get(cardId);
-  return card ? { ...card, paymentValue: value } : null;
+  const powerOverride = latestState?.rulesEngine?.tributePowerOverrides?.[myPlayerId]?.[cardId];
+  return card
+    ? { ...card, ...(Number.isFinite(powerOverride) ? { power: powerOverride } : {}), paymentValue: value }
+    : null;
 }
 
 function rulesRemainingAfterManifestations(cardIds, requirements) {
@@ -3217,7 +3220,16 @@ function rulesPersistentWillsAsEphemeralClient() {
 function rulesActionPaymentDraft(source, card, encodedAbility) {
   const isPrintedWill = ["hand", "suspended"].includes(source.zone)
     && ["ephemeral_will", "persistent_will"].includes(card?.type);
-  const paymentRequirements = encodedAbility && Object.hasOwn(encodedAbility, "tribute")
+  const freeWillPermission = isPrintedWill && (latestState?.rulesEngine?.playPermissions || []).some((permission) => (
+    permission.playerId === myPlayerId
+    && permission.fromZone === "hand"
+    && permission.noTribute
+    && (permission.cardId === source.cardId || permission.anyWill)
+    && Number(permission.turn || 0) === Number(latestState?.phaseTracker?.turn || 0)
+  ));
+  const paymentRequirements = freeWillPermission
+    ? {}
+    : encodedAbility && Object.hasOwn(encodedAbility, "tribute")
     ? printedTributeRequirements({ powerCost: encodedAbility.tribute })
     : isPrintedWill ? printedTributeRequirements(card) : {};
   let reduction = (latestState?.battlefield || []).reduce((total, item) => {
@@ -3238,7 +3250,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
     paymentRequirements[payable] -= 1;
     reduction -= 1;
   }
-  if (isPrintedWill && !(encodedAbility && Object.hasOwn(encodedAbility, "tribute"))) {
+  if (isPrintedWill && !freeWillPermission && !(encodedAbility && Object.hasOwn(encodedAbility, "tribute"))) {
     const increase = (latestState?.battlefield || []).reduce((total, item) => (
       total + (passiveEffectsByCard.get(item.cardId) || [])
         .filter((effect) => effect.kind === "increase_will_tribute")
@@ -6248,12 +6260,14 @@ function renderRulesChoice() {
               <select data-rules-deck-side="${esc(group.playerId)}:${index}">
                 <option value="top">${esc(t("rulesDeckTop"))}</option>
                 <option value="bottom">${esc(t("rulesDeckBottom"))}</option>
+                ${group.extraSide ? `<option value="extra">${esc(t(group.extraSide === "hand" ? "rulesDeckToHand" : "rulesDeckExile"))}</option>` : ""}
               </select>
               <input type="number" min="1" max="${group.cardIds.length}" value="${index + 1}" data-rules-deck-order="${esc(group.playerId)}:${index}" aria-label="${esc(t("rulesDeckOrder"))}">
             </div>`).join("")}
         </section>`).join("")}
       <button type="button" class="primary" id="rulesDeckReorderConfirm">${esc(t("confirm"))}</button>`;
     (choice.groups || []).forEach((group) => {
+      if (group.topCount == null || group.bottomCount == null) return;
       const topCount = Number(group.topCount);
       const bottomCount = Number(group.bottomCount);
       if (!Number.isInteger(topCount) || !Number.isInteger(bottomCount)) return;
@@ -6275,7 +6289,10 @@ function renderRulesChoice() {
         const ordered = (side) => entries.filter((entry) => entry.side === side)
           .sort((first, second) => first.order - second.order)
           .map((entry) => entry.cardId);
-        return { playerId: group.playerId, top: ordered("top"), bottom: ordered("bottom") };
+        return {
+          playerId: group.playerId, top: ordered("top"), bottom: ordered("bottom"),
+          ...(group.extraSide ? { extra: ordered("extra") } : {}),
+        };
       });
       event.currentTarget.disabled = true;
       send({ type: "resolve_rules_choice", choiceId: choice.id, option: { groups } });

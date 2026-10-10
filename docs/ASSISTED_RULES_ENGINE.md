@@ -792,3 +792,13 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Damage et Echo of the Wilds : résultat `distribute_power` (total, signe). Les cibles sont choisies à la pose (1 à 3, chacune reçoit au moins 1) ; seul le cas « 2 cibles pour un total de 3 » demande un choix `pick_distribution_extra` (la cible qui reçoit le point en plus).
 - Unruly Flail : condition `opponent_will_on_stack_targets_confrontation` (`supportFromHandCondition`, serveur et `rulesSupportFromHandAvailableClient`) et déclencheur à l'entrée en Support depuis la main qui neutralise une Volonté adverse choisie avec la nouvelle contrainte de cible `targetsConfrontationManifestation`.
 - Limites connues : les nouveaux écrans (répartition, main révélée) et le tribut depuis le Limbo ou le champ ne sont testés que côté serveur et par le test frontend général, pas manuellement dans un navigateur ; Damage choisit la répartition à la résolution pour le cas à deux cibles.
+
+## Lot 14 (Tut, Ababash, Expansive Ponderer, Zam-za, Alakazim, Palgonphio, Tricephalous Oil-Dog, Inspired Nimbus, Zizek, Obtrusive Mass)
+
+- `reorder_top_decks` accepte `topCount`/`bottomCount`, `extraSide` (`exile`|`hand`), `extraMin`/`extraMax` et `targetPlayer`; le client envoie `extra` dans chaque groupe. Le choix `look_top_pick_hand` est dans `RULES_AFTER_CHAIN`.
+- Surcharge de puissance de tribut: `tribute_power_override_for_card` (main.py) et `rules_tribute_power_override` (session.py), conditions `two_wills_played_this_turn` et `lost_or_stalemate_previous_turn`. Exposée au client via `rulesEngine.tributePowerOverrides`.
+- Passif `excess_essence_as_hollow` (Alakazim). Permission générique `grant_free_will_play` (`anyWill`, `noTribute`).
+- Zizek: `confrontationEntryLimboWills` et `retainsExcessEssence` (excès conservé sous la clé `(tempérament, "retained")`).
+- Obtrusive Mass: `redirect_opponent_targeting_to_source` via `rules_redirect_targets`. Les déclencheurs ciblés automatiquement NE sont PAS redirigés (limite connue).
+- Correctif client: `topCount`/`bottomCount` à `null` ne forcent plus tous les sélecteurs sur "bottom".
+- Registre: 369 automated / 0 partial / 81 manual.

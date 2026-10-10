@@ -24,6 +24,7 @@ RULES_SCORE_COUNTS = {
 }
 RULES_AFTER_CHAIN = {
     "discard_deck_per_base_power", "power_counter_target_per_base_power",
+    "look_top_pick_hand",
 }
 ALL_ZONES = PRIVATE_ZONES | SHARED_ZONES
 
@@ -1040,7 +1041,10 @@ class Session:
             permission = next((
                 entry for entry in self.rules_engine.get("playPermissions") or []
                 if entry.get("playerId") == player_id
-                and entry.get("cardId") == card_id
+                and (
+                    entry.get("cardId") == card_id
+                    or (entry.get("anyWill") and metadata.get("type") in RULES_WILL_TYPES)
+                )
                 and entry.get("fromZone") == "hand"
                 and entry.get("turn") == self.phase_tracker["turn"]
                 and self.current_phase_id() in entry.get("phaseIds", [])
@@ -1596,6 +1600,7 @@ class Session:
             "drain_excess_essence_power",
             "lock_next_turn_draws",
             "play_vessel_target_as_support",
+            "grant_free_will_play",
         }:
             clean = {"kind": kind}
             if kind == "play_limbo_target_as_support":
@@ -1691,6 +1696,13 @@ class Session:
                 clean["afterDraw"] = max(0, min(int(result["afterDraw"]), 10))
             if isinstance(result.get("afterDiscard"), (int, float)):
                 clean["afterDiscard"] = max(0, min(int(result["afterDiscard"]), 10))
+            for key in ("topCount", "bottomCount", "extraMin", "extraMax"):
+                if isinstance(result.get(key), (int, float)):
+                    clean[key] = max(0, min(int(result[key]), 12))
+            if result.get("extraSide") in {"exile", "hand"}:
+                clean["extraSide"] = result["extraSide"]
+            if result.get("targetPlayer"):
+                clean["targetPlayer"] = True
             return clean
         if kind == "split_targeted_limbo_cards":
             return {"kind": kind}
@@ -2347,6 +2359,48 @@ class Session:
                 requirements[temperament] = requirements.get(temperament, 0) + 1
         return requirements
 
+    def rules_redirect_targets(self, controller_id, targets):
+        """Obtrusive Mass: opponents' cards and effects target it instead."""
+        redirected = []
+        changed = False
+        for target in targets or []:
+            item = (
+                self.find_battlefield_item(target.get("itemId"))
+                if target.get("kind") == "card" else None
+            )
+            mass = None
+            if item is not None and self.rules_item_controller_id(item) != controller_id:
+                owner_id = self.rules_item_controller_id(item)
+                mass = next((
+                    source for source in self.rules_active_passive_sources(
+                        "redirect_opponent_targeting_to_source"
+                    )
+                    if self.rules_item_controller_id(source) == owner_id
+                    and source is not item
+                    and self.card_rules.get(source.get("cardId"), {}).get("type") == "manifestation"
+                    and not self.rules_item_is_immune(source, controller_id)
+                    and not self.rules_item_is_protected(source, controller_id)
+                ), None)
+            if mass is not None:
+                changed = True
+                redirected.append({
+                    "kind": "card", "itemId": mass["id"], "cardId": mass.get("cardId"),
+                    "ownerId": mass.get("ownerId"),
+                })
+            else:
+                redirected.append(target)
+        if not changed:
+            return targets
+        unique = []
+        for target in redirected:
+            if not any(
+                target.get("kind") == "card" and other.get("kind") == "card"
+                and other.get("itemId") == target.get("itemId")
+                for other in unique
+            ):
+                unique.append(target)
+        return unique
+
     def rules_tribute_extra_power_loss(self, action):
         source = action.get("source") or {}
         if (
@@ -2497,7 +2551,42 @@ class Session:
             consume(temperament, transcendent)
         return remaining, spent
 
-    def rules_manifestations_cover(self, card_ids, requirements, include_excess=False):
+    def rules_tribute_power_override(self, player_id, metadata):
+        override = metadata.get("tributePowerOverride")
+        if not override or player_id not in self.players:
+            return None
+        condition = override.get("condition")
+        turn = self.phase_tracker["turn"]
+        if condition == "two_wills_played_this_turn":
+            played = self.rules_engine.get("willsPlayed") or {}
+            if played.get("turn") != turn or int(played.get(player_id) or 0) < 2:
+                return None
+        elif condition == "lost_or_stalemate_previous_turn":
+            if (
+                (self.rules_engine.get("confrontationLosses") or {}).get(str(turn - 1)) != player_id
+                and not (self.rules_engine.get("confrontationStalemates") or {}).get(str(turn - 1))
+            ):
+                return None
+        elif condition:
+            return None
+        return int(override.get("power") or 0)
+
+    def rules_tribute_power_overrides_snapshot(self):
+        snapshot = {}
+        for player_id, player in self.players.items():
+            entries = {}
+            for card_id in set(player["zones"].get("hand", [])):
+                power = self.rules_tribute_power_override(
+                    player_id, self.card_rules.get(card_id, {})
+                )
+                if power is not None:
+                    entries[card_id] = power
+            if entries:
+                snapshot[player_id] = entries
+        return snapshot
+
+    def rules_manifestations_cover(self, card_ids, requirements, include_excess=False,
+                                   player_id=None):
         remaining = dict(requirements)
         excess = {}
         cards = []
@@ -2517,6 +2606,9 @@ class Session:
                 card_id = entry
                 metadata = self.card_rules.get(card_id, {})
                 power = int(metadata.get("power") or 0)
+            override = self.rules_tribute_power_override(player_id, metadata)
+            if override is not None:
+                power = override
             cards.append((card_id, metadata, max(0, power)))
         cards.sort(key=lambda item: "transcendent" in (
             item[1].get("tributeTemperaments")
@@ -2555,7 +2647,8 @@ class Session:
                     if payable != "hollow":
                         temperament = payable
             if include_excess and power > used and temperament:
-                excess[temperament] = excess.get(temperament, 0) + power - used
+                key = (temperament, "retained") if metadata.get("retainsExcessEssence") else temperament
+                excess[key] = excess.get(key, 0) + power - used
         covered = all(amount <= 0 for amount in remaining.values())
         return covered, excess
 
@@ -2662,14 +2755,15 @@ class Session:
         excess = {}
         if enforce_printed_cost:
             covered, excess = self.rules_manifestations_cover(
-                clean_entries, essence_remaining, include_excess=True
+                clean_entries, essence_remaining, include_excess=True,
+                player_id=player_id,
             )
             if not covered:
                 return "The selected Manifestations do not pay the full printed Tribute.", None
             for index in range(len(clean_ids)):
                 reduced_payment = clean_entries[:index] + clean_entries[index + 1:]
                 if self.rules_manifestations_cover(
-                    reduced_payment, essence_remaining
+                    reduced_payment, essence_remaining, player_id=player_id
                 )[0]:
                     return "A selected Manifestation is superfluous to this Tribute.", None
         essence_cost = str((ability or {}).get("essenceCost") or "")
@@ -2781,8 +2875,12 @@ class Session:
             "requirements": requirements,
             "essenceSpent": essence_spent,
             "excessEssence": [
-                {"temperament": temperament, "amount": amount}
-                for temperament, amount in excess.items() if amount > 0
+                (
+                    {"temperament": key[0], "amount": amount, "retained": True}
+                    if isinstance(key, tuple)
+                    else {"temperament": key, "amount": amount}
+                )
+                for key, amount in excess.items() if amount > 0
             ],
             "validated": enforce_printed_cost,
             "optionalExtraEssenceSpent": optional_extra_count,
@@ -2888,8 +2986,9 @@ class Session:
     def add_rules_excess_essence(self, player_id, generated):
         seat = self.players[player_id].get("seat")
         created = []
+        all_hollow = bool(self.rules_active_passive_sources("excess_essence_as_hollow"))
         for index, entry in enumerate(generated):
-            temperament = entry["temperament"]
+            temperament = "hollow" if all_hollow else entry["temperament"]
             amount = int(entry["amount"])
             expires_turn = 0 if entry.get("retained") else self.phase_tracker["turn"]
             token = next((
@@ -3719,9 +3818,22 @@ class Session:
             ) >= 5
         return False
 
+    def rules_confrontation_entry_blocked(self, player_id, metadata):
+        if metadata.get("cannotEnterConfrontation"):
+            return True
+        needed = int(metadata.get("confrontationEntryLimboWills") or 0)
+        if needed and player_id in self.players:
+            return sum(
+                1 for card_id in self.players[player_id]["zones"].get("graveyard", [])
+                if self.card_rules.get(card_id, {}).get("type") in RULES_WILL_TYPES
+            ) < needed
+        return False
+
     def rules_card_can_enter_support(self, item, from_zone="interzone"):
         metadata = self.rules_item_card_rules(item)
-        if metadata.get("cannotEnterConfrontation"):
+        if self.rules_confrontation_entry_blocked(
+            self.rules_item_controller_id(item), metadata
+        ):
             return False
         if not self.rules_item_effects_active(item):
             return False
@@ -3896,7 +4008,7 @@ class Session:
         metadata = self.card_rules.get(card_id, {})
         if metadata.get("type") != "manifestation":
             return None
-        if metadata.get("cannotEnterConfrontation"):
+        if self.rules_confrontation_entry_blocked(player_id, metadata):
             return "This Manifestation cannot enter the Confrontation Zone."
         if metadata.get("endPhaseInterzonePlay"):
             if self.current_phase_id() == "end_actions":
@@ -4676,6 +4788,10 @@ class Session:
             self.rules_engine.setdefault("confrontationLosses", {})[
                 str(self.phase_tracker["turn"])
             ] = loser_id
+        elif winner_id is None:
+            self.rules_engine.setdefault("confrontationStalemates", {})[
+                str(self.phase_tracker["turn"])
+            ] = True
         return result
 
     def rules_revelation_order(self):
@@ -5163,6 +5279,7 @@ class Session:
                 return "Choose the Manifestation from your hand to reveal and exile.", None
         else:
             cost_card_id = None
+        clean_targets = self.rules_redirect_targets(player_id, clean_targets)
         action = {
             "id": new_id(),
             "controllerId": player_id,
@@ -6802,6 +6919,7 @@ class Session:
             self.queue_rules_manifestation_entry_watchers(item, defer=True)
         )
         after_result = None
+        pending_pick = None
         if isinstance(after_chain, dict):
             base_power = int(self.card_rules.get(card_id, {}).get("power") or 0)
             if after_chain.get("kind") == "discard_deck_per_base_power":
@@ -6822,6 +6940,27 @@ class Session:
                     "kind": "discard_deck", "playerId": discarder_id,
                     "count": len(discarded), "cardIds": discarded,
                 }
+            elif after_chain.get("kind") == "look_top_pick_hand":
+                chain_player_id = chain_controller_id or player_id
+                card_ids = list(
+                    self.players[chain_player_id]["zones"]["deck"][:base_power]
+                )
+                if card_ids:
+                    groups = [{
+                        "playerId": chain_player_id, "cardIds": card_ids,
+                        "topCount": None, "bottomCount": None,
+                        "extraSide": "hand", "extraMin": 1, "extraMax": 1,
+                    }]
+                    pending_pick = {
+                        "id": new_id(), "kind": "deck_reorder",
+                        "playerId": chain_player_id,
+                        "sourceCardId": source_card_id,
+                        "groups": groups, "_groups": groups,
+                    }
+                    after_result = {
+                        "kind": "look_top_pick_hand", "playerId": chain_player_id,
+                        "count": len(card_ids),
+                    }
             elif after_chain.get("kind") == "power_counter_target_per_base_power":
                 target = next((
                     entry for entry in action_targets or []
@@ -6839,6 +6978,8 @@ class Session:
                     }
         if triggered_actions:
             self.queue_rules_simultaneous_actions(triggered_actions)
+        if pending_pick is not None and not self.rules_engine.get("pendingChoice"):
+            self.rules_engine["pendingChoice"] = pending_pick
         return None, {
             "kind": "chain_manifestation", "status": "chained",
             "playerId": player_id, "fromZone": zone,
@@ -9665,6 +9806,14 @@ class Session:
             target_player_ids = (
                 list(self.players) if result.get("eachPlayer") else [player_id]
             )
+            if result.get("targetPlayer"):
+                chosen = next((
+                    entry.get("playerId") for entry in action.get("targets") or []
+                    if entry.get("kind") == "player"
+                ), None)
+                if chosen not in self.players:
+                    return {"kind": "reorder_top_decks", "status": "target_missing"}
+                target_player_ids = [chosen]
             groups = []
             for target_player_id in target_player_ids:
                 card_ids = list(
@@ -9674,8 +9823,13 @@ class Session:
                     groups.append({
                         "playerId": target_player_id,
                         "cardIds": card_ids,
-                        "topCount": None,
-                        "bottomCount": None,
+                        "topCount": result.get("topCount"),
+                        "bottomCount": result.get("bottomCount"),
+                        **({
+                            "extraSide": result["extraSide"],
+                            "extraMin": int(result.get("extraMin") or 0),
+                            "extraMax": int(result.get("extraMax") or 0),
+                        } if result.get("extraSide") else {}),
                     })
             if not groups:
                 return {
@@ -9924,6 +10078,18 @@ class Session:
                 "status": "created",
                 "createdItemIds": [item["id"] for item in created],
             }
+        if result.get("kind") == "grant_free_will_play":
+            owner_id = (action.get("source") or {}).get("ownerId") or player_id
+            if owner_id not in self.players:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            self.rules_engine["playPermissions"].append({
+                "id": new_id(), "abilityId": (action.get("ability") or {}).get("id"),
+                "playerId": owner_id, "anyWill": True, "fromZone": "hand",
+                "phaseIds": list(ADVANCED_PHASES), "asSupport": False,
+                "noTribute": True, "turn": self.phase_tracker["turn"],
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+            })
+            return {"kind": result.get("kind"), "status": "granted", "playerId": owner_id}
         if result.get("kind") == "lock_next_turn_draws":
             target = next((
                 entry for entry in action.get("targets") or []
@@ -11667,14 +11833,23 @@ class Session:
                     return "Order every revealed deck group exactly once.", None
                 top = submitted.get("top")
                 bottom = submitted.get("bottom")
+                extra = submitted.get("extra") if group.get("extraSide") else []
+                if not isinstance(extra, list):
+                    return "Use every revealed card exactly once.", None
+                if group.get("extraSide") and not (
+                    int(group.get("extraMin") or 0) <= len(extra) <= int(group.get("extraMax") or 0)
+                ):
+                    return "Choose the allowed number of cards to set aside.", None
                 if (
                     not isinstance(top, list)
                     or not isinstance(bottom, list)
-                    or not all(isinstance(card_id, str) for card_id in top + bottom)
+                    or not all(isinstance(card_id, str) for card_id in top + bottom + extra)
                     or len(top) != len(set(top))
                     or len(bottom) != len(set(bottom))
                     or set(top) & set(bottom)
-                    or sorted(top + bottom) != sorted(group.get("cardIds") or [])
+                    or set(extra) & (set(top) | set(bottom))
+                    or len(extra) != len(set(extra))
+                    or sorted(top + bottom + extra) != sorted(group.get("cardIds") or [])
                 ):
                     return "Use every revealed card exactly once.", None
                 if (
@@ -11718,11 +11893,21 @@ class Session:
                         self.put_zone_card(
                             target_id, "deck", card_id, owners[card_id], "bottom"
                         )
+                for card_id in extra:
+                    if group.get("extraSide") == "hand":
+                        self.put_zone_card(
+                            player_id, "hand", card_id, owners[card_id], "top"
+                        )
+                    else:
+                        self.put_zone_card(
+                            owners[card_id], "exile", card_id, owners[card_id], "top"
+                        )
                 resolved_groups.append({
                     "playerId": target_id,
                     "top": list(top),
                     "bottom": list(bottom),
                     "fromZone": from_zone,
+                    **({"extraSide": group["extraSide"], "extra": list(extra)} if extra else {}),
                 })
             self.rules_engine["pendingChoice"] = None
             payload = {
@@ -12533,6 +12718,9 @@ class Session:
             if not isinstance(action, dict):
                 self.rules_engine["pendingChoice"] = None
                 return "This triggered effect is no longer available.", None
+            clean_targets = self.rules_redirect_targets(
+                action.get("controllerId") or player_id, clean_targets
+            )
             action["targets"] = clean_targets
             resume_cleanup = bool(choice.get("_resumeConfrontationCleanup"))
             optional_batch = choice.get("_optionalStackBatch")
@@ -13638,6 +13826,7 @@ class Session:
                 "handLimitEffects": [
                     dict(entry) for entry in self.rules_engine["handLimitEffects"]
                 ],
+                "tributePowerOverrides": self.rules_tribute_power_overrides_snapshot(),
                 "outcome": self.rules_engine["outcome"],
                 "priorityPlayerId": self.rules_engine["priorityPlayerId"],
                 "priorityPasses": list(self.rules_engine["priorityPasses"]),
@@ -13712,8 +13901,10 @@ class Session:
         _ = player_id, timing
         return max(0, int(default_limit))
 
-    def rules_card_can_be_first_manifestation(self, card_id):
+    def rules_card_can_be_first_manifestation(self, card_id, player_id=None):
         metadata = self.card_rules.get(card_id, {})
+        if player_id is not None and self.rules_confrontation_entry_blocked(player_id, metadata):
+            return False
         is_manifestation = card_id in self.manifestation_ids or metadata.get("type") == "manifestation"
         # Inner Deserts art is already playable, but its machine-readable card
         # types are still placeholders. Assisted rules must not turn missing
@@ -13950,7 +14141,7 @@ class Session:
     def register_first_manifestation(self, player_id, item):
         if not self.rules_first_manifestation_active():
             return None
-        if item.get("ownerId") != player_id or not self.rules_card_can_be_first_manifestation(item.get("cardId")):
+        if item.get("ownerId") != player_id or not self.rules_card_can_be_first_manifestation(item.get("cardId"), player_id):
             return "Your first play must be one of your Manifestations."
         selected = self.rules_engine["firstManifestationItemIds"]
         if player_id in selected:

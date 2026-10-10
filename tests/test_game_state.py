@@ -10839,6 +10839,126 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         result = session.apply_rules_action_result(session.rules_engine["actionStack"][-1])
         self.assertEqual(result["status"], "neutralized")
 
+    def test_manual_lot_fourteen_tribute_deck_and_targeting_cards(self):
+        tut, ababash, ponderer, zamza, alakazim, palgonphio, oildog, nimbus, zizek, mass = (
+            "inner-deserts-037", "inner-deserts-042", "xoo3jxtiy1sonm1_en", "inner-deserts-003",
+            "inner-deserts-028", "inner-deserts-099", "inner-deserts-133", "shiox5powdvu5nl_en",
+            "ir09smkker8rgxd_en", "6vxm454ffuni41x_en",
+        )
+        session, p1, p2 = self.manual_batch_session(
+            tut, ababash, ponderer, zamza, oildog, nimbus, mass, card_type="manifestation",
+        )
+        turn = session.phase_tracker["turn"]
+        # Tut: look at the top three, one goes to the bottom, the other two stay on top.
+        self.put(p1, "deck", ["m-1", "m-2", "m-3", "m-4"])
+        payload = self.run_ability(session, tut)[0]
+        self.assertEqual(payload["choiceKind"], "deck_reorder")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual((choice["groups"][0]["topCount"], choice["groups"][0]["bottomCount"]), (2, 1))
+        error, _ = session.resolve_rules_choice("p1", choice["id"], option={"groups": [
+            {"playerId": "p1", "top": ["m-2", "m-1"], "bottom": ["m-3"]}]})
+        self.assertIsNone(error)
+        self.assertEqual(p1["zones"]["deck"], ["m-2", "m-1", "m-4", "m-3"])
+        # Ababash: the top three of a target deck, one may be exiled, the rest go on top or bottom.
+        self.put(p2, "deck", ["m-5", "m-6", "m-7", "m-8"])
+        self.run_ability(session, ababash, [{"kind": "player", "playerId": "p2"}])
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["groups"][0]["playerId"], "p2")
+        self.assertEqual(choice["groups"][0]["extraSide"], "exile")
+        error, _ = session.resolve_rules_choice("p1", choice["id"], option={"groups": [
+            {"playerId": "p2", "top": ["m-7"], "bottom": ["m-5"], "extra": ["m-6"]}]})
+        self.assertIsNone(error)
+        self.assertEqual(p2["zones"]["deck"], ["m-7", "m-8", "m-5"])
+        self.assertEqual(p2["zones"]["exile"], ["m-6"])
+        # Expansive Ponderer: Chain, look at base-power cards, one goes to hand, others reorder.
+        session.card_rules["m-1"]["power"] = 3
+        self.put(p1, "hand", ["m-1"])
+        self.put(p1, "deck", ["m-2", "m-3", "m-4", "m-9"])
+        session.rules_engine["pendingChoice"] = None
+        error, chained = session.chain_rules_manifestation(
+            "p1", "hand", "m-1", source_card_id=ponderer, after_chain={"kind": "look_top_pick_hand"},
+            chain_controller_id="p1",
+        )
+        self.assertIsNone(error)
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["groups"][0]["cardIds"], ["m-2", "m-3", "m-4"])
+        error, _ = session.resolve_rules_choice("p1", choice["id"], option={"groups": [
+            {"playerId": "p1", "top": ["m-4"], "bottom": ["m-2"], "extra": ["m-3"]}]})
+        self.assertIsNone(error)
+        self.assertEqual(p1["zones"]["hand"], ["m-3"])
+        self.assertEqual(p1["zones"]["deck"], ["m-4", "m-9", "m-2"])
+        # Considered base power while used as tribute: Zam-za always, Alakazim after two Wills, Palgonphio after a loss.
+        session.card_rules[zamza] = {"type": "manifestation", "power": 1, "temperaments": ["phlegmatic"], "tributePowerOverride": {"power": 4, "condition": None}}
+        session.card_rules[alakazim] = {"type": "manifestation", "power": 1, "temperaments": ["phlegmatic"], "tributePowerOverride": {"power": 3, "condition": "two_wills_played_this_turn"}}
+        session.card_rules[palgonphio] = {"type": "manifestation", "power": 1, "temperaments": ["phlegmatic"], "tributePowerOverride": {"power": 4, "condition": "lost_or_stalemate_previous_turn"}}
+        session.card_rules["big-will"] = {"type": "ephemeral_will", "cost": 4, "powerCost": "{G}{G}{G}{G}", "temperaments": ["phlegmatic"]}
+        source = {"cardId": "big-will", "cardType": "ephemeral_will", "controllerId": "p1"}
+        self.put(p1, "hand", [zamza, alakazim, palgonphio, "big-will"])
+        error, _payment = session.rules_action_payment("p1", "play_card", source, [zamza], {"tribute": "{G}{G}{G}{G}"}, [])
+        self.assertIsNone(error)
+        error, _payment = session.rules_action_payment("p1", "play_card", source, [alakazim], {"tribute": "{G}{G}{G}"}, [])
+        self.assertIn("do not pay", error)
+        session.rules_engine["willsPlayed"] = {"turn": turn, "p1": 2}
+        self.assertIsNone(session.rules_action_payment("p1", "play_card", source, [alakazim], {"tribute": "{G}{G}{G}"}, [])[0])
+        self.assertIn("do not pay", session.rules_action_payment("p1", "play_card", source, [palgonphio], {"tribute": "{G}{G}{G}{G}"}, [])[0])
+        session.rules_engine["confrontationStalemates"] = {str(turn - 1): True}
+        self.assertIsNone(session.rules_action_payment("p1", "play_card", source, [palgonphio], {"tribute": "{G}{G}{G}{G}"}, [])[0])
+        self.assertEqual(session.rules_tribute_power_overrides_snapshot()["p1"][zamza], 4)
+        scores = (p1["score"], p2["score"])
+        session.apply_rules_action_result({
+            "id": "zz", "controllerId": "p1", "source": {"cardId": zamza},
+            "targets": [], "ability": {"result": self.ABILITIES[zamza][0]["result"]},
+        })
+        self.assertEqual((p1["score"], p2["score"]), (scores[0], scores[1] + 5))
+        # Tricephalous Oil-Dog turns every excess essence Hollow.
+        session.card_rules[oildog]["passiveEffects"] = [self.ABILITIES[oildog][0]["passiveEffect"]]
+        session.battlefield = [self.field_item("dog", "p2", oildog, field_zone="interzone")]
+        created = session.add_rules_excess_essence("p1", [{"temperament": "capricious", "amount": 2}])
+        self.assertEqual(created[0]["temperament"], "hollow")
+        # Zizek: needs six Wills in Limbo to enter and keeps its excess essence when used as tribute.
+        session.card_rules[zizek] = {
+            "type": "manifestation", "power": 5, "temperaments": ["melancholic"],
+            "confrontationEntryLimboWills": 6, "retainsExcessEssence": True,
+        }
+        self.assertTrue(session.rules_confrontation_entry_blocked("p1", session.card_rules[zizek]))
+        self.assertFalse(session.rules_card_can_be_first_manifestation(zizek, "p1"))
+        for number in range(6):
+            session.card_rules[f"lw-{number}"] = {"type": "ephemeral_will"}
+        self.put(p1, "graveyard", [f"lw-{number}" for number in range(6)])
+        self.assertFalse(session.rules_confrontation_entry_blocked("p1", session.card_rules[zizek]))
+        covered, excess = session.rules_manifestations_cover([zizek], {"melancholic": 2}, include_excess=True)
+        self.assertTrue(covered)
+        self.assertEqual(excess, {("melancholic", "retained"): 3})
+        # Inspired Nimbus lets its owner play any Will without tribute for the turn.
+        session.battlefield = []
+        self.run_ability(session, nimbus)
+        permission = session.rules_engine["playPermissions"][-1]
+        self.assertTrue(permission["anyWill"] and permission["noTribute"])
+        session.rules_engine["playPermissions"] = [permission]
+        session.card_rules["free-will"] = {"type": "ephemeral_will", "cost": 2, "powerCost": "{G}{G}", "temperaments": ["phlegmatic"]}
+        self.put(p1, "hand", ["free-will"])
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        session.rules_engine["firstManifestationComplete"] = True
+        error, action = session.declare_rules_action(
+            "p1", "free will", "play_card", source={"cardId": "free-will", "zone": "hand"},
+        )
+        self.assertIsNone(error)
+        self.assertEqual(action["cost"]["tributeRequirements"], {})
+        self.assertEqual(session.rules_engine["playPermissions"], [])
+        # Obtrusive Mass catches opponents' targeting of its controller's Manifestations.
+        session.card_rules[mass]["passiveEffects"] = [self.ABILITIES[mass][0]["passiveEffect"]]
+        session.battlefield = [
+            self.field_item("mass", "p1", mass, field_zone="interzone"),
+            self.field_item("mine", "p1", "m-a" if "m-a" in session.card_rules else "m-9"),
+            self.field_item("their", "p2", "m-8"),
+        ]
+        targets = [self.card_target("mine", "m-9")]
+        redirected = session.rules_redirect_targets("p2", targets)
+        self.assertEqual([entry["itemId"] for entry in redirected], ["mass"])
+        self.assertEqual(session.rules_redirect_targets("p1", targets), targets)
+        self.assertEqual(session.rules_redirect_targets("p2", [self.card_target("their", "m-8")])[0]["itemId"], "their")
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")

@@ -3611,5 +3611,55 @@
       "targets": { "kind": "stack_action", "min": 1, "max": 1, "cardTypes": ["ephemeral_will", "persistent_will"], "controller": "opponent", "targetsConfrontationManifestation": true },
       "result": { "kind": "neutralize_stack_action" }
     }
+  ],
+  "inner-deserts-037": [
+    {
+      "id": "tut-look-at-top-three",
+      "essenceCost": "{H}",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "reorder_top_decks", "count": 3, "topCount": 2, "bottomCount": 1 }
+    }
+  ],
+  "inner-deserts-042": [
+    {
+      "id": "ababash-look-at-top-three",
+      "exhaustSource": true,
+      "targets": { "kind": "player", "min": 1, "max": 1 },
+      "result": { "kind": "reorder_top_decks", "count": 3, "targetPlayer": true, "extraSide": "exile", "extraMin": 0, "extraMax": 1 }
+    }
+  ],
+  "xoo3jxtiy1sonm1_en": [
+    {
+      "id": "ponderer-chain-then-look-at-top",
+      "optional": true,
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": { "kind": "chain_from_zone", "zone": "hand", "optional": true, "afterChain": { "kind": "look_top_pick_hand" } }
+    }
+  ],
+  "inner-deserts-003": [
+    {
+      "id": "zam-za-gives-opponents-points-as-tribute",
+      "trigger": { "event": "used_as_tribute" },
+      "result": { "kind": "score_each_opponent", "value": 5 }
+    }
+  ],
+  "inner-deserts-133": [
+    {
+      "id": "excess-essence-is-hollow",
+      "passiveEffect": { "kind": "excess_essence_as_hollow" }
+    }
+  ],
+  "shiox5powdvu5nl_en": [
+    {
+      "id": "nimbus-grants-free-will-play",
+      "trigger": { "event": "enters_zone", "zone": "receptacle", "container": "opponent" },
+      "result": { "kind": "grant_free_will_play" }
+    }
+  ],
+  "6vxm454ffuni41x_en": [
+    {
+      "id": "redirect-opponent-targeting",
+      "passiveEffect": { "kind": "redirect_opponent_targeting_to_source" }
+    }
   ]
 }

@@ -34,6 +34,7 @@ def build_server_rules(cards, abilities):
         and node.name in {
             "continuous_power_rules_for_card",
             "interzone_tribute_power_for_card",
+            "tribute_power_override_for_card",
             "play_phases_for_card",
             "build_card_rules",
         }
@@ -282,6 +283,12 @@ class CardCatalogTests(unittest.TestCase):
         self.assertFalse(by_name["Kox, the Amoral"]["canBeFirstManifestation"])
         self.assertEqual(by_name["Kox, the Amoral"]["constructionLimitBonus"], 50)
         self.assertFalse(by_name["Zizek, the Immolated"]["cannotEnterConfrontation"])
+        self.assertEqual(by_name["Zam-za, the Prosperous"]["tributePowerOverride"], {"power": 4, "condition": None})
+        self.assertEqual(by_name["Alakazim, the Magician"]["tributePowerOverride"]["condition"], "two_wills_played_this_turn")
+        self.assertEqual(by_name["Palgonphio"]["tributePowerOverride"]["condition"], "lost_or_stalemate_previous_turn")
+        self.assertIsNone(by_name["Faroc-Ko, the Insipid"]["tributePowerOverride"])
+        self.assertEqual(by_name["Zizek, the Immolated"]["confrontationEntryLimboWills"], 6)
+        self.assertTrue(by_name["Zizek, the Immolated"]["retainsExcessEssence"])
         self.assertTrue(by_name["Forgotten Pile"]["canPayTributeFromLimbo"])
         self.assertTrue(by_name["Solar Apparition"]["canPayTributeFromInterzone"])
         self.assertEqual(by_name["Solar Apparition"]["tributeExtraPowerLoss"], 2)

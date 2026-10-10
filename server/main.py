@@ -130,6 +130,32 @@ def interzone_tribute_power_for_card(card):
     return len(symbols or icons) or None
 
 
+def tribute_power_override_for_card(card):
+    effect = card.get("effect") or ""
+    if re.search(r"tribute from the Interzone", effect, re.IGNORECASE):
+        return None
+    match = re.search(
+        r"(?:^|\n)(As long as [^,\n]+, )?if [^,\n]+ is used as tribute, it is considered "
+        r"to have a base power of ([^\n.]+)\.",
+        effect, re.IGNORECASE,
+    )
+    if not match:
+        return None
+    prefix = match.group(1) or ""
+    if not prefix:
+        condition = None
+    elif "played at least 2 Wills this turn" in prefix:
+        condition = "two_wills_played_this_turn"
+    elif "lost a Confrontation or a Confrontation ended in a Stalemate during the previous turn" in prefix:
+        condition = "lost_or_stalemate_previous_turn"
+    else:
+        return None
+    symbols = re.findall(r"\{[A-Z]\}", match.group(2))
+    icons = re.findall(r"[🔥🌿💧🔮⚡🌈]", match.group(2))
+    power = len(symbols or icons)
+    return {"power": power, "condition": condition} if power else None
+
+
 def build_card_rules(cards, abilities_by_card):
     return {
         card["id"]: {
@@ -193,6 +219,14 @@ def build_card_rules(cards, abilities_by_card):
             "cannotEnterConfrontation": bool(re.search(
                 r"\bcannot enter the Confrontation Zone\s*\.", card.get("effect") or "", re.IGNORECASE
             )),
+            "confrontationEntryLimboWills": int(next(iter(re.findall(
+                r"cannot enter the Confrontation Zone unless you have at least (\d+) Wills in your Limbo",
+                card.get("effect") or "", re.IGNORECASE,
+            )), 0)),
+            "retainsExcessEssence": bool(re.search(
+                r"When used as tribute, you do not lose [^.\n]*excess essence at the end of the turn",
+                card.get("effect") or "", re.IGNORECASE,
+            )),
             "constructionLimitBonus": int(next(iter(re.findall(
                 r"construction limit is increased by (\d+) points",
                 card.get("effect") or "", re.IGNORECASE,
@@ -208,6 +242,7 @@ def build_card_rules(cards, abilities_by_card):
                 re.IGNORECASE,
             )),
             "interzoneTributePower": interzone_tribute_power_for_card(card),
+            "tributePowerOverride": tribute_power_override_for_card(card),
             "canPayTributeFromLimbo": bool(re.search(
                 r"\bcan be used as tribute from (?:the )?Limbo\.",
                 card.get("effect") or "",
@@ -1181,7 +1216,7 @@ async def handle_message(ws, info, data):
         )
         if first_manifestation and (source_container_id != actor_id or from_zone != "hand"):
             return await send_error(ws, "Choose your first Manifestation from your hand.")
-        if first_manifestation and not session.rules_card_can_be_first_manifestation(card_id):
+        if first_manifestation and not session.rules_card_can_be_first_manifestation(card_id, actor_id):
             return await send_error(ws, "Your first play must be a Manifestation.")
         if (
             from_zone == "hand"

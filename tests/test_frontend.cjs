@@ -1287,6 +1287,101 @@ function startServer() {
         hoverFullyVisible, supportKeywordPlayableFromHand,
       };
     });
+    const newChoiceScreens = await page.evaluate(() => {
+      const ids = [...cardsById.keys()];
+      const saved = {
+        battlefield: latestState.battlefield, priority: latestState.rulesEngine.priorityPlayerId,
+        choice: latestState.rulesEngine.pendingChoice,
+      };
+      latestState.rulesEngine.priorityPlayerId = "p1";
+      latestState.battlefield = ids.slice(0, 2).map((cardId, index) => ({
+        id: `dist-${index}`, ownerId: "p2", controllerId: "p2", cardId,
+        faceUp: true, fieldZone: "interzone", x: 100 + index * 40, y: 100, rotation: 0, counters: {},
+      }));
+      const show = (choice, selector, who = "p1") => {
+        window.__sent = [];
+        latestState.rulesEngine.pendingChoice = choice;
+        renderAll();
+        return {
+          visible: !document.querySelector("#rulesChoicePanel").classList.contains("hidden"),
+          buttons: document.querySelectorAll(selector).length,
+          click: () => { document.querySelector(selector)?.click(); return window.__sent.find((payload) => payload.type === "resolve_rules_choice"); },
+        };
+      };
+      const distribute = show({
+        id: "dist-choice", kind: "pick_distribution_extra", playerId: "p1",
+        candidateItemIds: ["dist-0", "dist-1"], sourceCardId: ids[0], total: 3, sign: -1,
+      }, "[data-rules-distribute-item]");
+      const distributePayload = distribute.click();
+      const reveal = show({
+        id: "reveal-choice", kind: "reveal_hand_discard", playerId: "p1", targetPlayerId: "p2",
+        cardIds: ids.slice(2, 5), sourceCardId: ids[0],
+      }, "[data-rules-reveal-index]");
+      const revealPayload = reveal.click();
+      const opponentSees = show({
+        id: "reveal-choice-2", kind: "reveal_hand_discard", playerId: "p2", targetPlayerId: "p1",
+        cardIds: ids.slice(2, 5), sourceCardId: ids[0],
+      }, "[data-rules-reveal-index]");
+      latestState.battlefield = saved.battlefield;
+      latestState.rulesEngine.priorityPlayerId = saved.priority;
+      latestState.rulesEngine.pendingChoice = saved.choice;
+      renderAll();
+      return {
+        distribute: { visible: distribute.visible, buttons: distribute.buttons, payload: distributePayload },
+        reveal: { visible: reveal.visible, buttons: reveal.buttons, payload: revealPayload },
+        notMine: { visible: opponentSees.visible },
+      };
+    });
+    assert.equal(newChoiceScreens.distribute.visible, true);
+    assert.equal(newChoiceScreens.distribute.buttons, 2);
+    assert.equal(newChoiceScreens.distribute.payload.itemId, "dist-0");
+    assert.equal(newChoiceScreens.reveal.visible, true);
+    assert.equal(newChoiceScreens.reveal.buttons, 3);
+    assert.equal(newChoiceScreens.reveal.payload.option, "0");
+    assert.equal(newChoiceScreens.notMine.visible, false);
+    const extraReorder = await page.evaluate(() => {
+      const ids = [...cardsById.keys()];
+      const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };
+      latestState.rulesEngine.priorityPlayerId = "p1";
+      window.__sent = [];
+      latestState.rulesEngine.pendingChoice = {
+        id: "extra-reorder", kind: "deck_reorder", playerId: "p1", sourceCardId: ids[0],
+        groups: [{ playerId: "p2", cardIds: ids.slice(0, 3), topCount: null, bottomCount: null, extraSide: "exile", extraMin: 0, extraMax: 1 }],
+      };
+      renderAll();
+      const options = [...document.querySelectorAll("[data-rules-deck-side] option")].map((option) => option.value);
+      document.querySelector('[data-rules-deck-side="p2:1"]').value = "extra";
+      document.querySelector("#rulesDeckReorderConfirm").click();
+      const payload = window.__sent.find((entry) => entry.type === "resolve_rules_choice");
+      latestState.rulesEngine.priorityPlayerId = saved.priority;
+      latestState.rulesEngine.pendingChoice = saved.choice;
+      renderAll();
+      return { options: [...new Set(options)], extra: payload?.option?.groups?.[0]?.extra, top: payload?.option?.groups?.[0]?.top?.length };
+    });
+    assert.deepEqual(extraReorder.options, ["top", "bottom", "extra"]);
+    assert.equal(extraReorder.extra.length, 1);
+    assert.equal(extraReorder.top, 2);
+    const fieldTributeUi = await page.evaluate(() => {
+      const orator = "birhlimm9e8lq3d_en", pile = "g3zumpyf623hto6_en";
+      const will = [...cardsById.values()].find((card) => card.type === "ephemeral_will" && /^\{[A-Z]\}$/.test(String(card.powerCost || "")));
+      const other = [...cardsById.values()].find((card) => card.type === "manifestation" && card.id !== orator);
+      const saved = { battlefield: latestState.battlefield, limbo: latestState.players.p1.zones.graveyard };
+      const mk = (id, cardId, zone) => ({ id, ownerId: "p1", controllerId: "p1", cardId, faceUp: true, fieldZone: zone, x: 50, y: 50, rotation: 0, counters: {} });
+      const count = () => rulesActionPaymentDraft({ cardId: will.id, zone: "hand", handIndex: 0 }, will, null).manifestations.filter((entry) => entry.zone !== "hand").length;
+      latestState.battlefield = [mk("o-conf", other.id, "confrontation")];
+      const without = count();
+      latestState.battlefield = [mk("o-conf", other.id, "confrontation"), mk("o-orator", orator, "interzone")];
+      const withOrator = count();
+      latestState.battlefield = [];
+      latestState.players.p1.zones.graveyard = { cards: [pile], count: 1, owners: { [pile]: "p1" } };
+      const withPile = count();
+      latestState.battlefield = saved.battlefield;
+      latestState.players.p1.zones.graveyard = saved.limbo;
+      return { without, withOrator, withPile };
+    });
+    assert.equal(fieldTributeUi.without, 0);
+    assert(fieldTributeUi.withOrator >= 2);
+    assert.equal(fieldTributeUi.withPile, 1);
     const rulesChoice = await page.evaluate(() => {
       const darkApparitionId = "7e2ppf4rfgkdfms_en";
       const discardCardId = [...cardsById.keys()].find((cardId) => cardId !== darkApparitionId);

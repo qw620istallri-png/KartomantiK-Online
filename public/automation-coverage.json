@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 292,
-    "explicitAbilities": 352,
+    "explicitCards": 299,
+    "explicitAbilities": 359,
     "statuses": {
-      "automated": 359,
+      "automated": 369,
       "generic": 0,
-      "manual": 91,
+      "manual": 81,
       "partial": 0
     }
   },
@@ -1005,10 +1005,18 @@
       "collectionNumber": 63,
       "name": "Inspired Nimbus",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "nimbus-grants-free-will-play"
+      ],
+      "mechanics": [
+        "result:grant_free_will_play",
+        "trigger:enters_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "bx0uyxxb3c6pas2_en": {
       "collectionNumber": 64,
@@ -1160,10 +1168,18 @@
       "collectionNumber": 73,
       "name": "Expansive Ponderer",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "ponderer-chain-then-look-at-top"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "nt0bixroxp0ftnk_en": {
       "collectionNumber": 74,
@@ -2607,10 +2623,17 @@
       "collectionNumber": 166,
       "name": "Obtrusive Mass",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "redirect-opponent-targeting"
+      ],
+      "mechanics": [
+        "passive:redirect_opponent_targeting_to_source"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "om4qbiofb0ihq6p_en": {
       "collectionNumber": 167,
@@ -3980,10 +4003,13 @@
       "collectionNumber": 253,
       "name": "Zizek, the Immolated",
       "setName": "Beta",
-      "status": "manual",
+      "status": "automated",
       "abilityIds": [],
       "mechanics": [],
-      "testRefs": []
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "w8364ml7m6erl8s_en": {
       "collectionNumber": 254,
@@ -4741,10 +4767,18 @@
       "collectionNumber": 303,
       "name": "Zam-za, the Prosperous",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "zam-za-gives-opponents-points-as-tribute"
+      ],
+      "mechanics": [
+        "result:score_each_opponent",
+        "trigger:used_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-004": {
       "collectionNumber": 304,
@@ -5137,10 +5171,13 @@
       "collectionNumber": 328,
       "name": "Alakazim, the Magician",
       "setName": "Inner Deserts",
-      "status": "manual",
+      "status": "automated",
       "abilityIds": [],
       "mechanics": [],
-      "testRefs": []
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-029": {
       "collectionNumber": 329,
@@ -5256,10 +5293,17 @@
       "collectionNumber": 337,
       "name": "Tut, Rhythmic Whirlwind",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "tut-look-at-top-three"
+      ],
+      "mechanics": [
+        "result:reorder_top_decks"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-038": {
       "collectionNumber": 338,
@@ -5335,10 +5379,19 @@
       "collectionNumber": 342,
       "name": "Ababash, the Ambassador",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "ababash-look-at-top-three"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "result:reorder_top_decks",
+        "target:player"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-043": {
       "collectionNumber": 343,
@@ -6139,10 +6192,13 @@
       "collectionNumber": 399,
       "name": "Palgonphio",
       "setName": "Inner Deserts",
-      "status": "manual",
+      "status": "automated",
       "abilityIds": [],
       "mechanics": [],
-      "testRefs": []
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-100": {
       "collectionNumber": 400,
@@ -6698,10 +6754,17 @@
       "collectionNumber": 433,
       "name": "Tricephalous Oil-Dog",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "excess-essence-is-hollow"
+      ],
+      "mechanics": [
+        "passive:excess_essence_as_hollow"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-134": {
       "collectionNumber": 434,
