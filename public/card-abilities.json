@@ -4135,5 +4135,178 @@
         "duration": "until_end_of_turn"
       }
     }
+  ],
+  "inner-deserts-070": [
+    {
+      "id": "cradle-destroy-vessel-card",
+      "action": "play_card",
+      "targets": {
+        "kind": "zone_card",
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "receptacle"
+        ],
+        "container": "self"
+      },
+      "result": {
+        "kind": "destroy_vessel_target_owner_sacrifices"
+      }
+    }
+  ],
+  "inner-deserts-032": [
+    {
+      "id": "poopom-declare-top-card",
+      "trigger": {
+        "event": "enters_field"
+      },
+      "result": {
+        "kind": "declare_name_top_card_power",
+        "value": 4
+      }
+    }
+  ],
+  "inner-deserts-066": [
+    {
+      "id": "mejik-declare-and-discard",
+      "sourceFieldZone": "interzone",
+      "exhaustSource": true,
+      "targets": {
+        "kind": "player",
+        "min": 1,
+        "max": 1
+      },
+      "result": {
+        "kind": "declare_name_search_deck"
+      }
+    }
+  ],
+  "inner-deserts-057": [
+    {
+      "id": "sangen-wins-into-opponent-interzone",
+      "passiveEffect": {
+        "kind": "win_to_opponent_interzone"
+      }
+    },
+    {
+      "id": "sangen-unreplaceable",
+      "passiveEffect": {
+        "kind": "unreplaceable_in_interzone"
+      }
+    },
+    {
+      "id": "sangen-weakens-allies",
+      "passiveEffect": {
+        "kind": "interzone_allies_penalty",
+        "value": -1
+      }
+    },
+    {
+      "id": "sangen-final-points",
+      "passiveEffect": {
+        "kind": "final_interzone_points",
+        "value": 25
+      }
+    }
+  ],
+  "inner-deserts-135": [
+    {
+      "id": "asciugoth-absorbs-entering-temperament",
+      "passiveEffect": {
+        "kind": "entering_manifestation_becomes_hollow"
+      }
+    }
+  ],
+  "kw78e3qfnqw6sms_en": [
+    {
+      "id": "katun-gains-five",
+      "trigger": {
+        "event": "manifestation_left_by_effect",
+        "zone": "interzone",
+        "sourceLeftVessel": false
+      },
+      "result": {
+        "kind": "score_owner",
+        "value": 5
+      }
+    },
+    {
+      "id": "katun-gains-ten-after-vessel",
+      "trigger": {
+        "event": "manifestation_left_by_effect",
+        "zone": "interzone",
+        "sourceLeftVessel": true
+      },
+      "result": {
+        "kind": "score_owner",
+        "value": 10
+      }
+    }
+  ],
+  "inner-deserts-137": [
+    {
+      "id": "balance-redirects-points",
+      "passiveEffect": {
+        "kind": "balance_points"
+      }
+    }
+  ],
+  "inner-deserts-039": [
+    {
+      "id": "denegath-returns-first-then-chains",
+      "sourceFieldZone": "interzone",
+      "exhaustSource": true,
+      "essenceCost": "{H}{H}",
+      "phaseIds": [
+        "confrontation_reaction"
+      ],
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "result": {
+        "kind": "return_first_then_chain"
+      }
+    }
+  ],
+  "l9enna0sfy13yab_en": [
+    {
+      "id": "zaguor-exiles-to-take-control",
+      "optional": true,
+      "trigger": {
+        "event": "wins_confrontation"
+      },
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield",
+          "receptacle"
+        ],
+        "container": "opponent",
+        "fieldZone": "interzone",
+        "controller": "opponent"
+      },
+      "result": {
+        "kind": "exile_source_take_control_to_interzone"
+      }
+    }
+  ],
+  "inner-deserts-061": [
+    {
+      "id": "dol-chains-from-a-vessel",
+      "optional": true,
+      "trigger": {
+        "event": "enters_field"
+      },
+      "result": {
+        "kind": "chain_from_zone",
+        "zone": "receptacle",
+        "optional": false,
+        "winDestination": "exile"
+      }
+    }
   ]
 }

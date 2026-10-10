@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 319,
-    "explicitAbilities": 398,
+    "explicitCards": 329,
+    "explicitAbilities": 412,
     "statuses": {
-      "automated": 389,
+      "automated": 399,
       "generic": 0,
-      "manual": 61,
+      "manual": 51,
       "partial": 0
     }
   },
@@ -2736,10 +2736,18 @@
       "collectionNumber": 171,
       "name": "Zaguor, Greedy Pedal",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "zaguor-exiles-to-take-control"
+      ],
+      "mechanics": [
+        "result:exile_source_take_control_to_interzone",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "3bq6ahxkf9435k5_en": {
       "collectionNumber": 172,
@@ -2798,10 +2806,19 @@
       "collectionNumber": 175,
       "name": "Katun, the Inconsistent",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "katun-gains-five",
+        "katun-gains-ten-after-vessel"
+      ],
+      "mechanics": [
+        "result:score_owner",
+        "trigger:manifestation_left_by_effect"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "lk1xxhvwvrie2r2_en": {
       "collectionNumber": 176,
@@ -5335,10 +5352,18 @@
       "collectionNumber": 332,
       "name": "Poopom, the Hydromancer",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "poopom-declare-top-card"
+      ],
+      "mechanics": [
+        "result:declare_name_top_card_power",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-033": {
       "collectionNumber": 333,
@@ -5451,10 +5476,19 @@
       "collectionNumber": 339,
       "name": "Denegath, the Regulator",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "denegath-returns-first-then-chains"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "phase-window",
+        "result:return_first_then_chain"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-040": {
       "collectionNumber": 340,
@@ -5736,10 +5770,23 @@
       "collectionNumber": 357,
       "name": "Sangen, the Relic",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "sangen-wins-into-opponent-interzone",
+        "sangen-unreplaceable",
+        "sangen-weakens-allies",
+        "sangen-final-points"
+      ],
+      "mechanics": [
+        "passive:final_interzone_points",
+        "passive:interzone_allies_penalty",
+        "passive:unreplaceable_in_interzone",
+        "passive:win_to_opponent_interzone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-058": {
       "collectionNumber": 358,
@@ -5793,10 +5840,18 @@
       "collectionNumber": 361,
       "name": "Dol, the Aching",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "dol-chains-from-a-vessel"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-062": {
       "collectionNumber": 362,
@@ -5869,10 +5924,19 @@
       "collectionNumber": 366,
       "name": "Mejik, the Labyrinther",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "mejik-declare-and-discard"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "result:declare_name_search_deck",
+        "target:player"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-067": {
       "collectionNumber": 367,
@@ -5934,10 +5998,18 @@
       "collectionNumber": 370,
       "name": "Cradle the Putrescence",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "cradle-destroy-vessel-card"
+      ],
+      "mechanics": [
+        "result:destroy_vessel_target_owner_sacrifices",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-071": {
       "collectionNumber": 371,
@@ -6984,10 +7056,17 @@
       "collectionNumber": 435,
       "name": "Asciugoth, the Absorbent",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "asciugoth-absorbs-entering-temperament"
+      ],
+      "mechanics": [
+        "passive:entering_manifestation_becomes_hollow"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-136": {
       "collectionNumber": 436,
@@ -7014,10 +7093,17 @@
       "collectionNumber": 437,
       "name": "Balance of the Spirit",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "balance-redirects-points"
+      ],
+      "mechanics": [
+        "passive:balance_points"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-138": {
       "collectionNumber": 438,

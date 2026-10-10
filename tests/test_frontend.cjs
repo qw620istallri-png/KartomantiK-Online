@@ -610,8 +610,9 @@ function startServer() {
       const sourceCard = [...cardsById.values()].find((card) => (
         card.type === "ephemeral_will"
         && /target manifestation/i.test(String(card.effect || ""))
-        && !(playedAbilitiesByCard.get(card.id) || []).length
       ));
+      // Automated Wills carry encoded abilities; this check needs the manual-Will flow.
+      playedAbilitiesByCard.delete(sourceCard.id);
       const tributeCard = [...cardsById.values()].find((card) => card.type === "manifestation"
         && card.temperaments?.some((temperament) => sourceCard.temperaments?.includes(temperament)));
       const targetCard = [...cardsById.values()].find((card) => card.type === "manifestation" && card.id !== tributeCard.id);
@@ -1395,6 +1396,57 @@ function startServer() {
     assert.equal(clemencyUi.option, "neutralize");
     assert.equal(clemencyUi.choiceId, "clemency");
     assert.equal(clemencyUi.ownGorteHidden, true);
+    const declareNameUi = await page.evaluate(() => {
+      const ids = [...cardsById.keys()];
+      const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };
+      const panelVisible = () => !document.querySelector("#rulesChoicePanel").classList.contains("hidden");
+      const choice = (playerId) => ({
+        id: "declare", kind: "declare_card_name", playerId, mode: "search_deck",
+        targetPlayerId: "p2", sourceCardId: ids[0],
+      });
+      latestState.rulesEngine.priorityPlayerId = "p1";
+      latestState.rulesEngine.pendingChoice = choice("p2");
+      renderAll();
+      const notMine = panelVisible();
+      latestState.rulesEngine.pendingChoice = choice("p1");
+      window.__sent = [];
+      renderAll();
+      const visible = panelVisible();
+      const input = document.querySelector("#rulesDeclareNameInput");
+      const confirm = document.querySelector("#rulesDeclareNameConfirm");
+      const datalistSize = document.querySelectorAll("#rulesDeclareNameList option").length;
+      const disabledAtStart = confirm.disabled;
+      input.value = "not a real card name";
+      input.dispatchEvent(new Event("input"));
+      const disabledOnBadName = confirm.disabled;
+      input.value = cardName(ids[1]);
+      input.dispatchEvent(new Event("input"));
+      const enabledOnGoodName = !confirm.disabled;
+      confirm.click();
+      const payload = window.__sent.find((entry) => entry.type === "resolve_rules_choice");
+      latestState.rulesEngine.pendingChoice = {
+        id: "sacrifice", kind: "pick_own_item", purpose: "sacrifice", playerId: "p1",
+        candidateItemIds: [],
+      };
+      renderAll();
+      const sacrificeHeading = document.querySelector("#rulesChoiceHeading").textContent;
+      latestState.rulesEngine.priorityPlayerId = saved.priority;
+      latestState.rulesEngine.pendingChoice = saved.choice;
+      renderAll();
+      return {
+        notMine, visible, datalistSize, disabledAtStart, disabledOnBadName, enabledOnGoodName,
+        option: payload?.option, expected: ids.find((id) => cardName(id) === cardName(ids[1])), sacrificeHeading,
+        names: ids.filter((id) => cardName(id) === cardName(ids[1])),
+      };
+    });
+    assert.equal(declareNameUi.notMine, false);
+    assert.equal(declareNameUi.visible, true);
+    assert.ok(declareNameUi.datalistSize > 100);
+    assert.equal(declareNameUi.disabledAtStart, true);
+    assert.equal(declareNameUi.disabledOnBadName, true);
+    assert.equal(declareNameUi.enabledOnGoodName, true);
+    assert.ok(declareNameUi.names.includes(declareNameUi.option));
+    assert.match(declareNameUi.sacrificeHeading, /sacrifi/i);
     const fieldTributeUi = await page.evaluate(() => {
       const orator = "birhlimm9e8lq3d_en", pile = "g3zumpyf623hto6_en";
       const will = [...cardsById.values()].find((card) => card.type === "ephemeral_will" && /^\{[A-Z]\}$/.test(String(card.powerCost || "")));

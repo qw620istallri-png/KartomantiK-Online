@@ -12169,20 +12169,12 @@ class TournamentModeTests(unittest.TestCase):
         self.assertEqual(escalated[0]["followupAction"], "draw")
 
 
-class LotSixteenTests(unittest.TestCase):
-    """Hand reveals, Guart/Gomeran watchers, Numbi, Clemency, Pit and the Mask."""
+class RealCardRulesCase(unittest.TestCase):
+    """Sessions whose card rules come from the shipped abilities and the real server builder."""
 
     ROOT = Path(__file__).resolve().parent.parent
     ABILITIES = json.loads((ROOT / "public" / "card-abilities.json").read_text(encoding="utf-8"))
-    PIDUE, GORTE, BONZAI, NUMBI, GUART = (
-        "inner-deserts-129", "w8364ml7m6erl8s_en", "inner-deserts-034",
-        "wer3o71zo9myece_en", "xzb2jwtkunq5tys_en",
-    )
-    MALALEUCO, GOMERAN, CLEMENCY, PIT, MASK = (
-        "7yu566ip7zuqdoc_en", "xfgbjv2gjb09fj9_en", "inner-deserts-023",
-        "inner-deserts-117", "1ixfmjkfewc0o42_en",
-    )
-    ALL = (PIDUE, GORTE, BONZAI, NUMBI, GUART, MALALEUCO, GOMERAN, CLEMENCY, PIT, MASK)
+    ALL = ()
 
     @classmethod
     def real_rules(cls):
@@ -12197,15 +12189,15 @@ class LotSixteenTests(unittest.TestCase):
         )
 
     def make_session(self):
-        manifestation_ids = {f"m-{index}" for index in range(20)} | {
-            card_id for card_id in self.ALL
-            if card_id not in {self.CLEMENCY, self.PIT, self.MASK}
-        }
         card_rules = {
             card_id: {"type": "manifestation", "power": 1, "temperaments": ["phlegmatic"]}
             for card_id in (f"m-{index}" for index in range(20))
         }
         card_rules.update(self.real_rules())
+        manifestation_ids = {
+            card_id for card_id, rules in card_rules.items()
+            if rules.get("type") == "manifestation"
+        }
         card_rules["will-x"] = {"type": "ephemeral_will", "cost": 1, "temperaments": ["phlegmatic"]}
         session = Session(
             rules_beta=True, card_points={}, manifestation_ids=manifestation_ids,
@@ -12247,6 +12239,20 @@ class LotSixteenTests(unittest.TestCase):
             ids.append(choice["_triggerAction"]["ability"]["id"])
             session.rules_engine["pendingChoice"] = None
         return ids
+
+
+class LotSixteenTests(RealCardRulesCase):
+    """Hand reveals, Guart/Gomeran watchers, Numbi, Clemency, Pit and the Mask."""
+
+    PIDUE, GORTE, BONZAI, NUMBI, GUART = (
+        "inner-deserts-129", "w8364ml7m6erl8s_en", "inner-deserts-034",
+        "wer3o71zo9myece_en", "xzb2jwtkunq5tys_en",
+    )
+    MALALEUCO, GOMERAN, CLEMENCY, PIT, MASK = (
+        "7yu566ip7zuqdoc_en", "xfgbjv2gjb09fj9_en", "inner-deserts-023",
+        "inner-deserts-117", "1ixfmjkfewc0o42_en",
+    )
+    ALL = (PIDUE, GORTE, BONZAI, NUMBI, GUART, MALALEUCO, GOMERAN, CLEMENCY, PIT, MASK)
 
     def test_all_lot_sixteen_cards_are_registered_and_built_by_the_server(self):
         rules = self.real_rules()
@@ -12554,6 +12560,296 @@ class LotSixteenTests(unittest.TestCase):
             self.PIDUE, "p1", "card_played", event_card_id="played", item_id="pidue",
             face_up=True, event_controller_id="p1", defer=True, controller_id="p1",
         ), [])
+
+
+class LotSeventeenTests(RealCardRulesCase):
+    """Vessel and Interzone movers, declared names, Katun, Balance and Asciugoth."""
+
+    CRADLE, POOPOM, MEJIK, SANGEN, ASCIUGOTH = (
+        "inner-deserts-070", "inner-deserts-032", "inner-deserts-066",
+        "inner-deserts-057", "inner-deserts-135",
+    )
+    DOL, BALANCE, DENEGATH, KATUN, ZAGUOR = (
+        "inner-deserts-061", "inner-deserts-137", "inner-deserts-039",
+        "kw78e3qfnqw6sms_en", "l9enna0sfy13yab_en",
+    )
+    ALL = (CRADLE, POOPOM, MEJIK, SANGEN, ASCIUGOTH, DOL, BALANCE, DENEGATH, KATUN, ZAGUOR)
+
+    def run_result(self, session, card_id, ability_id, controller="p1", targets=None, item_id=None, **extra):
+        ability = self.ability(card_id, ability_id)
+        return session.apply_rules_action_result({
+            "id": f"run-{ability_id}", "controllerId": controller,
+            "source": {"cardId": card_id, "itemId": item_id, "ownerId": controller},
+            "targets": targets or [], "ability": ability, **extra,
+        })
+
+    def test_all_lot_seventeen_cards_are_built_by_the_server(self):
+        rules = self.real_rules()
+        self.assertEqual(set(rules), set(self.ALL))
+        self.assertEqual(rules[self.DENEGATH]["activatedAbilities"][0]["essenceCost"], "{H}{H}")
+        self.assertEqual(len(rules[self.KATUN]["triggeredAbilities"]), 2)
+        self.assertEqual(
+            {entry["kind"] for entry in rules[self.SANGEN]["passiveEffects"]},
+            {"win_to_opponent_interzone", "unreplaceable_in_interzone",
+             "interzone_allies_penalty", "final_interzone_points"},
+        )
+
+    def test_cradle_destroys_a_vessel_card_and_its_owner_sacrifices(self):
+        session, p1, p2 = self.make_session()
+        self.put(p1, "receptacle", {"m-1": "p2"})
+        target = [{"kind": "zone_card", "zone": "receptacle", "containerId": "p1", "cardId": "m-1", "ownerId": "p2"}]
+        ability = self.ability(self.CRADLE, "cradle-destroy-vessel-card")
+        self.assertIsNone(session.rules_ability_targets_error(ability["targets"], target, "p1"))
+        self.assertIsNotNone(session.rules_ability_targets_error(
+            ability["targets"], [{**target[0], "containerId": "p2"}], "p1"))
+        session.battlefield = [
+            self.field_item("a", "p2", "m-2", x=1.0, y=1.0), self.field_item("b", "p2", "m-3", x=1.0, y=1.0),
+            self.field_item("mine", "p1", "m-4", x=1.0, y=1.0),
+        ]
+        payload = self.run_result(session, self.CRADLE, "cradle-destroy-vessel-card", targets=target)
+        self.assertEqual((payload["choiceKind"], payload["playerId"], payload["purpose"]), ("pick_own_item", "p2", "sacrifice"))
+        self.assertEqual(p1["zones"]["receptacle"], [])
+        self.assertIn("m-1", p2["zones"]["graveyard"])
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(sorted(choice["candidateItemIds"]), ["a", "b"])
+        self.assertIsNotNone(session.resolve_rules_choice("p2", choice["id"], item_id="mine")[0])
+        error, result = session.resolve_rules_choice("p2", choice["id"], item_id="b")
+        self.assertIsNone(error)
+        self.assertEqual(result["purpose"], "sacrifice")
+        self.assertEqual([item["id"] for item in session.battlefield], ["a", "mine"])
+        self.assertIn("m-3", p2["zones"]["graveyard"])
+
+    def test_cradle_sacrifice_is_automatic_with_a_single_candidate(self):
+        session, p1, p2 = self.make_session()
+        self.put(p1, "receptacle", {"m-1": "p2"})
+        session.battlefield = [self.field_item("only", "p2", "m-2", x=1.0, y=1.0)]
+        target = [{"kind": "zone_card", "zone": "receptacle", "containerId": "p1", "cardId": "m-1", "ownerId": "p2"}]
+        payload = self.run_result(session, self.CRADLE, "cradle-destroy-vessel-card", targets=target)
+        self.assertEqual(payload["status"], "destroyed")
+        self.assertEqual(session.battlefield, [])
+        self.assertIn("m-2", p2["zones"]["graveyard"])
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+
+    def test_poopom_declares_a_name_and_either_grows_or_discards_the_top_card(self):
+        session, p1, _p2 = self.make_session()
+        session.card_labels = {"m-1": "Alpha", "m-2": "Beta", "m-3": "Alpha"}
+        poopom = self.field_item("poopom", "p1", self.POOPOM)
+        session.battlefield = [poopom]
+        session.card_rules[self.POOPOM]["power"] = 3
+        self.put(p1, "deck", ["m-3", "m-2"])
+        payload = self.run_result(session, self.POOPOM, "poopom-declare-top-card", item_id="poopom")
+        self.assertEqual(payload["choiceKind"], "declare_card_name")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertIsNotNone(session.resolve_rules_choice("p1", choice["id"], option="not-a-card")[0])
+        error, result = session.resolve_rules_choice("p1", choice["id"], option="m-1")
+        self.assertIsNone(error)
+        self.assertEqual((result["status"], result["revealedCardId"]), ("matched", "m-3"))
+        self.assertEqual(self.power_of(session, "poopom"), 7)
+        self.assertEqual(p1["zones"]["deck"], ["m-3", "m-2"])
+        # A wrong declaration discards the revealed card instead.
+        p1["zones"]["deck"] = ["m-2", "m-3"]
+        self.run_result(session, self.POOPOM, "poopom-declare-top-card", item_id="poopom")
+        error, result = session.resolve_rules_choice(
+            "p1", session.rules_engine["pendingChoice"]["id"], option="m-1")
+        self.assertEqual(result["status"], "discarded")
+        self.assertEqual((p1["zones"]["deck"], p1["zones"]["graveyard"]), (["m-3"], ["m-2"]))
+        self.assertEqual(self.power_of(session, "poopom"), 7)
+
+    def test_mejik_discards_a_declared_card_from_a_target_deck_and_shuffles_it(self):
+        session, p1, p2 = self.make_session()
+        session.card_labels = {"m-1": "Alpha", "m-2": "Beta", "m-3": "Alpha"}
+        self.put(p2, "deck", ["m-2", "m-3"])
+        ability = self.ability(self.MEJIK, "mejik-declare-and-discard")
+        session.battlefield = [self.field_item("mejik", "p1", self.MEJIK, field_zone="interzone")]
+        target = [{"kind": "player", "playerId": "p2"}]
+        self.assertIsNone(session.rules_ability_targets_error(ability["targets"], target, "p1"))
+        payload = self.run_result(session, self.MEJIK, "mejik-declare-and-discard", targets=target, item_id="mejik")
+        self.assertEqual(payload["choiceKind"], "declare_card_name")
+        error, result = session.resolve_rules_choice(
+            "p1", session.rules_engine["pendingChoice"]["id"], option="m-1")
+        self.assertIsNone(error)
+        self.assertEqual((result["status"], result["cardId"]), ("discarded", "m-3"))
+        self.assertEqual((p2["zones"]["deck"], p2["zones"]["graveyard"]), (["m-2"], ["m-3"]))
+        self.run_result(session, self.MEJIK, "mejik-declare-and-discard", targets=target, item_id="mejik")
+        error, result = session.resolve_rules_choice(
+            "p1", session.rules_engine["pendingChoice"]["id"], option="m-1")
+        self.assertEqual(result["status"], "not_found")
+
+    def test_sangen_changes_sides_on_a_win_and_weighs_down_its_new_controller(self):
+        session, p1, p2 = self.make_session()
+        session.card_rules[self.SANGEN]["power"] = 3
+        session.battlefield = [
+            self.field_item("sangen", "p1", self.SANGEN),
+            self.field_item("loser", "p2", "m-2"),
+            self.field_item("bystander", "p2", "m-3", field_zone="interzone"),
+        ]
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_compare")
+        self.assertEqual(session.prepare_rules_confrontation_result()["winnerId"], "p1")
+        cleanup = session.begin_rules_confrontation_cleanup()
+        sangen = session.find_battlefield_item("sangen")
+        self.assertEqual((sangen["controllerId"], sangen["ownerId"], sangen["fieldZone"]), ("p2", "p1", "interzone"))
+        self.assertEqual(cleanup["supportResolved"][0]["kind"], "win_to_opponent_interzone")
+        self.assertEqual(self.power_of(session, "bystander"), 0)
+        self.assertFalse(session.rules_interzone_item_replaceable(sangen))
+        self.assertEqual(session.rules_end_game_points("p2"), 25)
+        self.assertEqual(session.rules_end_game_points("p1"), 0)
+        sangen["effectsDisabled"] = True
+        self.assertEqual(self.power_of(session, "bystander"), 1)
+        self.assertEqual(session.rules_end_game_points("p2"), 0)
+
+    def test_asciugoth_turns_entering_manifestations_hollow_and_pays_their_temperament(self):
+        session, p1, _p2 = self.make_session()
+        session.battlefield = [
+            self.field_item("asciugoth", "p1", self.ASCIUGOTH, x=1.0, y=1.0),
+            self.field_item("entering", "p2", "m-1", x=1.0, y=1.0),
+        ]
+        session.queue_rules_manifestation_entry_watchers(session.find_battlefield_item("entering"), defer=True)
+        entering = session.find_battlefield_item("entering")
+        self.assertEqual(session.rules_manifestation_characteristics(entering)["temperament"], "hollow")
+        essence = [
+            (token["temperament"], token["counters"]["essence"])
+            for token in session.tokens if token.get("isEssence")
+        ]
+        self.assertEqual(essence, [("phlegmatic", 1)])
+        asciugoth = session.find_battlefield_item("asciugoth")
+        session.queue_rules_manifestation_entry_watchers(asciugoth, defer=True)
+        self.assertNotEqual(asciugoth.get("temperamentOverride"), "hollow")
+
+    def test_katun_pays_five_then_ten_after_it_has_left_a_vessel(self):
+        session, p1, p2 = self.make_session()
+        start = p1["score"]
+        katun = self.field_item("katun", "p1", self.KATUN, field_zone="interzone", x=1.0, y=1.0)
+        victim = self.field_item("victim", "p2", "m-1", x=1.0, y=1.0)
+        session.battlefield = [katun, victim]
+        session.rules_engine["observedEvents"] = []
+        session._rules_remove_field_item_by_effect(victim, "p2", "graveyard", "top", reason="destroy")
+        actions = session.queue_rules_observed_event_triggers(defer=True)
+        self.assertEqual([entry["ability"]["id"] for entry in actions if entry["source"]["cardId"] == self.KATUN], ["katun-gains-five"])
+        session.apply_rules_action_result(next(entry for entry in actions if entry["source"]["cardId"] == self.KATUN))
+        self.assertEqual(p1["score"] - start, 5)
+        # The movement of cards out of the Limbo by effect counts too.
+        session.rules_engine["observedEvents"] = []
+        session.move_zone_card_by_effect("p2", "graveyard", "p2", "exile", "m-1")
+        self.assertEqual(
+            [entry["kind"] for entry in session.rules_engine["observedEvents"]],
+            ["manifestation_left_by_effect"],
+        )
+        # Once Katun has left a Vessel, its triggers pay ten instead.
+        self.put(p2, "receptacle", {self.KATUN: "p1"})
+        session.take_zone_card("p2", "receptacle", self.KATUN)
+        actions = session.queue_rules_observed_event_triggers(defer=True)
+        self.assertEqual([entry["ability"]["id"] for entry in actions], ["katun-gains-ten-after-vessel"])
+        # Outside the Interzone Katun does nothing.
+        katun["fieldZone"] = "confrontation"
+        session.rules_engine["observedEvents"] = [{"kind": "manifestation_left_by_effect", "playerId": "p2"}]
+        self.assertEqual(session.queue_rules_observed_event_triggers(defer=True), [])
+
+    def test_balance_of_the_spirit_moves_gains_from_the_leader_and_losses_from_the_laggard(self):
+        session, p1, p2 = self.make_session()
+        p1["score"], p2["score"] = 50, 10
+        balance = self.field_item("balance", "p1", self.BALANCE, field_zone="field")
+        session.battlefield = [balance]
+        self.assertEqual(session.adjust_rules_score("p1", 10), 0)
+        self.assertEqual((p1["score"], p2["score"]), (50, 20))
+        self.assertEqual(session.adjust_rules_score("p2", -5), 0)
+        self.assertEqual((p1["score"], p2["score"]), (45, 20))
+        self.assertEqual(session.adjust_rules_score("p1", -5), -5)
+        self.assertEqual(session.adjust_rules_score("p2", 4), 4)
+        self.assertEqual((p1["score"], p2["score"]), (40, 24))
+        p1["score"] = p2["score"] = 30
+        self.assertEqual(session.adjust_rules_score("p1", 3), 3)
+        balance["effectsDisabled"] = True
+        p1["score"], p2["score"] = 50, 10
+        self.assertEqual(session.adjust_rules_score("p1", 10), 10)
+        self.assertEqual(p2["score"], 10)
+
+    def test_denegath_returns_the_first_manifestation_then_chains_another_card(self):
+        session, p1, _p2 = self.make_session()
+        session.battlefield = [
+            self.field_item("denegath", "p1", self.DENEGATH, field_zone="interzone", x=1.0, y=1.0),
+            self.field_item("first", "p1", "m-1", x=1.0, y=1.0),
+        ]
+        session.rules_engine["firstManifestationItemIds"] = {"p1": "first"}
+        self.put(p1, "hand", ["m-2"])
+        payload = self.run_result(session, self.DENEGATH, "denegath-returns-first-then-chains")
+        self.assertEqual((payload["choiceKind"], payload["returned"]["status"]), ("chain_manifestation", "moved"))
+        self.assertEqual(sorted(p1["zones"]["hand"]), ["m-1", "m-2"])
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["_cardIds"], ["m-2"])
+        error, _ = session.resolve_rules_choice("p1", choice["id"], ["m-2"], placement={"x": 400, "y": 300})
+        self.assertIsNone(error)
+        self.assertEqual(p1["zones"]["hand"], ["m-1"])
+        self.assertIsNotNone(session.rules_card_play_restriction_error("p1", "m-1"))
+        # Without a First Manifestation nothing happens.
+        session.rules_engine["firstManifestationItemIds"] = {}
+        self.assertEqual(
+            self.run_result(session, self.DENEGATH, "denegath-returns-first-then-chains")["status"],
+            "no_first_manifestation",
+        )
+
+    def test_dol_chains_a_manifestation_you_own_from_any_vessel_and_exiles_it_on_a_win(self):
+        session, p1, p2 = self.make_session()
+        self.put(p2, "receptacle", {"m-3": "p1", "m-4": "p2"})
+        session.battlefield = [self.field_item("dol", "p1", self.DOL, x=1.0, y=1.0)]
+        payload = self.run_result(session, self.DOL, "dol-chains-from-a-vessel", item_id="dol", optionalAccepted=True)
+        self.assertEqual((payload["choiceKind"], payload["fromZone"]), ("chain_manifestation", "receptacle"))
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["cardIds"], ["m-3"])
+        self.assertIsNotNone(session.resolve_rules_choice("p1", choice["id"], ["m-4"])[0])
+        error, result = session.resolve_rules_choice("p1", choice["id"], ["m-3"], placement={"x": 400, "y": 300})
+        self.assertIsNone(error)
+        self.assertEqual(p2["zones"]["receptacle"], ["m-4"])
+        chained = next(item for item in session.battlefield if item.get("isChained"))
+        self.assertEqual((chained["cardId"], chained["ownerId"], chained["controllerId"]), ("m-3", "p1", "p1"))
+        self.assertTrue(result["memoryId"])
+        # With nothing of yours in a Vessel there is nobody to Chain.
+        again = self.run_result(session, self.DOL, "dol-chains-from-a-vessel", item_id="dol", optionalAccepted=True)
+        self.assertEqual(again["status"], "no_eligible_card")
+
+    def test_zaguor_exiles_itself_to_take_a_card_from_the_vessel_or_the_interzone(self):
+        session, p1, p2 = self.make_session()
+        ability = self.ability(self.ZAGUOR, "zaguor-exiles-to-take-control")
+        rules = ability["targets"]
+        victim = [{"kind": "card", "itemId": "victim", "cardId": "m-2", "ownerId": "p2"}]
+        vessel = [{"kind": "zone_card", "zone": "receptacle", "containerId": "p2", "cardId": "m-3", "ownerId": "p2"}]
+        session.battlefield = [
+            self.field_item("zaguor", "p1", self.ZAGUOR, x=1.0, y=1.0),
+            self.field_item("victim", "p2", "m-2", field_zone="interzone", x=1.0, y=1.0),
+            self.field_item("own", "p1", "m-5", field_zone="interzone", x=1.0, y=1.0),
+        ]
+        self.put(p2, "receptacle", ["m-3"])
+        self.assertIsNone(session.rules_ability_targets_error(rules, victim, "p1"))
+        self.assertIsNone(session.rules_ability_targets_error(rules, vessel, "p1"))
+        self.assertIsNotNone(session.rules_ability_targets_error(
+            rules, [{"kind": "card", "itemId": "own", "cardId": "m-5", "ownerId": "p1"}], "p1"))
+        self.assertIsNotNone(session.rules_ability_targets_error(
+            rules, [{**vessel[0], "containerId": "p1"}], "p1"))
+        payload = self.run_result(session, self.ZAGUOR, "zaguor-exiles-to-take-control", targets=victim, item_id="zaguor")
+        self.assertEqual(payload["status"], "taken")
+        taken = session.find_battlefield_item("victim")
+        self.assertEqual((taken["controllerId"], taken["ownerId"], taken["fieldZone"]), ("p1", "p2", "interzone"))
+        self.assertIsNone(session.find_battlefield_item("zaguor"))
+        self.assertIn(self.ZAGUOR, p1["zones"]["exile"])
+        # A card from the opposing Vessel arrives in your Interzone too.
+        session.battlefield.append(self.field_item("zaguor2", "p1", self.ZAGUOR, x=1.0, y=1.0))
+        payload = self.run_result(session, self.ZAGUOR, "zaguor-exiles-to-take-control", targets=vessel, item_id="zaguor2")
+        self.assertEqual(payload["movement"]["status"], "moved")
+        self.assertEqual(p2["zones"]["receptacle"], [])
+        moved = session.find_battlefield_item(payload["movement"]["itemId"])
+        self.assertEqual((moved["controllerId"], moved["fieldZone"]), ("p1", "interzone"))
+        # A full Interzone refuses the swap before Zaguor is exiled.
+        self.put(p2, "receptacle", ["m-6"])
+        session.battlefield.append(self.field_item("zaguor3", "p1", self.ZAGUOR, x=1.0, y=1.0))
+        session.battlefield.extend(
+            self.field_item(f"fill{index}", "p1", f"m-{7 + index}", field_zone="interzone", x=1.0, y=1.0)
+            for index in range(3)
+        )
+        full = self.run_result(
+            session, self.ZAGUOR, "zaguor-exiles-to-take-control", item_id="zaguor3",
+            targets=[{"kind": "zone_card", "zone": "receptacle", "containerId": "p2", "cardId": "m-6", "ownerId": "p2"}],
+        )
+        self.assertEqual(full["status"], "interzone_full")
+        self.assertIsNotNone(session.find_battlefield_item("zaguor3"))
 
 
 if __name__ == "__main__":

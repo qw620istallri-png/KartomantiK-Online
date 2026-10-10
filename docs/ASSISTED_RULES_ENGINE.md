@@ -829,3 +829,18 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Powerful Pidue: cinq déclencheurs `card_played` par tempérament (Volonté ou Manifestation de l'adversaire pendant `confrontation_before_revelation`/`confrontation_reaction`). Le filtre « depuis la main / en Soutien » n'est pas appliqué: toute carte jouée à ces phases compte.
 - Version des assets: `20261010-rules-beta-110`.
 - Registre: 389 automated / 0 partial / 61 manual.
+
+## Lot 17 (Poopom, Mejik, Cradle the Putrescence, Sangen, Asciugoth, Dol, Balance of the Spirit, Denegath, Katun, Zaguor)
+
+- Nom de carte déclaré: choix `declare_card_name` (client: champ avec liste de suggestions, envoie l'id d'une carte; le serveur compare les noms via `card_labels`). Résultats `declare_name_top_card_power` (Poopom: +4 jusqu'à la fin du tour si la carte révélée a le même nom, sinon elle est défaussée) et `declare_name_search_deck` (Mejik: première carte du même nom du deck cible défaussée puis deck mélangé; le mélange a aussi lieu si rien n'est trouvé).
+- Cradle the Putrescence: `destroy_vessel_target_owner_sacrifices`. Le choix `pick_own_item` porte maintenant un `purpose` (`stalemate` ou `sacrifice`); le propriétaire de la carte détruite choisit la Manifestation qu'il sacrifie (automatique s'il n'en a qu'une).
+- Sangen: passifs `win_to_opponent_interzone` (au nettoyage de la confrontation, la carte passe dans l'Interzone adverse, contrôlée par lui), `unreplaceable_in_interzone`, `interzone_allies_penalty` (-1 aux autres Manifestations de l'Interzone de son contrôleur) et `final_interzone_points` (+25 en fin de partie pour son contrôleur, dans `rules_end_game_points`). La partie « cible un adversaire » est implicite: il n'y a qu'un adversaire.
+- Asciugoth: passif `entering_manifestation_becomes_hollow`, appliqué dans `queue_rules_manifestation_entry_watchers` (essence du tempérament d'origine pour son contrôleur, puis `temperamentOverride: hollow`). Les entrées qui ne passent pas par ce point (jetons créés directement) ne sont pas touchées.
+- Katun: nouvel événement observé `manifestation_left_by_effect` (retrait du terrain par effet via `_rules_remove_field_item_by_effect`, sortie de Limbo ou de Vessel via `move_zone_card_by_effect`). `take_zone_card` mémorise les cartes sorties d'un Vessel (`leftVesselCards`) et le filtre de déclencheur `sourceLeftVessel` choisit 5 ou 10 points. Les sorties « par les règles » (résolution de confrontation) ne comptent pas.
+- Balance of the Spirit: passif `balance_points` géré dans `adjust_rules_score` (`rules_balance_redirect`). Le total d'un joueur est ses points d'effet plus les points des cartes de son Vessel. En cas d'égalité, rien n'est redirigé.
+- Denegath: `return_first_then_chain` (Première Manifestation renvoyée en main, jouable seulement au tour suivant via `playRestrictions`, puis Chaînage depuis la main).
+- Dol: `chain_from_zone` accepte `zone: receptacle`: les cartes que le joueur possède dans n'importe quel Vessel (`rules_chain_candidates`, conteneur mémorisé dans le choix). Exil si la carte gagne. NON géré: « si elle devait quitter la Zone de Confrontation par un effet, elle retourne dans le Vessel ».
+- Zaguor: `exile_source_take_control_to_interzone`, déclencheur optionnel à la victoire; une seule capacité avec cible dans le Vessel adverse OU dans l'Interzone adverse (`zones: [battlefield, receptacle]`). Refusé si l'Interzone du joueur est pleine sans pile possible (Zaguor n'est alors pas exilé).
+- Test frontend: l'ancien test « Volonté manuelle » ne trouvait plus de Volonté non automatisée avec une cible Manifestation; il supprime maintenant les capacités encodées de la carte choisie.
+- Version des assets: `20261010-rules-beta-111`.
+- Registre: 399 automated / 0 partial / 51 manual.

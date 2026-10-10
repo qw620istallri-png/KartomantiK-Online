@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261010-rules-beta-110";
+const STATIC_ASSET_VERSION = "20261010-rules-beta-111";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -6536,6 +6536,36 @@ function renderRulesChoice() {
     panel.classList.remove("hidden");
     return;
   }
+  if (choice.kind === "declare_card_name") {
+    $("#rulesChoiceHeading").textContent = t("rulesDeclareNameHeading");
+    $("#rulesChoiceText").textContent = rulesText(
+      choice.mode === "search_deck" ? "rulesDeclareNameSearchText" : "rulesDeclareNameTopText",
+      { card: cardName(choice.sourceCardId), player: rulesPlayerName(choice.targetPlayerId) },
+    );
+    const names = new Map();
+    for (const cardId of cardsById.keys()) {
+      const name = cardName(cardId);
+      if (name && !names.has(name.toLowerCase())) names.set(name.toLowerCase(), { name, cardId });
+    }
+    options.innerHTML = `
+      <label>${esc(t("rulesDeclareNameLabel"))}
+        <input id="rulesDeclareNameInput" list="rulesDeclareNameList" autocomplete="off">
+      </label>
+      <datalist id="rulesDeclareNameList">${[...names.values()].map((entry) => `<option value="${esc(entry.name)}"></option>`).join("")}</datalist>
+      <button type="button" class="primary" id="rulesDeclareNameConfirm" disabled>${esc(t("confirm"))}</button>`;
+    const input = $("#rulesDeclareNameInput");
+    const confirmButton = $("#rulesDeclareNameConfirm");
+    const declared = () => names.get(input.value.trim().toLowerCase());
+    input.oninput = () => { confirmButton.disabled = !declared(); };
+    confirmButton.onclick = () => {
+      const entry = declared();
+      if (!entry) return;
+      confirmButton.disabled = true;
+      send({ type: "resolve_rules_choice", choiceId: choice.id, option: entry.cardId });
+    };
+    panel.classList.remove("hidden");
+    return;
+  }
   if (choice.kind === "clemency_choice") {
     $("#rulesChoiceHeading").textContent = t("rulesClemencyHeading");
     $("#rulesChoiceText").textContent = rulesText("rulesClemencyText", {
@@ -6855,8 +6885,9 @@ function renderRulesChoice() {
     return;
   }
   if (choice.kind === "pick_own_item") {
-    $("#rulesChoiceHeading").textContent = t("rulesPickOwnItemHeading");
-    $("#rulesChoiceText").textContent = t("rulesPickOwnItemText");
+    const sacrifice = choice.purpose === "sacrifice";
+    $("#rulesChoiceHeading").textContent = t(sacrifice ? "rulesSacrificeItemHeading" : "rulesPickOwnItemHeading");
+    $("#rulesChoiceText").textContent = t(sacrifice ? "rulesSacrificeItemText" : "rulesPickOwnItemText");
     const candidates = (choice.candidateItemIds || [])
       .map((itemId) => latestState?.battlefield?.find((item) => item.id === itemId))
       .filter(Boolean);
@@ -9409,7 +9440,14 @@ function formatLogEntry(e, options = {}) {
         { player: ownerName(d.playerId), card: card(d.cardId) },
         ["card"],
       );
-      if (d.kind === "pick_own_item") return f("logRulesPickOwnItem", {
+      if (d.kind === "declare_card_name") return f(
+        d.status === "matched" ? "logRulesDeclareMatched"
+          : d.status === "discarded" ? (d.mode === "search_deck" ? "logRulesDeclareSearchFound" : "logRulesDeclareMissed")
+          : d.mode === "search_deck" ? "logRulesDeclareSearchNone" : "logRulesDeclareMissed",
+        { player: ownerName(d.playerId), declared: card(d.declaredCardId), card: card(d.revealedCardId || d.cardId) },
+        ["declared", "card"],
+      );
+      if (d.kind === "pick_own_item") return f(d.purpose === "sacrifice" ? "logRulesSacrificeItem" : "logRulesPickOwnItem", {
         player: ownerName(d.playerId),
       });
       if (d.kind === "distribute_power") return f("logRulesDistributePower", {
