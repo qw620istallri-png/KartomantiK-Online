@@ -3529,5 +3529,87 @@
       "targets": { "kind": "zone_card", "min": 1, "max": 3, "cardType": "manifestation", "zones": ["receptacle"], "container": "opponent", "maxTotalPoints": 60 },
       "result": { "kind": "move_targets", "zone": "exile", "position": "top", "reason": "exile" }
     }
+  ],
+  "birhlimm9e8lq3d_en": [
+    {
+      "id": "field-manifestations-as-tribute",
+      "passiveEffect": { "kind": "field_manifestations_as_tribute" }
+    }
+  ],
+  "282b0n6ldnzdp0p_en": [
+    {
+      "id": "zum-weaken",
+      "essenceCost": "{R}",
+      "usePerTurn": true,
+      "supportWhenAllUsed": ["zum-weaken", "zum-silence", "zum-strengthen"],
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"] },
+      "ongoingEffect": { "kind": "power_modifier", "value": -1, "duration": "until_end_of_turn" }
+    },
+    {
+      "id": "zum-silence",
+      "essenceCost": "{Y}",
+      "usePerTurn": true,
+      "supportWhenAllUsed": ["zum-weaken", "zum-silence", "zum-strengthen"],
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"] },
+      "ongoingEffect": { "kind": "lose_effects", "duration": "until_end_of_turn" }
+    },
+    {
+      "id": "zum-strengthen",
+      "essenceCost": "{G}",
+      "usePerTurn": true,
+      "supportWhenAllUsed": ["zum-weaken", "zum-silence", "zum-strengthen"],
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"] },
+      "ongoingEffect": { "kind": "power_modifier", "value": 1, "duration": "until_end_of_turn" }
+    }
+  ],
+  "gu9rppos4r9ucsr_en": [
+    {
+      "id": "twist-the-soul",
+      "action": "play_card",
+      "targets": { "kind": "zone_card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["receptacle"], "container": "self" },
+      "result": { "kind": "play_vessel_target_as_support" }
+    }
+  ],
+  "n0natbzt0nfylml_en": [
+    {
+      "id": "shymon-lock-opponent-draws",
+      "exhaustSource": true,
+      "reduceSourcePower": 2,
+      "targets": { "kind": "player", "min": 1, "max": 1, "controller": "opponent" },
+      "result": { "kind": "lock_next_turn_draws" }
+    }
+  ],
+  "5r7g2e0r6q17lur_en": [
+    {
+      "id": "traumatize",
+      "action": "play_card",
+      "targets": { "kind": "player", "min": 1, "max": 1 },
+      "result": { "kind": "reveal_hand_discard_choice", "scoreCost": 5 }
+    }
+  ],
+  "goxjkkrwos0lhx4_en": [
+    {
+      "id": "damage-distribute-weakness",
+      "action": "play_card",
+      "targets": { "min": 1, "max": 3, "cardType": "manifestation", "zones": ["battlefield"], "fieldZone": "interzone", "controller": "opponent" },
+      "result": { "kind": "distribute_power", "total": 3, "sign": -1 }
+    }
+  ],
+  "6b4f3yh4tk4091p_en": [
+    {
+      "id": "echo-distribute-power-on-loss",
+      "optional": true,
+      "trigger": { "event": "loses_confrontation" },
+      "targets": { "min": 1, "max": 3, "cardType": "manifestation", "zones": ["battlefield"], "fieldZone": "interzone", "controller": "self" },
+      "result": { "kind": "distribute_power", "total": 3, "sign": 1 }
+    }
+  ],
+  "tdy2112mspb7u97_en": [
+    {
+      "id": "unruly-flail-neutralize-will",
+      "trigger": { "event": "enters_support", "enteredFromZone": "hand", "eventSourceOnly": true },
+      "targets": { "kind": "stack_action", "min": 1, "max": 1, "cardTypes": ["ephemeral_will", "persistent_will"], "controller": "opponent", "targetsConfrontationManifestation": true },
+      "result": { "kind": "neutralize_stack_action" }
+    }
   ]
 }

@@ -778,3 +778,17 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 - Jurat : `pay_rules_tribute` consigne les Manifestations payées en Tribut (`tributeLog`) ; une victoire crée un souvenir `return_from_limbo_end_turn` par carte, qui les rend à leur propriétaire en fin de tour.
 - Glabron : résultat `stalemate_target_grant_source_support`. Le Stalemate est appliqué à la résolution et non comme coût payé avant la Pile.
 - Everspring : compteurs « Tear » à chaque défaite ; retirer 3 compteurs exile jusqu'à trois Manifestations du Réceptacle adverse (nouvelle contrainte de cible `maxTotalPoints`, 60 points au total).
+
+### Lot 13 (dix cartes du set Beta)
+
+Registre : 359 automatisées / 0 partielle / 91 manuelles.
+
+- Tribut hors de la main : `rules_action_payment` accepte maintenant trois sources. Forgotten Pile (`canPayTributeFromLimbo`) paie depuis le Limbo sans compteur Formula et est exilée ; Orator of the Absurd (passif `field_manifestations_as_tribute`, pour tous les joueurs) permet de payer avec ses propres Manifestations de la Zone de Confrontation et de l'Interzone (jamais les jetons ni la source elle-même) ; le client (`rulesActionPaymentDraft`) propose les mêmes candidats.
+- Solar Apparition : drapeau `tributeExtraPowerLoss` (dérivé du texte). `rules_tribute_extra_power_loss` lit `cost.tributeCardIds` d'une Volonté éphémère et retire 2 de plus à chaque effet `power_modifier` négatif qu'elle crée (`create_rules_ongoing_effects`).
+- Zum : capacités activées `usePerTurn` (mémorisées dans `abilityTurnUses` de la source) et `supportWhenAllUsed` ; quand les trois effets ont servi dans le même tour, la source reçoit `supportUntilTurn`.
+- Twist the Soul : résultat `play_vessel_target_as_support` (cible `zone_card` du Réceptacle avec `container: "self"`). L'objet porte `supportReturn` ; en fin de confrontation, `begin_rules_confrontation_cleanup` le remet dans le Réceptacle de son contrôleur s'il gagne, sinon dans la main de son propriétaire (Égalité comprise).
+- Shymon : résultat `lock_next_turn_draws` (liste `drawLocks`) ; `draw_rules_cards` ne pioche plus hors Phase de Récupération pour le joueur visé pendant le tour suivant.
+- Traumatize : résultat `reveal_hand_discard_choice` (coût de 5 points à la résolution) ; choix `reveal_hand_discard` où le lanceur voit la main entière (`cardIds`, visible des deux joueurs) et choisit la carte à défausser.
+- Damage et Echo of the Wilds : résultat `distribute_power` (total, signe). Les cibles sont choisies à la pose (1 à 3, chacune reçoit au moins 1) ; seul le cas « 2 cibles pour un total de 3 » demande un choix `pick_distribution_extra` (la cible qui reçoit le point en plus).
+- Unruly Flail : condition `opponent_will_on_stack_targets_confrontation` (`supportFromHandCondition`, serveur et `rulesSupportFromHandAvailableClient`) et déclencheur à l'entrée en Support depuis la main qui neutralise une Volonté adverse choisie avec la nouvelle contrainte de cible `targetsConfrontationManifestation`.
+- Limites connues : les nouveaux écrans (répartition, main révélée) et le tribut depuis le Limbo ou le champ ne sont testés que côté serveur et par le test frontend général, pas manuellement dans un navigateur ; Damage choisit la répartition à la résolution pour le cas à deux cibles.

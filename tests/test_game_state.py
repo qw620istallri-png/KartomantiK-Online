@@ -10632,6 +10632,213 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertEqual(p2["zones"]["receptacle"], ["m-c"])
         self.assertEqual(sorted(p2["zones"]["exile"]), ["m-a", "m-b"])
 
+    def test_manual_lot_thirteen_beta_cards(self):
+        orator, zum, twist, shymon, traumatize, damage, echo, flail = (
+            "birhlimm9e8lq3d_en", "282b0n6ldnzdp0p_en", "gu9rppos4r9ucsr_en", "n0natbzt0nfylml_en",
+            "5r7g2e0r6q17lur_en", "goxjkkrwos0lhx4_en", "6b4f3yh4tk4091p_en", "tdy2112mspb7u97_en",
+        )
+        session, p1, p2 = self.manual_batch_session(
+            orator, zum, twist, shymon, traumatize, damage, echo, flail, card_type="manifestation",
+        )
+        for card_id in (twist, traumatize, damage):
+            session.card_rules[card_id]["type"] = "ephemeral_will"
+        for number, power in (("a", 4), ("b", 2), ("c", 5)):
+            session.card_rules[f"m-{number}"] = {"type": "manifestation", "power": power, "temperaments": ["phlegmatic"]}
+        turn = session.phase_tracker["turn"]
+        # Solar Apparition pays tribute from the Interzone and adds -2 to a power-reducing ephemeral Will.
+        solar, pile, weaken = "solar", "pile", "weaken-will"
+        session.card_rules[solar] = {
+            "type": "manifestation", "power": 3, "temperaments": ["choleric"],
+            "canPayTributeFromInterzone": True, "tributeExtraPowerLoss": 2,
+        }
+        session.card_rules[pile] = {
+            "type": "manifestation", "power": 2, "temperaments": ["hollow"], "canPayTributeFromLimbo": True,
+        }
+        session.card_rules[weaken] = {"type": "ephemeral_will", "cost": 3, "powerCost": "{R}{R}{R}", "temperaments": ["choleric"]}
+        session.battlefield = [
+            self.field_item("sol", "p1", solar, field_zone="interzone", controllerId="p1"),
+            self.field_item("x", "p2", "m-a"),
+        ]
+        ability = {"tribute": "{R}{R}{R}"}
+        error, payment = session.rules_action_payment(
+            "p1", "play_card", {"cardId": weaken, "cardType": "ephemeral_will", "controllerId": "p1"},
+            ["battlefield|sol"], ability, [self.card_target("x", "m-a")],
+        )
+        self.assertIsNone(error)
+        action = {
+            "id": "wk", "kind": "play_card", "controllerId": "p1", "source": {"cardId": weaken},
+            "cost": {"tributeCardIds": payment["cardIds"]}, "targets": [self.card_target("x", "m-a")],
+            "ability": {"id": "weaken", "ongoingEffect": {"kind": "power_modifier", "value": -1, "duration": "until_end_of_turn"}},
+        }
+        session.create_rules_ongoing_effects(action)
+        self.assertEqual(self.power_of(session, "x"), 4 - 3)
+        # Forgotten Pile pays tribute from the Limbo (no counter needed) and is exiled.
+        self.put(p1, "graveyard", [pile])
+        error, payment = session.rules_action_payment(
+            "p1", "play_card", {"cardId": weaken, "cardType": "ephemeral_will", "controllerId": "p1"},
+            [f"graveyard|{pile}"], {"tribute": "{H}{H}"}, [],
+        )
+        self.assertIsNone(error)
+        session.pay_rules_tribute("p1", payment)
+        self.assertEqual(p1["zones"]["graveyard"], [])
+        self.assertEqual(p1["zones"]["exile"], [pile])
+        # Orator of the Absurd lets every player pay tribute with their own field Manifestations.
+        session.card_rules[orator]["passiveEffects"] = [self.ABILITIES[orator][0]["passiveEffect"]]
+        session.battlefield = [
+            self.field_item("conf", "p1", "m-c", controllerId="p1"),
+            self.field_item("inter", "p1", "m-b", field_zone="interzone", controllerId="p1"),
+            self.field_item("theirs", "p2", "m-a", controllerId="p2"),
+        ]
+        error, _payment = session.rules_action_payment(
+            "p1", "play_card", {"cardId": weaken, "cardType": "ephemeral_will", "controllerId": "p1"},
+            ["battlefield|conf"], {"tribute": "{H}{H}"}, [],
+        )
+        self.assertIn("cannot pay Tribute from the field", error)
+        session.battlefield.append(self.field_item("orator", "p2", orator, field_zone="interzone"))
+        error, payment = session.rules_action_payment(
+            "p1", "play_card", {"cardId": weaken, "cardType": "ephemeral_will", "controllerId": "p1"},
+            ["battlefield|conf"], {"tribute": "{H}{H}"}, [],
+        )
+        self.assertIsNone(error)
+        error, _payment = session.rules_action_payment(
+            "p1", "play_card", {"cardId": weaken, "cardType": "ephemeral_will", "controllerId": "p1"},
+            ["battlefield|theirs"], {"tribute": "{H}{H}"}, [],
+        )
+        self.assertIn("cannot pay Tribute from the field", error)
+        session.pay_rules_tribute("p1", payment)
+        self.assertIsNone(session.find_battlefield_item("conf"))
+        self.assertIn("m-c", p1["zones"]["graveyard"])
+        # Zum: each effect once per turn; using all three grants Support.
+        session.battlefield = [
+            self.field_item("zum", "p1", zum, field_zone="interzone", controllerId="p1"),
+            self.field_item("t", "p2", "m-a"),
+        ]
+        session.card_rules[zum]["activatedAbilities"] = list(self.ABILITIES[zum])
+        source = {"cardId": zum, "itemId": "zum", "zone": "battlefield"}
+        zum_item = session.find_battlefield_item("zum")
+        for index, ability_id in enumerate(("zum-weaken", "zum-silence", "zum-strengthen")):
+            error, ability = session.rules_action_ability(
+                "p1", "activated_effect", source, ability_id, [self.card_target("t", "m-a")]
+            )
+            self.assertIsNone(error)
+            paid = session.pay_rules_activation_cost({"itemId": "zum", "controllerId": "p1"}, ability)
+            error, _ = session.rules_action_ability(
+                "p1", "activated_effect", source, ability_id, [self.card_target("t", "m-a")]
+            )
+            self.assertIn("once per turn", error)
+            self.assertEqual(bool(paid.get("grantedSupport")), index == 2)
+        self.assertEqual(zum_item["supportUntilTurn"], turn)
+        # Twist the Soul raises a vessel Manifestation into Support; it returns to the vessel on a win, else to its owner's hand.
+        for outcome_winner, destination in (("p1", "receptacle"), ("p2", "hand")):
+            self.put(p1, "receptacle", {"m-b": "p2"})
+            self.put(p1, "hand", [])
+            self.put(p2, "hand", [])
+            session.battlefield = []
+            payload = self.run_ability(session, twist, [{
+                "kind": "zone_card", "cardId": "m-b", "zone": "receptacle", "containerId": "p1", "ownerId": "p2",
+            }])[0]
+            self.assertEqual(payload["status"], "moved")
+            item_id = payload["itemId"]
+            self.assertTrue(session.find_battlefield_item(item_id)["isSupport"])
+            self.set_outcome(session, outcome_winner, "p2" if outcome_winner == "p1" else "p1", item_id)
+            session.rules_engine["confrontationResult"]["status"] = "cleanup"
+            session.begin_rules_confrontation_cleanup()
+            self.assertIsNone(session.find_battlefield_item(item_id))
+            if destination == "receptacle":
+                self.assertEqual(p1["zones"]["receptacle"], ["m-b"])
+            else:
+                self.assertEqual(p2["zones"]["hand"], ["m-b"])
+        error = session.rules_ability_targets_error(
+            self.ABILITIES[twist][0]["targets"],
+            [{"kind": "zone_card", "cardId": "m-b", "zone": "receptacle", "containerId": "p2", "ownerId": "p2"}], "p1",
+        )
+        self.assertIn("your own zone", error)
+        # Shymon: the targeted opponent cannot draw outside Recovery on the next turn.
+        self.put(p2, "deck", ["m-1", "m-2", "m-3"])
+        self.put(p2, "hand", [])
+        self.run_ability(session, shymon, [{"kind": "player", "playerId": "p2"}])
+        self.assertEqual(session.draw_rules_cards("p2", 1), ["m-1"])
+        session.phase_tracker["turn"] = turn + 1
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        self.assertEqual(session.draw_rules_cards("p2", 1), [])
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("recovery_draw")
+        self.assertEqual(session.draw_rules_cards("p2", 1), ["m-2"])
+        session.phase_tracker["turn"] = turn + 2
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        self.assertEqual(session.draw_rules_cards("p2", 1), ["m-3"])
+        session.phase_tracker["turn"] = turn
+        # Traumatize: lose 5 points, then the caster picks a card from the revealed hand.
+        self.put(p2, "hand", ["m-4", "m-5", "m-6"])
+        session.players["p1"]["score"] = 0
+        payload = self.run_ability(session, traumatize, [{"kind": "player", "playerId": "p2"}])[0]
+        self.assertEqual(payload["choiceKind"], "reveal_hand_discard")
+        self.assertEqual(session.players["p1"]["score"], -5)
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["cardIds"], ["m-4", "m-5", "m-6"])
+        self.assertIsNotNone(session.resolve_rules_choice("p2", choice["id"], option="1")[0])
+        error, resolved = session.resolve_rules_choice("p1", choice["id"], option="1")
+        self.assertIsNone(error)
+        self.assertEqual(resolved["cardId"], "m-5")
+        self.assertEqual(p2["zones"]["hand"], ["m-4", "m-6"])
+        self.assertIn("m-5", p2["zones"]["graveyard"])
+        # Damage distributes -3 among the chosen Interzone targets (the caster picks who takes the extra point).
+        session.rules_engine["ongoingEffects"] = []
+        session.battlefield = [
+            self.field_item("d1", "p2", "m-a", field_zone="interzone"),
+            self.field_item("d2", "p2", "m-c", field_zone="interzone"),
+            self.field_item("d3", "p2", "m-b", field_zone="interzone"),
+        ]
+        one = [self.card_target("d1", "m-a")]
+        self.run_ability(session, damage, one)
+        self.assertEqual(self.power_of(session, "d1"), 4 - 3)
+        session.rules_engine["ongoingEffects"] = []
+        two = [self.card_target("d1", "m-a"), self.card_target("d2", "m-c")]
+        payload = self.run_ability(session, damage, two)[0]
+        self.assertEqual(payload["choiceKind"], "pick_distribution_extra")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(session.resolve_rules_choice("p1", choice["id"], item_id="d3")[0], "Choose one of the targets.")
+        error, _resolved = session.resolve_rules_choice("p1", choice["id"], item_id="d2")
+        self.assertIsNone(error)
+        self.assertEqual((self.power_of(session, "d1"), self.power_of(session, "d2")), (4 - 1, 5 - 2))
+        session.rules_engine["ongoingEffects"] = []
+        three = [self.card_target("d1", "m-a"), self.card_target("d2", "m-c"), self.card_target("d3", "m-b")]
+        self.run_ability(session, damage, three)
+        self.assertEqual([self.power_of(session, i) for i in ("d1", "d2", "d3")], [3, 4, 1])
+        self.assertIsNone(session.rules_ability_targets_error(self.ABILITIES[damage][0]["targets"], three, "p1"))
+        # Echo of the Wilds distributes +3 on its controller's Interzone when it loses.
+        session.rules_engine["ongoingEffects"] = []
+        for item in session.battlefield:
+            item["ownerId"] = "p1"
+        self.run_ability_at(session, echo, 0, targets=[self.card_target("d1", "m-a")], controller="p1")
+        self.assertEqual(self.power_of(session, "d1"), 4 + 3)
+        # Unruly Flail needs an opponent's Will on the Stack that targets a Confrontation Manifestation.
+        session.card_rules[flail]["supportFromHandCondition"] = {"kind": "opponent_will_on_stack_targets_confrontation"}
+        session.battlefield = [self.field_item("conf2", "p1", "m-a")]
+        self.assertFalse(session.rules_support_from_hand_available("p1", flail))
+        session.rules_engine["actionStack"] = [{
+            "id": "w1", "kind": "play_card", "controllerId": "p2",
+            "source": {"cardId": weaken}, "sourceOnStack": True, "targets": [self.card_target("conf2", "m-a")],
+        }]
+        self.assertTrue(session.rules_support_from_hand_available("p1", flail))
+        self.assertFalse(session.rules_support_from_hand_available("p2", flail))
+        target_rules = self.ABILITIES[flail][0]["targets"]
+        self.assertIsNone(session.rules_ability_targets_error(target_rules, [{"kind": "stack_action", "actionId": "w1"}], "p1"))
+        session.rules_engine["actionStack"][0]["targets"] = [self.card_target("conf2", "m-a")]
+        session.find_battlefield_item("conf2")["fieldZone"] = "interzone"
+        self.assertIn("Confrontation Zone", session.rules_ability_targets_error(target_rules, [{"kind": "stack_action", "actionId": "w1"}], "p1"))
+        # Entering Support from hand lets Flail neutralize that Will through the normal trigger pipeline.
+        session.find_battlefield_item("conf2")["fieldZone"] = "confrontation"
+        session.battlefield.append(self.field_item("fl", "p1", flail, isSupport=True, controllerId="p1"))
+        session.queue_rules_support_entry_triggers(session.find_battlefield_item("fl"), played=True, from_zone="hand")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["kind"], "trigger_targets")
+        error, _chosen = session.resolve_rules_choice(
+            "p1", choice["id"], targets=[{"kind": "stack_action", "actionId": "w1", "cardId": weaken}]
+        )
+        self.assertIsNone(error)
+        result = session.apply_rules_action_result(session.rules_engine["actionStack"][-1])
+        self.assertEqual(result["status"], "neutralized")
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")

@@ -282,6 +282,12 @@ class CardCatalogTests(unittest.TestCase):
         self.assertFalse(by_name["Kox, the Amoral"]["canBeFirstManifestation"])
         self.assertEqual(by_name["Kox, the Amoral"]["constructionLimitBonus"], 50)
         self.assertFalse(by_name["Zizek, the Immolated"]["cannotEnterConfrontation"])
+        self.assertTrue(by_name["Forgotten Pile"]["canPayTributeFromLimbo"])
+        self.assertTrue(by_name["Solar Apparition"]["canPayTributeFromInterzone"])
+        self.assertEqual(by_name["Solar Apparition"]["tributeExtraPowerLoss"], 2)
+        self.assertEqual(by_name["Unruly Flail"]["supportFromHandCondition"], {
+            "kind": "opponent_will_on_stack_targets_confrontation",
+        })
         self.assertEqual(jondo["supportWinDestination"], "exile")
         self.assertEqual(chiff["supportFromHandCondition"], {
             "kind": "opponent_support_from_interzone_this_turn",

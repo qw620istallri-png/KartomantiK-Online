@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261010-rules-beta-105";
+const STATIC_ASSET_VERSION = "20261010-rules-beta-106";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -3127,7 +3127,9 @@ function rulesStructuredActionTargets(encodedAbility) {
     .filter((item) => (
       targetRules?.container === "opponent"
         ? item.containerId !== myPlayerId
-        : true
+        : targetRules?.container === "self"
+          ? item.containerId === myPlayerId
+          : true
     ))
     .filter((item) => (
       !targetRules?.enteredThisTurn
@@ -3166,6 +3168,13 @@ function rulesStructuredActionTargets(encodedAbility) {
           : ["activated_effect", "triggered_effect"].includes(action.kind) && action.source?.cardId
       ))
       .filter((action) => targetMatchesRules(action.source.cardId))
+      .filter((action) => !targetRules?.targetsConfrontationManifestation
+        || (action.targets || []).some((target) => {
+          const item = (latestState?.battlefield || []).find((candidate) => candidate.id === target.itemId);
+          return target.kind === "card"
+            && item?.fieldZone === "confrontation"
+            && cardsById.get(item.cardId)?.type === "manifestation";
+        }))
       .filter((action) => {
         if (targetRules?.controller === "self") return action.controllerId === myPlayerId;
         if (targetRules?.controller === "opponent") return action.controllerId !== myPlayerId;
@@ -3320,15 +3329,47 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
       });
     }
   }
+  if (!limboSource) {
+    const limboCards = latestState?.players?.[myPlayerId]?.zones?.graveyard?.cards || [];
+    for (const cardId of limboCards) {
+      const manifestation = cardsById.get(cardId);
+      if (
+        manifestation?.type !== "manifestation"
+        || !/\bcan be used as tribute from (?:the )?Limbo\./i.test(
+          String(manifestation.effect || ""),
+        )
+      ) continue;
+      manifestations.push({
+        cardId,
+        index: null,
+        selectionKey: `graveyard:${cardId}:${manifestations.length}`,
+        paymentValue: `graveyard|${cardId}`,
+        zone: "graveyard",
+      });
+    }
+  }
+  const fieldTributeActive = (latestState?.battlefield || []).some((item) => (
+    (passiveEffectsByCard.get(item.cardId) || []).some(
+      (effect) => effect.kind === "field_manifestations_as_tribute"
+    )
+  ));
   for (const item of latestState?.battlefield || []) {
     const manifestation = cardsById.get(item.cardId);
+    const interzoneTribute = item.fieldZone === "interzone"
+      && /\bcan be used as tribute from the Interzone\./i.test(
+        String(manifestation?.effect || ""),
+      );
+    const fieldTribute = fieldTributeActive
+      && ["interzone", "confrontation"].includes(item.fieldZone)
+      && !item.isTokenCard
+      && !/^Cannot be used (?:to pay tributes|as tribute)/im.test(
+        String(manifestation?.effect || ""),
+      );
     if (
       battlefieldItemControllerId(item) !== myPlayerId
-      || item.fieldZone !== "interzone"
       || manifestation?.type !== "manifestation"
-      || !/\bcan be used as tribute from the Interzone\./i.test(
-        String(manifestation.effect || ""),
-      )
+      || item.id === source?.itemId
+      || !(interzoneTribute || fieldTribute)
     ) continue;
     manifestations.push({
       cardId: item.cardId,
@@ -5773,6 +5814,19 @@ function rulesSupportFromHandAvailableClient(cardId) {
     && Number(permission.turn || 0)
       === Number(latestState?.phaseTracker?.turn || 0)
   ))) return true;
+  if (effect.includes("an opponent controls at least one Will in the stack that targets a manifestation in the Confrontation Zone")) {
+    return (latestState?.rulesEngine?.actionStack || []).some((entry) => (
+      entry.controllerId !== myPlayerId
+      && entry.kind === "play_card"
+      && ["ephemeral_will", "persistent_will"].includes(cardsById.get(entry.source?.cardId)?.type)
+      && (entry.targets || []).some((target) => {
+        const item = (latestState?.battlefield || []).find((candidate) => candidate.id === target.itemId);
+        return target.kind === "card"
+          && item?.fieldZone === "confrontation"
+          && cardsById.get(item.cardId)?.type === "manifestation";
+      })
+    ));
+  }
   if (!effect.includes("an opponent has put a manifestation into Support from their Interzone")) return false;
   const turn = Number(latestState?.phaseTracker?.turn || 0);
   return (latestState?.rulesEngine?.supportEntries || []).some((entry) => (
@@ -6741,6 +6795,53 @@ function renderRulesChoice() {
           type: "resolve_rules_choice",
           choiceId: choice.id,
           itemId: button.dataset.rulesPickItem,
+        });
+      };
+    });
+    panel.classList.remove("hidden");
+    return;
+  }
+  if (choice.kind === "pick_distribution_extra") {
+    $("#rulesChoiceHeading").textContent = t("rulesDistributeHeading");
+    $("#rulesChoiceText").textContent = t("rulesDistributeText");
+    const candidates = (choice.candidateItemIds || [])
+      .map((itemId) => latestState?.battlefield?.find((item) => item.id === itemId))
+      .filter(Boolean);
+    options.innerHTML = candidates.map((item) => `
+      <button type="button" class="rules-choice-card" data-rules-distribute-item="${esc(item.id)}" title="${esc(cardName(item.cardId))}">
+        <img src="${esc(cardImage(item.cardId))}" alt="">
+        <span>${esc(cardName(item.cardId))}</span>
+      </button>`).join("");
+    $$("[data-rules-distribute-item]").forEach((button) => {
+      button.onclick = () => {
+        button.disabled = true;
+        send({
+          type: "resolve_rules_choice",
+          choiceId: choice.id,
+          itemId: button.dataset.rulesDistributeItem,
+        });
+      };
+    });
+    panel.classList.remove("hidden");
+    return;
+  }
+  if (choice.kind === "reveal_hand_discard") {
+    $("#rulesChoiceHeading").textContent = t("rulesRevealDiscardHeading");
+    $("#rulesChoiceText").textContent = rulesText("rulesRevealDiscardText", {
+      player: rulesPlayerName(choice.targetPlayerId),
+    });
+    options.innerHTML = (choice.cardIds || []).map((cardId, index) => `
+      <button type="button" class="rules-choice-card" data-rules-reveal-index="${index}" title="${esc(cardName(cardId))}">
+        <img src="${esc(cardImage(cardId))}" alt="">
+        <span>${esc(cardName(cardId))}</span>
+      </button>`).join("");
+    $$("[data-rules-reveal-index]").forEach((button) => {
+      button.onclick = () => {
+        $$("[data-rules-reveal-index]").forEach((other) => { other.disabled = true; });
+        send({
+          type: "resolve_rules_choice",
+          choiceId: choice.id,
+          option: button.dataset.rulesRevealIndex,
         });
       };
     });
@@ -9234,6 +9335,13 @@ function formatLogEntry(e, options = {}) {
       if (d.kind === "pick_own_item") return f("logRulesPickOwnItem", {
         player: ownerName(d.playerId),
       });
+      if (d.kind === "distribute_power") return f("logRulesDistributePower", {
+        player: ownerName(d.playerId),
+      });
+      if (d.kind === "reveal_hand_discard") return f("logRulesRevealDiscard", {
+        player: ownerName(d.playerId), target: ownerName(d.targetPlayerId),
+        card: card(d.cardId),
+      }, ["card"]);
       if (d.kind === "immediate_effect_payment") return f(
         d.status === "paid"
           ? "logRulesImmediatePaymentPaid"

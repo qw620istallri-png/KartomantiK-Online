@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 284,
-    "explicitAbilities": 342,
+    "explicitCards": 292,
+    "explicitAbilities": 352,
     "statuses": {
-      "automated": 349,
+      "automated": 359,
       "generic": 0,
-      "manual": 101,
+      "manual": 91,
       "partial": 0
     }
   },
@@ -242,10 +242,18 @@
       "collectionNumber": 16,
       "name": "Echo of the Wilds",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "echo-distribute-power-on-loss"
+      ],
+      "mechanics": [
+        "result:distribute_power",
+        "trigger:loses_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "iuqpdn4gvjiu25v_en": {
       "collectionNumber": 17,
@@ -1187,10 +1195,19 @@
       "collectionNumber": 76,
       "name": "Shymon, the Mastermind",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "shymon-lock-opponent-draws"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "result:lock_next_turn_draws",
+        "target:player"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "tzizek39tj8rqq5_en": {
       "collectionNumber": 77,
@@ -1583,10 +1600,13 @@
       "collectionNumber": 103,
       "name": "Forgotten Pile",
       "setName": "Beta",
-      "status": "manual",
+      "status": "automated",
       "abilityIds": [],
       "mechanics": [],
-      "testRefs": []
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "7e2ppf4rfgkdfms_en": {
       "collectionNumber": 104,
@@ -2073,10 +2093,18 @@
       "collectionNumber": 132,
       "name": "Twist the Soul",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "twist-the-soul"
+      ],
+      "mechanics": [
+        "result:play_vessel_target_as_support",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "ul1tffi1wn5l3q5_en": {
       "collectionNumber": 133,
@@ -2177,10 +2205,18 @@
       "collectionNumber": 139,
       "name": "Traumatize",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "traumatize"
+      ],
+      "mechanics": [
+        "result:reveal_hand_discard_choice",
+        "target:player"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "uin3dxt3bc50z6q_en": {
       "collectionNumber": 140,
@@ -2529,11 +2565,20 @@
       "collectionNumber": 163,
       "name": "Unruly Flail",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": [],
-      "notes": "Conditional Support requires an opponent's targeting Will and must neutralize one; generic recognition incorrectly grants unconditional Support from hand."
+      "status": "automated",
+      "abilityIds": [
+        "unruly-flail-neutralize-will"
+      ],
+      "mechanics": [
+        "conditional-support",
+        "result:neutralize_stack_action",
+        "target:stack_action",
+        "trigger:enters_support"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "vt30v1v8anw5hib_en": {
       "collectionNumber": 164,
@@ -3334,10 +3379,13 @@
       "collectionNumber": 216,
       "name": "Solar Apparition",
       "setName": "Beta",
-      "status": "manual",
+      "status": "automated",
       "abilityIds": [],
       "mechanics": [],
-      "testRefs": []
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "pgvrly9397pua77_en": {
       "collectionNumber": 217,
@@ -3503,10 +3551,17 @@
       "collectionNumber": 227,
       "name": "Damage",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "damage-distribute-weakness"
+      ],
+      "mechanics": [
+        "result:distribute_power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "obn1uv72ewxv3y5_en": {
       "collectionNumber": 228,
@@ -3906,10 +3961,20 @@
       "collectionNumber": 252,
       "name": "Zum, the Manifold",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "zum-weaken",
+        "zum-silence",
+        "zum-strengthen"
+      ],
+      "mechanics": [
+        "ongoing:lose_effects",
+        "ongoing:power_modifier"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "ir09smkker8rgxd_en": {
       "collectionNumber": 253,
@@ -3933,10 +3998,17 @@
       "collectionNumber": 255,
       "name": "Orator of the Absurd",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "field-manifestations-as-tribute"
+      ],
+      "mechanics": [
+        "passive:field_manifestations_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "ghb6i1uoiqq12o2_en": {
       "collectionNumber": 256,

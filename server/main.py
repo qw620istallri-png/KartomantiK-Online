@@ -208,6 +208,16 @@ def build_card_rules(cards, abilities_by_card):
                 re.IGNORECASE,
             )),
             "interzoneTributePower": interzone_tribute_power_for_card(card),
+            "canPayTributeFromLimbo": bool(re.search(
+                r"\bcan be used as tribute from (?:the )?Limbo\.",
+                card.get("effect") or "",
+                re.IGNORECASE,
+            )),
+            "tributeExtraPowerLoss": int(next(iter(re.findall(
+                r"used as tribute for an ephemeral Will that would reduce the power"
+                r".{0,80}?by an additional -(\d+)",
+                card.get("effect") or "", re.IGNORECASE | re.DOTALL,
+            )), 0)),
             "playBeforeRevelation": bool(re.search(
                 r"\bcan be played before the Revelation\.",
                 card.get("effect") or "",
@@ -231,6 +241,8 @@ def build_card_rules(cards, abilities_by_card):
             "supportFromHandCondition": (
                 {"kind": "opponent_support_from_interzone_this_turn"}
                 if "an opponent has put a manifestation into Support from their Interzone" in (card.get("effect") or "")
+                else {"kind": "opponent_will_on_stack_targets_confrontation"}
+                if "an opponent controls at least one Will in the stack that targets a manifestation in the Confrontation Zone" in (card.get("effect") or "")
                 else None
             ),
             "supportFromInterzone": bool(

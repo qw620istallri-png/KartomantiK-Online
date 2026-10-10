@@ -1212,8 +1212,11 @@
       ]
     },
     "tdy2112mspb7u97_en": {
-      "status": "manual",
-      "notes": "Conditional Support requires an opponent's targeting Will and must neutralize one; generic recognition incorrectly grants unconditional Support from hand."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "43faoiy4cmoxmaw_en": {
       "status": "automated",
@@ -2468,6 +2471,69 @@
       ]
     },
     "67009ud077sgz7b_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "7j3udrfh5t8vl25_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "g3zumpyf623hto6_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "birhlimm9e8lq3d_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "282b0n6ldnzdp0p_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "gu9rppos4r9ucsr_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "n0natbzt0nfylml_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "5r7g2e0r6q17lur_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "goxjkkrwos0lhx4_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "6b4f3yh4tk4091p_en": {
       "status": "automated",
       "testRefs": [
         "tests/test_game_state.py",
