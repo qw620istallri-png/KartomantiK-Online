@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261010-rules-beta-109";
+const STATIC_ASSET_VERSION = "20261010-rules-beta-110";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -2909,6 +2909,10 @@ function rulesActivatedActionDraft(item, abilityOverride = null) {
     || (
       battlefieldItemControllerId(item) !== myPlayerId
       && !ability?.anyPlayer
+    )
+    || (
+      ability?.opponentOnly
+      && battlefieldItemControllerId(item) === myPlayerId
     )
     || !latestState?.rulesEngine?.enabled
     || latestState.rulesEngine.pendingChoice
@@ -6527,6 +6531,29 @@ function renderRulesChoice() {
       button.onclick = () => {
         button.disabled = true;
         send({ type: "resolve_rules_choice", choiceId: choice.id, option: button.dataset.rulesWeakenOption });
+      };
+    });
+    panel.classList.remove("hidden");
+    return;
+  }
+  if (choice.kind === "clemency_choice") {
+    $("#rulesChoiceHeading").textContent = t("rulesClemencyHeading");
+    $("#rulesChoiceText").textContent = rulesText("rulesClemencyText", {
+      card: cardName(choice.sourceCardId),
+      will: cardName(choice.relatedCardId),
+      points: choice.points,
+    });
+    options.innerHTML = `
+      <button type="button" class="rules-choice-destination" data-rules-clemency-option="allow">
+        <strong>${esc(rulesText("rulesClemencyAllow", { points: choice.points }))}</strong>
+      </button>
+      <button type="button" class="rules-choice-destination" data-rules-clemency-option="neutralize">
+        <strong>${esc(t("rulesClemencyNeutralize"))}</strong>
+      </button>`;
+    $$("[data-rules-clemency-option]").forEach((button) => {
+      button.onclick = () => {
+        button.disabled = true;
+        send({ type: "resolve_rules_choice", choiceId: choice.id, option: button.dataset.rulesClemencyOption });
       };
     });
     panel.classList.remove("hidden");

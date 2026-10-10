@@ -814,3 +814,18 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Sandokaron: déclencheur `sourceCounterMax` (exil sans compteur en fin de tour). Regurgitating Catacomb: ne gère que l'exil sur victoire (pas le remplacement « quitte la Zone de Confrontation par un effet »).
 - Eorthoda: résultat de déclencheur `protect_related_will` (via `relatedActionId`). L'action posée sur la Pile reçoit `cannotBeNeutralized` (bloque `neutralize_stack_action` et le mode `neutralize` de `counter_stack_action_unless_payment`, pas l'annulation `cancel`); une Volonté Persistante reçoit en plus une Protection contre les adversaires jusqu'à la fin du tour, transférée à la carte quand elle entre sur le terrain.
 - Registre: 379 automated / 0 partial / 71 manual.
+
+## Lot 16 (Powerful Pidue, Gorte, Bonzai, Numbi, Guart, Malaleuco, Gomeran, Simulacrum of Clemency, Spiked Pit, Empathic Mask)
+
+- Mains révélées: `can_view_zone` accepte désormais la zone `hand` via `rules_hand_revealed_to`. Gorte (passif `reveal_opponent_hands`) révèle la main des adversaires de son contrôleur à tous les joueurs tant qu'il est actif; Bonzai (`vessel_reveals_owner_hand`, dans un Vessel) montre la main du propriétaire du Vessel à son propriétaire pendant `confrontation_choose` et `confrontation_before_revelation` seulement. Le client affichait déjà `hand.cards` d'un adversaire (éventail « connu »).
+- Gorte: capacité `anyPlayer` + nouveau drapeau `opponentOnly` (refusé côté serveur dans `rules_action_source` et masqué côté client dans `rulesActivatedActionDraft`). Résultat `disable_source_effects` (`effectsDisabled`, définitif).
+- Numbi: `chain_from_zone` (main, adversaires) avec `afterChain: boost_controller_first` (valeur 2 jusqu'à la fin du tour sur la Première Manifestation du contrôleur). Si l'adversaire ne peut pas Enchaîner, la preuve de main existante (`handProof`) sert de « il montre sa main ».
+- Guart: nouvel événement observé `power_gained` (effets `power_modifier` positifs et compteurs de puissance), symétrique de `power_lost`. Les gains d'un adversaire sont filtrés par `eventController`.
+- Malaleuco: résultat `move_hand_source_to_interzone` (vérifie la place dans l'Interzone à la déclaration et à la résolution). La copie de Volonté est le `copy_stack_action` existant.
+- Gomeran: résultat `create_event_token_copy_in_support` (jeton copie en Soutien via `create_rules_token_copy`). Les copies sont des jetons, donc pas de boucle. Les déclencheurs d'entrée du jeton lui-même ne sont pas relancés (limite connue).
+- Simulacrum of Clemency: résultat `clemency_choice` → choix `clemency_choice` pour le joueur adverse (`allow`/`neutralize`). Neutraliser retire la Volonté de la Pile (`counter_rules_stack_action`) et épuise Simulacrum; si la Volonté ne peut pas être neutralisée, Simulacrum gagne quand même les points. Passif `no_effects_while_exhausted` dans `rules_item_effects_active`.
+- Spiked Pit: passif `interzone_entry_penalty`, appliqué par `apply_rules_interzone_entry_penalty` (depuis `mark_rules_interzone_entry` et le placement manuel). Le malus est un compteur de puissance -1 qui reste tant que la Manifestation est sur le terrain (le texte ne donne pas de durée).
+- Empathic Mask: `ongoingEffect` `temperament_override` (tempérament de base choisi, jusqu'à la fin du tour), appliqué dans `rules_manifestation_characteristics`.
+- Powerful Pidue: cinq déclencheurs `card_played` par tempérament (Volonté ou Manifestation de l'adversaire pendant `confrontation_before_revelation`/`confrontation_reaction`). Le filtre « depuis la main / en Soutien » n'est pas appliqué: toute carte jouée à ces phases compte.
+- Version des assets: `20261010-rules-beta-110`.
+- Registre: 389 automated / 0 partial / 61 manual.

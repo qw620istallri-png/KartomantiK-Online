@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 309,
-    "explicitAbilities": 376,
+    "explicitCards": 319,
+    "explicitAbilities": 398,
     "statuses": {
-      "automated": 379,
+      "automated": 389,
       "generic": 0,
-      "manual": 71,
+      "manual": 61,
       "partial": 0
     }
   },
@@ -276,10 +276,20 @@
       "collectionNumber": 18,
       "name": "Guart, the Slinger",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "guart-answers-opponent-power-gain",
+        "guart-answers-own-power-loss"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "trigger:power_gained",
+        "trigger:power_lost"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "dbevnzpvngas8pg_en": {
       "collectionNumber": 19,
@@ -1202,10 +1212,18 @@
       "collectionNumber": 75,
       "name": "Gomeran, Echo Mistress",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "gomeran-copies-support-entry"
+      ],
+      "mechanics": [
+        "result:create_event_token_copy_in_support",
+        "trigger:enters_support"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "n0natbzt0nfylml_en": {
       "collectionNumber": 76,
@@ -1298,10 +1316,21 @@
       "collectionNumber": 81,
       "name": "Malaleuco, the Will-shaper",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "malaleuco-copy-will",
+        "malaleuco-to-interzone"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "result:copy_stack_action",
+        "result:move_hand_source_to_interzone",
+        "target:stack_action"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "b6ebpyb30urtas2_en": {
       "collectionNumber": 82,
@@ -3283,10 +3312,18 @@
       "collectionNumber": 208,
       "name": "Numbi, the Irritating",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "numbi-force-chain"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "trigger:revelation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "mxbi84phhueeolc_en": {
       "collectionNumber": 209,
@@ -4030,10 +4067,21 @@
       "collectionNumber": 254,
       "name": "Gorte, Timeless",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "opponents-hands-revealed",
+        "opponent-silences-gorte"
+      ],
+      "mechanics": [
+        "activation:any-player",
+        "cost:tribute",
+        "passive:reveal_opponent_hands",
+        "result:disable_source_effects"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "birhlimm9e8lq3d_en": {
       "collectionNumber": 255,
@@ -4587,10 +4635,22 @@
       "collectionNumber": 289,
       "name": "Empathic Mask",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "mask-becomes-choleric",
+        "mask-becomes-vitreous",
+        "mask-becomes-phlegmatic",
+        "mask-becomes-capricious",
+        "mask-becomes-melancholic"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "ongoing:temperament_override"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "7gaov0c4cjndl9w_en": {
       "collectionNumber": 290,
@@ -5136,10 +5196,20 @@
       "collectionNumber": 323,
       "name": "Simulacrum of Clemency",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "clemency-exhausted-no-effects",
+        "clemency-gain-unless-neutralized"
+      ],
+      "mechanics": [
+        "passive:no_effects_while_exhausted",
+        "result:clemency_choice",
+        "trigger:will_played"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-024": {
       "collectionNumber": 324,
@@ -5293,10 +5363,17 @@
       "collectionNumber": 334,
       "name": "Bonzai, the Unexpected",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "vessel-owner-shows-hand"
+      ],
+      "mechanics": [
+        "passive:vessel_reveals_owner_hand"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-035": {
       "collectionNumber": 335,
@@ -6586,10 +6663,17 @@
       "collectionNumber": 417,
       "name": "Spiked Pit",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "interzone-entry-penalty"
+      ],
+      "mechanics": [
+        "passive:interzone_entry_penalty"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-118": {
       "collectionNumber": 418,
@@ -6783,10 +6867,27 @@
       "collectionNumber": 429,
       "name": "Powerful Pidue",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "pidue-choleric-weakens",
+        "pidue-vitreous-silences",
+        "pidue-phlegmatic-token",
+        "pidue-capricious-draws",
+        "pidue-melancholic-discards"
+      ],
+      "mechanics": [
+        "ongoing:lose_effects",
+        "ongoing:power_modifier",
+        "result:create_support_token",
+        "result:discard_hand_target",
+        "result:draw_owner",
+        "target:player",
+        "trigger:card_played"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-130": {
       "collectionNumber": 430,

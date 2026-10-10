@@ -1361,6 +1361,40 @@ function startServer() {
     assert.deepEqual(extraReorder.options, ["top", "bottom", "extra"]);
     assert.equal(extraReorder.extra.length, 1);
     assert.equal(extraReorder.top, 2);
+    const clemencyUi = await page.evaluate(() => {
+      const ids = [...cardsById.keys()];
+      const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };
+      const panelVisible = () => !document.querySelector("#rulesChoicePanel").classList.contains("hidden");
+      const choice = (playerId) => ({
+        id: "clemency", kind: "clemency_choice", playerId, sourceCardId: ids[0], relatedCardId: ids[1],
+        points: 5, options: ["allow", "neutralize"],
+      });
+      latestState.rulesEngine.priorityPlayerId = "p1";
+      latestState.rulesEngine.pendingChoice = choice("p2");
+      renderAll();
+      const notMine = panelVisible();
+      latestState.rulesEngine.pendingChoice = choice("p1");
+      window.__sent = [];
+      renderAll();
+      const visible = panelVisible();
+      const buttons = [...document.querySelectorAll("[data-rules-clemency-option]")].map((button) => button.dataset.rulesClemencyOption);
+      document.querySelector('[data-rules-clemency-option="neutralize"]').click();
+      const payload = window.__sent.find((entry) => entry.type === "resolve_rules_choice");
+      const ownGorteHidden = rulesActivatedActionDraft(
+        { id: "own-gorte", cardId: ids[0], controllerId: "p1", ownerId: "p1", faceUp: true },
+        { id: "x", anyPlayer: true, opponentOnly: true },
+      ) === null;
+      latestState.rulesEngine.priorityPlayerId = saved.priority;
+      latestState.rulesEngine.pendingChoice = saved.choice;
+      renderAll();
+      return { notMine, visible, buttons, option: payload?.option, choiceId: payload?.choiceId, ownGorteHidden };
+    });
+    assert.equal(clemencyUi.notMine, false);
+    assert.equal(clemencyUi.visible, true);
+    assert.deepEqual(clemencyUi.buttons, ["allow", "neutralize"]);
+    assert.equal(clemencyUi.option, "neutralize");
+    assert.equal(clemencyUi.choiceId, "clemency");
+    assert.equal(clemencyUi.ownGorteHidden, true);
     const fieldTributeUi = await page.evaluate(() => {
       const orator = "birhlimm9e8lq3d_en", pile = "g3zumpyf623hto6_en";
       const will = [...cardsById.values()].find((card) => card.type === "ephemeral_will" && /^\{[A-Z]\}$/.test(String(card.powerCost || "")));

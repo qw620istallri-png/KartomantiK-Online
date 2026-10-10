@@ -12169,5 +12169,392 @@ class TournamentModeTests(unittest.TestCase):
         self.assertEqual(escalated[0]["followupAction"], "draw")
 
 
+class LotSixteenTests(unittest.TestCase):
+    """Hand reveals, Guart/Gomeran watchers, Numbi, Clemency, Pit and the Mask."""
+
+    ROOT = Path(__file__).resolve().parent.parent
+    ABILITIES = json.loads((ROOT / "public" / "card-abilities.json").read_text(encoding="utf-8"))
+    PIDUE, GORTE, BONZAI, NUMBI, GUART = (
+        "inner-deserts-129", "w8364ml7m6erl8s_en", "inner-deserts-034",
+        "wer3o71zo9myece_en", "xzb2jwtkunq5tys_en",
+    )
+    MALALEUCO, GOMERAN, CLEMENCY, PIT, MASK = (
+        "7yu566ip7zuqdoc_en", "xfgbjv2gjb09fj9_en", "inner-deserts-023",
+        "inner-deserts-117", "1ixfmjkfewc0o42_en",
+    )
+    ALL = (PIDUE, GORTE, BONZAI, NUMBI, GUART, MALALEUCO, GOMERAN, CLEMENCY, PIT, MASK)
+
+    @classmethod
+    def real_rules(cls):
+        sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from test_card_catalog import build_server_rules
+        cards = json.loads((cls.ROOT / "public" / "cards-data.json").read_text(encoding="utf-8"))
+        cards += json.loads(
+            (cls.ROOT / "public" / "extensions" / "inner-desert" / "cards.json").read_text(encoding="utf-8")
+        )
+        return build_server_rules(
+            [card for card in cards if card["id"] in cls.ALL], cls.ABILITIES,
+        )
+
+    def make_session(self):
+        manifestation_ids = {f"m-{index}" for index in range(20)} | {
+            card_id for card_id in self.ALL
+            if card_id not in {self.CLEMENCY, self.PIT, self.MASK}
+        }
+        card_rules = {
+            card_id: {"type": "manifestation", "power": 1, "temperaments": ["phlegmatic"]}
+            for card_id in (f"m-{index}" for index in range(20))
+        }
+        card_rules.update(self.real_rules())
+        card_rules["will-x"] = {"type": "ephemeral_will", "cost": 1, "temperaments": ["phlegmatic"]}
+        session = Session(
+            rules_beta=True, card_points={}, manifestation_ids=manifestation_ids,
+            card_rules=card_rules,
+        )
+        p1 = session.get_or_create_player("p1", "P1", seat=0)
+        p2 = session.get_or_create_player("p2", "P2", seat=1)
+        session.rules_engine["deckConfirmedPlayerIds"] = ["p1", "p2"]
+        session.phase_tracker["index"] = 1
+        return session, p1, p2
+
+    @staticmethod
+    def put(player, zone, cards):
+        owners = cards if isinstance(cards, dict) else {card_id: player["id"] for card_id in cards}
+        player["zones"][zone] = list(owners)
+        player["zoneOwners"][zone] = dict(owners)
+
+    @staticmethod
+    def field_item(item_id, owner_id, card_id, field_zone="confrontation", **extra):
+        return {
+            "id": item_id, "ownerId": owner_id, "cardId": card_id,
+            "faceUp": True, "fieldZone": field_zone, "counters": {}, **extra,
+        }
+
+    def power_of(self, session, item_id):
+        return session.rules_manifestation_characteristics(
+            session.find_battlefield_item(item_id)
+        )["power"]
+
+    def ability(self, card_id, ability_id):
+        return next(entry for entry in self.ABILITIES[card_id] if entry["id"] == ability_id)
+
+    @staticmethod
+    def trigger_ids(session, actions):
+        """Ids of queued triggers, including one parked on a target choice."""
+        ids = [entry["ability"]["id"] for entry in actions]
+        choice = session.rules_engine.get("pendingChoice")
+        if choice and choice.get("kind") == "trigger_targets":
+            ids.append(choice["_triggerAction"]["ability"]["id"])
+            session.rules_engine["pendingChoice"] = None
+        return ids
+
+    def test_all_lot_sixteen_cards_are_registered_and_built_by_the_server(self):
+        rules = self.real_rules()
+        self.assertEqual(set(rules), set(self.ALL))
+        self.assertEqual(
+            [entry["kind"] for entry in rules[self.GORTE]["passiveEffects"]], ["reveal_opponent_hands"]
+        )
+        gorte_ability = rules[self.GORTE]["activatedAbilities"][0]
+        self.assertTrue(gorte_ability["anyPlayer"])
+        self.assertTrue(gorte_ability["opponentOnly"])
+        self.assertEqual(len(rules[self.PIDUE]["triggeredAbilities"]), 5)
+        self.assertEqual(len(rules[self.MASK]["activatedAbilities"]), 5)
+        self.assertEqual(
+            rules[self.MASK]["activatedAbilities"][0]["ongoingEffect"]["temperament"], "choleric"
+        )
+
+    def test_gorte_reveals_the_opponents_hand_until_an_opponent_silences_it(self):
+        session, p1, p2 = self.make_session()
+        self.put(p2, "hand", ["m-1", "m-2"])
+        self.put(p1, "hand", ["m-3"])
+        gorte = self.field_item(
+            "gorte", "p1", self.GORTE, x=100.0, y=100.0, rotation=0.0, stackedOn=None,
+        )
+        session.battlefield = [gorte]
+        self.assertTrue(session.can_view_zone("p1", "player", "p2", "hand"))
+        self.assertFalse(session.can_view_zone("p2", "player", "p1", "hand"))
+        view = session.serialize_for("p1", "player")
+        self.assertEqual(view["players"]["p2"]["zones"]["hand"]["cards"], ["m-1", "m-2"])
+        self.assertNotIn("cards", session.serialize_for("p2", "player")["players"]["p1"]["zones"]["hand"])
+        # Only an opponent of Gorte's controller may pay to silence it.
+        source = {"cardId": self.GORTE, "zone": "battlefield", "itemId": "gorte"}
+        error, _ = session.rules_action_source(
+            "p1", "activated_effect", source, ability_id="opponent-silences-gorte"
+        )
+        self.assertIn("opponent", error)
+        error, _ = session.rules_action_source(
+            "p2", "activated_effect", source, ability_id="opponent-silences-gorte"
+        )
+        self.assertIsNone(error)
+        payload = session.apply_rules_action_result({
+            "controllerId": "p2", "source": source, "targets": [],
+            "ability": {"result": self.ability(self.GORTE, "opponent-silences-gorte")["result"]},
+        })
+        self.assertEqual(payload["status"], "disabled")
+        self.assertTrue(gorte["effectsDisabled"])
+        self.assertFalse(session.can_view_zone("p1", "player", "p2", "hand"))
+
+    def test_bonzai_in_a_vessel_shows_the_owner_hand_only_before_the_revelation(self):
+        session, p1, p2 = self.make_session()
+        self.put(p2, "hand", ["m-1"])
+        self.put(p2, "receptacle", {self.BONZAI: "p1"})
+        phases = session.phase_sequence()
+        session.phase_tracker["index"] = phases.index("confrontation_before_revelation")
+        self.assertTrue(session.can_view_zone("p1", "player", "p2", "hand"))
+        self.assertFalse(session.can_view_zone("p2", "player", "p1", "hand"))
+        session.phase_tracker["index"] = phases.index("confrontation_reaction")
+        self.assertFalse(session.can_view_zone("p1", "player", "p2", "hand"))
+        session.phase_tracker["index"] = phases.index("confrontation_choose")
+        self.put(p2, "receptacle", {"m-5": "p1"})
+        self.assertFalse(session.can_view_zone("p1", "player", "p2", "hand"))
+
+    def test_numbi_boosts_the_first_manifestation_when_the_opponent_chains(self):
+        session, p1, p2 = self.make_session()
+        numbi = self.field_item("numbi", "p1", self.NUMBI, field_zone="interzone")
+        first = self.field_item("first", "p1", "m-1")
+        session.battlefield = [numbi, first]
+        session.rules_engine["firstManifestationItemIds"] = {"p1": "first"}
+        self.put(p2, "hand", ["m-2", "will-x"])
+        ability = self.ability(self.NUMBI, "numbi-force-chain")
+        actions = session.queue_rules_triggers(
+            self.NUMBI, "p1", "revelation", item_id="numbi", face_up=True,
+            zone="interzone", event_controller_id="p1", defer=True, controller_id="p1",
+        )
+        self.assertEqual([entry["ability"]["id"] for entry in actions], ["numbi-force-chain"])
+        self.assertEqual(actions[0]["ability"]["result"]["afterChain"], {"kind": "boost_controller_first", "value": 2})
+        payload = session.apply_rules_action_result({**actions[0], "optionalAccepted": True})
+        self.assertEqual(payload["choiceKind"], "chain_manifestation")
+        self.assertEqual(payload["playerId"], "p2")
+        choice = session.rules_engine["pendingChoice"]
+        error, result = session.resolve_rules_choice("p2", choice["id"], card_ids=["m-2"], placement={"x": 400, "y": 300})
+        self.assertIsNone(error)
+        self.assertEqual(result["afterChain"]["value"], 2)
+        self.assertEqual(self.power_of(session, "first"), 3)
+        session.phase_tracker["turn"] += 1
+        session.prune_rules_ongoing_effects()
+        self.assertEqual(self.power_of(session, "first"), 1)
+
+    def test_numbi_reveals_the_hand_of_an_opponent_who_cannot_chain(self):
+        session, p1, p2 = self.make_session()
+        first = self.field_item("first", "p1", "m-1")
+        session.battlefield = [first]
+        session.rules_engine["firstManifestationItemIds"] = {"p1": "first"}
+        self.put(p2, "hand", ["will-x"])
+        payload = session.apply_rules_action_result({
+            "id": "numbi", "controllerId": "p1", "optionalAccepted": True,
+            "source": {"cardId": self.NUMBI}, "targets": [],
+            "ability": {"result": self.ability(self.NUMBI, "numbi-force-chain")["result"]},
+        })
+        self.assertEqual(payload["status"], "no_eligible_card")
+        self.assertEqual(payload["handProof"], ["will-x"])
+        self.assertEqual(self.power_of(session, "first"), 1)
+
+    def test_guart_answers_power_gains_by_opponents_and_power_losses_of_its_side(self):
+        session, p1, p2 = self.make_session()
+        guart = self.field_item("guart", "p1", self.GUART)
+        mine = self.field_item("mine", "p1", "m-1")
+        theirs = self.field_item("theirs", "p2", "m-2")
+        session.battlefield = [guart, mine, theirs]
+        for effect_value, target, expected in ((2, "theirs", "guart-answers-opponent-power-gain"),
+                                               (-1, "mine", "guart-answers-own-power-loss")):
+            session.rules_engine["observedEvents"] = []
+            session.create_rules_ongoing_effects({
+                "id": f"fx{effect_value}", "controllerId": "p2",
+                "source": {"cardId": "m-2", "itemId": "theirs"},
+                "targets": [{"kind": "card", "itemId": target, "cardId": "x", "ownerId": "p1"}],
+                "ability": {"id": "fx", "ongoingEffect": {
+                    "kind": "power_modifier", "value": effect_value, "duration": "until_end_of_turn"}},
+            })
+            actions = session.queue_rules_observed_event_triggers(defer=True)
+            self.assertEqual(self.trigger_ids(session, actions), [expected])
+        # Guart's own +1 is not an opponent power gain, so it cannot loop.
+        session.rules_engine["observedEvents"] = []
+        session.create_rules_ongoing_effects({
+            "id": "own", "controllerId": "p1", "source": {"cardId": self.GUART, "itemId": "guart"},
+            "targets": [{"kind": "card", "itemId": "mine", "cardId": "m-1", "ownerId": "p1"}],
+            "ability": {"id": "g", "ongoingEffect": {"kind": "power_modifier", "value": 1, "duration": "until_end_of_turn"}},
+        })
+        self.assertEqual(self.trigger_ids(session, session.queue_rules_observed_event_triggers(defer=True)), [])
+
+    def test_malaleuco_enters_the_interzone_from_hand_while_there_is_space(self):
+        session, p1, _p2 = self.make_session()
+        self.put(p1, "hand", [self.MALALEUCO])
+        source = {"cardId": self.MALALEUCO, "zone": "hand", "ownerId": "p1", "containerId": "p1"}
+        ability = self.ability(self.MALALEUCO, "malaleuco-to-interzone")
+        session.battlefield = [
+            self.field_item(f"i{index}", "p1", f"m-{index}", field_zone="interzone") for index in range(3)
+        ]
+        error, _ = session.rules_action_ability(
+            "p1", "activated_effect", source, "malaleuco-to-interzone", []
+        )
+        self.assertEqual(error, "There is no space left in your Interzone.")
+        self.assertEqual(session.apply_rules_action_result({
+            "controllerId": "p1", "source": source, "targets": [], "ability": {"result": ability["result"]},
+        })["status"], "no_space")
+        self.assertEqual(p1["zones"]["hand"], [self.MALALEUCO])
+        session.battlefield.pop()
+        error, _ = session.rules_action_ability(
+            "p1", "activated_effect", source, "malaleuco-to-interzone", []
+        )
+        self.assertIsNone(error)
+        payload = session.apply_rules_action_result({
+            "controllerId": "p1", "source": source, "targets": [], "ability": {"result": ability["result"]},
+        })
+        self.assertEqual(payload["status"], "moved")
+        self.assertEqual(p1["zones"]["hand"], [])
+        moved = session.find_battlefield_item(payload["itemId"])
+        self.assertEqual((moved["cardId"], moved["fieldZone"], moved["faceUp"]), (self.MALALEUCO, "interzone", True))
+
+    def test_gomeran_puts_a_token_copy_of_each_non_token_manifestation_in_support(self):
+        session, p1, _p2 = self.make_session()
+        gomeran = self.field_item("gomeran", "p1", self.GOMERAN)
+        entering = self.field_item("entering", "p1", "m-1", isSupport=True)
+        session.battlefield = [gomeran, entering]
+        actions = session.queue_rules_support_entry_triggers(entering, played=True, from_zone="hand", defer=True)
+        self.assertEqual([entry["ability"]["id"] for entry in actions], ["gomeran-copies-support-entry"])
+        payload = session.apply_rules_action_result(actions[0])
+        self.assertEqual(payload["status"], "created")
+        copy = session.find_battlefield_item(payload["itemId"])
+        self.assertTrue(copy["isTokenCopy"] and copy["isSupport"])
+        self.assertEqual((copy["cardId"], copy["controllerId"]), ("m-1", "p1"))
+        # The copy is a token, so entering Support does not copy it again.
+        self.assertEqual(session.apply_rules_action_result({
+            **actions[0], "ability": {**actions[0]["ability"], "trigger": {
+                **actions[0]["ability"]["trigger"], "eventItemId": copy["id"]}},
+        })["status"], "not_applicable")
+        # Opponents' entries and Gomeran outside the Confrontation Zone do nothing.
+        theirs = self.field_item("theirs", "p2", "m-2", isSupport=True)
+        session.battlefield.append(theirs)
+        self.assertEqual(session.queue_rules_support_entry_triggers(theirs, defer=True), [])
+        gomeran["fieldZone"] = "interzone"
+        self.assertEqual(session.queue_rules_support_entry_triggers(entering, defer=True), [])
+
+    def play_will(self, session, owner_id="p2", action_id="will-action"):
+        action = {
+            "id": action_id, "kind": "play_card", "controllerId": owner_id, "sourceOnStack": True,
+            "source": {"cardId": "will-x", "zone": "hand", "ownerId": owner_id},
+        }
+        session.rules_engine["actionStack"] = [action]
+        return action
+
+    def clemency_trigger(self, session, will_action):
+        simulacrum = self.field_item("sim", "p1", self.CLEMENCY, field_zone="field")
+        session.battlefield = [simulacrum]
+        actions = session.queue_rules_triggers(
+            self.CLEMENCY, "p1", "will_played", item_id="sim", face_up=True,
+            event_controller_id="p2", defer=True, controller_id="p1", related_action=will_action,
+        )
+        self.assertEqual([entry["ability"]["id"] for entry in actions], ["clemency-gain-unless-neutralized"])
+        return simulacrum, actions[0]
+
+    def test_clemency_gives_five_points_unless_the_opponent_neutralizes_their_will(self):
+        session, p1, p2 = self.make_session()
+        start = p1["score"]
+        simulacrum, trigger = self.clemency_trigger(session, self.play_will(session))
+        payload = session.apply_rules_action_result(trigger)
+        self.assertEqual((payload["choiceKind"], payload["playerId"]), ("clemency_choice", "p2"))
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["options"], ["allow", "neutralize"])
+        self.assertIsNotNone(session.resolve_rules_choice("p1", choice["id"], option="allow")[0])
+        error, result = session.resolve_rules_choice("p2", choice["id"], option="allow")
+        self.assertIsNone(error)
+        self.assertEqual((result["status"], p1["score"] - start), ("gained", 5))
+        self.assertEqual(int(round(simulacrum.get("rotation") or 0)), 0)
+
+    def test_clemency_neutralizing_removes_the_will_and_exhausts_simulacrum(self):
+        session, p1, p2 = self.make_session()
+        start = p1["score"]
+        will_action = self.play_will(session)
+        simulacrum, trigger = self.clemency_trigger(session, will_action)
+        session.apply_rules_action_result(trigger)
+        choice = session.rules_engine["pendingChoice"]
+        error, result = session.resolve_rules_choice("p2", choice["id"], option="neutralize")
+        self.assertIsNone(error)
+        self.assertEqual(result["status"], "neutralized")
+        self.assertNotIn(will_action, session.rules_engine["actionStack"])
+        self.assertEqual(p1["score"], start)
+        self.assertEqual(simulacrum["rotation"], 90.0)
+        self.assertFalse(session.rules_item_effects_active(simulacrum))
+        simulacrum["rotation"] = 0.0
+        self.assertTrue(session.rules_item_effects_active(simulacrum))
+
+    def test_clemency_gives_points_when_the_will_cannot_be_neutralized(self):
+        session, p1, p2 = self.make_session()
+        start = p1["score"]
+        will_action = self.play_will(session)
+        will_action["cannotBeNeutralized"] = True
+        _simulacrum, trigger = self.clemency_trigger(session, will_action)
+        session.apply_rules_action_result(trigger)
+        error, result = session.resolve_rules_choice(
+            "p2", session.rules_engine["pendingChoice"]["id"], option="neutralize"
+        )
+        self.assertIsNone(error)
+        self.assertEqual((result["status"], p1["score"] - start), ("gained", 5))
+
+    def test_spiked_pit_weakens_manifestations_entering_an_opponents_interzone(self):
+        session, p1, _p2 = self.make_session()
+        pit = self.field_item("pit", "p1", self.PIT, field_zone="field")
+        theirs = self.field_item("theirs", "p2", "m-1", field_zone="interzone")
+        mine = self.field_item("mine", "p1", "m-2", field_zone="interzone")
+        session.battlefield = [pit, theirs, mine]
+        session.card_rules["m-1"]["power"] = 3
+        session.mark_rules_interzone_entry(theirs)
+        session.mark_rules_interzone_entry(mine)
+        self.assertEqual(self.power_of(session, "theirs"), 2)
+        self.assertEqual(self.power_of(session, "mine"), 1)
+        self.assertEqual(session.rules_engine["observedEvents"][-1]["kind"], "power_lost")
+        pit["effectsDisabled"] = True
+        late = self.field_item("late", "p2", "m-3", field_zone="interzone")
+        session.battlefield.append(late)
+        session.mark_rules_interzone_entry(late)
+        self.assertEqual(self.power_of(session, "late"), 1)
+
+    def test_empathic_mask_changes_the_base_temperament_until_end_of_turn(self):
+        session, p1, _p2 = self.make_session()
+        target = self.field_item("target", "p2", "m-1")
+        session.battlefield = [target]
+        for ability_id, temperament in (("mask-becomes-choleric", "choleric"), ("mask-becomes-vitreous", "vitreous")):
+            ability = self.ability(self.MASK, ability_id)
+            session.rules_engine["ongoingEffects"] = []
+            session.create_rules_ongoing_effects({
+                "id": ability_id, "controllerId": "p1",
+                "source": {"cardId": self.MASK},
+                "targets": [{"kind": "card", "itemId": "target", "cardId": "m-1", "ownerId": "p2"}],
+                "ability": {"id": ability_id, "ongoingEffect": session.rules_item_card_rules(
+                    self.field_item("mask", "p1", self.MASK, field_zone="field")
+                )["activatedAbilities"][[a["id"] for a in session.card_rules[self.MASK]["activatedAbilities"]].index(ability_id)]["ongoingEffect"]},
+            })
+            self.assertEqual(
+                session.rules_manifestation_characteristics(target)["temperament"], temperament
+            )
+        session.phase_tracker["turn"] += 1
+        session.prune_rules_ongoing_effects()
+        self.assertEqual(session.rules_manifestation_characteristics(target)["temperament"], "phlegmatic")
+
+    def test_pidue_reacts_to_each_temperament_an_opponent_plays(self):
+        session, p1, p2 = self.make_session()
+        pidue = self.field_item("pidue", "p1", self.PIDUE)
+        session.battlefield = [pidue]
+        session.phase_tracker["index"] = session.phase_sequence().index("confrontation_reaction")
+        seen = {}
+        for temperament in ("choleric", "vitreous", "phlegmatic", "capricious", "melancholic"):
+            session.card_rules["played"] = {"type": "ephemeral_will", "temperaments": [temperament]}
+            actions = session.queue_rules_triggers(
+                self.PIDUE, "p1", "card_played", event_card_id="played", item_id="pidue",
+                face_up=True, event_controller_id="p2", defer=True, controller_id="p1",
+            )
+            seen[temperament] = self.trigger_ids(session, actions)
+        self.assertEqual(seen, {
+            "choleric": ["pidue-choleric-weakens"], "vitreous": ["pidue-vitreous-silences"],
+            "phlegmatic": ["pidue-phlegmatic-token"], "capricious": ["pidue-capricious-draws"],
+            "melancholic": ["pidue-melancholic-discards"],
+        })
+        session.card_rules["played"]["temperaments"] = ["choleric"]
+        self.assertEqual(session.queue_rules_triggers(
+            self.PIDUE, "p1", "card_played", event_card_id="played", item_id="pidue",
+            face_up=True, event_controller_id="p1", defer=True, controller_id="p1",
+        ), [])
+
+
 if __name__ == "__main__":
     unittest.main()

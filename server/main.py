@@ -1298,6 +1298,7 @@ async def handle_message(ws, info, data):
                 session.mark_rules_confrontation_entry(item)
             else:
                 item["fieldZone"] = "interzone"
+                session.apply_rules_interzone_entry_penalty(item)
         session.take_zone_card(source_container_id, from_zone, card_id)
         if zone_play_permission:
             session.consume_rules_zone_play_permission(zone_play_permission["id"])

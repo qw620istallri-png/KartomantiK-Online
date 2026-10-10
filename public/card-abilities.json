@@ -3775,5 +3775,365 @@
       "trigger": { "event": "used_as_tribute" },
       "result": { "kind": "protect_related_will" }
     }
+  ],
+  "inner-deserts-129": [
+    {
+      "id": "pidue-choleric-weakens",
+      "trigger": {
+        "event": "card_played",
+        "eventController": "opponent",
+        "cardTemperament": "choleric",
+        "phaseIds": [
+          "confrontation_before_revelation",
+          "confrontation_reaction"
+        ]
+      },
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ]
+      },
+      "ongoingEffect": {
+        "kind": "power_modifier",
+        "value": -1,
+        "duration": "until_end_of_turn"
+      }
+    },
+    {
+      "id": "pidue-vitreous-silences",
+      "trigger": {
+        "event": "card_played",
+        "eventController": "opponent",
+        "cardTemperament": "vitreous",
+        "phaseIds": [
+          "confrontation_before_revelation",
+          "confrontation_reaction"
+        ]
+      },
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ]
+      },
+      "ongoingEffect": {
+        "kind": "lose_effects",
+        "duration": "until_end_of_turn"
+      }
+    },
+    {
+      "id": "pidue-phlegmatic-token",
+      "trigger": {
+        "event": "card_played",
+        "eventController": "opponent",
+        "cardTemperament": "phlegmatic",
+        "phaseIds": [
+          "confrontation_before_revelation",
+          "confrontation_reaction"
+        ]
+      },
+      "result": {
+        "kind": "create_support_token",
+        "power": 1,
+        "temperament": "phlegmatic"
+      }
+    },
+    {
+      "id": "pidue-capricious-draws",
+      "trigger": {
+        "event": "card_played",
+        "eventController": "opponent",
+        "cardTemperament": "capricious",
+        "phaseIds": [
+          "confrontation_before_revelation",
+          "confrontation_reaction"
+        ]
+      },
+      "result": {
+        "kind": "draw_owner",
+        "value": 1
+      }
+    },
+    {
+      "id": "pidue-melancholic-discards",
+      "trigger": {
+        "event": "card_played",
+        "eventController": "opponent",
+        "cardTemperament": "melancholic",
+        "phaseIds": [
+          "confrontation_before_revelation",
+          "confrontation_reaction"
+        ]
+      },
+      "targets": {
+        "kind": "player",
+        "min": 1,
+        "max": 1
+      },
+      "result": {
+        "kind": "discard_hand_target",
+        "value": 1
+      }
+    }
+  ],
+  "w8364ml7m6erl8s_en": [
+    {
+      "id": "opponents-hands-revealed",
+      "passiveEffect": {
+        "kind": "reveal_opponent_hands"
+      }
+    },
+    {
+      "id": "opponent-silences-gorte",
+      "anyPlayer": true,
+      "opponentOnly": true,
+      "tribute": "{H}{H}{H}{H}",
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "result": {
+        "kind": "disable_source_effects"
+      }
+    }
+  ],
+  "inner-deserts-034": [
+    {
+      "id": "vessel-owner-shows-hand",
+      "passiveEffect": {
+        "kind": "vessel_reveals_owner_hand"
+      }
+    }
+  ],
+  "wer3o71zo9myece_en": [
+    {
+      "id": "numbi-force-chain",
+      "optional": true,
+      "trigger": {
+        "event": "revelation",
+        "zone": "interzone"
+      },
+      "result": {
+        "kind": "chain_from_zone",
+        "zone": "hand",
+        "optional": false,
+        "players": "each_opponent",
+        "afterChain": {
+          "kind": "boost_controller_first",
+          "value": 2
+        }
+      }
+    }
+  ],
+  "xzb2jwtkunq5tys_en": [
+    {
+      "id": "guart-answers-opponent-power-gain",
+      "trigger": {
+        "event": "power_gained",
+        "eventController": "opponent"
+      },
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ],
+        "controller": "self"
+      },
+      "ongoingEffect": {
+        "kind": "power_modifier",
+        "value": 1,
+        "duration": "until_end_of_turn"
+      }
+    },
+    {
+      "id": "guart-answers-own-power-loss",
+      "trigger": {
+        "event": "power_lost",
+        "eventController": "owner"
+      },
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ],
+        "controller": "opponent"
+      },
+      "ongoingEffect": {
+        "kind": "power_modifier",
+        "value": -1,
+        "duration": "until_end_of_turn"
+      }
+    }
+  ],
+  "7yu566ip7zuqdoc_en": [
+    {
+      "id": "malaleuco-copy-will",
+      "sourceFieldZone": "interzone",
+      "exhaustSource": true,
+      "targets": {
+        "kind": "stack_action",
+        "min": 1,
+        "max": 1,
+        "cardTypes": [
+          "ephemeral_will",
+          "persistent_will"
+        ],
+        "controller": "self"
+      },
+      "result": {
+        "kind": "copy_stack_action"
+      }
+    },
+    {
+      "id": "malaleuco-to-interzone",
+      "sourceZones": [
+        "hand"
+      ],
+      "essenceCost": "{B}{B}{B}",
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "result": {
+        "kind": "move_hand_source_to_interzone"
+      }
+    }
+  ],
+  "xfgbjv2gjb09fj9_en": [
+    {
+      "id": "gomeran-copies-support-entry",
+      "trigger": {
+        "event": "enters_support",
+        "zone": "confrontation",
+        "eventController": "owner"
+      },
+      "result": {
+        "kind": "create_event_token_copy_in_support"
+      }
+    }
+  ],
+  "inner-deserts-023": [
+    {
+      "id": "clemency-exhausted-no-effects",
+      "passiveEffect": {
+        "kind": "no_effects_while_exhausted"
+      }
+    },
+    {
+      "id": "clemency-gain-unless-neutralized",
+      "trigger": {
+        "event": "will_played",
+        "eventController": "opponent"
+      },
+      "result": {
+        "kind": "clemency_choice",
+        "value": 5
+      }
+    }
+  ],
+  "inner-deserts-117": [
+    {
+      "id": "interzone-entry-penalty",
+      "passiveEffect": {
+        "kind": "interzone_entry_penalty",
+        "value": -1
+      }
+    }
+  ],
+  "1ixfmjkfewc0o42_en": [
+    {
+      "id": "mask-becomes-choleric",
+      "tribute": "{H}",
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ]
+      },
+      "ongoingEffect": {
+        "kind": "temperament_override",
+        "temperament": "choleric",
+        "duration": "until_end_of_turn"
+      }
+    },
+    {
+      "id": "mask-becomes-vitreous",
+      "tribute": "{H}",
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ]
+      },
+      "ongoingEffect": {
+        "kind": "temperament_override",
+        "temperament": "vitreous",
+        "duration": "until_end_of_turn"
+      }
+    },
+    {
+      "id": "mask-becomes-phlegmatic",
+      "tribute": "{H}",
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ]
+      },
+      "ongoingEffect": {
+        "kind": "temperament_override",
+        "temperament": "phlegmatic",
+        "duration": "until_end_of_turn"
+      }
+    },
+    {
+      "id": "mask-becomes-capricious",
+      "tribute": "{H}",
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ]
+      },
+      "ongoingEffect": {
+        "kind": "temperament_override",
+        "temperament": "capricious",
+        "duration": "until_end_of_turn"
+      }
+    },
+    {
+      "id": "mask-becomes-melancholic",
+      "tribute": "{H}",
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ]
+      },
+      "ongoingEffect": {
+        "kind": "temperament_override",
+        "temperament": "melancholic",
+        "duration": "until_end_of_turn"
+      }
+    }
   ]
 }
