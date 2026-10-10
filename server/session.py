@@ -421,6 +421,10 @@ class Session:
         player = self.players.get(container_id)
         if player is None:
             return False
+        if zone in {"deck", "graveyard"} and self.rules_exiles_incoming_manifestations(
+            container_id, card_id
+        ):
+            zone, position = "exile", "top"
         if position == "bottom":
             player["zones"][zone].append(card_id)
         else:
@@ -1335,6 +1339,7 @@ class Session:
             "move_source_to_owner_hand", "disable_source_effects",
             "destroy_vessel_target_owner_sacrifices",
             "declare_name_search_deck", "return_first_then_chain",
+            "offer_support_else_chain",
             "exile_source_take_control_to_interzone",
             "move_hand_source_to_interzone",
             "create_event_token_copy_in_support",
@@ -1666,6 +1671,7 @@ class Session:
             "lock_next_turn_draws",
             "play_vessel_target_as_support",
             "grant_free_will_play",
+            "take_last_opponent_support_to_vessel",
         }:
             clean = {"kind": kind}
             if kind == "play_limbo_target_as_support":
@@ -2190,6 +2196,10 @@ class Session:
             ):
                 return "This ability requires you to have lost the current confrontation.", None
 
+        if condition == "last_opponent_support_low_power":
+            if self.rules_last_opponent_support(player_id, 2) is None:
+                return "The last Manifestation an opponent put in Support must have a base power of 2 or less.", None
+
         phase_ids = [
             str(phase_id)
             for phase_id in ability.get("phaseIds") or []
@@ -2283,6 +2293,7 @@ class Session:
                     "friendly_manifestations_in_interzone",
                     "friendly_manifestations_in_confrontation",
                     "target_player_manifestations_in_interzone",
+                    "target_player",
                     "global",
                 }:
                     clean["scope"] = ongoing_effect["scope"]
@@ -3698,6 +3709,13 @@ class Session:
                 and self.card_rules.get(item.get("cardId"), {}).get("type")
                 == "manifestation"
             ]
+        elif definition.get("scope") == "target_player":
+            targets = [
+                {"kind": "player", "playerId": target.get("playerId")}
+                for target in targets
+                if target.get("kind") == "player"
+                and target.get("playerId") in self.players
+            ]
         elif definition.get("scope") == "global":
             targets = [{"kind": "global"}]
 
@@ -3724,6 +3742,8 @@ class Session:
                 if target_kind in {"stack_action", "stack_effect"}
                 else True
                 if target_kind == "global"
+                else target.get("playerId") in self.players
+                if target_kind == "player"
                 else False
             )
             if not target_present:
@@ -3776,6 +3796,8 @@ class Session:
         return created
 
     def prune_rules_ongoing_effects(self):
+        for pending in [entry for entry in self.battlefield if entry.get("pendingExile")]:
+            self._rules_remove_field_item(pending, pending.get("ownerId"), "exile", "top")
         battlefield_ids = {item.get("id") for item in self.battlefield}
         current_turn = self.phase_tracker["turn"]
         kept = []
@@ -3785,6 +3807,8 @@ class Session:
             target_present = (
                 target.get("itemId") in battlefield_ids
                 if target.get("itemId")
+                else target.get("playerId") in self.players
+                if target.get("kind") == "player"
                 else any(
                     action.get("id") == target.get("actionId")
                     for action in self.rules_engine.get("actionStack") or []
@@ -3819,6 +3843,13 @@ class Session:
             else:
                 removed.append(effect)
         self.rules_engine["ongoingEffects"] = kept
+        for effect in removed:
+            if effect.get("kind") != "drill_link":
+                continue
+            drill = self.find_battlefield_item((effect.get("source") or {}).get("itemId"))
+            if drill is not None and (effect.get("target") or {}).get("itemId") not in battlefield_ids:
+                # Parasitic Drill: the linked Will left the field, so the Drill is sacrificed.
+                self._rules_remove_field_item(drill, drill.get("ownerId"), "graveyard", "top")
         return removed
 
     # -- assisted confrontation resolution ----------------------------
@@ -3925,8 +3956,52 @@ class Session:
             )
         ]
 
+    def apply_rules_drill_drain(self, item_id):
+        """Parasitic Drill: whenever the linked Will triggers or is activated, its controller loses points."""
+        if not item_id:
+            return 0
+        target = self.find_battlefield_item(item_id)
+        if target is None:
+            return 0
+        lost = 0
+        for effect in list(self.rules_engine.get("ongoingEffects") or []):
+            if (
+                effect.get("kind") != "drill_link"
+                or (effect.get("target") or {}).get("itemId") != item_id
+            ):
+                continue
+            source = self.find_battlefield_item((effect.get("source") or {}).get("itemId"))
+            if source is None or not self.rules_item_effects_active(source):
+                continue
+            amount = int(effect.get("value") or 10)
+            self.adjust_rules_score(self.rules_item_controller_id(target), -amount)
+            lost += amount
+        return lost
+
+    def rules_exiles_incoming_manifestations(self, player_id, card_id):
+        """Nullify Reason: Manifestations about to enter this player's Interzone, deck or Limbo are exiled."""
+        if (
+            not hasattr(self, "rules_engine")
+            or not self.rules_engine.get("enabled")
+            or self.card_rules.get(card_id, {}).get("type") != "manifestation"
+        ):
+            return False
+        return any(
+            effect.get("kind") == "exile_incoming_manifestations"
+            and (effect.get("target") or {}).get("playerId") == player_id
+            for effect in self.rules_engine.get("ongoingEffects") or []
+        )
+
     def mark_rules_interzone_entry(self, item):
         item["interzoneTurn"] = int(self.phase_tracker.get("turn") or 1)
+        if self.rules_exiles_incoming_manifestations(
+            self.rules_item_controller_id(item), item.get("cardId")
+        ) and not item.get("isCopy") and not item.get("isTokenCard"):
+            if item in self.battlefield:
+                self._rules_remove_field_item(item, item.get("ownerId"), "exile", "top")
+            else:
+                item["pendingExile"] = True
+            return
         self.apply_rules_interzone_entry_penalty(item)
 
     def apply_rules_interzone_entry_penalty(self, item):
@@ -4130,6 +4205,24 @@ class Session:
             and self.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"
             for entry in (stack_action or {}).get("targets") or []
         )
+
+    def rules_last_opponent_support(self, player_id, max_base_power):
+        """Ranba: the last Manifestation an opponent put in Support, if still there and weak enough."""
+        entry = next((
+            entry for entry in reversed(self.rules_engine.get("supportEntries") or [])
+            if entry.get("controllerId") != player_id
+        ), None)
+        if entry is None:
+            return None
+        item = self.find_battlefield_item(entry.get("itemId"))
+        if item is None or not item.get("isSupport"):
+            return None
+        if self.rules_item_controller_id(item) == player_id:
+            return None
+        power = self.card_rules.get(item.get("cardId"), {}).get("power")
+        if not isinstance(power, (int, float)) or power > max_base_power:
+            return None
+        return item
 
     def rules_support_from_hand_available(self, player_id, card_id):
         metadata = self.card_rules.get(card_id, {})
@@ -5734,6 +5827,8 @@ class Session:
                     "cardId": clean_source["cardId"], "ownerId": source_owner,
                     "itemId": stalemate_item["id"],
                 }
+        if kind == "activated_effect":
+            self.apply_rules_drill_drain(clean_source.get("itemId"))
         self.rules_engine["actionStack"].append(action)
         self.rules_engine["priorityPasses"] = []
         self.rules_engine["priorityPlayerId"] = self.other_rules_player_id(player_id)
@@ -6161,6 +6256,7 @@ class Session:
                 continue
             if clean_targets:
                 clean_targets = self.rules_redirect_targets(controller_id, clean_targets)
+            self.apply_rules_drill_drain(item_id)
             ongoing_definition = ability.get("ongoingEffect") or {}
             clean_ongoing_effect = None
             duration = str(ongoing_definition.get("duration") or "")
@@ -10613,6 +10709,14 @@ class Session:
                 "status": "created",
                 "createdItemIds": [item["id"] for item in created],
             }
+        if result.get("kind") == "take_last_opponent_support_to_vessel":
+            item = self.rules_last_opponent_support(player_id, 2)
+            if item is None:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            if item.get("ownerId") == player_id:
+                return {"kind": result.get("kind"), "status": "own_card"}
+            movement = self._rules_remove_field_item_by_effect(item, player_id, "receptacle", "top", reason="vessel")
+            return {"kind": result.get("kind"), "status": "taken", "movement": movement}
         if result.get("kind") == "grant_free_will_play":
             owner_id = (action.get("source") or {}).get("ownerId") or player_id
             if owner_id not in self.players:
@@ -12043,6 +12147,37 @@ class Session:
                 "kind": "choice_required", "choiceId": choice_id,
                 "choiceKind": "declare_card_name", "playerId": player_id,
             }
+        if result.get("kind") == "offer_support_else_chain":
+            target = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "card"
+            ), None)
+            item = self.find_battlefield_item((target or {}).get("itemId"))
+            if item is None or self.rules_field_zone(item) != "interzone":
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            chooser_id = self.rules_item_controller_id(item)
+            if chooser_id not in self.players:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "binary_choice", "purpose": "support_else_chain",
+                "playerId": chooser_id, "options": ["yes", "no"],
+                "headingKey": "rulesSupportElseChainHeading",
+                "textKey": "rulesSupportElseChainText",
+                "yesKey": "rulesSupportElseChainYes", "noKey": "rulesSupportElseChainNo",
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+                "relatedCardId": item.get("cardId"),
+                "targetItemId": item.get("id"),
+                "controllerId": action.get("controllerId"),
+                "_action": {
+                    "id": action.get("id"), "controllerId": action.get("controllerId"),
+                    "source": dict(action.get("source") or {}),
+                },
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "binary_choice", "playerId": chooser_id,
+            }
         if result.get("kind") == "return_first_then_chain":
             first = self.find_battlefield_item(
                 (self.rules_engine.get("firstManifestationItemIds") or {}).get(player_id)
@@ -13091,6 +13226,40 @@ class Session:
                 **payload, "cardId": found,
                 "status": "discarded" if not error and not replacement else "unmoved",
             }
+
+        if choice.get("kind") == "binary_choice" and choice.get("purpose") == "support_else_chain":
+            if option not in choice.get("options", []):
+                return "Choose yes or no.", None
+            self.rules_engine["pendingChoice"] = None
+            item = self.find_battlefield_item(choice.get("targetItemId"))
+            moved = False
+            if (
+                option == "yes" and item is not None
+                and self.rules_field_zone(item) == "interzone"
+                and not self.rules_support_entry_locked(player_id)
+            ):
+                item["stackedOn"] = None
+                self.mark_rules_support_entry(item)
+                triggered = self.queue_rules_support_entry_triggers(
+                    item, played=False, from_zone="interzone", defer=True,
+                )
+                if triggered:
+                    self.queue_rules_simultaneous_actions(triggered)
+                moved = True
+            if moved:
+                return None, {
+                    "kind": "binary_choice", "status": "support",
+                    "itemId": item["id"], "cardId": item.get("cardId"),
+                }
+            controller_id = choice.get("controllerId")
+            if controller_id not in self.players:
+                return None, {"kind": "binary_choice", "status": "declined"}
+            chain = self.begin_rules_chain_sequence(
+                controller_id, [controller_id],
+                {"kind": "chain_from_zone", "zone": "hand", "optional": True},
+                dict(choice.get("_action") or {}),
+            )
+            return None, {**chain, "declined": True}
 
         if choice.get("kind") == "clemency_choice":
             if option not in choice.get("options", []):

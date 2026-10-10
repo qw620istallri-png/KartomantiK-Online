@@ -12992,5 +12992,180 @@ class LimitsFollowUpTests(RealCardRulesCase):
         self.assertEqual([t["itemId"] for t in queued[0]["targets"]], ["mass"])
 
 
+class LotEighteenTests(RealCardRulesCase):
+    """Beta leftovers: Ranba and friends."""
+
+    RANBA, NULLIFY_REASON, DRILL = "fdnhc537c4xu2wo_en", "36l7iw5m5hk1pmr_en", "cwgofw6qsn7aplc_en"
+    BARANCHIO = "qairavs7la5qg39_en"
+    ALL = (RANBA, NULLIFY_REASON, DRILL, BARANCHIO)
+
+    def run_result(self, session, card_id, ability_id, controller="p1", targets=None, item_id=None, **extra):
+        ability = self.ability(card_id, ability_id)
+        return session.apply_rules_action_result({
+            "id": f"run-{ability_id}", "controllerId": controller,
+            "source": {"cardId": card_id, "itemId": item_id, "ownerId": controller},
+            "targets": targets or [], "ability": ability, **extra,
+        })
+
+    def test_ranba_takes_a_weak_opponent_support_into_your_vessel(self):
+        session, p1, p2 = self.make_session()
+        self.put(p1, "hand", [self.RANBA])
+        session.card_rules["m-1"]["power"] = 2
+        session.card_rules["m-2"]["power"] = 3
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        source = {"cardId": self.RANBA, "zone": "hand"}
+        error, _ability = session.rules_action_ability("p1", "activated_effect", source, "ranba-abduct-weak-support", [])
+        self.assertIn("Support", error)
+        weak = self.field_item("weak", "p2", "m-1", isSupport=True)
+        session.battlefield = [weak]
+        session.rules_engine["supportEntries"].append(
+            {"turn": session.phase_tracker["turn"], "itemId": "weak", "cardId": "m-1", "controllerId": "p2"})
+        error, _ability = session.rules_action_ability("p1", "activated_effect", source, "ranba-abduct-weak-support", [])
+        self.assertIsNone(error)
+        payload = self.run_result(session, self.RANBA, "ranba-abduct-weak-support")
+        self.assertEqual(payload["status"], "taken")
+        self.assertIsNone(session.find_battlefield_item("weak"))
+        self.assertIn("m-1", p1["zones"]["receptacle"])
+        # A strong Support, or one that is no longer the last, does not qualify.
+        strong = self.field_item("strong", "p2", "m-2", isSupport=True)
+        session.battlefield = [strong]
+        session.rules_engine["supportEntries"].append(
+            {"turn": session.phase_tracker["turn"], "itemId": "strong", "cardId": "m-2", "controllerId": "p2"})
+        error, _ability = session.rules_action_ability("p1", "activated_effect", source, "ranba-abduct-weak-support", [])
+        self.assertIn("Support", error)
+
+    def test_nullify_reason_exiles_manifestations_entering_the_targets_interzone_deck_and_limbo(self):
+        session, p1, p2 = self.make_session()
+        ability = self.ability(self.NULLIFY_REASON, "nullify-reason-exile-incoming")
+        self.assertIsNone(session.rules_ability_targets_error(ability["targets"], [{"kind": "player", "playerId": "p2"}], "p1"))
+        session.create_rules_ongoing_effects({
+            "id": "a1", "controllerId": "p1", "source": {"cardId": self.NULLIFY_REASON},
+            "targets": [{"kind": "player", "playerId": "p2"}], "ability": ability,
+        })
+        self.assertEqual(len(session.rules_engine["ongoingEffects"]), 1)
+        session.prune_rules_ongoing_effects()
+        self.assertEqual(len(session.rules_engine["ongoingEffects"]), 1)
+        # Limbo and deck of the target player.
+        session.put_zone_card("p2", "graveyard", "m-1", "p2")
+        session.put_zone_card("p2", "deck", "m-2", "p2", "bottom")
+        self.assertEqual(sorted(p2["zones"]["exile"]), ["m-1", "m-2"])
+        self.assertEqual((p2["zones"]["graveyard"], p2["zones"]["deck"]), ([], []))
+        # Other players, other zones and Wills are untouched.
+        session.put_zone_card("p1", "graveyard", "m-3", "p1")
+        session.put_zone_card("p2", "hand", "m-4", "p2")
+        session.put_zone_card("p2", "graveyard", "will-x", "p2")
+        self.assertIn("m-3", p1["zones"]["graveyard"])
+        self.assertIn("m-4", p2["zones"]["hand"])
+        self.assertIn("will-x", p2["zones"]["graveyard"])
+        # Interzone.
+        entering = self.field_item("in", "p2", "m-5", field_zone="interzone", controllerId="p2")
+        session.battlefield = [entering]
+        session.mark_rules_interzone_entry(entering)
+        self.assertEqual(session.battlefield, [])
+        self.assertIn("m-5", p2["zones"]["exile"])
+        mine = self.field_item("mine", "p1", "m-6", field_zone="interzone", controllerId="p1")
+        session.battlefield = [mine]
+        session.mark_rules_interzone_entry(mine)
+        self.assertEqual(session.battlefield, [mine])
+        # Gone at the end of the turn.
+        session.phase_tracker["turn"] += 1
+        session.prune_rules_ongoing_effects()
+        session.put_zone_card("p2", "graveyard", "m-7", "p2")
+        self.assertIn("m-7", p2["zones"]["graveyard"])
+
+    def test_parasitic_drill_taxes_the_linked_will_and_is_sacrificed_with_it(self):
+        session, p1, p2 = self.make_session()
+        session.card_rules["pw"] = {"type": "persistent_will", "temperaments": ["phlegmatic"]}
+        session.battlefield = [
+            self.field_item("drill", "p1", self.DRILL, field_zone="field"),
+            self.field_item("pw", "p2", "pw", field_zone="field", controllerId="p2"),
+        ]
+        target = {"kind": "card", "itemId": "pw", "cardId": "pw", "ownerId": "p2"}
+        ability = self.ability(self.DRILL, "parasitic-drill-links-a-persistent-will")
+        self.assertIsNone(session.rules_ability_targets_error(ability["targets"], [target], "p1", event_item_id="drill"))
+        self.assertIsNotNone(session.rules_ability_targets_error(
+            ability["targets"], [{"kind": "card", "itemId": "drill", "cardId": self.DRILL, "ownerId": "p1"}],
+            "p1", event_item_id="drill"))
+        queued = session.queue_rules_triggers(
+            self.DRILL, "p1", "enters_field", zone="battlefield", item_id="drill", face_up=True,
+            event_targets=[target],
+        )
+        self.assertEqual(len(queued), 1)
+        session.create_rules_ongoing_effects(queued[0])
+        links = [e for e in session.rules_engine["ongoingEffects"] if e["kind"] == "drill_link"]
+        self.assertEqual(len(links), 1)
+        before = p2["score"]
+        self.assertEqual(session.apply_rules_drill_drain("pw"), 10)
+        self.assertEqual(p2["score"], before - 10)
+        self.assertEqual(session.apply_rules_drill_drain("drill"), 0)
+        # A trigger of the linked Will costs points too.
+        session.card_rules["pw"]["triggeredAbilities"] = [{
+            "id": "pw-count", "trigger": {"event": "enters_field", "visibility": "face_up"},
+            "result": {"kind": "add_counter_source", "counter": "Test", "value": 1},
+        }]
+        before = p2["score"]
+        self.assertTrue(session.queue_rules_triggers("pw", "p2", "enters_field", zone="battlefield", item_id="pw", face_up=True))
+        self.assertEqual(p2["score"], before - 10)
+        # The Will leaves the field: the Drill is sacrificed.
+        session.battlefield = [item for item in session.battlefield if item["id"] != "pw"]
+        session.prune_rules_ongoing_effects()
+        self.assertIsNone(session.find_battlefield_item("drill"))
+        self.assertIn(self.DRILL, p1["zones"]["graveyard"])
+        # Without the Drill no tax applies.
+        session.battlefield.append(self.field_item("pw", "p2", "pw", field_zone="field", controllerId="p2"))
+        self.assertEqual(session.apply_rules_drill_drain("pw"), 0)
+
+    def baranchio_offer(self, session):
+        session.battlefield = [
+            self.field_item("bar", "p1", self.BARANCHIO, controllerId="p1"),
+            self.field_item("their", "p2", "m-1", field_zone="interzone", controllerId="p2"),
+        ]
+        action = {
+            "id": "bar-action", "controllerId": "p1", "optionalAccepted": True,
+            "source": {"cardId": self.BARANCHIO, "itemId": "bar", "ownerId": "p1"},
+            "targets": [{"kind": "card", "itemId": "their", "cardId": "m-1", "ownerId": "p2"}],
+            "ability": self.ability(self.BARANCHIO, "baranchio-offers-support-or-chains"),
+        }
+        return session.apply_rules_action_result(action)
+
+    def test_baranchio_lets_the_opponent_take_support_or_lets_you_chain(self):
+        session, p1, p2 = self.make_session()
+        ability = self.ability(self.BARANCHIO, "baranchio-offers-support-or-chains")
+        payload = self.baranchio_offer(session)
+        their_target = [{"kind": "card", "itemId": "their", "cardId": "m-1", "ownerId": "p2"}]
+        self.assertIsNone(session.rules_ability_targets_error(ability["targets"], their_target, "p1", event_item_id="bar"))
+        session.battlefield.append(self.field_item("mine", "p1", "m-2", field_zone="interzone", controllerId="p1"))
+        self.assertIsNotNone(session.rules_ability_targets_error(
+            ability["targets"], [{"kind": "card", "itemId": "mine", "cardId": "m-2", "ownerId": "p1"}], "p1", event_item_id="bar"))
+        session.battlefield.pop()
+        self.assertEqual((payload["choiceKind"], payload["playerId"]), ("binary_choice", "p2"))
+        choice = session.rules_engine["pendingChoice"]
+        self.assertIsNotNone(session.resolve_rules_choice("p1", choice["id"], option="yes")[0])
+        error, result = session.resolve_rules_choice("p2", choice["id"], option="yes")
+        self.assertIsNone(error)
+        self.assertEqual(result["status"], "support")
+        their = session.find_battlefield_item("their")
+        self.assertTrue(their["isSupport"])
+        self.assertEqual(their["fieldZone"], "confrontation")
+        # Refusing lets the Baranchio controller Chain from their hand.
+        session2, q1, q2 = self.make_session()
+        self.put(q1, "hand", ["m-3"])
+        self.baranchio_offer(session2)
+        choice = session2.rules_engine["pendingChoice"]
+        error, result = session2.resolve_rules_choice("p2", choice["id"], option="no")
+        self.assertIsNone(error)
+        self.assertEqual(session2.find_battlefield_item("their")["fieldZone"], "interzone")
+        self.assertEqual((result["choiceKind"], result["playerId"]), ("chain_manifestation", "p1"))
+        self.assertTrue(result["declined"])
+        # A Support lock stops the offer from being accepted, so the Chain follows.
+        session3, r1, r2 = self.make_session()
+        self.put(r1, "hand", ["m-3"])
+        session3.rules_engine.setdefault("supportLocks", []).append({"turn": session3.phase_tracker["turn"], "playerId": None})
+        self.baranchio_offer(session3)
+        error, result = session3.resolve_rules_choice("p2", session3.rules_engine["pendingChoice"]["id"], option="yes")
+        self.assertEqual(session3.find_battlefield_item("their")["fieldZone"], "interzone")
+        self.assertEqual(result["choiceKind"], "chain_manifestation")
+
+
 if __name__ == "__main__":
     unittest.main()

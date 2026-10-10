@@ -2819,6 +2819,34 @@
         "tests/test_game_state.py",
         "tests/test_card_catalog.py"
       ]
+    },
+    "fdnhc537c4xu2wo_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "36l7iw5m5hk1pmr_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "cwgofw6qsn7aplc_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "qairavs7la5qg39_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     }
   }
 }

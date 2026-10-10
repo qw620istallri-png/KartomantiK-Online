@@ -844,3 +844,13 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Test frontend: l'ancien test « Volonté manuelle » ne trouvait plus de Volonté non automatisée avec une cible Manifestation; il supprime maintenant les capacités encodées de la carte choisie.
 - Version des assets: `20261010-rules-beta-111`.
 - Registre: 399 automated / 0 partial / 51 manual.
+
+## Lot 18 (Ranba, Nullify Reason, Parasitic Drill, Perfidious Baranchio)
+
+- Ranba: capacité depuis la main (`sourceCost: discard_source`, phase Réaction) avec la condition `last_opponent_support_low_power` (`rules_last_opponent_support`: dernière entrée en Soutien d'un adversaire d'après `supportEntries`, puissance de base 2 ou moins). Résultat `take_last_opponent_support_to_vessel`: la carte va dans le Vessel du joueur, sauf s'il en est le propriétaire.
+- Nullify Reason: effet continu `exile_incoming_manifestations` (portée `target_player`, cible joueur conservée par `create_rules_ongoing_effects` et `prune_rules_ongoing_effects`). `put_zone_card` exile à la place d'un envoi au deck ou au Limbo; `mark_rules_interzone_entry` exile la carte qui entre dans l'Interzone (`rules_exiles_incoming_manifestations`). Les jetons et copies ne sont pas concernés.
+- Parasitic Drill: déclencheur à l'entrée avec cible Volonté Persistante et effet continu `drill_link` (`while_source_and_target_on_field`, valeur 10). `apply_rules_drill_drain` retire 10 points au contrôleur de la Volonté liée quand elle déclenche (`queue_rules_triggers`) ou est activée (`declare_rules_action`). `prune_rules_ongoing_effects` sacrifie le Drill quand la Volonté quitte le terrain.
+- Perfidious Baranchio: résultat `offer_support_else_chain`. Nouveau choix générique `binary_choice` (clés i18n fournies par le serveur: `headingKey`, `textKey`, `yesKey`, `noKey`) posé au contrôleur de la carte ciblée. Oui: la carte passe en Soutien (refusé si les Soutiens sont verrouillés); sinon le contrôleur de Baranchio peut Enchaîner depuis sa main.
+- Restent manuelles: Karma Bro et Kaos Bro (lancer physique), et les cartes qui demandent jouer des Volontés depuis le Limbo, une zone de cartes posées ou un choix de tempérament.
+- Version des assets: `20261010-rules-beta-112`.
+- Registre: 403 automated / 0 partial / 47 manual.

@@ -1396,6 +1396,33 @@ function startServer() {
     assert.equal(clemencyUi.option, "neutralize");
     assert.equal(clemencyUi.choiceId, "clemency");
     assert.equal(clemencyUi.ownGorteHidden, true);
+    const binaryUi = await page.evaluate(() => {
+      const ids = [...cardsById.keys()];
+      const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };
+      latestState.rulesEngine.priorityPlayerId = "p1";
+      latestState.rulesEngine.pendingChoice = {
+        id: "binary", kind: "binary_choice", purpose: "support_else_chain", playerId: "p1",
+        sourceCardId: ids[0], relatedCardId: ids[1], options: ["yes", "no"],
+        headingKey: "rulesSupportElseChainHeading", textKey: "rulesSupportElseChainText",
+        yesKey: "rulesSupportElseChainYes", noKey: "rulesSupportElseChainNo",
+      };
+      window.__sent = [];
+      renderAll();
+      const visible = !document.querySelector("#rulesChoicePanel").classList.contains("hidden");
+      const buttons = [...document.querySelectorAll("[data-rules-binary-option]")].map((button) => button.dataset.rulesBinaryOption);
+      const text = document.querySelector("#rulesChoiceText").textContent;
+      document.querySelector('[data-rules-binary-option="no"]').click();
+      const payload = window.__sent.find((entry) => entry.type === "resolve_rules_choice");
+      latestState.rulesEngine.priorityPlayerId = saved.priority;
+      latestState.rulesEngine.pendingChoice = saved.choice;
+      renderAll();
+      return { visible, buttons, option: payload?.option, choiceId: payload?.choiceId, hasText: text.length > 10 && !text.includes("{") };
+    });
+    assert.equal(binaryUi.visible, true);
+    assert.deepEqual(binaryUi.buttons, ["yes", "no"]);
+    assert.equal(binaryUi.option, "no");
+    assert.equal(binaryUi.choiceId, "binary");
+    assert.equal(binaryUi.hasText, true);
     const declareNameUi = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
       const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };

@@ -4315,5 +4315,89 @@
         "returnToVessel": true
       }
     }
+  ],
+  "fdnhc537c4xu2wo_en": [
+    {
+      "id": "ranba-abduct-weak-support",
+      "sourceZones": [
+        "hand"
+      ],
+      "sourceCost": "discard_source",
+      "phaseIds": [
+        "confrontation_reaction"
+      ],
+      "condition": "last_opponent_support_low_power",
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "result": {
+        "kind": "take_last_opponent_support_to_vessel"
+      }
+    }
+  ],
+  "36l7iw5m5hk1pmr_en": [
+    {
+      "id": "nullify-reason-exile-incoming",
+      "action": "play_card",
+      "targets": {
+        "kind": "player",
+        "min": 1,
+        "max": 1
+      },
+      "ongoingEffect": {
+        "kind": "exile_incoming_manifestations",
+        "duration": "until_end_of_turn",
+        "scope": "target_player"
+      }
+    }
+  ],
+  "cwgofw6qsn7aplc_en": [
+    {
+      "id": "parasitic-drill-links-a-persistent-will",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "targets": {
+        "kind": "card",
+        "min": 1,
+        "max": 1,
+        "cardType": "persistent_will",
+        "zones": [
+          "battlefield"
+        ],
+        "excludeEventSource": true
+      },
+      "ongoingEffect": {
+        "kind": "drill_link",
+        "duration": "while_source_and_target_on_field",
+        "value": 10
+      }
+    }
+  ],
+  "qairavs7la5qg39_en": [
+    {
+      "id": "baranchio-offers-support-or-chains",
+      "optional": true,
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "confrontation"
+      },
+      "targets": {
+        "kind": "card",
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ],
+        "fieldZone": "interzone",
+        "controller": "opponent"
+      },
+      "result": {
+        "kind": "offer_support_else_chain"
+      }
+    }
   ]
 }

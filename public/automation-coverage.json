@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 329,
-    "explicitAbilities": 412,
+    "explicitCards": 333,
+    "explicitAbilities": 416,
     "statuses": {
-      "automated": 399,
+      "automated": 403,
       "generic": 0,
-      "manual": 51,
+      "manual": 47,
       "partial": 0
     }
   },
@@ -2228,10 +2228,19 @@
       "collectionNumber": 137,
       "name": "Parasitic Drill",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "parasitic-drill-links-a-persistent-will"
+      ],
+      "mechanics": [
+        "ongoing:drill_link",
+        "target:card",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "y6g3tex9ypttk8u_en": {
       "collectionNumber": 138,
@@ -2591,10 +2600,19 @@
       "collectionNumber": 161,
       "name": "Ranba, Silent Abductor",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "ranba-abduct-weak-support"
+      ],
+      "mechanics": [
+        "condition:last_opponent_support_low_power",
+        "phase-window",
+        "result:take_last_opponent_support_to_vessel"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "rgjdtrcaw4o9381_en": {
       "collectionNumber": 162,
@@ -3150,10 +3168,19 @@
       "collectionNumber": 196,
       "name": "Perfidious Baranchio",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "baranchio-offers-support-or-chains"
+      ],
+      "mechanics": [
+        "result:offer_support_else_chain",
+        "target:card",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "iwpmdq754ew0mw7_en": {
       "collectionNumber": 197,
@@ -3595,10 +3622,18 @@
       "collectionNumber": 224,
       "name": "Nullify Reason",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "nullify-reason-exile-incoming"
+      ],
+      "mechanics": [
+        "ongoing:exile_incoming_manifestations",
+        "target:player"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "4naoqbqz6ebozj5_en": {
       "collectionNumber": 225,
