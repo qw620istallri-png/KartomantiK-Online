@@ -1455,6 +1455,15 @@ class Session:
                 "kind": kind, "value": max(0, min(int(result.get("value") or 0), 500)),
                 "maxBasePower": max(0, min(int(result.get("maxBasePower") or 0), 99)),
             }
+        if kind in {"unless_payment_deck_discard", "unless_payment_lose_effects"}:
+            payment = str(result.get("payment") or "")
+            symbols = re.findall(r"\{([A-Z])\}", payment)
+            if not symbols or any(symbol not in TRIBUTE_SYMBOL_TEMPERAMENT for symbol in symbols):
+                return None
+            clean = {"kind": kind, "payment": payment}
+            if kind == "unless_payment_deck_discard":
+                clean["count"] = max(1, min(int(result.get("count") or 1), 20))
+            return clean
         if kind == "search_deck_to_hand":
             return {
                 "kind": kind, "count": max(1, min(int(result.get("count") or 1), 10)),
@@ -7497,6 +7506,37 @@ class Session:
                 "kind": result.get("kind"),
                 "status": "shuffled" if moved else "nothing", "cardIds": moved,
             }
+        if result.get("kind") in {"unless_payment_deck_discard", "unless_payment_lose_effects"}:
+            if result.get("kind") == "unless_payment_deck_discard":
+                payer_id = (action.get("source") or {}).get("containerId")
+                on_decline = {"kind": "deck_discard", "count": int(result.get("count") or 1)}
+            else:
+                target = next((
+                    entry for entry in action.get("targets") or [] if entry.get("kind") == "card"
+                ), None)
+                item = self.find_battlefield_item((target or {}).get("itemId"))
+                if item is None:
+                    return {"kind": result.get("kind"), "status": "target_missing"}
+                payer_id = self.rules_item_controller_id(item)
+                on_decline = {"kind": "lose_effects", "itemId": item["id"]}
+            if payer_id not in self.players:
+                return {"kind": result.get("kind"), "status": "payer_missing"}
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "effect_payment", "playerId": payer_id,
+                "payment": result.get("payment"),
+                "requirements": self.rules_requirements_from_symbols(result.get("payment")),
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+                "targetCardId": (action.get("source") or {}).get("cardId"),
+                "onDecline": on_decline,
+                "actionId": action.get("id"),
+                "controllerId": action.get("controllerId"),
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "effect_payment", "playerId": payer_id,
+                "payment": result.get("payment"),
+            }
         if result.get("kind") == "search_deck_to_hand":
             deck = list(player["zones"]["deck"])
             if not deck:
@@ -11645,6 +11685,61 @@ class Session:
                 "copyActionId": copied_action.get("id"),
                 "keptOriginalTargets": option == "keep",
                 "targets": [dict(entry) for entry in clean_targets],
+            }
+
+        if choice.get("kind") == "effect_payment":
+            if option not in {"pay", "decline"}:
+                return "Choose whether to pay the requested Tribute.", None
+            on_decline = choice.get("onDecline") or {}
+            if option == "pay":
+                payment_error, payment = self.rules_action_payment(
+                    player_id, "activated_effect", None, card_ids,
+                    {"tribute": choice.get("payment")},
+                )
+                if payment_error:
+                    return payment_error, None
+                self.pay_rules_tribute(player_id, payment)
+                triggered_actions = self.queue_rules_tribute_triggers(payment["cardIds"], player_id)
+                self.rules_engine["pendingChoice"] = None
+                return None, {
+                    "kind": "effect_payment", "status": "paid", "playerId": player_id,
+                    "choiceId": choice_id, "sourceCardId": choice.get("sourceCardId"),
+                    "triggeredActions": triggered_actions,
+                }
+            outcome = {}
+            if on_decline.get("kind") == "deck_discard":
+                deck = self.players[player_id]["zones"]["deck"]
+                discarded = 0
+                for _index in range(min(int(on_decline.get("count") or 0), len(deck))):
+                    error, _owner, replacement = self.move_zone_card_by_effect(
+                        player_id, "deck", player_id, "graveyard", deck[0], "top"
+                    )
+                    if error:
+                        break
+                    if not replacement:
+                        discarded += 1
+                outcome["discarded"] = discarded
+            elif on_decline.get("kind") == "lose_effects":
+                item = self.find_battlefield_item(on_decline.get("itemId"))
+                if item is not None:
+                    self.rules_engine["ongoingEffects"].append({
+                        "id": new_id(), "actionId": choice.get("actionId"),
+                        "abilityId": "effect-payment-declined",
+                        "controllerId": choice.get("controllerId") or player_id,
+                        "source": {"cardId": choice.get("sourceCardId")},
+                        "target": {
+                            "kind": "card", "itemId": item["id"],
+                            "cardId": item.get("cardId"), "ownerId": item.get("ownerId"),
+                        },
+                        "kind": "lose_effects", "duration": "permanent",
+                        "startedTurn": self.phase_tracker["turn"],
+                    })
+                    outcome["itemId"] = item["id"]
+            self.rules_engine["pendingChoice"] = None
+            return None, {
+                "kind": "effect_payment", "status": "declined", "playerId": player_id,
+                "choiceId": choice_id, "sourceCardId": choice.get("sourceCardId"),
+                **outcome,
             }
 
         if choice.get("kind") == "stack_counter_payment":

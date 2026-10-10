@@ -10253,6 +10253,29 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         own = session.serialize_for("p1", "player")["rulesEngine"]["pendingChoice"]
         self.assertEqual(own["candidateCardIds"], ["s-2"])
 
+    def test_manual_lot_seven_unless_payment_effects(self):
+        lerxur, nullify = "oftdgsrobaqgst7_en", "fwh3yrkvg9n09vg_en"
+        session, p1, p2 = self.manual_batch_session(lerxur, nullify, card_type="manifestation")
+        # Lerxur: the vessel owner (p2) may pay {H}{H}; declining mills two cards.
+        self.put(p2, "deck", ["d-1", "d-2", "d-3"])
+        payload = self.run_ability_at(session, lerxur, 0, source={"zone": "receptacle", "containerId": "p2"})
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual((payload["choiceKind"], choice["playerId"]), ("effect_payment", "p2"))
+        error, result = session.resolve_rules_choice("p2", choice["id"], option="decline")
+        self.assertIsNone(error)
+        self.assertEqual((result["status"], result["discarded"]), ("declined", 2))
+        self.assertEqual(p2["zones"]["deck"], ["d-3"])
+        # Nullify: declining the payment permanently removes the target's effects.
+        session.battlefield = [self.field_item("t", "p2", "m-1")]
+        self.run_ability_at(session, nullify, 0, targets=[self.card_target("t", "m-1")])
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["playerId"], "p2")
+        error, result = session.resolve_rules_choice("p2", choice["id"], option="decline")
+        self.assertIsNone(error)
+        self.assertFalse(session.rules_item_effects_active(session.battlefield[0]))
+        session.prune_rules_ongoing_effects()
+        self.assertFalse(session.rules_item_effects_active(session.battlefield[0]))
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")

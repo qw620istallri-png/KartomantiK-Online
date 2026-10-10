@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261009-rules-beta-99";
+const STATIC_ASSET_VERSION = "20261009-rules-beta-100";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -1981,6 +1981,7 @@ function rulesStackPaymentChoice() {
     "stack_counter_payment",
     "effect_memory_payment",
     "immediate_effect_payment",
+    "effect_payment",
   ].includes(choice?.kind)
     && choice.playerId === myPlayerId && !isObserver
     ? choice
@@ -2467,6 +2468,8 @@ function renderRulesBoardFlow() {
         ? "rulesMemoryPaymentInstruction"
         : flow.choice.kind === "immediate_effect_payment"
           ? "rulesImmediatePaymentInstruction"
+        : flow.choice.kind === "effect_payment"
+          ? "rulesEffectPaymentInstruction"
         : "rulesStackPaymentInstruction", {
       source: cardName(flow.choice.sourceCardId),
       target: cardName(flow.choice.targetCardId),
@@ -2479,6 +2482,8 @@ function renderRulesBoardFlow() {
         ? "rulesDeclineMemoryPayment"
         : flow.choice.kind === "immediate_effect_payment"
           ? "rulesDeclineImmediatePayment"
+        : flow.choice.kind === "effect_payment"
+          ? "rulesDeclineEffectPayment"
         : flow.choice.mode === "cancel"
           ? "rulesLetEffectCancel"
           : "rulesLetCardNeutralize"
@@ -2489,6 +2494,8 @@ function renderRulesBoardFlow() {
           ? "rulesPayAndPreventReturn"
           : flow.choice.kind === "immediate_effect_payment"
             ? "rulesPayAndContinueConfrontation"
+          : flow.choice.kind === "effect_payment"
+            ? "rulesPayAndPreventEffect"
           : "rulesPayAndKeepStack"
         : canPay ? "rulesSelectPayment" : "rulesCannotPay"
     );
@@ -5848,7 +5855,7 @@ function renderRulesChoice() {
     return;
   }
   if ([
-    "stack_counter_payment", "effect_memory_payment",
+    "stack_counter_payment", "effect_memory_payment", "effect_payment",
     "immediate_effect_payment", "stack_copy_targets", "trigger_targets",
   ].includes(choice.kind)) {
     panel.classList.add("hidden");
@@ -8857,6 +8864,11 @@ function formatLogEntry(e, options = {}) {
       if (d.kind === "effect_memory_return") return f(
         d.status === "returned" ? "logRulesMemoryReturned" : "logRulesMemoryDeclined",
         { player: ownerName(d.playerId), card: card(d.cardId) },
+        ["card"],
+      );
+      if (d.kind === "effect_payment") return f(
+        d.status === "paid" ? "logRulesEffectPaymentPaid" : "logRulesEffectPaymentDeclined",
+        { player: ownerName(d.playerId), card: card(d.sourceCardId) },
         ["card"],
       );
       if (d.kind === "effect_memory_payment") return f(

@@ -723,3 +723,8 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 - Le choix `discard_from_hand` sert maintenant aussi de sélecteur générique : `destination` (`interzone` ou `exile` au lieu du Limbo), `drawByBasePower` (pige autant que la puissance de base de la carte choisie), `destroyTargetItemId` (détruit la cible si sa puissance de base est ≤ celle de la carte choisie) et `candidateCardIds` (recherche dans le deck : les cartes choisies vont en main puis le deck est mélangé ; la liste n'est envoyée qu'au joueur concerné).
 - Résultats `hand_manifestation_choice` (Dew Invoker, Censor, Martyrize) et `search_deck_to_hand` (Hermeto, Recall).
 - Approximations : Censor et Martyrize choisissent la manifestation révélée à la résolution et non comme coût additionnel ; Martyrize n'exile pas la Volonté ensuite (cartes en partiel).
+
+### Lot 7 (« sauf si l'on paie »)
+
+- Nouveau choix `effect_payment` (réutilise le flux de paiement du plateau, comme `effect_memory_payment`) : le payeur paie le Tribut ou laisse l'effet `onDecline` se produire. Résultats `unless_payment_deck_discard` (Lerxur : le propriétaire du Réceptacle défausse 2 cartes sauf s'il paie {H}{H}) et `unless_payment_lose_effects` (Nullify : la cible perd ses effets de façon permanente sauf si son contrôleur paie {H}{H}).
+- Dulfer n'est pas fait : les cartes dans un Réceptacle ne reçoivent pas l'évènement `revelation`.

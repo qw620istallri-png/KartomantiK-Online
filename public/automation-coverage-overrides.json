@@ -2300,6 +2300,20 @@
       "testRefs": [
         "tests/test_game_state.py"
       ]
+    },
+    "oftdgsrobaqgst7_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "fwh3yrkvg9n09vg_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     }
   }
 }

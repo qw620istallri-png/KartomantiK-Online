@@ -3266,5 +3266,20 @@
       "targets": { "min": 0, "max": 0 },
       "result": { "kind": "search_deck_to_hand", "count": 1 }
     }
+  ],
+  "oftdgsrobaqgst7_en": [
+    {
+      "id": "lerxur-mills-vessel-owner-unless-payment",
+      "trigger": { "event": "beginning_of_turn", "zone": "receptacle", "container": "opponent" },
+      "result": { "kind": "unless_payment_deck_discard", "payment": "{H}{H}", "count": 2 }
+    }
+  ],
+  "fwh3yrkvg9n09vg_en": [
+    {
+      "id": "nullify-removes-effects-unless-payment",
+      "action": "play_card",
+      "targets": { "kind": "card", "min": 1, "max": 1, "zones": ["battlefield"] },
+      "result": { "kind": "unless_payment_lose_effects", "payment": "{H}{H}" }
+    }
   ]
 }

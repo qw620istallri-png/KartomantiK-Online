@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 259,
-    "explicitAbilities": 306,
+    "explicitCards": 261,
+    "explicitAbilities": 308,
     "statuses": {
-      "automated": 318,
+      "automated": 320,
       "generic": 0,
-      "manual": 124,
+      "manual": 122,
       "partial": 8
     }
   },
@@ -1751,10 +1751,18 @@
       "collectionNumber": 116,
       "name": "Lerxur, the Black Moon",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "lerxur-mills-vessel-owner-unless-payment"
+      ],
+      "mechanics": [
+        "result:unless_payment_deck_discard",
+        "trigger:beginning_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "fknxa83uens94ju_en": {
       "collectionNumber": 117,
@@ -3997,10 +4005,18 @@
       "collectionNumber": 271,
       "name": "Nullify",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "nullify-removes-effects-unless-payment"
+      ],
+      "mechanics": [
+        "result:unless_payment_lose_effects",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "bithch9c4vi77cu_en": {
       "collectionNumber": 272,
