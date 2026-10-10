@@ -3433,5 +3433,101 @@
       "targets": { "min": 0, "max": 0 },
       "result": { "kind": "unless_opponent_payment_lock_support_entries", "payment": "{H}{H}" }
     }
+  ],
+  "t42gc95tma8uhzm_en": [
+    {
+      "id": "trim-field-to-base-power",
+      "action": "play_card",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "set_field_power", "mode": "base" }
+    }
+  ],
+  "qahv0guk18jyo6i_en": [
+    {
+      "id": "equalize-field-to-lowest-base",
+      "action": "play_card",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "set_field_power", "mode": "lowest_base" }
+    }
+  ],
+  "s4dofvhan101mew_en": [
+    {
+      "id": "soup-persistent-wills-at-ephemeral-timing",
+      "passiveEffect": { "kind": "persistent_wills_as_ephemeral" }
+    }
+  ],
+  "vt3extxbwd6gybn_en": [
+    {
+      "id": "inflorescence-grants-support",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "targets": { "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"] },
+      "ongoingEffect": { "kind": "grant_support", "duration": "while_source_and_target_on_field" }
+    },
+    {
+      "id": "inflorescence-retarget-support",
+      "tribute": "{G}{G}{G}",
+      "exhaustSource": true,
+      "phaseIds": ["end_actions"],
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"] },
+      "result": { "kind": "retarget_source_effect", "effectKind": "grant_support" }
+    }
+  ],
+  "411u4asiunisv9l_en": [
+    {
+      "id": "logos-stalemates-interzone-target-after-win",
+      "optional": true,
+      "trigger": { "event": "player_wins_confrontation", "eventController": "owner" },
+      "targets": { "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"], "fieldZone": "interzone" },
+      "result": { "kind": "stalemate_targets", "lockZone": true }
+    },
+    {
+      "id": "logos-and-winner-stalemate-after-loss",
+      "trigger": { "event": "player_loses_confrontation", "eventController": "owner" },
+      "targets": { "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"], "confrontationOutcome": "won" },
+      "result": { "kind": "stalemate_targets", "includeSource": true, "lockZone": true }
+    }
+  ],
+  "kae4oy2v7jtkgn2_en": [
+    {
+      "id": "imgurd-gains-points-when-power-is-lost",
+      "trigger": { "event": "power_lost" },
+      "result": { "kind": "score_owner", "value": 5 }
+    }
+  ],
+  "iuqpdn4gvjiu25v_en": [
+    {
+      "id": "snoozer-boosts-support-entries-after-loss",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "result": { "kind": "grant_support_entry_bonus", "value": 1, "requireLostPrevious": true }
+    }
+  ],
+  "t9yazjrbj1d37yu_en": [
+    {
+      "id": "jurat-returns-turn-tributes",
+      "trigger": { "event": "wins_confrontation" },
+      "result": { "kind": "return_turn_tributes_end_turn" }
+    }
+  ],
+  "x15xumjqqhrnrds_en": [
+    {
+      "id": "glabron-stalemates-own-interzone-card-for-support",
+      "sourceZones": ["hand", "battlefield"],
+      "sourceFieldZone": "interzone",
+      "targets": { "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"], "fieldZone": "interzone", "controller": "self" },
+      "result": { "kind": "stalemate_target_grant_source_support" }
+    }
+  ],
+  "67009ud077sgz7b_en": [
+    {
+      "id": "everspring-tear-after-loss",
+      "trigger": { "event": "player_loses_confrontation", "eventController": "owner" },
+      "result": { "kind": "add_counter_source", "counter": "Tear", "value": 1 }
+    },
+    {
+      "id": "everspring-spend-tears-to-exile-vessel",
+      "removeCountersFromSource": { "name": "Tear", "amount": 3 },
+      "targets": { "kind": "zone_card", "min": 1, "max": 3, "cardType": "manifestation", "zones": ["receptacle"], "container": "opponent", "maxTotalPoints": 60 },
+      "result": { "kind": "move_targets", "zone": "exile", "position": "top", "reason": "exile" }
+    }
   ]
 }

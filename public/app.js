@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261010-rules-beta-104";
+const STATIC_ASSET_VERSION = "20261010-rules-beta-105";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -3194,6 +3194,17 @@ function rulesStructuredActionTargets(encodedAbility) {
   };
 }
 
+function rulesPersistentWillsAsEphemeralClient() {
+  return (latestState?.battlefield || []).some((item) => (
+    (item.controllerId || item.ownerId) === myPlayerId
+    && item.fieldZone === "interzone"
+    && item.faceUp
+    && (passiveEffectsByCard.get(item.cardId) || []).some(
+      (effect) => effect.kind === "persistent_wills_as_ephemeral",
+    )
+  ));
+}
+
 function rulesActionPaymentDraft(source, card, encodedAbility) {
   const isPrintedWill = ["hand", "suspended"].includes(source.zone)
     && ["ephemeral_will", "persistent_will"].includes(card?.type);
@@ -3562,6 +3573,10 @@ function rulesActionContextItem(source) {
       && !(
         phaseId === "confrontation_before_revelation"
         && rulesBeforeRevelationPlayClient(cardsById.get(source.cardId))
+      )
+      && !(
+        ["confrontation_reaction", "resolution_effects"].includes(phaseId)
+        && rulesPersistentWillsAsEphemeralClient()
       )
     ) return null;
     if (!["ephemeral_will", "persistent_will"].includes(cardType)) return null;
@@ -5690,6 +5705,10 @@ function handCardIsPlayable(cardId) {
     return !draft || Number(draft.targetRules?.min || 0) <= draft.structuredTargets.length;
   }
   if (card.type === "persistent_will") {
+    if (
+      ["confrontation_reaction", "resolution_effects"].includes(phaseId)
+      && rulesPersistentWillsAsEphemeralClient()
+    ) return rulesCanAffordCard(cardId);
     const timingOk = phaseId === "end_actions"
       || (phaseId === "confrontation_before_revelation" && rulesBeforeRevelationPlayClient(card));
     return timingOk && !stackHasActions && rulesCanAffordCard(cardId);

@@ -2403,6 +2403,76 @@
         "tests/test_game_state.py",
         "tests/test_card_catalog.py"
       ]
+    },
+    "t42gc95tma8uhzm_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "qahv0guk18jyo6i_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "s4dofvhan101mew_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "vt3extxbwd6gybn_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "411u4asiunisv9l_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "kae4oy2v7jtkgn2_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "iuqpdn4gvjiu25v_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "t9yazjrbj1d37yu_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "x15xumjqqhrnrds_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "67009ud077sgz7b_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     }
   }
 }

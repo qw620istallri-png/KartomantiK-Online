@@ -766,3 +766,15 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 - Pile : une impulsion bleue signale l'ajout ou le déclenchement ; une impulsion verte signale la résolution. Les libellés restent lisibles à côté de la Pile.
 - Effets continus : la pose d'un effet relie brièvement source et cible puis appose un sceau. Le lien persistant reste discret et ne s'anime qu'au survol ou au focus du marqueur d'effet ; sa disparition produit une dissolution courte.
 - Les animations sont décoratives et pilotées par les états confirmés du serveur. Avec `prefers-reduced-motion`, les déplacements sont supprimés mais les contours, libellés et changements d'état restent visibles.
+
+### Lot 12 (dix cartes du set Beta)
+
+- Trim the Excess / Equalize : résultat `set_field_power` (`mode` `base` ou `lowest_base`) → un effet `power_set_maximum` jusqu'à la fin du tour sur chaque Manifestation du champ (la puissance fixée ignore les modificateurs ultérieurs).
+- Soup : passif `persistent_wills_as_ephemeral` ; `rules_action_timing_error(player_id=…)` (serveur) et `rulesPersistentWillsAsEphemeralClient` (client) autorisent les Volontés persistantes en Réaction / Résolution tant que Soup est dans l'Interzone du joueur.
+- Altruistic Inflorescence : effet continu `grant_support` (tant que la source et la cible sont sur le champ, lu par `rules_card_can_enter_support`) ; changement de cible en Phase de Fin via `retarget_source_effect`.
+- Logos : résultat `stalemate_targets` (`includeSource`, `lockZone`) ; victoire = une Manifestation d'Interzone choisie, défaite = Logos et une Manifestation gagnante ; toutes gelées (`zoneLockTurn`) jusqu'à la fin du tour.
+- Imgurd : nouvel évènement observé `power_lost`, émis quand un effet ajoute une puissance négative (`create_rules_ongoing_effects`, `add_power_counter_target`).
+- Stoic Snoozer : résultat `grant_support_entry_bonus` (`supportEntryBonuses`, appliqué par `mark_rules_support_entry`) si le joueur a perdu la confrontation précédente.
+- Jurat : `pay_rules_tribute` consigne les Manifestations payées en Tribut (`tributeLog`) ; une victoire crée un souvenir `return_from_limbo_end_turn` par carte, qui les rend à leur propriétaire en fin de tour.
+- Glabron : résultat `stalemate_target_grant_source_support`. Le Stalemate est appliqué à la résolution et non comme coût payé avant la Pile.
+- Everspring : compteurs « Tear » à chaque défaite ; retirer 3 compteurs exile jusqu'à trois Manifestations du Réceptacle adverse (nouvelle contrainte de cible `maxTotalPoints`, 60 points au total).

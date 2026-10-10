@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 274,
-    "explicitAbilities": 329,
+    "explicitCards": 284,
+    "explicitAbilities": 342,
     "statuses": {
-      "automated": 339,
+      "automated": 349,
       "generic": 0,
-      "manual": 111,
+      "manual": 101,
       "partial": 0
     }
   },
@@ -251,10 +251,18 @@
       "collectionNumber": 17,
       "name": "Stoic Snoozer",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "snoozer-boosts-support-entries-after-loss"
+      ],
+      "mechanics": [
+        "result:grant_support_entry_bonus",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "xzb2jwtkunq5tys_en": {
       "collectionNumber": 18,
@@ -641,10 +649,24 @@
       "collectionNumber": 42,
       "name": "Altruistic Inflorescence",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "inflorescence-grants-support",
+        "inflorescence-retarget-support"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "cost:tribute",
+        "ongoing:grant_support",
+        "phase-window",
+        "result:retarget_source_effect",
+        "target:card",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "gybb0ktsth7clz5_en": {
       "collectionNumber": 43,
@@ -1073,10 +1095,18 @@
       "collectionNumber": 69,
       "name": "Jurat, the Strategist",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "jurat-returns-turn-tributes"
+      ],
+      "mechanics": [
+        "result:return_turn_tributes_end_turn",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "xzaw511oz4g4km9_en": {
       "collectionNumber": 70,
@@ -2456,10 +2486,17 @@
       "collectionNumber": 160,
       "name": "Soup, the Graceful",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "soup-persistent-wills-at-ephemeral-timing"
+      ],
+      "mechanics": [
+        "passive:persistent_wills_as_ephemeral"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "fdnhc537c4xu2wo_en": {
       "collectionNumber": 161,
@@ -2619,10 +2656,21 @@
       "collectionNumber": 173,
       "name": "Logos, the Lost",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "logos-stalemates-interzone-target-after-win",
+        "logos-and-winner-stalemate-after-loss"
+      ],
+      "mechanics": [
+        "result:stalemate_targets",
+        "target:card",
+        "trigger:player_loses_confrontation",
+        "trigger:player_wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "7jaany95hy1h5pz_en": {
       "collectionNumber": 174,
@@ -2671,19 +2719,33 @@
       "collectionNumber": 177,
       "name": "Trim the Excess",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "trim-field-to-base-power"
+      ],
+      "mechanics": [
+        "result:set_field_power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "qahv0guk18jyo6i_en": {
       "collectionNumber": 178,
       "name": "Equalize",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "equalize-field-to-lowest-base"
+      ],
+      "mechanics": [
+        "result:set_field_power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "2y961kgs0crdict_en": {
       "collectionNumber": 179,
@@ -3021,10 +3083,18 @@
       "collectionNumber": 200,
       "name": "Glabron, the Oppressing",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "glabron-stalemates-own-interzone-card-for-support"
+      ],
+      "mechanics": [
+        "result:stalemate_target_grant_source_support",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "gz2zjrxqc2rbcwq_en": {
       "collectionNumber": 201,
@@ -3338,10 +3408,18 @@
       "collectionNumber": 221,
       "name": "Imgurd, Flame Craver",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "imgurd-gains-points-when-power-is-lost"
+      ],
+      "mechanics": [
+        "result:score_owner",
+        "trigger:power_lost"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "02y2r5cvbw1mauv_en": {
       "collectionNumber": 222,
@@ -3600,10 +3678,21 @@
       "collectionNumber": 238,
       "name": "Everspring",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "everspring-tear-after-loss",
+        "everspring-spend-tears-to-exile-vessel"
+      ],
+      "mechanics": [
+        "result:add_counter_source",
+        "result:move_targets",
+        "target:zone_card",
+        "trigger:player_loses_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "9bkn03sc9veaa88_en": {
       "collectionNumber": 239,

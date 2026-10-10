@@ -10515,6 +10515,123 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertEqual(session.find_battlefield_item("a1")["fieldZone"], "confrontation")
         self.assertIsNone(session.rules_engine["pendingChoice"])
 
+    def test_manual_lot_twelve_beta_cards(self):
+        trim, equalize, soup, inflorescence, logos, imgurd, snoozer, jurat, glabron, everspring = (
+            "t42gc95tma8uhzm_en", "qahv0guk18jyo6i_en", "s4dofvhan101mew_en", "vt3extxbwd6gybn_en",
+            "411u4asiunisv9l_en", "kae4oy2v7jtkgn2_en", "iuqpdn4gvjiu25v_en", "t9yazjrbj1d37yu_en",
+            "x15xumjqqhrnrds_en", "67009ud077sgz7b_en",
+        )
+        session, p1, p2 = self.manual_batch_session(
+            trim, equalize, soup, inflorescence, logos, imgurd, snoozer, jurat, glabron, everspring,
+            card_type="manifestation",
+        )
+        for number, power in (("a", 4), ("b", 2), ("c", 6)):
+            session.card_rules[f"m-{number}"] = {"type": "manifestation", "power": power, "temperaments": ["phlegmatic"]}
+        session.battlefield = [
+            self.field_item("ia", "p1", "m-a", field_zone="interzone", counters={"power": 3}),
+            self.field_item("ib", "p2", "m-b"), self.field_item("ic", "p2", "m-c", field_zone="stalemate"),
+        ]
+        # Trim the Excess resets every power to base and ignores later modifiers; Equalize uses the lowest base.
+        self.run_ability(session, trim)
+        self.assertEqual([self.power_of(session, i) for i in ("ia", "ib", "ic")], [4, 2, 6])
+        session.find_battlefield_item("ia")["counters"]["power"] = 9
+        self.assertEqual(self.power_of(session, "ia"), 4)
+        session.rules_engine["ongoingEffects"] = []
+        self.run_ability(session, equalize)
+        self.assertEqual({self.power_of(session, i) for i in ("ia", "ib", "ic")}, {2})
+        # Soup lets a Persistent Will be played at Ephemeral timing.
+        session.rules_engine["ongoingEffects"] = []
+        session.card_rules[soup]["passiveEffects"] = [self.ABILITIES[soup][0]["passiveEffect"]]
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        source = {"cardId": "will-persistent", "cardType": "persistent_will", "zone": "hand"}
+        session.rules_engine["firstManifestationComplete"] = True
+        self.assertIn("End actions", session.rules_action_timing_error("play_card", source, player_id="p1"))
+        session.battlefield = [self.field_item("soup", "p1", soup, field_zone="interzone")]
+        self.assertIsNone(session.rules_action_timing_error("play_card", source, player_id="p1"))
+        self.assertIn("End actions", session.rules_action_timing_error("play_card", source, player_id="p2"))
+        # Altruistic Inflorescence grants Support to its target while both are on the field.
+        session.battlefield = [
+            self.field_item("inf", "p1", inflorescence, field_zone="field"),
+            self.field_item("t", "p1", "m-a", field_zone="interzone"),
+        ]
+        self.assertFalse(session.rules_card_can_enter_support(session.battlefield[1]))
+        session.create_rules_ongoing_effects({
+            "id": "inf-action", "controllerId": "p1", "source": {"cardId": inflorescence, "itemId": "inf"},
+            "targets": [self.card_target("t", "m-a")],
+            "ability": {"id": "inflorescence-grants-support", "ongoingEffect": self.ABILITIES[inflorescence][0]["ongoingEffect"]},
+        })
+        self.assertTrue(session.rules_card_can_enter_support(session.find_battlefield_item("t")))
+        # Logos: win stalemates a chosen Interzone Manifestation; loss stalemates Logos and a winner. Both are frozen.
+        session.battlefield = [
+            self.field_item("lg", "p1", logos), self.field_item("v", "p2", "m-b", field_zone="interzone"),
+        ]
+        payload = self.run_ability_at(session, logos, 0, targets=[self.card_target("v", "m-b")], source={"itemId": "lg"})
+        self.assertEqual(payload["itemIds"], ["v"])
+        self.assertTrue(session.rules_item_zone_locked(session.find_battlefield_item("v")))
+        session.battlefield = [
+            self.field_item("lg", "p1", logos), self.field_item("w", "p2", "m-c"),
+        ]
+        self.set_outcome(session, "p2", "p1", "lg", "w")
+        payload = self.run_ability_at(session, logos, 1, targets=[self.card_target("w", "m-c")], source={"itemId": "lg"})
+        self.assertEqual(sorted(payload["itemIds"]), ["lg", "w"])
+        self.assertEqual({session.rules_field_zone(i) for i in session.battlefield}, {"stalemate"})
+        # Imgurd: a Manifestation losing power is observed and pays its controller 5 points.
+        session.battlefield = [self.field_item("im", "p1", imgurd, field_zone="interzone"), self.field_item("x", "p2", "m-a")]
+        session.rules_engine["observedEvents"] = []
+        session.apply_rules_action_result({
+            "id": "weaken", "controllerId": "p1", "source": {"cardId": "z"}, "targets": [self.card_target("x", "m-a")],
+            "ability": {"result": {"kind": "add_power_counter_target", "value": -1}},
+        })
+        self.assertEqual([e["kind"] for e in session.rules_engine["observedEvents"]], ["power_lost"])
+        queued = session.queue_rules_observed_event_triggers(defer=True)
+        self.assertEqual([a["ability"]["id"] for a in queued], ["imgurd-gains-points-when-power-is-lost"])
+        # Stoic Snoozer: after losing the previous turn, later Support entrants get +1 until end of turn.
+        turn = session.phase_tracker["turn"]
+        self.run_ability_at(session, snoozer, 0)
+        self.assertEqual(session.rules_engine.get("supportEntryBonuses") or [], [])
+        session.rules_engine["confrontationLosses"] = {str(turn - 1): "p1"}
+        self.run_ability_at(session, snoozer, 0)
+        entrant = self.field_item("sup", "p1", "m-b", field_zone="interzone", controllerId="p1")
+        session.battlefield.append(entrant)
+        base = self.power_of(session, "sup")
+        session.mark_rules_support_entry(entrant)
+        self.assertEqual(self.power_of(session, "sup"), base + 1)
+        # Jurat: every Manifestation used as tribute this turn returns to hand at end of turn after a win.
+        session.rules_engine["tributeLog"] = [
+            {"turn": turn, "playerId": "p1", "cardId": "m-1", "ownerId": "p1"},
+            {"turn": turn, "playerId": "p2", "cardId": "m-2", "ownerId": "p2"},
+            {"turn": turn - 1, "playerId": "p1", "cardId": "m-3", "ownerId": "p1"},
+        ]
+        self.put(p1, "graveyard", ["m-1", "m-3"])
+        payload = self.run_ability_at(session, jurat, 0)
+        self.assertEqual(payload["cardIds"], ["m-1"])
+        queued = session.queue_rules_end_turn_memory_triggers(defer=True)
+        self.assertEqual(len(queued), 1)
+        session.apply_rules_action_result({**queued[0], "ability": {"result": queued[0]["ability"]["result"]}})
+        self.assertIn("m-1", p1["zones"]["hand"])
+        self.assertIn("m-3", p1["zones"]["graveyard"])
+        # Glabron: stalemating a card from your Interzone gives it Support for the turn.
+        session.battlefield = [
+            self.field_item("gl", "p1", glabron, field_zone="interzone"),
+            self.field_item("o", "p1", "m-a", field_zone="interzone"),
+        ]
+        self.run_ability_at(session, glabron, 0, targets=[self.card_target("o", "m-a")], source={"itemId": "gl", "zone": "battlefield"})
+        self.assertEqual(session.find_battlefield_item("o")["fieldZone"], "stalemate")
+        self.assertEqual(session.find_battlefield_item("gl")["supportUntilTurn"], turn)
+        # Everspring: Tear counters, then exile up to three vessel Manifestations worth at most 60 points.
+        session.card_points = {"m-a": 30, "m-b": 30, "m-c": 20}
+        ability = self.ABILITIES[everspring][1]["targets"]
+        targets = [{"kind": "zone_card", "cardId": cid, "zone": "receptacle", "containerId": "p2", "ownerId": "p2"} for cid in ("m-a", "m-b", "m-c")]
+        self.assertIn("too many points", session.rules_ability_targets_error(ability, targets, "p1"))
+        self.assertIsNone(session.rules_ability_targets_error(ability, targets[:2], "p1"))
+        self.put(p2, "receptacle", {"m-a": "p2", "m-b": "p2", "m-c": "p2"})
+        session.apply_rules_action_result({
+            "id": "ev", "controllerId": "p1", "source": {"cardId": everspring}, "targets": targets[:2],
+            "ability": {"result": self.ABILITIES[everspring][1]["result"]},
+        })
+        self.assertEqual(p2["zones"]["receptacle"], ["m-c"])
+        self.assertEqual(sorted(p2["zones"]["exile"]), ["m-a", "m-b"])
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")

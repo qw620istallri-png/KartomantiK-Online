@@ -1470,6 +1470,22 @@ class Session:
             return {"kind": kind, "value": max(1, min(int(result.get("value") or 1), 20))}
         if kind == "lock_support_entries":
             return {"kind": kind, "scope": "controller" if result.get("scope") == "controller" else "all"}
+        if kind == "set_field_power":
+            mode = str(result.get("mode") or "")
+            return {"kind": kind, "mode": mode} if mode in {"base", "lowest_base"} else None
+        if kind == "stalemate_targets":
+            return {
+                "kind": kind, "includeSource": bool(result.get("includeSource")),
+                "lockZone": bool(result.get("lockZone")),
+            }
+        if kind == "grant_support_entry_bonus":
+            return {
+                "kind": kind,
+                "value": max(1, min(int(result.get("value") or 1), 20)),
+                "requireLostPrevious": bool(result.get("requireLostPrevious")),
+            }
+        if kind in {"return_turn_tributes_end_turn", "stalemate_target_grant_source_support"}:
+            return {"kind": kind}
         if kind == "stalemate_confrontation":
             return {
                 "kind": kind,
@@ -1824,6 +1840,13 @@ class Session:
         required_types = set(target_rules.get("cardTypes") or [])
         if target_rules.get("cardType"):
             required_types.add(target_rules["cardType"])
+        if isinstance(target_rules.get("maxTotalPoints"), (int, float)):
+            total_points = sum(
+                int((self.card_points or {}).get(entry.get("cardId"), 0))
+                for entry in targets if entry.get("kind") in {"card", "zone_card"}
+            )
+            if total_points > target_rules["maxTotalPoints"]:
+                return "The selected targets are worth too many points in total."
         for target in targets:
             target_kind = str(target_rules.get("kind") or "card")
             if target_kind == "player":
@@ -2175,7 +2198,7 @@ class Session:
             "excludeEventSource",
             "sourceOnly", "fieldZonesByType", "enteredThisTurn", "enteredInterzoneThisTurn", "confrontationOutcome", "owner",
             "firstManifestationOnly",
-            "counter", "minCounters", "limboReasons", "container",
+            "counter", "minCounters", "limboReasons", "container", "maxTotalPoints",
         }
         return None, {
             "id": ability["id"],
@@ -2698,6 +2721,13 @@ class Session:
             ),
         }
 
+    def record_rules_power_lost(self, item_id):
+        item = self.find_battlefield_item(item_id)
+        if item is not None:
+            self.record_rules_observed_event(
+                "power_lost", self.rules_item_controller_id(item), itemId=item_id,
+            )
+
     def rules_stalemate_item(self, item_id):
         item = self.find_battlefield_item(item_id)
         if item is None:
@@ -2845,6 +2875,13 @@ class Session:
                 movement = self._rules_remove_field_item(
                     item, item.get("ownerId"), "graveyard", "top"
                 )
+                self.rules_engine["tributeLog"] = [
+                    entry for entry in self.rules_engine.get("tributeLog") or []
+                    if entry.get("turn") == self.phase_tracker["turn"]
+                ] + [{
+                    "turn": self.phase_tracker["turn"], "playerId": player_id,
+                    "cardId": card_id, "ownerId": item.get("ownerId"),
+                }]
                 movements.append({
                     "cardId": card_id, "ownerId": item.get("ownerId"),
                     "fromZone": "interzone",
@@ -2901,6 +2938,13 @@ class Session:
             )
             if error:
                 raise RuntimeError(f"Validated Tribute payment failed: {error}")
+            self.rules_engine["tributeLog"] = [
+                entry for entry in self.rules_engine.get("tributeLog") or []
+                if entry.get("turn") == self.phase_tracker["turn"]
+            ] + [{
+                "turn": self.phase_tracker["turn"], "playerId": player_id,
+                "cardId": card_id, "ownerId": owner_id,
+            }] if destination == "graveyard" else self.rules_engine.get("tributeLog") or []
             movements.append({
                 "cardId": card_id, "ownerId": owner_id,
                 "destination": destination,
@@ -3372,6 +3416,11 @@ class Session:
                 effect["fromOpponents"] = True
             self.rules_engine["ongoingEffects"].append(effect)
             created.append(effect)
+            if (
+                effect["kind"] == "power_modifier" and target_kind == "card"
+                and int(effect.get("value") or 0) < 0
+            ):
+                self.record_rules_power_lost(target.get("itemId"))
         return created
 
     def prune_rules_ongoing_effects(self):
@@ -3523,6 +3572,20 @@ class Session:
                 "value": max(0, min(int(effect.get("value") or 0), 999)),
             }
         self.mark_rules_confrontation_entry(item)
+        turn = self.phase_tracker["turn"]
+        for bonus in self.rules_engine.get("supportEntryBonuses") or []:
+            if bonus.get("turn") == turn and bonus.get("playerId") == self.rules_item_controller_id(item):
+                self.rules_engine["ongoingEffects"].append({
+                    "id": new_id(), "actionId": None, "abilityId": "support-entry-bonus",
+                    "controllerId": bonus["playerId"],
+                    "source": {"cardId": bonus.get("sourceCardId")},
+                    "target": {
+                        "kind": "card", "itemId": item["id"],
+                        "cardId": item.get("cardId"), "ownerId": item.get("ownerId"),
+                    },
+                    "kind": "power_modifier", "value": int(bonus.get("value") or 1),
+                    "duration": "until_end_of_turn", "startedTurn": turn,
+                })
 
     def rules_support_condition_met(self, item, condition):
         if not condition:
@@ -3548,6 +3611,12 @@ class Session:
             return False
         if from_zone == "hand":
             return self.rules_support_from_hand_available(item.get("ownerId"), item.get("cardId"))
+        if any(
+            effect.get("kind") == "grant_support"
+            and effect.get("target", {}).get("itemId") == item.get("id")
+            for effect in self.rules_engine.get("ongoingEffects") or []
+        ):
+            return True
         if from_zone == "stalemate":
             return bool(metadata.get("supportFromStalemate"))
         counter_name = metadata.get("supportWhenNoCounter")
@@ -4790,7 +4859,14 @@ class Session:
             readied_item_ids.append(item["id"])
         return readied_item_ids
 
-    def rules_action_timing_error(self, kind, source, as_support=False):
+    def rules_persistent_wills_as_ephemeral(self, player_id):
+        return any(
+            self.rules_item_controller_id(item) == player_id
+            and self.rules_field_zone(item) == "interzone"
+            for item in self.rules_active_passive_sources("persistent_wills_as_ephemeral")
+        )
+
+    def rules_action_timing_error(self, kind, source, as_support=False, player_id=None):
         """Reject voluntary card actions outside the rulebook response windows.
 
         Older saved games and focused engine tests can lack the pre-game ready
@@ -4823,6 +4899,11 @@ class Session:
             return None if phase_id in response_phases else "An Ephemeral Will cannot be played during the current step."
         if card_type == "persistent_will":
             if phase_id == "end_actions":
+                return None
+            if (
+                phase_id in response_phases and player_id
+                and self.rules_persistent_wills_as_ephemeral(player_id)
+            ):
                 return None
             if (
                 phase_id == "confrontation_before_revelation"
@@ -4867,7 +4948,9 @@ class Session:
         )
         if source_error:
             return source_error, None
-        timing_error = self.rules_action_timing_error(kind, clean_source, as_support=as_support)
+        timing_error = self.rules_action_timing_error(
+            kind, clean_source, as_support=as_support, player_id=player_id,
+        )
         if timing_error:
             return timing_error, None
         target_error, clean_targets = self.rules_action_targets(targets)
@@ -5427,6 +5510,7 @@ class Session:
                 "player_wins_confrontation": "battlefield",
                 "player_loses_confrontation": "battlefield",
                 "points_lost": "battlefield",
+                "power_lost": "battlefield",
                 "cards_discarded": "battlefield",
                 "deck_cards_discarded": "battlefield",
                 "cards_drawn": "battlefield",
@@ -5464,7 +5548,7 @@ class Session:
                         "will_played", "card_played",
                         "player_wins_confrontation",
                         "player_loses_confrontation",
-                        "points_lost", "cards_discarded",
+                        "points_lost", "power_lost", "cards_discarded",
                         "deck_cards_discarded", "cards_drawn", "points_gained",
                         "manifestation_entered_limbo", "manifestation_targeted_by_will",
                         "manifestation_destroyed",
@@ -7062,6 +7146,8 @@ class Session:
                 return {"kind": result.get("kind"), "status": "target_missing"}
             counters = item.setdefault("counters", {})
             counters["power"] = int(counters.get("power") or 0) + int(result.get("value") or 0)
+            if int(result.get("value") or 0) < 0:
+                self.record_rules_power_lost(item["id"])
             return {
                 "kind": result.get("kind"), "status": "changed",
                 "itemId": item["id"], "value": int(result.get("value") or 0),
@@ -8124,6 +8210,88 @@ class Session:
                         "controllerId": pid, "turn": self.phase_tracker["turn"],
                     })
             return {"kind": result.get("kind"), "status": "armed"}
+        if result.get("kind") == "set_field_power":
+            items = self.rules_confrontation_items(None, ("interzone", "confrontation", "stalemate"))
+            bases = {item["id"]: self.rules_manifestation_base_power(item) for item in items}
+            floor = min(bases.values()) if bases else 0
+            effect_ids = []
+            for item in items:
+                value = bases[item["id"]] if result.get("mode") == "base" else floor
+                effect = {
+                    "id": new_id(), "actionId": action.get("id"),
+                    "abilityId": (action.get("ability") or {}).get("id"),
+                    "controllerId": player_id,
+                    "source": dict(action.get("source") or {}),
+                    "target": {
+                        "kind": "card", "itemId": item["id"],
+                        "cardId": item.get("cardId"), "ownerId": item.get("ownerId"),
+                    },
+                    "kind": "power_set_maximum", "duration": "until_end_of_turn",
+                    "startedTurn": self.phase_tracker["turn"], "value": int(value),
+                }
+                self.rules_engine["ongoingEffects"].append(effect)
+                effect_ids.append(effect["id"])
+            return {
+                "kind": result.get("kind"), "status": "set" if effect_ids else "nothing",
+                "mode": result.get("mode"), "effectIds": effect_ids,
+            }
+        if result.get("kind") in {"stalemate_targets", "stalemate_target_grant_source_support"}:
+            source = action.get("source") or {}
+            item_ids = [
+                entry.get("itemId") for entry in action.get("targets") or []
+                if entry.get("kind") == "card"
+            ]
+            if result.get("kind") == "stalemate_target_grant_source_support":
+                item_ids = [item_id for item_id in item_ids if item_id != source.get("itemId")]
+                if not item_ids:
+                    return {"kind": result.get("kind"), "status": "target_missing"}
+            if result.get("includeSource") and source.get("itemId"):
+                item_ids.append(source.get("itemId"))
+            moved = []
+            for item_id in item_ids:
+                item = self.find_battlefield_item(item_id)
+                if item is None or self.rules_item_zone_locked(item):
+                    continue
+                item["stackedOn"] = None
+                self.rules_stalemate_item(item_id)
+                if result.get("lockZone"):
+                    item["zoneLockTurn"] = self.phase_tracker["turn"]
+                moved.append(item_id)
+            self.prune_rules_ongoing_effects()
+            payload = {
+                "kind": result.get("kind"),
+                "status": "stalemated" if moved else "nothing", "itemIds": moved,
+            }
+            if result.get("kind") == "stalemate_target_grant_source_support" and moved:
+                payload["support"] = self.apply_rules_action_result({
+                    **action,
+                    "ability": {**(action.get("ability") or {}), "result": {"kind": "grant_source_support_until_end_turn"}},
+                })
+            return payload
+        if result.get("kind") == "grant_support_entry_bonus":
+            turn = self.phase_tracker["turn"]
+            if result.get("requireLostPrevious") and (
+                (self.rules_engine.get("confrontationLosses") or {}).get(str(turn - 1)) != player_id
+            ):
+                return {"kind": result.get("kind"), "status": "condition_failed"}
+            self.rules_engine.setdefault("supportEntryBonuses", []).append({
+                "turn": turn, "playerId": player_id, "value": int(result.get("value") or 1),
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+            })
+            return {"kind": result.get("kind"), "status": "armed", "value": int(result.get("value") or 1)}
+        if result.get("kind") == "return_turn_tributes_end_turn":
+            turn = self.phase_tracker["turn"]
+            memories = []
+            for entry in self.rules_engine.get("tributeLog") or []:
+                if entry.get("turn") != turn or entry.get("playerId") != player_id:
+                    continue
+                memory = self.create_rules_effect_memory(
+                    entry["ownerId"], entry["cardId"], "return_from_limbo_end_turn",
+                    controller_id=player_id, source_action_id=action.get("id"),
+                )
+                if memory:
+                    memories.append(entry["cardId"])
+            return {"kind": result.get("kind"), "status": "scheduled" if memories else "nothing", "cardIds": memories}
         if result.get("kind") == "each_player_stalemate_own_confrontation":
             moved, queue = [], []
             for pid in self.players:
