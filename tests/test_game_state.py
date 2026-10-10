@@ -12913,5 +12913,75 @@ class LotSeventeenTests(RealCardRulesCase):
         self.assertIsNotNone(session.find_battlefield_item("zaguor3"))
 
 
+class LimitsFollowUpTests(RealCardRulesCase):
+    """Catacomb replacement, Pillar vs untargeted Vessel effects, Mass vs automatic targets."""
+
+    CATACOMB, PILLAR, MASS, VESSEL_SMASHER = (
+        "inner-deserts-067", "7gaov0c4cjndl9w_en", "6vxm454ffuni41x_en", "7jaany95hy1h5pz_en",
+    )
+
+    def test_catacomb_raised_manifestation_is_exiled_instead_of_leaving_by_an_effect(self):
+        session, p1, _p2 = self.make_session()
+        ability = self.ability(self.CATACOMB, "catacomb-raise-discarded-manifestation")
+        self.assertTrue(ability["result"]["exileInsteadOfLeaving"])
+        item = self.field_item("raised", "p1", "m-1", exileInsteadOfLeaving=True)
+        session.battlefield = [item]
+        moved = session._rules_remove_field_item_by_effect(item, "p1", "graveyard", "top", reason="destroy")
+        self.assertEqual(moved["zone"], "exile")
+        self.assertIn("m-1", p1["zones"]["exile"])
+        self.assertNotIn("m-1", p1["zones"]["graveyard"])
+        plain = self.field_item("plain", "p1", "m-2")
+        session.battlefield = [plain]
+        moved = session._rules_remove_field_item_by_effect(plain, "p1", "graveyard", "top", reason="destroy")
+        self.assertEqual(moved["zone"], "graveyard")
+
+    def test_pillar_protects_the_vessel_from_untargeted_destruction(self):
+        session, p1, p2 = self.make_session()
+        for card_id in ("m-3", "m-4"):
+            session.card_rules[card_id] = {"type": "manifestation", "power": 1, "temperaments": ["phlegmatic"]}
+        self.put(p2, "receptacle", {"m-3": "p2", "m-4": "p2"})
+        action = lambda: {
+            "id": "smash", "controllerId": "p1",
+            "source": {"cardId": self.VESSEL_SMASHER, "containerId": "p2"},
+            "targets": [], "ability": {"result": {"kind": "destroy_random_vessel_manifestations", "count": 3}},
+        }
+        session.card_rules[self.PILLAR] = {
+            "type": "persistent_will", "passiveEffects": [self.ABILITIES[self.PILLAR][0]["passiveEffect"]],
+        }
+        session.battlefield = [self.field_item("pillar", "p2", self.PILLAR, field_zone="field")]
+        payload = session.apply_rules_action_result(action())
+        self.assertEqual(payload["status"], "nothing")
+        self.assertEqual(sorted(p2["zones"]["receptacle"]), ["m-3", "m-4"])
+        session.battlefield = []
+        payload = session.apply_rules_action_result(action())
+        self.assertEqual(payload["status"], "destroyed")
+
+    def test_obtrusive_mass_redirects_automatic_trigger_targets(self):
+        session, p1, p2 = self.make_session()
+        session.card_rules["trig"] = {
+            "type": "manifestation", "power": 1, "temperaments": ["phlegmatic"],
+            "triggeredAbilities": [{
+                "id": "auto-hit", "trigger": {"event": "enters_field", "visibility": "face_up"},
+                "targets": {"kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"]},
+                "result": {"kind": "move_target", "zone": "hand", "position": "top", "reason": "return"},
+            }],
+        }
+        session.card_rules[self.MASS] = {
+            "type": "manifestation", "power": 4, "temperaments": ["capricious"],
+            "passiveEffects": [self.ABILITIES[self.MASS][0]["passiveEffect"]],
+        }
+        session.battlefield = [
+            self.field_item("mass", "p1", self.MASS, field_zone="interzone"),
+            self.field_item("mine", "p1", "m-1"),
+            self.field_item("trig", "p2", "trig"),
+        ]
+        queued = session.queue_rules_triggers(
+            "trig", "p2", "enters_field", zone="battlefield", item_id="trig", face_up=True,
+            event_targets=[{"kind": "card", "itemId": "mine", "cardId": "m-1", "ownerId": "p1"}],
+        )
+        self.assertTrue(queued, "trigger should be queued")
+        self.assertEqual([t["itemId"] for t in queued[0]["targets"]], ["mass"])
+
+
 if __name__ == "__main__":
     unittest.main()

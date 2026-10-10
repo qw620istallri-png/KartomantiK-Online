@@ -1676,6 +1676,8 @@ class Session:
                 )
                 if result.get("losesEffects"):
                     clean["losesEffects"] = True
+                if result.get("exileInsteadOfLeaving"):
+                    clean["exileInsteadOfLeaving"] = True
             if kind == "choose_target_score_delta":
                 value = result.get("value")
                 if not isinstance(value, (int, float)) or not int(value):
@@ -4886,6 +4888,15 @@ class Session:
             # Dol: a Chained card leaving the Confrontation Zone by an effect
             # goes back to the Vessel it came from instead.
             container_id, zone, position = home_vessel, "receptacle", "top"
+        elif (
+            item.get("exileInsteadOfLeaving")
+            and zone != "exile"
+            and self.rules_field_zone(item) == "confrontation"
+            and not item.get("isCopy") and not item.get("isTokenCard")
+        ):
+            # Regurgitating Catacomb: the raised Manifestation is exiled
+            # instead of leaving the Confrontation Zone due to an effect.
+            container_id, zone, position = item.get("ownerId"), "exile", "top"
         if item.get("isCopy") or item.get("isTokenCard"):
             return self._rules_remove_field_item(
                 item, container_id, zone, position
@@ -6148,6 +6159,8 @@ class Session:
             )
             if target_validation_error and not needs_target_choice:
                 continue
+            if clean_targets:
+                clean_targets = self.rules_redirect_targets(controller_id, clean_targets)
             ongoing_definition = ability.get("ongoingEffect") or {}
             clean_ongoing_effect = None
             duration = str(ongoing_definition.get("duration") or "")
@@ -8742,6 +8755,11 @@ class Session:
             pool = list(self.players[container_id]["zones"].get("receptacle", []))
             if source.get("cardId") in pool:
                 pool.remove(source.get("cardId"))
+            if (
+                container_id != action.get("controllerId")
+                and self.rules_vessel_locked(container_id)
+            ):
+                pool = []
             pool = [
                 cid for cid in pool
                 if self.card_rules.get(cid, {}).get("type") == "manifestation"
@@ -9869,6 +9887,8 @@ class Session:
                 item["supportWinDestination"] = "exile"
             if result.get("losesEffects"):
                 item["effectsDisabled"] = True
+            if result.get("exileInsteadOfLeaving"):
+                item["exileInsteadOfLeaving"] = True
             self.battlefield.append(item)
             return {
                 "kind": result.get("kind"),

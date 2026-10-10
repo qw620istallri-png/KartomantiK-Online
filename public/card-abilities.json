@@ -3673,7 +3673,7 @@
       "exhaustSource": true,
       "removeCountersFromSource": { "name": "Bone", "amount": 1 },
       "targets": { "kind": "zone_card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["graveyard"], "container": "self", "limboReasons": ["discard"] },
-      "result": { "kind": "play_limbo_target_as_support", "winDestination": "exile" }
+      "result": { "kind": "play_limbo_target_as_support", "winDestination": "exile", "exileInsteadOfLeaving": true }
     }
   ],
   "inner-deserts-114": [
