@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 250,
-    "explicitAbilities": 295,
+    "explicitCards": 254,
+    "explicitAbilities": 301,
     "statuses": {
-      "automated": 312,
+      "automated": 315,
       "generic": 0,
-      "manual": 133,
-      "partial": 5
+      "manual": 129,
+      "partial": 6
     }
   },
   "cards": {
@@ -2986,10 +2986,18 @@
       "collectionNumber": 205,
       "name": "Piercing Lover",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "piercing-lover-penalises-vessel-owner"
+      ],
+      "mechanics": [
+        "result:final_vessel_penalty",
+        "trigger:end_of_game"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "o4p1r7347u6sff2_en": {
       "collectionNumber": 206,
@@ -3633,10 +3641,20 @@
       "collectionNumber": 248,
       "name": "Kox, the Amoral",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "partial",
+      "abilityIds": [
+        "kox-gifts-opponents-on-entering-field",
+        "kox-gifts-opponents-on-entering-limbo"
+      ],
+      "mechanics": [
+        "result:score_each_opponent",
+        "trigger:enters_field",
+        "trigger:enters_limbo"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py"
+      ],
+      "notes": "The 50 points given to opponents when Kox enters the field or the Limbo are automated; the construction limit bonus and the ban on entering the Confrontation Zone are not."
     },
     "9d2y8uy9ut7omyo_en": {
       "collectionNumber": 249,
@@ -4886,10 +4904,18 @@
       "collectionNumber": 335,
       "name": "Phimosino",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "phimosino-scores-from-the-deck"
+      ],
+      "mechanics": [
+        "result:final_deck_points",
+        "trigger:end_of_game"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-036": {
       "collectionNumber": 336,
@@ -6318,10 +6344,21 @@
       "collectionNumber": 432,
       "name": "Losers' Chariot",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "losers-chariot-gives-winner-points",
+        "losers-chariot-consoles-its-controller"
+      ],
+      "mechanics": [
+        "result:score_each_opponent",
+        "result:score_owner",
+        "trigger:loses_confrontation",
+        "trigger:player_loses_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-133": {
       "collectionNumber": 433,

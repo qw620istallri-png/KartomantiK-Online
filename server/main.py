@@ -246,6 +246,12 @@ def build_card_rules(cards, abilities_by_card):
                     card.get("effect") or "",
                     re.IGNORECASE,
                 )
+                else "own_interzone"
+                if re.search(
+                    r"loses a confrontation, put it into your Interzone",
+                    card.get("effect") or "",
+                    re.IGNORECASE,
+                )
                 else None
             ),
             "supportWinDestination": (

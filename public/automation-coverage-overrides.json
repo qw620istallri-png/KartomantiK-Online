@@ -2237,6 +2237,34 @@
       "testRefs": [
         "tests/test_game_state.py"
       ]
+    },
+    "inner-deserts-035": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "2z1svoyvo77ta03_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "inner-deserts-132": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "40lqhpf5xr5v5sk_en": {
+      "status": "partial",
+      "notes": "The 50 points given to opponents when Kox enters the field or the Limbo are automated; the construction limit bonus and the ban on entering the Confrontation Zone are not.",
+      "testRefs": [
+        "tests/test_game_state.py"
+      ]
     }
   }
 }

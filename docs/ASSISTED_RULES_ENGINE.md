@@ -711,3 +711,9 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 - Explosive Rancor, Punitive Tripod (puissance fixée à 1 via `power_set_maximum`), Sacred Mountain, Drain the Substance (retire toutes les essences en excès).
 - Stampeding Brood : tokens `fieldZone: interzone` (non perdus à la Résolution).
 - Referen-Doom (partiel) : l'exil de Volontés du Limbo est automatisé, pas les essences arc-en-ciel gagnées en cas de défaite.
+
+### Lot 5 (scores de fin de partie, perte vers l'Interzone du propriétaire)
+
+- Évènement `end_of_game` : lu uniquement par `rules_end_game_points` (appelé par `calculate_final_scores`, champ `endGamePoints`). Résultats `final_deck_points` (Phimosino : +50 si dans le deck) et `final_vessel_penalty` (Piercing Lover : -5 par manifestation de puissance de base ≤ 2 dans le Réceptacle où il se trouve).
+- Flag `lossDestination: own_interzone` (Losers' Chariot) : à la défaite la carte va dans l'Interzone de son propriétaire au lieu du Réceptacle adverse ; le vainqueur gagne 15 points et ses défaites suivantes rapportent 10 points depuis l'Interzone.
+- Kox (partiel) : seuls les 50 points donnés aux adversaires à l'entrée en jeu ou au Limbo sont automatisés.

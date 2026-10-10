@@ -1448,6 +1448,13 @@ class Session:
             return {"kind": kind, "scope": "controller" if result.get("scope") == "controller" else "all"}
         if kind == "optional_discard_up_to":
             return {"kind": kind, "value": max(1, min(int(result.get("value") or 1), 7))}
+        if kind == "final_deck_points":
+            return {"kind": kind, "value": max(0, min(int(result.get("value") or 0), 500))}
+        if kind == "final_vessel_penalty":
+            return {
+                "kind": kind, "value": max(0, min(int(result.get("value") or 0), 500)),
+                "maxBasePower": max(0, min(int(result.get("maxBasePower") or 0), 99)),
+            }
         if kind == "destroy_random_vessel_manifestations":
             return {"kind": kind, "count": max(1, min(int(result.get("count") or 1), 10))}
         if kind == "set_interzone_power":
@@ -4434,6 +4441,27 @@ class Session:
                     "status": "moved_to_winner_interzone", "itemId": item.get("id"),
                     "cardId": item.get("cardId"), "ownerId": item.get("ownerId"),
                     "containerId": winner_id, "zone": "interzone",
+                })
+                continue
+            if (
+                self.rules_item_card_rules(item).get("lossDestination") == "own_interzone"
+                and not item.get("isCopy") and not item.get("isTokenCard")
+            ):
+                owner_id = self.rules_item_controller_id(item)
+                if self.rules_interzone_slot_count(owner_id) >= self.rules_interzone_capacity(owner_id):
+                    anchor = self.rules_interzone_share_anchor(owner_id, item)
+                    item.update({
+                        "stackedOn": anchor, "stackOffsetX": 18.0, "stackOffsetY": 18.0,
+                    } if anchor else {"stackedOn": None})
+                else:
+                    item["stackedOn"] = None
+                item["fieldZone"] = "interzone"
+                item["isSupport"] = False
+                self.mark_rules_interzone_entry(item)
+                captured.append({
+                    "status": "moved_to_own_interzone", "itemId": item.get("id"),
+                    "cardId": item.get("cardId"), "ownerId": item.get("ownerId"),
+                    "containerId": owner_id, "zone": "interzone",
                 })
                 continue
             captured.append(self._rules_remove_field_item(item, winner_id, "receptacle", "top"))
@@ -12939,6 +12967,38 @@ class Session:
             self._start_rules_match_after_opening()
         return None, {"ready": True, "started": started}
 
+    def rules_end_game_points(self, player_id):
+        """Points from cards that score "at the end of the game"."""
+        def end_game_results(card_id):
+            for ability in self.card_rules.get(card_id, {}).get("triggeredAbilities") or []:
+                if (ability.get("trigger") or {}).get("event") == "end_of_game":
+                    yield ability.get("result") or {}
+
+        total = 0
+        player = self.players[player_id]
+        for card_id in player["zones"]["deck"]:
+            for result in end_game_results(card_id):
+                if result.get("kind") == "final_deck_points":
+                    total += int(result.get("value") or 0)
+        for container in self.players.values():
+            owners = container["zoneOwners"].get("receptacle", {})
+            for card_id in container["zones"]["receptacle"]:
+                if container["id"] != player_id:
+                    continue
+                if owners.get(card_id, container["id"]) == player_id:
+                    continue
+                for result in end_game_results(card_id):
+                    if result.get("kind") != "final_vessel_penalty":
+                        continue
+                    limit = int(result.get("maxBasePower") or 0)
+                    count = sum(
+                        1 for other_id in container["zones"]["receptacle"]
+                        if self.card_rules.get(other_id, {}).get("type") == "manifestation"
+                        and int(self.card_rules.get(other_id, {}).get("power") or 0) <= limit
+                    )
+                    total -= int(result.get("value") or 0) * count
+        return total
+
     def calculate_final_scores(self):
         scores = {}
         for player_id, player in self.players.items():
@@ -12950,12 +13010,14 @@ class Session:
             )
             effect_points = int(player.get("score") or 0)
             deck_bonus = remaining_manifestations * 5
+            end_game_points = self.rules_end_game_points(player_id)
             scores[player_id] = {
                 "vesselPoints": vessel_points,
                 "effectPoints": effect_points,
                 "remainingManifestations": remaining_manifestations,
                 "deckBonus": deck_bonus,
-                "total": vessel_points + effect_points + deck_bonus,
+                "endGamePoints": end_game_points,
+                "total": vessel_points + effect_points + deck_bonus + end_game_points,
             }
         alternate_players = {
             player_id for player_id, player in self.players.items()

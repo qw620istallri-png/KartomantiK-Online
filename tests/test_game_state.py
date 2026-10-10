@@ -10167,6 +10167,36 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertEqual(self.power_of(session, "rd"), base + 5)
         self.assertEqual([t for t in session.tokens if t.get("isEssence")], [])
 
+    def test_manual_lot_five_end_of_game_and_loss_destination(self):
+        phimosino, lover, chariot, kox = (
+            "inner-deserts-035", "2z1svoyvo77ta03_en", "inner-deserts-132", "40lqhpf5xr5v5sk_en",
+        )
+        session, p1, p2 = self.manual_batch_session(phimosino, lover, chariot, kox, card_type="manifestation")
+        for cid in ("m-1", "m-2", "m-3"):
+            session.card_rules[cid]["power"] = 2
+        session.card_rules["m-3"]["power"] = 4
+        self.put(p1, "deck", [phimosino])
+        # Piercing Lover sits in p2's vessel (owned by p1): p2 loses 5 per manifestation with base power <= 2 there.
+        self.put(p2, "receptacle", [lover, "m-1", "m-2", "m-3"])
+        p2["zoneOwners"]["receptacle"] = {lover: "p1", "m-1": "p1", "m-2": "p1", "m-3": "p1"}
+        scores = session.calculate_final_scores()["scores"]
+        self.assertEqual(scores["p1"]["endGamePoints"], 50)
+        self.assertEqual(scores["p2"]["endGamePoints"], -5 * 3)  # Lover itself (power from catalog) counts too if <= 2
+        # Losers' Chariot goes to its owner's Interzone instead of the winner's vessel.
+        session.card_rules[chariot]["lossDestination"] = "own_interzone"
+        session.battlefield = [self.field_item("lc", "p1", chariot)]
+        session.rules_engine["confrontationResult"] = {
+            "turn": session.phase_tracker["turn"], "status": "effects", "winnerId": "p2",
+            "loserId": "p1", "participantItemIds": ["lc"], "stalemate": False,
+        }
+        session.begin_rules_confrontation_cleanup()
+        self.assertEqual(session.battlefield[0]["fieldZone"], "interzone")
+        self.assertEqual(session.battlefield[0]["controllerId"] if "controllerId" in session.battlefield[0] else "p1", "p1")
+        self.assertNotIn(chariot, p2["zones"]["receptacle"])
+        # Kox gifts opponents 50 points on entering the field.
+        payload = self.run_ability_at(session, kox, 0, source={"itemId": "x"})
+        self.assertEqual(p2["score"], 50)
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")
