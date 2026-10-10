@@ -1377,12 +1377,17 @@ class Session:
             temperament = str(result.get("temperament") or "hollow")
             if temperament not in RULES_TEMPERAMENTS:
                 return None
-            return {
+            clean = {
                 "kind": kind,
                 "count": max(1, min(int(result.get("count") or 1), 10)),
                 "power": max(0, min(int(result.get("power") or 1), 99)),
                 "temperament": temperament,
             }
+            if result.get("fieldZone") == "interzone":
+                clean["fieldZone"] = "interzone"
+            if result.get("upTo"):
+                clean["upTo"] = True
+            return clean
         if kind == "discard_hand_each_opponent":
             return {
                 "kind": kind,
@@ -1443,6 +1448,10 @@ class Session:
             return {"kind": kind, "scope": "controller" if result.get("scope") == "controller" else "all"}
         if kind == "optional_discard_up_to":
             return {"kind": kind, "value": max(1, min(int(result.get("value") or 1), 7))}
+        if kind == "destroy_random_vessel_manifestations":
+            return {"kind": kind, "count": max(1, min(int(result.get("count") or 1), 10))}
+        if kind == "set_interzone_power":
+            return {"kind": kind, "value": max(0, min(int(result.get("value") or 1), 99))}
         if kind in {
             "grant_source_support_until_end_turn",
             "grant_source_support_if_base_higher_than_own_first",
@@ -1475,6 +1484,12 @@ class Session:
             "interzone_target_to_support",
             "flower_of_evil_burst",
             "discard_any_then_lose_per_remaining",
+            "roll_discard_deck_gain_power",
+            "opponents_discard_deck_by_source_roll",
+            "exile_confrontation_stalemate_and_source",
+            "exile_tribute_manifestation_score_others",
+            "exile_limbo_wills_add_power_each",
+            "drain_excess_essence_power",
         }:
             clean = {"kind": kind}
             if kind == "play_limbo_target_as_support":
@@ -4794,6 +4809,10 @@ class Session:
                 "attachTo": attach_to,
                 "optional": bool(result.get("optional")),
             }
+            if result.get("rollReturnOrExile"):
+                clean["rollReturnOrExile"] = True
+            if result.get("requireLostConfrontation"):
+                clean["requireLostConfrontation"] = True
             payment = str(result.get("opponentPayment") or "")
             if payment:
                 symbols = re.findall(r"\{([A-Z])\}", payment)
@@ -6448,7 +6467,7 @@ class Session:
     def create_rules_token_copy(self, card_id, controller_id, *,
                                 source_item_id=None, hollow=False,
                                 effects_disabled=False, generic_power=None,
-                                generic_temperament=None):
+                                generic_temperament=None, field_zone=None):
         metadata = self.card_rules.get(card_id, {})
         seat = self.players[controller_id].get("seat")
         item = {
@@ -6484,7 +6503,9 @@ class Session:
                 item["temperamentOverride"] = "hollow"
         if effects_disabled:
             item["effectsDisabled"] = True
-        if item.get("isSupport"):
+        if field_zone == "interzone":
+            item["fieldZone"] = "interzone"
+        elif item.get("isSupport"):
             self.mark_rules_support_entry(item)
         self.battlefield.append(item)
         return item
@@ -7434,6 +7455,192 @@ class Session:
                 "kind": result.get("kind"),
                 "status": "shuffled" if moved else "nothing", "cardIds": moved,
             }
+        if result.get("kind") == "destroy_random_vessel_manifestations":
+            source = action.get("source") or {}
+            container_id = source.get("containerId")
+            if container_id not in self.players:
+                return {"kind": result.get("kind"), "status": "source_missing"}
+            pool = list(self.players[container_id]["zones"].get("receptacle", []))
+            if source.get("cardId") in pool:
+                pool.remove(source.get("cardId"))
+            pool = [
+                cid for cid in pool
+                if self.card_rules.get(cid, {}).get("type") == "manifestation"
+            ]
+            random.shuffle(pool)
+            destroyed = []
+            for card_id in pool[:int(result.get("count") or 1)]:
+                owner_id = self.card_owner_in_zone(container_id, "receptacle", card_id)
+                if owner_id is None:
+                    continue
+                error, _owner, replacement = self.move_zone_card_by_effect(
+                    container_id, "receptacle", owner_id, "graveyard", card_id, "top"
+                )
+                if not error and not replacement:
+                    destroyed.append(card_id)
+            return {
+                "kind": result.get("kind"),
+                "status": "destroyed" if destroyed else "nothing", "cardIds": destroyed,
+            }
+        if result.get("kind") in {"roll_discard_deck_gain_power", "opponents_discard_deck_by_source_roll"}:
+            source_item = self.find_battlefield_item((action.get("source") or {}).get("itemId"))
+            if source_item is None:
+                return {"kind": result.get("kind"), "status": "source_missing"}
+            if result.get("kind") == "roll_discard_deck_gain_power":
+                roll = random.randint(1, 6)
+                discarded = 0
+                deck = self.players[player_id]["zones"]["deck"]
+                for _index in range(min(roll, len(deck))):
+                    error, _owner, replacement = self.move_zone_card_by_effect(
+                        player_id, "deck", player_id, "graveyard", deck[0], "top"
+                    )
+                    if error:
+                        break
+                    if not replacement:
+                        discarded += 1
+                source_item["rollDiscarded"] = discarded
+                if discarded:
+                    counters = source_item.setdefault("counters", {})
+                    counters["power"] = int(counters.get("power") or 0) + discarded
+                return {
+                    "kind": result.get("kind"), "status": "resolved",
+                    "roll": roll, "discarded": discarded,
+                }
+            amount = int(source_item.get("rollDiscarded") or 0)
+            discarded = {}
+            for pid in self.players:
+                if pid == player_id:
+                    continue
+                deck = self.players[pid]["zones"]["deck"]
+                for _index in range(min(amount, len(deck))):
+                    error, _owner, replacement = self.move_zone_card_by_effect(
+                        pid, "deck", pid, "graveyard", deck[0], "top"
+                    )
+                    if error:
+                        break
+                    discarded[pid] = discarded.get(pid, 0) + (0 if replacement else 1)
+            return {
+                "kind": result.get("kind"),
+                "status": "discarded" if discarded else "nothing", "discarded": discarded,
+            }
+        if result.get("kind") == "exile_confrontation_stalemate_and_source":
+            removed = []
+            source_id = (action.get("source") or {}).get("itemId")
+            for item in list(self.rules_confrontation_items(None, ("confrontation", "stalemate"))):
+                movement = self._rules_remove_field_item(item, item.get("ownerId"), "exile", "top")
+                if movement.get("status") in {"moved", "removed_copy"}:
+                    removed.append(item["id"])
+            source_item = self.find_battlefield_item(source_id)
+            if source_item is not None:
+                self._rules_remove_field_item(source_item, source_item.get("ownerId"), "exile", "top")
+            self.prune_rules_ongoing_effects()
+            return {
+                "kind": result.get("kind"),
+                "status": "exiled" if removed else "nothing", "itemIds": removed,
+            }
+        if result.get("kind") == "set_interzone_power":
+            effects = []
+            for item in self.rules_confrontation_items(None, ("interzone",)):
+                effect = {
+                    "id": new_id(), "actionId": action.get("id"),
+                    "abilityId": (action.get("ability") or {}).get("id"),
+                    "controllerId": player_id,
+                    "source": dict(action.get("source") or {}),
+                    "target": {
+                        "kind": "card", "itemId": item["id"],
+                        "cardId": item.get("cardId"), "ownerId": item.get("ownerId"),
+                    },
+                    "kind": "power_set_maximum",
+                    "duration": "until_end_of_turn",
+                    "startedTurn": self.phase_tracker["turn"],
+                    "value": int(result.get("value") or 1),
+                }
+                self.rules_engine["ongoingEffects"].append(effect)
+                effects.append(effect["id"])
+            return {
+                "kind": result.get("kind"),
+                "status": "set" if effects else "nothing", "effectIds": effects,
+            }
+        if result.get("kind") == "exile_tribute_manifestation_score_others":
+            trigger = (action.get("ability") or {}).get("trigger") or {}
+            card_id = trigger.get("relatedCardId")
+            owner_id = trigger.get("relatedOwnerId")
+            payer_id = trigger.get("eventControllerId") or owner_id
+            exiled = False
+            if card_id and owner_id in self.players and card_id in self.players[owner_id]["zones"]["graveyard"]:
+                error, _owner, _replacement = self.move_zone_card_by_effect(
+                    owner_id, "graveyard", owner_id, "exile", card_id, "top"
+                )
+                exiled = not error
+            for pid in self.players:
+                if pid != payer_id:
+                    self.adjust_rules_score(pid, 5)
+            return {
+                "kind": result.get("kind"),
+                "status": "exiled" if exiled else "scored", "cardId": card_id,
+            }
+        if result.get("kind") == "exile_limbo_wills_add_power_each":
+            source_item = self.find_battlefield_item((action.get("source") or {}).get("itemId"))
+            exiled = []
+            for target in action.get("targets") or []:
+                if target.get("kind") != "zone_card" or target.get("zone") != "graveyard":
+                    continue
+                container_id = target.get("containerId")
+                card_id = target.get("cardId")
+                if self.card_rules.get(card_id, {}).get("type") not in RULES_WILL_TYPES:
+                    continue
+                owner_id = self.card_owner_in_zone(container_id, "graveyard", card_id)
+                if owner_id is None:
+                    continue
+                error, _owner, _replacement = self.move_zone_card_by_effect(
+                    container_id, "graveyard", owner_id, "exile", card_id, "top"
+                )
+                if not error:
+                    exiled.append(card_id)
+            if exiled and source_item is not None:
+                self.rules_engine["ongoingEffects"].append({
+                    "id": new_id(), "actionId": action.get("id"),
+                    "abilityId": (action.get("ability") or {}).get("id"),
+                    "controllerId": player_id,
+                    "source": dict(action.get("source") or {}),
+                    "target": {
+                        "kind": "card", "itemId": source_item["id"],
+                        "cardId": source_item.get("cardId"), "ownerId": source_item.get("ownerId"),
+                    },
+                    "kind": "power_modifier", "duration": "until_end_of_turn",
+                    "startedTurn": self.phase_tracker["turn"], "value": len(exiled),
+                })
+            return {
+                "kind": result.get("kind"),
+                "status": "exiled" if exiled else "nothing", "cardIds": exiled,
+            }
+        if result.get("kind") == "drain_excess_essence_power":
+            total = 0
+            for token in list(self.tokens):
+                if token.get("isEssence") and not token.get("isNeutralCounter"):
+                    total += max(0, int(token.get("counters", {}).get("essence") or 0))
+                    self.tokens.remove(token)
+            target = next((
+                entry for entry in action.get("targets") or [] if entry.get("kind") == "card"
+            ), None)
+            item = self.find_battlefield_item((target or {}).get("itemId"))
+            if item is not None and total:
+                self.rules_engine["ongoingEffects"].append({
+                    "id": new_id(), "actionId": action.get("id"),
+                    "abilityId": (action.get("ability") or {}).get("id"),
+                    "controllerId": player_id,
+                    "source": dict(action.get("source") or {}),
+                    "target": {
+                        "kind": "card", "itemId": item["id"],
+                        "cardId": item.get("cardId"), "ownerId": item.get("ownerId"),
+                    },
+                    "kind": "power_modifier", "duration": "until_end_of_turn",
+                    "startedTurn": self.phase_tracker["turn"], "value": total,
+                })
+            return {
+                "kind": result.get("kind"),
+                "status": "drained" if total else "nothing", "essence": total,
+            }
         if result.get("kind") == "exile_source_card_from_limbo":
             source = action.get("source") or {}
             owner_id = source.get("ownerId") or player_id
@@ -7936,6 +8143,8 @@ class Session:
                         and not action.get("optionalAccepted")
                     ),
                     "opponentPayment": result.get("opponentPayment"),
+                    "rollReturnOrExile": bool(result.get("rollReturnOrExile")),
+                    "requireLostConfrontation": bool(result.get("requireLostConfrontation")),
                 },
             )
             return {
@@ -9456,6 +9665,32 @@ class Session:
                     "cardId": card_id,
                 }
             data = memory.get("data") or {}
+            if data.get("requireLostConfrontation"):
+                outcome = self.rules_engine.get("confrontationResult") or {}
+                if (
+                    outcome.get("turn") != self.phase_tracker["turn"]
+                    or outcome.get("loserId") != memory.get("controllerId")
+                ):
+                    self.remove_rules_effect_memory(memory["id"])
+                    return {
+                        "kind": "resolve_effect_memory",
+                        "status": "condition_failed",
+                        "memoryId": memory["id"], "cardId": card_id,
+                    }
+            if data.get("rollReturnOrExile"):
+                roll = random.randint(1, 6)
+                destination = "hand" if roll % 2 == 0 else "exile"
+                error, _owner_id, replacement = self.move_zone_card_by_effect(
+                    owner_id, "graveyard", owner_id, destination, card_id, "top"
+                )
+                self.remove_rules_effect_memory(memory["id"])
+                return {
+                    "kind": "resolve_effect_memory",
+                    "status": "target_missing" if error else "suspended" if replacement else (
+                        "returned" if destination == "hand" else "exiled"
+                    ),
+                    "memoryId": memory["id"], "cardId": card_id, "roll": roll,
+                }
             opponent_payment = data.get("opponentPayment")
             if opponent_payment:
                 opponent_id = self.other_rules_player_id(memory.get("controllerId"))
@@ -9659,6 +9894,7 @@ class Session:
                     source_item_id=(source_item or {}).get("id"),
                     generic_power=result.get("power"),
                     generic_temperament=result.get("temperament"),
+                    field_zone=result.get("fieldZone"),
                 )
                 for _index in range(int(result.get("count") or 1))
             ]

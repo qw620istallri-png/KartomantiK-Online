@@ -3089,5 +3089,101 @@
       },
       "result": { "kind": "exile_limbo_targets_create_tokens" }
     }
+  ],
+  "7jaany95hy1h5pz_en": [
+    {
+      "id": "worm-bomb-destroys-random-vessel-manifestations",
+      "trigger": { "event": "enters_zone", "zone": "receptacle", "container": "opponent" },
+      "result": { "kind": "destroy_random_vessel_manifestations", "count": 3 }
+    }
+  ],
+  "g02zvmqx3loxlcv_en": [
+    {
+      "id": "buddhan-dark-rolls-and-discards",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "result": { "kind": "roll_discard_deck_gain_power" }
+    },
+    {
+      "id": "buddhan-dark-opponents-discard-on-win",
+      "trigger": { "event": "wins_confrontation" },
+      "result": { "kind": "opponents_discard_deck_by_source_roll" }
+    }
+  ],
+  "rf5srmnqyh235tm_en": [
+    {
+      "id": "qu-lom-rolls-at-end-of-turn",
+      "trigger": { "event": "used_as_tribute" },
+      "result": {
+        "kind": "create_effect_memory", "memoryKind": "return_from_limbo_end_turn",
+        "attachTo": "event_card", "rollReturnOrExile": true
+      }
+    }
+  ],
+  "1a8wzhi7xhbcenj_en": [
+    {
+      "id": "loop-returns-paid-will-after-loss",
+      "trigger": { "event": "used_as_tribute" },
+      "result": {
+        "kind": "create_effect_memory", "memoryKind": "return_from_limbo_end_turn",
+        "attachTo": "paid_action_source", "optional": true, "requireLostConfrontation": true
+      }
+    }
+  ],
+  "inner-deserts-141": [
+    {
+      "id": "explosive-rancor-exiles-confrontation-and-stalemate",
+      "tribute": "{H}{H}{H}{H}",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "exile_confrontation_stalemate_and_source" }
+    }
+  ],
+  "inner-deserts-103": [
+    {
+      "id": "punitive-tripod-gains-power-entering-confrontation",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "result": { "kind": "add_counter_source", "counter": "power", "value": 2 }
+    },
+    {
+      "id": "punitive-tripod-sets-interzone-power-on-loss",
+      "trigger": { "event": "loses_confrontation" },
+      "result": { "kind": "set_interzone_power", "value": 1 }
+    }
+  ],
+  "inner-deserts-123": [
+    {
+      "id": "sacred-mountain-exiles-tribute",
+      "trigger": { "event": "manifestation_used_as_tribute" },
+      "result": { "kind": "exile_tribute_manifestation_score_others" }
+    }
+  ],
+  "je9rwgrjwk97oes_en": [
+    {
+      "id": "stampeding-brood-creates-interzone-tokens",
+      "trigger": { "event": "enters_zone", "zone": "receptacle", "container": "opponent" },
+      "result": {
+        "kind": "create_support_tokens", "count": 2, "power": 1,
+        "temperament": "phlegmatic", "fieldZone": "interzone"
+      }
+    }
+  ],
+  "inner-deserts-038": [
+    {
+      "id": "referen-doom-exiles-limbo-wills",
+      "optional": true,
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "targets": {
+        "kind": "zone_card", "min": 0, "max": 20, "zones": ["graveyard"], "owner": "self"
+      },
+      "result": { "kind": "exile_limbo_wills_add_power_each" }
+    }
+  ],
+  "inner-deserts-119": [
+    {
+      "id": "drain-the-substance-removes-excess-essence",
+      "action": "play_card",
+      "immediate": true,
+      "targets": { "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"] },
+      "result": { "kind": "drain_excess_essence_power" }
+    }
   ]
 }

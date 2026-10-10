@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 240,
-    "explicitAbilities": 283,
+    "explicitCards": 250,
+    "explicitAbilities": 295,
     "statuses": {
-      "automated": 303,
+      "automated": 312,
       "generic": 0,
-      "manual": 143,
-      "partial": 4
+      "manual": 133,
+      "partial": 5
     }
   },
   "cards": {
@@ -355,10 +355,18 @@
       "collectionNumber": 24,
       "name": "Stampeding Brood",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "stampeding-brood-creates-interzone-tokens"
+      ],
+      "mechanics": [
+        "result:create_support_tokens",
+        "trigger:enters_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "j2a7x783j5ql0ab_en": {
       "collectionNumber": 25,
@@ -2258,10 +2266,18 @@
       "collectionNumber": 152,
       "name": "Loop, the Insistent",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "loop-returns-paid-will-after-loss"
+      ],
+      "mechanics": [
+        "result:create_effect_memory",
+        "trigger:used_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "rngwnb4y158ya2q_en": {
       "collectionNumber": 153,
@@ -2534,10 +2550,18 @@
       "collectionNumber": 174,
       "name": "Worm Bomb",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "worm-bomb-destroys-random-vessel-manifestations"
+      ],
+      "mechanics": [
+        "result:destroy_random_vessel_manifestations",
+        "trigger:enters_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "kw78e3qfnqw6sms_en": {
       "collectionNumber": 175,
@@ -3631,10 +3655,18 @@
       "collectionNumber": 250,
       "name": "Qu Lom, Haphazard Martyr",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "qu-lom-rolls-at-end-of-turn"
+      ],
+      "mechanics": [
+        "result:create_effect_memory",
+        "trigger:used_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "kmvhsfddh84cpq6_en": {
       "collectionNumber": 251,
@@ -3828,10 +3860,21 @@
       "collectionNumber": 265,
       "name": "Buddhan the Dark",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "buddhan-dark-rolls-and-discards",
+        "buddhan-dark-opponents-discard-on-win"
+      ],
+      "mechanics": [
+        "result:opponents_discard_deck_by_source_roll",
+        "result:roll_discard_deck_gain_power",
+        "trigger:enters_field_zone",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "lo85kdsow36bymu_en": {
       "collectionNumber": 266,
@@ -4879,10 +4922,19 @@
       "collectionNumber": 338,
       "name": "Referen-Doom, the Dreamer",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "partial",
+      "abilityIds": [
+        "referen-doom-exiles-limbo-wills"
+      ],
+      "mechanics": [
+        "result:exile_limbo_wills_add_power_each",
+        "target:zone_card",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py"
+      ],
+      "notes": "The exile of Limbo Wills for +1 power is automated; the Rainbow essences gained when it loses a Confrontation are not."
     },
     "inner-deserts-039": {
       "collectionNumber": 339,
@@ -5786,10 +5838,21 @@
       "collectionNumber": 403,
       "name": "Punitive Tripod",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "punitive-tripod-gains-power-entering-confrontation",
+        "punitive-tripod-sets-interzone-power-on-loss"
+      ],
+      "mechanics": [
+        "result:add_counter_source",
+        "result:set_interzone_power",
+        "trigger:enters_field_zone",
+        "trigger:loses_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-104": {
       "collectionNumber": 404,
@@ -6038,10 +6101,18 @@
       "collectionNumber": 419,
       "name": "Drain the Substance",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "drain-the-substance-removes-excess-essence"
+      ],
+      "mechanics": [
+        "result:drain_excess_essence_power",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-120": {
       "collectionNumber": 420,
@@ -6085,10 +6156,18 @@
       "collectionNumber": 423,
       "name": "Sacred Mountain",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "sacred-mountain-exiles-tribute"
+      ],
+      "mechanics": [
+        "result:exile_tribute_manifestation_score_others",
+        "trigger:manifestation_used_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-124": {
       "collectionNumber": 424,
@@ -6364,10 +6443,18 @@
       "collectionNumber": 441,
       "name": "Explosive Rancor",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "explosive-rancor-exiles-confrontation-and-stalemate"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "result:exile_confrontation_stalemate_and_source"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-142": {
       "collectionNumber": 442,

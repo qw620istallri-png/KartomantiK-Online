@@ -702,3 +702,12 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 - Fintus (`destroyNextEntries`) détruit la prochaine entrée adverse sans déclencher les effets propres de la carte entrante.
 - Gorb / Wretched Arena : `lock_support_entries` ne couvre que les jeux en Support déclarés.
 - Healing Bond, Watchtower, Horned Augustus automatisés.
+
+### Lot 4 (jets de dé, mémoires de fin de tour, tokens d'Interzone)
+
+- Worm Bomb détruit jusqu'à 3 manifestations au hasard dans le Réceptacle où elle entre (toujours le maximum, le choix « jusqu'à » n'est pas laissé au joueur).
+- Buddhan the Dark : jet d'un D6, défausse du dessus du deck, +1 puissance par carte (compteur permanent) ; à la victoire les adversaires défaussent autant (mémorisé dans `rollDiscarded`).
+- Qu Lom : mémoire de fin de tour avec jet (pair : main, impair : exil). Loop : mémoire optionnelle, ignorée si le contrôleur n'a pas perdu la confrontation du tour.
+- Explosive Rancor, Punitive Tripod (puissance fixée à 1 via `power_set_maximum`), Sacred Mountain, Drain the Substance (retire toutes les essences en excès).
+- Stampeding Brood : tokens `fieldZone: interzone` (non perdus à la Résolution).
+- Referen-Doom (partiel) : l'exil de Volontés du Limbo est automatisé, pas les essences arc-en-ciel gagnées en cas de défaite.

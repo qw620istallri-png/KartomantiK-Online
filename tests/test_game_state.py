@@ -10041,6 +10041,132 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertEqual((len(tokens), sorted(p1["zones"]["exile"])), (2, ["m-5", "m-6"]))
         self.assertTrue(all(t["isSupport"] and t["power"] == 1 for t in tokens))
 
+    def run_ability_at(self, session, card_id, index, targets=None, source=None, trigger=None, controller="p1"):
+        ability = self.ABILITIES[card_id][index]
+        full = {**ability, "trigger": {**(ability.get("trigger") or {}), **(trigger or {})}}
+        return session.apply_rules_action_result({
+            "id": f"run-{card_id}-{index}", "controllerId": controller,
+            "source": {"cardId": card_id, **(source or {})},
+            "targets": targets or [], "ability": {**full, "result": ability["result"]},
+        })
+
+    def test_manual_lot_four_vessel_roll_and_memory_effects(self):
+        bomb, buddhan, qulom, loop, brood = (
+            "7jaany95hy1h5pz_en", "g02zvmqx3loxlcv_en", "rf5srmnqyh235tm_en",
+            "1a8wzhi7xhbcenj_en", "je9rwgrjwk97oes_en",
+        )
+        session, p1, p2 = self.manual_batch_session(bomb, buddhan, qulom, loop, brood, card_type="manifestation")
+        # Worm Bomb destroys up to three other manifestations in the vessel it entered.
+        self.put(p2, "receptacle", [bomb, "m-1", "m-2", "m-3", "m-4"])
+        payload = self.run_ability_at(session, bomb, 0, source={"zone": "receptacle", "containerId": "p2"})
+        self.assertEqual(len(payload["cardIds"]), 3)
+        self.assertIn(bomb, p2["zones"]["receptacle"])
+        self.assertEqual(len(p2["zones"]["receptacle"]), 2)
+        # Buddhan the Dark discards a rolled amount and wins for the same amount from opponents.
+        self.put(p1, "deck", [f"d-{i}" for i in range(8)])
+        self.put(p2, "deck", [f"e-{i}" for i in range(8)])
+        session.battlefield = [self.field_item("bd", "p1", buddhan)]
+        payload = self.run_ability_at(session, buddhan, 0, source={"itemId": "bd"})
+        rolled = payload["discarded"]
+        self.assertEqual(len(p1["zones"]["deck"]), 8 - rolled)
+        self.assertEqual(self.power_of(session, "bd"), session.card_rules[buddhan]["power"] + rolled)
+        self.run_ability_at(session, buddhan, 1, source={"itemId": "bd"})
+        self.assertEqual(len(p2["zones"]["deck"]), 8 - rolled)
+        # Qu Lom: the end-of-turn roll returns it to hand (even) or exiles it (odd).
+        self.put(p1, "graveyard", [qulom])
+        memory = session.create_rules_effect_memory(
+            "p1", qulom, "return_from_limbo_end_turn", controller_id="p1",
+            data={"rollReturnOrExile": True},
+        )
+        payload = session.apply_rules_action_result({
+            "id": "m", "controllerId": "p1", "source": {"cardId": qulom},
+            "ability": {"result": {"kind": "resolve_effect_memory", "memoryId": memory["id"]}},
+        })
+        self.assertEqual(
+            qulom in p1["zones"]["hand"] if payload["roll"] % 2 == 0 else qulom in p1["zones"]["exile"], True,
+        )
+        # Loop only returns the Will after a lost confrontation.
+        self.put(p1, "graveyard", [loop])
+        memory = session.create_rules_effect_memory(
+            "p1", loop, "return_from_limbo_end_turn", controller_id="p1",
+            data={"requireLostConfrontation": True, "optional": True},
+        )
+        session.rules_engine["confrontationResult"] = {"turn": session.phase_tracker["turn"], "loserId": "p2"}
+        payload = session.apply_rules_action_result({
+            "id": "m2", "controllerId": "p1", "source": {"cardId": loop},
+            "ability": {"result": {"kind": "resolve_effect_memory", "memoryId": memory["id"]}},
+        })
+        self.assertEqual(payload["status"], "condition_failed")
+        self.assertIn(loop, p1["zones"]["graveyard"])
+        memory = session.create_rules_effect_memory(
+            "p1", loop, "return_from_limbo_end_turn", controller_id="p1",
+            data={"requireLostConfrontation": True, "optional": True},
+        )
+        session.rules_engine["confrontationResult"]["loserId"] = "p1"
+        payload = session.apply_rules_action_result({
+            "id": "m3", "controllerId": "p1", "source": {"cardId": loop},
+            "ability": {"result": {"kind": "resolve_effect_memory", "memoryId": memory["id"]}},
+        })
+        self.assertEqual(payload["kind"], "choice_required")
+        # Stampeding Brood leaves two 1-power tokens in the owner's Interzone.
+        session.battlefield = []
+        self.run_ability_at(session, brood, 0)
+        tokens = [i for i in session.battlefield if i.get("isTokenCard")]
+        self.assertEqual([t["fieldZone"] for t in tokens], ["interzone", "interzone"])
+
+    def test_manual_lot_four_board_effects(self):
+        rancor, tripod, mountain, doom, drain = (
+            "inner-deserts-141", "inner-deserts-103", "inner-deserts-123",
+            "inner-deserts-038", "inner-deserts-119",
+        )
+        session, p1, p2 = self.manual_batch_session(rancor, tripod, mountain, doom, drain, card_type="manifestation")
+        # Explosive Rancor exiles the Confrontation and Stalemate zones and itself.
+        session.battlefield = [
+            self.field_item("c1", "p1", "m-1"), self.field_item("c2", "p2", "m-2", field_zone="stalemate"),
+            self.field_item("i1", "p1", "m-3", field_zone="interzone"),
+            self.field_item("rc", "p1", rancor, field_zone="field"),
+        ]
+        self.run_ability_at(session, rancor, 0, source={"itemId": "rc"})
+        self.assertEqual([i["id"] for i in session.battlefield], ["i1"])
+        self.assertEqual(sorted(p1["zones"]["exile"] + p2["zones"]["exile"]), sorted([rancor, "m-1", "m-2"]))
+        # Punitive Tripod: +2 power on entering, Interzone power becomes 1 on a loss.
+        session.battlefield = [
+            self.field_item("tr", "p1", tripod), self.field_item("z1", "p1", "m-4", field_zone="interzone"),
+            self.field_item("z2", "p2", "m-5", field_zone="interzone"),
+        ]
+        base = self.power_of(session, "tr")
+        self.run_ability_at(session, tripod, 0, source={"itemId": "tr"})
+        self.assertEqual(self.power_of(session, "tr"), base + 2)
+        session.card_rules["m-4"]["power"] = 5
+        self.run_ability_at(session, tripod, 1, source={"itemId": "tr"})
+        self.assertEqual((self.power_of(session, "z1"), self.power_of(session, "z2")), (1, 1))
+        # Sacred Mountain exiles the tribute and the other player gains 5 points.
+        self.put(p1, "graveyard", ["m-6"])
+        self.run_ability_at(session, mountain, 0, trigger={
+            "relatedCardId": "m-6", "relatedOwnerId": "p1", "eventControllerId": "p1",
+        })
+        self.assertIn("m-6", p1["zones"]["exile"])
+        self.assertEqual((p1["score"], p2["score"]), (0, 5))
+        # Referen-Doom exiles Limbo Wills for +1 power each.
+        session.card_rules["will-1"] = {"type": "ephemeral_will", "temperaments": [], "power": 0}
+        session.card_rules["will-2"] = {"type": "persistent_will", "temperaments": [], "power": 0}
+        self.put(p1, "graveyard", ["will-1", "will-2", "m-7"])
+        session.battlefield = [self.field_item("rd", "p1", doom)]
+        base = self.power_of(session, "rd")
+        self.run_ability_at(session, doom, 0, source={"itemId": "rd"}, targets=[
+            {"kind": "zone_card", "containerId": "p1", "zone": "graveyard", "cardId": cid, "ownerId": "p1"}
+            for cid in ("will-1", "will-2", "m-7")
+        ])
+        self.assertEqual(self.power_of(session, "rd"), base + 2)
+        self.assertIn("m-7", p1["zones"]["graveyard"])
+        # Drain the Substance removes all excess essence and adds it to the target.
+        session.add_rules_excess_essence("p1", [{"temperament": "hollow", "amount": 3}])
+        session.add_rules_excess_essence("p2", [{"temperament": "choleric", "amount": 2}])
+        base = self.power_of(session, "rd")
+        self.run_ability_at(session, drain, 0, targets=[self.card_target("rd", doom)])
+        self.assertEqual(self.power_of(session, "rd"), base + 5)
+        self.assertEqual([t for t in session.tokens if t.get("isEssence")], [])
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")
