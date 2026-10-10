@@ -1455,6 +1455,20 @@ class Session:
                 "kind": kind, "value": max(0, min(int(result.get("value") or 0), 500)),
                 "maxBasePower": max(0, min(int(result.get("maxBasePower") or 0), 99)),
             }
+        if kind == "search_deck_to_hand":
+            return {
+                "kind": kind, "count": max(1, min(int(result.get("count") or 1), 10)),
+                "upTo": bool(result.get("upTo")),
+            }
+        if kind == "hand_manifestation_choice":
+            destination = str(result.get("destination") or "")
+            if destination not in {"interzone", "exile"}:
+                return None
+            clean = {"kind": kind, "destination": destination}
+            for flag in ("drawByBasePower", "destroyTarget", "optional"):
+                if result.get(flag):
+                    clean[flag] = True
+            return clean
         if kind == "destroy_random_vessel_manifestations":
             return {"kind": kind, "count": max(1, min(int(result.get("count") or 1), 10))}
         if kind == "set_interzone_power":
@@ -7483,6 +7497,52 @@ class Session:
                 "kind": result.get("kind"),
                 "status": "shuffled" if moved else "nothing", "cardIds": moved,
             }
+        if result.get("kind") == "search_deck_to_hand":
+            deck = list(player["zones"]["deck"])
+            if not deck:
+                return {"kind": result.get("kind"), "status": "no_cards"}
+            count = min(int(result.get("count") or 1), len(deck))
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "discard_from_hand",
+                "playerId": player_id, "count": count, "upTo": bool(result.get("upTo")),
+                "candidateCardIds": sorted(deck),
+                "actionId": action.get("id"),
+                "controllerId": action.get("controllerId"),
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "discard_from_hand", "playerId": player_id,
+                "count": count, "upTo": bool(result.get("upTo")), "search": True,
+            }
+        if result.get("kind") == "hand_manifestation_choice":
+            hand = player["zones"]["hand"]
+            if not any(self.card_rules.get(c, {}).get("type") == "manifestation" for c in hand):
+                return {"kind": result.get("kind"), "status": "no_hand_card"}
+            if result.get("optional") and not action.get("optionalAccepted"):
+                return {"kind": result.get("kind"), "status": "declined"}
+            target = next((
+                entry for entry in action.get("targets") or [] if entry.get("kind") == "card"
+            ), None)
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "discard_from_hand",
+                "playerId": player_id, "count": 1, "requireManifestation": True,
+                "destination": result.get("destination"),
+                "drawByBasePower": bool(result.get("drawByBasePower")),
+                "destroyTargetItemId": (
+                    (target or {}).get("itemId") if result.get("destroyTarget") else None
+                ),
+                "actionId": action.get("id"),
+                "controllerId": action.get("controllerId"),
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "discard_from_hand", "playerId": player_id,
+                "count": 1, "requireManifestation": True,
+            }
         if result.get("kind") == "destroy_random_vessel_manifestations":
             source = action.get("source") or {}
             container_id = source.get("containerId")
@@ -11843,6 +11903,27 @@ class Session:
         required = int(choice.get("count") or 0)
         if len(selected) > required or (len(selected) != required and not choice.get("upTo")):
             return "Choose the required number of cards.", None
+        if choice.get("candidateCardIds") is not None:
+            deck_zone = list(self.players[player_id]["zones"]["deck"])
+            for card_id in selected:
+                if card_id not in choice["candidateCardIds"] or card_id not in deck_zone:
+                    return "A selected card is not available in your deck.", None
+                deck_zone.remove(card_id)
+            for card_id in selected:
+                error, _owner_id = self.move_zone_card(
+                    player_id, "deck", player_id, "hand", card_id, "top"
+                )
+                if error:
+                    return error, None
+            random.shuffle(self.players[player_id]["zones"]["deck"])
+            self.rules_engine["pendingChoice"] = None
+            return None, {
+                "kind": "search_deck", "playerId": player_id,
+                "count": len(selected), "cardIds": selected, "choiceId": choice_id,
+                "actionId": choice.get("actionId"),
+                "controllerId": choice.get("controllerId"),
+                "sourceCardId": choice.get("sourceCardId"),
+            }
         hand_remaining = list(self.players[player_id]["zones"]["hand"])
         for card_id in selected:
             if card_id not in hand_remaining:
@@ -11858,12 +11939,40 @@ class Session:
             for card_id in selected
         ):
             return "Choose a valid card type from your hand.", None
+        destination = choice.get("destination")
         for card_id in selected:
+            if destination == "interzone":
+                moved = self.apply_rules_action_result({
+                    "id": new_id(), "controllerId": player_id,
+                    "source": {"cardId": choice.get("sourceCardId")},
+                    "targets": [{
+                        "kind": "zone_card", "containerId": player_id, "zone": "hand",
+                        "cardId": card_id, "ownerId": player_id,
+                    }],
+                    "ability": {"result": {"kind": "move_zone_target_to_field_zone", "fieldZone": "interzone"}},
+                })
+                if (moved or {}).get("status") != "moved":
+                    return "Your Interzone has no room for this Manifestation.", None
+                continue
             error, _owner_id = self.move_zone_card(
-                player_id, "hand", player_id, "graveyard", card_id, "top"
+                player_id, "hand", player_id, "exile" if destination == "exile" else "graveyard",
+                card_id, "top",
             )
             if error:
                 return error, None
+        destroyed = None
+        if choice.get("destroyTargetItemId") and selected:
+            target_item = self.find_battlefield_item(choice["destroyTargetItemId"])
+            revealed_base = int(self.card_rules.get(selected[0], {}).get("power") or 0)
+            if (
+                target_item is not None
+                and self.rules_manifestation_base_power(target_item) <= revealed_base
+            ):
+                movement = self._rules_remove_field_item_by_effect(
+                    target_item, target_item.get("ownerId"), "graveyard", "top", reason="destroy"
+                )
+                self.prune_rules_ongoing_effects()
+                destroyed = {"itemId": target_item["id"], "status": movement.get("status")}
         weakened = None
         if choice.get("weakenTargetItemId"):
             weak_item = self.find_battlefield_item(choice["weakenTargetItemId"])
@@ -11903,6 +12012,8 @@ class Session:
             ) if remaining else 0
         drawn = 0
         requested_draw = max(0, min(int(choice.get("drawAfter") or 0), 50))
+        if choice.get("drawByBasePower") and selected:
+            requested_draw = max(0, min(int(self.card_rules.get(selected[0], {}).get("power") or 0), 50))
         for _index in range(min(requested_draw, len(self.players[player_id]["zones"]["deck"]))):
             card_id = self.players[player_id]["zones"]["deck"][0]
             error, _owner_id = self.move_zone_card(
@@ -11922,6 +12033,7 @@ class Session:
             "actionId": choice.get("actionId"),
             "controllerId": choice.get("controllerId"),
             "sourceCardId": choice.get("sourceCardId"),
+            **({"destroyed": destroyed} if destroyed else {}),
             **({"weakened": weakened} if weakened else {}),
             **({"powerGain": power_gain} if power_gain else {}),
             **({"pointsLost": points_lost} if points_lost else {}),
@@ -12377,6 +12489,13 @@ class Session:
                     key: value for key, value in group.items()
                     if key != "cardIds"
                 } for group in pending_choice_view["groups"]]
+        if (
+            pending_choice_view
+            and "candidateCardIds" in pending_choice_view
+            and viewer_id != pending_choice.get("playerId")
+            and not can_view_hidden
+        ):
+            pending_choice_view.pop("candidateCardIds", None)
         players_view = {}
         for pid, player in self.players.items():
             zones_view = {}

@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 254,
-    "explicitAbilities": 301,
+    "explicitCards": 259,
+    "explicitAbilities": 306,
     "statuses": {
-      "automated": 315,
+      "automated": 318,
       "generic": 0,
-      "manual": 129,
-      "partial": 6
+      "manual": 124,
+      "partial": 8
     }
   },
   "cards": {
@@ -1067,10 +1067,18 @@
       "collectionNumber": 70,
       "name": "Hermeto, the Observer",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "hermeto-searches-two-cards"
+      ],
+      "mechanics": [
+        "result:search_deck_to_hand",
+        "trigger:enters_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "qapv47r7rz6gqah_en": {
       "collectionNumber": 71,
@@ -1108,10 +1116,18 @@
       "collectionNumber": 74,
       "name": "Dew Invoker",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "dew-invoker-puts-hand-manifestation-in-interzone"
+      ],
+      "mechanics": [
+        "result:hand_manifestation_choice",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "xfgbjv2gjb09fj9_en": {
       "collectionNumber": 75,
@@ -4069,10 +4085,18 @@
       "collectionNumber": 277,
       "name": "Recall",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "recall-searches-after-loss"
+      ],
+      "mechanics": [
+        "condition:controller_lost_confrontation",
+        "result:search_deck_to_hand"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "mv2vad6gwrfbi1l_en": {
       "collectionNumber": 278,
@@ -4104,10 +4128,18 @@
       "collectionNumber": 280,
       "name": "Censor",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "partial",
+      "abilityIds": [
+        "censor-exiles-hand-manifestation-to-destroy"
+      ],
+      "mechanics": [
+        "result:hand_manifestation_choice",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py"
+      ],
+      "notes": "The revealed-and-exiled Manifestation is chosen when the Will resolves instead of as an additional cost, and the target's legality is checked then."
     },
     "zni76s4aabicqag_en": {
       "collectionNumber": 281,
@@ -4161,10 +4193,17 @@
       "collectionNumber": 284,
       "name": "Martyrize",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "partial",
+      "abilityIds": [
+        "martyrize-exiles-hand-manifestation-to-draw"
+      ],
+      "mechanics": [
+        "result:hand_manifestation_choice"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py"
+      ],
+      "notes": "The exiled Manifestation is chosen when the Will resolves instead of as an additional cost, and the Will itself is not exiled afterwards."
     },
     "ey6fuk5gguasrb0_en": {
       "collectionNumber": 285,

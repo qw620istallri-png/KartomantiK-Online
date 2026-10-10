@@ -10041,13 +10041,14 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertEqual((len(tokens), sorted(p1["zones"]["exile"])), (2, ["m-5", "m-6"]))
         self.assertTrue(all(t["isSupport"] and t["power"] == 1 for t in tokens))
 
-    def run_ability_at(self, session, card_id, index, targets=None, source=None, trigger=None, controller="p1"):
+    def run_ability_at(self, session, card_id, index, targets=None, source=None, trigger=None, controller="p1", accepted=False):
         ability = self.ABILITIES[card_id][index]
         full = {**ability, "trigger": {**(ability.get("trigger") or {}), **(trigger or {})}}
         return session.apply_rules_action_result({
             "id": f"run-{card_id}-{index}", "controllerId": controller,
             "source": {"cardId": card_id, **(source or {})},
             "targets": targets or [], "ability": {**full, "result": ability["result"]},
+            **({"optionalAccepted": True} if accepted else {}),
         })
 
     def test_manual_lot_four_vessel_roll_and_memory_effects(self):
@@ -10196,6 +10197,61 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         # Kox gifts opponents 50 points on entering the field.
         payload = self.run_ability_at(session, kox, 0, source={"itemId": "x"})
         self.assertEqual(p2["score"], 50)
+
+    def test_manual_lot_six_hand_and_deck_choices(self):
+        dew, censor, martyrize, hermeto, recall = (
+            "nt0bixroxp0ftnk_en", "op83bq67vaf368q_en", "3gqrmx5jegwz8kb_en",
+            "xzaw511oz4g4km9_en", "cnqaie6oq458qgq_en",
+        )
+        session, p1, p2 = self.manual_batch_session(dew, censor, martyrize, hermeto, recall, card_type="manifestation")
+        for cid, power in (("m-1", 3), ("m-2", 2), ("m-3", 5)):
+            session.card_rules[cid]["power"] = power
+        # Dew Invoker: a hand Manifestation enters the Interzone.
+        self.put(p1, "hand", ["m-1", "m-2"])
+        session.battlefield = []
+        payload = self.run_ability_at(session, dew, 0, accepted=True)
+        self.assertEqual(payload["kind"], "choice_required")
+        choice = session.rules_engine["pendingChoice"]
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-1"])
+        self.assertIsNone(error)
+        self.assertEqual([i["cardId"] for i in session.battlefield], ["m-1"])
+        self.assertEqual(session.battlefield[0]["fieldZone"], "interzone")
+        self.assertNotIn("m-1", p1["zones"]["hand"])
+        # Martyrize: exile a hand Manifestation and draw its base power.
+        self.put(p1, "deck", ["d-1", "d-2", "d-3", "d-4"])
+        self.run_ability_at(session, martyrize, 0)
+        choice = session.rules_engine["pendingChoice"]
+        error, result = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-2"])
+        self.assertIsNone(error)
+        self.assertIn("m-2", p1["zones"]["exile"])
+        self.assertEqual(result["drawCount"], 2)
+        # Censor: destroys the target only when its base power is not higher than the exiled card.
+        session.card_rules["m-4"]["power"] = 4
+        self.put(p1, "hand", ["m-3"])
+        session.battlefield = [self.field_item("t", "p2", "m-4")]
+        self.run_ability_at(session, censor, 0, targets=[self.card_target("t", "m-4")])
+        choice = session.rules_engine["pendingChoice"]
+        error, result = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-3"])
+        self.assertIsNone(error)
+        self.assertEqual(result["destroyed"]["itemId"], "t")
+        self.assertIn("m-4", p2["zones"]["graveyard"])
+        # Hermeto: search up to two cards, then shuffle.
+        self.put(p1, "deck", ["s-1", "s-2", "s-3"])
+        self.put(p1, "hand", [])
+        self.run_ability_at(session, hermeto, 0)
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(sorted(choice["candidateCardIds"]), ["s-1", "s-2", "s-3"])
+        self.assertTrue(session.resolve_rules_choice("p1", choice["id"], card_ids=["zzz"])[0])
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["s-1", "s-3"])
+        self.assertIsNone(error)
+        self.assertEqual(sorted(p1["zones"]["hand"]), ["s-1", "s-3"])
+        self.assertEqual(p1["zones"]["deck"], ["s-2"])
+        # The candidates stay private to the searching player.
+        self.run_ability_at(session, recall, 0)
+        view = session.serialize_for("p2", "player")["rulesEngine"]["pendingChoice"]
+        self.assertNotIn("candidateCardIds", view)
+        own = session.serialize_for("p1", "player")["rulesEngine"]["pendingChoice"]
+        self.assertEqual(own["candidateCardIds"], ["s-2"])
 
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"

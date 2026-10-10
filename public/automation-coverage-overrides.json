@@ -2265,6 +2265,41 @@
       "testRefs": [
         "tests/test_game_state.py"
       ]
+    },
+    "nt0bixroxp0ftnk_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "xzaw511oz4g4km9_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "cnqaie6oq458qgq_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "op83bq67vaf368q_en": {
+      "status": "partial",
+      "notes": "The revealed-and-exiled Manifestation is chosen when the Will resolves instead of as an additional cost, and the target's legality is checked then.",
+      "testRefs": [
+        "tests/test_game_state.py"
+      ]
+    },
+    "3gqrmx5jegwz8kb_en": {
+      "status": "partial",
+      "notes": "The exiled Manifestation is chosen when the Will resolves instead of as an additional cost, and the Will itself is not exiled afterwards.",
+      "testRefs": [
+        "tests/test_game_state.py"
+      ]
     }
   }
 }

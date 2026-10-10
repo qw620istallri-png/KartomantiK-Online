@@ -3223,5 +3223,48 @@
       "trigger": { "event": "enters_limbo" },
       "result": { "kind": "score_each_opponent", "value": 50 }
     }
+  ],
+  "nt0bixroxp0ftnk_en": [
+    {
+      "id": "dew-invoker-puts-hand-manifestation-in-interzone",
+      "optional": true,
+      "trigger": { "event": "wins_confrontation" },
+      "result": { "kind": "hand_manifestation_choice", "destination": "interzone", "optional": true }
+    }
+  ],
+  "op83bq67vaf368q_en": [
+    {
+      "id": "censor-exiles-hand-manifestation-to-destroy",
+      "action": "play_card",
+      "targets": {
+        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation",
+        "zones": ["battlefield"], "fieldZone": "confrontation"
+      },
+      "result": { "kind": "hand_manifestation_choice", "destination": "exile", "destroyTarget": true }
+    }
+  ],
+  "3gqrmx5jegwz8kb_en": [
+    {
+      "id": "martyrize-exiles-hand-manifestation-to-draw",
+      "action": "play_card",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "hand_manifestation_choice", "destination": "exile", "drawByBasePower": true }
+    }
+  ],
+  "xzaw511oz4g4km9_en": [
+    {
+      "id": "hermeto-searches-two-cards",
+      "trigger": { "event": "enters_zone", "zone": "receptacle", "container": "opponent" },
+      "result": { "kind": "search_deck_to_hand", "count": 2, "upTo": true }
+    }
+  ],
+  "cnqaie6oq458qgq_en": [
+    {
+      "id": "recall-searches-after-loss",
+      "action": "play_card",
+      "condition": "controller_lost_confrontation",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "search_deck_to_hand", "count": 1 }
+    }
   ]
 }

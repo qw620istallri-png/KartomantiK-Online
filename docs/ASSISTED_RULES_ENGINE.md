@@ -717,3 +717,9 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 - Évènement `end_of_game` : lu uniquement par `rules_end_game_points` (appelé par `calculate_final_scores`, champ `endGamePoints`). Résultats `final_deck_points` (Phimosino : +50 si dans le deck) et `final_vessel_penalty` (Piercing Lover : -5 par manifestation de puissance de base ≤ 2 dans le Réceptacle où il se trouve).
 - Flag `lossDestination: own_interzone` (Losers' Chariot) : à la défaite la carte va dans l'Interzone de son propriétaire au lieu du Réceptacle adverse ; le vainqueur gagne 15 points et ses défaites suivantes rapportent 10 points depuis l'Interzone.
 - Kox (partiel) : seuls les 50 points donnés aux adversaires à l'entrée en jeu ou au Limbo sont automatisés.
+
+### Lot 6 (choix d'une carte en main, recherche dans le deck)
+
+- Le choix `discard_from_hand` sert maintenant aussi de sélecteur générique : `destination` (`interzone` ou `exile` au lieu du Limbo), `drawByBasePower` (pige autant que la puissance de base de la carte choisie), `destroyTargetItemId` (détruit la cible si sa puissance de base est ≤ celle de la carte choisie) et `candidateCardIds` (recherche dans le deck : les cartes choisies vont en main puis le deck est mélangé ; la liste n'est envoyée qu'au joueur concerné).
+- Résultats `hand_manifestation_choice` (Dew Invoker, Censor, Martyrize) et `search_deck_to_hand` (Hermeto, Recall).
+- Approximations : Censor et Martyrize choisissent la manifestation révélée à la résolution et non comme coût additionnel ; Martyrize n'exile pas la Volonté ensuite (cartes en partiel).
