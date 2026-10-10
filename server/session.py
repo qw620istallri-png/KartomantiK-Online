@@ -3515,7 +3515,7 @@ class Session:
         """Remove one validated Stack entry while preserving already-paid costs."""
         if target_action not in self.rules_engine.get("actionStack", []):
             return None
-        if mode == "neutralize" and target_action.get("cannotBeNeutralized"):
+        if target_action.get("cannotBeNeutralized"):
             return {
                 "status": "prevented", "mode": mode,
                 "actionId": target_action.get("id"),

@@ -12505,6 +12505,15 @@ class LotSixteenTests(RealCardRulesCase):
         simulacrum["rotation"] = 0.0
         self.assertTrue(session.rules_item_effects_active(simulacrum))
 
+    def test_a_will_that_cannot_be_neutralized_cannot_be_cancelled_either(self):
+        session, _p1, _p2 = self.make_session()
+        will_action = self.play_will(session)
+        will_action["cannotBeNeutralized"] = True
+        for mode in ("neutralize", "cancel"):
+            result = session.counter_rules_stack_action(will_action, mode)
+            self.assertEqual(result["status"], "prevented")
+            self.assertIn(will_action, session.rules_engine["actionStack"])
+
     def test_clemency_gives_points_when_the_will_cannot_be_neutralized(self):
         session, p1, p2 = self.make_session()
         start = p1["score"]
