@@ -13305,6 +13305,167 @@ class LotEighteenTests(RealCardRulesCase):
         session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_compare")
         self.assertEqual(session.prepare_rules_confrontation_result()["winnerId"], "p2")
 
+    def test_hermetic_hourglass_makes_its_controller_play_the_first_manifestation_last(self):
+        session, p1, p2 = self.make_session()
+        session.rules_engine["enabled"] = True
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_choose")
+        session.rules_engine["firstManifestationComplete"] = False
+        session.card_rules[self.HOURGLASS]["passiveEffects"] = [
+            self.ABILITIES[self.HOURGLASS][0]["passiveEffect"]
+        ]
+        ability = self.ability(self.HOURGLASS, "immediate-stalemate-unless-opponent-pays")
+        self.assertEqual(ability["trigger"]["event"], "revelation")
+        self.assertTrue(ability["immediate"])
+        hourglass = self.field_item("hourglass", "p1", self.HOURGLASS, field_zone="field", controllerId="p1", x=0, y=0, rotation=0, stackedOn=None)
+        mine = {**self.field_item("mine", "p1", "m-1", field_zone="field", x=0, y=0, rotation=0, stackedOn=None), "faceUp": False}
+        theirs = self.field_item("theirs", "p2", "m-2", field_zone="field", faceUp=True, x=0, y=0, rotation=0, stackedOn=None)
+        session.battlefield = [hourglass, mine, theirs]
+        self.assertTrue(session.rules_plays_first_manifestation_after("p1"))
+        self.assertFalse(session.rules_plays_first_manifestation_after("p2"))
+        self.assertIn("Hourglass", session.register_first_manifestation("p1", mine))
+        self.assertIsNone(session.register_first_manifestation("p2", theirs))
+        self.assertIsNone(session.validate_first_manifestation("p2")[0])
+        # The opponent is now locked in and the Hourglass controller can see their card.
+        self.assertIn("locked", session.validate_first_manifestation("p2", validated=False)[0])
+        view = {entry["id"]: entry for entry in session.serialize_for("p1", "player")["battlefield"]}
+        self.assertEqual(view["theirs"]["cardId"], "m-2")
+        hidden = {entry["id"]: entry for entry in session.serialize_for("p2", "player")["battlefield"]}
+        self.assertEqual(hidden["mine"]["cardId"], None)
+        self.assertIsNone(session.register_first_manifestation("p1", mine))
+        error, result = session.validate_first_manifestation("p1")
+        self.assertIsNone(error)
+        self.assertTrue(result["selectionComplete"])
+        # With an Hourglass on each side the order is unchanged.
+        session.battlefield.append(self.field_item("hourglass2", "p2", self.HOURGLASS, field_zone="field", controllerId="p2"))
+        self.assertFalse(session.rules_plays_first_manifestation_after("p1"))
+
+
+class LotTwentyTests(RealCardRulesCase):
+    """Playing Wills from the Limbo: Ergorath and Freenya."""
+
+    ERGORATH, FREENYA = "e1zg2gsn0tfqo1y_en", "b6ebpyb30urtas2_en"
+    ALL = (ERGORATH, FREENYA)
+
+    def limbo_setup(self, phase="confrontation_reaction"):
+        session, p1, p2 = self.make_session()
+        session.rules_engine["enabled"] = True
+        session.rules_engine["priorityPlayerId"] = "p1"
+        session.phase_tracker["index"] = ADVANCED_PHASES.index(phase)
+        session.card_rules["limbo-eph"] = {"type": "ephemeral_will", "cost": 2, "powerCost": "{G}{G}", "temperaments": ["phlegmatic"]}
+        session.card_rules["limbo-per"] = {"type": "persistent_will", "cost": 2, "powerCost": "{G}{G}", "temperaments": ["phlegmatic"]}
+        self.put(p1, "graveyard", ["limbo-eph", "limbo-per"])
+        self.put(p1, "hand", ["m-0", "m-1"])
+        return session, p1, p2
+
+    def ergorath_item(self, session):
+        item = self.field_item("ergorath", "p1", self.ERGORATH, field_zone="interzone", controllerId="p1", x=0, y=0, rotation=0, stackedOn=None)
+        session.battlefield = [item]
+        return item
+
+    def test_ergorath_plays_a_limbo_will_for_one_hollow_and_exiles_it(self):
+        session, p1, _p2 = self.limbo_setup()
+        error, _action = session.declare_rules_action(
+            "p1", "Play", kind="play_card", source={"cardId": "limbo-eph", "zone": "graveyard"},
+            payment_card_ids=["m-0"])
+        self.assertIn("no effect", error)
+        self.ergorath_item(session)
+        session.card_rules[self.ERGORATH]["passiveEffects"] = [self.ABILITIES[self.ERGORATH][0]["passiveEffect"]]
+        error, action = session.declare_rules_action(
+            "p1", "Play", kind="play_card", source={"cardId": "limbo-eph", "zone": "graveyard"},
+            payment_card_ids=["m-0"])
+        self.assertIsNone(error)
+        self.assertNotIn("limbo-eph", p1["zones"]["graveyard"])
+        self.assertEqual(action["source"]["fixedTribute"], {"hollow": 1})
+        session.pass_rules_priority("p2")
+        _err, resolution = session.pass_rules_priority("p1")
+        self.assertEqual(resolution["action"]["sourceResolution"]["destination"], "exile")
+        self.assertIn("limbo-eph", p1["zones"]["exile"])
+        self.assertNotIn("limbo-eph", p1["zones"]["graveyard"])
+
+    def test_ergorath_will_that_is_neutralized_is_exiled_too(self):
+        session, p1, _p2 = self.limbo_setup()
+        self.ergorath_item(session)
+        session.card_rules[self.ERGORATH]["passiveEffects"] = [self.ABILITIES[self.ERGORATH][0]["passiveEffect"]]
+        _error, action = session.declare_rules_action(
+            "p1", "Play", kind="play_card", source={"cardId": "limbo-eph", "zone": "graveyard"},
+            payment_card_ids=["m-0"])
+        session.counter_rules_stack_action(action, "neutralize")
+        self.assertIn("limbo-eph", p1["zones"]["exile"])
+        self.assertNotIn("limbo-eph", p1["zones"]["graveyard"])
+
+    def test_ergorath_persistent_will_is_exiled_when_it_leaves_the_field(self):
+        session, p1, _p2 = self.limbo_setup("end_actions")
+        self.ergorath_item(session)
+        session.card_rules[self.ERGORATH]["passiveEffects"] = [self.ABILITIES[self.ERGORATH][0]["passiveEffect"]]
+        error, _action = session.declare_rules_action(
+            "p1", "Play", kind="play_card", source={"cardId": "limbo-per", "zone": "graveyard"},
+            payment_card_ids=["m-0"])
+        self.assertIsNone(error)
+        session.pass_rules_priority("p2")
+        _err, resolution = session.pass_rules_priority("p1")
+        item = session.find_battlefield_item(resolution["action"]["sourceResolution"]["itemId"])
+        self.assertTrue(item["exileIfLeaves"])
+        session._rules_remove_field_item_by_effect(item, "p1", "graveyard")
+        self.assertIn("limbo-per", p1["zones"]["exile"])
+        self.assertNotIn("limbo-per", p1["zones"]["graveyard"])
+
+    def test_ergorath_in_the_interzone_at_end_of_turn_costs_10_points_and_is_shuffled(self):
+        session, p1, _p2 = self.limbo_setup()
+        item = self.ergorath_item(session)
+        ability = self.ability(self.ERGORATH, "ergorath-interzone-penalty")
+        score = p1["score"]
+        payload = session.apply_rules_action_result({
+            "id": "e1", "controllerId": "p1",
+            "source": {"cardId": self.ERGORATH, "itemId": "ergorath", "ownerId": "p1"},
+            "targets": [], "ability": ability,
+        })
+        self.assertEqual(payload["status"], "moved")
+        self.assertEqual(p1["score"], score - 10)
+        self.assertIn(self.ERGORATH, p1["zones"]["deck"])
+        self.assertIsNone(session.find_battlefield_item("ergorath"))
+
+    def test_freenya_grants_one_free_limbo_play_only_after_a_will_from_hand(self):
+        session, p1, _p2 = self.limbo_setup()
+        ability = self.ability(self.FREENYA, "freenya-free-limbo-will")
+        self.assertEqual(ability["trigger"]["playedFromZone"], "hand")
+        # Played from the Limbo (zone graveyard) does not trigger it again.
+        session.card_rules[self.FREENYA]["triggeredAbilities"] = [ability]
+        freenya = self.field_item("freenya", "p1", self.FREENYA, field_zone="interzone", controllerId="p1", x=0, y=0, rotation=0, stackedOn=None)
+        session.battlefield = [freenya]
+        queued_hand = session.queue_rules_triggers(
+            self.FREENYA, "p1", "card_played", event_card_id="limbo-eph", item_id="freenya",
+            face_up=True, event_controller_id="p1", defer=True, controller_id="p1",
+            related_action={"id": "a", "source": {"cardId": "x", "zone": "hand"}})
+        queued_limbo = session.queue_rules_triggers(
+            self.FREENYA, "p1", "card_played", event_card_id="limbo-eph", item_id="freenya",
+            face_up=True, event_controller_id="p1", defer=True, controller_id="p1",
+            related_action={"id": "b", "source": {"cardId": "x", "zone": "graveyard"}})
+        self.assertEqual(len(queued_hand), 1)
+        self.assertEqual(queued_limbo, [])
+        session.rules_engine["actionStack"] = []
+        session.rules_engine["priorityPlayerId"] = "p1"
+        # Without the grant nothing can be played from the Limbo.
+        error, _a = session.declare_rules_action(
+            "p1", "Play", kind="play_card", source={"cardId": "limbo-eph", "zone": "graveyard"})
+        self.assertIn("no effect", error)
+        session.apply_rules_action_result({
+            "id": "f1", "controllerId": "p1",
+            "source": {"cardId": self.FREENYA, "itemId": "freenya", "ownerId": "p1"},
+            "targets": [], "ability": ability,
+        })
+        error, action = session.declare_rules_action(
+            "p1", "Play", kind="play_card", source={"cardId": "limbo-eph", "zone": "graveyard"})
+        self.assertIsNone(error)
+        self.assertEqual(action["cost"]["tributePaid"], False)
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        self.assertIn("limbo-eph", p1["zones"]["exile"])
+        # The right is spent.
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, _a = session.declare_rules_action(
+            "p1", "Play", kind="play_card", source={"cardId": "limbo-per", "zone": "graveyard"})
+        self.assertIn("no effect", error)
+
 
 if __name__ == "__main__":
     unittest.main()

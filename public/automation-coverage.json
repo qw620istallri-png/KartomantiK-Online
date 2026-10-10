@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 336,
-    "explicitAbilities": 422,
+    "explicitCards": 338,
+    "explicitAbilities": 426,
     "statuses": {
-      "automated": 405,
+      "automated": 408,
       "generic": 0,
-      "manual": 44,
-      "partial": 1
+      "manual": 42,
+      "partial": 0
     }
   },
   "cards": {
@@ -1336,10 +1336,19 @@
       "collectionNumber": 82,
       "name": "Freenya, Heartless Songstress",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "freenya-free-limbo-will"
+      ],
+      "mechanics": [
+        "result:grant_limbo_will_play",
+        "trigger:card_played"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_frontend.cjs"
+      ]
     },
     "9yylrq6xancbn0m_en": {
       "collectionNumber": 83,
@@ -2098,10 +2107,21 @@
       "collectionNumber": 128,
       "name": "Ergorath, Scribe of the Limbo",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "ergorath-play-wills-from-limbo",
+        "ergorath-interzone-penalty"
+      ],
+      "mechanics": [
+        "passive:play_wills_from_limbo_hollow_tribute",
+        "result:lose_points_shuffle_source_into_deck",
+        "trigger:end_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py",
+        "tests/test_frontend.cjs"
+      ]
     },
     "de3meyzl13rpqo5_en": {
       "collectionNumber": 129,
@@ -3857,14 +3877,20 @@
       "collectionNumber": 237,
       "name": "Hermetic Hourglass",
       "setName": "Beta",
-      "status": "partial",
+      "status": "automated",
       "abilityIds": [
+        "plays-first-manifestation-after-opponents",
         "immediate-stalemate-unless-opponent-pays"
       ],
       "mechanics": [
-        "result:stalemate_unless_opponent_pays"
+        "passive:play_first_manifestation_after_opponents",
+        "result:stalemate_unless_opponent_pays",
+        "trigger:revelation"
       ],
-      "testRefs": []
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "67009ud077sgz7b_en": {
       "collectionNumber": 238,

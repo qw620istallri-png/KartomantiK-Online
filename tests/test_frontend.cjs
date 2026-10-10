@@ -1423,6 +1423,39 @@ function startServer() {
     assert.equal(binaryUi.option, "no");
     assert.equal(binaryUi.choiceId, "binary");
     assert.equal(binaryUi.hasText, true);
+    const limboUi = await page.evaluate(() => {
+      const will = [...cardsById.values()].find((card) => card.type === "ephemeral_will" && printedTributeRequirements(card) && Object.keys(printedTributeRequirements(card)).length);
+      const savedRules = JSON.parse(JSON.stringify({
+        permissions: latestState.rulesEngine.playPermissions || [], battlefield: latestState.battlefield || [],
+      }));
+      const phaseId = currentPhaseUi().phase?.id;
+      const none = rulesLimboPlayMode();
+      latestState.rulesEngine.playPermissions = [{
+        id: "pf", playerId: myPlayerId, fromZone: "graveyard", anyWill: true, noTribute: true, exileOnLeave: true,
+        phaseIds: [phaseId], turn: Number(latestState.phaseTracker?.turn || 0),
+      }];
+      const free = rulesLimboPlayMode();
+      const freeDraft = buildRulesActionDraft({ cardId: will.id, zone: "graveyard" });
+      latestState.rulesEngine.playPermissions = [];
+      latestState.battlefield = [...latestState.battlefield, {
+        id: "ergo", cardId: "e1zg2gsn0tfqo1y_en", ownerId: myPlayerId, controllerId: myPlayerId, faceUp: true, fieldZone: "interzone",
+      }];
+      const hollow = rulesLimboPlayMode();
+      const hollowDraft = buildRulesActionDraft({ cardId: will.id, zone: "graveyard" });
+      latestState.rulesEngine.playPermissions = savedRules.permissions;
+      latestState.battlefield = savedRules.battlefield;
+      return {
+        none, free, hollow,
+        freeReq: freeDraft.paymentRequirements, hollowReq: hollowDraft.paymentRequirements,
+        passive: (passiveEffectsByCard.get("e1zg2gsn0tfqo1y_en") || []).map((effect) => effect.kind),
+      };
+    });
+    assert.equal(limboUi.none, null);
+    assert.equal(limboUi.free, "free");
+    assert.equal(limboUi.hollow, "hollow");
+    assert.deepEqual(limboUi.freeReq, {});
+    assert.deepEqual(limboUi.hollowReq, { hollow: 1 });
+    assert.deepEqual(limboUi.passive, ["play_wills_from_limbo_hollow_tribute"]);
     const temperamentUi = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
       const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };

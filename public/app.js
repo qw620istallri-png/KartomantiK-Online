@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261010-rules-beta-113";
+const STATIC_ASSET_VERSION = "20261010-rules-beta-114";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -2592,8 +2592,8 @@ function renderRulesBoardFlow() {
     panel?.classList.add("hidden");
     return;
   }
-  const handSourceStillValid = flow.source.zone === "hand"
-    && (latestState?.players?.[myPlayerId]?.zones?.hand?.cards || []).includes(flow.source.cardId);
+  const handSourceStillValid = ["hand", "graveyard"].includes(flow.source.zone)
+    && (latestState?.players?.[myPlayerId]?.zones?.[flow.source.zone]?.cards || []).includes(flow.source.cardId);
   const battlefieldSource = flow.source.zone === "battlefield"
     ? latestState?.battlefield?.find((item) => item.id === flow.source.itemId)
     : null;
@@ -2953,7 +2953,10 @@ function rulesActivatedActionDraft(item, abilityOverride = null) {
 function beginRulesBoardAction(source) {
   const draft = buildRulesActionDraft(source);
   if (!draft.card || !["ephemeral_will", "persistent_will"].includes(draft.card.type)) return false;
-  if (!handCardIsPlayable(source.cardId)) {
+  const playable = source.zone === "graveyard"
+    ? limboWillIsPlayable(source.cardId)
+    : handCardIsPlayable(source.cardId);
+  if (!playable) {
     showToast(t("rulesBoardCardNotPlayable"), true);
     return true;
   }
@@ -3229,8 +3232,45 @@ function rulesPersistentWillsAsEphemeralClient() {
   ));
 }
 
+function rulesLimboPlayMode() {
+  const turn = Number(latestState?.phaseTracker?.turn || 0);
+  const phaseId = currentPhaseUi().phase?.id;
+  if ((latestState?.rulesEngine?.playPermissions || []).some((permission) => (
+    permission.playerId === myPlayerId
+    && permission.fromZone === "graveyard"
+    && permission.noTribute && permission.exileOnLeave && permission.anyWill
+    && Number(permission.turn || 0) === turn
+    && (permission.phaseIds || []).includes(phaseId)
+  ))) return "free";
+  const hollow = (latestState?.battlefield || []).some((item) => (
+    (item.controllerId || item.ownerId) === myPlayerId
+    && item.faceUp !== false
+    && (passiveEffectsByCard.get(item.cardId) || []).some(
+      (effect) => effect.kind === "play_wills_from_limbo_hollow_tribute"
+    )
+  ));
+  return hollow ? "hollow" : null;
+}
+
+function limboWillIsPlayable(cardId) {
+  const rules = latestState?.rulesEngine;
+  const card = cardsById.get(cardId);
+  if (!rules?.enabled || !card || isObserver || rules.pendingChoice) return false;
+  if (!["ephemeral_will", "persistent_will"].includes(card.type)) return false;
+  if (rules.priorityPlayerId !== myPlayerId || !rulesLimboPlayMode()) return false;
+  if (rulesCardPlayRestrictedClient(cardId)) return false;
+  const phaseId = currentPhaseUi().phase?.id;
+  if (card.type === "persistent_will") {
+    return phaseId === "end_actions" && !(rules.actionStack || []).length;
+  }
+  return rulesEphemeralPhasesClient(card).includes(phaseId);
+}
+
 function rulesActionPaymentDraft(source, card, encodedAbility) {
-  const isPrintedWill = ["hand", "suspended"].includes(source.zone)
+  const limboPlay = source.zone === "graveyard"
+    && ["ephemeral_will", "persistent_will"].includes(card?.type)
+    ? rulesLimboPlayMode() : null;
+  const isPrintedWill = (["hand", "suspended"].includes(source.zone) || Boolean(limboPlay))
     && ["ephemeral_will", "persistent_will"].includes(card?.type);
   const freeWillPermission = isPrintedWill && (latestState?.rulesEngine?.playPermissions || []).some((permission) => (
     permission.playerId === myPlayerId
@@ -3239,12 +3279,14 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
     && (permission.cardId === source.cardId || permission.anyWill)
     && Number(permission.turn || 0) === Number(latestState?.phaseTracker?.turn || 0)
   ));
-  const paymentRequirements = freeWillPermission
+  const paymentRequirements = limboPlay
+    ? (limboPlay === "free" ? {} : { hollow: 1 })
+    : freeWillPermission
     ? {}
     : encodedAbility && Object.hasOwn(encodedAbility, "tribute")
     ? printedTributeRequirements({ powerCost: encodedAbility.tribute })
     : isPrintedWill ? printedTributeRequirements(card) : {};
-  let reduction = (latestState?.battlefield || []).reduce((total, item) => {
+  let reduction = limboPlay ? 0 : (latestState?.battlefield || []).reduce((total, item) => {
     if ((item.controllerId || item.ownerId) !== myPlayerId || item.fieldZone !== "interzone") return total;
     return total + (passiveEffectsByCard.get(item.cardId) || [])
       .filter((effect) => effect.kind === "reduce_will_tribute")
@@ -3262,7 +3304,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
     paymentRequirements[payable] -= 1;
     reduction -= 1;
   }
-  if (isPrintedWill && !freeWillPermission && !(encodedAbility && Object.hasOwn(encodedAbility, "tribute"))) {
+  if (isPrintedWill && !limboPlay && !freeWillPermission && !(encodedAbility && Object.hasOwn(encodedAbility, "tribute"))) {
     const increase = (latestState?.battlefield || []).reduce((total, item) => (
       total + (passiveEffectsByCard.get(item.cardId) || [])
         .filter((effect) => effect.kind === "increase_will_tribute")
@@ -3467,7 +3509,7 @@ function buildRulesActionDraft(source, abilityOverride = undefined) {
         )) || null
     : source?.zone === "battlefield"
       ? (rulesActivatedAbilitiesForItem(sourceItem) || [])[0] || null
-      : ["hand", "suspended"].includes(source?.zone)
+      : ["hand", "suspended", "graveyard"].includes(source?.zone)
         ? (playedAbilitiesByCard.get(source.cardId) || [])[0] || null
         : null;
   if (encodedAbility?.tributeFromSourceCounter && source?.itemId) {
@@ -3577,7 +3619,7 @@ function openRulesActionPanel(source) {
   const hasEssenceCost = Object.keys(essenceCostRequirements || {}).length > 0;
   tributeFieldset.classList.toggle(
     "hidden",
-    source.zone === "hand" && !hasPrintedTribute && !hasEssenceCost,
+    ["hand", "graveyard"].includes(source.zone) && !hasPrintedTribute && !hasEssenceCost,
   );
   $("#rulesTributeSummary").classList.toggle(
     "hidden", !hasPrintedTribute && !hasEssenceCost,
@@ -7504,6 +7546,20 @@ function resolveDrop(ctx, clientX, clientY) {
     const logical = rotateForSeat((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
     const anchor = stackAnchorAt(clientX, clientY, null);
     const card = cardsById.get(ctx.cardId);
+    if (
+      latestState?.rulesEngine?.enabled
+      && ctx.fromZone === "graveyard"
+      && ctx.fromOwnerId === myPlayerId
+      && ["ephemeral_will", "persistent_will"].includes(card?.type)
+      && rulesLimboPlayMode()
+    ) {
+      beginRulesBoardAction({
+        cardId: ctx.cardId,
+        zone: "graveyard",
+        placement: { x: logical.x, y: logical.y },
+      });
+      return;
+    }
     if (latestState?.rulesEngine?.enabled && ctx.fromZone === "hand") {
       if (["ephemeral_will", "persistent_will"].includes(card?.type)) {
         beginRulesBoardAction({

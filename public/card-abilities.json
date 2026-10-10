@@ -4486,16 +4486,52 @@
   ],
   "lmx5uff1z53fo0g_en": [
     {
+      "id": "plays-first-manifestation-after-opponents",
+      "passiveEffect": {
+        "kind": "play_first_manifestation_after_opponents"
+      }
+    },
+    {
       "id": "immediate-stalemate-unless-opponent-pays",
-      "action": "play_card",
-      "immediate": true,
-      "targets": {
-        "min": 0,
-        "max": 0
+      "trigger": {
+        "event": "revelation"
       },
+      "immediate": true,
       "result": {
         "kind": "stalemate_unless_opponent_pays",
         "payment": "{H}{H}"
+      }
+    }
+  ],
+  "e1zg2gsn0tfqo1y_en": [
+    {
+      "id": "ergorath-play-wills-from-limbo",
+      "passiveEffect": {
+        "kind": "play_wills_from_limbo_hollow_tribute"
+      }
+    },
+    {
+      "id": "ergorath-interzone-penalty",
+      "trigger": {
+        "event": "end_of_turn",
+        "zone": "interzone"
+      },
+      "result": {
+        "kind": "lose_points_shuffle_source_into_deck"
+      }
+    }
+  ],
+  "b6ebpyb30urtas2_en": [
+    {
+      "id": "freenya-free-limbo-will",
+      "optional": true,
+      "trigger": {
+        "event": "card_played",
+        "eventController": "owner",
+        "playedFromZone": "hand"
+      },
+      "result": {
+        "kind": "grant_limbo_will_play"
       }
     }
   ]

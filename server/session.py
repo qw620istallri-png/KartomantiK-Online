@@ -1154,6 +1154,25 @@ class Session:
             )
             if permission_error:
                 return permission_error, None
+        elif zone == "graveyard" and kind == "play_card" and not as_support:
+            if metadata.get("type") not in RULES_WILL_TYPES:
+                return "Only a Will can be played from your Limbo this way.", None
+            if container_id != player_id or card_id not in self.players[player_id]["zones"]["graveyard"]:
+                return "This Will is not in your Limbo.", None
+            permission = next((
+                entry for entry in self.rules_engine.get("playPermissions") or []
+                if entry.get("playerId") == player_id
+                and entry.get("fromZone") == "graveyard"
+                and entry.get("anyWill") and entry.get("exileOnLeave")
+                and entry.get("turn") == self.phase_tracker["turn"]
+                and self.current_phase_id() in entry.get("phaseIds", [])
+            ), None)
+            limbo_hollow = any(
+                self.rules_item_controller_id(entry) == player_id
+                for entry in self.rules_active_passive_sources("play_wills_from_limbo_hollow_tribute")
+            )
+            if permission is None and not limbo_hollow:
+                return "You have no effect letting you play a Will from your Limbo.", None
         elif zone == "suspended":
             suspension = next((
                 entry for entry in self.rules_engine.get("suspendedCards") or []
@@ -1201,7 +1220,17 @@ class Session:
                 "permissionId": permission.get("id"),
                 "noTribute": bool(permission.get("noTribute")),
             })
-        if zone == "graveyard":
+        if zone == "graveyard" and not as_support:
+            clean_source.update({
+                "containerId": container_id,
+                "permissionId": permission.get("id") if permission else None,
+                "exileOnLeave": True,
+            })
+            if permission:
+                clean_source["noTribute"] = True
+            else:
+                clean_source["fixedTribute"] = {"hollow": 1}
+        elif zone == "graveyard":
             clean_source.update({
                 "containerId": container_id,
                 "permissionId": permission.get("id"),
@@ -1673,6 +1702,8 @@ class Session:
             "lock_next_turn_draws",
             "play_vessel_target_as_support",
             "grant_free_will_play",
+            "grant_limbo_will_play",
+            "lose_points_shuffle_source_into_deck",
             "take_last_opponent_support_to_vessel",
         }:
             clean = {"kind": kind}
@@ -2558,6 +2589,8 @@ class Session:
             return {}, False
         if source.get("noTribute"):
             return {}, True
+        if source.get("fixedTribute"):
+            return dict(source["fixedTribute"]), True
         metadata = self.card_rules.get(source.get("cardId"), {})
         if metadata.get("type") not in RULES_WILL_TYPES:
             return {}, True
@@ -3480,7 +3513,7 @@ class Session:
                 "asSupport": True, "fromZone": from_zone,
                 "enteredBattlefield": source.get("zone") != "battlefield",
             }
-        if source.get("zone") not in {"hand", "suspended"}:
+        if source.get("zone") not in {"hand", "suspended", "graveyard"}:
             return None
         if player is None or (not source_on_stack and card_id not in player["zones"]["hand"]):
             destination = "battlefield" if source.get("cardType") == "persistent_will" else "graveyard"
@@ -3498,6 +3531,8 @@ class Session:
                 "rarity": (self.players.get(owner_id) or {}).get("cardRarities", {}).get(card_id),
                 "stackedOn": None,
             }
+            if source.get("exileOnLeave"):
+                item["exileIfLeaves"] = True
             self.battlefield.append(item)
             self.transfer_rules_stack_protection(action, item)
             return {
@@ -3510,6 +3545,8 @@ class Session:
         destination = (action.get("ability") or {}).get(
             "resolveSourceTo"
         ) or "graveyard"
+        if source.get("exileOnLeave") and destination in {"graveyard", "hand", "deck"}:
+            destination = "exile"
         if source_on_stack:
             if owner_id is None or not self.put_zone_card(owner_id, destination, card_id, owner_id, "top"):
                 return {"status": "source_missing", "destination": destination}
@@ -3550,6 +3587,8 @@ class Session:
             return {"status": "source_missing", "destination": "graveyard"}
         if destination not in {"graveyard", "hand"}:
             destination = "graveyard"
+        if source.get("exileOnLeave"):
+            destination = "exile"
         if not self.put_zone_card(owner_id, destination, card_id, owner_id, "top"):
             return {"status": "source_missing", "destination": destination}
         return {
@@ -4991,6 +5030,12 @@ class Session:
             and self.rules_item_card_rules(item).get("vesselEntryRoll")
             and self.rules_item_effects_active(item)
         )
+        if (
+            item.get("exileIfLeaves")
+            and zone in {"graveyard", "hand", "deck"}
+            and not item.get("isCopy") and not item.get("isTokenCard")
+        ):
+            container_id, zone, position = item.get("ownerId"), "exile", "top"
         self.battlefield.remove(item)
         for other in self.battlefield:
             if other.get("stackedOn") == item.get("id"):
@@ -5034,6 +5079,12 @@ class Session:
 
     def _rules_remove_field_item_by_effect(self, item, container_id, zone,
                                            position="top", reason=None):
+        if (
+            item.get("exileIfLeaves")
+            and zone in {"graveyard", "hand", "deck"}
+            and not item.get("isCopy") and not item.get("isTokenCard")
+        ):
+            container_id, zone, position = item.get("ownerId"), "exile", "top"
         home_vessel = item.get("returnToVesselId")
         if (
             home_vessel in self.players
@@ -6181,6 +6232,13 @@ class Session:
                 if trigger.get("container") == "opponent" and container_id == owner_id:
                     continue
             if event == "enters_field_zone" and trigger.get("zone") != zone:
+                continue
+            if (
+                trigger.get("playedFromZone")
+                and isinstance(related_action, dict)
+                and (related_action.get("source") or {}).get("zone")
+                != trigger.get("playedFromZone")
+            ):
                 continue
             if trigger.get("firstWillOfTurn") and not first_will_of_turn:
                 continue
@@ -10797,6 +10855,37 @@ class Session:
                 "sourceCardId": (action.get("source") or {}).get("cardId"),
             })
             return {"kind": result.get("kind"), "status": "granted", "playerId": owner_id}
+        if result.get("kind") == "grant_limbo_will_play":
+            owner_id = (action.get("source") or {}).get("ownerId") or player_id
+            if owner_id not in self.players:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            self.rules_engine["playPermissions"].append({
+                "id": new_id(), "abilityId": (action.get("ability") or {}).get("id"),
+                "playerId": owner_id, "anyWill": True, "fromZone": "graveyard",
+                "phaseIds": [self.current_phase_id()], "asSupport": False,
+                "noTribute": True, "exileOnLeave": True,
+                "turn": self.phase_tracker["turn"],
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+            })
+            return {"kind": result.get("kind"), "status": "granted", "playerId": owner_id}
+        if result.get("kind") == "lose_points_shuffle_source_into_deck":
+            source_item = self.find_battlefield_item(
+                (action.get("source") or {}).get("itemId")
+            )
+            if source_item is None:
+                return {"kind": result.get("kind"), "status": "source_missing"}
+            delta = self.adjust_rules_score(
+                self.rules_item_controller_id(source_item), -10
+            )
+            owner_id = source_item.get("ownerId")
+            movement = self._rules_remove_field_item(source_item, owner_id, "deck", "top")
+            if owner_id in self.players:
+                random.shuffle(self.players[owner_id]["zones"]["deck"])
+            self.prune_rules_ongoing_effects()
+            return {
+                "kind": result.get("kind"), "status": movement.get("status"),
+                "delta": delta, "movement": movement,
+            }
         if result.get("kind") == "lose_excess_essence_or_points":
             value = int(result.get("value") or 0)
             outcomes = []
@@ -15051,6 +15140,14 @@ class Session:
         for item in self.battlefield:
             # the owner sees their own hidden cards; a trusted observer sees everything too
             can_peek = can_view_hidden or item["ownerId"] == viewer_id
+            if (
+                not can_peek and self.rules_engine["enabled"]
+                and item["id"] in (self.rules_engine.get("firstManifestationItemIds") or {}).values()
+                and item["ownerId"] in self.rules_engine["firstManifestationValidatedPlayerIds"]
+                and viewer_id in self.players and viewer_id != item["ownerId"]
+                and self.rules_plays_first_manifestation_after(viewer_id)
+            ):
+                can_peek = True  # Hermetic Hourglass: the opponent's First Manifestation is shown first
             if item["faceUp"] or can_peek:
                 card_id = item["cardId"]
             else:
@@ -15467,9 +15564,27 @@ class Session:
             and not self.rules_engine["firstManifestationComplete"]
         )
 
+    def rules_plays_first_manifestation_after(self, player_id):
+        """Hermetic Hourglass: its controller plays the First Manifestation after the opponent."""
+        sources = self.rules_active_passive_sources("play_first_manifestation_after_opponents")
+        mine = any(self.rules_item_controller_id(source) == player_id for source in sources)
+        theirs = any(self.rules_item_controller_id(source) != player_id for source in sources)
+        return mine and not theirs
+
+    def rules_first_manifestation_order_error(self, player_id):
+        if not self.rules_plays_first_manifestation_after(player_id):
+            return None
+        validated = self.rules_engine["firstManifestationValidatedPlayerIds"]
+        if any(pid != player_id and pid in validated for pid in self.players):
+            return None
+        return "Your Hermetic Hourglass makes you play after the opponent: wait for their validated First Manifestation."
+
     def register_first_manifestation(self, player_id, item):
         if not self.rules_first_manifestation_active():
             return None
+        order_error = self.rules_first_manifestation_order_error(player_id)
+        if order_error and not item.get("persistedFirst"):
+            return order_error
         if item.get("ownerId") != player_id or not self.rules_card_can_be_first_manifestation(item.get("cardId"), player_id):
             return "Your first play must be one of your Manifestations."
         selected = self.rules_engine["firstManifestationItemIds"]
@@ -15522,12 +15637,20 @@ class Session:
             )
             if opponent_confirmed:
                 return "The opponent has already validated their first Manifestation.", None
+            if any(
+                pid != player_id and self.rules_plays_first_manifestation_after(pid)
+                for pid in self.players
+            ):
+                return "Your opponent's Hermetic Hourglass lets them see your First Manifestation: it is locked in.", None
             if player_id in confirmed_players:
                 confirmed_players.remove(player_id)
             return None, {"validated": False, "revealed": False}
         item_id = self.rules_engine["firstManifestationItemIds"].get(player_id)
         if not item_id or not self.find_battlefield_item(item_id):
             return "Play a Manifestation face down before validating.", None
+        order_error = self.rules_first_manifestation_order_error(player_id)
+        if order_error:
+            return order_error, None
         if player_id not in confirmed_players:
             confirmed_players.append(player_id)
         player_ids = list(self.players)
