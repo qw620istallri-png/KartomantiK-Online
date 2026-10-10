@@ -2044,6 +2044,13 @@
       "trigger": {"event": "beginning_of_turn", "zone": "field", "sourceCounterMin": {"name": "Coil", "min": 10}},
       "targets": {"min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"]},
       "ongoingEffect": {"kind": "lose_effects", "duration": "until_end_of_turn"}
+    },
+    {
+      "id": "spend-coils-to-stalemate-own-manifestations",
+      "sourceZones": ["battlefield"],
+      "removeCountersFromSource": {"name": "Coil", "amount": 5},
+      "targets": {"min": 0, "max": 0},
+      "result": {"kind": "each_player_stalemate_own_confrontation"}
     }
   ],
   "m2l3v60n0iakrm2_en": [
@@ -3256,6 +3263,14 @@
       "id": "kox-gifts-opponents-on-entering-limbo",
       "trigger": { "event": "enters_limbo" },
       "result": { "kind": "score_each_opponent", "value": 50 }
+    },
+    {
+      "id": "kox-raises-construction-limit",
+      "passiveEffect": { "kind": "construction_limit_bonus", "value": 50 }
+    },
+    {
+      "id": "kox-cannot-enter-confrontation",
+      "passiveEffect": { "kind": "cannot_enter_confrontation" }
     }
   ],
   "nt0bixroxp0ftnk_en": [
@@ -3270,6 +3285,7 @@
     {
       "id": "censor-exiles-hand-manifestation-to-destroy",
       "action": "play_card",
+      "additionalCost": "exile_hand_manifestation",
       "targets": {
         "kind": "card", "min": 1, "max": 1, "cardType": "manifestation",
         "zones": ["battlefield"], "fieldZone": "confrontation"
@@ -3281,6 +3297,8 @@
     {
       "id": "martyrize-exiles-hand-manifestation-to-draw",
       "action": "play_card",
+      "additionalCost": "exile_hand_manifestation",
+      "resolveSourceTo": "exile",
       "targets": { "min": 0, "max": 0 },
       "result": { "kind": "hand_manifestation_choice", "destination": "exile", "drawByBasePower": true }
     }
@@ -3410,10 +3428,10 @@
   ],
   "dly528oj65qnznh_en": [
     {
-      "id": "lock-support-entries",
+      "id": "lock-support-entries-unless-opponent-pays",
       "action": "play_card",
       "targets": { "min": 0, "max": 0 },
-      "result": { "kind": "lock_support_entries", "scope": "all" }
+      "result": { "kind": "unless_opponent_payment_lock_support_entries", "payment": "{H}{H}" }
     }
   ]
 }

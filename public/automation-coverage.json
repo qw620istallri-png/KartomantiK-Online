@@ -3,12 +3,12 @@
   "summary": {
     "catalogCards": 450,
     "explicitCards": 274,
-    "explicitAbilities": 326,
+    "explicitAbilities": 329,
     "statuses": {
-      "automated": 333,
+      "automated": 339,
       "generic": 0,
       "manual": 111,
-      "partial": 6
+      "partial": 0
     }
   },
   "cards": {
@@ -2393,7 +2393,7 @@
       "collectionNumber": 155,
       "name": "Rogue Tadpole",
       "setName": "Beta",
-      "status": "partial",
+      "status": "automated",
       "abilityIds": [
         "tadpole-return-target-interzone-to-deck-top"
       ],
@@ -2402,8 +2402,10 @@
         "target:player",
         "trigger:wins_confrontation"
       ],
-      "testRefs": [],
-      "notes": "The owners' choice of the order in which their Interzone manifestations go back on top of their decks is not automated (the engine uses board order)."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "fw18tebi26jwiqb_en": {
       "collectionNumber": 156,
@@ -2844,19 +2846,23 @@
       "collectionNumber": 188,
       "name": "Atavic Volatility",
       "setName": "Beta",
-      "status": "partial",
+      "status": "automated",
       "abilityIds": [
         "coil-counter-on-own-yellow-card",
-        "disable-target-at-turn-start-with-ten-coils"
+        "disable-target-at-turn-start-with-ten-coils",
+        "spend-coils-to-stalemate-own-manifestations"
       ],
       "mechanics": [
         "ongoing:lose_effects",
         "result:add_counter_source",
+        "result:each_player_stalemate_own_confrontation",
         "trigger:beginning_of_turn",
         "trigger:card_played"
       ],
-      "testRefs": [],
-      "notes": "The effect that makes each player put one of their Confrontation Manifestations into stalemate is not automated."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "43faoiy4cmoxmaw_en": {
       "collectionNumber": 189,
@@ -3748,20 +3754,25 @@
       "collectionNumber": 248,
       "name": "Kox, the Amoral",
       "setName": "Beta",
-      "status": "partial",
+      "status": "automated",
       "abilityIds": [
         "kox-gifts-opponents-on-entering-field",
-        "kox-gifts-opponents-on-entering-limbo"
+        "kox-gifts-opponents-on-entering-limbo",
+        "kox-raises-construction-limit",
+        "kox-cannot-enter-confrontation"
       ],
       "mechanics": [
+        "first-restriction",
+        "passive:cannot_enter_confrontation",
+        "passive:construction_limit_bonus",
         "result:score_each_opponent",
         "trigger:enters_field",
         "trigger:enters_limbo"
       ],
       "testRefs": [
-        "tests/test_game_state.py"
-      ],
-      "notes": "The 50 points given to opponents when Kox enters the field or the Limbo are automated; the construction limit bonus and the ban on entering the Confrontation Zone are not."
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "9d2y8uy9ut7omyo_en": {
       "collectionNumber": 249,
@@ -4218,23 +4229,23 @@
       "collectionNumber": 279,
       "name": "Duel Honorably",
       "setName": "Beta",
-      "status": "partial",
+      "status": "automated",
       "abilityIds": [
-        "lock-support-entries"
+        "lock-support-entries-unless-opponent-pays"
       ],
       "mechanics": [
-        "result:lock_support_entries"
+        "result:unless_opponent_payment_lock_support_entries"
       ],
       "testRefs": [
-        "tests/test_game_state.py"
-      ],
-      "notes": "The Support-entry lock is automated; the option for any player to pay {H}{H} while the Will is on the Stack to neutralize it is not."
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "op83bq67vaf368q_en": {
       "collectionNumber": 280,
       "name": "Censor",
       "setName": "Beta",
-      "status": "partial",
+      "status": "automated",
       "abilityIds": [
         "censor-exiles-hand-manifestation-to-destroy"
       ],
@@ -4243,9 +4254,9 @@
         "target:card"
       ],
       "testRefs": [
-        "tests/test_game_state.py"
-      ],
-      "notes": "The revealed-and-exiled Manifestation is chosen when the Will resolves instead of as an additional cost, and the target's legality is checked then."
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "zni76s4aabicqag_en": {
       "collectionNumber": 281,
@@ -4299,7 +4310,7 @@
       "collectionNumber": 284,
       "name": "Martyrize",
       "setName": "Beta",
-      "status": "partial",
+      "status": "automated",
       "abilityIds": [
         "martyrize-exiles-hand-manifestation-to-draw"
       ],
@@ -4307,9 +4318,9 @@
         "result:hand_manifestation_choice"
       ],
       "testRefs": [
-        "tests/test_game_state.py"
-      ],
-      "notes": "The exiled Manifestation is chosen when the Will resolves instead of as an additional cost, and the Will itself is not exiled afterwards."
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "ey6fuk5gguasrb0_en": {
       "collectionNumber": 285,

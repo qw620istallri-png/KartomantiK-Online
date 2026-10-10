@@ -277,6 +277,11 @@ class CardCatalogTests(unittest.TestCase):
             "kind": "opponent_vessel_score", "value": 10,
         })
         self.assertTrue(world_spore["canBeFirstManifestation"])
+        by_name = {card["name"]: rules[card["id"]] for card in cards}
+        self.assertTrue(by_name["Kox, the Amoral"]["cannotEnterConfrontation"])
+        self.assertFalse(by_name["Kox, the Amoral"]["canBeFirstManifestation"])
+        self.assertEqual(by_name["Kox, the Amoral"]["constructionLimitBonus"], 50)
+        self.assertFalse(by_name["Zizek, the Immolated"]["cannotEnterConfrontation"])
         self.assertEqual(jondo["supportWinDestination"], "exile")
         self.assertEqual(chiff["supportFromHandCondition"], {
             "kind": "opponent_support_from_interzone_this_turn",

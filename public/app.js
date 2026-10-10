@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261010-rules-beta-103";
+const STATIC_ASSET_VERSION = "20261010-rules-beta-104";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -851,12 +851,20 @@ function deckImportPoints(cardIds) {
   return cardIds.reduce((total, cardId) => total + (Number(cardsById.get(cardId)?.points) || 0), 0);
 }
 
+function deckImportPointLimit(cardIds) {
+  return 500 + cardIds.reduce((total, cardId) => {
+    const match = /construction limit is increased by (\d+) points/i.exec(cardsById.get(cardId)?.effect || "");
+    return total + (match ? Number(match[1]) : 0);
+  }, 0);
+}
+
 function deckImportValidation(pending = pendingDeckImport) {
   if (!pending) return { valid: false, message: t("deckMissing") };
   const errors = [];
   if (pending.mainIds.length !== 30) errors.push(rulesText("deckCountInvalid", { count: pending.mainIds.length }));
   const points = deckImportPoints(pending.mainIds);
-  if (points > 500) errors.push(rulesText("deckPointsInvalid", { points }));
+  const pointLimit = deckImportPointLimit(pending.mainIds);
+  if (points > pointLimit) errors.push(rulesText("deckPointsInvalid", { points, limit: pointLimit }));
   if (pending.sideboardIds.length > 6) errors.push(rulesText("sideboardCountInvalid", { count: pending.sideboardIds.length }));
   const overlap = pending.mainIds.filter((cardId) => pending.sideboardIds.includes(cardId));
   if (overlap.length) errors.push(t("deckSideboardOverlap"));
@@ -910,10 +918,11 @@ function renderSideboardEditor() {
   if (!pendingDeckImport) return;
   const points = deckImportPoints(pendingDeckImport.mainIds);
   const validCount = pendingDeckImport.mainIds.length === 30;
-  const validPoints = points <= 500;
+  const pointLimit = deckImportPointLimit(pendingDeckImport.mainIds);
+  const validPoints = points <= pointLimit;
   $("#sideboardDeckHeading").textContent = t("deckPool");
   $("#sideboardPoolHeading").textContent = t("sideboard");
-  $("#sideboardDeckStats").innerHTML = `<strong class="${validCount ? "valid" : "invalid"}">${pendingDeckImport.mainIds.length}/30 ${esc(t("cards"))}</strong><strong class="${validPoints ? "valid" : "invalid"}">${points}/500 ${esc(t("points"))}</strong>`;
+  $("#sideboardDeckStats").innerHTML = `<strong class="${validCount ? "valid" : "invalid"}">${pendingDeckImport.mainIds.length}/30 ${esc(t("cards"))}</strong><strong class="${validPoints ? "valid" : "invalid"}">${points}/${pointLimit} ${esc(t("points"))}</strong>`;
   $("#sideboardPoolStats").innerHTML = `<strong class="${pendingDeckImport.sideboardIds.length > 6 ? "warning" : ""}">${pendingDeckImport.sideboardIds.length}/6 ${esc(t("cards"))}</strong>`;
   $("#sideboardDeckCards").innerHTML = pendingDeckImport.mainIds.map((cardId) => sideboardCardMarkup(cardId, "deck")).join("");
   $("#sideboardPoolCards").innerHTML = pendingDeckImport.sideboardIds.map((cardId) => sideboardCardMarkup(cardId, "sideboard")).join("");
@@ -2425,6 +2434,7 @@ function submitRulesBoardFlow(target = null) {
     paymentCardIds: rulesBoardSelectedPayments(flow),
     extraEssenceCount: Number(flow.extraEssenceCount || 0),
   };
+  if (flow.costCardId) payload.costCardId = flow.costCardId;
   if (flow.draft.encodedAbility?.id) payload.abilityId = flow.draft.encodedAbility.id;
   if (flow.source.placement) payload.placement = flow.source.placement;
   send(payload);
@@ -2520,6 +2530,11 @@ function armRulesBoardTargets(flow) {
 function advanceRulesBoardFlow() {
   const flow = pendingRulesBoardFlow;
   if (!flow) return;
+  if (flow.draft.encodedAbility?.additionalCost && !flow.costCardId) {
+    flow.stage = "cost_card";
+    renderRulesBoardFlow();
+    return;
+  }
   if (
     flow.draft.optionalExtraEssenceMax > 0
     && !flow.extraEssenceConfirmed
@@ -2740,6 +2755,37 @@ function renderRulesBoardFlow() {
     $("#rulesFlowCost").innerHTML = `${sourceCost}
       <div class="rules-flow-cost-row"><span>${esc(t("rulesEssenceUsed"))}</span>${rulesTributeUnitsHtml(essence, t("rulesNoEssenceUsed"))}</div>
       <div class="rules-flow-cost-row"><span>${esc(t("rulesTributeRemaining"))}</span>${rulesTributeUnitsHtml(remaining, t("rulesCoveredByEssence"))}</div>`;
+    clearRulesBoardTargets();
+    return;
+  }
+
+  if (flow.stage === "cost_card") {
+    const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
+    let skippedSource = false;
+    const choices = hand.filter((cardId) => {
+      if (!skippedSource && flow.source.zone === "hand" && cardId === flow.source.cardId) {
+        skippedSource = true;
+        return false;
+      }
+      return cardsById.get(cardId)?.type === "manifestation";
+    });
+    $("#rulesBoardEssence").classList.add("hidden");
+    $("#rulesFlowInstruction").textContent = t(
+      choices.length ? "rulesCostCardInstruction" : "rulesCostCardNone",
+    );
+    $("#rulesFlowCost").innerHTML = `<div class="rules-flow-cost-row rules-cost-card-row">${
+      choices.map((cardId, index) => `
+        <button type="button" class="rules-choice-card" data-rules-cost-card="${esc(cardId)}" data-index="${index}" title="${esc(cardName(cardId))}">
+          <img src="${esc(cardImage(cardId))}" alt="">
+          <span>${esc(cardName(cardId))}</span>
+        </button>`).join("")
+    }</div>`;
+    $$("[data-rules-cost-card]").forEach((button) => {
+      button.onclick = () => {
+        flow.costCardId = button.dataset.rulesCostCard;
+        advanceRulesBoardFlow();
+      };
+    });
     clearRulesBoardTargets();
     return;
   }
@@ -3299,6 +3345,7 @@ function rulesInitialActionStage(draft) {
     Object.values(draft.essencePlan.remaining)
       .some((amount) => amount > 0)
   ) return "payment";
+  if (draft.encodedAbility?.additionalCost) return "cost_card";
   if (draft.optionalExtraEssenceMax > 0) return "extra_essence";
   return "target";
 }
@@ -6657,6 +6704,30 @@ function renderRulesChoice() {
     panel.classList.remove("hidden");
     return;
   }
+  if (choice.kind === "pick_own_item") {
+    $("#rulesChoiceHeading").textContent = t("rulesPickOwnItemHeading");
+    $("#rulesChoiceText").textContent = t("rulesPickOwnItemText");
+    const candidates = (choice.candidateItemIds || [])
+      .map((itemId) => latestState?.battlefield?.find((item) => item.id === itemId))
+      .filter(Boolean);
+    options.innerHTML = candidates.map((item) => `
+      <button type="button" class="rules-choice-card" data-rules-pick-item="${esc(item.id)}" title="${esc(cardName(item.cardId))}">
+        <img src="${esc(cardImage(item.cardId))}" alt="">
+        <span>${esc(cardName(item.cardId))}</span>
+      </button>`).join("");
+    $$("[data-rules-pick-item]").forEach((button) => {
+      button.onclick = () => {
+        button.disabled = true;
+        send({
+          type: "resolve_rules_choice",
+          choiceId: choice.id,
+          itemId: button.dataset.rulesPickItem,
+        });
+      };
+    });
+    panel.classList.remove("hidden");
+    return;
+  }
   if (choice.kind === "effect_memory_return") {
     $("#rulesChoiceHeading").textContent = t("rulesMemoryReturnHeading");
     $("#rulesChoiceText").textContent = rulesText("rulesMemoryReturnText", {
@@ -9141,6 +9212,9 @@ function formatLogEntry(e, options = {}) {
         { player: ownerName(d.playerId), card: card(d.cardId) },
         ["card"],
       );
+      if (d.kind === "pick_own_item") return f("logRulesPickOwnItem", {
+        player: ownerName(d.playerId),
+      });
       if (d.kind === "immediate_effect_payment") return f(
         d.status === "paid"
           ? "logRulesImmediatePaymentPaid"

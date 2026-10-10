@@ -10395,9 +10395,14 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertEqual(zones, {"a": "stalemate", "b": "stalemate", "c": "interzone"})
         self.assertTrue(session.rules_support_entry_locked("p1"))
         self.assertTrue(session.rules_support_entry_locked("p2"))
-        # Duel Honorably only locks Support entries.
+        # Duel Honorably locks Support entries unless the opponent pays {H}{H}.
         session.rules_engine["supportLocks"] = []
         self.run_ability(session, duel)
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual((choice["kind"], choice["playerId"], choice["payment"]), ("effect_payment", "p2", "{H}{H}"))
+        self.assertFalse(session.rules_support_entry_locked("p2"))
+        error, result = session.resolve_rules_choice("p2", choice["id"], option="decline")
+        self.assertIsNone(error)
         self.assertTrue(session.rules_support_entry_locked("p2"))
         # Static Scuttler stalemates the winner's Confrontation Manifestations and freezes them.
         session.rules_engine["supportLocks"] = []
@@ -10415,6 +10420,100 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertIn("cannot change zone", session.set_rules_field_zone("p2", "w1", "confrontation")[0])
         session.phase_tracker["turn"] += 1
         self.assertFalse(session.rules_item_zone_locked(frozen))
+
+    def test_manual_lot_eleven_partials_become_complete(self):
+        kox, censor, martyrize, tadpole, volatility = (
+            "40lqhpf5xr5v5sk_en", "op83bq67vaf368q_en", "3gqrmx5jegwz8kb_en",
+            "uycbbilf0zlttb9_en", "rqvzo3iji2a1l65_en",
+        )
+        session, p1, p2 = self.manual_batch_session(kox, tadpole, volatility, card_type="manifestation")
+        # Kox: +50 construction limit and never enters the Confrontation Zone.
+        session.card_rules[kox]["cannotEnterConfrontation"] = True
+        session.card_rules[kox]["constructionLimitBonus"] = 50
+        item = self.field_item("kox", "p1", kox, field_zone="interzone", supportUntilTurn=session.phase_tracker["turn"])
+        session.battlefield = [item]
+        self.assertFalse(session.rules_card_can_enter_support(item))
+        self.assertIn("cannot enter", session.rules_support_from_hand_error("p1", kox) or "")
+        self.assertEqual(session.rules_deck_limit_bonus([kox, "m-1"]), 50)
+        points = {f"c-{index}": 17 for index in range(30)}
+        deck = list(points)
+        self.assertIn("500 points", validate_tournament_deck(deck, [], points) or "")
+        self.assertIsNone(validate_tournament_deck(deck, [], points, limit_bonus=50))
+        # Martyrize / Censor: the exiled hand Manifestation is an additional cost paid on declaration.
+        for cid, ability_id in ((martyrize, "martyrize-exiles-hand-manifestation-to-draw"), (censor, "censor-exiles-hand-manifestation-to-destroy")):
+            ability = next(a for a in self.ABILITIES[cid] if a["id"] == ability_id)
+            session.card_rules[cid] = {"type": "ephemeral_will", "cost": 0, "playedAbilities": [ability], "temperaments": []}
+        self.assertEqual(self.ABILITIES[martyrize][0]["resolveSourceTo"], "exile")
+        session.card_rules["m-big"] = {"type": "manifestation", "power": 3, "temperaments": ["phlegmatic"]}
+        session.card_rules["m-small"] = {"type": "manifestation", "power": 1, "temperaments": ["phlegmatic"]}
+        session.battlefield = [self.field_item("victim", "p2", "m-1", power=None)]
+        session.card_rules["m-1"] = {"type": "manifestation", "power": 2, "temperaments": ["phlegmatic"]}
+        self.put(p1, "hand", [martyrize, censor, "m-big", "m-small"])
+        self.put(p1, "deck", [f"d-{i}" for i in range(6)])
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, _action = session.declare_rules_action(
+            "p1", "Martyrize", kind="play_card", source={"cardId": martyrize, "zone": "hand"},
+            ability_id="martyrize-exiles-hand-manifestation-to-draw",
+        )
+        self.assertIn("Choose the Manifestation", error)
+        error, action = session.declare_rules_action(
+            "p1", "Martyrize", kind="play_card", source={"cardId": martyrize, "zone": "hand"},
+            ability_id="martyrize-exiles-hand-manifestation-to-draw", cost_card_id="m-big",
+        )
+        self.assertIsNone(error)
+        self.assertEqual(action["cost"]["revealedCard"]["power"], 3)
+        self.assertIn("m-big", p1["zones"]["exile"])
+        self.assertNotIn("m-big", p1["zones"]["hand"])
+        session.pass_rules_priority("p2")
+        error, resolution = session.pass_rules_priority("p1")
+        self.assertIsNone(error)
+        self.assertEqual(len(p1["zones"]["deck"]), 3)
+        self.assertIn(martyrize, p1["zones"]["exile"])
+        # Censor destroys only a target whose base power does not exceed the revealed card.
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, action = session.declare_rules_action(
+            "p1", "Censor", kind="play_card", source={"cardId": censor, "zone": "hand"},
+            ability_id="censor-exiles-hand-manifestation-to-destroy", cost_card_id="m-small",
+            targets=[self.card_target("victim", "m-1")],
+        )
+        self.assertIsNone(error, error)
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        self.assertIsNotNone(session.find_battlefield_item("victim"))
+        # Rogue Tadpole: each owner orders their own returned Manifestations.
+        session.rules_engine["pendingChoice"] = None
+        session.battlefield = [
+            self.field_item("i1", "p2", "m-2", field_zone="interzone", controllerId="p2"),
+            self.field_item("i2", "p2", "m-3", field_zone="interzone", controllerId="p2"),
+        ]
+        self.put(p2, "deck", ["e-1"])
+        payload = self.run_ability_at(session, tadpole, 0, targets=[{"kind": "player", "playerId": "p2"}], source={"itemId": "tad"})
+        self.assertEqual((payload["kind"], payload["choiceKind"], payload["playerId"]), ("choice_required", "deck_reorder", "p2"))
+        choice = session.rules_engine["pendingChoice"]
+        cards = choice["groups"][0]["cardIds"]
+        self.assertEqual(sorted(cards), ["m-2", "m-3"])
+        error, _result = session.resolve_rules_choice(
+            "p2", choice["id"],
+            option={"groups": [{"playerId": "p2", "top": ["m-3", "m-2"], "bottom": []}]},
+        )
+        self.assertIsNone(error)
+        self.assertEqual(p2["zones"]["deck"][:3], ["m-3", "m-2", "e-1"])
+        # Atavic Volatility: each player chooses which of their Confrontation Manifestations is stalemated.
+        session.rules_engine["pendingChoice"] = None
+        session.battlefield = [
+            self.field_item("a1", "p1", "m-4"), self.field_item("a2", "p1", "m-5"),
+            self.field_item("b1", "p2", "m-6"),
+        ]
+        payload = self.run_ability_at(session, volatility, 2, source={"itemId": "vol"})
+        self.assertEqual((payload["choiceKind"], payload["playerId"]), ("pick_own_item", "p1"))
+        self.assertEqual(session.find_battlefield_item("b1")["fieldZone"], "stalemate")
+        choice = session.rules_engine["pendingChoice"]
+        error, result = session.resolve_rules_choice("p1", choice["id"], item_id="a2")
+        self.assertIsNone(error)
+        self.assertEqual(session.find_battlefield_item("a2")["fieldZone"], "stalemate")
+        self.assertEqual(session.find_battlefield_item("a1")["fieldZone"], "confrontation")
+        self.assertIsNone(session.rules_engine["pendingChoice"])
 
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"

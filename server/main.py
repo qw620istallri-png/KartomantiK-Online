@@ -186,7 +186,17 @@ def build_card_rules(cards, abilities_by_card):
                 in (card.get("effect") or "")
                 and "If BOB reaches 11 power or more" in (card.get("effect") or "")
             ) else {}),
-            "canBeFirstManifestation": "Cannot be played as First Manifestation" not in (card.get("effect") or ""),
+            "canBeFirstManifestation": (
+                "Cannot be played as First Manifestation" not in (card.get("effect") or "")
+                and not re.search(r"\bcannot enter the Confrontation Zone\s*\.", card.get("effect") or "", re.IGNORECASE)
+            ),
+            "cannotEnterConfrontation": bool(re.search(
+                r"\bcannot enter the Confrontation Zone\s*\.", card.get("effect") or "", re.IGNORECASE
+            )),
+            "constructionLimitBonus": int(next(iter(re.findall(
+                r"construction limit is increased by (\d+) points",
+                card.get("effect") or "", re.IGNORECASE,
+            )), 0)),
             "canPayTribute": not re.search(
                 r"^Cannot be used (?:to pay tributes|as tribute)\.?",
                 card.get("effect") or "",
@@ -722,6 +732,10 @@ async def handle_message(ws, info, data):
                 card_ids, sideboard_ids, CARD_POINTS,
                 session.tournament_policy if session.ban_list_enabled else None,
                 CARD_LABELS,
+                limit_bonus=sum(
+                    int(CARD_RULES.get(card_id, {}).get("constructionLimitBonus") or 0)
+                    for card_id in card_ids
+                ),
             )
             if validation_error:
                 return await send_error(ws, validation_error)
@@ -1692,6 +1706,7 @@ async def handle_message(ws, info, data):
             placement=data.get("placement"),
             as_support=data.get("asSupport", False),
             extra_essence_count=data.get("extraEssenceCount"),
+            cost_card_id=data.get("costCardId"),
         )
         if error:
             return await send_error(ws, error)

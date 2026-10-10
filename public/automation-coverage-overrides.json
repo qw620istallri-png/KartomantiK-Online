@@ -110,8 +110,11 @@
       ]
     },
     "rqvzo3iji2a1l65_en": {
-      "status": "partial",
-      "notes": "The effect that makes each player put one of their Confrontation Manifestations into stalemate is not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "nupb1i59d98g3md_en": {
       "status": "automated",
@@ -1856,8 +1859,11 @@
       ]
     },
     "uycbbilf0zlttb9_en": {
-      "status": "partial",
-      "notes": "The owners' choice of the order in which their Interzone manifestations go back on top of their decks is not automated (the engine uses board order)."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "5xurdeiiyq7kgir_en": {
       "status": "automated",
@@ -2266,10 +2272,10 @@
       ]
     },
     "40lqhpf5xr5v5sk_en": {
-      "status": "partial",
-      "notes": "The 50 points given to opponents when Kox enters the field or the Limbo are automated; the construction limit bonus and the ban on entering the Confrontation Zone are not.",
+      "status": "automated",
       "testRefs": [
-        "tests/test_game_state.py"
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
       ]
     },
     "nt0bixroxp0ftnk_en": {
@@ -2294,17 +2300,17 @@
       ]
     },
     "op83bq67vaf368q_en": {
-      "status": "partial",
-      "notes": "The revealed-and-exiled Manifestation is chosen when the Will resolves instead of as an additional cost, and the target's legality is checked then.",
+      "status": "automated",
       "testRefs": [
-        "tests/test_game_state.py"
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
       ]
     },
     "3gqrmx5jegwz8kb_en": {
-      "status": "partial",
-      "notes": "The exiled Manifestation is chosen when the Will resolves instead of as an additional cost, and the Will itself is not exiled afterwards.",
+      "status": "automated",
       "testRefs": [
-        "tests/test_game_state.py"
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
       ]
     },
     "oftdgsrobaqgst7_en": {
@@ -2392,10 +2398,10 @@
       ]
     },
     "dly528oj65qnznh_en": {
-      "status": "partial",
-      "notes": "The Support-entry lock is automated; the option for any player to pay {H}{H} while the Will is on the Stack to neutralize it is not.",
+      "status": "automated",
       "testRefs": [
-        "tests/test_game_state.py"
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
       ]
     }
   }

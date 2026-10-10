@@ -748,7 +748,15 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 - Thornmaster : nouveau champ de capacité `useLimit` (nombre maximal d'utilisations par carte sur le champ, suivi dans `item.abilityUses`) ; perdre 5 points ajoute un compteur de puissance, 5 fois au plus.
 - Cognitive Fog : passif `increase_will_tribute` ; `rules_tribute_requirements` (serveur) et `rulesActionPaymentDraft` (client) ajoutent une Essence Vide à toutes les Volontés imprimées, quel que soit leur contrôleur.
 - Résultat `stalemate_confrontation` (`scope` : `all` ou `winner`, `lockZone`, `lockSupportEntries`) : Pin Down met toute la Zone de Confrontation en Stalemate et verrouille les entrées en Support ; Static Scuttler (perte) met en Stalemate les manifestations du gagnant. `lockZone` pose `zoneLockTurn` : l'objet ne retourne pas en Interzone au nettoyage, ne peut pas entrer en Support et n'est pas déplaçable par `move_target` jusqu'à la fin du tour (`rules_item_zone_locked`).
-- Duel Honorably (partiel) : verrou des entrées en Support automatisé (Volonté jouable avant la Révélation) ; la neutralisation en payant {H}{H} depuis la Pile reste manuelle.
+- Duel Honorably (partiel, complété au lot 11) : verrou des entrées en Support automatisé (Volonté jouable avant la Révélation) ; la neutralisation en payant {H}{H} depuis la Pile reste manuelle.
+
+### Lot 11 (les six cartes partielles)
+
+- Kox : texte « cannot enter the Confrontation Zone. » → drapeau `cannotEnterConfrontation` (refusé en Première Manifestation, en Support et depuis la main) ; « construction limit is increased by N points » → `constructionLimitBonus`, lu par `validate_tournament_deck(limit_bonus=…)` (serveur) et `deckImportPointLimit` (client). Passifs `construction_limit_bonus` et `cannot_enter_confrontation` dans `card-abilities.json` pour le registre.
+- Censor et Martyrize : champ de capacité `additionalCost: "exile_hand_manifestation"`. `declare_rules_action(cost_card_id=…)` valide la Manifestation de la main (étape client `cost_card`, champ `costCardId`), l'exile à la déclaration (`action.cost.revealedCard`) ; la résolution (`hand_manifestation_choice`) utilise cette carte : Censor détruit la cible si sa puissance de base est ≤ celle de la carte révélée, Martyrize pioche autant puis s'exile (`resolveSourceTo: "exile"`).
+- Rogue Tadpole : après le retour des Manifestations de l'Interzone sur le dessus des decks, chaque propriétaire ayant au moins deux cartes ordonne les siennes (choix `deck_reorder` enchaîné via `_queue`, `rules_next_deck_order_choice`).
+- Atavic Volatility : capacité activée « retirer 5 compteurs Coil » → résultat `each_player_stalemate_own_confrontation` ; chaque joueur ayant plusieurs Manifestations en Confrontation choisit la sienne (choix `pick_own_item`, un joueur après l'autre).
+- Duel Honorably : résultat `unless_opponent_payment_lock_support_entries` (choix `effect_payment` pour l'adversaire : payer {H}{H} neutralise le verrou du Support, refuser l'applique). Le paiement est demandé à la résolution, ce qui revient au même qu'un paiement pendant que la Volonté est sur la Pile puisque personne d'autre ne peut agir entre-temps.
 
 ### Langage visuel des actions automatisées
 
