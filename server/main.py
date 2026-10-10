@@ -226,6 +226,11 @@ def build_card_rules(cards, abilities_by_card):
             "supportFromInterzone": bool(
                 re.search(r"^Support[.;]", card.get("effect") or "")
             ),
+            "supportFromStalemate": bool(re.search(
+                r"can enter in Support from the Stalemate Zone",
+                card.get("effect") or "",
+                re.IGNORECASE,
+            )),
             "playOnlyEmptyStack": (
                 "can only be played while the Stack is empty"
                 in (card.get("effect") or "")

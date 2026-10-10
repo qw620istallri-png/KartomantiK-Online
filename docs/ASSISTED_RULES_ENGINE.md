@@ -710,7 +710,7 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 - Qu Lom : mémoire de fin de tour avec jet (pair : main, impair : exil). Loop : mémoire optionnelle, ignorée si le contrôleur n'a pas perdu la confrontation du tour.
 - Explosive Rancor, Punitive Tripod (puissance fixée à 1 via `power_set_maximum`), Sacred Mountain, Drain the Substance (retire toutes les essences en excès).
 - Stampeding Brood : tokens `fieldZone: interzone` (non perdus à la Résolution).
-- Referen-Doom (partiel) : l'exil de Volontés du Limbo est automatisé, pas les essences arc-en-ciel gagnées en cas de défaite.
+- Referen-Doom : l'exil de Volontés du Limbo et les essences arc-en-ciel gagnées en cas de défaite sont automatisés.
 
 ### Lot 5 (scores de fin de partie, perte vers l'Interzone du propriétaire)
 
@@ -735,3 +735,9 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 - Passif `conditional_support` (dans `card-abilities.json`) → flag `supportCondition` lu par `rules_card_can_enter_support` : `lost_previous_confrontation` (Twin-headed Druid, via `confrontationLosses` par tour), `limbo_exit_this_turn` (Mourning Offal, via `limboExitTurn` mis à jour dans `take_zone_card`), `five_wills_in_limbo` (Artificial Thinker, +2 puissance en Confrontation via la règle continue `self_in_confrontation_with_five_limbo_wills`).
 - `serialize_for` publie `canEnterSupport` sur les objets de l'Interzone : le menu client « Jouer en Support » s'appuie dessus (au lieu du seul cas Inert Anchorstone).
 - Nouvel évènement observé `manifestation_entered_limbo` (Otranth retire un compteur Shackle ; Support à zéro ; dans l'Interzone au début du tour : -10 points et compteurs restaurés via `restore_source_counter`).
+
+### Lot 9 (résultats de confrontation et Support depuis Stalemate)
+
+- Venerable Viper cible un adversaire à sa défaite : seules les manifestations déjà présentes dans son Interzone perdent leurs effets et deviennent non remplaçables jusqu'à la fin du prochain tour.
+- Referen-Doom crée à sa défaite autant d'essences arc-en-ciel que sa puissance actuelle au moment de la résolution.
+- Nubilung peut être joué en Support depuis Stalemate en passant par la Pile. Son origine est conservée pendant la résolution, ce qui déclenche son +2 temporaire jusqu'à la Résolution ; une victoire en Support l'exile via la règle générique `supportWinDestination`.

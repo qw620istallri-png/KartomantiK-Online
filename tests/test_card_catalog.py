@@ -1048,6 +1048,43 @@ class CardCatalogTests(unittest.TestCase):
             "stack_item",
         )
 
+    def test_stalemate_and_confrontation_outcome_batch_compiles(self):
+        cards = load_server_catalog()
+        abilities = json.loads(
+            (ROOT / "public" / "card-abilities.json").read_text(
+                encoding="utf-8"
+            )
+        )
+        rules = build_server_rules(cards, abilities)
+
+        nubilung = rules["inner-deserts-076"]
+        self.assertTrue(nubilung["supportFromStalemate"])
+        self.assertEqual(nubilung["supportWinDestination"], "exile")
+        self.assertFalse(nubilung["canBeFirstManifestation"])
+
+        viper = abilities["3gy8gbbbmamc8d0_en"][0]
+        self.assertEqual(viper["trigger"]["event"], "loses_confrontation")
+        self.assertEqual(viper["targets"]["controller"], "opponent")
+        self.assertEqual(
+            viper["ongoingEffect"],
+            {
+                "kind": "interzone_lock",
+                "duration": "until_end_of_next_turn",
+                "scope": "target_player_manifestations_in_interzone",
+            },
+        )
+
+        referen = next(
+            entry for entry in abilities["inner-deserts-038"]
+            if entry["id"] == "referen-doom-gains-rainbow-essence-on-loss"
+        )
+        self.assertEqual(referen["result"]["perCount"], "source_current_power")
+        self.assertEqual(referen["result"]["temperament"], "transcendent")
+
+        nubilung_ability = abilities["inner-deserts-076"][0]
+        self.assertEqual(nubilung_ability["trigger"]["enteredFromZone"], "stalemate")
+        self.assertEqual(nubilung_ability["ongoingEffect"]["duration"], "until_resolution")
+
     def test_destroy_uses_field_zone_specific_targeting(self):
         abilities = json.loads(
             (ROOT / "public" / "card-abilities.json").read_text(

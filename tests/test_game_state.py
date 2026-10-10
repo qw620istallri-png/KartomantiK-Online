@@ -1284,7 +1284,7 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertIsNotNone(restored)
         self.assertTrue(restored["isSupport"])
         self.assertEqual(restored["fieldZone"], "confrontation")
-        self.assertEqual(resolution["action"]["sourceResolution"]["fromZone"], "battlefield")
+        self.assertEqual(resolution["action"]["sourceResolution"]["fromZone"], "interzone")
         self.assertEqual(session.rules_engine["priorityPlayerId"], "p1")
 
     def test_reset_returns_an_unresolved_stack_source_to_its_owner_hand(self):
@@ -11106,6 +11106,119 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         with patch("session.random.randint", return_value=4):
             result = session.apply_rules_action_result(actions[0])
         self.assertEqual((result["status"], source["fieldZone"]), ("unchanged", "confrontation"))
+
+    def test_venerable_viper_locks_current_opponent_interzone_until_next_turn_ends(self):
+        viper_id = "3gy8gbbbmamc8d0_en"
+        session, _p1, _p2 = self.make_session(viper_id)
+        viper = self.field_item("viper", "p1", viper_id)
+        locked_a = self.field_item("locked-a", "p2", "m-1", field_zone="interzone")
+        locked_b = self.field_item("locked-b", "p2", "m-2", field_zone="interzone")
+        friendly = self.field_item("friendly", "p1", "m-3", field_zone="interzone")
+        session.battlefield = [viper, locked_a, locked_b, friendly]
+        ability = self.ABILITIES[viper_id][0]
+        action = {
+            "id": "viper-loss", "controllerId": "p1",
+            "source": {"cardId": viper_id, "itemId": viper["id"]},
+            "targets": [{"kind": "player", "playerId": "p2"}],
+            "ability": ability,
+        }
+
+        effects = session.create_rules_ongoing_effects(action)
+
+        self.assertEqual(
+            {effect["target"]["itemId"] for effect in effects},
+            {"locked-a", "locked-b"},
+        )
+        self.assertFalse(session.rules_item_effects_active(locked_a))
+        self.assertFalse(session.rules_interzone_item_replaceable(locked_a))
+        self.assertTrue(session.rules_item_effects_active(friendly))
+        session.rules_engine["pendingChoice"] = {
+            "id": "replace", "kind": "confrontation_replace_interzone",
+            "playerId": "p2", "itemId": "entering", "cardId": "m-4",
+            "candidateItemIds": [locked_a["id"]],
+        }
+        error, replacement = session.resolve_rules_choice(
+            "p2", "replace", item_id=locked_a["id"]
+        )
+        self.assertIn("no longer available", error)
+        self.assertIsNone(replacement)
+        session.rules_engine["pendingChoice"] = None
+        session.phase_tracker["turn"] += 1
+        session.prune_rules_ongoing_effects()
+        self.assertFalse(session.rules_item_effects_active(locked_a))
+        session.phase_tracker["turn"] += 1
+        session.prune_rules_ongoing_effects()
+        self.assertTrue(session.rules_item_effects_active(locked_a))
+        self.assertTrue(session.rules_interzone_item_replaceable(locked_a))
+
+    def test_referen_doom_creates_rainbow_essence_equal_to_current_power_on_loss(self):
+        doom_id = "inner-deserts-038"
+        session, _p1, _p2 = self.make_session(doom_id)
+        doom = self.field_item("doom", "p1", doom_id)
+        doom["counters"]["power"] = 2
+        session.battlefield = [doom]
+        ability = next(
+            entry for entry in self.ABILITIES[doom_id]
+            if entry["id"] == "referen-doom-gains-rainbow-essence-on-loss"
+        )
+        action = {
+            "id": "doom-loss", "controllerId": "p1",
+            "source": {"cardId": doom_id, "itemId": doom["id"]},
+            "targets": [], "ability": ability,
+        }
+
+        result = session.apply_rules_action_result(action)
+
+        self.assertEqual(result["status"], "created")
+        self.assertEqual(result["temperament"], "transcendent")
+        self.assertEqual(result["amount"], 5)
+
+    def test_nubilung_can_enter_support_from_stalemate_and_gains_two_until_resolution(self):
+        nubilung_id = "inner-deserts-076"
+        session, _p1, _p2 = self.make_session(nubilung_id)
+        session.card_rules[nubilung_id].update({
+            "supportFromStalemate": True,
+            "supportWinDestination": "exile",
+        })
+        session.phase_tracker["index"] = session.phase_sequence().index(
+            "confrontation_reaction"
+        )
+        session.rules_engine["priorityPlayerId"] = "p1"
+        nubilung = self.field_item(
+            "nubilung", "p1", nubilung_id, field_zone="stalemate", x=350, y=500
+        )
+        opposing = self.field_item("opposing", "p2", "m-1")
+        session.battlefield = [nubilung, opposing]
+
+        error, action = session.declare_rules_action(
+            "p1", "Nubilung enters Support", kind="play_card", as_support=True,
+            source={"cardId": nubilung_id, "zone": "battlefield", "itemId": nubilung["id"]},
+            placement={"x": 500, "y": 500},
+        )
+        self.assertIsNone(error)
+        self.assertEqual(action["sourceBattlefieldItem"]["fieldZone"], "stalemate")
+        session.pass_rules_priority("p2")
+        error, resolution = session.pass_rules_priority("p1")
+        self.assertIsNone(error)
+        restored = session.find_battlefield_item(nubilung["id"])
+        self.assertEqual(resolution["action"]["sourceResolution"]["fromZone"], "stalemate")
+        self.assertTrue(restored["isSupport"])
+        self.assertEqual(restored["supportWinDestination"], "exile")
+
+        actions = [
+            triggered for triggered in resolution["triggeredActions"]
+            if triggered["source"]["itemId"] == restored["id"]
+        ]
+        self.assertEqual(len(actions), 1)
+        session.create_rules_ongoing_effects(actions[0])
+        self.assertEqual(
+            session.rules_manifestation_characteristics(restored)["power"], 5
+        )
+        session.phase_tracker["index"] = session.phase_sequence().index("end_actions")
+        session.prune_rules_ongoing_effects()
+        self.assertEqual(
+            session.rules_manifestation_characteristics(restored)["power"], 3
+        )
 
 
 class TournamentModeTests(unittest.TestCase):

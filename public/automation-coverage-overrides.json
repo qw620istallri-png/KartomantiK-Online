@@ -1111,8 +1111,11 @@
       ]
     },
     "3gy8gbbbmamc8d0_en": {
-      "status": "partial",
-      "notes": "The loss trigger that suppresses replacement and effects in an opponent's Interzone through the next turn is not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "3oiehnpbub1byg6_en": {
       "status": "automated",
@@ -1422,8 +1425,11 @@
       ]
     },
     "inner-deserts-076": {
-      "status": "partial",
-      "notes": "Entering Support from Stalemate, the +2 power through Resolution, and exile after a Support win are not automated."
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-079": {
       "status": "automated",
@@ -2232,10 +2238,10 @@
       ]
     },
     "inner-deserts-038": {
-      "status": "partial",
-      "notes": "The exile of Limbo Wills for +1 power is automated; the Rainbow essences gained when it loses a Confrontation are not.",
+      "status": "automated",
       "testRefs": [
-        "tests/test_game_state.py"
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
       ]
     },
     "inner-deserts-035": {

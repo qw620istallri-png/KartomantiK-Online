@@ -3175,6 +3175,40 @@
         "kind": "zone_card", "min": 0, "max": 20, "zones": ["graveyard"], "owner": "self"
       },
       "result": { "kind": "exile_limbo_wills_add_power_each" }
+    },
+    {
+      "id": "referen-doom-gains-rainbow-essence-on-loss",
+      "trigger": { "event": "loses_confrontation" },
+      "result": {
+        "kind": "create_essence", "temperament": "transcendent", "value": 1,
+        "perCount": "source_current_power"
+      }
+    }
+  ],
+  "3gy8gbbbmamc8d0_en": [
+    {
+      "id": "venerable-viper-locks-opponent-interzone",
+      "trigger": { "event": "loses_confrontation" },
+      "targets": {
+        "kind": "player", "min": 1, "max": 1, "controller": "opponent"
+      },
+      "ongoingEffect": {
+        "kind": "interzone_lock", "duration": "until_end_of_next_turn",
+        "scope": "target_player_manifestations_in_interzone"
+      }
+    }
+  ],
+  "inner-deserts-076": [
+    {
+      "id": "nubilung-gains-power-from-stalemate-support",
+      "trigger": {
+        "event": "enters_support", "enteredFromZone": "stalemate",
+        "eventSourceOnly": true
+      },
+      "ongoingEffect": {
+        "kind": "power_modifier", "value": 2,
+        "duration": "until_resolution", "scope": "source"
+      }
     }
   ],
   "inner-deserts-119": [

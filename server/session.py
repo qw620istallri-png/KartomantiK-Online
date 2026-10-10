@@ -19,6 +19,7 @@ RULES_SCORE_COUNTS = {
     "own_manifestations_in_vessels",
     "excess_power_over_target_first_manifestation",
     "source_base_power",
+    "source_current_power",
     "source_card_points",
 }
 RULES_AFTER_CHAIN = {
@@ -69,6 +70,7 @@ RULES_DESTROY_MATCHES = {
 }
 RULES_EFFECT_DURATIONS = {
     "until_end_of_turn",
+    "until_end_of_next_turn",
     "while_source_and_target_on_field",
     "while_target_on_field",
     "until_resolution",
@@ -81,6 +83,7 @@ RULES_COPIED_EFFECT_KEYS = {
     "adamant", "float", "persist", "canPayTribute", "suspensionThresholds",
     "canPayTributeFromInterzone", "interzoneTributePower",
     "supportFromHand", "supportFromHandCondition", "supportFromInterzone",
+    "supportFromStalemate",
     "lossDestination", "supportWhenNoCounter", "supportCondition",
     "playOnlyEmptyStack", "supportWinDestination", "supportWinEffect",
     "continuousPowerRules", "activatedAbilities", "triggeredAbilities",
@@ -565,6 +568,18 @@ class Session:
                 (source_item or {}).get("cardId")
                 or (action.get("source") or {}).get("cardId"), {}
             ).get("power") or 0)
+        if count_kind == "source_current_power":
+            source_item = self.find_battlefield_item(
+                (action.get("source") or {}).get("itemId")
+            )
+            if source_item is not None:
+                return max(
+                    0,
+                    int(self.rules_manifestation_characteristics(source_item)["power"]),
+                )
+            return max(0, int(self.card_rules.get(
+                (action.get("source") or {}).get("cardId"), {}
+            ).get("power") or 0))
         if count_kind == "source_card_points":
             return int((self.card_points or {}).get(
                 (action.get("source") or {}).get("cardId"), 0
@@ -1060,12 +1075,13 @@ class Session:
                 return "A card already on the field cannot be played again.", None
             if as_support:
                 if self.current_phase_id() != "confrontation_reaction":
-                    return "A Manifestation can enter the confrontation from the Interzone only during Reaction.", None
+                    return "A Manifestation can enter Support only during Reaction.", None
                 if metadata.get("type") != "manifestation":
                     return "Only a Manifestation can enter the confrontation.", None
-                if self.rules_field_zone(item) != "interzone":
-                    return "This Manifestation is not in your Interzone.", None
-                if not self.rules_card_can_enter_support(item, "interzone"):
+                source_field_zone = self.rules_field_zone(item)
+                if source_field_zone not in {"interzone", "stalemate"}:
+                    return "This Manifestation is not in a zone from which it can enter Support.", None
+                if not self.rules_card_can_enter_support(item, source_field_zone):
                     return "This Manifestation does not currently have Support.", None
         elif zone == "graveyard" and as_support:
             permission_error, permission = self.rules_zone_play_permission(
@@ -2100,6 +2116,7 @@ class Session:
                     "friendly_cards_on_field",
                     "friendly_manifestations_in_interzone",
                     "friendly_manifestations_in_confrontation",
+                    "target_player_manifestations_in_interzone",
                     "global",
                 }:
                     clean["scope"] = ongoing_effect["scope"]
@@ -2934,6 +2951,11 @@ class Session:
                 return {"status": "source_missing", "destination": "battlefield", "asSupport": True}
             placement = action.get("placement") or {}
             stored_item = action.get("sourceBattlefieldItem")
+            from_zone = (
+                stored_item.get("fieldZone")
+                if isinstance(stored_item, dict)
+                else None
+            ) or source.get("zone")
             item = dict(stored_item) if isinstance(stored_item, dict) else {
                 "id": new_id(), "ownerId": owner_id, "controllerId": controller_id,
                 "cardId": card_id, "faceUp": True, "rotation": 0.0, "counters": {},
@@ -2955,7 +2977,7 @@ class Session:
             return {
                 "status": "moved", "destination": "battlefield", "itemId": item["id"],
                 "cardId": card_id, "ownerId": owner_id, "x": item["x"], "y": item["y"],
-                "asSupport": True, "fromZone": source.get("zone"),
+                "asSupport": True, "fromZone": from_zone,
                 "enteredBattlefield": source.get("zone") != "battlefield",
             }
         if source.get("zone") not in {"hand", "suspended"}:
@@ -3199,6 +3221,23 @@ class Session:
                     action.get("controllerId"), ("interzone",)
                 )
             ]
+        elif definition.get("scope") == "target_player_manifestations_in_interzone":
+            target_player_id = next((
+                target.get("playerId") for target in targets
+                if target.get("kind") == "player"
+            ), None)
+            targets = [
+                {
+                    "kind": "card", "itemId": item["id"],
+                    "cardId": item["cardId"], "ownerId": item["ownerId"],
+                }
+                for item in self.battlefield
+                if target_player_id in self.players
+                and self.rules_item_controller_id(item) == target_player_id
+                and self.rules_field_zone(item) == "interzone"
+                and self.card_rules.get(item.get("cardId"), {}).get("type")
+                == "manifestation"
+            ]
         elif definition.get("scope") == "global":
             targets = [{"kind": "global"}]
 
@@ -3283,12 +3322,17 @@ class Session:
                 effect.get("duration") == "until_end_of_turn"
                 and int(effect.get("startedTurn") or 0) < current_turn
             )
+            next_turn_active = not (
+                effect.get("duration") == "until_end_of_next_turn"
+                and int(effect.get("startedTurn") or 0) + 1 < current_turn
+            )
             resolution_active = not (
                 effect.get("duration") == "until_resolution"
                 and self.current_phase_group() in {"end", "recovery"}
             )
             if (
-                target_present and turn_active and resolution_active
+                target_present and turn_active and next_turn_active
+                and resolution_active
                 and (not source_required or source_present)
             ):
                 kept.append(effect)
@@ -3353,8 +3397,15 @@ class Session:
         if item.get("effectsDisabled"):
             return False
         return not any(
-            effect.get("kind") in {"lose_effects", "obscure_lock"}
+            effect.get("kind") in {"lose_effects", "obscure_lock", "interzone_lock"}
             and effect.get("target", {}).get("itemId") == item.get("id")
+            for effect in self.rules_engine.get("ongoingEffects") or []
+        )
+
+    def rules_interzone_item_replaceable(self, item):
+        return not any(
+            effect.get("kind") == "interzone_lock"
+            and effect.get("target", {}).get("itemId") == (item or {}).get("id")
             for effect in self.rules_engine.get("ongoingEffects") or []
         )
 
@@ -3416,6 +3467,8 @@ class Session:
             return False
         if from_zone == "hand":
             return self.rules_support_from_hand_available(item.get("ownerId"), item.get("cardId"))
+        if from_zone == "stalemate":
+            return bool(metadata.get("supportFromStalemate"))
         counter_name = metadata.get("supportWhenNoCounter")
         return bool(
             metadata.get("supportFromInterzone")
@@ -5239,6 +5292,7 @@ class Session:
                     "friendly_cards_on_field",
                     "friendly_manifestations_in_interzone",
                     "friendly_manifestations_in_confrontation",
+                    "target_player_manifestations_in_interzone",
                     "source",
                 }:
                     clean_ongoing_effect["scope"] = ongoing_definition["scope"]
@@ -11994,10 +12048,16 @@ class Session:
                         "destination": "interzone", "stackedOn": share_anchor,
                         "triggeredActions": triggered_actions,
                     }
+                replacement_candidates = [
+                    entry["id"] for entry in interzone_items
+                    if self.rules_interzone_item_replaceable(entry)
+                ]
+                if not replacement_candidates:
+                    return "No Manifestation in your Interzone can currently be replaced.", None
                 replacement = {
                     "id": new_id(), "kind": "confrontation_replace_interzone",
                     "playerId": player_id, "itemId": item["id"], "cardId": item.get("cardId"),
-                    "candidateItemIds": [entry["id"] for entry in interzone_items],
+                    "candidateItemIds": replacement_candidates,
                 }
                 self.rules_engine["pendingChoice"] = replacement
                 return None, {
@@ -12035,6 +12095,7 @@ class Session:
                 entering is None
                 or replaced is None
                 or self.rules_item_controller_id(replaced) != player_id
+                or not self.rules_interzone_item_replaceable(replaced)
             ):
                 return "This Interzone choice is no longer available.", None
             movement = self._rules_remove_field_item(replaced, replaced["ownerId"], "deck", "bottom")
@@ -13148,7 +13209,7 @@ class Session:
         if not self.rules_engine["enabled"]:
             return "Assisted rules are not active.", None
         if field_zone != "confrontation" or self.current_phase_id() != "confrontation_reaction":
-            return "A Manifestation can enter the confrontation from the Interzone only during Reaction.", None
+            return "A Manifestation can enter Support only during Reaction.", None
         item = self.find_battlefield_item(item_id)
         if item is None or self.rules_item_controller_id(item) != player_id:
             return "This Manifestation is not under your control.", None
@@ -13156,11 +13217,12 @@ class Session:
             return "Only a Manifestation can enter the confrontation.", None
         if self.rules_support_entry_locked(player_id):
             return "Manifestations cannot be put in Support until the end of the turn.", None
-        if self.rules_field_zone(item) != "interzone":
-            return "This Manifestation is not in your Interzone.", None
+        source_field_zone = self.rules_field_zone(item)
+        if source_field_zone not in {"interzone", "stalemate"}:
+            return "This Manifestation is not in a zone from which it can enter Support.", None
         if self.rules_engine.get("priorityPlayerId") != player_id:
             return "You do not have priority.", None
-        if not self.rules_card_can_enter_support(item, "interzone"):
+        if not self.rules_card_can_enter_support(item, source_field_zone):
             return "This Manifestation does not currently have Support.", None
         self.mark_rules_support_entry(item)
         return None, {

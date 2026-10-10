@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261009-rules-beta-101";
+const STATIC_ASSET_VERSION = "20261010-rules-beta-102";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -5481,6 +5481,21 @@ function rulesSupportFromHandAvailableClient(cardId) {
   ));
 }
 
+function rulesBattlefieldSupportAvailableClient(item) {
+  const effect = String(cardsById.get(item?.cardId)?.effect || "");
+  if (item?.fieldZone === "stalemate") {
+    return /can enter in Support from the Stalemate Zone/i.test(effect);
+  }
+  if (item?.fieldZone !== "interzone") return false;
+  return /^Support[.;]/.test(effect)
+    || Number(item.supportUntilTurn || 0) === Number(latestState?.phaseTracker?.turn || 0)
+    || item.canEnterSupport === true
+    || (
+      /as long as there are no Block counters on it, it has Support/i.test(effect)
+      && Number((item.counters || {}).Block || 0) <= 0
+    );
+}
+
 function rulesCardPlayRestrictedClient(cardId) {
   const rules = latestState?.rulesEngine;
   const turn = Number(latestState?.phaseTracker?.turn || 0);
@@ -7564,6 +7579,7 @@ function rulesEffectTone(effect) {
 function rulesEffectKindText(effect) {
   if (effect.kind === "power_ignored") return t("rulesEffectPowerIgnored");
   if (effect.kind === "copy_power_temperament") return t("rulesEffectCopyPowerTemperament");
+  if (effect.kind === "interzone_lock") return t("rulesEffectInterzoneLock");
   if (effect.kind === "power_modifier") {
     const value = Number(effect.value || 0);
     return rulesText("rulesEffectPowerModifier", { value: `${value > 0 ? "+" : ""}${value}` });
@@ -7572,9 +7588,10 @@ function rulesEffectKindText(effect) {
 }
 
 function rulesEffectDurationText(effect) {
-  return effect.duration === "until_end_of_turn"
-    ? t("rulesEffectUntilEndTurn")
-    : t("rulesEffectWhileOnField");
+  if (effect.duration === "until_end_of_turn") return t("rulesEffectUntilEndTurn");
+  if (effect.duration === "until_end_of_next_turn") return t("rulesEffectUntilEndNextTurn");
+  if (effect.duration === "until_resolution") return t("rulesEffectUntilResolution");
+  return t("rulesEffectWhileOnField");
 }
 
 function rulesEffectDescription(effect) {
@@ -7821,7 +7838,9 @@ function counterCircles(
   ongoingEffects
     .filter((effect) => effect.kind === "power_modifier" && Number(effect.value))
     .forEach((effect) => {
-      const key = effect.duration === "until_end_of_turn" ? "rulesTempPower" : "rulesPermanentPower";
+      const temporary = ["until_end_of_turn", "until_end_of_next_turn", "until_resolution"]
+        .includes(effect.duration);
+      const key = temporary ? "rulesTempPower" : "rulesPermanentPower";
       renderedCounters[key] = Number(renderedCounters[key] || 0) + Number(effect.value);
     });
   if (
@@ -8126,23 +8145,10 @@ function renderBattlefield() {
       if (
         isMine
         && latestState?.rulesEngine?.enabled
-        && item.fieldZone === "interzone"
         && currentPhaseUi().phase?.id === "confrontation_reaction"
         && latestState.rulesEngine.priorityPlayerId === myPlayerId
         && cardsById.get(item.cardId)?.type === "manifestation"
-        && (
-          /^Support[.;]/.test(
-            String(cardsById.get(item.cardId)?.effect || "")
-          )
-          || Number(item.supportUntilTurn || 0) === Number(latestState.phaseTracker?.turn || 0)
-          || item.canEnterSupport === true
-          || (
-            /as long as there are no Block counters on it, it has Support/i.test(
-              String(cardsById.get(item.cardId)?.effect || "")
-            )
-            && Number((item.counters || {}).Block || 0) <= 0
-          )
-        )
+        && rulesBattlefieldSupportAvailableClient(item)
       ) {
         items.push({
           label: t("playInSupport"),

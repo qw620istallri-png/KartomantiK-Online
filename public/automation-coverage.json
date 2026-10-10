@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 266,
-    "explicitAbilities": 316,
+    "explicitCards": 268,
+    "explicitAbilities": 319,
     "statuses": {
-      "automated": 325,
+      "automated": 328,
       "generic": 0,
       "manual": 117,
-      "partial": 8
+      "partial": 5
     }
   },
   "cards": {
@@ -923,13 +923,20 @@
       "collectionNumber": 60,
       "name": "Venerable Viper",
       "setName": "Beta",
-      "status": "partial",
-      "abilityIds": [],
-      "mechanics": [
-        "support-from-hand"
+      "status": "automated",
+      "abilityIds": [
+        "venerable-viper-locks-opponent-interzone"
       ],
-      "testRefs": [],
-      "notes": "The loss trigger that suppresses replacement and effects in an opponent's Interzone through the next turn is not automated."
+      "mechanics": [
+        "ongoing:interzone_lock",
+        "support-from-hand",
+        "target:player",
+        "trigger:loses_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "rl4ppd0wsyov7lw_en": {
       "collectionNumber": 61,
@@ -5040,19 +5047,22 @@
       "collectionNumber": 338,
       "name": "Referen-Doom, the Dreamer",
       "setName": "Inner Deserts",
-      "status": "partial",
+      "status": "automated",
       "abilityIds": [
-        "referen-doom-exiles-limbo-wills"
+        "referen-doom-exiles-limbo-wills",
+        "referen-doom-gains-rainbow-essence-on-loss"
       ],
       "mechanics": [
+        "result:create_essence",
         "result:exile_limbo_wills_add_power_each",
         "target:zone_card",
-        "trigger:enters_field"
+        "trigger:enters_field",
+        "trigger:loses_confrontation"
       ],
       "testRefs": [
-        "tests/test_game_state.py"
-      ],
-      "notes": "The exile of Limbo Wills for +1 power is automated; the Rainbow essences gained when it loses a Confrontation are not."
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-039": {
       "collectionNumber": 339,
@@ -5597,15 +5607,21 @@
       "collectionNumber": 376,
       "name": "Nubilung, the Elder",
       "setName": "Inner Deserts",
-      "status": "partial",
-      "abilityIds": [],
+      "status": "automated",
+      "abilityIds": [
+        "nubilung-gains-power-from-stalemate-support"
+      ],
       "mechanics": [
         "first-restriction",
+        "ongoing:power_modifier",
         "support-from-hand",
-        "support-win:exile"
+        "support-win:exile",
+        "trigger:enters_support"
       ],
-      "testRefs": [],
-      "notes": "Entering Support from Stalemate, the +2 power through Resolution, and exile after a Support win are not automated."
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-077": {
       "collectionNumber": 377,
