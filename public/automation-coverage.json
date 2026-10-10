@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 268,
-    "explicitAbilities": 319,
+    "explicitCards": 274,
+    "explicitAbilities": 326,
     "statuses": {
-      "automated": 328,
+      "automated": 333,
       "generic": 0,
-      "manual": 117,
-      "partial": 5
+      "manual": 111,
+      "partial": 6
     }
   },
   "cards": {
@@ -2052,10 +2052,17 @@
       "collectionNumber": 133,
       "name": "Cognitive Fog",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "all-wills-cost-one-more"
+      ],
+      "mechanics": [
+        "passive:increase_will_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "nupb1i59d98g3md_en": {
       "collectionNumber": 134,
@@ -2318,10 +2325,18 @@
       "collectionNumber": 151,
       "name": "Static Scuttler",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "stalemate-winner-after-loss"
+      ],
+      "mechanics": [
+        "result:stalemate_confrontation",
+        "trigger:loses_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "1a8wzhi7xhbcenj_en": {
       "collectionNumber": 152,
@@ -2744,10 +2759,17 @@
       "collectionNumber": 183,
       "name": "Pin Down",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "stalemate-confrontation-and-lock"
+      ],
+      "mechanics": [
+        "result:stalemate_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "ynp0apjx1risrpt_en": {
       "collectionNumber": 184,
@@ -3028,10 +3050,17 @@
       "collectionNumber": 203,
       "name": "Thornmaster",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "lose-points-for-power"
+      ],
+      "mechanics": [
+        "result:add_power_counter_target"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "ng6w09m6mrjq3xc_en": {
       "collectionNumber": 204,
@@ -3210,10 +3239,20 @@
       "collectionNumber": 215,
       "name": "Grudge Weaver",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "grudge-counter-after-loss",
+        "spend-grudges-for-support"
+      ],
+      "mechanics": [
+        "result:add_counter_source",
+        "result:grant_source_support_until_end_turn",
+        "trigger:player_loses_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "7j3udrfh5t8vl25_en": {
       "collectionNumber": 216,
@@ -4179,10 +4218,17 @@
       "collectionNumber": 279,
       "name": "Duel Honorably",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "partial",
+      "abilityIds": [
+        "lock-support-entries"
+      ],
+      "mechanics": [
+        "result:lock_support_entries"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py"
+      ],
+      "notes": "The Support-entry lock is automated; the option for any player to pay {H}{H} while the Will is on the Stack to neutralize it is not."
     },
     "op83bq67vaf368q_en": {
       "collectionNumber": 280,

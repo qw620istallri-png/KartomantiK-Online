@@ -10340,6 +10340,82 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         kinds = [e["kind"] for e in session.rules_engine["observedEvents"]]
         self.assertIn("manifestation_entered_limbo", kinds)
 
+    def test_manual_lot_ten_counters_limits_costs_and_stalemate(self):
+        weaver, thorn, fog, pin, scuttler, duel = (
+            "2hszv736kwwmi7n_en", "03jzw541k0af8x3_en", "ul1tffi1wn5l3q5_en",
+            "kmyzmxtakzhj58p_en", "7badn4v9w72srad_en", "dly528oj65qnznh_en",
+        )
+        session, p1, p2 = self.manual_batch_session(weaver, thorn, scuttler, card_type="manifestation")
+        # Grudge Weaver: a counter per lost confrontation, two of them buy Support for the turn.
+        session.battlefield = [self.field_item("gw", "p1", weaver, field_zone="interzone")]
+        self.run_ability_at(session, weaver, 0, source={"itemId": "gw"})
+        self.run_ability_at(session, weaver, 0, source={"itemId": "gw"})
+        self.assertEqual(session.battlefield[0]["counters"]["Grudge"], 2)
+        ability = self.ABILITIES[weaver][1]
+        self.assertEqual(ability["removeCountersFromSource"], {"name": "Grudge", "amount": 2})
+        self.run_ability_at(session, weaver, 1, source={"itemId": "gw"})
+        self.assertEqual(session.battlefield[0].get("supportUntilTurn"), session.phase_tracker["turn"])
+        # Thornmaster: the activation limit is tracked on the source and refuses the sixth use.
+        session.battlefield = [self.field_item("th", "p1", thorn)]
+        session.card_rules[thorn]["activatedAbilities"] = [self.ABILITIES[thorn][0]]
+        cost = {"loseScore": 5, "useLimit": 5, "id": "lose-points-for-power"}
+        for _ in range(5):
+            session.pay_rules_activation_cost({"itemId": "th", "controllerId": "p1"}, cost)
+        self.assertEqual(session.battlefield[0]["abilityUses"]["lose-points-for-power"], 5)
+        self.assertEqual(p1["score"], -25)
+        error, _ = session.rules_action_ability(
+            "p1", "activated_effect", {"cardId": thorn, "zone": "battlefield", "itemId": "th"},
+            "lose-points-for-power", [self.card_target("th", thorn)],
+        )
+        self.assertIn("at most 5 times", error or "")
+        self.run_ability_at(session, thorn, 0, targets=[self.card_target("th", thorn)], source={"itemId": "th"})
+        self.assertEqual(session.battlefield[0]["counters"]["power"], 1)
+        # Cognitive Fog adds one Hollow essence to every Will, whoever controls it.
+        session.card_rules[fog] = {
+            "type": "persistent_will", "passiveEffects": [self.ABILITIES[fog][0]["passiveEffect"]],
+        }
+        session.card_rules["will-x"] = {"type": "ephemeral_will", "powerCost": "{H}{H}", "cost": 2}
+        session.card_rules["will-free"] = {"type": "ephemeral_will"}
+        source = {"cardId": "will-x", "zone": "hand"}
+        before, _ = session.rules_tribute_requirements("play_card", source, player_id="p2")
+        session.battlefield = [self.field_item("fog", "p1", fog, field_zone="field")]
+        after, _ = session.rules_tribute_requirements("play_card", source, player_id="p2")
+        self.assertEqual(sum(after.values()), sum(before.values()) + 1)
+        free, _ = session.rules_tribute_requirements("play_card", {"cardId": "will-free", "zone": "hand"}, player_id="p1")
+        self.assertEqual(free, {"hollow": 1})
+        # Pin Down stalemates the whole Confrontation Zone and shuts Support entries.
+        session.battlefield = [
+            self.field_item("a", "p1", "m-1"), self.field_item("b", "p2", "m-2", isSupport=True),
+            self.field_item("c", "p1", "m-3", field_zone="interzone"),
+        ]
+        session.card_rules["m-1"] = session.card_rules["m-2"] = session.card_rules["m-3"] = {"type": "manifestation", "power": 2}
+        payload, _ = self.run_ability(session, pin)
+        self.assertEqual(sorted(payload["itemIds"]), ["a", "b"])
+        zones = {item["id"]: session.rules_field_zone(item) for item in session.battlefield}
+        self.assertEqual(zones, {"a": "stalemate", "b": "stalemate", "c": "interzone"})
+        self.assertTrue(session.rules_support_entry_locked("p1"))
+        self.assertTrue(session.rules_support_entry_locked("p2"))
+        # Duel Honorably only locks Support entries.
+        session.rules_engine["supportLocks"] = []
+        self.run_ability(session, duel)
+        self.assertTrue(session.rules_support_entry_locked("p2"))
+        # Static Scuttler stalemates the winner's Confrontation Manifestations and freezes them.
+        session.rules_engine["supportLocks"] = []
+        session.battlefield = [
+            self.field_item("sc", "p1", scuttler), self.field_item("w1", "p2", "m-2"),
+            self.field_item("w2", "p2", "m-3", isSupport=True),
+        ]
+        self.set_outcome(session, "p2", "p1", "sc", "w1", "w2")
+        payload = self.run_ability_at(session, scuttler, 0, source={"itemId": "sc"})
+        self.assertEqual(sorted(payload["itemIds"]), ["w1", "w2"])
+        frozen = session.find_battlefield_item("w1")
+        self.assertEqual(session.rules_field_zone(frozen), "stalemate")
+        self.assertTrue(session.rules_item_zone_locked(frozen))
+        session.current_phase_id = lambda: "confrontation_reaction"
+        self.assertIn("cannot change zone", session.set_rules_field_zone("p2", "w1", "confrontation")[0])
+        session.phase_tracker["turn"] += 1
+        self.assertFalse(session.rules_item_zone_locked(frozen))
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")

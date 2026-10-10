@@ -1468,6 +1468,13 @@ class Session:
             return {"kind": kind, "value": max(1, min(int(result.get("value") or 1), 20))}
         if kind == "lock_support_entries":
             return {"kind": kind, "scope": "controller" if result.get("scope") == "controller" else "all"}
+        if kind == "stalemate_confrontation":
+            return {
+                "kind": kind,
+                "scope": "winner" if result.get("scope") == "winner" else "all",
+                "lockZone": bool(result.get("lockZone")),
+                "lockSupportEntries": bool(result.get("lockSupportEntries")),
+            }
         if kind == "optional_discard_up_to":
             return {"kind": kind, "value": max(1, min(int(result.get("value") or 1), 7))}
         if kind == "final_deck_points":
@@ -2090,6 +2097,13 @@ class Session:
                     f'This effect needs {int(counter_cost.get("amount") or 0)} '
                     f'{counter_cost.get("name")} counters on its source.'
                 ), None
+        use_limit = max(0, min(int(ability.get("useLimit") or 0), 99))
+        if use_limit:
+            used = int(((
+                self.find_battlefield_item(source.get("itemId")) or {}
+            ).get("abilityUses") or {}).get(str(ability.get("id")), 0))
+            if used >= use_limit:
+                return f"This effect can be used at most {use_limit} times.", None
         if ability.get("sacrificeTokenCreatedBySource") and not any(
             candidate.get("isTokenCard")
             and candidate.get("createdByItemId") == source.get("itemId")
@@ -2227,6 +2241,7 @@ class Session:
             "reduceSourcePower": max(
                 0, min(int(ability.get("reduceSourcePower") or 0), 999)
             ),
+            "useLimit": max(0, min(int(ability.get("useLimit") or 0), 99)) or None,
             "sourceFieldZone": required_source_field_zone or None,
             "condition": condition or None,
             "phaseIds": phase_ids,
@@ -2312,6 +2327,16 @@ class Session:
                 (first_item or {}).get("cardId"), {}
             ).get("power") or 0)
             reduction += base_power // 2
+        increase = sum(
+            int(passive.get("value") or 0)
+            for field_source in self.rules_active_passive_sources(
+                "increase_will_tribute"
+            )
+            for passive in self.card_rules.get(
+                field_source.get("cardId"), {}
+            ).get("passiveEffects") or []
+            if passive.get("kind") == "increase_will_tribute"
+        )
         for _index in range(max(0, reduction)):
             payable = max(
                 requirements,
@@ -2321,6 +2346,8 @@ class Session:
             if payable is None or requirements[payable] <= 0:
                 break
             requirements[payable] -= 1
+        if increase > 0:
+            requirements["hollow"] = requirements.get("hollow", 0) + increase
         requirements = {
             temperament: amount
             for temperament, amount in requirements.items() if amount > 0
@@ -2661,6 +2688,9 @@ class Session:
             ),
         }
 
+    def rules_item_zone_locked(self, item):
+        return bool(item) and item.get("zoneLockTurn") == self.phase_tracker["turn"]
+
     def rules_support_entry_locked(self, player_id):
         turn = self.phase_tracker["turn"]
         return any(
@@ -2930,6 +2960,9 @@ class Session:
             counters = item.setdefault("counters", {})
             counters["power"] = int(counters.get("power") or 0) - reduction
             result["reducedSourcePower"] = reduction
+        if int(ability.get("useLimit") or 0) > 0 and item is not None:
+            uses = item.setdefault("abilityUses", {})
+            uses[str(ability.get("id"))] = int(uses.get(str(ability.get("id"))) or 0) + 1
         return result
 
     def resolve_rules_action_source(self, action):
@@ -4539,7 +4572,7 @@ class Session:
         for item in list(self.rules_confrontation_items_owned_by(
             loser_id, ("confrontation", "stalemate")
         )):
-            if item.get("id") in rematch_item_ids:
+            if item.get("id") in rematch_item_ids or self.rules_item_zone_locked(item):
                 continue
             if (
                 self.rules_item_card_rules(item).get("lossDestination") == "winner_interzone"
@@ -4590,6 +4623,7 @@ class Session:
                 winner_id, ("confrontation", "stalemate")
             )
             if item.get("id") not in rematch_item_ids
+            and not self.rules_item_zone_locked(item)
         ]
         support_exiled = []
         support_resolved = []
@@ -7982,6 +8016,32 @@ class Session:
                         "controllerId": pid, "turn": self.phase_tracker["turn"],
                     })
             return {"kind": result.get("kind"), "status": "armed"}
+        if result.get("kind") == "stalemate_confrontation":
+            if result.get("scope") == "winner":
+                winner_id = (self.rules_engine.get("confrontationResult") or {}).get("winnerId")
+                items = (
+                    self.rules_confrontation_items(winner_id)
+                    if winner_id in self.players else []
+                )
+            else:
+                items = self.rules_confrontation_items()
+            moved = []
+            for item in items:
+                item["fieldZone"] = "stalemate"
+                item.pop("isSupport", None)
+                item.pop("supportUntilTurn", None)
+                if result.get("lockZone"):
+                    item["zoneLockTurn"] = self.phase_tracker["turn"]
+                moved.append(item["id"])
+            if result.get("lockSupportEntries"):
+                self.rules_engine.setdefault("supportLocks", []).append({
+                    "turn": self.phase_tracker["turn"], "playerId": None,
+                })
+            self.prune_rules_ongoing_effects()
+            return {
+                "kind": result.get("kind"), "status": "stalemated" if moved else "nothing",
+                "itemIds": moved, "locked": bool(result.get("lockZone")),
+            }
         if result.get("kind") == "lock_support_entries":
             self.rules_engine.setdefault("supportLocks", []).append({
                 "turn": self.phase_tracker["turn"],
@@ -10329,6 +10389,13 @@ class Session:
                     "toZone": result.get("zone"), "position": result.get("position"),
                 })
             item_controller = item.get("controllerId") or item.get("ownerId")
+            if self.rules_item_zone_locked(item):
+                return movement({
+                    "kind": "move_card", "status": "prevented_zone_lock",
+                    "cardId": item.get("cardId"), "itemId": item.get("id"),
+                    "ownerId": item.get("ownerId"), "fromZone": "battlefield",
+                    "toZone": destination, "position": position,
+                })
             if (
                 self.rules_item_card_rules(item).get("adamant")
                 and self.rules_item_effects_active(item)
@@ -13217,6 +13284,8 @@ class Session:
             return "Only a Manifestation can enter the confrontation.", None
         if self.rules_support_entry_locked(player_id):
             return "Manifestations cannot be put in Support until the end of the turn.", None
+        if self.rules_item_zone_locked(item):
+            return "This Manifestation cannot change zone until the end of the turn.", None
         source_field_zone = self.rules_field_zone(item)
         if source_field_zone not in {"interzone", "stalemate"}:
             return "This Manifestation is not in a zone from which it can enter Support.", None

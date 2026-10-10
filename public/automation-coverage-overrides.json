@@ -2355,6 +2355,48 @@
         "tests/test_game_state.py",
         "tests/test_card_catalog.py"
       ]
+    },
+    "2hszv736kwwmi7n_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "03jzw541k0af8x3_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "ul1tffi1wn5l3q5_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "kmyzmxtakzhj58p_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "7badn4v9w72srad_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "dly528oj65qnznh_en": {
+      "status": "partial",
+      "notes": "The Support-entry lock is automated; the option for any player to pay {H}{H} while the Will is on the Stack to neutralize it is not.",
+      "testRefs": [
+        "tests/test_game_state.py"
+      ]
     }
   }
 }

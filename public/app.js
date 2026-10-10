@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261010-rules-beta-102";
+const STATIC_ASSET_VERSION = "20261010-rules-beta-103";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -2948,6 +2948,16 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
     if (!payable || Number(paymentRequirements[payable]) <= 0) break;
     paymentRequirements[payable] -= 1;
     reduction -= 1;
+  }
+  if (isPrintedWill && !(encodedAbility && Object.hasOwn(encodedAbility, "tribute"))) {
+    const increase = (latestState?.battlefield || []).reduce((total, item) => (
+      total + (passiveEffectsByCard.get(item.cardId) || [])
+        .filter((effect) => effect.kind === "increase_will_tribute")
+        .reduce((sum, effect) => sum + Number(effect.value || 0), 0)
+    ), 0);
+    if (increase > 0) {
+      paymentRequirements.hollow = Number(paymentRequirements.hollow || 0) + increase;
+    }
   }
   if (source.zone === "suspended") {
     const total = Object.values(paymentRequirements)

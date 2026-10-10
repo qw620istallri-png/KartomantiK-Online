@@ -3362,5 +3362,58 @@
       "trigger": { "event": "beginning_of_turn", "zone": "interzone" },
       "result": { "kind": "restore_source_counter", "counter": "Shackle", "value": 2 }
     }
+  ],
+  "2hszv736kwwmi7n_en": [
+    {
+      "id": "grudge-counter-after-loss",
+      "trigger": { "event": "player_loses_confrontation", "zone": "interzone", "eventController": "owner" },
+      "result": { "kind": "add_counter_source", "counter": "Grudge", "value": 1 }
+    },
+    {
+      "id": "spend-grudges-for-support",
+      "sourceZones": ["battlefield"],
+      "sourceFieldZone": "interzone",
+      "removeCountersFromSource": { "name": "Grudge", "amount": 2 },
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "grant_source_support_until_end_turn" }
+    }
+  ],
+  "03jzw541k0af8x3_en": [
+    {
+      "id": "lose-points-for-power",
+      "loseScore": 5,
+      "useLimit": 5,
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation", "sourceOnly": true },
+      "result": { "kind": "add_power_counter_target", "value": 1 }
+    }
+  ],
+  "ul1tffi1wn5l3q5_en": [
+    {
+      "id": "all-wills-cost-one-more",
+      "passiveEffect": { "kind": "increase_will_tribute", "value": 1 }
+    }
+  ],
+  "kmyzmxtakzhj58p_en": [
+    {
+      "id": "stalemate-confrontation-and-lock",
+      "action": "play_card",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "stalemate_confrontation", "scope": "all", "lockSupportEntries": true }
+    }
+  ],
+  "7badn4v9w72srad_en": [
+    {
+      "id": "stalemate-winner-after-loss",
+      "trigger": { "event": "loses_confrontation" },
+      "result": { "kind": "stalemate_confrontation", "scope": "winner", "lockZone": true }
+    }
+  ],
+  "dly528oj65qnznh_en": [
+    {
+      "id": "lock-support-entries",
+      "action": "play_card",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "lock_support_entries", "scope": "all" }
+    }
   ]
 }

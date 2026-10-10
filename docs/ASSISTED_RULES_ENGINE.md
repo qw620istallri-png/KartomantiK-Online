@@ -741,3 +741,11 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 - Venerable Viper cible un adversaire à sa défaite : seules les manifestations déjà présentes dans son Interzone perdent leurs effets et deviennent non remplaçables jusqu'à la fin du prochain tour.
 - Referen-Doom crée à sa défaite autant d'essences arc-en-ciel que sa puissance actuelle au moment de la résolution.
 - Nubilung peut être joué en Support depuis Stalemate en passant par la Pile. Son origine est conservée pendant la résolution, ce qui déclenche son +2 temporaire jusqu'à la Résolution ; une victoire en Support l'exile via la règle générique `supportWinDestination`.
+
+### Lot 10 (limites d'usage, coût des Volontés, mise en Stalemate)
+
+- Grudge Weaver : compteur « Grudge » à chaque confrontation perdue (déclencheur `player_loses_confrontation` depuis l'Interzone) ; retirer 2 compteurs (`removeCountersFromSource`) donne Support jusqu'à la fin du tour.
+- Thornmaster : nouveau champ de capacité `useLimit` (nombre maximal d'utilisations par carte sur le champ, suivi dans `item.abilityUses`) ; perdre 5 points ajoute un compteur de puissance, 5 fois au plus.
+- Cognitive Fog : passif `increase_will_tribute` ; `rules_tribute_requirements` (serveur) et `rulesActionPaymentDraft` (client) ajoutent une Essence Vide à toutes les Volontés imprimées, quel que soit leur contrôleur.
+- Résultat `stalemate_confrontation` (`scope` : `all` ou `winner`, `lockZone`, `lockSupportEntries`) : Pin Down met toute la Zone de Confrontation en Stalemate et verrouille les entrées en Support ; Static Scuttler (perte) met en Stalemate les manifestations du gagnant. `lockZone` pose `zoneLockTurn` : l'objet ne retourne pas en Interzone au nettoyage, ne peut pas entrer en Support et n'est pas déplaçable par `move_target` jusqu'à la fin du tour (`rules_item_zone_locked`).
+- Duel Honorably (partiel) : verrou des entrées en Support automatisé (Volonté jouable avant la Révélation) ; la neutralisation en payant {H}{H} depuis la Pile reste manuelle.
