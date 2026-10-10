@@ -13460,6 +13460,20 @@ class LotTwentyTests(RealCardRulesCase):
         session.pass_rules_priority("p2")
         session.pass_rules_priority("p1")
         self.assertIn("limbo-eph", p1["zones"]["exile"])
+        # Passing priority without using the right also spends it.
+        session.apply_rules_action_result({
+            "id": "f2", "controllerId": "p1",
+            "source": {"cardId": self.FREENYA, "itemId": "freenya", "ownerId": "p1"},
+            "targets": [], "ability": ability,
+        })
+        session.rules_engine["actionStack"] = []
+        session.rules_engine["priorityPlayerId"] = "p1"
+        session.pass_rules_priority("p1")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        session.rules_engine["priorityPasses"] = []
+        error, _a = session.declare_rules_action(
+            "p1", "Play", kind="play_card", source={"cardId": "limbo-per", "zone": "graveyard"})
+        self.assertIn("no effect", error)
         # The right is spent.
         session.rules_engine["priorityPlayerId"] = "p1"
         error, _a = session.declare_rules_action(
@@ -13579,27 +13593,54 @@ class LotTwentyOneTests(RealCardRulesCase):
         error, _ = self.ju_lien_put(session, "m-0")
         self.assertIn("valid card type", error)
 
-    def test_ju_lien_will_is_free_to_play_after_a_win_and_exiled_otherwise(self):
+    def test_ju_lien_will_stays_on_the_field_free_to_play_after_a_win_and_is_exiled_otherwise(self):
         session, p1, p2 = self.setup_wills()
-        ability = self.ability(self.JU_LIEN, "ju-lien-puts-hand-will-in-support")
         for winner in ("p1", "p2", None):
             self.put(p1, "hand", ["will-eph"])
             p1["zones"]["exile"] = []
-            session.rules_engine["playPermissions"] = []
             self.ju_lien_put(session, "will-eph")
             payload = {"itemId": session.battlefield[-1]["id"]}
             settled, ids = self.settle(session, payload["itemId"], winner)
             if winner == "p1":
                 self.assertEqual(settled[0]["status"], "playable_free")
-                self.assertIn("will-eph", p1["zones"]["hand"])
-                permission = session.rules_engine["playPermissions"][0]
-                self.assertTrue(permission["noTribute"])
-                self.assertEqual(permission["cardId"], "will-eph")
+                item = session.find_battlefield_item(payload["itemId"])
+                self.assertEqual(item["playableFree"], session.phase_tracker["turn"])
+                self.assertEqual(session.rules_field_zone(item), "field")
+                self.assertEqual(session.rules_item_card_rules(item)["type"], "ephemeral_will")
+                self.assertNotIn("will-eph", p1["zones"]["hand"])
+                # Play it from the field without paying its tribute.
+                session.rules_engine["pendingChoice"] = None
+                session.rules_engine["actionStack"] = []
+                session.rules_engine["priorityPlayerId"] = "p1"
+                error, action = session.declare_rules_action(
+                    "p1", "Play", kind="play_card",
+                    source={"cardId": "will-eph", "zone": "battlefield", "itemId": item["id"]})
+                self.assertIsNone(error)
+                self.assertFalse(action["cost"]["tributePaid"])
+                self.assertIsNone(session.find_battlefield_item(item["id"]))
+                session.pass_rules_priority("p2")
+                session.pass_rules_priority("p1")
+                self.assertIn("will-eph", p1["zones"]["graveyard"])
+                # Not playable again, nor after the turn is over.
+                p1["zones"]["graveyard"] = []
             else:
                 self.assertIn("will-eph", p1["zones"]["exile"])
                 self.assertNotIn("will-eph", p1["zones"]["hand"])
-            self.assertIsNone(session.find_battlefield_item(payload["itemId"]))
+                self.assertIsNone(session.find_battlefield_item(payload["itemId"]))
             session.battlefield = []
+
+    def test_ju_lien_free_play_right_ends_with_the_turn(self):
+        session, p1, p2 = self.setup_wills()
+        item = self.field_item("w", "p1", "will-eph", field_zone="field", controllerId="p1", x=0, y=0, rotation=0, stackedOn=None,
+                               effectsDisabled=True, playableFree=session.phase_tracker["turn"])
+        session.battlefield = [item]
+        session.rules_engine["priorityPlayerId"] = "p1"
+        session.phase_tracker["turn"] += 1
+        session.prune_rules_ongoing_effects()
+        self.assertNotIn("playableFree", item)
+        error, _ = session.declare_rules_action(
+            "p1", "Play", kind="play_card", source={"cardId": "will-eph", "zone": "battlefield", "itemId": "w"})
+        self.assertIn("already on the field", error)
 
     def test_a_converted_will_that_never_fought_goes_back_to_normal_at_the_next_turn(self):
         session, p1, p2 = self.setup_wills()

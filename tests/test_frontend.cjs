@@ -1486,6 +1486,17 @@ function startServer() {
     });
     assert.equal(limboPicker.shown, limboPicker.playable ? 1 : 0, JSON.stringify(limboPicker));
     assert.equal(limboPicker.filtered, 0);
+    const fieldPlay = await page.evaluate(() => {
+      const will = [...cardsById.values()].find((card) => card.type === "ephemeral_will" && Object.keys(printedTributeRequirements(card)).length);
+      const saved = latestState.rulesEngine.priorityPlayerId;
+      latestState.rulesEngine.priorityPlayerId = myPlayerId;
+      const playable = limboWillIsPlayable(will.id, true);
+      const draft = buildRulesActionDraft({ cardId: will.id, zone: "battlefield", itemId: "x", playFromField: true });
+      latestState.rulesEngine.priorityPlayerId = saved;
+      return { playable, req: draft.paymentRequirements };
+    });
+    assert.equal(fieldPlay.playable, true);
+    assert.deepEqual(fieldPlay.req, {});
     const temperamentUi = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
       const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };

@@ -1136,7 +1136,11 @@ class Session:
                 return "Only an opponent can activate this effect.", None
             if not item.get("faceUp"):
                 return "A face-down card cannot declare an effect.", None
-            if kind == "play_card" and not as_support:
+            if kind == "play_card" and not as_support and not (
+                item.get("playableFree")
+                and metadata.get("type") in RULES_WILL_TYPES
+                and item.get("playableFree") == self.phase_tracker["turn"]
+            ):
                 return "A card already on the field cannot be played again.", None
             if as_support:
                 if self.current_phase_id() != "confrontation_reaction":
@@ -1220,6 +1224,8 @@ class Session:
                 "permissionId": permission.get("id"),
                 "noTribute": bool(permission.get("noTribute")),
             })
+        if zone == "battlefield" and kind == "play_card" and not as_support:
+            clean_source["noTribute"] = True
         if zone == "graveyard" and not as_support:
             clean_source.update({
                 "containerId": container_id,
@@ -3515,7 +3521,7 @@ class Session:
                 "asSupport": True, "fromZone": from_zone,
                 "enteredBattlefield": source.get("zone") != "battlefield",
             }
-        if source.get("zone") not in {"hand", "suspended", "graveyard"}:
+        if source.get("zone") not in {"hand", "suspended", "graveyard", "battlefield"}:
             return None
         if player is None or (not source_on_stack and card_id not in player["zones"]["hand"]):
             destination = "battlefield" if source.get("cardType") == "persistent_will" else "graveyard"
@@ -3874,6 +3880,11 @@ class Session:
     def prune_rules_ongoing_effects(self):
         for pending in [entry for entry in self.battlefield if entry.get("pendingExile")]:
             self._rules_remove_field_item(pending, pending.get("ownerId"), "exile", "top")
+        for expired in [
+            entry for entry in self.battlefield
+            if entry.get("playableFree") and entry["playableFree"] != self.phase_tracker["turn"]
+        ]:
+            expired.pop("playableFree", None)
         for stale in [
             entry for entry in self.battlefield
             if entry.get("willManifestation")
@@ -4036,17 +4047,11 @@ class Session:
             elif outcome == "exile":
                 entry = self._rules_remove_field_item(item, owner_id, "exile", "top")
             else:
-                card_id = item.get("cardId")
-                entry = self._rules_remove_field_item(item, owner_id, "hand", "top")
-                if card_id in self.players.get(owner_id, {}).get("zones", {}).get("hand", []):
-                    self.rules_engine["playPermissions"].append({
-                        "id": new_id(), "abilityId": "ju-lien-free-play",
-                        "playerId": owner_id, "cardId": card_id, "fromZone": "hand",
-                        "phaseIds": ["confrontation_reaction", "resolution_effects", "end_actions"],
-                        "asSupport": False, "noTribute": True,
-                        "turn": self.phase_tracker["turn"],
-                    })
-                    entry = {**entry, "status": "playable_free"}
+                # Ju Lien: the Will stays on the field (effects still off) and can
+                # be played from there, without tribute, until the end of the turn.
+                self.revert_rules_will_manifestation(item)
+                item["playableFree"] = self.phase_tracker["turn"]
+                entry = {"status": "playable_free"}
             participant_ids.discard(item.get("id"))
             settled.append({**entry, "itemId": item.get("id"), "cardId": item.get("cardId"), "outcome": outcome})
         if settled:
@@ -5952,7 +5957,7 @@ class Session:
             action["sourceOnStack"] = True
             if clean_source.get("permissionId"):
                 self.consume_rules_zone_play_permission(clean_source["permissionId"])
-        elif as_support and clean_source.get("zone") == "battlefield":
+        elif clean_source and clean_source.get("zone") == "battlefield" and kind == "play_card":
             source_item = self.find_battlefield_item(clean_source.get("itemId"))
             if source_item is None:
                 return "This Manifestation is no longer in your Interzone.", None
@@ -14959,6 +14964,15 @@ class Session:
             return "You have not passed priority.", None
         if self.rules_engine["priorityPlayerId"] != player_id:
             return "You do not have priority.", None
+        # Freenya: the free Limbo play is offered once, when its effect resolves.
+        self.rules_engine["playPermissions"] = [
+            entry for entry in self.rules_engine.get("playPermissions") or []
+            if not (
+                entry.get("playerId") == player_id
+                and entry.get("fromZone") == "graveyard"
+                and entry.get("exileOnLeave")
+            )
+        ]
 
         previous_passes = self.rules_engine["priorityPasses"]
         if not previous_passes:
@@ -15367,6 +15381,8 @@ class Session:
                 entry["confrontationOrder"] = item["confrontationOrder"]
             if item.get("effectsDisabled"):
                 entry["effectsDisabled"] = True
+            if item.get("playableFree"):
+                entry["playableFree"] = item["playableFree"]
             if item.get("isTokenCard"):
                 entry["isTokenCard"] = True
                 entry["temperament"] = item["temperament"]

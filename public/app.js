@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261010-rules-beta-116";
+const STATIC_ASSET_VERSION = "20261010-rules-beta-117";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -2420,9 +2420,11 @@ function submitRulesBoardFlow(target = null) {
     closeRulesBoardFlow();
     return;
   }
-  const activated = flow.actionKind === "activated_effect"
+  const activated = !flow.source.playFromField && (
+    flow.actionKind === "activated_effect"
     || flow.source.actionKind === "activated_effect"
-    || flow.source.zone === "battlefield";
+    || flow.source.zone === "battlefield"
+  );
   const selectedTargets = [...(flow.selectedTargets || [])];
   if (target) selectedTargets.push(target);
   const payload = {
@@ -2432,7 +2434,7 @@ function submitRulesBoardFlow(target = null) {
     source: {
       cardId: flow.source.cardId,
       zone: flow.source.zone,
-      itemId: activated ? flow.source.itemId : null,
+      itemId: (activated || flow.source.playFromField) ? flow.source.itemId : null,
     },
     target: "",
     targets: selectedTargets.map(rulesTargetPayload),
@@ -2953,9 +2955,11 @@ function rulesActivatedActionDraft(item, abilityOverride = null) {
 function beginRulesBoardAction(source) {
   const draft = buildRulesActionDraft(source);
   if (!draft.card || !["ephemeral_will", "persistent_will"].includes(draft.card.type)) return false;
-  const playable = source.zone === "graveyard"
-    ? limboWillIsPlayable(source.cardId)
-    : handCardIsPlayable(source.cardId);
+  const playable = source.playFromField
+    ? limboWillIsPlayable(source.cardId, true)
+    : source.zone === "graveyard"
+      ? limboWillIsPlayable(source.cardId)
+      : handCardIsPlayable(source.cardId);
   if (!playable) {
     showToast(t("rulesBoardCardNotPlayable"), true);
     return true;
@@ -3252,12 +3256,12 @@ function rulesLimboPlayMode() {
   return hollow ? "hollow" : null;
 }
 
-function limboWillIsPlayable(cardId) {
+function limboWillIsPlayable(cardId, fromField = false) {
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
   if (!rules?.enabled || !card || isObserver || rules.pendingChoice) return false;
   if (!["ephemeral_will", "persistent_will"].includes(card.type)) return false;
-  if (rules.priorityPlayerId !== myPlayerId || !rulesLimboPlayMode()) return false;
+  if (rules.priorityPlayerId !== myPlayerId || !(fromField || rulesLimboPlayMode())) return false;
   if (rulesCardPlayRestrictedClient(cardId)) return false;
   const phaseId = currentPhaseUi().phase?.id;
   if (card.type === "persistent_will") {
@@ -3302,9 +3306,11 @@ function renderLimboPlayList() {
 }
 
 function rulesActionPaymentDraft(source, card, encodedAbility) {
-  const limboPlay = source.zone === "graveyard"
-    && ["ephemeral_will", "persistent_will"].includes(card?.type)
-    ? rulesLimboPlayMode() : null;
+  const limboPlay = source.playFromField
+    ? "free"
+    : source.zone === "graveyard"
+      && ["ephemeral_will", "persistent_will"].includes(card?.type)
+      ? rulesLimboPlayMode() : null;
   const isPrintedWill = (["hand", "suspended"].includes(source.zone) || Boolean(limboPlay))
     && ["ephemeral_will", "persistent_will"].includes(card?.type);
   const freeWillPermission = isPrintedWill && (latestState?.rulesEngine?.playPermissions || []).some((permission) => (
@@ -3542,6 +3548,8 @@ function buildRulesActionDraft(source, abilityOverride = undefined) {
           !Array.isArray(ability.sourceZones)
           || ability.sourceZones.includes(source.zone)
         )) || null
+    : source?.playFromField
+      ? (playedAbilitiesByCard.get(source.cardId) || [])[0] || null
     : source?.zone === "battlefield"
       ? (rulesActivatedAbilitiesForItem(sourceItem) || [])[0] || null
       : ["hand", "suspended", "graveyard"].includes(source?.zone)
@@ -8813,6 +8821,15 @@ function renderBattlefield() {
         ? rulesActionContextItem({ cardId: item.cardId, zone: "battlefield", itemId: item.id })
         : null;
       if (rulesItem) items.push(rulesItem);
+      if (isMine && item.playableFree && limboWillIsPlayable(item.cardId, true)) {
+        items.push({
+          label: t("rulesPlayFreeFromField"),
+          onSelect: () => beginRulesBoardAction({
+            cardId: item.cardId, zone: "battlefield", itemId: item.id, playFromField: true,
+            placement: { x: item.x, y: item.y },
+          }),
+        });
+      }
       if (item.faceUp) items.push({ label: t("copyCard"), onSelect: () => send({ type: "copy_card", itemId: item.id }) });
       items.push({ separator: true });
       if (isMine) items.push({ label: t("flip"), onSelect: () => send({ type: "flip_card", itemId: item.id }), highlight: !item.faceUp });
