@@ -12996,8 +12996,9 @@ class LotEighteenTests(RealCardRulesCase):
     """Beta leftovers: Ranba and friends."""
 
     RANBA, NULLIFY_REASON, DRILL = "fdnhc537c4xu2wo_en", "36l7iw5m5hk1pmr_en", "cwgofw6qsn7aplc_en"
-    BARANCHIO = "qairavs7la5qg39_en"
-    ALL = (RANBA, NULLIFY_REASON, DRILL, BARANCHIO)
+    BARANCHIO, BEACON = "qairavs7la5qg39_en", "z2gm0fc6fxlnsb1_en"
+    RADIANCE, HOURGLASS = "yca1lsjic3cktj1_en", "lmx5uff1z53fo0g_en"
+    ALL = (RANBA, NULLIFY_REASON, DRILL, BARANCHIO, BEACON, RADIANCE, HOURGLASS)
 
     def run_result(self, session, card_id, ability_id, controller="p1", targets=None, item_id=None, **extra):
         ability = self.ability(card_id, ability_id)
@@ -13165,6 +13166,144 @@ class LotEighteenTests(RealCardRulesCase):
         error, result = session3.resolve_rules_choice("p2", session3.rules_engine["pendingChoice"]["id"], option="yes")
         self.assertEqual(session3.find_battlefield_item("their")["fieldZone"], "interzone")
         self.assertEqual(result["choiceKind"], "chain_manifestation")
+
+    def test_scrambling_beacon_changes_the_target_of_a_stack_effect(self):
+        session, p1, p2 = self.make_session()
+        session.card_rules["pull"] = {"type": "persistent_will", "temperaments": ["phlegmatic"]}
+        mine = {"kind": "card", "itemId": "mine", "cardId": "m-1", "ownerId": "p1"}
+        other = {"kind": "card", "itemId": "other", "cardId": "m-2", "ownerId": "p1"}
+        session.battlefield = [
+            self.field_item("beacon", "p1", self.BEACON, field_zone="field", counters={"Lucore": 3}),
+            self.field_item("mine", "p1", "m-1", controllerId="p1"),
+            self.field_item("other", "p1", "m-2", controllerId="p1"),
+            self.field_item("enemy", "p2", "m-3", controllerId="p2"),
+        ]
+        victim_rules = {"kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"]}
+        hit = {
+            "id": "hit", "kind": "activated_effect", "controllerId": "p2", "targets": [mine],
+            "source": {"cardId": "pull", "itemId": "enemy", "ownerId": "p2"},
+            "ability": {"id": "pull-hit", "targets": victim_rules, "result": {"kind": "move_target", "zone": "hand", "position": "top", "reason": "return"}},
+        }
+        session.rules_engine["actionStack"] = [hit]
+        beacon = self.ability(self.BEACON, "beacon-changes-a-target")
+        stack_target = {"kind": "stack_item", "actionId": "hit", "cardId": "pull"}
+        contract = {"groups": beacon["targetGroups"]}
+        self.assertIsNone(session.rules_ability_targets_error(contract, [stack_target, other], "p1"))
+        self.assertIsNone(session.rules_retarget_error([stack_target, other]))
+        # An effect that targets no card on the field is not a legal first target.
+        hit["targets"] = []
+        self.assertIsNotNone(session.rules_ability_targets_error(contract, [stack_target, other], "p1"))
+        hit["targets"] = [mine]
+        # The new target has to be legal for the redirected effect.
+        session.card_rules["m-4"] = {"type": "persistent_will", "temperaments": ["phlegmatic"]}
+        session.battlefield.append(self.field_item("will", "p1", "m-4", field_zone="field"))
+        wrong = {"kind": "card", "itemId": "will", "cardId": "m-4", "ownerId": "p1"}
+        self.assertIsNotNone(session.rules_retarget_error([stack_target, wrong]))
+        error, _ability = session.rules_action_ability(
+            "p1", "activated_effect", {"cardId": self.BEACON, "itemId": "beacon", "zone": "battlefield"},
+            "beacon-changes-a-target", [stack_target, other],
+        )
+        self.assertIsNone(error)
+        error, _ability = session.rules_action_ability(
+            "p1", "activated_effect", {"cardId": self.BEACON, "itemId": "beacon", "zone": "battlefield"},
+            "beacon-changes-a-target", [stack_target, wrong],
+        )
+        self.assertIsNotNone(error)
+        payload = session.apply_rules_action_result({
+            "id": "beacon-act", "controllerId": "p1",
+            "source": {"cardId": self.BEACON, "itemId": "beacon", "ownerId": "p1"},
+            "targets": [stack_target, other], "ability": beacon,
+        })
+        self.assertEqual(payload["status"], "retargeted")
+        self.assertEqual([entry["itemId"] for entry in hit["targets"]], ["other"])
+        # The Beacon enters with three Lucore counters.
+        enter = self.ability(self.BEACON, "beacon-enters-with-lucore")
+        self.assertEqual(enter["result"]["value"], 3)
+
+    def test_nullifying_radiance_chooses_a_temperament_and_cancels_matching_effects(self):
+        session, p1, p2 = self.make_session()
+        session.battlefield = [
+            self.field_item("rad", "p1", self.RADIANCE, field_zone="field", counters={"Flame": 3}),
+            self.field_item("mine", "p1", "m-1", controllerId="p1"),
+            self.field_item("theirs", "p2", "m-2", controllerId="p2"),
+        ]
+        payload = session.apply_rules_action_result({
+            "id": "rad-enter", "controllerId": "p1",
+            "source": {"cardId": self.RADIANCE, "itemId": "rad", "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.RADIANCE, "radiance-chooses-a-temperament"),
+        })
+        self.assertEqual((payload["choiceKind"], payload["playerId"]), ("temperament_choice", "p1"))
+        choice = session.rules_engine["pendingChoice"]
+        self.assertIsNotNone(session.resolve_rules_choice("p1", choice["id"], option="plasma")[0])
+        error, result = session.resolve_rules_choice("p1", choice["id"], option="choleric")
+        self.assertIsNone(error)
+        rad = session.find_battlefield_item("rad")
+        self.assertEqual((rad["chosenTemperament"], rad["counters"]["Flame"]), ("choleric", 3))
+        # Only an opponent's effect of that temperament aimed at one of your field cards can be cancelled.
+        session.card_rules["red"] = {"type": "manifestation", "temperaments": ["choleric"]}
+        session.card_rules["blue"] = {"type": "manifestation", "temperaments": ["vitreous"]}
+        rules = self.ability(self.RADIANCE, "radiance-cancels-a-matching-effect")["targets"]
+        def effect(action_id, card_id, controller, targets):
+            action = {
+                "id": action_id, "kind": "triggered_effect", "controllerId": controller,
+                "source": {"cardId": card_id, "ownerId": controller}, "targets": targets,
+                "ability": {"id": "x", "result": {"kind": "score_owner", "value": 1}},
+            }
+            session.rules_engine["actionStack"].append(action)
+            return action, {"kind": "stack_effect", "actionId": action_id, "cardId": card_id}
+        mine_target = [{"kind": "card", "itemId": "mine", "cardId": "m-1", "ownerId": "p1"}]
+        theirs_target = [{"kind": "card", "itemId": "theirs", "cardId": "m-2", "ownerId": "p2"}]
+        good, good_ref = effect("good", "red", "p2", mine_target)
+        _wrong_temperament, wrong_ref = effect("blue-effect", "blue", "p2", mine_target)
+        _not_mine, not_mine_ref = effect("elsewhere", "red", "p2", theirs_target)
+        _own, own_ref = effect("own", "red", "p1", mine_target)
+        self.assertIsNone(session.rules_ability_targets_error(rules, [good_ref], "p1", source_item_id="rad"))
+        for ref in (wrong_ref, not_mine_ref, own_ref):
+            self.assertIsNotNone(session.rules_ability_targets_error(rules, [ref], "p1", source_item_id="rad"))
+        cancelled = session.apply_rules_action_result({
+            "id": "rad-act", "controllerId": "p1",
+            "source": {"cardId": self.RADIANCE, "itemId": "rad", "ownerId": "p1"},
+            "targets": [good_ref], "ability": self.ability(self.RADIANCE, "radiance-cancels-a-matching-effect"),
+        })
+        self.assertEqual(cancelled["status"], "cancelled")
+        self.assertNotIn(good, session.rules_engine["actionStack"])
+
+    def hourglass_setup(self, own_power, opponent_power):
+        session, p1, p2 = self.make_session()
+        session.card_rules["m-1"]["power"] = own_power
+        session.card_rules["m-2"]["power"] = opponent_power
+        session.battlefield = [
+            self.field_item("mine", "p1", "m-1", controllerId="p1", confrontationOrder=1),
+            self.field_item("theirs", "p2", "m-2", controllerId="p2", confrontationOrder=2),
+        ]
+        session.rules_engine["firstManifestationItemIds"] = {"p1": "mine", "p2": "theirs"}
+        action = {
+            "id": "hourglass", "controllerId": "p1",
+            "source": {"cardId": self.HOURGLASS, "ownerId": "p1"}, "targets": [],
+            "ability": self.ability(self.HOURGLASS, "immediate-stalemate-unless-opponent-pays"),
+        }
+        return session, p1, p2, action
+
+    def test_hermetic_hourglass_forces_a_stalemate_when_your_first_is_the_weakest_unless_paid(self):
+        session, _p1, _p2, action = self.hourglass_setup(1, 3)
+        payload = session.apply_rules_action_result(action)
+        self.assertEqual((payload["choiceKind"], payload["playerId"]), ("immediate_effect_payment", "p2"))
+        choice = session.rules_engine["pendingChoice"]
+        self.assertTrue(choice["stalemateOnDecline"])
+        self.assertEqual(choice["requirements"], {"hollow": 2})
+        error, result = session.resolve_rules_choice("p2", choice["id"], option="decline")
+        self.assertIsNone(error)
+        self.assertEqual(result["status"], "declined")
+        self.assertTrue(result["confrontationResult"]["stalemate"])
+        # Without the condition nothing is asked.
+        session, _p1, _p2, action = self.hourglass_setup(3, 1)
+        self.assertEqual(session.apply_rules_action_result(action)["status"], "condition_failed")
+        session, _p1, _p2, action = self.hourglass_setup(2, 2)
+        self.assertEqual(session.apply_rules_action_result(action)["status"], "condition_failed")
+        # Without the stalemate flag the stronger First Manifestation would have won.
+        session, *_rest = self.hourglass_setup(1, 3)
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_compare")
+        self.assertEqual(session.prepare_rules_confrontation_result()["winnerId"], "p2")
 
 
 if __name__ == "__main__":

@@ -233,6 +233,7 @@ class Session:
             "lastConfrontationWinnerId": None,
             "rematchPending": None,
             "forcedConfrontationWinnerId": None,
+            "forcedConfrontationStalemate": False,
         }
         self.phase_tracker = {
             "enabled": bool(rules_beta),
@@ -1339,7 +1340,8 @@ class Session:
             "move_source_to_owner_hand", "disable_source_effects",
             "destroy_vessel_target_owner_sacrifices",
             "declare_name_search_deck", "return_first_then_chain",
-            "offer_support_else_chain",
+            "offer_support_else_chain", "retarget_stack_action",
+            "choose_source_temperament", "cancel_target_stack_effect",
             "exile_source_take_control_to_interzone",
             "move_hand_source_to_interzone",
             "create_event_token_copy_in_support",
@@ -1859,11 +1861,18 @@ class Session:
             return {"kind": kind}
         if kind in {
             "force_win_if_highest_base_first",
+            "stalemate_unless_opponent_pays",
             "skip_confrontation_unless_points",
             "end_confrontation_relocate_all",
             "suspend_opponent_hand_will",
         }:
             clean = {"kind": kind}
+            if kind == "stalemate_unless_opponent_pays":
+                payment = str(result.get("payment") or "")
+                symbols = re.findall(r"\{([A-Z])\}", payment)
+                if not symbols or any(symbol not in TRIBUTE_SYMBOL_TEMPERAMENT for symbol in symbols):
+                    return None
+                clean["payment"] = "".join(f"{{{symbol}}}" for symbol in symbols)
             if kind == "skip_confrontation_unless_points":
                 points = result.get("points")
                 if not isinstance(points, (int, float)):
@@ -1996,6 +2005,8 @@ class Session:
                         if stack_target_kind == "stack_action"
                         else "The targeted effect is no longer on the Stack."
                     )
+                if stack_action is None:
+                    return "The targeted card or effect is no longer on the Stack."
                 if self.rules_stack_action_is_protected(
                     stack_action, controller_id
                 ):
@@ -2008,6 +2019,25 @@ class Session:
                 metadata = self.card_rules.get((stack_action.get("source") or {}).get("cardId"), {})
                 if required_types and metadata.get("type") not in required_types:
                     return "This effect requires a different type of Stack card."
+                if target_rules.get("targetsOwnFieldCard") and not any(
+                    entry.get("kind") == "card"
+                    and (field_item := self.find_battlefield_item(entry.get("itemId"))) is not None
+                    and self.rules_item_controller_id(field_item) == controller_id
+                    for entry in stack_action.get("targets") or []
+                ):
+                    return "This effect must target a card on the field you control."
+                if target_rules.get("effectTemperamentChosenBySource"):
+                    chosen = (self.find_battlefield_item(source_item_id) or {}).get("chosenTemperament")
+                    effect_temperaments = self.card_rules.get(
+                        (stack_action.get("source") or {}).get("cardId"), {}
+                    ).get("temperaments") or []
+                    if not chosen or chosen not in effect_temperaments:
+                        return "This effect must have the chosen temperament."
+                if (
+                    target_rules.get("targetsFieldCard")
+                    and not self.rules_stack_action_targets_field_card(stack_action)
+                ):
+                    return "This effect requires a card or effect that targets a card on the field."
                 if (
                     target_rules.get("targetsConfrontationManifestation")
                     and not self.rules_stack_action_targets_confrontation(stack_action)
@@ -2225,6 +2255,10 @@ class Session:
         )
         if target_error:
             return target_error, None
+        if (ability.get("result") or {}).get("kind") == "retarget_stack_action":
+            retarget_error = self.rules_retarget_error(targets)
+            if retarget_error:
+                return retarget_error, None
 
         if ability.get("exhaustSource"):
             item = self.find_battlefield_item(source.get("itemId"))
@@ -2335,6 +2369,7 @@ class Session:
             "sourceOnly", "fieldZonesByType", "enteredThisTurn", "enteredInterzoneThisTurn", "confrontationOutcome", "owner",
             "firstManifestationOnly",
             "counter", "minCounters", "limboReasons", "container", "maxTotalPoints", "targetsConfrontationManifestation",
+            "targetsFieldCard", "targetsOwnFieldCard", "effectTemperamentChosenBySource",
         }
         return None, {
             "id": ability["id"],
@@ -4197,6 +4232,34 @@ class Session:
             if not item.get("stackedOn")
         )
 
+    def rules_stack_action_targets_field_card(self, stack_action):
+        return any(
+            entry.get("kind") == "card"
+            and self.find_battlefield_item(entry.get("itemId")) is not None
+            for entry in (stack_action or {}).get("targets") or []
+        )
+
+    def rules_retarget_error(self, targets):
+        """Scrambling Beacon: the new target must be legal for the redirected card or effect."""
+        stack_entry, new_target = (list(targets) + [None, None])[:2]
+        target_action = next((
+            entry for entry in self.rules_engine.get("actionStack") or []
+            if stack_entry and entry.get("id") == stack_entry.get("actionId")
+        ), None)
+        if target_action is None or not isinstance(new_target, dict):
+            return "The selected card or effect is no longer on the Stack."
+        rules = self.rules_action_target_rules(target_action)
+        if not rules or "groups" in rules or int(rules.get("max") or 0) != 1:
+            return "The target of this card or effect cannot be changed."
+        error = self.rules_ability_targets_error(
+            rules, [new_target], target_action.get("controllerId"),
+            source_item_id=(target_action.get("source") or {}).get("itemId"),
+        )
+        return error or (
+            None if new_target.get("kind") == "card"
+            else "Choose a card on the field as the new target."
+        )
+
     def rules_stack_action_targets_confrontation(self, stack_action):
         return any(
             entry.get("kind") == "card"
@@ -5115,6 +5178,10 @@ class Session:
                 source.get("cardId"), {}
             ).get("passiveEffects") or []
         )
+        loudmouth_forces_stalemate = (
+            loudmouth_forces_stalemate
+            or bool(self.rules_engine.get("forcedConfrontationStalemate"))
+        )
         if forced_winner_id in self.players and not loudmouth_forces_stalemate:
             winner_id = forced_winner_id
             loser_id = self.other_rules_player_id(winner_id)
@@ -5517,6 +5584,7 @@ class Session:
         )
         self.rules_engine["confrontationResult"] = None
         self.rules_engine["forcedConfrontationWinnerId"] = None
+        self.rules_engine["forcedConfrontationStalemate"] = False
 
     def ready_rules_exhausted_cards(self):
         """Return exhausted battlefield cards to their upright orientation."""
@@ -11129,6 +11197,35 @@ class Session:
                 "basePower": source_power,
                 "highestBasePower": highest,
             }
+        if result.get("kind") == "stalemate_unless_opponent_pays":
+            controller_id = action.get("controllerId")
+            opponent_id = self.other_rules_player_id(controller_id)
+            first_ids = self.rules_engine.get("firstManifestationItemIds", {})
+            powers = {}
+            for pid in (controller_id, opponent_id):
+                first = self.find_battlefield_item(first_ids.get(pid))
+                if first is not None:
+                    powers[pid] = int(self.card_rules.get(first.get("cardId"), {}).get("power") or 0)
+            if (
+                controller_id not in powers or opponent_id not in powers
+                or powers[controller_id] >= powers[opponent_id]
+            ):
+                return {"kind": result.get("kind"), "status": "condition_failed", "powers": powers}
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "immediate_effect_payment", "playerId": opponent_id,
+                "payment": result.get("payment"),
+                "requirements": self.rules_requirements_from_symbols(result.get("payment")),
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+                "actionId": action.get("id"),
+                "controllerId": controller_id,
+                "stalemateOnDecline": True,
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "immediate_effect_payment", "playerId": opponent_id,
+                "payment": result.get("payment"),
+            }
         if result.get("kind") == "skip_confrontation_unless_points":
             source_controller_id = action.get("controllerId")
             opponent_id = self.other_rules_player_id(source_controller_id)
@@ -11501,6 +11598,69 @@ class Session:
                 "memoryId": memory["id"],
                 "cardId": card_id,
                 "playerId": owner_id,
+            }
+        if result.get("kind") == "choose_source_temperament":
+            source = action.get("source") or {}
+            item = self.find_battlefield_item(source.get("itemId"))
+            if item is None:
+                return {"kind": result.get("kind"), "status": "source_missing"}
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "temperament_choice", "playerId": player_id,
+                "options": sorted(RULES_TEMPERAMENTS),
+                "sourceCardId": source.get("cardId"), "sourceItemId": item.get("id"),
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "temperament_choice", "playerId": player_id,
+            }
+        if result.get("kind") == "cancel_target_stack_effect":
+            target = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "stack_effect"
+            ), None)
+            target_action = next((
+                entry for entry in self.rules_engine.get("actionStack") or []
+                if target and entry.get("id") == target.get("actionId")
+            ), None)
+            if target_action is None:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            countered = self.counter_rules_stack_action(target_action, "cancel")
+            return {"kind": result.get("kind"), **(countered or {"status": "target_missing"})}
+        if result.get("kind") == "retarget_stack_action":
+            stack_entry = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") in {"stack_action", "stack_effect", "stack_item"}
+            ), None)
+            new_target = next((
+                entry for entry in action.get("targets") or []
+                if entry.get("kind") == "card"
+            ), None)
+            target_action = next((
+                entry for entry in self.rules_engine.get("actionStack") or []
+                if stack_entry and entry.get("id") == stack_entry.get("actionId")
+            ), None)
+            if target_action is None or new_target is None:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            error = self.rules_retarget_error([stack_entry, new_target])
+            if error:
+                return {"kind": result.get("kind"), "status": "invalid_target", "error": error}
+            replaced = False
+            updated = []
+            for entry in target_action.get("targets") or []:
+                if not replaced and entry.get("kind") == "card":
+                    updated.append(dict(new_target))
+                    replaced = True
+                else:
+                    updated.append(entry)
+            target_action["targets"] = updated
+            if isinstance(target_action.get("target"), dict) and target_action["target"].get("kind") == "card":
+                target_action["target"] = dict(new_target)
+            return {
+                "kind": result.get("kind"), "status": "retargeted",
+                "actionId": target_action.get("id"),
+                "cardId": (target_action.get("source") or {}).get("cardId"),
+                "newTarget": dict(new_target),
             }
         if result.get("kind") == "neutralize_stack_action":
             target = next((
@@ -13227,6 +13387,20 @@ class Session:
                 "status": "discarded" if not error and not replacement else "unmoved",
             }
 
+        if choice.get("kind") == "temperament_choice":
+            if option not in choice.get("options", []):
+                return "Choose a base temperament.", None
+            self.rules_engine["pendingChoice"] = None
+            item = self.find_battlefield_item(choice.get("sourceItemId"))
+            if item is not None:
+                item["chosenTemperament"] = option
+                label = option.capitalize()
+                item.setdefault("counters", {})[label] = 1
+            return None, {
+                "kind": "temperament_choice", "status": "chosen",
+                "temperament": option, "itemId": choice.get("sourceItemId"),
+            }
+
         if choice.get("kind") == "binary_choice" and choice.get("purpose") == "support_else_chain":
             if option not in choice.get("options", []):
                 return "Choose yes or no.", None
@@ -13697,6 +13871,8 @@ class Session:
                         controller_id, "graveyard",
                         controller_id, "exile", source_card_id, "top",
                     )
+                if choice.get("stalemateOnDecline"):
+                    self.rules_engine["forcedConfrontationStalemate"] = True
                 self.phase_tracker["index"] = ADVANCED_PHASES.index(
                     "resolution_compare"
                 )
@@ -14893,6 +15069,8 @@ class Session:
                 entry["fieldZone"] = item["fieldZone"]
             if item.get("isSupport"):
                 entry["isSupport"] = True
+            if item.get("chosenTemperament"):
+                entry["chosenTemperament"] = item["chosenTemperament"]
             if item.get("supportUntilTurn"):
                 entry["supportUntilTurn"] = item["supportUntilTurn"]
             if (

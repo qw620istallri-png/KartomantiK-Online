@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 333,
-    "explicitAbilities": 416,
+    "explicitCards": 336,
+    "explicitAbilities": 422,
     "statuses": {
-      "automated": 403,
+      "automated": 405,
       "generic": 0,
-      "manual": 47,
-      "partial": 0
+      "manual": 44,
+      "partial": 1
     }
   },
   "cards": {
@@ -1462,10 +1462,23 @@
       "collectionNumber": 90,
       "name": "Scrambling Beacon",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "beacon-enters-with-lucore",
+        "beacon-changes-a-target"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "result:add_counter_source",
+        "result:retarget_stack_action",
+        "target:card",
+        "target:stack_item",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "0r7k88v71vvx7kk_en": {
       "collectionNumber": 91,
@@ -3844,9 +3857,13 @@
       "collectionNumber": 237,
       "name": "Hermetic Hourglass",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
+      "status": "partial",
+      "abilityIds": [
+        "immediate-stalemate-unless-opponent-pays"
+      ],
+      "mechanics": [
+        "result:stalemate_unless_opponent_pays"
+      ],
       "testRefs": []
     },
     "67009ud077sgz7b_en": {
@@ -4678,10 +4695,24 @@
       "collectionNumber": 288,
       "name": "Nullifying Radiance",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "radiance-enters-with-flames",
+        "radiance-chooses-a-temperament",
+        "radiance-cancels-a-matching-effect"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "result:add_counter_source",
+        "result:cancel_target_stack_effect",
+        "result:choose_source_temperament",
+        "target:stack_effect",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "1ixfmjkfewc0o42_en": {
       "collectionNumber": 289,

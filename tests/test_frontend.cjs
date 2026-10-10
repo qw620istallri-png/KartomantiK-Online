@@ -1423,6 +1423,48 @@ function startServer() {
     assert.equal(binaryUi.option, "no");
     assert.equal(binaryUi.choiceId, "binary");
     assert.equal(binaryUi.hasText, true);
+    const temperamentUi = await page.evaluate(() => {
+      const ids = [...cardsById.keys()];
+      const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };
+      latestState.rulesEngine.priorityPlayerId = "p1";
+      latestState.rulesEngine.pendingChoice = {
+        id: "temperament", kind: "temperament_choice", playerId: "p1", sourceCardId: ids[0],
+        options: ["capricious", "choleric", "hollow", "melancholic", "phlegmatic", "transcendent", "vitreous"],
+      };
+      window.__sent = [];
+      renderAll();
+      const visible = !document.querySelector("#rulesChoicePanel").classList.contains("hidden");
+      const buttons = [...document.querySelectorAll("[data-rules-temperament-option]")].map((button) => button.dataset.rulesTemperamentOption);
+      const label = document.querySelector('[data-rules-temperament-option="hollow"]').textContent.trim();
+      document.querySelector('[data-rules-temperament-option="hollow"]').click();
+      const payload = window.__sent.find((entry) => entry.type === "resolve_rules_choice");
+      latestState.rulesEngine.priorityPlayerId = saved.priority;
+      latestState.rulesEngine.pendingChoice = saved.choice;
+      renderAll();
+      return { visible, count: buttons.length, label, option: payload?.option, choiceId: payload?.choiceId };
+    });
+    assert.equal(temperamentUi.visible, true);
+    assert.equal(temperamentUi.count, 7);
+    assert.ok(temperamentUi.label.length > 2 && !temperamentUi.label.startsWith("temperament"));
+    assert.equal(temperamentUi.option, "hollow");
+    assert.equal(temperamentUi.choiceId, "temperament");
+    const mixedGroups = await page.evaluate(() => {
+      const ids = [...cardsById.keys()];
+      const saved = latestState.rulesEngine.actionStack;
+      latestState.rulesEngine.actionStack = [{
+        id: "stack-1", kind: "triggered_effect", controllerId: "p2",
+        source: { cardId: ids[0], itemId: "x" }, targets: [],
+      }];
+      const result = rulesStructuredActionTargets({ targetGroups: [
+        { kind: "stack_item", min: 1, max: 1 },
+        { kind: "card", min: 1, max: 1, zones: ["battlefield"] },
+      ] });
+      latestState.rulesEngine.actionStack = saved;
+      const groups = result.structuredTargets.map((target) => target.targetGroupIndex);
+      return { has0: groups.includes(0), kind0: result.structuredTargets.find((t) => t.targetGroupIndex === 0)?.kind, groups, n: result.structuredTargets.length, stack: (latestState.rulesEngine.actionStack || []).length };
+    });
+    assert.equal(mixedGroups.has0, true, JSON.stringify(mixedGroups));
+    assert.equal(mixedGroups.kind0, "stack_item");
     const declareNameUi = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
       const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };

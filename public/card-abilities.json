@@ -4399,5 +4399,104 @@
         "kind": "offer_support_else_chain"
       }
     }
+  ],
+  "z2gm0fc6fxlnsb1_en": [
+    {
+      "id": "beacon-enters-with-lucore",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Lucore",
+        "value": 3
+      }
+    },
+    {
+      "id": "beacon-changes-a-target",
+      "tribute": "{H}{H}{H}",
+      "removeCountersFromSource": {
+        "name": "Lucore",
+        "amount": 1
+      },
+      "targetGroups": [
+        {
+          "kind": "stack_item",
+          "min": 1,
+          "max": 1,
+          "targetsFieldCard": true
+        },
+        {
+          "kind": "card",
+          "min": 1,
+          "max": 1,
+          "zones": [
+            "battlefield"
+          ]
+        }
+      ],
+      "result": {
+        "kind": "retarget_stack_action"
+      }
+    }
+  ],
+  "yca1lsjic3cktj1_en": [
+    {
+      "id": "radiance-enters-with-flames",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Flame",
+        "value": 3
+      }
+    },
+    {
+      "id": "radiance-chooses-a-temperament",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "choose_source_temperament"
+      }
+    },
+    {
+      "id": "radiance-cancels-a-matching-effect",
+      "tribute": "{H}{H}",
+      "removeCountersFromSource": {
+        "name": "Flame",
+        "amount": 1
+      },
+      "targets": {
+        "kind": "stack_effect",
+        "min": 1,
+        "max": 1,
+        "controller": "opponent",
+        "targetsOwnFieldCard": true,
+        "effectTemperamentChosenBySource": true
+      },
+      "result": {
+        "kind": "cancel_target_stack_effect"
+      }
+    }
+  ],
+  "lmx5uff1z53fo0g_en": [
+    {
+      "id": "immediate-stalemate-unless-opponent-pays",
+      "action": "play_card",
+      "immediate": true,
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "result": {
+        "kind": "stalemate_unless_opponent_pays",
+        "payment": "{H}{H}"
+      }
+    }
   ]
 }

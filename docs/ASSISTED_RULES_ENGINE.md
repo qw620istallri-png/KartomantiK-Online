@@ -854,3 +854,11 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Restent manuelles: Karma Bro et Kaos Bro (lancer physique), et les cartes qui demandent jouer des Volontés depuis le Limbo, une zone de cartes posées ou un choix de tempérament.
 - Version des assets: `20261010-rules-beta-112`.
 - Registre: 403 automated / 0 partial / 47 manual.
+
+## Lot 19 (Scrambling Beacon, Nullifying Radiance, Hermetic Hourglass)
+
+- Scrambling Beacon: capacité à deux groupes de cibles (`targetGroups`): une carte ou un effet de la Pile qui cible une carte du champ (`kind: stack_item`, filtre `targetsFieldCard`) puis la nouvelle cible. Résultat `retarget_stack_action`; `rules_retarget_error` valide la nouvelle cible avec le contrat de cibles de l'effet redirigé (`rules_action_target_rules`), à l'activation et à la résolution. Seuls les effets à une seule cible peuvent être redirigés. Le client envoie la première cible avec le type `stack_item` (le serveur l'accepte); le test frontend vérifie que les candidats du groupe pile sont proposés, mais le clic complet sur deux groupes n'a pas été testé dans un navigateur.
+- Nullifying Radiance: déclencheur `choose_source_temperament` (choix `temperament_choice`, panneau client à sept boutons), mémorisé dans `chosenTemperament` et rendu visible par un compteur du nom du tempérament. Capacité `cancel_target_stack_effect`: cible un effet de la Pile contrôlé par un adversaire (filtres `targetsOwnFieldCard` et `effectTemperamentChosenBySource`, tempérament imprimé de la carte source). Une action `cannotBeNeutralized` ne peut pas être annulée.
+- Hermetic Hourglass (partielle): l'Effet Immédiat est automatisé (`stalemate_unless_opponent_pays`, choix `immediate_effect_payment` avec `stalemateOnDecline`, drapeau `forcedConfrontationStalemate`). Il s'applique seulement si la Première Manifestation du joueur a une puissance de base strictement plus faible. L'ordre de jeu de la Première Manifestation à la Révélation n'est pas imposé.
+- Version des assets: `20261010-rules-beta-113`.
+- Registre: 405 automated / 1 partial / 44 manual.

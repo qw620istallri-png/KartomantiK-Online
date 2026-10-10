@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261010-rules-beta-112";
+const STATIC_ASSET_VERSION = "20261010-rules-beta-113";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -6563,6 +6563,22 @@ function renderRulesChoice() {
       confirmButton.disabled = true;
       send({ type: "resolve_rules_choice", choiceId: choice.id, option: entry.cardId });
     };
+    panel.classList.remove("hidden");
+    return;
+  }
+  if (choice.kind === "temperament_choice") {
+    $("#rulesChoiceHeading").textContent = t("rulesTemperamentChoiceHeading");
+    $("#rulesChoiceText").textContent = rulesText("rulesTemperamentChoiceText", { card: cardName(choice.sourceCardId) });
+    options.innerHTML = (choice.options || []).map((temperament) => `
+      <button type="button" class="rules-choice-destination" data-rules-temperament-option="${esc(temperament)}">
+        <strong>${esc(t(`temperament${temperament[0].toUpperCase()}${temperament.slice(1)}`))}</strong>
+      </button>`).join("");
+    $$("[data-rules-temperament-option]").forEach((button) => {
+      button.onclick = () => {
+        button.disabled = true;
+        send({ type: "resolve_rules_choice", choiceId: choice.id, option: button.dataset.rulesTemperamentOption });
+      };
+    });
     panel.classList.remove("hidden");
     return;
   }
