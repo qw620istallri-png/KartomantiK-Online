@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 338,
-    "explicitAbilities": 426,
+    "explicitCards": 340,
+    "explicitAbilities": 428,
     "statuses": {
-      "automated": 408,
+      "automated": 410,
       "generic": 0,
-      "manual": 42,
+      "manual": 40,
       "partial": 0
     }
   },
@@ -477,10 +477,20 @@
       "collectionNumber": 30,
       "name": "Rinq, Shameless Slacker",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "rinq-persistent-will-becomes-support"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "phase-window",
+        "result:will_becomes_support_manifestation",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "ibf2epfw6eap5x3_en": {
       "collectionNumber": 31,
@@ -1155,10 +1165,18 @@
       "collectionNumber": 71,
       "name": "Ju Lien, the Provocateur",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "ju-lien-puts-hand-will-in-support"
+      ],
+      "mechanics": [
+        "result:choose_hand_will_as_support_manifestation",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "twn0cer0tjbw09n_en": {
       "collectionNumber": 72,

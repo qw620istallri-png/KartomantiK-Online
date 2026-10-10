@@ -4534,5 +4534,40 @@
         "kind": "grant_limbo_will_play"
       }
     }
+  ],
+  "b5ge92hr33pdwc7_en": [
+    {
+      "id": "rinq-persistent-will-becomes-support",
+      "tribute": "{H}{H}",
+      "phaseIds": [
+        "confrontation_reaction"
+      ],
+      "targets": {
+        "kind": "card",
+        "min": 1,
+        "max": 1,
+        "cardType": "persistent_will",
+        "zones": [
+          "battlefield"
+        ],
+        "controller": "self"
+      },
+      "result": {
+        "kind": "will_becomes_support_manifestation"
+      }
+    }
+  ],
+  "qapv47r7rz6gqah_en": [
+    {
+      "id": "ju-lien-puts-hand-will-in-support",
+      "optional": true,
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "confrontation"
+      },
+      "result": {
+        "kind": "choose_hand_will_as_support_manifestation"
+      }
+    }
   ]
 }

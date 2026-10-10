@@ -2884,6 +2884,20 @@
         "tests/test_card_catalog.py",
         "tests/test_frontend.cjs"
       ]
+    },
+    "b5ge92hr33pdwc7_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
+    },
+    "qapv47r7rz6gqah_en": {
+      "status": "automated",
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     }
   }
 }

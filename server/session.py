@@ -1703,6 +1703,8 @@ class Session:
             "play_vessel_target_as_support",
             "grant_free_will_play",
             "grant_limbo_will_play",
+            "will_becomes_support_manifestation",
+            "choose_hand_will_as_support_manifestation",
             "lose_points_shuffle_source_into_deck",
             "take_last_opponent_support_to_vessel",
         }:
@@ -3699,7 +3701,7 @@ class Session:
             targets = [
                 {"kind": "card", "itemId": item["id"], "cardId": item["cardId"], "ownerId": item["ownerId"]}
                 for item in self.battlefield
-                if item.get("faceUp") and self.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"
+                if item.get("faceUp") and self.rules_item_card_rules(item).get("type") == "manifestation"
                 and not (
                     definition.get("excludeSource")
                     and item.get("id") == source.get("itemId")
@@ -3780,7 +3782,7 @@ class Session:
                 if target_player_id in self.players
                 and self.rules_item_controller_id(item) == target_player_id
                 and self.rules_field_zone(item) == "interzone"
-                and self.card_rules.get(item.get("cardId"), {}).get("type")
+                and self.rules_item_card_rules(item).get("type")
                 == "manifestation"
             ]
         elif definition.get("scope") == "target_player":
@@ -3872,6 +3874,15 @@ class Session:
     def prune_rules_ongoing_effects(self):
         for pending in [entry for entry in self.battlefield if entry.get("pendingExile")]:
             self._rules_remove_field_item(pending, pending.get("ownerId"), "exile", "top")
+        for stale in [
+            entry for entry in self.battlefield
+            if entry.get("willManifestation")
+            and (
+                entry["willManifestation"].get("turn") != self.phase_tracker["turn"]
+                or self.rules_field_zone(entry) not in {"confrontation", "stalemate"}
+            )
+        ]:
+            self.revert_rules_will_manifestation(stale)
         battlefield_ids = {item.get("id") for item in self.battlefield}
         current_turn = self.phase_tracker["turn"]
         kept = []
@@ -3950,6 +3961,17 @@ class Session:
         )
 
     def rules_item_card_rules(self, item, visiting=None):
+        metadata = self._rules_item_card_rules_base(item, visiting)
+        manifestation = item.get("willManifestation") if isinstance(item, dict) else None
+        if manifestation:
+            # Rinq / Ju Lien: a Will that is a Manifestation until the Resolution.
+            metadata = {
+                **metadata, "type": "manifestation",
+                "power": int(manifestation.get("power") or 0),
+            }
+        return metadata
+
+    def _rules_item_card_rules_base(self, item, visiting=None):
         if not isinstance(item, dict):
             return {}
         metadata = dict(self.card_rules.get(item.get("cardId"), {}))
@@ -3975,6 +3997,61 @@ class Session:
             if key in copied_metadata:
                 metadata[key] = copied_metadata[key]
         return metadata
+
+    def rules_will_tribute_cost(self, card_id):
+        metadata = self.card_rules.get(card_id, {})
+        symbols = sum(self.rules_requirements_from_symbols(metadata.get("powerCost")).values())
+        return int(symbols or metadata.get("cost") or 0)
+
+    def revert_rules_will_manifestation(self, item):
+        item.pop("willManifestation", None)
+        item["isSupport"] = False
+        if self.rules_field_zone(item) in {"confrontation", "stalemate"}:
+            item["fieldZone"] = "field"
+        item["stackedOn"] = None
+
+    def settle_rules_will_manifestations(self, result, participant_ids):
+        """End of the confrontation: Rinq / Ju Lien Wills stop being Manifestations."""
+        settled = []
+        for item in list(self.battlefield):
+            manifestation = item.get("willManifestation")
+            if not manifestation or item.get("id") not in participant_ids:
+                continue
+            controller_id = self.rules_item_controller_id(item)
+            if result.get("stalemate"):
+                key = "onStalemate"
+            elif result.get("winnerId") == controller_id:
+                key = "onWin"
+            else:
+                key = "onLoss"
+            outcome = manifestation.get(key) or "revert"
+            owner_id = item.get("ownerId")
+            if outcome == "revert":
+                self.revert_rules_will_manifestation(item)
+                entry = {"status": "reverted"}
+            elif outcome == "destroy":
+                entry = self._rules_remove_field_item_by_effect(
+                    item, owner_id, "graveyard", "top", reason="destroy"
+                )
+            elif outcome == "exile":
+                entry = self._rules_remove_field_item(item, owner_id, "exile", "top")
+            else:
+                card_id = item.get("cardId")
+                entry = self._rules_remove_field_item(item, owner_id, "hand", "top")
+                if card_id in self.players.get(owner_id, {}).get("zones", {}).get("hand", []):
+                    self.rules_engine["playPermissions"].append({
+                        "id": new_id(), "abilityId": "ju-lien-free-play",
+                        "playerId": owner_id, "cardId": card_id, "fromZone": "hand",
+                        "phaseIds": ["confrontation_reaction", "resolution_effects", "end_actions"],
+                        "asSupport": False, "noTribute": True,
+                        "turn": self.phase_tracker["turn"],
+                    })
+                    entry = {**entry, "status": "playable_free"}
+            participant_ids.discard(item.get("id"))
+            settled.append({**entry, "itemId": item.get("id"), "cardId": item.get("cardId"), "outcome": outcome})
+        if settled:
+            result["willManifestations"] = settled
+        return settled
 
     def rules_item_effects_active(self, item):
         if not item or item not in self.battlefield or not item.get("faceUp"):
@@ -4082,7 +4159,7 @@ class Session:
         """Spiked Pit: a Manifestation entering an opponent's Interzone loses Power."""
         if (
             not self.rules_engine.get("enabled")
-            or self.card_rules.get(item.get("cardId"), {}).get("type")
+            or self.rules_item_card_rules(item).get("type")
             != "manifestation"
         ):
             return 0
@@ -4304,7 +4381,7 @@ class Session:
             entry.get("kind") == "card"
             and (item := self.find_battlefield_item(entry.get("itemId"))) is not None
             and self.rules_field_zone(item) == "confrontation"
-            and self.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"
+            and self.rules_item_card_rules(item).get("type") == "manifestation"
             for entry in (stack_action or {}).get("targets") or []
         )
 
@@ -4633,6 +4710,8 @@ class Session:
         visiting.add(item.get("id"))
         metadata = self.card_rules.get(item.get("cardId"), {})
         power = item.get("power") if item.get("isTokenCard") else metadata.get("power")
+        if item.get("willManifestation"):
+            power = item["willManifestation"].get("power")
         power = int(power or 0)
         base_power = power
         temperaments = (
@@ -4829,7 +4908,7 @@ class Session:
         for item in self.battlefield:
             if not item.get("faceUp"):
                 continue
-            if self.card_rules.get(item.get("cardId"), {}).get("type") != "manifestation" and not item.get("isTokenCard"):
+            if self.rules_item_card_rules(item).get("type") != "manifestation" and not item.get("isTokenCard"):
                 continue
             if player_id is not None and self.rules_item_controller_id(item) != player_id:
                 continue
@@ -4855,7 +4934,7 @@ class Session:
         for item in list(self.battlefield):
             if (
                 not item.get("faceUp")
-                or self.card_rules.get(item.get("cardId"), {}).get("type") != "manifestation"
+                or self.rules_item_card_rules(item).get("type") != "manifestation"
                 or not self.rules_item_effects_active(item)
                 or self.rules_field_zone(item) == "stalemate"
             ):
@@ -4917,7 +4996,7 @@ class Session:
                 item for item in list(self.battlefield)
                 if item.get("faceUp")
                 and (
-                    self.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"
+                    self.rules_item_card_rules(item).get("type") == "manifestation"
                     or item.get("isTokenCard")
                 )
                 and (
@@ -5146,7 +5225,7 @@ class Session:
         )
         if (
             movement.get("status") == "moved"
-            and self.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"
+            and self.rules_item_card_rules(item).get("type") == "manifestation"
         ):
             self.record_rules_observed_event(
                 "manifestation_left_by_effect", controller_before,
@@ -5402,6 +5481,7 @@ class Session:
         if not result or result.get("status") not in {"effects", "cleanup"}:
             return result
         participant_ids = set(result.get("participantItemIds") or [])
+        self.settle_rules_will_manifestations(result, participant_ids)
         support_returned = []
         for item in list(self.battlefield):
             support_return = item.get("supportReturn")
@@ -6973,7 +7053,7 @@ class Session:
         if (
             not item
             or not item.get("faceUp")
-            or self.card_rules.get(item.get("cardId"), {}).get("type") != "manifestation"
+            or self.rules_item_card_rules(item).get("type") != "manifestation"
         ):
             return []
         event_controller_id = item.get("controllerId") or item.get("ownerId")
@@ -7012,7 +7092,7 @@ class Session:
             not item
             or not item.get("faceUp")
             or item.get("isTokenCopy")
-            or self.card_rules.get(item.get("cardId"), {}).get("type")
+            or self.rules_item_card_rules(item).get("type")
             != "persistent_will"
         ):
             return []
@@ -8289,7 +8369,7 @@ class Session:
         if result.get("kind") == "exile_all_wills_and_interzones":
             removed = []
             for item in list(self.battlefield):
-                card_type = self.card_rules.get(item.get("cardId"), {}).get("type")
+                card_type = self.rules_item_card_rules(item).get("type")
                 in_interzone = (
                     card_type == "manifestation"
                     and self.rules_field_zone(item) == "interzone"
@@ -8776,6 +8856,27 @@ class Session:
                 "kind": "choice_required", "choiceId": choice_id,
                 "choiceKind": "discard_from_hand", "playerId": target_id,
                 "count": len(hand), "upTo": True,
+            }
+        if result.get("kind") == "choose_hand_will_as_support_manifestation":
+            hand = player["zones"]["hand"]
+            if not any(self.card_rules.get(c, {}).get("type") in RULES_WILL_TYPES for c in hand):
+                return {"kind": result.get("kind"), "status": "no_hand_card"}
+            if not action.get("optionalAccepted"):
+                return {"kind": result.get("kind"), "status": "declined"}
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "discard_from_hand",
+                "playerId": player_id, "count": 1,
+                "requireTypes": sorted(RULES_WILL_TYPES),
+                "destination": "support_manifestation",
+                "actionId": action.get("id"),
+                "controllerId": action.get("controllerId"),
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "discard_from_hand", "playerId": player_id,
+                "count": 1, "requireTypes": sorted(RULES_WILL_TYPES),
             }
         if result.get("kind") == "optional_discard_wills_for_power":
             hand = player["zones"]["hand"]
@@ -10855,6 +10956,71 @@ class Session:
                 "sourceCardId": (action.get("source") or {}).get("cardId"),
             })
             return {"kind": result.get("kind"), "status": "granted", "playerId": owner_id}
+        if result.get("kind") in {
+            "will_becomes_support_manifestation", "put_hand_will_as_support_manifestation",
+        }:
+            from_hand = result.get("kind") == "put_hand_will_as_support_manifestation"
+            if self.rules_support_entry_locked(player_id):
+                return {"kind": result.get("kind"), "status": "prevented"}
+            if from_hand:
+                target = next((
+                    entry for entry in action.get("targets") or []
+                    if entry.get("kind") == "zone_card"
+                ), None)
+                card_id = (target or {}).get("cardId")
+                owner_id = self.card_owner_in_zone(player_id, "hand", card_id) if card_id else None
+                if (
+                    owner_id is None
+                    or self.card_rules.get(card_id, {}).get("type") not in RULES_WILL_TYPES
+                    or not self.take_zone_card(player_id, "hand", card_id)
+                ):
+                    return {"kind": result.get("kind"), "status": "target_missing"}
+                seat = self.players[player_id].get("seat")
+                item = {
+                    "id": new_id(), "ownerId": owner_id,
+                    "controllerId": player_id, "cardId": card_id,
+                    "x": 740.0, "y": 620.0 if seat != 1 else 880.0,
+                    "faceUp": True, "rotation": 0.0, "counters": {},
+                    "stackedOn": None,
+                    # Put onto the field, not played: its own effects stay off.
+                    "effectsDisabled": True,
+                }
+                self.battlefield.append(item)
+                outcomes = {"onWin": "free_play", "onLoss": "exile", "onStalemate": "exile"}
+            else:
+                target = next((
+                    entry for entry in action.get("targets") or []
+                    if entry.get("kind") == "card"
+                ), None)
+                item = self.find_battlefield_item((target or {}).get("itemId"))
+                if (
+                    item is None
+                    or self.rules_item_card_rules(item).get("type") != "persistent_will"
+                    or self.rules_item_controller_id(item) != player_id
+                    or self.rules_field_zone(item) != "field"
+                    or item.get("willManifestation")
+                ):
+                    return {"kind": result.get("kind"), "status": "target_missing"}
+                outcomes = {"onWin": "revert", "onLoss": "destroy", "onStalemate": "revert"}
+            will_cost = self.rules_will_tribute_cost(item.get("cardId"))
+            item["willManifestation"] = {
+                "power": will_cost, "turn": self.phase_tracker["turn"], **outcomes,
+            }
+            item["controllerId"] = player_id
+            item["stackedOn"] = None
+            self.mark_rules_support_entry(item)
+            triggered = self.queue_rules_support_entry_triggers(
+                item, played=False, from_zone="hand" if from_hand else "field", defer=True,
+            )
+            triggered.extend(self.queue_rules_field_zone_entry_triggers(
+                item, "confrontation", defer=True,
+            ))
+            if triggered:
+                self.queue_rules_simultaneous_actions(triggered)
+            return {
+                "kind": result.get("kind"), "status": "moved",
+                "itemId": item["id"], "cardId": item.get("cardId"), "power": will_cost,
+            }
         if result.get("kind") == "grant_limbo_will_play":
             owner_id = (action.get("source") or {}).get("ownerId") or player_id
             if owner_id not in self.players:
@@ -11954,7 +12120,7 @@ class Session:
                 if item.get("id") not in matched_ids or not item.get("faceUp"):
                     continue
                 if (
-                    self.card_rules.get(item.get("cardId"), {}).get("type")
+                    self.rules_item_card_rules(item).get("type")
                     != "manifestation"
                     and not item.get("isTokenCard")
                 ):
@@ -12535,7 +12701,7 @@ class Session:
             candidates = [
                 item["id"] for item in self.battlefield
                 if self.rules_item_controller_id(item) == sacrificer_id
-                and self.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"
+                and self.rules_item_card_rules(item).get("type") == "manifestation"
                 and not self.rules_item_zone_locked(item)
             ]
             payload = {
@@ -13659,7 +13825,7 @@ class Session:
                     item["id"] for item in self.battlefield
                     if item.get("faceUp")
                     and (
-                        self.card_rules.get(item.get("cardId"), {}).get("type")
+                        self.rules_item_card_rules(item).get("type")
                         == "manifestation" or item.get("isTokenCard")
                     )
                     and self.rules_item_controller_id(item)
@@ -14524,6 +14690,19 @@ class Session:
             return "Choose a valid card type from your hand.", None
         destination = choice.get("destination")
         for card_id in selected:
+            if destination == "support_manifestation":
+                moved = self.apply_rules_action_result({
+                    "id": new_id(), "controllerId": player_id,
+                    "source": {"cardId": choice.get("sourceCardId"), "ownerId": player_id},
+                    "targets": [{
+                        "kind": "zone_card", "containerId": player_id, "zone": "hand",
+                        "cardId": card_id, "ownerId": player_id,
+                    }],
+                    "ability": {"result": {"kind": "put_hand_will_as_support_manifestation"}},
+                })
+                if (moved or {}).get("status") != "moved":
+                    return "This Will cannot enter Support right now.", None
+                continue
             if destination == "interzone":
                 moved = self.apply_rules_action_result({
                     "id": new_id(), "controllerId": player_id,
@@ -14632,7 +14811,7 @@ class Session:
             for item in self.battlefield
             if item.get("faceUp")
             and (
-                self.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"
+                self.rules_item_card_rules(item).get("type") == "manifestation"
                 or item.get("isTokenCard")
             )
         }
@@ -15173,7 +15352,7 @@ class Session:
             if (
                 self.rules_engine["enabled"] and item.get("faceUp")
                 and item.get("fieldZone") == "interzone"
-                and self.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"
+                and self.rules_item_card_rules(item).get("type") == "manifestation"
                 and self.rules_card_can_enter_support(item)
             ):
                 entry["canEnterSupport"] = True
@@ -15200,7 +15379,7 @@ class Session:
                 entry["rarity"] = item["rarity"]
             if (
                 self.rules_engine["enabled"] and item.get("faceUp")
-                and (item.get("isTokenCard") or self.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation")
+                and (item.get("isTokenCard") or self.rules_item_card_rules(item).get("type") == "manifestation")
             ):
                 entry["effectivePower"] = self.rules_manifestation_characteristics(item)["power"]
             if item.get("stackedOn"):
@@ -15603,7 +15782,7 @@ class Session:
         item = self.find_battlefield_item(item_id)
         if item is None or self.rules_item_controller_id(item) != player_id:
             return "This Manifestation is not under your control.", None
-        if self.card_rules.get(item.get("cardId"), {}).get("type") != "manifestation":
+        if self.rules_item_card_rules(item).get("type") != "manifestation":
             return "Only a Manifestation can enter the confrontation.", None
         if self.rules_support_entry_locked(player_id):
             return "Manifestations cannot be put in Support until the end of the turn.", None

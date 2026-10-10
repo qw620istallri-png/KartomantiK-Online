@@ -873,3 +873,13 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Limites connues: la permission de Freenya dure jusqu'à la fin de la phase (et non seulement à la résolution du déclencheur); le glisser-déposer et le clic jusqu'à l'assistant n'ont pas été testés dans un navigateur réel. Rinq et Ju Lien restent manuelles (une Volonté devient une Manifestation).
 - Version des assets: `20261010-rules-beta-115`.
 - Registre: 408 automated / 0 partial / 42 manual.
+
+## Lot 21 (Rinq, Ju Lien: une Volonté devenue Manifestation)
+
+- Mécanisme: drapeau d'objet `willManifestation` (`power` = coût de tribut de la Volonté, `turn`, `onWin`/`onLoss`/`onStalemate`). `rules_item_card_rules` superpose alors `type: manifestation` et la puissance; les contrôles de type par objet passent tous par ce point d'entrée. Entrée en Soutien via `mark_rules_support_entry` et déclencheurs d'entrée en Soutien / en Zone de Confrontation.
+- Rinq: capacité activée {H}{H} en Réaction sur une Volonté Persistante du champ que vous contrôlez (résultat `will_becomes_support_manifestation`). Fin de confrontation (`settle_rules_will_manifestations`): victoire ou égalité, la Volonté redevient une Volonté sur le champ avec ses effets; défaite, elle est détruite (Limbo de son propriétaire).
+- Ju Lien: déclencheur optionnel à l'entrée en Zone de Confrontation (`choose_hand_will_as_support_manifestation`, choix d'une Volonté de la main, `put_hand_will_as_support_manifestation`). La Volonté est mise sur le champ sans être jouée (`effectsDisabled`). Victoire: elle retourne en main avec une permission de jeu sans tribut (`noTribute`) jusqu'à la fin du tour; défaite ou égalité: exil.
+- Limites: la Volonté gagnante de Ju Lien est replacée dans la main (avec permission gratuite pour le tour) au lieu de rester sur le champ en attente d'être jouée; la permission expire en fin de tour mais la carte reste ensuite en main. Seuls les tests serveur couvrent ces deux cartes; le texte du choix côté client (Volonté de la main) n'a pas été vérifié dans un navigateur réel. Une Volonté devenue Manifestation n'est pas traitée comme « jouée » pour ses déclencheurs d'entrée.
+- Version des assets: `20261010-rules-beta-116`.
+- Registre: 410 automated / 0 partial / 40 manual.
+

@@ -13467,5 +13467,152 @@ class LotTwentyTests(RealCardRulesCase):
         self.assertIn("no effect", error)
 
 
+class LotTwentyOneTests(RealCardRulesCase):
+    """Rinq and Ju Lien: a Will that is a Manifestation until the Resolution."""
+
+    RINQ, JU_LIEN = "b5ge92hr33pdwc7_en", "qapv47r7rz6gqah_en"
+    ALL = (RINQ, JU_LIEN)
+
+    def setup_wills(self):
+        session, p1, p2 = self.make_session()
+        session.rules_engine["enabled"] = True
+        session.card_rules["will-per"] = {"type": "persistent_will", "cost": 2, "powerCost": "{G}{G}", "temperaments": ["phlegmatic"]}
+        session.card_rules["will-eph"] = {"type": "ephemeral_will", "cost": 3, "powerCost": "{G}{G}{G}", "temperaments": ["phlegmatic"]}
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        return session, p1, p2
+
+    def ju_lien_put(self, session, card_id):
+        """Run Ju Lien's trigger: accept, then choose the Will from the hand."""
+        jl = self.field_item("jl", "p1", self.JU_LIEN, field_zone="confrontation", controllerId="p1", x=0, y=0, rotation=0, stackedOn=None)
+        session.battlefield = [jl]
+        session.rules_engine["pendingChoice"] = None
+        session.rules_engine["actionStack"] = []
+        session.queue_rules_field_zone_entry_triggers(jl, "confrontation")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["kind"], "optional_stack_action")
+        session.resolve_rules_choice("p1", choice["id"], option="accept")
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["destination"], "support_manifestation")
+        return session.resolve_rules_choice("p1", choice["id"], card_ids=[card_id])
+
+    def settle(self, session, item_id, winner):
+        result = {"winnerId": winner, "stalemate": winner is None}
+        ids = {item_id}
+        return session.settle_rules_will_manifestations(result, ids), ids
+
+    def test_rinq_turns_a_field_will_into_a_support_manifestation_with_power_equal_to_its_cost(self):
+        session, p1, p2 = self.setup_wills()
+        ability = self.ability(self.RINQ, "rinq-persistent-will-becomes-support")
+        will = self.field_item("w", "p1", "will-per", field_zone="field", controllerId="p1", x=0, y=0, rotation=0, stackedOn=None)
+        session.battlefield = [will]
+        target = [{"kind": "card", "itemId": "w", "cardId": "will-per"}]
+        self.assertIsNone(session.rules_ability_targets_error(ability["targets"], target, "p1"))
+        payload = session.apply_rules_action_result({
+            "id": "r1", "controllerId": "p1", "source": {"cardId": self.RINQ, "ownerId": "p1"},
+            "targets": target, "ability": ability,
+        })
+        self.assertEqual(payload["status"], "moved")
+        self.assertEqual(payload["power"], 2)
+        self.assertTrue(will["isSupport"])
+        self.assertEqual(session.rules_field_zone(will), "confrontation")
+        self.assertEqual(session.rules_item_card_rules(will)["type"], "manifestation")
+        self.assertEqual(session.rules_manifestation_characteristics(will)["power"], 2)
+        # An opponent's Will, or one already converted, is not a valid target.
+        again = session.apply_rules_action_result({
+            "id": "r2", "controllerId": "p1", "source": {"cardId": self.RINQ, "ownerId": "p1"},
+            "targets": target, "ability": ability,
+        })
+        self.assertEqual(again["status"], "target_missing")
+
+    def test_rinq_ability_is_only_available_during_reaction_with_a_field_will(self):
+        session, p1, p2 = self.setup_wills()
+        rinq = self.field_item("rinq", "p1", self.RINQ, field_zone="interzone", controllerId="p1", x=0, y=0, rotation=0, stackedOn=None)
+        will = self.field_item("w", "p1", "will-per", field_zone="field", controllerId="p1", x=0, y=0, rotation=0, stackedOn=None)
+        session.battlefield = [rinq, will]
+        source = {"cardId": self.RINQ, "zone": "battlefield", "itemId": "rinq"}
+        target = [{"kind": "card", "itemId": "w", "cardId": "will-per"}]
+        error, _ability = session.rules_action_ability("p1", "activated_effect", source, "rinq-persistent-will-becomes-support", target)
+        self.assertIsNone(error)
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
+        error, _ability = session.rules_action_ability("p1", "activated_effect", source, "rinq-persistent-will-becomes-support", target)
+        self.assertTrue(error)
+
+    def test_rinq_will_returns_to_the_field_when_it_wins_and_is_destroyed_when_it_loses(self):
+        session, p1, p2 = self.setup_wills()
+        ability = self.ability(self.RINQ, "rinq-persistent-will-becomes-support")
+        for winner, expect in (("p1", "reverted"), ("p2", "destroy"), (None, "reverted")):
+            session.battlefield = [self.field_item("w", "p1", "will-per", field_zone="field", controllerId="p1", x=0, y=0, rotation=0, stackedOn=None)]
+            p1["zones"]["graveyard"] = []
+            session.apply_rules_action_result({
+                "id": "r", "controllerId": "p1", "source": {"cardId": self.RINQ, "ownerId": "p1"},
+                "targets": [{"kind": "card", "itemId": "w", "cardId": "will-per"}], "ability": ability,
+            })
+            settled, ids = self.settle(session, "w", winner)
+            self.assertEqual(settled[0]["outcome"] if expect == "destroy" else settled[0]["status"], expect)
+            self.assertEqual(ids, set())
+            if expect == "destroy":
+                self.assertIsNone(session.find_battlefield_item("w"))
+                self.assertIn("will-per", p1["zones"]["graveyard"])
+            else:
+                item = session.find_battlefield_item("w")
+                self.assertNotIn("willManifestation", item)
+                self.assertEqual(session.rules_field_zone(item), "field")
+                self.assertEqual(session.rules_item_card_rules(item)["type"], "persistent_will")
+
+    def test_ju_lien_puts_a_hand_will_in_support_with_its_effects_off(self):
+        session, p1, p2 = self.setup_wills()
+        ability = self.ability(self.JU_LIEN, "ju-lien-puts-hand-will-in-support")
+        self.put(p1, "hand", ["will-eph", "m-0"])
+        self.assertTrue(ability["optional"])
+        payload = self.ju_lien_put(session, "will-eph")
+        self.assertEqual(payload[0], None)
+        item = session.battlefield[-1]
+        self.assertEqual(item["cardId"], "will-eph")
+        self.assertTrue(item["isSupport"] and item["effectsDisabled"])
+        self.assertNotIn("will-eph", p1["zones"]["hand"])
+        self.assertEqual(session.rules_manifestation_characteristics(item)["power"], 3)
+        # A Manifestation in hand is not a Will.
+        self.put(p1, "hand", ["will-eph", "m-0"])
+        session.battlefield = []
+        error, _ = self.ju_lien_put(session, "m-0")
+        self.assertIn("valid card type", error)
+
+    def test_ju_lien_will_is_free_to_play_after_a_win_and_exiled_otherwise(self):
+        session, p1, p2 = self.setup_wills()
+        ability = self.ability(self.JU_LIEN, "ju-lien-puts-hand-will-in-support")
+        for winner in ("p1", "p2", None):
+            self.put(p1, "hand", ["will-eph"])
+            p1["zones"]["exile"] = []
+            session.rules_engine["playPermissions"] = []
+            self.ju_lien_put(session, "will-eph")
+            payload = {"itemId": session.battlefield[-1]["id"]}
+            settled, ids = self.settle(session, payload["itemId"], winner)
+            if winner == "p1":
+                self.assertEqual(settled[0]["status"], "playable_free")
+                self.assertIn("will-eph", p1["zones"]["hand"])
+                permission = session.rules_engine["playPermissions"][0]
+                self.assertTrue(permission["noTribute"])
+                self.assertEqual(permission["cardId"], "will-eph")
+            else:
+                self.assertIn("will-eph", p1["zones"]["exile"])
+                self.assertNotIn("will-eph", p1["zones"]["hand"])
+            self.assertIsNone(session.find_battlefield_item(payload["itemId"]))
+            session.battlefield = []
+
+    def test_a_converted_will_that_never_fought_goes_back_to_normal_at_the_next_turn(self):
+        session, p1, p2 = self.setup_wills()
+        will = self.field_item("w", "p1", "will-per", field_zone="confrontation", controllerId="p1", x=0, y=0, rotation=0, stackedOn=None,
+                               isSupport=True, willManifestation={"power": 2, "turn": session.phase_tracker["turn"], "onWin": "revert"})
+        session.battlefield = [will]
+        session.prune_rules_ongoing_effects()
+        self.assertIn("willManifestation", will)
+        session.phase_tracker["turn"] += 1
+        session.prune_rules_ongoing_effects()
+        self.assertNotIn("willManifestation", will)
+        self.assertEqual(session.rules_field_zone(will), "field")
+
+
 if __name__ == "__main__":
     unittest.main()
