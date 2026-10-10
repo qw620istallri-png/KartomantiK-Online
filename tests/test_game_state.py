@@ -12428,6 +12428,27 @@ class LotSixteenTests(RealCardRulesCase):
             **actions[0], "ability": {**actions[0]["ability"], "trigger": {
                 **actions[0]["ability"]["trigger"], "eventItemId": copy["id"]}},
         })["status"], "not_applicable")
+        # Entering Support also fires the watchers of the copy.
+        session.card_rules["m-9"] = {
+            "type": "manifestation", "power": 1, "temperaments": ["phlegmatic"],
+            "triggeredAbilities": [{
+                "id": "watches-support", "trigger": {"event": "enters_support"},
+                "result": {"kind": "draw_owner", "value": 1},
+            }],
+        }
+        session.battlefield.append(self.field_item("watcher", "p1", "m-9"))
+        again = session.apply_rules_action_result(actions[0])
+        self.assertIn(
+            "watches-support",
+            [entry["ability"]["id"] for entry in again["triggeredActions"]],
+        )
+        # Tokens entering Support never wake Gomeran itself.
+        self.assertEqual(
+            [entry["ability"]["id"] for entry in again["triggeredActions"]
+             if entry["source"]["cardId"] == self.GOMERAN],
+            [],
+        )
+        session.battlefield = [item for item in session.battlefield if item["id"] != "watcher"]
         # Opponents' entries and Gomeran outside the Confrontation Zone do nothing.
         theirs = self.field_item("theirs", "p2", "m-2", isSupport=True)
         session.battlefield.append(theirs)
@@ -12542,12 +12563,14 @@ class LotSixteenTests(RealCardRulesCase):
         pidue = self.field_item("pidue", "p1", self.PIDUE)
         session.battlefield = [pidue]
         session.phase_tracker["index"] = session.phase_sequence().index("confrontation_reaction")
+        hand_will = {"source": {"cardId": "played", "zone": "hand", "ownerId": "p2"}}
         seen = {}
         for temperament in ("choleric", "vitreous", "phlegmatic", "capricious", "melancholic"):
             session.card_rules["played"] = {"type": "ephemeral_will", "temperaments": [temperament]}
             actions = session.queue_rules_triggers(
                 self.PIDUE, "p1", "card_played", event_card_id="played", item_id="pidue",
                 face_up=True, event_controller_id="p2", defer=True, controller_id="p1",
+                related_action=hand_will,
             )
             seen[temperament] = self.trigger_ids(session, actions)
         self.assertEqual(seen, {
@@ -12559,6 +12582,30 @@ class LotSixteenTests(RealCardRulesCase):
         self.assertEqual(session.queue_rules_triggers(
             self.PIDUE, "p1", "card_played", event_card_id="played", item_id="pidue",
             face_up=True, event_controller_id="p1", defer=True, controller_id="p1",
+            related_action=hand_will,
+        ), [])
+
+    def test_pidue_ignores_wills_from_other_zones_and_manifestations_outside_support(self):
+        session, _p1, _p2 = self.make_session()
+        session.battlefield = [
+            self.field_item("pidue", "p1", self.PIDUE),
+            self.field_item("plain", "p2", "m-1"),
+            self.field_item("support", "p2", "m-2", isSupport=True),
+        ]
+        session.phase_tracker["index"] = session.phase_sequence().index("confrontation_reaction")
+        session.card_rules["m-1"]["temperaments"] = ["phlegmatic"]
+        session.card_rules["m-2"]["temperaments"] = ["phlegmatic"]
+        session.card_rules["played"] = {"type": "ephemeral_will", "temperaments": ["phlegmatic"]}
+        def fired(**kwargs):
+            return self.trigger_ids(session, session.queue_rules_triggers(
+                self.PIDUE, "p1", "card_played", item_id="pidue", face_up=True,
+                event_controller_id="p2", defer=True, controller_id="p1", **kwargs,
+            ))
+        self.assertEqual(fired(event_card_id="m-1", event_item_id="plain"), [])
+        self.assertEqual(fired(event_card_id="m-2", event_item_id="support"), ["pidue-phlegmatic-token"])
+        self.assertEqual(fired(
+            event_card_id="played",
+            related_action={"source": {"cardId": "played", "zone": "graveyard", "ownerId": "p2"}},
         ), [])
 
 
@@ -12711,6 +12758,12 @@ class LotSeventeenTests(RealCardRulesCase):
             for token in session.tokens if token.get("isEssence")
         ]
         self.assertEqual(essence, [("phlegmatic", 1)])
+        token = session.create_rules_token_copy("m-2", "p2")
+        self.assertEqual(session.rules_manifestation_characteristics(token)["temperament"], "hollow")
+        self.assertEqual(
+            [(token_["temperament"], token_["counters"]["essence"]) for token_ in session.tokens if token_.get("isEssence")],
+            [("phlegmatic", 2)],
+        )
         asciugoth = session.find_battlefield_item("asciugoth")
         session.queue_rules_manifestation_entry_watchers(asciugoth, defer=True)
         self.assertNotEqual(asciugoth.get("temperamentOverride"), "hollow")
@@ -12802,7 +12855,15 @@ class LotSeventeenTests(RealCardRulesCase):
         chained = next(item for item in session.battlefield if item.get("isChained"))
         self.assertEqual((chained["cardId"], chained["ownerId"], chained["controllerId"]), ("m-3", "p1", "p1"))
         self.assertTrue(result["memoryId"])
+        # Leaving the Confrontation Zone by an effect sends the card home instead.
+        session.prune_rules_ongoing_effects()
+        moved = session._rules_remove_field_item_by_effect(chained, "p1", "graveyard", "top", reason="destroy")
+        self.assertEqual((moved["status"], moved["zone"], moved["containerId"]), ("moved", "receptacle", "p2"))
+        self.assertEqual(sorted(p2["zones"]["receptacle"]), ["m-3", "m-4"])
+        self.assertNotIn("m-3", p1["zones"]["graveyard"])
+        session.battlefield.append(chained)
         # With nothing of yours in a Vessel there is nobody to Chain.
+        self.put(p2, "receptacle", {"m-4": "p2"})
         again = self.run_result(session, self.DOL, "dol-chains-from-a-vessel", item_id="dol", optionalAccepted=True)
         self.assertEqual(again["status"], "no_eligible_card")
 

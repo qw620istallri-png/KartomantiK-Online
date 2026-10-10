@@ -4876,6 +4876,16 @@ class Session:
 
     def _rules_remove_field_item_by_effect(self, item, container_id, zone,
                                            position="top", reason=None):
+        home_vessel = item.get("returnToVesselId")
+        if (
+            home_vessel in self.players
+            and zone != "receptacle"
+            and self.rules_field_zone(item) == "confrontation"
+            and not item.get("isCopy") and not item.get("isTokenCard")
+        ):
+            # Dol: a Chained card leaving the Confrontation Zone by an effect
+            # goes back to the Vessel it came from instead.
+            container_id, zone, position = home_vessel, "receptacle", "top"
         if item.get("isCopy") or item.get("isTokenCard"):
             return self._rules_remove_field_item(
                 item, container_id, zone, position
@@ -5811,6 +5821,8 @@ class Session:
                 clean["winDestination"] = result["winDestination"]
             if result.get("shuffleAfter"):
                 clean["shuffleAfter"] = True
+            if result.get("returnToVessel"):
+                clean["returnToVessel"] = True
             if result.get("players") in {"each_opponent", "all"}:
                 clean["players"] = result["players"]
             if isinstance(result.get("scoreCost"), (int, float)) and result["scoreCost"] < 0:
@@ -6025,6 +6037,22 @@ class Session:
                     == str(counter_min.get("name") or "").casefold()
                 )
                 if counter_total < int(counter_min.get("min") or 0):
+                    continue
+            if trigger.get("playedAs") == "support_or_hand_will":
+                if event_item_id:
+                    played_item = self.find_battlefield_item(event_item_id)
+                    if played_item is None or not played_item.get("isSupport"):
+                        continue
+                elif (
+                    not isinstance(related_action, dict)
+                    or (related_action.get("source") or {}).get("zone") != "hand"
+                ):
+                    continue
+            if trigger.get("eventNonToken"):
+                token_item = self.find_battlefield_item(event_item_id)
+                if token_item is None or token_item.get("isTokenCard") or token_item.get(
+                    "isCopy"
+                ) or token_item.get("isTokenCopy"):
                     continue
             if "sourceLeftVessel" in trigger and bool(trigger["sourceLeftVessel"]) != (
                 f"{owner_id}:{card_id}" in (self.rules_engine.get("leftVesselCards") or [])
@@ -6688,14 +6716,10 @@ class Session:
             self.queue_rules_simultaneous_actions(queued)
         return queued
 
-    def queue_rules_manifestation_entry_watchers(self, item, defer=False):
-        if (
-            not item
-            or not item.get("faceUp")
-            or self.card_rules.get(item.get("cardId"), {}).get("type") != "manifestation"
-        ):
-            return []
-        event_controller_id = item.get("controllerId") or item.get("ownerId")
+    def apply_rules_entering_manifestation_replacements(self, item):
+        """Asciugoth: an entering Manifestation pays out its Temperament, then turns Hollow."""
+        if item.get("hollowAbsorbed"):
+            return False
         for source in self.rules_active_passive_sources("entering_manifestation_becomes_hollow"):
             if source is item:
                 continue
@@ -6706,7 +6730,19 @@ class Session:
                     [{"temperament": absorbed, "amount": 1}],
                 )
             item["temperamentOverride"] = "hollow"
-            break
+            item["hollowAbsorbed"] = True
+            return True
+        return False
+
+    def queue_rules_manifestation_entry_watchers(self, item, defer=False):
+        if (
+            not item
+            or not item.get("faceUp")
+            or self.card_rules.get(item.get("cardId"), {}).get("type") != "manifestation"
+        ):
+            return []
+        event_controller_id = item.get("controllerId") or item.get("ownerId")
+        self.apply_rules_entering_manifestation_replacements(item)
         queued = []
         for source in list(self.battlefield):
             if not source.get("faceUp"):
@@ -7254,7 +7290,8 @@ class Session:
                                   action_id=None, source_card_id=None,
                                   shuffle_after=False, after_chain=None,
                                   chain_abilities=None, chain_controller_id=None,
-                                  action_targets=None, container_id=None):
+                                  action_targets=None, container_id=None,
+                                  return_to_vessel=False):
         container_id = container_id if container_id in self.players else player_id
         if card_id not in self.players[container_id]["zones"].get(zone, []):
             return "The selected Manifestation is no longer in the required zone.", None
@@ -7296,6 +7333,8 @@ class Session:
             ).get(card_id),
             "stackedOn": None, "isChained": True,
         }
+        if return_to_vessel and zone == "receptacle":
+            item["returnToVesselId"] = container_id
         self.mark_rules_support_entry(item)
         if win_destination == "opponent_receptacle":
             item["supportWinDestination"] = "opponent_receptacle"
@@ -7609,6 +7648,8 @@ class Session:
             item["fieldZone"] = "interzone"
         elif item.get("isSupport"):
             self.mark_rules_support_entry(item)
+        if item.get("isTokenCard") or metadata.get("type") == "manifestation":
+            self.apply_rules_entering_manifestation_replacements(item)
         self.battlefield.append(item)
         return item
 
@@ -11918,9 +11959,21 @@ class Session:
                 event_item["cardId"], action.get("controllerId") or player_id,
                 source_item_id=(action.get("source") or {}).get("itemId"),
             )
+            triggered_actions = self.queue_rules_battlefield_entry_triggers(
+                copy["cardId"], copy["ownerId"], copy["id"], True, defer=True,
+            )
+            triggered_actions.extend(self.queue_rules_support_entry_triggers(
+                copy, played=False, defer=True,
+            ))
+            triggered_actions.extend(self.queue_rules_field_zone_entry_triggers(
+                copy, "confrontation", defer=True,
+            ))
+            if triggered_actions:
+                self.queue_rules_simultaneous_actions(triggered_actions)
             return {
                 "kind": result.get("kind"), "status": "created",
                 "cardId": copy.get("cardId"), "itemId": copy["id"],
+                "triggeredActions": triggered_actions,
             }
         if result.get("kind") == "clemency_choice":
             trigger = (action.get("ability") or {}).get("trigger") or {}
@@ -12235,6 +12288,7 @@ class Session:
             ),
             "winDestination": result.get("winDestination"),
             "shuffleAfter": bool(result.get("shuffleAfter")),
+            "returnToVessel": bool(result.get("returnToVessel")),
             "afterChain": result.get("afterChain"),
             "chainAbilities": result.get("chainAbilities"),
             "actionId": action.get("id"),
@@ -13963,6 +14017,7 @@ class Session:
                 action_id=choice.get("actionId"),
                 source_card_id=choice.get("sourceCardId"),
                 shuffle_after=bool(choice.get("shuffleAfter")),
+                return_to_vessel=bool(choice.get("returnToVessel")),
                 after_chain=choice.get("afterChain"),
                 chain_abilities=choice.get("chainAbilities"),
                 chain_controller_id=choice.get("controllerId"),

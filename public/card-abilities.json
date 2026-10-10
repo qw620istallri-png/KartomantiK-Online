@@ -3782,6 +3782,7 @@
       "trigger": {
         "event": "card_played",
         "eventController": "opponent",
+        "playedAs": "support_or_hand_will",
         "cardTemperament": "choleric",
         "phaseIds": [
           "confrontation_before_revelation",
@@ -3807,6 +3808,7 @@
       "trigger": {
         "event": "card_played",
         "eventController": "opponent",
+        "playedAs": "support_or_hand_will",
         "cardTemperament": "vitreous",
         "phaseIds": [
           "confrontation_before_revelation",
@@ -3831,6 +3833,7 @@
       "trigger": {
         "event": "card_played",
         "eventController": "opponent",
+        "playedAs": "support_or_hand_will",
         "cardTemperament": "phlegmatic",
         "phaseIds": [
           "confrontation_before_revelation",
@@ -3848,6 +3851,7 @@
       "trigger": {
         "event": "card_played",
         "eventController": "opponent",
+        "playedAs": "support_or_hand_will",
         "cardTemperament": "capricious",
         "phaseIds": [
           "confrontation_before_revelation",
@@ -3864,6 +3868,7 @@
       "trigger": {
         "event": "card_played",
         "eventController": "opponent",
+        "playedAs": "support_or_hand_will",
         "cardTemperament": "melancholic",
         "phaseIds": [
           "confrontation_before_revelation",
@@ -4014,7 +4019,8 @@
       "trigger": {
         "event": "enters_support",
         "zone": "confrontation",
-        "eventController": "owner"
+        "eventController": "owner",
+        "eventNonToken": true
       },
       "result": {
         "kind": "create_event_token_copy_in_support"
@@ -4305,7 +4311,8 @@
         "kind": "chain_from_zone",
         "zone": "receptacle",
         "optional": false,
-        "winDestination": "exile"
+        "winDestination": "exile",
+        "returnToVessel": true
       }
     }
   ]
