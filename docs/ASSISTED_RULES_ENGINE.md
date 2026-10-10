@@ -749,3 +749,12 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 - Cognitive Fog : passif `increase_will_tribute` ; `rules_tribute_requirements` (serveur) et `rulesActionPaymentDraft` (client) ajoutent une Essence Vide à toutes les Volontés imprimées, quel que soit leur contrôleur.
 - Résultat `stalemate_confrontation` (`scope` : `all` ou `winner`, `lockZone`, `lockSupportEntries`) : Pin Down met toute la Zone de Confrontation en Stalemate et verrouille les entrées en Support ; Static Scuttler (perte) met en Stalemate les manifestations du gagnant. `lockZone` pose `zoneLockTurn` : l'objet ne retourne pas en Interzone au nettoyage, ne peut pas entrer en Support et n'est pas déplaçable par `move_target` jusqu'à la fin du tour (`rules_item_zone_locked`).
 - Duel Honorably (partiel) : verrou des entrées en Support automatisé (Volonté jouable avant la Révélation) ; la neutralisation en payant {H}{H} depuis la Pile reste manuelle.
+
+### Langage visuel des actions automatisées
+
+- Ciblage en cours : réticule cyan sur les seules cibles valides et trajectoire courbe animée depuis la carte source. Le clic produit un verrou bref ; il confirme l'intention, pas encore la résolution.
+- Mouvement confirmé : une copie visuelle de la carte suit une courbe entre son origine et sa destination. L'impact final reste attaché à la zone réellement modifiée.
+- Destruction : condamnation de la carte, rupture en fragments, puis aspiration vers le Limbo. Ce mouvement est distinct d'une défausse ou d'un simple changement de zone.
+- Pile : une impulsion bleue signale l'ajout ou le déclenchement ; une impulsion verte signale la résolution. Les libellés restent lisibles à côté de la Pile.
+- Effets continus : la pose d'un effet relie brièvement source et cible puis appose un sceau. Le lien persistant reste discret et ne s'anime qu'au survol ou au focus du marqueur d'effet ; sa disparition produit une dissolution courte.
+- Les animations sont décoratives et pilotées par les états confirmés du serveur. Avec `prefers-reduced-motion`, les déplacements sont supprimés mais les contours, libellés et changements d'état restent visibles.

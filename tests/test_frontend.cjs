@@ -1502,6 +1502,7 @@ function startServer() {
       handleServerMessage(triggeredState);
       await new Promise((resolve) => setTimeout(resolve, 90));
       const triggered = document.querySelector(".rules-vfx-impact-triggered")?.textContent || "";
+      const triggeredPulse = document.querySelectorAll(".rules-vfx-stack-pulse-triggered").length;
 
       removeRulesVfx();
       const resolvedState = structuredClone(triggeredState);
@@ -1519,6 +1520,7 @@ function startServer() {
       await new Promise((resolve) => setTimeout(resolve, 90));
       const resolved = document.querySelector(".rules-vfx-impact-resolved")?.textContent || "";
       const score = document.querySelector(".rules-vfx-impact-score")?.textContent || "";
+      const resolvedPulse = document.querySelectorAll(".rules-vfx-stack-pulse-resolved").length;
 
       removeRulesVfx();
       const drawState = structuredClone(resolvedState);
@@ -1588,6 +1590,7 @@ function startServer() {
       await new Promise((resolve) => setTimeout(resolve, 90));
       const moved = {
         flight: document.querySelectorAll(".rules-vfx-effect-card").length,
+        glint: document.querySelectorAll(".rules-vfx-effect-card .rules-vfx-flight-glint").length,
         label: document.querySelector(".rules-vfx-impact-moved")?.textContent || "",
       };
       removeRulesVfx();
@@ -1637,6 +1640,8 @@ function startServer() {
       await new Promise((resolve) => setTimeout(resolve, 90));
       const destroyed = {
         flight: document.querySelectorAll(".rules-vfx-destroy-card").length,
+        shards: document.querySelectorAll(".rules-vfx-destruction-shard").length,
+        burst: document.querySelectorAll(".rules-vfx-impact-burst-destroyed").length,
         label: document.querySelector(".rules-vfx-impact-destroyed")?.textContent || "",
         expectedLabel: t("rulesVfxDestroyed"),
       };
@@ -1721,7 +1726,9 @@ function startServer() {
         declared,
         sacrifice,
         triggered,
+        triggeredPulse,
         resolved,
+        resolvedPulse,
         score,
         draw,
         scoreLoss,
@@ -1733,7 +1740,7 @@ function startServer() {
         noEligible,
         deckDiscard,
         supportWin,
-        remaining: document.querySelectorAll(".rules-vfx-flight, .rules-vfx-impact, .rules-vfx-exhaust-ring, .rules-vfx-exhaust-label").length,
+        remaining: document.querySelectorAll(".rules-vfx-flight, .rules-vfx-impact, .rules-vfx-exhaust-ring, .rules-vfx-exhaust-label, .rules-vfx-impact-burst, .rules-vfx-target-lock, .rules-vfx-effect-cast, .rules-vfx-effect-seal, .rules-vfx-effect-release, .rules-vfx-stack-pulse").length,
       };
     }, {
       tributeCardId: rulesStack.tributeCardId,
@@ -1989,7 +1996,7 @@ function startServer() {
         secondCardId: manifestations[1].id,
       };
     });
-    const ongoingEffect = await page.evaluate(({ encodedCardId, targetCardId }) => {
+    const ongoingEffect = await page.evaluate(async ({ encodedCardId, targetCardId }) => {
       latestState.rulesEngine.ongoingEffects = [
         {
           id: "effect-1",
@@ -2019,6 +2026,8 @@ function startServer() {
       const target = document.querySelector('.bf-card[data-item-id="rules-target-1"]');
       const badge = target.querySelector(".rules-effect-badge");
       badge.focus();
+      playRulesVfxEffectBind(latestState.rulesEngine.ongoingEffects[1]);
+      await new Promise((resolve) => setTimeout(resolve, 40));
       const result = {
         marked: target.classList.contains("has-ongoing-effect"),
         frameRemoved: !target.querySelector(".rules-effect-frame"),
@@ -2029,8 +2038,11 @@ function startServer() {
         linkCount: document.querySelectorAll("#rulesEffectLayer .rules-effect-link").length,
         highlighted: document.querySelector("#rulesEffectLayer .rules-effect-link")?.classList.contains("highlighted"),
         flowAnimation: getComputedStyle(document.querySelector(".rules-effect-link-flow")).animationName,
+        bindPathCount: document.querySelectorAll(".rules-vfx-effect-cast").length,
+        sealCount: document.querySelectorAll(".rules-vfx-effect-seal").length,
       };
       badge.blur();
+      removeRulesVfx();
       return result;
     }, { encodedCardId: rulesStack.encoded.cardId, targetCardId: rulesStack.targetCardId });
     await page.setViewportSize({ width: 1280, height: 720 });
@@ -2414,12 +2426,15 @@ function startServer() {
         stage: pendingRulesBoardFlow?.stage,
         paidByDrag: pendingRulesBoardFlow?.selectedPaymentIndexes?.has(1) || false,
         highlighted: document.querySelectorAll(".rules-valid-target").length,
+        reticles: document.querySelectorAll(".rules-target-reticle").length,
+        arrowAnimation: getComputedStyle(document.querySelector("#rulesTargetArrow .rules-target-arrow-line")).animationName,
         arrow: document.querySelector("#rulesTargetArrow .rules-target-arrow-line").getAttribute("d"),
         instruction: document.querySelector("#rulesFlowInstruction").textContent,
       };
       document.querySelector('[data-item-id="board-flow-target"]').dispatchEvent(new PointerEvent("pointerdown", {
         bubbles: true, cancelable: true, clientX: 720, clientY: 460,
       }));
+      targeting.targetLock = document.querySelectorAll(".rules-vfx-target-lock").length;
       const willPayload = window.__sent.find((payload) => payload.type === "declare_rules_action");
       const closedAfterTarget = document.querySelector("#rulesBoardFlow").classList.contains("hidden");
 
@@ -2733,9 +2748,12 @@ function startServer() {
     assert.equal(boardFirstPlay.targeting.stage, "target");
     assert.equal(boardFirstPlay.targeting.paidByDrag, true);
     assert.equal(boardFirstPlay.targeting.highlighted, 1);
+    assert.equal(boardFirstPlay.targeting.reticles, 1);
+    assert.notEqual(boardFirstPlay.targeting.arrowAnimation, "none");
     assert.match(boardFirstPlay.targeting.arrow, /^M /);
     assert(boardFirstPlay.targeting.instruction.length > 10);
     assert.equal(boardFirstPlay.closedAfterTarget, true);
+    assert.equal(boardFirstPlay.targeting.targetLock, 1);
     assert.equal(boardFirstPlay.willPayload.abilityId, "oppress-power-modifier");
     assert.equal(boardFirstPlay.willPayload.paymentCardIds.length, 1);
     assert.deepEqual(boardFirstPlay.willPayload.targets, [{ kind: "card", itemId: "board-flow-target", cardId: boardFirstPlay.willPayload.targets[0].cardId }]);
@@ -3250,17 +3268,22 @@ function startServer() {
     assert.equal(rulesVfx.sacrifice.flight, 1);
     assert(rulesVfx.sacrifice.label.length > 0);
     assert(rulesVfx.triggered.length > 0);
+    assert.equal(rulesVfx.triggeredPulse, 1);
     assert(rulesVfx.resolved.length > 0);
+    assert.equal(rulesVfx.resolvedPulse, 1);
     assert.equal(rulesVfx.score, "+20");
     assert.match(rulesVfx.draw, /1/);
     assert.equal(rulesVfx.scoreLoss, "-20");
     assert(rulesVfx.discarded.length > 0);
     assert.match(rulesVfx.drawAfterDiscard, /2/);
     assert.equal(rulesVfx.moved.flight, 1);
+    assert.equal(rulesVfx.moved.glint, 1);
     assert(rulesVfx.moved.label.length > 0);
     assert.equal(rulesVfx.exiled.flight, 1);
     assert.equal(rulesVfx.exiled.label, rulesVfx.exiled.expectedLabel);
     assert.equal(rulesVfx.destroyed.flight, 1);
+    assert.equal(rulesVfx.destroyed.shards, 5);
+    assert(rulesVfx.destroyed.burst >= 1);
     assert.equal(rulesVfx.destroyed.label, rulesVfx.destroyed.expectedLabel);
     assert.equal(rulesVfx.noEligible.label, rulesVfx.noEligible.expectedLabel);
     assert.equal(rulesVfx.deckDiscard.flight, 1);
@@ -3291,6 +3314,8 @@ function startServer() {
     assert.equal(ongoingEffect.linkCount, 1);
     assert.equal(ongoingEffect.highlighted, true);
     assert.notEqual(ongoingEffect.flowAnimation, "none");
+    assert.equal(ongoingEffect.bindPathCount, 1);
+    assert.equal(ongoingEffect.sealCount, 1);
     assert.deepEqual(result.board, {
       width: 1741, height: 1549, cssWidth: "1741px", cssHeight: "1549px",
       viewBox: "0 0 1741 1549", rotatedOrigin: { x: 1591, y: 1339 },
