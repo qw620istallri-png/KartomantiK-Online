@@ -92,6 +92,8 @@ def continuous_power_rules_for_card(card):
         rules.append({"kind": "self_per_owned_vessel_manifestation", "value": 1})
     if "the First Manifestation you control gets +1 power for each manifestation in your Interzone" in effect:
         rules.append({"kind": "first_manifestation_per_interzone_manifestation", "value": 1})
+    if re.search(r"as long as it is in the Confrontation Zone, gets \+2 power", effect) and "5 or more Wills in your Limbo" in effect:
+        rules.append({"kind": "self_in_confrontation_with_five_limbo_wills", "value": 2})
     if "you control only one manifestation in the Confrontation Zone, that manifestation gets +2 power" in effect:
         rules.append({"kind": "only_friendly_confrontation_manifestation", "value": 2})
     return rules
@@ -239,6 +241,12 @@ def build_card_rules(cards, abilities_by_card):
                     card.get("effect") or "", re.IGNORECASE,
                 ) or [None, None])[1]
             ),
+            "supportCondition": next((
+                ability["passiveEffect"].get("condition")
+                for ability in abilities_by_card.get(card["id"], [])
+                if isinstance(ability.get("passiveEffect"), dict)
+                and ability["passiveEffect"].get("kind") == "conditional_support"
+            ), None),
             "lossDestination": (
                 "winner_interzone"
                 if re.search(

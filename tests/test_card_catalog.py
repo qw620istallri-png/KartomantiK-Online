@@ -1013,6 +1013,13 @@ class CardCatalogTests(unittest.TestCase):
             rules["xw1fbhs6hwz6thc_en"]["lossDestination"], "winner_interzone"
         )
         self.assertEqual(rules["inner-deserts-132"]["lossDestination"], "own_interzone")
+        self.assertEqual(rules["ymsp3bnm3142ji3_en"]["supportCondition"], "lost_previous_confrontation")
+        self.assertEqual(rules["k7bnhqhxkij5lsl_en"]["supportCondition"], "limbo_exit_this_turn")
+        self.assertEqual(rules["01ynsddc9h2r6wc_en"]["supportCondition"], "five_wills_in_limbo")
+        self.assertIn(
+            "self_in_confrontation_with_five_limbo_wills",
+            [rule["kind"] for rule in rules["01ynsddc9h2r6wc_en"]["continuousPowerRules"]],
+        )
         self.assertTrue(rules["93gvk0hy12hylm6_en"]["vesselEntryRoll"])
         self.assertEqual(rules["3oiehnpbub1byg6_en"]["supportWhenNoCounter"], "Block")
         expected = {

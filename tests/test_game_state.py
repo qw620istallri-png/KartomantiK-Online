@@ -10276,6 +10276,70 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         session.prune_rules_ongoing_effects()
         self.assertFalse(session.rules_item_effects_active(session.battlefield[0]))
 
+    def test_manual_lot_eight_vessel_revelation_and_conditional_support(self):
+        dulfer, druid, offal, thinker, otranth = (
+            "inner-deserts-104", "ymsp3bnm3142ji3_en", "k7bnhqhxkij5lsl_en",
+            "01ynsddc9h2r6wc_en", "tvjlvc3vj3r2zws_en",
+        )
+        session, p1, p2 = self.manual_batch_session(dulfer, druid, offal, thinker, otranth, card_type="manifestation")
+        # Dulfer in p2's vessel: p2 chooses between losing 10 points and -2 on its First Manifestation.
+        self.put(p2, "receptacle", [dulfer])
+        p2["zoneOwners"]["receptacle"] = {dulfer: "p1"}
+        session.battlefield = [self.field_item("f2", "p2", "m-1")]
+        session.rules_engine["firstManifestationItemIds"] = {"p2": "f2"}
+        queued = session.queue_rules_revelation_triggers(defer=True)
+        self.assertEqual([a["ability"]["id"] for a in queued], ["dulfer-taxes-vessel-owner-at-revelation"])
+        payload = session.apply_rules_action_result({**queued[0], "ability": {"result": queued[0]["ability"]["result"]}})
+        self.assertEqual(payload["playerId"], "p2")
+        choice = session.rules_engine["pendingChoice"]
+        base = self.power_of(session, "f2")
+        error, result = session.resolve_rules_choice("p2", choice["id"], option="weaken_first")
+        self.assertIsNone(error)
+        self.assertEqual(self.power_of(session, "f2"), base - 2)
+        session.apply_rules_action_result({**queued[0], "ability": {"result": queued[0]["ability"]["result"]}})
+        error, result = session.resolve_rules_choice("p2", session.rules_engine["pendingChoice"]["id"], option="lose_points")
+        self.assertEqual((p2["score"], result["status"]), (-10, "lost_points"))
+        # Conditional Support: previous-turn loss, Limbo exit this turn, five Wills in Limbo.
+        for cid, cond in ((druid, "lost_previous_confrontation"), (offal, "limbo_exit_this_turn"), (thinker, "five_wills_in_limbo")):
+            session.card_rules[cid]["supportCondition"] = cond
+        turn = session.phase_tracker["turn"]
+        item = self.field_item("d", "p1", druid, field_zone="interzone")
+        session.battlefield = [item]
+        self.assertFalse(session.rules_card_can_enter_support(item))
+        session.rules_engine["confrontationLosses"] = {str(turn - 1): "p1"}
+        self.assertTrue(session.rules_card_can_enter_support(item))
+        item = self.field_item("o", "p1", offal, field_zone="interzone")
+        session.battlefield = [item]
+        self.assertFalse(session.rules_card_can_enter_support(item))
+        self.put(p1, "graveyard", ["m-2"])
+        session.take_zone_card("p1", "graveyard", "m-2")
+        self.assertTrue(session.rules_card_can_enter_support(item))
+        item = self.field_item("t", "p1", thinker, field_zone="interzone")
+        session.battlefield = [item]
+        for cid in ("w-1", "w-2", "w-3", "w-4", "w-5"):
+            session.card_rules[cid] = {"type": "ephemeral_will", "temperaments": []}
+        self.put(p1, "graveyard", ["w-1", "w-2", "w-3", "w-4"])
+        self.assertFalse(session.rules_card_can_enter_support(item))
+        self.put(p1, "graveyard", ["w-1", "w-2", "w-3", "w-4", "w-5"])
+        self.assertTrue(session.rules_card_can_enter_support(item))
+        # Otranth loses a Shackle counter per manifestation entering a Limbo and has Support at zero.
+        session.card_rules[otranth]["supportWhenNoCounter"] = "Shackle"
+        session.battlefield = [self.field_item("ot", "p1", otranth, field_zone="interzone")]
+        self.run_ability_at(session, otranth, 0, source={"itemId": "ot"})
+        self.assertEqual(session.battlefield[0]["counters"]["Shackle"], 2)
+        self.assertFalse(session.rules_card_can_enter_support(session.battlefield[0]))
+        for _ in range(2):
+            self.run_ability_at(session, otranth, 1, source={"itemId": "ot"})
+        self.assertTrue(session.rules_card_can_enter_support(session.battlefield[0]))
+        self.run_ability_at(session, otranth, 3, source={"itemId": "ot"})
+        self.assertEqual(session.battlefield[0]["counters"]["Shackle"], 2)
+        # A manifestation entering a Limbo is observed by field watchers.
+        session.rules_engine["observedEvents"] = []
+        self.put(p2, "hand", ["m-3"])
+        session.move_zone_card("p2", "hand", "p2", "graveyard", "m-3", "top")
+        kinds = [e["kind"] for e in session.rules_engine["observedEvents"]]
+        self.assertIn("manifestation_entered_limbo", kinds)
+
     def test_shababba_reorders_the_deck_top_at_end_of_turn_only_from_the_interzone(self):
         shababba = "i7h2c7ku2gt1yvg_en"
         session, p1, _p2 = self.manual_batch_session(shababba, card_type="manifestation")

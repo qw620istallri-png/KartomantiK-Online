@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261009-rules-beta-100";
+const STATIC_ASSET_VERSION = "20261009-rules-beta-101";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -6089,6 +6089,29 @@ function renderRulesChoice() {
     panel.classList.remove("hidden");
     return;
   }
+  if (choice.kind === "points_or_weaken_first") {
+    $("#rulesChoiceHeading").textContent = t("rulesWeakenChoiceHeading");
+    $("#rulesChoiceText").textContent = rulesText("rulesWeakenChoiceText", {
+      card: cardName(choice.sourceCardId),
+      points: choice.points,
+      power: choice.power,
+    });
+    options.innerHTML = `
+      <button type="button" class="rules-choice-destination" data-rules-weaken-option="lose_points">
+        <strong>${esc(rulesText("rulesLosePointsAmount", { points: choice.points }))}</strong>
+      </button>
+      <button type="button" class="rules-choice-destination" data-rules-weaken-option="weaken_first">
+        <strong>${esc(rulesText("rulesWeakenFirstAmount", { power: choice.power }))}</strong>
+      </button>`;
+    $$("[data-rules-weaken-option]").forEach((button) => {
+      button.onclick = () => {
+        button.disabled = true;
+        send({ type: "resolve_rules_choice", choiceId: choice.id, option: button.dataset.rulesWeakenOption });
+      };
+    });
+    panel.classList.remove("hidden");
+    return;
+  }
   if (choice.kind === "points_or_hand_limit") {
     $("#rulesChoiceHeading").textContent = t("rulesHandLimitChoiceHeading");
     $("#rulesChoiceText").textContent = rulesText("rulesHandLimitChoiceText", {
@@ -8112,6 +8135,7 @@ function renderBattlefield() {
             String(cardsById.get(item.cardId)?.effect || "")
           )
           || Number(item.supportUntilTurn || 0) === Number(latestState.phaseTracker?.turn || 0)
+          || item.canEnterSupport === true
           || (
             /as long as there are no Block counters on it, it has Support/i.test(
               String(cardsById.get(item.cardId)?.effect || "")

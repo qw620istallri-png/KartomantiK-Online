@@ -728,3 +728,10 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 
 - Nouveau choix `effect_payment` (réutilise le flux de paiement du plateau, comme `effect_memory_payment`) : le payeur paie le Tribut ou laisse l'effet `onDecline` se produire. Résultats `unless_payment_deck_discard` (Lerxur : le propriétaire du Réceptacle défausse 2 cartes sauf s'il paie {H}{H}) et `unless_payment_lose_effects` (Nullify : la cible perd ses effets de façon permanente sauf si son contrôleur paie {H}{H}).
 - Dulfer n'est pas fait : les cartes dans un Réceptacle ne reçoivent pas l'évènement `revelation`.
+
+### Lot 8 (Révélation depuis le Réceptacle, Support conditionnel)
+
+- Évènement `vessel_revelation` : envoyé par `queue_rules_revelation_triggers` aux cartes présentes dans les Réceptacles (`trigger.zone: receptacle`, `container: opponent`). Dulfer : le propriétaire du Réceptacle choisit entre perdre 10 points et -2 de puissance pour sa Première Manifestation (choix `points_or_weaken_first`).
+- Passif `conditional_support` (dans `card-abilities.json`) → flag `supportCondition` lu par `rules_card_can_enter_support` : `lost_previous_confrontation` (Twin-headed Druid, via `confrontationLosses` par tour), `limbo_exit_this_turn` (Mourning Offal, via `limboExitTurn` mis à jour dans `take_zone_card`), `five_wills_in_limbo` (Artificial Thinker, +2 puissance en Confrontation via la règle continue `self_in_confrontation_with_five_limbo_wills`).
+- `serialize_for` publie `canEnterSupport` sur les objets de l'Interzone : le menu client « Jouer en Support » s'appuie dessus (au lieu du seul cas Inert Anchorstone).
+- Nouvel évènement observé `manifestation_entered_limbo` (Otranth retire un compteur Shackle ; Support à zéro ; dans l'Interzone au début du tour : -10 points et compteurs restaurés via `restore_source_counter`).

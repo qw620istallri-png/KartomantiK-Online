@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 261,
-    "explicitAbilities": 308,
+    "explicitCards": 266,
+    "explicitAbilities": 316,
     "statuses": {
-      "automated": 320,
+      "automated": 325,
       "generic": 0,
-      "manual": 122,
+      "manual": 117,
       "partial": 8
     }
   },
@@ -750,10 +750,18 @@
       "collectionNumber": 49,
       "name": "Artificial Thinker",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "artificial-thinker-support-with-five-limbo-wills"
+      ],
+      "mechanics": [
+        "continuous-power",
+        "passive:conditional_support"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "fro1wz8eln9t49l_en": {
       "collectionNumber": 50,
@@ -1464,10 +1472,17 @@
       "collectionNumber": 98,
       "name": "Mourning Offal",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "mourning-offal-support-after-limbo-exit"
+      ],
+      "mechanics": [
+        "passive:conditional_support"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "2kz0soujsn2nitf_en": {
       "collectionNumber": 99,
@@ -1889,10 +1904,25 @@
       "collectionNumber": 124,
       "name": "Otranth, the Bloodthirsty",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "otranth-enters-with-shackles",
+        "otranth-loses-shackle-when-manifestation-enters-limbo",
+        "otranth-costs-points-in-interzone",
+        "otranth-restores-shackles-in-interzone"
+      ],
+      "mechanics": [
+        "result:add_counter_source",
+        "result:restore_source_counter",
+        "result:score_owner",
+        "trigger:beginning_of_turn",
+        "trigger:enters_field",
+        "trigger:manifestation_entered_limbo"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "pekwxpsy3c0ro3l_en": {
       "collectionNumber": 125,
@@ -2859,10 +2889,17 @@
       "collectionNumber": 193,
       "name": "Twin-headed Druid",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "twin-headed-druid-support-after-loss"
+      ],
+      "mechanics": [
+        "passive:conditional_support"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "zo4rbgcnww4pxg0_en": {
       "collectionNumber": 194,
@@ -5939,10 +5976,18 @@
       "collectionNumber": 404,
       "name": "Dulfer, the Touchy",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "dulfer-taxes-vessel-owner-at-revelation"
+      ],
+      "mechanics": [
+        "result:choose_points_or_weaken_first",
+        "trigger:vessel_revelation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-105": {
       "collectionNumber": 405,

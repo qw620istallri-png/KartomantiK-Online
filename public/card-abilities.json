@@ -3281,5 +3281,52 @@
       "targets": { "kind": "card", "min": 1, "max": 1, "zones": ["battlefield"] },
       "result": { "kind": "unless_payment_lose_effects", "payment": "{H}{H}" }
     }
+  ],
+  "inner-deserts-104": [
+    {
+      "id": "dulfer-taxes-vessel-owner-at-revelation",
+      "trigger": { "event": "vessel_revelation", "zone": "receptacle", "container": "opponent" },
+      "result": { "kind": "choose_points_or_weaken_first", "points": 10, "power": 2 }
+    }
+  ],
+  "ymsp3bnm3142ji3_en": [
+    {
+      "id": "twin-headed-druid-support-after-loss",
+      "passiveEffect": { "kind": "conditional_support", "condition": "lost_previous_confrontation" }
+    }
+  ],
+  "k7bnhqhxkij5lsl_en": [
+    {
+      "id": "mourning-offal-support-after-limbo-exit",
+      "passiveEffect": { "kind": "conditional_support", "condition": "limbo_exit_this_turn" }
+    }
+  ],
+  "01ynsddc9h2r6wc_en": [
+    {
+      "id": "artificial-thinker-support-with-five-limbo-wills",
+      "passiveEffect": { "kind": "conditional_support", "condition": "five_wills_in_limbo" }
+    }
+  ],
+  "tvjlvc3vj3r2zws_en": [
+    {
+      "id": "otranth-enters-with-shackles",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": { "kind": "add_counter_source", "counter": "Shackle", "value": 2 }
+    },
+    {
+      "id": "otranth-loses-shackle-when-manifestation-enters-limbo",
+      "trigger": { "event": "manifestation_entered_limbo" },
+      "result": { "kind": "add_counter_source", "counter": "Shackle", "value": -1 }
+    },
+    {
+      "id": "otranth-costs-points-in-interzone",
+      "trigger": { "event": "beginning_of_turn", "zone": "interzone" },
+      "result": { "kind": "score_owner", "value": -10 }
+    },
+    {
+      "id": "otranth-restores-shackles-in-interzone",
+      "trigger": { "event": "beginning_of_turn", "zone": "interzone" },
+      "result": { "kind": "restore_source_counter", "counter": "Shackle", "value": 2 }
+    }
   ]
 }

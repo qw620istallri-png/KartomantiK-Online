@@ -81,7 +81,7 @@ RULES_COPIED_EFFECT_KEYS = {
     "adamant", "float", "persist", "canPayTribute", "suspensionThresholds",
     "canPayTributeFromInterzone", "interzoneTributePower",
     "supportFromHand", "supportFromHandCondition", "supportFromInterzone",
-    "lossDestination", "supportWhenNoCounter",
+    "lossDestination", "supportWhenNoCounter", "supportCondition",
     "playOnlyEmptyStack", "supportWinDestination", "supportWinEffect",
     "continuousPowerRules", "activatedAbilities", "triggeredAbilities",
     "playPermissions", "passiveEffects",
@@ -389,6 +389,8 @@ class Session:
             return None
         owner_id = self.card_owner_in_zone(container_id, zone, card_id)
         player["zones"][zone].remove(card_id)
+        if zone == "graveyard" and self.rules_engine.get("enabled"):
+            self.rules_engine["limboExitTurn"] = self.phase_tracker["turn"]
         self.rules_engine.get("zoneEntryTurns", {}).pop(
             f"{container_id}:{zone}:{card_id}", None
         )
@@ -507,6 +509,10 @@ class Session:
         self.record_rules_observed_event(
             "card_entered_limbo", owner_id, cardId=card_id, reason=entry["reason"],
         )
+        if self.card_rules.get(card_id, {}).get("type") == "manifestation":
+            self.record_rules_observed_event(
+                "manifestation_entered_limbo", owner_id, cardId=card_id,
+            )
         self.rules_engine["recentLimboEntries"] = [
             current
             for current in self.rules_engine["recentLimboEntries"]
@@ -1464,6 +1470,16 @@ class Session:
             if kind == "unless_payment_deck_discard":
                 clean["count"] = max(1, min(int(result.get("count") or 1), 20))
             return clean
+        if kind == "restore_source_counter":
+            counter = str(result.get("counter") or "")[:64]
+            if not counter:
+                return None
+            return {"kind": kind, "counter": counter, "value": max(0, min(int(result.get("value") or 0), 99))}
+        if kind == "choose_points_or_weaken_first":
+            return {
+                "kind": kind, "points": max(1, min(int(result.get("points") or 10), 999)),
+                "power": max(1, min(int(result.get("power") or 2), 99)),
+            }
         if kind == "search_deck_to_hand":
             return {
                 "kind": kind, "count": max(1, min(int(result.get("count") or 1), 10)),
@@ -3378,6 +3394,22 @@ class Session:
             }
         self.mark_rules_confrontation_entry(item)
 
+    def rules_support_condition_met(self, item, condition):
+        if not condition:
+            return False
+        owner_id = self.rules_item_controller_id(item)
+        turn = self.phase_tracker["turn"]
+        if condition == "lost_previous_confrontation":
+            return (self.rules_engine.get("confrontationLosses") or {}).get(str(turn - 1)) == owner_id
+        if condition == "limbo_exit_this_turn":
+            return int(self.rules_engine.get("limboExitTurn") or 0) == turn
+        if condition == "five_wills_in_limbo":
+            return sum(
+                1 for card_id in self.players.get(owner_id, {}).get("zones", {}).get("graveyard", [])
+                if self.card_rules.get(card_id, {}).get("type") in RULES_WILL_TYPES
+            ) >= 5
+        return False
+
     def rules_card_can_enter_support(self, item, from_zone="interzone"):
         metadata = self.rules_item_card_rules(item)
         if not self.rules_item_effects_active(item):
@@ -3387,6 +3419,7 @@ class Session:
         counter_name = metadata.get("supportWhenNoCounter")
         return bool(
             metadata.get("supportFromInterzone")
+            or self.rules_support_condition_met(item, metadata.get("supportCondition"))
             or int(item.get("supportUntilTurn") or 0) == self.phase_tracker["turn"]
             or (
                 counter_name
@@ -3564,6 +3597,13 @@ class Session:
                     if confrontation_items is None:
                         confrontation_items = self.rules_confrontation_items()
                     if len(confrontation_items) >= int(rule.get("minimum") or 0):
+                        modifier += value
+                elif kind == "self_in_confrontation_with_five_limbo_wills":
+                    if (
+                        source is item
+                        and self.rules_field_zone(item) == "confrontation"
+                        and self.rules_support_condition_met(item, "five_wills_in_limbo")
+                    ):
                         modifier += value
                 elif kind == "friendly_support_flat":
                     if self.rules_item_controller_id(item) == self.rules_item_controller_id(source) and item.get("isSupport"):
@@ -4292,6 +4332,10 @@ class Session:
             "captured": [], "returned": [],
         }
         self.rules_engine["confrontationResult"] = result
+        if loser_id:
+            self.rules_engine.setdefault("confrontationLosses", {})[
+                str(self.phase_tracker["turn"])
+            ] = loser_id
         return result
 
     def rules_revelation_order(self):
@@ -5052,7 +5096,7 @@ class Session:
                 trigger.get("zone")
                 and event not in {
                     "enters_zone", "enters_field_zone",
-                    "beginning_of_turn", "end_of_turn",
+                    "beginning_of_turn", "end_of_turn", "vessel_revelation",
                 }
                 and (
                     trigger_source_item is None
@@ -5060,6 +5104,8 @@ class Session:
                     != trigger.get("zone")
                 )
             ):
+                continue
+            if event == "vessel_revelation" and trigger.get("zone") != zone:
                 continue
             if event == "enters_zone":
                 if trigger.get("zone") != zone:
@@ -5081,7 +5127,7 @@ class Session:
             ) != int(trigger["controllerConfrontationManifestations"]):
                 continue
             if (
-                event == "beginning_of_turn"
+                event in {"beginning_of_turn", "vessel_revelation"}
                 and trigger.get("container") == "opponent"
                 and container_id == owner_id
             ):
@@ -5220,6 +5266,7 @@ class Session:
                 "deck_cards_discarded": "battlefield",
                 "cards_drawn": "battlefield",
                 "points_gained": "battlefield",
+                "manifestation_entered_limbo": "battlefield",
                 "enters_limbo": "graveyard",
                 "discarded": "graveyard",
                 "manifestation_targeted_by_will": "battlefield",
@@ -5228,6 +5275,7 @@ class Session:
                 "wins_confrontation": "battlefield",
                 "loses_confrontation": "battlefield",
                 "revelation": "battlefield",
+                "vessel_revelation": zone,
                 "before_revelation": "battlefield",
                 "enters_field_zone": "battlefield",
                 "end_of_turn": "battlefield",
@@ -5253,7 +5301,7 @@ class Session:
                         "player_loses_confrontation",
                         "points_lost", "cards_discarded",
                         "deck_cards_discarded", "cards_drawn", "points_gained",
-                        "manifestation_targeted_by_will",
+                        "manifestation_entered_limbo", "manifestation_targeted_by_will",
                         "manifestation_destroyed",
                         "manifestation_enters_opponent_vessel",
                         "wins_confrontation",
@@ -6046,6 +6094,13 @@ class Session:
 
     def queue_rules_revelation_triggers(self, defer=False):
         queued = []
+        for container_id, container in self.players.items():
+            for card_id in list(container["zones"]["receptacle"]):
+                queued.extend(self.queue_rules_triggers(
+                    card_id, self.card_owner_in_zone(container_id, "receptacle", card_id),
+                    "vessel_revelation", zone="receptacle", container_id=container_id,
+                    face_up=True, defer=True,
+                ))
         for item in list(self.battlefield):
             if not self.rules_item_effects_active(item):
                 continue
@@ -7536,6 +7591,30 @@ class Session:
                 "kind": "choice_required", "choiceId": choice_id,
                 "choiceKind": "effect_payment", "playerId": payer_id,
                 "payment": result.get("payment"),
+            }
+        if result.get("kind") == "restore_source_counter":
+            source_item = self.find_battlefield_item((action.get("source") or {}).get("itemId"))
+            if source_item is None:
+                return {"kind": result.get("kind"), "status": "source_missing"}
+            counters = source_item.setdefault("counters", {})
+            name = str(result.get("counter") or "")
+            key = next((k for k in counters if str(k).casefold() == name.casefold()), name)
+            counters[key] = int(result.get("value") or 0)
+            return {"kind": result.get("kind"), "status": "restored", "counter": name, "value": counters[key]}
+        if result.get("kind") == "choose_points_or_weaken_first":
+            payer_id = (action.get("source") or {}).get("containerId")
+            if payer_id not in self.players:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "points_or_weaken_first", "playerId": payer_id,
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+                "points": int(result.get("points") or 10), "power": int(result.get("power") or 2),
+                "options": ["lose_points", "weaken_first"],
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "points_or_weaken_first", "playerId": payer_id,
             }
         if result.get("kind") == "search_deck_to_hand":
             deck = list(player["zones"]["deck"])
@@ -11092,6 +11171,37 @@ class Session:
                 "sourceCardId": choice.get("sourceCardId"),
             }
 
+        if choice.get("kind") == "points_or_weaken_first":
+            if option not in choice.get("options", []):
+                return "Choose whether to lose points or weaken your First Manifestation.", None
+            outcome = {}
+            if option == "lose_points":
+                outcome["delta"] = self.adjust_rules_score(player_id, -int(choice.get("points") or 0))
+            else:
+                first = self.find_battlefield_item(
+                    (self.rules_engine.get("firstManifestationItemIds") or {}).get(player_id)
+                )
+                if first is not None:
+                    self.rules_engine["ongoingEffects"].append({
+                        "id": new_id(), "actionId": None, "abilityId": "points-or-weaken-first",
+                        "controllerId": player_id,
+                        "source": {"cardId": choice.get("sourceCardId")},
+                        "target": {
+                            "kind": "card", "itemId": first["id"],
+                            "cardId": first.get("cardId"), "ownerId": first.get("ownerId"),
+                        },
+                        "kind": "power_modifier", "duration": "until_end_of_turn",
+                        "startedTurn": self.phase_tracker["turn"],
+                        "value": -int(choice.get("power") or 0),
+                    })
+                    outcome["itemId"] = first["id"]
+            self.rules_engine["pendingChoice"] = None
+            return None, {
+                "kind": "points_or_weaken_first",
+                "status": "lost_points" if option == "lose_points" else "weakened",
+                "playerId": player_id, "sourceCardId": choice.get("sourceCardId"), **outcome,
+            }
+
         if choice.get("kind") == "points_or_hand_limit":
             if option not in choice.get("options", []):
                 return "Choose whether to lose points or limit your Hand.", None
@@ -12639,6 +12749,13 @@ class Session:
                 entry["isSupport"] = True
             if item.get("supportUntilTurn"):
                 entry["supportUntilTurn"] = item["supportUntilTurn"]
+            if (
+                self.rules_engine["enabled"] and item.get("faceUp")
+                and item.get("fieldZone") == "interzone"
+                and self.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"
+                and self.rules_card_can_enter_support(item)
+            ):
+                entry["canEnterSupport"] = True
             if item.get("isChained"):
                 entry["isChained"] = True
             controller_id = self.rules_item_controller_id(item)
