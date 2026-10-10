@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261010-rules-beta-108";
+const STATIC_ASSET_VERSION = "20261010-rules-beta-109";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -110,6 +110,9 @@ function rulesTributeCandidate(reference) {
   }
   const cardId = value.includes("|") ? value.split("|").at(-1) : value;
   const card = cardsById.get(cardId);
+  if (card && value.startsWith("receptacle|")) {
+    return { ...card, temperaments: ["transcendent"], paymentValue: value };
+  }
   const powerOverride = latestState?.rulesEngine?.tributePowerOverrides?.[myPlayerId]?.[cardId];
   return card
     ? { ...card, ...(Number.isFinite(powerOverride) ? { power: powerOverride } : {}), paymentValue: value }
@@ -2770,11 +2773,16 @@ function renderRulesBoardFlow() {
         skippedSource = true;
         return false;
       }
-      return cardsById.get(cardId)?.type === "manifestation";
+      return flow.draft.encodedAbility?.additionalCost === "discard_hand_will"
+        ? ["ephemeral_will", "persistent_will"].includes(cardsById.get(cardId)?.type)
+        : cardsById.get(cardId)?.type === "manifestation";
     });
+    const discardCost = flow.draft.encodedAbility?.additionalCost === "discard_hand_will";
     $("#rulesBoardEssence").classList.add("hidden");
     $("#rulesFlowInstruction").textContent = t(
-      choices.length ? "rulesCostCardInstruction" : "rulesCostCardNone",
+      choices.length
+        ? (discardCost ? "rulesCostWillInstruction" : "rulesCostCardInstruction")
+        : (discardCost ? "rulesCostWillNone" : "rulesCostCardNone"),
     );
     $("#rulesFlowCost").innerHTML = `<div class="rules-flow-cost-row rules-cost-card-row">${
       choices.map((cardId, index) => `
@@ -3393,6 +3401,31 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
       powerOverride: rulesTributeCandidate(`battlefield|${item.id}`)?.power,
     });
   }
+  const vesselTributeActive = (latestState?.battlefield || []).some((item) => (
+    battlefieldItemControllerId(item) === myPlayerId
+    && (passiveEffectsByCard.get(item.cardId) || []).some(
+      (effect) => effect.kind === "vessel_manifestations_as_tribute"
+    )
+  ));
+  if (vesselTributeActive) {
+    const vesselCards = latestState?.players?.[myPlayerId]?.zones?.receptacle?.cards || [];
+    for (const cardId of vesselCards) {
+      const manifestation = cardsById.get(cardId);
+      if (
+        manifestation?.type !== "manifestation"
+        || /^Cannot be used (?:to pay tributes|as tribute)/im.test(
+          String(manifestation.effect || ""),
+        )
+      ) continue;
+      manifestations.push({
+        cardId,
+        index: null,
+        selectionKey: `receptacle:${cardId}:${manifestations.length}`,
+        paymentValue: `receptacle|${cardId}`,
+        zone: "receptacle",
+      });
+    }
+  }
   if (
     Object.keys(essenceCostRequirements).length
     && !hasPrintedTribute
@@ -3566,7 +3599,7 @@ function openRulesActionPanel(source) {
         const power = zone === "interzone"
           ? rulesTributeCandidate(paymentValue)?.power
           : tribute?.power;
-        return `<label class="rules-tribute-choice" title="${esc(cardName(cardId))}"><input type="checkbox" value="${esc(paymentValue)}" ${Number.isInteger(index) ? `data-hand-index="${index}"` : ""}>${temperament ? `<img src="${esc(temperamentSymbol(temperament))}" alt="">` : ""}<span>${esc(cardName(cardId))} · ${esc(rulesText("rulesPowerValue", { power: power ?? "—" }))}${zone === "graveyard" ? ` · ${esc(t("graveyard"))}` : zone === "interzone" ? ` · ${esc(t("interzone"))}` : ""}</span></label>`;
+        return `<label class="rules-tribute-choice" title="${esc(cardName(cardId))}"><input type="checkbox" value="${esc(paymentValue)}" ${Number.isInteger(index) ? `data-hand-index="${index}"` : ""}>${temperament ? `<img src="${esc(temperamentSymbol(temperament))}" alt="">` : ""}<span>${esc(cardName(cardId))} · ${esc(rulesText("rulesPowerValue", { power: power ?? "—" }))}${zone === "graveyard" ? ` · ${esc(t("graveyard"))}` : zone === "receptacle" ? ` · ${esc(t("receptacle"))}` : zone === "interzone" ? ` · ${esc(t("interzone"))}` : ""}</span></label>`;
       }).join("")
     : `<span class="rules-tribute-empty">${esc(hasPrintedTribute && !remainingTemperaments.length ? t("rulesCoveredByEssence") : t("rulesNoTributeCards"))}</span>`;
 

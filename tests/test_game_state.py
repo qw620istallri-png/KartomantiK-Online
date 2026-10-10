@@ -10839,6 +10839,228 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         result = session.apply_rules_action_result(session.rules_engine["actionStack"][-1])
         self.assertEqual(result["status"], "neutralized")
 
+    def test_manual_lot_fifteen_hand_costs_vessel_tribute_and_counters(self):
+        catacomb, sando, bivalv, swindley, timid, braba, pillar, quper, tax = (
+            "inner-deserts-067", "inner-deserts-114", "inner-deserts-029", "inner-deserts-077",
+            "5zgq2zcogt4g4d0_en", "zhzp6kenpqrym9h_en", "7gaov0c4cjndl9w_en",
+            "inner-deserts-004", "inner-deserts-069",
+        )
+        session, p1, p2 = self.manual_batch_session(
+            catacomb, sando, bivalv, swindley, timid, braba, pillar, quper, tax, card_type="manifestation",
+        )
+        for card_id in (catacomb, pillar, tax):
+            session.card_rules[card_id]["type"] = "persistent_will"
+        for card_id in (catacomb, sando, bivalv, swindley, timid, braba, pillar, quper, tax):
+            abilities = self.ABILITIES[card_id]
+            session.card_rules[card_id]["activatedAbilities"] = [
+                a for a in abilities
+                if not a.get("trigger") and not a.get("passiveEffect") and a.get("action") != "play_card"
+            ]
+            session.card_rules[card_id]["passiveEffects"] = [
+                a["passiveEffect"] for a in abilities if a.get("passiveEffect")
+            ]
+        session.card_rules["will-ephemeral"] = {
+            "type": "ephemeral_will", "cost": 1, "powerCost": "{G}", "temperaments": ["phlegmatic"],
+        }
+        for card_id in ("m-1", "m-2", "m-3", "m-4", "m-5"):
+            session.card_rules[card_id] = {"type": "manifestation", "power": 2, "temperaments": ["phlegmatic"]}
+        turn = session.phase_tracker["turn"]
+        reaction = ADVANCED_PHASES.index("confrontation_reaction")
+        # Regurgitating Catacomb raises only a Manifestation discarded this turn, and exiles it after a win.
+        self.put(p1, "graveyard", ["m-1", "m-2"])
+        session.record_rules_limbo_entry("p1", "m-1", "discard")
+        target_rules = self.ABILITIES[catacomb][1]["targets"]
+        def limbo_target(card_id):
+            return {"kind": "zone_card", "cardId": card_id, "zone": "graveyard", "containerId": "p1", "ownerId": "p1"}
+        self.assertIn("destroyed or discarded", session.rules_ability_targets_error(target_rules, [limbo_target("m-2")], "p1"))
+        self.assertIsNone(session.rules_ability_targets_error(target_rules, [limbo_target("m-1")], "p1"))
+        self.assertIn("your own zone", session.rules_ability_targets_error(
+            target_rules, [{**limbo_target("m-1"), "containerId": "p2"}], "p1"))
+        payload = session.apply_rules_action_result({
+            "controllerId": "p1", "source": {"cardId": catacomb}, "targets": [limbo_target("m-1")],
+            "ability": {"result": self.ABILITIES[catacomb][1]["result"]},
+        })
+        self.assertEqual(payload["status"], "moved")
+        raised = session.find_battlefield_item(payload["itemId"])
+        self.assertEqual(raised["supportWinDestination"], "exile")
+        self.assertNotIn("m-1", p1["zones"]["graveyard"])
+        # Sandokaron: Banner counters move with confrontation results and it is exiled with none at the end of the turn.
+        session.battlefield = [self.field_item("sando", "p1", sando, field_zone="interzone", controllerId="p1", counters={"Banner": 1})]
+        sando_source = {"cardId": sando, "itemId": "sando", "zone": "battlefield"}
+        error, ability = session.rules_action_ability("p1", "activated_effect", sando_source, "sandokaron-banner-essence", [])
+        self.assertIsNone(error)
+        session.pay_rules_activation_cost({"itemId": "sando", "controllerId": "p1"}, ability)
+        self.assertEqual(session.find_battlefield_item("sando")["counters"]["Banner"], 0)
+        error, _ability = session.rules_action_ability("p1", "activated_effect", sando_source, "sandokaron-banner-essence", [])
+        self.assertIn("Banner counters", error)
+        self.run_ability_counter(session, "sando", sando, "sandokaron-banner-on-win", 1)
+        self.assertEqual(session.find_battlefield_item("sando")["counters"]["Banner"], 1)
+        self.run_ability_counter(session, "sando", sando, "sandokaron-banner-lost-on-loss", -1)
+        self.run_ability_counter(session, "sando", sando, "sandokaron-banner-lost-on-loss", -1)
+        self.assertEqual(session.find_battlefield_item("sando")["counters"]["Banner"], 0)
+        queued = session.queue_rules_triggers(
+            sando, "p1", "end_of_turn", zone="interzone", item_id="sando", face_up=True,
+            controller_id="p1", defer=True,
+        )
+        self.assertEqual([a["ability"]["id"] for a in queued], ["sandokaron-exile-without-banner"])
+        session.find_battlefield_item("sando")["counters"]["Banner"] = 2
+        self.assertEqual(session.queue_rules_triggers(
+            sando, "p1", "end_of_turn", zone="interzone", item_id="sando", face_up=True,
+            controller_id="p1", defer=True,
+        ), [])
+        # Bivalv: discarding it from hand protects a card you control from opponents until the end of the turn.
+        session.battlefield = [self.field_item("mine", "p1", "m-3", controllerId="p1")]
+        self.put(p1, "hand", [bivalv, swindley, timid, "will-ephemeral"])
+        session.phase_tracker["index"] = reaction
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, action = session.declare_rules_action(
+            "p1", "Bivalv", kind="activated_effect", source={"cardId": bivalv, "zone": "hand"},
+            ability_id="bivalv-discard-to-protect", targets=[self.card_target("mine", "m-3")],
+        )
+        self.assertIsNone(error, error)
+        self.assertIn(bivalv, p1["zones"]["graveyard"])
+        self.assertNotIn(bivalv, p1["zones"]["hand"])
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        mine = session.find_battlefield_item("mine")
+        self.assertTrue(session.rules_item_is_protected(mine, "p2"))
+        self.assertFalse(session.rules_item_is_protected(mine, "p1"))
+        # Swindley: it goes to the Stalemate Zone as a cost and returns a stalemated Manifestation to its owner's hand.
+        session.battlefield.append(self.field_item("stale", "p2", "m-4", field_zone="stalemate"))
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, action = session.declare_rules_action(
+            "p1", "Swindley", kind="activated_effect", source={"cardId": swindley, "zone": "hand"},
+            ability_id="swindley-stalemate-to-return", targets=[self.card_target("stale", "m-4")],
+        )
+        self.assertIsNone(error, error)
+        self.assertEqual(session.find_battlefield_item(action["cost"]["stalematedSource"]["itemId"])["fieldZone"], "stalemate")
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        self.assertEqual(p2["zones"]["hand"], ["m-4"])
+        self.assertIsNone(session.find_battlefield_item("stale"))
+        # Timid Brain: discard a Will from hand to be allowed to play it in Support.
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, _action = session.declare_rules_action(
+            "p1", "Timid Brain", kind="activated_effect", source={"cardId": timid, "zone": "hand"},
+            ability_id="timid-brain-discard-will-for-support",
+        )
+        self.assertIn("Choose the Will", error)
+        error, action = session.declare_rules_action(
+            "p1", "Timid Brain", kind="activated_effect", source={"cardId": timid, "zone": "hand"},
+            ability_id="timid-brain-discard-will-for-support", cost_card_id="m-5",
+        )
+        self.assertIn("Choose the Will", error)
+        error, action = session.declare_rules_action(
+            "p1", "Timid Brain", kind="activated_effect", source={"cardId": timid, "zone": "hand"},
+            ability_id="timid-brain-discard-will-for-support", cost_card_id="will-ephemeral",
+        )
+        self.assertIsNone(error, error)
+        self.assertIn("will-ephemeral", p1["zones"]["graveyard"])
+        self.assertIn(timid, p1["zones"]["hand"])
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        self.assertTrue(any(
+            entry.get("cardId") == timid and entry.get("asSupport")
+            for entry in session.rules_engine["playPermissions"]
+        ))
+        # Brabataba lets the Empathic Vessel pay Tribute as {T}; the paid cards are exiled.
+        weaken = "weaken-will"
+        session.card_rules[weaken] = {"type": "ephemeral_will", "cost": 2, "powerCost": "{R}{R}", "temperaments": ["choleric"]}
+        self.put(p1, "receptacle", {"m-3": "p2", "m-2": "p1"})
+        will_source = {"cardId": weaken, "cardType": "ephemeral_will", "controllerId": "p1"}
+        error, _payment = session.rules_action_payment("p1", "play_card", will_source, ["receptacle|m-3", "receptacle|m-2"], {"tribute": "{R}{R}"}, [])
+        self.assertIn("Vessel cannot currently pay", error)
+        session.battlefield = [self.field_item("braba", "p1", braba, controllerId="p1")]
+        error, payment = session.rules_action_payment("p1", "play_card", will_source, ["receptacle|m-3"], {"tribute": "{R}{R}"}, [])
+        self.assertIsNone(error)
+        session.pay_rules_tribute("p1", payment)
+        self.assertEqual(p2["zones"]["exile"][-1:], ["m-3"])
+        self.assertNotIn("m-3", p1["zones"]["receptacle"])
+        error, _payment = session.rules_action_payment("p1", "play_card", will_source, ["receptacle|m-4"], {"tribute": "{R}{R}"}, [])
+        self.assertIn("cannot currently pay", error)
+        # Unreachable Pillar: opponents cannot target the Vessel cards of its controller.
+        vessel_rules = {"kind": "zone_card", "min": 1, "max": 1, "zones": ["receptacle"]}
+        vessel_target = {"kind": "zone_card", "cardId": "m-2", "zone": "receptacle", "containerId": "p1", "ownerId": "p1"}
+        self.assertIsNone(session.rules_ability_targets_error(vessel_rules, [vessel_target], "p2"))
+        session.battlefield.append(self.field_item("pillar", "p1", pillar, controllerId="p1"))
+        self.assertIn("Protected", session.rules_ability_targets_error(vessel_rules, [vessel_target], "p2"))
+        self.assertIsNone(session.rules_ability_targets_error(vessel_rules, [vessel_target], "p1"))
+        # Quper is sacrificed at 5 power and boosts its controller's Confrontation Zone Manifestations.
+        session.battlefield = [
+            self.field_item("quper", "p1", quper, field_zone="interzone", controllerId="p1"),
+            self.field_item("mine", "p1", "m-3", controllerId="p1"),
+            self.field_item("theirs", "p2", "m-4", controllerId="p2"),
+        ]
+        session.card_rules[quper]["power"] = 4
+        session.resolve_rules_state_actions()
+        self.assertIsNotNone(session.find_battlefield_item("quper"))
+        session.card_rules[quper]["power"] = 5
+        session.resolve_rules_state_actions()
+        self.assertIsNone(session.find_battlefield_item("quper"))
+        self.assertIn(quper, p1["zones"]["graveyard"])
+        self.assertEqual(self.power_of(session, "mine"), 4)
+        self.assertEqual(self.power_of(session, "theirs"), 2)
+        # Tax of the Malignant: each player loses their excess essence, or 5 points when they have none.
+        session.battlefield = [self.field_item("tax", "p1", tax, field_zone="confrontation", controllerId="p1")]
+        session.add_rules_excess_essence("p1", [{"temperament": "choleric", "amount": 2}])
+        p1["score"], p2["score"] = 0, 0
+        for event in ("resolution", "end_of_turn"):
+            queued = session.queue_rules_triggers(
+                tax, "p1", event, zone="confrontation", item_id="tax", face_up=True,
+                controller_id="p1", defer=True,
+            )
+            self.assertEqual(len(queued), 1, event)
+        payload = session.apply_rules_action_result({
+            "controllerId": "p1", "source": {"cardId": tax, "itemId": "tax"}, "targets": [],
+            "ability": {"result": self.ABILITIES[tax][0]["result"]},
+        })
+        self.assertEqual(payload["status"], "applied")
+        self.assertFalse([t for t in session.tokens if t.get("isExcess")])
+        self.assertEqual((p1["score"], p2["score"]), (0, -5))
+
+    def test_eorthoda_makes_the_paid_will_unneutralizable_and_protects_persistent_ones(self):
+        eorthoda = "inner-deserts-007"
+        session, p1, _p2 = self.manual_batch_session(eorthoda, card_type="manifestation")
+        for will_type in ("ephemeral_will", "persistent_will"):
+            will = f"paid-{will_type}"
+            session.card_rules[will] = {"type": will_type, "cost": 1, "temperaments": ["phlegmatic"]}
+            action_id = f"stack-{will_type}"
+            related = {
+                "id": action_id, "kind": "play_card", "controllerId": "p1", "sourceOnStack": True,
+                "source": {"cardId": will, "zone": "hand", "ownerId": "p1"},
+            }
+            session.rules_engine["actionStack"] = [related]
+            payload = session.apply_rules_action_result({
+                "id": "trigger", "controllerId": "p1", "source": {"cardId": eorthoda}, "targets": [],
+                "ability": {
+                    "id": "eorthoda-protects-paid-will",
+                    "trigger": {"event": "used_as_tribute", "relatedActionId": action_id},
+                    "result": self.ABILITIES[eorthoda][0]["result"],
+                },
+            })
+            self.assertEqual(payload["status"], "protected")
+            self.assertTrue(related["cannotBeNeutralized"])
+            self.assertEqual(session.counter_rules_stack_action(related, "neutralize")["status"], "prevented")
+            self.assertIn(related, session.rules_engine["actionStack"])
+            self.assertEqual(
+                session.rules_stack_action_is_protected(related, "p2"),
+                will_type == "persistent_will",
+            )
+            self.assertFalse(session.rules_stack_action_is_protected(related, "p1"))
+        session.rules_engine["actionStack"] = []
+        self.assertEqual(session.apply_rules_action_result({
+            "id": "t2", "controllerId": "p1", "source": {"cardId": eorthoda}, "targets": [],
+            "ability": {"trigger": {"relatedActionId": "gone"}, "result": {"kind": "protect_related_will"}},
+        })["status"], "related_action_not_hand_will")
+
+    def run_ability_counter(self, session, item_id, card_id, ability_id, expected_value):
+        ability = next(a for a in self.ABILITIES[card_id] if a["id"] == ability_id)
+        self.assertEqual(ability["result"]["value"], expected_value)
+        return session.apply_rules_action_result({
+            "controllerId": "p1", "source": {"cardId": card_id, "itemId": item_id},
+            "targets": [], "ability": {"result": ability["result"]},
+        })
+
     def test_manual_lot_fourteen_tribute_deck_and_targeting_cards(self):
         tut, ababash, ponderer, zamza, alakazim, palgonphio, oildog, nimbus, zizek, mass = (
             "inner-deserts-037", "inner-deserts-042", "xoo3jxtiy1sonm1_en", "inner-deserts-003",

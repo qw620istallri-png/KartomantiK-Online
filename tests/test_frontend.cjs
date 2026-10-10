@@ -1382,6 +1382,45 @@ function startServer() {
     assert.equal(fieldTributeUi.without, 0);
     assert(fieldTributeUi.withOrator >= 2);
     assert.equal(fieldTributeUi.withPile, 1);
+    const vesselAndWillCostUi = await page.evaluate(() => {
+      const braba = "zhzp6kenpqrym9h_en", timid = "5zgq2zcogt4g4d0_en";
+      const will = [...cardsById.values()].find((card) => card.type === "ephemeral_will" && /^\{[A-Z]\}$/.test(String(card.powerCost || "")));
+      const second = [...cardsById.values()].find((card) => card.type === "ephemeral_will" && card.id !== will.id);
+      const manifestation = [...cardsById.values()].find((card) => card.type === "manifestation" && card.id !== braba && card.id !== timid);
+      const saved = {
+        battlefield: latestState.battlefield, vessel: latestState.players.p1.zones.receptacle,
+        hand: latestState.players.p1.zones.hand, priority: latestState.rulesEngine.priorityPlayerId,
+      };
+      const mk = (id, cardId, zone) => ({ id, ownerId: "p1", controllerId: "p1", cardId, faceUp: true, fieldZone: zone, x: 50, y: 50, rotation: 0, counters: {} });
+      const count = () => rulesActionPaymentDraft({ cardId: will.id, zone: "hand", handIndex: 0 }, will, null).manifestations.filter((entry) => entry.zone === "receptacle").length;
+      latestState.players.p1.zones.receptacle = { cards: [manifestation.id], count: 1, owners: { [manifestation.id]: "p2" } };
+      latestState.battlefield = [];
+      const without = count();
+      latestState.battlefield = [mk("braba", braba, "interzone")];
+      const withBraba = count();
+      latestState.rulesEngine.priorityPlayerId = "p1";
+      latestState.players.p1.zones.hand = {
+        cards: [timid, will.id, manifestation.id, second.id], count: 4,
+        owners: { [timid]: "p1", [will.id]: "p1", [manifestation.id]: "p1", [second.id]: "p1" },
+      };
+      latestState.battlefield = [];
+      renderAll();
+      beginRulesHandActivatedAction(timid, 0);
+      const stage = pendingRulesBoardFlow?.stage;
+      const costChoices = [...document.querySelectorAll("[data-rules-cost-card]")].map((button) => button.dataset.rulesCostCard);
+      closeRulesActionPanel();
+      pendingRulesBoardFlow = null;
+      latestState.battlefield = saved.battlefield;
+      latestState.players.p1.zones.receptacle = saved.vessel;
+      latestState.players.p1.zones.hand = saved.hand;
+      latestState.rulesEngine.priorityPlayerId = saved.priority;
+      renderAll();
+      return { without, withBraba, stage, costChoices, willIds: [will.id, second.id] };
+    });
+    assert.equal(vesselAndWillCostUi.without, 0);
+    assert.equal(vesselAndWillCostUi.withBraba, 1);
+    assert.equal(vesselAndWillCostUi.stage, "cost_card");
+    assert.deepEqual(vesselAndWillCostUi.costChoices.sort(), vesselAndWillCostUi.willIds.sort());
     const rulesChoice = await page.evaluate(() => {
       const darkApparitionId = "7e2ppf4rfgkdfms_en";
       const discardCardId = [...cardsById.keys()].find((cardId) => cardId !== darkApparitionId);

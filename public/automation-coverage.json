@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 299,
-    "explicitAbilities": 359,
+    "explicitCards": 309,
+    "explicitAbilities": 376,
     "statuses": {
-      "automated": 369,
+      "automated": 379,
       "generic": 0,
-      "manual": 81,
+      "manual": 71,
       "partial": 0
     }
   },
@@ -1521,10 +1521,18 @@
       "collectionNumber": 96,
       "name": "Timid Brain",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "timid-brain-discard-will-for-support"
+      ],
+      "mechanics": [
+        "phase-window",
+        "result:grant_source_support_until_end_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "h3qquea83b813t9_en": {
       "collectionNumber": 97,
@@ -3894,10 +3902,17 @@
       "collectionNumber": 246,
       "name": "Brabataba, the Unambitious",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "vessel-manifestations-as-tribute"
+      ],
+      "mechanics": [
+        "passive:vessel_manifestations_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "tzoadjk7wb5qj5f_en": {
       "collectionNumber": 247,
@@ -4581,10 +4596,17 @@
       "collectionNumber": 290,
       "name": "Unreachable Pillar",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "vessel-protected-without-effects"
+      ],
+      "mechanics": [
+        "passive:vessel_protected_no_effects"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "xzh48oy0ramirce_en": {
       "collectionNumber": 291,
@@ -4784,10 +4806,17 @@
       "collectionNumber": 304,
       "name": "Quper, the Bestower",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "quper-sacrifice-at-five"
+      ],
+      "mechanics": [
+        "passive:sacrifice_at_power"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-005": {
       "collectionNumber": 305,
@@ -4825,10 +4854,18 @@
       "collectionNumber": 307,
       "name": "Eorthoda, the Limpid",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "eorthoda-protects-paid-will"
+      ],
+      "mechanics": [
+        "result:protect_related_will",
+        "trigger:used_as_tribute"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-008": {
       "collectionNumber": 308,
@@ -5183,10 +5220,17 @@
       "collectionNumber": 329,
       "name": "Bivalv, the Circumspect",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "bivalv-discard-to-protect"
+      ],
+      "mechanics": [
+        "ongoing:protection"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-030": {
       "collectionNumber": 330,
@@ -5757,10 +5801,22 @@
       "collectionNumber": 367,
       "name": "Regurgitating Catacomb",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "catacomb-bone-counters",
+        "catacomb-raise-discarded-manifestation"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "result:add_counter_source",
+        "result:play_limbo_target_as_support",
+        "target:zone_card",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-068": {
       "collectionNumber": 368,
@@ -5782,10 +5838,20 @@
       "collectionNumber": 369,
       "name": "Tax of the Malignant",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "tax-on-resolution",
+        "tax-at-end-of-turn"
+      ],
+      "mechanics": [
+        "result:lose_excess_essence_or_points",
+        "trigger:end_of_turn",
+        "trigger:resolution"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-070": {
       "collectionNumber": 370,
@@ -5898,10 +5964,19 @@
       "collectionNumber": 377,
       "name": "Swindley, the Festive",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "swindley-stalemate-to-return"
+      ],
+      "mechanics": [
+        "phase-window",
+        "result:move_target",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-078": {
       "collectionNumber": 378,
@@ -6450,10 +6525,29 @@
       "collectionNumber": 414,
       "name": "Sandokaron, Banners Bearer",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "sandokaron-banner-on-enter",
+        "sandokaron-banner-on-win",
+        "sandokaron-banner-lost-on-loss",
+        "sandokaron-banner-power",
+        "sandokaron-banner-essence",
+        "sandokaron-exile-without-banner"
+      ],
+      "mechanics": [
+        "ongoing:power_modifier",
+        "result:add_counter_source",
+        "result:create_essence",
+        "result:move_source_to_owner_exile",
+        "trigger:end_of_turn",
+        "trigger:enters_field",
+        "trigger:player_loses_confrontation",
+        "trigger:player_wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-115": {
       "collectionNumber": 415,

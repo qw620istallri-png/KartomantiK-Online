@@ -802,3 +802,15 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Obtrusive Mass: `redirect_opponent_targeting_to_source` via `rules_redirect_targets`. Les déclencheurs ciblés automatiquement NE sont PAS redirigés (limite connue).
 - Correctif client: `topCount`/`bottomCount` à `null` ne forcent plus tous les sélecteurs sur "bottom".
 - Registre: 369 automated / 0 partial / 81 manual.
+
+## Lot 15 (Regurgitating Catacomb, Sandokaron, Bivalv, Swindley, Timid Brain, Brabataba, Unreachable Pillar, Quper, Tax of the Malignant, Eorthoda)
+
+- Coûts depuis la main: `sourceCost` (`discard_source`, `stalemate_source`) payé à la déclaration dans `declare_rules_action` (Bivalv, Swindley); `additionalCost: "discard_hand_will"` (Timid Brain) réutilise l'étape client `cost_card`, filtrée sur les Volontés.
+- Timid Brain: l'effet n'accorde que la permission de jouer en Soutien (phase Réaction). Le joueur joue ensuite la carte lui-même.
+- Brabataba: passif `vessel_manifestations_as_tribute`. Références de tribut `receptacle|<cardId>`, comptées comme {T}, exilées chez leur propriétaire.
+- Unreachable Pillar: passif `vessel_protected_no_effects` (`rules_vessel_locked`). Les cartes du Vessel ne sont plus ciblables par l'adversaire et leurs déclencheurs (`beginning_of_turn`, `vessel_revelation`, `enters_zone` dans le Vessel) sont ignorés. Les effets sans cible qui touchent le Vessel d'un adversaire ne sont pas filtrés.
+- Quper: passif `sacrifice_at_power` (seuil, bonus) évalué dans `resolve_rules_state_actions`; le bonus +2 est un effet continu `power_modifier` sur les Manifestations de la Zone de Confrontation du contrôleur.
+- Tax of the Malignant: nouvel événement de déclencheur `resolution` (début de `resolution_effects`, `queue_rules_resolution_field_triggers`) et résultat `lose_excess_essence_or_points`. Les jetons d'essence en excès portent maintenant `isExcess`.
+- Sandokaron: déclencheur `sourceCounterMax` (exil sans compteur en fin de tour). Regurgitating Catacomb: ne gère que l'exil sur victoire (pas le remplacement « quitte la Zone de Confrontation par un effet »).
+- Eorthoda: résultat de déclencheur `protect_related_will` (via `relatedActionId`). L'action posée sur la Pile reçoit `cannotBeNeutralized` (bloque `neutralize_stack_action` et le mode `neutralize` de `counter_stack_action_unless_payment`, pas l'annulation `cancel`); une Volonté Persistante reçoit en plus une Protection contre les adversaires jusqu'à la fin du tour, transférée à la carte quand elle entre sur le terrain.
+- Registre: 379 automated / 0 partial / 71 manual.

@@ -3661,5 +3661,119 @@
       "id": "redirect-opponent-targeting",
       "passiveEffect": { "kind": "redirect_opponent_targeting_to_source" }
     }
+  ],
+  "inner-deserts-067": [
+    {
+      "id": "catacomb-bone-counters",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": { "kind": "add_counter_source", "counter": "Bone", "value": 3 }
+    },
+    {
+      "id": "catacomb-raise-discarded-manifestation",
+      "exhaustSource": true,
+      "removeCountersFromSource": { "name": "Bone", "amount": 1 },
+      "targets": { "kind": "zone_card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["graveyard"], "container": "self", "limboReasons": ["discard"] },
+      "result": { "kind": "play_limbo_target_as_support", "winDestination": "exile" }
+    }
+  ],
+  "inner-deserts-114": [
+    {
+      "id": "sandokaron-banner-on-enter",
+      "trigger": { "event": "enters_field", "visibility": "face_up" },
+      "result": { "kind": "add_counter_source", "counter": "Banner", "value": 1 }
+    },
+    {
+      "id": "sandokaron-banner-on-win",
+      "trigger": { "event": "player_wins_confrontation", "eventController": "owner" },
+      "result": { "kind": "add_counter_source", "counter": "Banner", "value": 1 }
+    },
+    {
+      "id": "sandokaron-banner-lost-on-loss",
+      "trigger": { "event": "player_loses_confrontation", "eventController": "owner" },
+      "result": { "kind": "add_counter_source", "counter": "Banner", "value": -1 }
+    },
+    {
+      "id": "sandokaron-banner-power",
+      "removeCountersFromSource": { "name": "Banner", "amount": 1 },
+      "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"] },
+      "ongoingEffect": { "kind": "power_modifier", "value": 3, "duration": "until_end_of_turn" }
+    },
+    {
+      "id": "sandokaron-banner-essence",
+      "removeCountersFromSource": { "name": "Banner", "amount": 1 },
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "create_essence", "temperament": "choleric", "value": 2 }
+    },
+    {
+      "id": "sandokaron-exile-without-banner",
+      "trigger": { "event": "end_of_turn", "sourceCounterMax": { "name": "Banner", "max": 0 } },
+      "result": { "kind": "move_source_to_owner_exile" }
+    }
+  ],
+  "inner-deserts-029": [
+    {
+      "id": "bivalv-discard-to-protect",
+      "sourceZones": ["hand"],
+      "sourceCost": "discard_source",
+      "targets": { "min": 1, "max": 1, "cardTypes": ["manifestation", "persistent_will"], "zones": ["battlefield"], "controller": "self" },
+      "ongoingEffect": { "kind": "protection", "fromOpponents": true, "duration": "until_end_of_turn" }
+    }
+  ],
+  "inner-deserts-077": [
+    {
+      "id": "swindley-stalemate-to-return",
+      "sourceZones": ["hand"],
+      "sourceCost": "stalemate_source",
+      "phaseIds": ["confrontation_reaction"],
+      "targets": { "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"], "fieldZone": "stalemate" },
+      "result": { "kind": "move_target", "zone": "hand", "position": "top", "reason": "return" }
+    }
+  ],
+  "5zgq2zcogt4g4d0_en": [
+    {
+      "id": "timid-brain-discard-will-for-support",
+      "sourceZones": ["hand"],
+      "phaseIds": ["confrontation_reaction"],
+      "additionalCost": "discard_hand_will",
+      "targets": { "min": 0, "max": 0 },
+      "result": { "kind": "grant_source_support_until_end_turn" }
+    }
+  ],
+  "zhzp6kenpqrym9h_en": [
+    {
+      "id": "vessel-manifestations-as-tribute",
+      "passiveEffect": { "kind": "vessel_manifestations_as_tribute" }
+    }
+  ],
+  "7gaov0c4cjndl9w_en": [
+    {
+      "id": "vessel-protected-without-effects",
+      "passiveEffect": { "kind": "vessel_protected_no_effects" }
+    }
+  ],
+  "inner-deserts-004": [
+    {
+      "id": "quper-sacrifice-at-five",
+      "passiveEffect": { "kind": "sacrifice_at_power", "threshold": 5, "bonus": 2 }
+    }
+  ],
+  "inner-deserts-069": [
+    {
+      "id": "tax-on-resolution",
+      "trigger": { "event": "resolution" },
+      "result": { "kind": "lose_excess_essence_or_points", "value": 5 }
+    },
+    {
+      "id": "tax-at-end-of-turn",
+      "trigger": { "event": "end_of_turn" },
+      "result": { "kind": "lose_excess_essence_or_points", "value": 5 }
+    }
+  ],
+  "inner-deserts-007": [
+    {
+      "id": "eorthoda-protects-paid-will",
+      "trigger": { "event": "used_as_tribute" },
+      "result": { "kind": "protect_related_will" }
+    }
   ]
 }

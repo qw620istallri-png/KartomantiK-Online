@@ -1959,6 +1959,13 @@ class Session:
                 if not isinstance(points, (int, float)) or points > target_rules["maxPoints"]:
                     return "This effect requires a target with a lower point value."
             if target.get("kind") != "card":
+                if (
+                    target.get("zone") == "receptacle"
+                    and target.get("containerId") in self.players
+                    and target.get("containerId") != controller_id
+                    and self.rules_vessel_locked(target.get("containerId"))
+                ):
+                    return "The selected Empathic Vessel card is Protected from this controller."
                 owner_relation = target_rules.get("owner")
                 target_owner_id = target.get("ownerId")
                 if owner_relation == "self" and target_owner_id != controller_id:
@@ -2319,8 +2326,15 @@ class Session:
                 str(entry)[:64] for entry in ability.get("supportWhenAllUsed") or []
             ][:6] if isinstance(ability.get("supportWhenAllUsed"), list) else None,
             "additionalCost": (
-                "exile_hand_manifestation"
-                if ability.get("additionalCost") == "exile_hand_manifestation" else None
+                ability["additionalCost"]
+                if ability.get("additionalCost") in {
+                    "exile_hand_manifestation", "discard_hand_will",
+                } else None
+            ),
+            "sourceCost": (
+                ability["sourceCost"]
+                if ability.get("sourceCost") in {"discard_source", "stalemate_source"}
+                else None
             ),
             "sourceFieldZone": required_source_field_zone or None,
             "condition": condition or None,
@@ -2609,6 +2623,8 @@ class Session:
             override = self.rules_tribute_power_override(player_id, metadata)
             if override is not None:
                 power = override
+            if isinstance(entry, dict) and entry.get("zone") == "receptacle":
+                metadata = {**metadata, "tributeTemperaments": ["transcendent"]}
             cards.append((card_id, metadata, max(0, power)))
         cards.sort(key=lambda item: "transcendent" in (
             item[1].get("tributeTemperaments")
@@ -2665,7 +2681,7 @@ class Session:
             zone, separator, card_id = reference.partition("|")
             if not separator:
                 zone, card_id = "hand", reference
-            if zone not in {"hand", "graveyard", "battlefield"}:
+            if zone not in {"hand", "graveyard", "battlefield", "receptacle"}:
                 return "A selected Tribute card uses an unsupported zone.", None
             if zone == "battlefield":
                 item = self.find_battlefield_item(card_id)
@@ -2703,6 +2719,18 @@ class Session:
             if entry["zone"] == "hand":
                 if requested_counts[key] > hand.count(card_id) - reserved_source:
                     return "A selected Tribute card is no longer in your Hand.", None
+            elif entry["zone"] == "receptacle":
+                if not any(
+                    self.rules_item_controller_id(source) == player_id
+                    for source in self.rules_active_passive_sources(
+                        "vessel_manifestations_as_tribute"
+                    )
+                ):
+                    return "Your Empathic Vessel cannot currently pay Tribute.", None
+                if requested_counts[key] > self.players[player_id]["zones"].get(
+                    "receptacle", []
+                ).count(card_id):
+                    return "A selected Empathic Vessel card cannot currently pay Tribute.", None
             else:
                 if entry["zone"] == "battlefield":
                     item = self.find_battlefield_item(entry.get("itemId"))
@@ -3009,6 +3037,7 @@ class Session:
                     "isEssence": True,
                     "temperament": temperament,
                     "isNeutralCounter": False,
+                    "isExcess": True,
                     "label": "",
                     "color": "#b58a24",
                     "counters": {"essence": 0},
@@ -3087,6 +3116,17 @@ class Session:
                 })
                 continue
             owner_id = self.card_owner_in_zone(player_id, from_zone, card_id)
+            if from_zone == "receptacle":
+                error, _owner_id, replacement = self.move_zone_card_by_effect(
+                    player_id, "receptacle", owner_id, "exile", card_id, "top",
+                )
+                if error or replacement:
+                    raise RuntimeError("Validated Vessel Tribute payment failed.")
+                movements.append({
+                    "cardId": card_id, "ownerId": owner_id,
+                    "fromZone": "receptacle", "destination": "exile",
+                })
+                continue
             if from_zone == "graveyard":
                 error, _owner_id, replacement = self.move_zone_card_by_effect(
                     player_id, "graveyard", owner_id, "exile",
@@ -3391,6 +3431,12 @@ class Session:
         """Remove one validated Stack entry while preserving already-paid costs."""
         if target_action not in self.rules_engine.get("actionStack", []):
             return None
+        if mode == "neutralize" and target_action.get("cannotBeNeutralized"):
+            return {
+                "status": "prevented", "mode": mode,
+                "actionId": target_action.get("id"),
+                "cardId": (target_action.get("source") or {}).get("cardId"),
+            }
         self.rules_engine["actionStack"].remove(target_action)
         self.rules_engine["ongoingEffects"] = [
             effect for effect in self.rules_engine.get("ongoingEffects") or []
@@ -3750,6 +3796,15 @@ class Session:
             effect.get("kind") == "interzone_lock"
             and effect.get("target", {}).get("itemId") == (item or {}).get("id")
             for effect in self.rules_engine.get("ongoingEffects") or []
+        )
+
+    def rules_vessel_locked(self, container_id):
+        """Unreachable Pillar: Vessel cards are Protected and have no effects."""
+        return any(
+            self.rules_item_controller_id(source) == container_id
+            for source in self.rules_active_passive_sources(
+                "vessel_protected_no_effects"
+            )
         )
 
     def rules_active_passive_sources(self, kind):
@@ -4452,6 +4507,49 @@ class Session:
         replacements = []
         triggered_actions = []
         threshold_exiled = []
+        for item in list(self.battlefield):
+            if (
+                not item.get("faceUp")
+                or self.card_rules.get(item.get("cardId"), {}).get("type") != "manifestation"
+                or not self.rules_item_effects_active(item)
+                or self.rules_field_zone(item) == "stalemate"
+            ):
+                continue
+            passive = next((
+                entry for entry in self.rules_item_card_rules(item).get("passiveEffects") or []
+                if entry.get("kind") == "sacrifice_at_power"
+            ), None)
+            if (
+                passive is None
+                or self.rules_manifestation_characteristics(item)["power"]
+                < int(passive.get("threshold") or 0)
+            ):
+                continue
+            controller_id = self.rules_item_controller_id(item)
+            movement = self._rules_remove_field_item_by_effect(
+                item, item.get("ownerId"), "graveyard", "top", reason="sacrifice",
+            )
+            movement["replacement"] = "sacrifice_at_power"
+            replacements.append(movement)
+            if movement.get("status") == "moved":
+                triggered_actions.extend(self.queue_rules_zone_entry_triggers(
+                    item.get("cardId"), item.get("ownerId"),
+                    item.get("ownerId"), "graveyard", defer=True,
+                ))
+            for other in self.rules_confrontation_items(controller_id):
+                self.rules_engine["ongoingEffects"].append({
+                    "id": new_id(), "actionId": None,
+                    "abilityId": "sacrifice-at-power-bonus",
+                    "controllerId": controller_id,
+                    "source": {"cardId": item.get("cardId")},
+                    "target": {
+                        "kind": "card", "itemId": other["id"],
+                        "cardId": other.get("cardId"), "ownerId": other.get("ownerId"),
+                    },
+                    "kind": "power_modifier", "value": int(passive.get("bonus") or 0),
+                    "duration": "until_end_of_turn",
+                    "startedTurn": self.phase_tracker["turn"],
+                })
         for item in list(self.rules_confrontation_items()):
             threshold = self.rules_item_card_rules(item).get(
                 "suspensionThresholds", {}
@@ -5263,20 +5361,38 @@ class Session:
         if payment_error:
             return payment_error, None
         cost_card_id = str(cost_card_id) if cost_card_id else None
-        if clean_ability and clean_ability.get("additionalCost") == "exile_hand_manifestation":
+        if clean_ability and clean_ability.get("sourceCost") and not (
+            clean_source.get("zone") == "hand"
+            and clean_source.get("cardId") in self.players[player_id]["zones"]["hand"]
+        ):
+            return "This effect's cost needs its source card in your Hand.", None
+        additional_cost = (clean_ability or {}).get("additionalCost")
+        if additional_cost in {"exile_hand_manifestation", "discard_hand_will"}:
             hand_cards = list(self.players[player_id]["zones"]["hand"])
             if clean_source.get("zone") == "hand" and clean_source.get("cardId") in hand_cards:
                 hand_cards.remove(clean_source["cardId"])
+            cost_types = (
+                RULES_WILL_TYPES if additional_cost == "discard_hand_will"
+                else {"manifestation"}
+            )
             if not any(
-                self.card_rules.get(card_id, {}).get("type") == "manifestation"
+                self.card_rules.get(card_id, {}).get("type") in cost_types
                 for card_id in hand_cards
             ):
-                return "You need a Manifestation in hand to reveal and exile as an additional cost.", None
+                return (
+                    "You need a Will in hand to discard as an additional cost."
+                    if additional_cost == "discard_hand_will"
+                    else "You need a Manifestation in hand to reveal and exile as an additional cost."
+                ), None
             if (
                 cost_card_id not in hand_cards
-                or self.card_rules.get(cost_card_id, {}).get("type") != "manifestation"
+                or self.card_rules.get(cost_card_id, {}).get("type") not in cost_types
             ):
-                return "Choose the Manifestation from your hand to reveal and exile.", None
+                return (
+                    "Choose the Will from your hand to discard."
+                    if additional_cost == "discard_hand_will"
+                    else "Choose the Manifestation from your hand to reveal and exile."
+                ), None
         else:
             cost_card_id = None
         clean_targets = self.rules_redirect_targets(player_id, clean_targets)
@@ -5359,7 +5475,16 @@ class Session:
         action["cost"]["reducedSourcePower"] = activation_payment[
             "reducedSourcePower"
         ]
-        if cost_card_id:
+        if cost_card_id and additional_cost == "discard_hand_will":
+            cost_owner = self.card_owner_in_zone(player_id, "hand", cost_card_id) or player_id
+            cost_error, _owner, _replacement = self.move_zone_card_by_effect(
+                player_id, "hand", cost_owner, "graveyard", cost_card_id, "top"
+            )
+            if not cost_error:
+                action["cost"]["discardedCard"] = {
+                    "cardId": cost_card_id, "ownerId": cost_owner,
+                }
+        elif cost_card_id:
             cost_owner = self.card_owner_in_zone(player_id, "hand", cost_card_id) or player_id
             cost_error, _owner, _replacement = self.move_zone_card_by_effect(
                 player_id, "hand", cost_owner, "exile", cost_card_id, "top"
@@ -5368,6 +5493,40 @@ class Session:
                 action["cost"]["revealedCard"] = {
                     "cardId": cost_card_id, "ownerId": cost_owner,
                     "power": int(self.card_rules.get(cost_card_id, {}).get("power") or 0),
+                }
+        source_cost = (clean_ability or {}).get("sourceCost")
+        if source_cost == "discard_source":
+            source_owner = self.card_owner_in_zone(
+                player_id, "hand", clean_source["cardId"]
+            ) or player_id
+            source_error, _owner, _replacement = self.move_zone_card_by_effect(
+                player_id, "hand", source_owner, "graveyard",
+                clean_source["cardId"], "top",
+            )
+            if not source_error:
+                action["cost"]["discardedSource"] = {
+                    "cardId": clean_source["cardId"], "ownerId": source_owner,
+                }
+        elif source_cost == "stalemate_source":
+            source_owner = self.take_zone_card(
+                player_id, "hand", clean_source["cardId"]
+            )
+            if source_owner is not None:
+                seat = self.players[player_id].get("seat")
+                stalemate_item = {
+                    "id": new_id(), "ownerId": source_owner,
+                    "controllerId": player_id, "cardId": clean_source["cardId"],
+                    "x": 650.0, "y": 520.0 if seat != 1 else 980.0,
+                    "faceUp": True, "rotation": 0.0, "counters": {},
+                    "rarity": self.players[source_owner].get(
+                        "cardRarities", {}
+                    ).get(clean_source["cardId"]),
+                    "stackedOn": None, "fieldZone": "stalemate",
+                }
+                self.battlefield.append(stalemate_item)
+                action["cost"]["stalematedSource"] = {
+                    "cardId": clean_source["cardId"], "ownerId": source_owner,
+                    "itemId": stalemate_item["id"],
                 }
         self.rules_engine["actionStack"].append(action)
         self.rules_engine["priorityPasses"] = []
@@ -5439,6 +5598,8 @@ class Session:
                     return None
                 clean["opponentPayment"] = payment
             return clean
+        if kind == "protect_related_will":
+            return {"kind": kind}
         if kind == "add_counter_source":
             counter = str(result.get("counter") or "")[:64]
             value = result.get("value")
@@ -5449,6 +5610,11 @@ class Session:
                 "counter": counter,
                 "value": max(-999, min(int(value), 999)),
             }
+        if kind == "lose_excess_essence_or_points":
+            value = result.get("value")
+            if not isinstance(value, (int, float)) or int(value) < 1:
+                return None
+            return {"kind": kind, "value": min(int(value), 999)}
         if kind == "each_player_recovery_choice":
             return {"kind": kind}
         if kind == "chain_from_zone":
@@ -5579,6 +5745,12 @@ class Session:
         )
         if event == "enters_zone" and container_id not in self.players:
             return []
+        if (
+            zone == "receptacle"
+            and container_id in self.players
+            and self.rules_vessel_locked(container_id)
+        ):
+            return []
         if event == "enters_field" and not face_up:
             return []
         if item_id:
@@ -5664,6 +5836,18 @@ class Session:
                     == str(counter_min.get("name") or "").casefold()
                 )
                 if counter_total < int(counter_min.get("min") or 0):
+                    continue
+            counter_max = trigger.get("sourceCounterMax")
+            if isinstance(counter_max, dict):
+                source_counters = (
+                    self.find_battlefield_item(item_id) or {}
+                ).get("counters") or {}
+                counter_total = sum(
+                    int(value or 0) for key, value in source_counters.items()
+                    if str(key).casefold()
+                    == str(counter_max.get("name") or "").casefold()
+                )
+                if counter_total > int(counter_max.get("max") or 0):
                     continue
             if event == "beginning_of_turn" and trigger.get("zone") and trigger.get("zone") != zone:
                 continue
@@ -5802,6 +5986,7 @@ class Session:
                 "before_revelation": "battlefield",
                 "enters_field_zone": "battlefield",
                 "end_of_turn": "battlefield",
+                "resolution": "battlefield",
             }.get(event)
             if source_zone is None:
                 continue
@@ -5831,7 +6016,7 @@ class Session:
                         "loses_confrontation",
                         "revelation",
                         "before_revelation",
-                        "enters_field_zone", "end_of_turn",
+                        "enters_field_zone", "end_of_turn", "resolution",
                     } else None,
                     "cardType": self.card_rules.get(card_id, {}).get("type"),
                     "ownerId": owner_id,
@@ -6652,6 +6837,24 @@ class Session:
                 item_id=item.get("id"),
                 face_up=True,
                 target_player_id=self.other_rules_player_id(controller_id),
+                defer=True,
+                controller_id=controller_id,
+            ))
+        if queued and not defer:
+            self.queue_rules_simultaneous_actions(queued)
+        return queued
+
+    def queue_rules_resolution_field_triggers(self, defer=False):
+        queued = []
+        for item in list(self.battlefield):
+            if not self.rules_item_effects_active(item):
+                continue
+            controller_id = self.rules_item_controller_id(item)
+            queued.extend(self.queue_rules_triggers(
+                item.get("cardId"), item.get("ownerId"),
+                "resolution",
+                item_id=item.get("id"),
+                face_up=True,
                 defer=True,
                 controller_id=controller_id,
             ))
@@ -9102,6 +9305,41 @@ class Session:
                 "cardId": card_id,
                 "ownerId": owner_id,
             }
+        if result.get("kind") == "protect_related_will":
+            trigger = (action.get("ability") or {}).get("trigger") or {}
+            related = next((
+                entry for entry in self.rules_engine.get("actionStack") or []
+                if entry.get("id") == trigger.get("relatedActionId")
+                and entry.get("kind") == "play_card"
+                and (entry.get("source") or {}).get("zone") == "hand"
+                and self.card_rules.get(
+                    (entry.get("source") or {}).get("cardId"), {}
+                ).get("type") in RULES_WILL_TYPES
+            ), None)
+            if related is None:
+                return {"kind": result.get("kind"), "status": "related_action_not_hand_will"}
+            related["cannotBeNeutralized"] = True
+            related_source = related.get("source") or {}
+            if self.card_rules.get(related_source.get("cardId"), {}).get("type") == "persistent_will":
+                self.rules_engine["ongoingEffects"].append({
+                    "id": new_id(), "actionId": action.get("id"),
+                    "abilityId": (action.get("ability") or {}).get("id"),
+                    "controllerId": related.get("controllerId"),
+                    "source": {"cardId": (action.get("source") or {}).get("cardId")},
+                    "target": {
+                        "kind": "stack_action", "actionId": related.get("id"),
+                        "cardId": related_source.get("cardId"),
+                        "ownerId": related_source.get("ownerId"),
+                    },
+                    "kind": "protection", "fromOpponents": True,
+                    "duration": "until_end_of_turn",
+                    "startedTurn": self.phase_tracker["turn"],
+                })
+            return {
+                "kind": result.get("kind"), "status": "protected",
+                "actionId": related.get("id"),
+                "cardId": related_source.get("cardId"),
+            }
         if result.get("kind") == "add_counter_source":
             source_item = self.find_battlefield_item(
                 (action.get("source") or {}).get("itemId")
@@ -10090,6 +10328,25 @@ class Session:
                 "sourceCardId": (action.get("source") or {}).get("cardId"),
             })
             return {"kind": result.get("kind"), "status": "granted", "playerId": owner_id}
+        if result.get("kind") == "lose_excess_essence_or_points":
+            value = int(result.get("value") or 0)
+            outcomes = []
+            for current_id in self.players:
+                excess = [
+                    token for token in self.tokens
+                    if token.get("ownerId") == current_id
+                    and token.get("isExcess")
+                    and int((token.get("counters") or {}).get("essence") or 0) > 0
+                ]
+                if excess:
+                    lost = sum(int(token["counters"]["essence"]) for token in excess)
+                    gone = {token["id"] for token in excess}
+                    self.tokens = [t for t in self.tokens if t.get("id") not in gone]
+                    outcomes.append({"playerId": current_id, "essenceLost": lost})
+                else:
+                    lost_points = -self.adjust_rules_score(current_id, -value)
+                    outcomes.append({"playerId": current_id, "pointsLost": lost_points})
+            return {"kind": result.get("kind"), "status": "applied", "players": outcomes}
         if result.get("kind") == "lock_next_turn_draws":
             target = next((
                 entry for entry in action.get("targets") or []
@@ -10863,7 +11120,7 @@ class Session:
                 target_action, "neutralize",
                 result.get("destination") or "graveyard",
             )
-            if result.get("refundEssence"):
+            if result.get("refundEssence") and countered.get("status") != "prevented":
                 refunded = self.rules_refund_stack_action_essence(target_action)
                 if refunded:
                     countered["refundedEssence"] = refunded
@@ -13504,6 +13761,9 @@ class Session:
             )
             resolution_triggered_actions.extend(
                 self.queue_rules_confrontation_win_triggers()
+            )
+            resolution_triggered_actions.extend(
+                self.queue_rules_resolution_field_triggers()
             )
         confrontation_result = None
         if self.current_phase_id() == "resolution_compare":
