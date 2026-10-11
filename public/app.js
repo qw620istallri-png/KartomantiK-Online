@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261011-rules-beta-122";
+const STATIC_ASSET_VERSION = "20261011-rules-beta-123";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -2900,7 +2900,9 @@ function rulesCopiedEffectsCardId(item) {
 
 function rulesActivatedAbilitiesForItem(item) {
   const copiedCardId = rulesCopiedEffectsCardId(item);
-  return activatedAbilitiesByCard.get(copiedCardId || item?.cardId) || [];
+  const own = activatedAbilitiesByCard.get(copiedCardId || item?.cardId) || [];
+  // Gummo gains the effects of a Vessel card in addition to its own.
+  return item?.gummoCopy ? [...own, ...(activatedAbilitiesByCard.get(item.gummoCopy) || [])] : own;
 }
 
 function rulesActivatedActionDraft(item, abilityOverride = null) {
@@ -8923,11 +8925,16 @@ function renderBattlefield() {
         ? rulesActionContextItem({ cardId: item.cardId, zone: "battlefield", itemId: item.id })
         : null;
       if (rulesItem) items.push(rulesItem);
-      if (isMine && (passiveEffectsByCard.get(item.cardId) || []).some((effect) => effect.kind === "recovery_draw_from_limbo")) {
-        const limboOn = (latestState?.rulesEngine?.limboRecoveryPlayerIds || []).includes(myPlayerId);
+      if (isMine && (passiveEffectsByCard.get(item.cardId) || []).some((effect) => effect.kind === "swap_with_targeted_confrontation_manifestation")) {
         items.push({
-          label: t(limboOn ? "rulesLimboRecoveryOn" : "rulesLimboRecoveryOff"),
-          onSelect: () => send({ type: "toggle_limbo_recovery" }),
+          label: t(item.outcastOff ? "rulesOutcastOff" : "rulesOutcastOn"),
+          onSelect: () => send({ type: "toggle_item_option", itemId: item.id, option: "outcastOff" }),
+        });
+      }
+      if (isMine && (passiveEffectsByCard.get(item.cardId) || []).some((effect) => effect.kind === "interzone_substitute_holder")) {
+        items.push({
+          label: t(item.karmapultAuto ? "rulesKarmapultAutoOn" : "rulesKarmapultAutoOff"),
+          onSelect: () => send({ type: "toggle_item_option", itemId: item.id, option: "karmapultAuto" }),
         });
       }
       (item.attachedCards || []).forEach((entry) => {

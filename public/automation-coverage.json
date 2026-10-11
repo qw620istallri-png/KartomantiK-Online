@@ -3,7 +3,7 @@
   "summary": {
     "catalogCards": 450,
     "explicitCards": 357,
-    "explicitAbilities": 456,
+    "explicitAbilities": 457,
     "statuses": {
       "automated": 427,
       "generic": 0,
@@ -135,6 +135,7 @@
         "slumberer-falls-asleep",
         "slumberer-taken-by-the-winner",
         "slumberer-sleeps-deeper",
+        "slumberer-sleeps-deeper-on-stalemate",
         "slumberer-wakes-up"
       ],
       "mechanics": [
@@ -142,6 +143,7 @@
         "result:slumberer_wakes",
         "result:source_to_winner_vessel",
         "trigger:beginning_of_turn",
+        "trigger:confrontation_stalemate",
         "trigger:enters_field",
         "trigger:player_loses_confrontation",
         "trigger:player_wins_confrontation"

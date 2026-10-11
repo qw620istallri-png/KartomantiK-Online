@@ -4903,6 +4903,18 @@
       }
     },
     {
+      "id": "slumberer-sleeps-deeper-on-stalemate",
+      "trigger": {
+        "event": "confrontation_stalemate",
+        "eventController": "owner"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Sleep",
+        "value": -1
+      }
+    },
+    {
       "id": "slumberer-wakes-up",
       "trigger": {
         "event": "beginning_of_turn",

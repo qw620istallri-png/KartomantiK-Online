@@ -2639,6 +2639,7 @@ class Session:
                     )
                     if self.rules_item_controller_id(source) == owner_id
                     and self.rules_field_zone(source) == "interzone"
+                    and not source.get("outcastOff")
                     and self.rules_field_zone(item) == "confrontation"
                     and not item.get("isSupport")
                     and self.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"
@@ -4319,7 +4320,36 @@ class Session:
             for effect in self.rules_engine.get("ongoingEffects") or []
         )
 
+    def toggle_rules_item_option(self, player_id, item_id, option):
+        item = self.find_battlefield_item(item_id)
+        if (
+            item is None or option not in {"outcastOff", "karmapultAuto"}
+            or self.rules_item_controller_id(item) != player_id
+        ):
+            return "This option is not available.", None
+        if item.get(option):
+            item.pop(option)
+        else:
+            item[option] = True
+        return None, {"itemId": item_id, "option": option, "enabled": bool(item.get(option))}
+
     def mark_rules_interzone_entry(self, item):
+        holder = self.rules_karmapult_holder(self.rules_item_controller_id(item), item)
+        if (
+            holder is not None and holder.get("karmapultAuto") and holder is not item
+            and item in self.battlefield
+            and not item.get("isCopy") and not item.get("isTokenCard")
+        ):
+            # Karmapult: put on it instead of entering the Interzone.
+            self.battlefield.remove(item)
+            for other in self.battlefield:
+                if other.get("stackedOn") == item.get("id"):
+                    other["stackedOn"] = None
+            holder.setdefault("attachedCards", []).append({
+                "cardId": item["cardId"], "ownerId": item["ownerId"],
+            })
+            self.rules_sync_attached_counter(holder)
+            return
         item["interzoneTurn"] = int(self.phase_tracker.get("turn") or 1)
         if self.rules_exiles_incoming_manifestations(
             self.rules_item_controller_id(item), item.get("cardId")
@@ -5976,7 +6006,7 @@ class Session:
     def declare_rules_action(self, player_id, label, kind="manual", source=None, target=None,
                              targets=None, cost_note=None, payment_card_ids=None, ability_id=None,
                              placement=None, as_support=False,
-                             extra_essence_count=0, cost_card_id=None):
+                             extra_essence_count=0, cost_card_id=None, internal=False):
         if not self.rules_engine["enabled"]:
             return "Assisted rules are not active.", None
         if self.ended or player_id not in self.players:
@@ -5985,7 +6015,7 @@ class Session:
             return "Both players must join before using priority.", None
         if self.rules_engine.get("pendingChoice"):
             return "A required card choice must be completed first.", None
-        if self.rules_engine["priorityPlayerId"] != player_id:
+        if self.rules_engine["priorityPlayerId"] != player_id and not internal:
             return "You do not have priority.", None
         kind = str(kind or "manual")
         if kind not in RULES_ACTION_KINDS:
@@ -6006,7 +6036,7 @@ class Session:
         )
         if source_error:
             return source_error, None
-        timing_error = self.rules_action_timing_error(
+        timing_error = None if internal else self.rules_action_timing_error(
             kind, clean_source, as_support=as_support, player_id=player_id,
         )
         if timing_error:
@@ -6722,6 +6752,7 @@ class Session:
                 "manifestation_enters_opponent_vessel": "battlefield",
                 "wins_confrontation": "battlefield",
                 "loses_confrontation": "battlefield",
+                "confrontation_stalemate": "battlefield",
                 "revelation": "battlefield",
                 "vessel_revelation": zone,
                 "before_revelation": "battlefield",
@@ -6756,6 +6787,7 @@ class Session:
                         "manifestation_enters_opponent_vessel",
                         "wins_confrontation",
                         "loses_confrontation",
+                        "confrontation_stalemate",
                         "revelation",
                         "before_revelation",
                         "enters_field_zone", "end_of_turn", "resolution",
@@ -7496,6 +7528,20 @@ class Session:
     def queue_rules_confrontation_win_triggers(self, defer=False):
         result = self.rules_engine.get("confrontationResult") or {}
         winner_id = result.get("winnerId")
+        if winner_id not in self.players and result.get("stalemate"):
+            stalemate_queued = []
+            for item in list(self.battlefield):
+                if not self.rules_item_effects_active(item):
+                    continue
+                stalemate_queued.extend(self.queue_rules_triggers(
+                    item.get("cardId"), item.get("ownerId"), "confrontation_stalemate",
+                    item_id=item.get("id"), face_up=True, defer=True,
+                    event_controller_id=self.rules_item_controller_id(item),
+                    controller_id=self.rules_item_controller_id(item),
+                ))
+            if stalemate_queued and not defer:
+                self.queue_rules_simultaneous_actions(stalemate_queued)
+            return stalemate_queued
         if winner_id not in self.players:
             return []
         participant_ids = set(result.get("participantItemIds") or [])
@@ -14200,6 +14246,24 @@ class Session:
                 "temperament": option, "itemId": choice.get("sourceItemId"),
             }
 
+        if choice.get("kind") == "binary_choice" and choice.get("purpose") == "quasimillenary":
+            if option not in choice.get("options", []):
+                return "Choose yes or no.", None
+            self.rules_engine["pendingChoice"] = None
+            self.rules_engine.setdefault("limboRecoveryDecided", {})[player_id] = self.phase_tracker["turn"]
+            enabled = self.rules_engine.setdefault("limboRecoveryPlayerIds", [])
+            if option == "yes" and player_id not in enabled:
+                enabled.append(player_id)
+            elif option == "no" and player_id in enabled:
+                enabled.remove(player_id)
+            error, recovery = self.resolve_recovery_draw(int(choice.get("handLimit") or 7))
+            if error:
+                return error, None
+            return None, {
+                "kind": "quasimillenary_choice", "status": "limbo" if option == "yes" else "deck",
+                "playerId": player_id, "recovery": recovery,
+            }
+
         if choice.get("kind") == "binary_choice" and choice.get("purpose") == "womb_show":
             if option not in choice.get("options", []):
                 return "Choose yes or no.", None
@@ -14728,10 +14792,20 @@ class Session:
                     "noTribute": True, "turn": self.phase_tracker["turn"],
                     "sourceCardId": choice.get("sourceCardId"),
                 })
+            played = None
+            if will_id in self.players[controller_id]["zones"]["hand"]:
+                error, played = self.declare_rules_action(
+                    controller_id, f"{self.card_labels.get(will_id, will_id)}",
+                    kind="play_card", source={"cardId": will_id, "zone": "hand"},
+                    internal=True,
+                )
+                if error:
+                    played = None  # needs targets or a choice: the free-play right remains
             return None, {
                 "kind": "immediate_effect_payment", "status": "paid",
                 "playerId": player_id, "sourceCardId": choice.get("sourceCardId"),
                 "willCardId": will_id, "freePlayGrantedTo": controller_id,
+                "autoPlayed": bool(played),
             }
 
         if choice.get("kind") == "immediate_effect_payment":
@@ -16211,6 +16285,9 @@ class Session:
                 entry["playableFree"] = item["playableFree"]
             if item.get("attachedCards"):
                 entry["attachedCards"] = [dict(card) for card in item["attachedCards"]]
+            for option_key in ("outcastOff", "karmapultAuto", "gummoCopy"):
+                if item.get(option_key):
+                    entry[option_key] = item[option_key]
             if item.get("concealedWill") and can_peek:
                 entry["concealedWill"] = True
                 if item.get("concealedFree"):
@@ -16646,14 +16723,23 @@ class Session:
             and not self.rules_engine["firstManifestationComplete"]
         )
 
-    def rules_plays_first_manifestation_after(self, player_id):
-        """Hermetic Hourglass or Trap: this player plays the First Manifestation after the opponent."""
+    def _rules_wants_first_manifestation_after(self, player_id):
         if player_id in (self.rules_engine.get("trapPlayerIds") or []):
             return True
         sources = self.rules_active_passive_sources("play_first_manifestation_after_opponents")
         mine = any(self.rules_item_controller_id(source) == player_id for source in sources)
         theirs = any(self.rules_item_controller_id(source) != player_id for source in sources)
         return mine and not theirs
+
+    def rules_plays_first_manifestation_after(self, player_id):
+        """Hermetic Hourglass or Trap: this player plays the First Manifestation after the opponent.
+
+        When every player wants to play last (Trap against Hourglass, two Traps),
+        the demands cancel out instead of leaving both players waiting.
+        """
+        if not self._rules_wants_first_manifestation_after(player_id):
+            return False
+        return not all(self._rules_wants_first_manifestation_after(pid) for pid in self.players)
 
     def rules_first_manifestation_order_error(self, player_id):
         if not self.rules_plays_first_manifestation_after(player_id):
@@ -17075,6 +17161,35 @@ class Session:
         if len(self.players) != NUM_SEATS:
             return "Both players must be seated before resolving the Recovery draw.", None
 
+        # Quasimillenary: its controller chooses where this Recovery draw comes from.
+        decided = self.rules_engine.setdefault("limboRecoveryDecided", {})
+        for pid in sorted(self.players, key=lambda current: self.players[current].get("seat", 0)):
+            if decided.get(pid) == turn or not self.players[pid]["zones"]["graveyard"]:
+                continue
+            if not any(
+                self.rules_item_controller_id(source) == pid
+                and self.rules_field_zone(source) == "interzone"
+                for source in self.rules_active_passive_sources("recovery_draw_from_limbo")
+            ):
+                continue
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "binary_choice", "purpose": "quasimillenary",
+                "playerId": pid, "options": ["yes", "no"],
+                "headingKey": "rulesQuasiHeading", "textKey": "rulesQuasiText",
+                "yesKey": "rulesQuasiYes", "noKey": "rulesQuasiNo",
+                "sourceCardId": next((
+                    src.get("cardId") for src in self.rules_active_passive_sources("recovery_draw_from_limbo")
+                    if self.rules_item_controller_id(src) == pid
+                ), None),
+                "controllerId": pid, "handLimit": hand_limit,
+            }
+            return None, {
+                "awaitingChoice": True, "choiceId": choice_id, "draws": {},
+                "handLimits": {}, "mulliganRequiredPlayerIds": [], "outcome": None,
+                "phaseId": self.current_phase_id(), "advanced": False,
+                "incompletePlayerIds": [],
+            }
         draws = {}
         hand_limits = {}
         for player in sorted(self.players.values(), key=lambda current: current.get("seat", 0)):
@@ -17084,6 +17199,7 @@ class Session:
                 return error, None
             draws[player_id] = draw_result["count"]
             hand_limits[player_id] = draw_result["handLimit"]
+        self.rules_engine["limboRecoveryPlayerIds"] = []
         overflow = self.set_rules_hand_overflow_choice(list(self.players))
 
         self.rules_engine["recoveryDrawTurn"] = turn

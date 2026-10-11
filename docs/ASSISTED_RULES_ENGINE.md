@@ -918,3 +918,14 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 
 - The Slumberer : drapeau de carte `playAsPersistentWill` (texte « Can only be played as if it were a persistent Will », `server/main.py`). La source de jeu depuis la main déclare `cardType: persistent_will` (timing End actions, tribut du coût imprimé) ; le client utilise `rulesPlayType`. Il reste une Manifestation sur le champ (zone `field`). Compteurs Sleep (3 à l'entrée, −1 quand son propriétaire gagne, Vessel de l'adversaire quand il perd avec des compteurs), puis `slumberer_wakes` au début du tour sans compteur : `rules_item_becomes_first_manifestation` + `gainsPersist`. LIMITES : le match nul ne retire pas de compteur ; la carte n'est pas affichée comme Manifestation tant qu'elle est en zone champ.
 - Obelisk of Friendship : trigger `revelation` optionnel, `obelisk_gift`. Le propriétaire choisit en secret (`discard_from_hand` destination `obelisk_gift`), l'adversaire répond (`obelisk_reply`, choix du propriétaire caché dans `_giftCardId`), puis échange vers les Réceptacles, le Première Manifestation du donneur de plus grande puissance de base gagne +3 (égalité = personne). Si l'adversaire n'a pas de Manifestation en main, seul le cadeau du propriétaire est donné. Avec plus de deux joueurs c'est le premier adversaire.
+
+## Correctifs des écarts (après le lot 26)
+
+- Wandering Outcast : l'échange est un choix par carte (menu de l'objet, `outcastOff`), activé par défaut.
+- Karmapult : option `karmapultAuto` (menu de l'objet, désactivée par défaut) pour placer automatiquement toute manifestation qui entre dans l'Interzone ; sinon le choix reste à la fin de la confrontation.
+- Quasimillenary : à chaque Recovery, choix oui/non (`binary_choice` `purpose: quasimillenary`) au lieu d'un interrupteur persistant.
+- Bullyboo : après paiement de l'adversaire, la Volonté est jouée automatiquement (`declare_rules_action(..., internal=True)`) ; si elle exige des cibles, le droit de jeu gratuit reste.
+- Gummo : les capacités activées copiées apparaissent dans les menus clients (`gummoCopy`).
+- The Slumberer : l'événement `confrontation_stalemate` retire un compteur Sleep.
+- Trap contre Hermetic Hourglass : si tous les joueurs veulent jouer en dernier, la demande est annulée (plus d'interblocage).
+- Obelisk et ">2 joueurs" : sans objet / inchangé (partie à 2 joueurs ; sans manifestation adverse en main, seul le don est effectué).

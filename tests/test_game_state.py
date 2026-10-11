@@ -14055,11 +14055,9 @@ class LotTwentyFourTests(RealCardRulesCase):
         error, _ = session.resolve_rules_choice("p2", pay["id"], option="pay", card_ids=["m-3"])
         self.assertIsNone(error, error)
         self.assertNotIn("m-3", p2["zones"]["hand"])
-        self.assertTrue(any(
-            permission["playerId"] == "p1" and permission.get("cardId") == "will-r" and permission["noTribute"]
-            for permission in session.rules_engine["playPermissions"]
-        ))
-        self.assertIn("will-r", p1["zones"]["hand"])
+        # The Will is then played right away (it sits on the Stack, free of tribute).
+        self.assertNotIn("will-r", p1["zones"]["hand"])
+        self.assertTrue(any(a["source"]["cardId"] == "will-r" for a in session.rules_engine["actionStack"]))
 
     GRIMOIRE, KARMAPULT = "omhqwnu5tvwlzzg_en", "e049wxg2j24nczl_en"
 
@@ -14216,6 +14214,23 @@ class LotTwentyFourTests(RealCardRulesCase):
         session.battlefield = []
         self.assertFalse(session.rules_quasimillenary_active("p1"))
 
+    def test_quasimillenary_asks_each_recovery_and_yes_draws_from_limbo(self):
+        session, p1, p2 = self.setup_game()
+        session.phase_tracker["index"] = 1
+        self.put(p1, "graveyard", ["m-1", "m-2"])
+        self.put(p1, "deck", ["m-5", "m-6", "m-7", "m-8", "m-9", "m-10", "m-11"])
+        self.put(p2, "deck", ["m-12", "m-13", "m-14", "m-15", "m-16", "m-17", "m-18"])
+        session.battlefield = [self.item("quasi", "p1", self.QUASI, "interzone")]
+        error, result = session.resolve_recovery_draw()
+        self.assertIsNone(error)
+        self.assertTrue(result["awaitingChoice"])
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["purpose"], "quasimillenary")
+        error, _ = session.resolve_rules_choice("p1", choice["id"], option="yes")
+        self.assertIsNone(error)
+        self.assertEqual(p1["zones"]["graveyard"], [])
+        self.assertIn("m-1", p1["zones"]["hand"])
+
     SLUMBER = "nlbgn1ranlrd09r_en"
 
     def test_the_slumberer_plays_as_a_persistent_will_sleeps_then_wakes_as_first_manifestation(self):
@@ -14324,3 +14339,16 @@ class LotTwentyFourTests(RealCardRulesCase):
         base2 = session.card_rules["m-5"]["power"]
         self.assertEqual(session.rules_manifestation_characteristics(first1)["power"], base1 + 3)
         self.assertEqual(session.rules_manifestation_characteristics(first2)["power"], base2)
+
+    def test_trap_against_hermetic_hourglass_does_not_deadlock(self):
+        session, p1, p2 = self.setup_game()
+        session.rules_engine["trapPlayerIds"] = ["p1"]
+        session.battlefield = [self.item("hg", "p2", "1c8aoaxk66m8vcd_en", "field")]
+        session.card_rules["1c8aoaxk66m8vcd_en"] = {"type": "persistent_will", "passiveEffects": [{"kind": "play_first_manifestation_after_opponents"}]}
+        self.assertTrue(session._rules_wants_first_manifestation_after("p1"))
+        self.assertTrue(session._rules_wants_first_manifestation_after("p2"))
+        self.assertFalse(session.rules_plays_first_manifestation_after("p1"))
+        self.assertFalse(session.rules_plays_first_manifestation_after("p2"))
+        session.rules_engine["trapPlayerIds"] = []
+        self.assertFalse(session.rules_plays_first_manifestation_after("p1"))
+        self.assertTrue(session.rules_plays_first_manifestation_after("p2"))

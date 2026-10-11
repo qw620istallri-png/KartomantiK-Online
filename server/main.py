@@ -1792,6 +1792,15 @@ async def handle_message(ws, info, data):
         session.touch()
         await broadcast_state(session)
 
+    elif msg_type == "toggle_item_option":
+        if is_observer:
+            return await send_error(ws, "Observers cannot act.")
+        error, result = session.toggle_rules_item_option(actor_id, data.get("itemId"), data.get("option"))
+        if error:
+            return await send_error(ws, error)
+        session.touch()
+        await broadcast_state(session)
+
     elif msg_type == "toggle_limbo_recovery":
         if is_observer:
             return await send_error(ws, "Observers cannot act.")
