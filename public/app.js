@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261011-rules-beta-120";
+const STATIC_ASSET_VERSION = "20261011-rules-beta-121";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -2434,7 +2434,7 @@ function submitRulesBoardFlow(target = null) {
     source: {
       cardId: flow.source.cardId,
       zone: flow.source.zone,
-      itemId: (activated || flow.source.playFromField) ? flow.source.itemId : null,
+      itemId: (activated || flow.source.playFromField || flow.source.zone === "attached") ? flow.source.itemId : null,
       ...(flow.source.containerId ? { containerId: flow.source.containerId } : {}),
     },
     target: "",
@@ -2681,6 +2681,7 @@ function renderRulesBoardFlow() {
 
   if (flow.mode === "stack_copy_target") {
     const declineButton = $("#rulesFlowDeclineBtn");
+    declineButton.hidden = false;
     declineButton.textContent = t("rulesKeepCopiedTargets");
     declineButton.disabled = flow.stage === "committing";
     $("#rulesFlowInstruction").textContent = rulesText("rulesCopyChooseTargetInstruction", {
@@ -2748,6 +2749,7 @@ function renderRulesBoardFlow() {
     );
     payButton.disabled = !covered || flow.stage === "committing";
     declineButton.disabled = flow.stage === "committing";
+    declineButton.hidden = Boolean(flow.choice.mustPay);
     clearRulesBoardTargets();
     return;
   }
@@ -3328,7 +3330,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
     : source.zone === "graveyard"
       && ["ephemeral_will", "persistent_will"].includes(card?.type)
       ? rulesLimboPlayMode() : null;
-  const isPrintedWill = (["hand", "suspended"].includes(source.zone) || Boolean(limboPlay) || Boolean(source.playFromField))
+  const isPrintedWill = (["hand", "suspended", "attached"].includes(source.zone) || Boolean(limboPlay) || Boolean(source.playFromField))
     && ["ephemeral_will", "persistent_will"].includes(card?.type);
   const freeWillPermission = isPrintedWill && (latestState?.rulesEngine?.playPermissions || []).some((permission) => (
     permission.playerId === myPlayerId
@@ -3569,7 +3571,7 @@ function buildRulesActionDraft(source, abilityOverride = undefined) {
       ? (playedAbilitiesByCard.get(source.cardId) || [])[0] || null
     : source?.zone === "battlefield"
       ? (rulesActivatedAbilitiesForItem(sourceItem) || [])[0] || null
-      : ["hand", "suspended", "graveyard"].includes(source?.zone)
+      : ["hand", "suspended", "graveyard", "attached"].includes(source?.zone)
         ? (playedAbilitiesByCard.get(source.cardId) || [])[0] || null
         : null;
   if (encodedAbility?.tributeFromSourceCounter && source?.itemId) {
@@ -7199,6 +7201,11 @@ function renderRulesChoice() {
         <strong>${esc(t("interzone"))}</strong>
         <span>${esc(t("rulesConfrontationInterzoneHint"))}</span>
       </button>
+      ${(choice.options || []).includes("karmapult") ? `<button type="button" class="rules-choice-destination" data-rules-destination="karmapult">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M7 20l2-9h6l2 9M12 11V4M9 6l3-2 3 2"/></svg>
+        <strong>${esc(t("rulesKarmapultDestination"))}</strong>
+        <span>${esc(t("rulesKarmapultDestinationHint"))}</span>
+      </button>` : ""}
       <button type="button" class="rules-choice-destination" data-rules-destination="deck_bottom">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="11" height="15" rx="2"/><path d="M8 21h11a2 2 0 0 0 2-2V7M10 13l3 3 3-3M13 8v8"/></svg>
         <strong>${esc(t("rulesDeckBottom"))}</strong>
@@ -8894,6 +8901,20 @@ function renderBattlefield() {
         ? rulesActionContextItem({ cardId: item.cardId, zone: "battlefield", itemId: item.id })
         : null;
       if (rulesItem) items.push(rulesItem);
+      (item.attachedCards || []).forEach((entry) => {
+        const attachedCard = cardsById.get(entry.cardId);
+        const playable = isMine && ["ephemeral_will", "persistent_will"].includes(attachedCard?.type)
+          && (passiveEffectsByCard.get(item.cardId) || []).some((effect) => effect.kind === "play_attached_wills");
+        items.push(playable
+          ? {
+            label: rulesText("rulesPlayAttached", { card: cardName(entry.cardId) }),
+            onSelect: () => beginRulesBoardAction({
+              cardId: entry.cardId, zone: "attached", itemId: item.id,
+              placement: { x: item.x + 40, y: item.y + 40 },
+            }),
+          }
+          : { label: rulesText("rulesInspectAttached", { card: cardName(entry.cardId) }), onSelect: () => showInspect(entry.cardId) });
+      });
       if (isMine && (item.playableFree || item.concealedWill) && limboWillIsPlayable(item.cardId, true)) {
         const fieldFree = Boolean(item.playableFree || item.concealedFree);
         items.push({

@@ -900,3 +900,10 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Extortionist Womb : `extortionist_womb` ; l'adversaire accepte ou refuse de montrer sa main (`womb_show`). Si oui, le contrôleur choisit (via `reveal_hand_discard` purpose `womb`) une manifestation que l'adversaire Enchaîne ; sinon, ou si rien n'est chaînable, 2 jetons 2 {H} en Soutien.
 - Bloatuba : `afterChain` `reveal_top_opponent_suspend`. L'adversaire choisit une manifestation parmi les cartes révélées (`reveal_hand_discard` purpose `bloatuba`, cartes du deck), elle est mise en Impasse (suspendue), puis le contrôleur ordonne les autres sous le deck (`deck_reorder`). Les cartes non-manifestation révélées ne s'affichent qu'à l'étape d'ordre.
 - Wandering Outcast : passif `swap_with_targeted_confrontation_manifestation` dans `rules_redirect_targets`. LIMITE : automatique, alors que la carte dit « vous pouvez ».
+
+## Lot 24 (Bullyboo, Grimoire, Karmapult)
+
+- Cartes « posées sur » une autre : `item.attachedCards = [{cardId, ownerId}]` (+ compteur `Placed`). Si l'hôte quitte le champ (`_rules_remove_field_item`) les cartes posées sont exilées.
+- Grimoire : trigger `end_of_turn` `grimoire_place` (choix des Volontés en main, destination `attach_to_source`). Passif `play_attached_wills` : source de jeu `zone: "attached"` + `itemId` de l'hôte, tribut normal. Client : entrée de menu sur le Grimoire par Volonté posée.
+- Karmapult : passif `interzone_substitute_holder`. LIMITE : l'option « poser sur le Karmapult » n'est offerte que dans le choix de destination de fin de confrontation (`karmapult`), pas pour les autres façons d'entrer en Interzone. Capacité `karmapult_sacrifice` : sacrifie tout, malus de puissance jusqu'à la fin du tour.
+- Bullyboo : `bullyboo_reveal` (Volonté de la main révélée), l'adversaire paie son tribut si `rules_can_afford_tribute` (paiement obligatoire, `immediate_effect_payment` `mustPay`), puis permission de jeu gratuit pour cette Volonté (pas de jeu automatique). Sinon il perd 10 points, sa main est dévoilée (`handProof` dans le payload) et la Volonté est défaussée.

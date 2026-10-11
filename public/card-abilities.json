@@ -4762,5 +4762,63 @@
         "kind": "swap_with_targeted_confrontation_manifestation"
       }
     }
+  ],
+  "gz2zjrxqc2rbcwq_en": [
+    {
+      "id": "bullyboo-reveals-will-opponent-pays",
+      "optional": true,
+      "trigger": {
+        "event": "wins_confrontation"
+      },
+      "result": {
+        "kind": "bullyboo_reveal"
+      }
+    }
+  ],
+  "omhqwnu5tvwlzzg_en": [
+    {
+      "id": "grimoire-lets-placed-wills-be-played",
+      "passiveEffect": {
+        "kind": "play_attached_wills"
+      }
+    },
+    {
+      "id": "grimoire-places-hand-wills",
+      "optional": true,
+      "trigger": {
+        "event": "end_of_turn",
+        "zone": "field"
+      },
+      "result": {
+        "kind": "grimoire_place"
+      }
+    }
+  ],
+  "e049wxg2j24nczl_en": [
+    {
+      "id": "karmapult-holds-manifestations",
+      "passiveEffect": {
+        "kind": "interzone_substitute_holder"
+      }
+    },
+    {
+      "id": "karmapult-sacrifices-for-power-loss",
+      "tribute": "{H}",
+      "sourceZones": [
+        "battlefield"
+      ],
+      "targets": {
+        "kind": "card",
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ]
+      },
+      "result": {
+        "kind": "karmapult_sacrifice"
+      }
+    }
   ]
 }

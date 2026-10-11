@@ -1163,6 +1163,23 @@ class Session:
             )
             if permission_error:
                 return permission_error, None
+        elif zone == "attached" and kind == "play_card" and not as_support:
+            host = self.find_battlefield_item(item_id)
+            if (
+                host is None or self.rules_item_controller_id(host) != player_id
+                or not self.rules_item_effects_active(host)
+                or not any(
+                    passive.get("kind") == "play_attached_wills"
+                    for passive in self.rules_item_card_rules(host).get("passiveEffects") or []
+                )
+                or not any(
+                    entry.get("cardId") == card_id and entry.get("ownerId") == player_id
+                    for entry in host.get("attachedCards") or []
+                )
+            ):
+                return "This Will is not placed on a card you control.", None
+            if metadata.get("type") not in RULES_WILL_TYPES:
+                return "Only a Will can be played from here.", None
         elif zone == "graveyard" and kind == "play_card" and not as_support:
             if metadata.get("type") not in RULES_WILL_TYPES:
                 return "Only a Will can be played from your Limbo this way.", None
@@ -1226,8 +1243,8 @@ class Session:
             "ownerId": (
                 self.card_owner_in_zone(player_id, "hand", card_id)
                 if zone == "hand" else (
-                    self.card_owner_in_zone(container_id, zone, card_id)
-                        if zone in {"graveyard", "receptacle"} else (
+                    (player_id if zone == "attached" else self.card_owner_in_zone(container_id, zone, card_id))
+                        if zone in {"graveyard", "receptacle", "attached"} else (
                             suspension.get("ownerId")
                             if zone == "suspended"
                             else self.find_battlefield_item(item_id).get("ownerId")
@@ -1741,6 +1758,9 @@ class Session:
             "choose_hand_will_as_support_manifestation",
             "amphora_offer",
             "extortionist_womb",
+            "bullyboo_reveal",
+            "grimoire_place",
+            "karmapult_sacrifice",
             "hold_winner_manifestations",
             "search_deck_will_conceal",
             "free_concealed_wills",
@@ -3587,7 +3607,7 @@ class Session:
                 "asSupport": True, "fromZone": from_zone,
                 "enteredBattlefield": source.get("zone") != "battlefield",
             }
-        if source.get("zone") not in {"hand", "suspended", "graveyard", "battlefield"}:
+        if source.get("zone") not in {"hand", "suspended", "graveyard", "battlefield", "attached"}:
             return None
         if player is None or (not source_on_stack and card_id not in player["zones"]["hand"]):
             destination = "battlefield" if source.get("cardType") == "persistent_will" else "graveyard"
@@ -5228,6 +5248,8 @@ class Session:
         ):
             container_id, zone, position = item.get("ownerId"), "exile", "top"
         self.battlefield.remove(item)
+        for entry in item.pop("attachedCards", None) or []:
+            self.put_zone_card(entry["ownerId"], "exile", entry["cardId"], entry["ownerId"], "top")
         for other in self.battlefield:
             if other.get("stackedOn") == item.get("id"):
                 other["stackedOn"] = None
@@ -5566,6 +5588,8 @@ class Session:
             "playerId": result.get("winnerId"), "itemId": item["id"],
             "cardId": item.get("cardId"), "options": ["interzone", "deck_bottom"],
         }
+        if self.rules_karmapult_holder(result.get("winnerId"), item):
+            choice["options"].append("karmapult")
         self.rules_engine["pendingChoice"] = choice
         result["status"] = "cleanup_choice"
         return choice
@@ -6069,6 +6093,17 @@ class Session:
             action["sourceOnStack"] = True
             if clean_source.get("permissionId"):
                 self.consume_rules_zone_play_permission(clean_source["permissionId"])
+        elif clean_source and clean_source.get("zone") == "attached" and kind == "play_card":
+            host = self.find_battlefield_item(clean_source.get("itemId"))
+            entry = next((
+                e for e in (host or {}).get("attachedCards") or []
+                if e.get("cardId") == clean_source["cardId"]
+            ), None)
+            if entry is None:
+                return "This Will is no longer placed on that card.", None
+            host["attachedCards"].remove(entry)
+            self.rules_sync_attached_counter(host)
+            action["sourceOnStack"] = True
         elif clean_source and clean_source.get("zone") == "battlefield" and kind == "play_card":
             source_item = self.find_battlefield_item(clean_source.get("itemId"))
             if source_item is None:
@@ -9030,6 +9065,83 @@ class Session:
             return {
                 "kind": "choice_required", "choiceId": choice_id,
                 "choiceKind": "binary_choice", "playerId": chooser_id,
+            }
+        if result.get("kind") == "grimoire_place":
+            host = self.find_battlefield_item((action.get("source") or {}).get("itemId"))
+            hand = player["zones"]["hand"]
+            wills = [c for c in hand if self.card_rules.get(c, {}).get("type") in RULES_WILL_TYPES]
+            if host is None or not wills:
+                return {"kind": result.get("kind"), "status": "no_hand_card"}
+            if not action.get("optionalAccepted"):
+                return {"kind": result.get("kind"), "status": "declined"}
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "discard_from_hand",
+                "playerId": player_id, "count": len(wills), "upTo": True,
+                "requireTypes": sorted(RULES_WILL_TYPES),
+                "destination": "attach_to_source", "sourceItemId": host["id"],
+                "actionId": action.get("id"),
+                "controllerId": action.get("controllerId"),
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "discard_from_hand", "playerId": player_id,
+                "count": len(wills), "upTo": True, "requireTypes": sorted(RULES_WILL_TYPES),
+            }
+        if result.get("kind") == "karmapult_sacrifice":
+            host = self.find_battlefield_item((action.get("source") or {}).get("itemId"))
+            target = next((e for e in action.get("targets") or [] if e.get("kind") == "card"), None)
+            target_item = self.find_battlefield_item((target or {}).get("itemId"))
+            if host is None or target_item is None:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            sacrificed = [dict(entry) for entry in host.get("attachedCards") or []]
+            host["attachedCards"] = []
+            self.rules_sync_attached_counter(host)
+            for entry in sacrificed:
+                self.put_zone_card(entry["ownerId"], "graveyard", entry["cardId"], entry["ownerId"], "top")
+            if sacrificed:
+                self.rules_engine["ongoingEffects"].append({
+                    "id": new_id(), "actionId": action.get("id"),
+                    "abilityId": "karmapult-power-loss",
+                    "controllerId": action.get("controllerId") or player_id,
+                    "source": {"cardId": host.get("cardId"), "itemId": host["id"], "zone": "battlefield"},
+                    "target": {
+                        "kind": "card", "itemId": target_item["id"],
+                        "cardId": target_item.get("cardId"), "ownerId": target_item.get("ownerId"),
+                    },
+                    "kind": "power_modifier", "value": -len(sacrificed),
+                    "duration": "until_end_of_turn",
+                    "startedTurn": self.phase_tracker["turn"],
+                })
+            return {
+                "kind": result.get("kind"), "status": "sacrificed" if sacrificed else "nothing_placed",
+                "count": len(sacrificed), "cardIds": [e["cardId"] for e in sacrificed],
+                "itemId": target_item["id"], "value": -len(sacrificed),
+            }
+        if result.get("kind") == "bullyboo_reveal":
+            hand = player["zones"]["hand"]
+            if not any(self.card_rules.get(c, {}).get("type") in RULES_WILL_TYPES for c in hand):
+                return {"kind": result.get("kind"), "status": "no_hand_card"}
+            if not action.get("optionalAccepted"):
+                return {"kind": result.get("kind"), "status": "declined"}
+            opponents = [pid for pid in self.players if pid != player_id]
+            if not opponents:
+                return {"kind": result.get("kind"), "status": "no_opponent"}
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "discard_from_hand",
+                "playerId": player_id, "count": 1,
+                "requireTypes": sorted(RULES_WILL_TYPES),
+                "destination": "bullyboo_reveal", "chooserId": opponents[0],
+                "actionId": action.get("id"),
+                "controllerId": action.get("controllerId"),
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "discard_from_hand", "playerId": player_id,
+                "count": 1, "requireTypes": sorted(RULES_WILL_TYPES),
             }
         if result.get("kind") == "amphora_offer":
             hand = player["zones"]["hand"]
@@ -13035,6 +13147,38 @@ class Session:
             "sourceCardId": source_card_id, "groups": [group], "_groups": [group],
         }
 
+    def rules_karmapult_holder(self, player_id, item=None):
+        if item is not None and self.card_rules.get(item.get("cardId"), {}).get("type") != "manifestation":
+            return None
+        return next((
+            source for source in self.rules_active_passive_sources("interzone_substitute_holder")
+            if self.rules_item_controller_id(source) == player_id
+            and self.rules_field_zone(source) == "field"
+        ), None)
+
+    def rules_sync_attached_counter(self, host):
+        count = len(host.get("attachedCards") or [])
+        counters = host.setdefault("counters", {})
+        if count:
+            counters["Placed"] = count
+        else:
+            counters.pop("Placed", None)
+
+    def rules_can_afford_tribute(self, player_id, cost):
+        """True when some set of cards in hand (plus Essence) covers `cost`."""
+        hand = list(self.players[player_id]["zones"]["hand"])
+        if not self.rules_requirements_from_symbols(cost):
+            return True
+        pool = [c for c in hand if self.card_rules.get(c, {}).get("type") == "manifestation"][:7]
+        for mask in range(1 << len(pool)):
+            picked = [pool[i] for i in range(len(pool)) if mask >> i & 1]
+            error, _payment = self.rules_action_payment(
+                player_id, "activated_effect", None, picked, {"tribute": cost},
+            )
+            if not error:
+                return True
+        return False
+
     def rules_chain_candidates(self, chain_player_id, zone):
         """Chainable Manifestations as {card_id: container_id}.
 
@@ -14407,6 +14551,33 @@ class Session:
                 "payment": choice.get("payment"),
             }
 
+        if choice.get("kind") == "immediate_effect_payment" and choice.get("purpose") == "bullyboo":
+            if option != "pay":
+                return "You must pay this Tribute.", None
+            payment_error, payment = self.rules_action_payment(
+                player_id, "activated_effect", None, card_ids,
+                {"tribute": choice.get("payment")},
+            )
+            if payment_error:
+                return payment_error, None
+            self.pay_rules_tribute(player_id, payment)
+            self.rules_engine["pendingChoice"] = None
+            controller_id = choice.get("controllerId")
+            will_id = choice.get("willCardId")
+            if will_id in self.players[controller_id]["zones"]["hand"]:
+                self.rules_engine["playPermissions"].append({
+                    "id": new_id(), "abilityId": "bullyboo-plays-revealed-will",
+                    "playerId": controller_id, "cardId": will_id, "fromZone": "hand",
+                    "phaseIds": list(ADVANCED_PHASES), "asSupport": False,
+                    "noTribute": True, "turn": self.phase_tracker["turn"],
+                    "sourceCardId": choice.get("sourceCardId"),
+                })
+            return None, {
+                "kind": "immediate_effect_payment", "status": "paid",
+                "playerId": player_id, "sourceCardId": choice.get("sourceCardId"),
+                "willCardId": will_id, "freePlayGrantedTo": controller_id,
+            }
+
         if choice.get("kind") == "immediate_effect_payment":
             if option not in {"pay", "decline"}:
                 return "Choose whether to pay the requested Tribute.", None
@@ -14805,6 +14976,32 @@ class Session:
                     "destination": "deck_bottom",
                 }
 
+            if option == "karmapult":
+                holder = self.rules_karmapult_holder(player_id, item)
+                if holder is None:
+                    return "You have no Karmapult to place it on.", None
+                self.battlefield.remove(item)
+                for other in self.battlefield:
+                    if other.get("stackedOn") == item.get("id"):
+                        other["stackedOn"] = None
+                holder.setdefault("attachedCards", []).append({
+                    "cardId": item["cardId"], "ownerId": item["ownerId"],
+                })
+                self.rules_sync_attached_counter(holder)
+                result.setdefault("returned", []).append({
+                    "status": "karmapult", "itemId": item["id"], "cardId": item.get("cardId"),
+                })
+                pending = result.get("pendingOwnItemIds") or []
+                if pending and pending[0] == item["id"]:
+                    pending.pop(0)
+                self.rules_engine["pendingChoice"] = None
+                self._queue_next_rules_confrontation_destination()
+                return None, {
+                    "kind": "confrontation_destination", "playerId": player_id,
+                    "cardId": item.get("cardId"), "itemId": item.get("id"),
+                    "destination": "karmapult", "holderItemId": holder["id"],
+                }
+
             interzone_items = self.rules_confrontation_items(player_id, ("interzone",))
             if self.rules_interzone_slot_count(player_id) >= self.rules_interzone_capacity(player_id):
                 share_anchor = self.rules_interzone_share_anchor(player_id, item)
@@ -15018,6 +15215,60 @@ class Session:
         ):
             return "Choose a valid card type from your hand.", None
         destination = choice.get("destination")
+        if destination == "attach_to_source":
+            host = self.find_battlefield_item(choice.get("sourceItemId"))
+            if host is None:
+                return "The card to place them on is gone.", None
+            placed = []
+            for card_id in selected:
+                owner_id = self.take_zone_card(player_id, "hand", card_id)
+                if owner_id is None:
+                    continue
+                host.setdefault("attachedCards", []).append({"cardId": card_id, "ownerId": owner_id})
+                placed.append(card_id)
+            self.rules_sync_attached_counter(host)
+            self.rules_engine["pendingChoice"] = None
+            return None, {
+                "kind": "attach_to_source", "playerId": player_id, "cardIds": placed,
+                "count": len(placed), "itemId": host["id"], "choiceId": choice_id,
+                "actionId": choice.get("actionId"),
+                "controllerId": choice.get("controllerId"),
+                "sourceCardId": choice.get("sourceCardId"),
+            }
+        if destination == "bullyboo_reveal":
+            will_id = selected[0]
+            payer_id = choice.get("chooserId")
+            cost = self.card_rules.get(will_id, {}).get("powerCost")
+            revealed = {
+                "kind": "bullyboo_reveal", "playerId": player_id, "cardIds": [will_id],
+                "handProof": [will_id], "handProofPlayerId": player_id,
+                "actionId": choice.get("actionId"),
+                "controllerId": choice.get("controllerId"),
+                "sourceCardId": choice.get("sourceCardId"),
+            }
+            if self.rules_can_afford_tribute(payer_id, cost):
+                new_choice_id = new_id()
+                self.rules_engine["pendingChoice"] = {
+                    "id": new_choice_id, "kind": "immediate_effect_payment",
+                    "purpose": "bullyboo", "mustPay": True, "playerId": payer_id,
+                    "payment": cost,
+                    "requirements": self.rules_requirements_from_symbols(cost),
+                    "sourceCardId": choice.get("sourceCardId"),
+                    "relatedCardId": will_id, "willCardId": will_id,
+                    "actionId": choice.get("actionId"),
+                    "controllerId": player_id,
+                }
+                return None, {**revealed, "status": "payment_required", "choiceId": new_choice_id}
+            self.rules_engine["pendingChoice"] = None
+            lost = -self.adjust_rules_score(payer_id, -10)
+            self.move_zone_card(player_id, "hand", player_id, "graveyard", will_id, "top")
+            return None, {
+                **revealed, "status": "cannot_pay", "lost": lost,
+                "payerId": payer_id,
+                "payerHand": list(self.players[payer_id]["zones"]["hand"]),
+                "handProof": list(self.players[payer_id]["zones"]["hand"]),
+                "handProofPlayerId": payer_id,
+            }
         if destination == "amphora_offer":
             new_choice_id = new_id()
             self.rules_engine["pendingChoice"] = {
@@ -15725,6 +15976,8 @@ class Session:
                 entry["effectsDisabled"] = True
             if item.get("playableFree"):
                 entry["playableFree"] = item["playableFree"]
+            if item.get("attachedCards"):
+                entry["attachedCards"] = [dict(card) for card in item["attachedCards"]]
             if item.get("concealedWill") and can_peek:
                 entry["concealedWill"] = True
                 if item.get("concealedFree"):

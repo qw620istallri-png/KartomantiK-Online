@@ -13985,3 +13985,147 @@ class LotTwentyThreeTests(RealCardRulesCase):
         self.assertEqual(session.rules_redirect_targets("p1", [target]), [target])
         enemy_target = {"kind": "card", "itemId": "enemy", "cardId": "m-2", "ownerId": "p2"}
         self.assertEqual(session.rules_redirect_targets("p1", [enemy_target]), [enemy_target])
+
+
+class LotTwentyFourTests(RealCardRulesCase):
+    """Bullyboo and the cards that keep Wills / Manifestations on a card."""
+
+    BULLY = "gz2zjrxqc2rbcwq_en"
+    ALL = (BULLY, "omhqwnu5tvwlzzg_en", "e049wxg2j24nczl_en")
+
+    def setup_game(self):
+        session, p1, p2 = self.make_session()
+        session.rules_engine["enabled"] = True
+        session.card_rules["will-r"] = {"type": "persistent_will", "cost": 3, "powerCost": "{R}{R}{R}", "temperaments": ["choleric"]}
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_effects")
+        return session, p1, p2
+
+    def item(self, item_id, owner, card, zone="field", **extra):
+        return self.field_item(item_id, owner, card, field_zone=zone, controllerId=owner, x=0, y=0, rotation=0, stackedOn=None, **extra)
+
+    def bully_wins(self, session):
+        bully = self.item("bully", "p1", self.BULLY, "confrontation")
+        session.battlefield = [bully]
+        session.rules_engine["confrontationResult"] = {
+            "winnerId": "p1", "loserId": "p2", "participantItemIds": ["bully"],
+        }
+        return session.queue_rules_confrontation_win_triggers()
+
+    def test_bullyboo_opponent_who_cannot_pay_loses_10_and_the_will_is_discarded(self):
+        session, p1, p2 = self.setup_game()
+        self.put(p1, "hand", ["will-r"])
+        self.put(p2, "hand", ["m-3"])
+        score = p2["score"]
+        self.bully_wins(session)
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        choice = session.rules_engine["pendingChoice"]
+        if choice["kind"] == "optional_stack_action":
+            session.resolve_rules_choice("p1", choice["id"], option="accept")
+            session.pass_rules_priority("p2")
+            session.pass_rules_priority("p1")
+            choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["destination"], "bullyboo_reveal")
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["will-r"])
+        self.assertIsNone(error)
+        self.assertEqual(p2["score"], score - 10)
+        self.assertIn("will-r", p1["zones"]["graveyard"])
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+
+    def test_bullyboo_opponent_who_can_pay_must_pay_and_the_revealed_will_is_played_free(self):
+        session, p1, p2 = self.setup_game()
+        session.card_rules["m-3"].update({"canPayTribute": True, "temperaments": ["choleric"], "power": 3})
+        session.card_rules["will-r"]["powerCost"] = "{R}"
+        self.put(p1, "hand", ["will-r"])
+        self.put(p2, "hand", ["m-3"])
+        self.bully_wins(session)
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        choice = session.rules_engine["pendingChoice"]
+        if choice["kind"] == "optional_stack_action":
+            session.resolve_rules_choice("p1", choice["id"], option="accept")
+            session.pass_rules_priority("p2")
+            session.pass_rules_priority("p1")
+            choice = session.rules_engine["pendingChoice"]
+        session.resolve_rules_choice("p1", choice["id"], card_ids=["will-r"])
+        pay = session.rules_engine["pendingChoice"]
+        self.assertEqual((pay["kind"], pay["playerId"], pay["mustPay"]), ("immediate_effect_payment", "p2", True))
+        error, _ = session.resolve_rules_choice("p2", pay["id"], option="decline")
+        self.assertTrue(error)
+        error, _ = session.resolve_rules_choice("p2", pay["id"], option="pay", card_ids=["m-3"])
+        self.assertIsNone(error, error)
+        self.assertNotIn("m-3", p2["zones"]["hand"])
+        self.assertTrue(any(
+            permission["playerId"] == "p1" and permission.get("cardId") == "will-r" and permission["noTribute"]
+            for permission in session.rules_engine["playPermissions"]
+        ))
+        self.assertIn("will-r", p1["zones"]["hand"])
+
+    GRIMOIRE, KARMAPULT = "omhqwnu5tvwlzzg_en", "e049wxg2j24nczl_en"
+
+    def test_grimoire_holds_hand_wills_that_can_be_played_and_are_exiled_when_it_leaves(self):
+        session, p1, p2 = self.setup_game()
+        session.card_rules["will-x"] = {"type": "persistent_will", "cost": 1, "powerCost": "{H}", "temperaments": ["phlegmatic"]}
+        self.put(p1, "hand", ["will-r", "will-x", "m-1"])
+        grimoire = self.item("grim", "p1", self.GRIMOIRE, "field")
+        session.battlefield = [grimoire]
+        session.queue_rules_triggers(self.GRIMOIRE, "p1", "end_of_turn", item_id="grim", face_up=True, zone="field", controller_id="p1")
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        choice = session.rules_engine["pendingChoice"]
+        if choice["kind"] == "optional_stack_action":
+            session.resolve_rules_choice("p1", choice["id"], option="accept")
+            session.pass_rules_priority("p2")
+            session.pass_rules_priority("p1")
+            choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["destination"], "attach_to_source")
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-1"])
+        self.assertTrue(error)
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["will-r", "will-x"])
+        self.assertIsNone(error)
+        self.assertEqual(p1["zones"]["hand"], ["m-1"])
+        self.assertEqual([e["cardId"] for e in grimoire["attachedCards"]], ["will-r", "will-x"])
+        self.assertEqual(grimoire["counters"]["Placed"], 2)
+        # Play one from the Grimoire (tribute is due: pay with nothing -> refused).
+        session.rules_engine["pendingChoice"] = None
+        session.rules_engine["actionStack"] = []
+        session.rules_engine["priorityPlayerId"] = "p1"
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
+        source = {"cardId": "will-x", "zone": "attached", "itemId": "grim"}
+        error, _ = session.declare_rules_action("p1", "Play", kind="play_card", source=source)
+        self.assertTrue(error)
+        self.put(p1, "hand", ["m-1", "m-2"])
+        session.card_rules["m-1"].update({"canPayTribute": True, "temperaments": ["phlegmatic"], "power": 1})
+        error, action = session.declare_rules_action("p1", "Play", kind="play_card", source=source, payment_card_ids=["m-1"])
+        self.assertIsNone(error, error)
+        self.assertEqual([e["cardId"] for e in grimoire["attachedCards"]], ["will-r"])
+        # Leaving the field exiles what is left on it.
+        session._rules_remove_field_item(grimoire, "p1", "graveyard")
+        self.assertIn("will-r", p1["zones"]["exile"])
+
+    def test_karmapult_takes_a_won_manifestation_and_sacrifices_it_for_a_power_loss(self):
+        session, p1, p2 = self.setup_game()
+        kp = self.item("kp", "p1", self.KARMAPULT, "field")
+        mine = self.item("mine", "p1", "m-1", "confrontation")
+        theirs = self.item("theirs", "p2", "m-2", "confrontation")
+        session.battlefield = [kp, mine, theirs]
+        session.rules_engine["confrontationResult"] = {
+            "winnerId": "p1", "loserId": "p2", "pendingOwnItemIds": ["mine"],
+        }
+        choice = session._queue_next_rules_confrontation_destination()
+        self.assertIn("karmapult", choice["options"])
+        error, _ = session.resolve_rules_choice("p1", choice["id"], option="karmapult")
+        self.assertIsNone(error)
+        self.assertIsNone(session.find_battlefield_item("mine"))
+        self.assertEqual(kp["attachedCards"], [{"cardId": "m-1", "ownerId": "p1"}])
+        result = session.apply_rules_action_result({
+            "id": "k", "controllerId": "p1",
+            "source": {"cardId": self.KARMAPULT, "itemId": "kp", "ownerId": "p1"},
+            "targets": [{"kind": "card", "itemId": "theirs", "cardId": "m-2", "ownerId": "p2"}],
+            "ability": self.ability(self.KARMAPULT, "karmapult-sacrifices-for-power-loss"),
+        })
+        self.assertEqual((result["status"], result["count"]), ("sacrificed", 1))
+        self.assertIn("m-1", p1["zones"]["graveyard"])
+        self.assertNotIn("Placed", kp["counters"])
+        base = session.card_rules["m-2"]["power"]
+        self.assertEqual(session.rules_manifestation_characteristics(theirs)["power"], base - 1)

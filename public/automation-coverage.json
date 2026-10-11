@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 349,
-    "explicitAbilities": 442,
+    "explicitCards": 352,
+    "explicitAbilities": 447,
     "statuses": {
-      "automated": 419,
+      "automated": 422,
       "generic": 0,
-      "manual": 31,
+      "manual": 28,
       "partial": 0
     }
   },
@@ -3351,10 +3351,18 @@
       "collectionNumber": 201,
       "name": "Bullyboo",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "bullyboo-reveals-will-opponent-pays"
+      ],
+      "mechanics": [
+        "result:bullyboo_reveal",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "0um05ree31uu6e2_en": {
       "collectionNumber": 202,
@@ -4957,19 +4965,40 @@
       "collectionNumber": 296,
       "name": "Karmapult",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "karmapult-holds-manifestations",
+        "karmapult-sacrifices-for-power-loss"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "passive:interzone_substitute_holder",
+        "result:karmapult_sacrifice",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "omhqwnu5tvwlzzg_en": {
       "collectionNumber": 297,
       "name": "Grimoire",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "grimoire-lets-placed-wills-be-played",
+        "grimoire-places-hand-wills"
+      ],
+      "mechanics": [
+        "passive:play_attached_wills",
+        "result:grimoire_place",
+        "trigger:end_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "5hpmlq50blbf3y6_en": {
       "collectionNumber": 298,
