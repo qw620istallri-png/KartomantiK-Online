@@ -1497,6 +1497,20 @@ function startServer() {
     });
     assert.equal(fieldPlay.playable, true);
     assert.deepEqual(fieldPlay.req, {});
+    const previewUi = await page.evaluate(() => {
+      const holder = document.createElement("div");
+      holder.innerHTML = '<button type="button" class="rules-choice-card" id="previewProbe"><img src="data:image/gif;base64,R0lGODlhAQABAAAAACw=" alt="probe"><span>probe</span></button>';
+      document.body.appendChild(holder);
+      document.querySelector("#previewProbe").dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+      const preview = document.querySelector(".choice-card-preview");
+      const shown = Boolean(preview) && preview.getBoundingClientRect().height >= 300;
+      document.body.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+      const hidden = !document.querySelector(".choice-card-preview");
+      holder.remove();
+      return { shown, hidden };
+    });
+    assert.equal(previewUi.shown, true);
+    assert.equal(previewUi.hidden, true);
     const temperamentUi = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
       const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };

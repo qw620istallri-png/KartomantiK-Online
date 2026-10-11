@@ -881,5 +881,15 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Ju Lien: déclencheur optionnel à l'entrée en Zone de Confrontation (`choose_hand_will_as_support_manifestation`, choix d'une Volonté de la main, `put_hand_will_as_support_manifestation`). La Volonté est mise sur le champ sans être jouée (`effectsDisabled`). Victoire: elle reste sur le champ (effets éteints, drapeau `playableFree` = numéro du tour) et peut être jouée depuis le champ sans tribut jusqu'à la fin du tour (`play_card` avec source `battlefield`, entrée « Jouer sans payer son tribut » du menu contextuel); le droit expire en fin de tour et la Volonté reste inerte sur le champ. Défaite ou égalité: exil.
 - Limites: seuls les tests serveur couvrent Rinq et Ju Lien; le choix de la Volonté de la main, l'entrée de menu « Jouer sans payer son tribut » et le sélecteur du Limbo n'ont pas été vérifiés dans un navigateur réel (test frontend sur le calcul du tribut et la disponibilité). Une Volonté devenue Manifestation n'est pas traitée comme « jouée » pour les déclencheurs de jeu de carte.
 - Version des assets: `20261010-rules-beta-117`.
-- Registre: 410 automated / 0 partial / 40 manual.
+- Registre: 415 automated / 0 partial / 40 manual.
 
+
+## Lot 22 (Suspend Judgment, Buddhan the Transcended, Jigon, Gnarlipuff, Trap)
+
+- Suspend Judgment : résultat `hold_winner_manifestations` ; les items gardés portent `holdUntilResolution` et sont exclus du nettoyage de confrontation.
+- Buddhan the Transcended : compteurs Quiet, `add_counter_source` avec `onZeroTemperament`, `move_random_zone_card` (option `eachPlayer`).
+- Jigon : `search_deck_will_conceal` pose une Volonté du deck face cachée (`concealedWill`, `jigonItemId`) ; `free_concealed_wills` la rend gratuite (`concealedFree`) si Jigon perd. Client : menu de l'item (gratuit ou tribut normal, `source.fieldFree`).
+- Gnarlipuff : capacité depuis le Réceptacle adverse (`sourceZones: receptacle`, `containerId`). Client : menu de la carte dans le navigateur de pile.
+- Trap : `play_first_manifestation_trap` (main.py) ; `trapPlayerIds` ; un Trap ne se joue pas comme une carte normale. Limite : deadlock possible Trap vs Hermetic Hourglass (chacun attend l'autre), non géré.
+- Zoom 100 % au survol des cartes dans les choix de recherche (`showChoiceCardPreview`).
+- Non testé en navigateur réel : menus Jigon / Gnarlipuff / Trap.

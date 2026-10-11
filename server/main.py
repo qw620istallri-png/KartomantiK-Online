@@ -1782,6 +1782,19 @@ async def handle_message(ws, info, data):
         session.touch()
         await broadcast_state(session)
 
+    elif msg_type == "play_first_manifestation_trap":
+        if is_observer:
+            return await send_error(ws, "Observers cannot play a Trap.")
+        card_id = data.get("cardId")
+        if not isinstance(card_id, str):
+            return await send_error(ws, "Choose a Trap from your Hand.")
+        error, result = session.play_first_manifestation_trap(actor_id, card_id)
+        if error:
+            return await send_error(ws, error)
+        session.add_log(actor_id, "rules_first_manifestation_trap", {"cardId": card_id, "delta": result.get("delta")})
+        session.touch()
+        await broadcast_state(session)
+
     elif msg_type == "validate_first_manifestation":
         if is_observer:
             return await send_error(ws, "Observers cannot validate a Manifestation.")

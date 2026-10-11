@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 340,
-    "explicitAbilities": 428,
+    "explicitCards": 345,
+    "explicitAbilities": 438,
     "statuses": {
-      "automated": 410,
+      "automated": 415,
       "generic": 0,
-      "manual": 40,
+      "manual": 35,
       "partial": 0
     }
   },
@@ -1511,10 +1511,18 @@
       "collectionNumber": 91,
       "name": "Suspend Judgment",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "suspend-judgment-hold-winner"
+      ],
+      "mechanics": [
+        "result:hold_winner_manifestations",
+        "target:player"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "zk76fhtep0wm3hh_en": {
       "collectionNumber": 92,
@@ -2599,10 +2607,19 @@
       "collectionNumber": 157,
       "name": "Gnarlipuff, the Slimy",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "gnarlipuff-return-interzone-manifestation"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "result:move_target",
+        "target:card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "h67753m250gg2h6_en": {
       "collectionNumber": 158,
@@ -2796,10 +2813,21 @@
       "collectionNumber": 170,
       "name": "Jigon, the Trap Setter",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "jigon-conceals-deck-will",
+        "jigon-frees-concealed-wills"
+      ],
+      "mechanics": [
+        "result:free_concealed_wills",
+        "result:search_deck_will_conceal",
+        "trigger:enters_field_zone",
+        "trigger:loses_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "l9enna0sfy13yab_en": {
       "collectionNumber": 171,
@@ -4140,10 +4168,27 @@
       "collectionNumber": 251,
       "name": "Buddhan the Transcended",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "buddhan-quiet-on-enter",
+        "buddhan-quiet-power-lost",
+        "buddhan-quiet-cards-discarded",
+        "buddhan-quiet-points-lost",
+        "buddhan-awakened-exiles-vessels"
+      ],
+      "mechanics": [
+        "result:add_counter_source",
+        "result:move_random_zone_card",
+        "trigger:beginning_of_turn",
+        "trigger:cards_discarded",
+        "trigger:enters_field",
+        "trigger:points_lost",
+        "trigger:power_lost"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "282b0n6ldnzdp0p_en": {
       "collectionNumber": 252,
@@ -4799,10 +4844,17 @@
       "collectionNumber": 291,
       "name": "Trap",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "trap-at-revelation"
+      ],
+      "mechanics": [
+        "result:first_manifestation_trap"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "pqi88s5ytyfnalf_en": {
       "collectionNumber": 292,

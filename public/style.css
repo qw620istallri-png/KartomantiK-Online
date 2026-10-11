@@ -2965,3 +2965,6 @@ input, textarea, select {
 .limbo-play-card:hover, .limbo-play-card:focus-visible { border-color: #b8860b; }
 .limbo-play-card img { display: block; width: 100%; border-radius: 6px; }
 .limbo-play-card span { display: block; font-size: 12px; margin-top: 4px; }
+
+.choice-card-preview { position: fixed; z-index: 400; pointer-events: none; border-radius: 12px; box-shadow: 0 12px 40px #000a; background: #000; }
+.choice-card-preview img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: 12px; }

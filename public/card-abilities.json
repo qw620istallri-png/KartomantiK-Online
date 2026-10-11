@@ -4569,5 +4569,148 @@
         "kind": "choose_hand_will_as_support_manifestation"
       }
     }
+  ],
+  "0r7k88v71vvx7kk_en": [
+    {
+      "id": "suspend-judgment-hold-winner",
+      "action": "play_card",
+      "targets": {
+        "kind": "player",
+        "min": 1,
+        "max": 1
+      },
+      "result": {
+        "kind": "hold_winner_manifestations"
+      }
+    }
+  ],
+  "kmvhsfddh84cpq6_en": [
+    {
+      "id": "buddhan-quiet-on-enter",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Quiet",
+        "value": 3
+      }
+    },
+    {
+      "id": "buddhan-quiet-power-lost",
+      "trigger": {
+        "event": "power_lost"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Quiet",
+        "value": -1,
+        "onZeroTemperament": "hollow"
+      }
+    },
+    {
+      "id": "buddhan-quiet-cards-discarded",
+      "trigger": {
+        "event": "cards_discarded"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Quiet",
+        "value": -1,
+        "onZeroTemperament": "hollow"
+      }
+    },
+    {
+      "id": "buddhan-quiet-points-lost",
+      "trigger": {
+        "event": "points_lost"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Quiet",
+        "value": -1,
+        "onZeroTemperament": "hollow"
+      }
+    },
+    {
+      "id": "buddhan-awakened-exiles-vessels",
+      "trigger": {
+        "event": "beginning_of_turn",
+        "sourceCounterMax": {
+          "name": "Quiet",
+          "max": 0
+        }
+      },
+      "result": {
+        "kind": "move_random_zone_card",
+        "fromZone": "receptacle",
+        "cardType": "manifestation",
+        "zone": "exile",
+        "position": "top",
+        "reason": "exile",
+        "eachPlayer": true
+      }
+    }
+  ],
+  "z6awx4mwwkfrvdd_en": [
+    {
+      "id": "jigon-conceals-deck-will",
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "confrontation"
+      },
+      "result": {
+        "kind": "search_deck_will_conceal"
+      }
+    },
+    {
+      "id": "jigon-frees-concealed-wills",
+      "trigger": {
+        "event": "loses_confrontation"
+      },
+      "result": {
+        "kind": "free_concealed_wills"
+      }
+    }
+  ],
+  "dq529rojumn98fp_en": [
+    {
+      "id": "gnarlipuff-return-interzone-manifestation",
+      "tribute": "{H}{H}{H}",
+      "sourceZones": [
+        "receptacle"
+      ],
+      "targets": {
+        "kind": "card",
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ],
+        "fieldZone": "interzone",
+        "controller": "opponent"
+      },
+      "result": {
+        "kind": "move_target",
+        "zone": "deck",
+        "position": "top",
+        "reason": "return"
+      }
+    }
+  ],
+  "xzh48oy0ramirce_en": [
+    {
+      "id": "trap-at-revelation",
+      "action": "play_card",
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "result": {
+        "kind": "first_manifestation_trap"
+      }
+    }
   ]
 }

@@ -13655,5 +13655,183 @@ class LotTwentyOneTests(RealCardRulesCase):
         self.assertEqual(session.rules_field_zone(will), "field")
 
 
+class LotTwentyTwoTests(RealCardRulesCase):
+    """Suspend Judgment, Buddhan the Transcended, Jigon, Gnarlipuff."""
+
+    SUSPEND, BUDDHAN, JIGON, GNARLIPUFF = "0r7k88v71vvx7kk_en", "kmvhsfddh84cpq6_en", "z6awx4mwwkfrvdd_en", "dq529rojumn98fp_en"
+    ALL = (SUSPEND, BUDDHAN, JIGON, GNARLIPUFF)
+
+    def setup_game(self):
+        session, p1, p2 = self.make_session()
+        session.rules_engine["enabled"] = True
+        session.card_rules["will-per"] = {"type": "persistent_will", "cost": 1, "powerCost": "{H}", "temperaments": ["phlegmatic"]}
+        session.card_rules["will-eph"] = {"type": "ephemeral_will", "cost": 1, "powerCost": "{H}", "temperaments": ["phlegmatic"]}
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        return session, p1, p2
+
+    def item(self, item_id, owner, card, zone="field", **extra):
+        return self.field_item(item_id, owner, card, field_zone=zone, controllerId=owner, x=0, y=0, rotation=0, stackedOn=None, **extra)
+
+    def test_suspend_judgment_keeps_the_winners_manifestations_in_the_confrontation_zone(self):
+        session, p1, p2 = self.setup_game()
+        ability = self.ability(self.SUSPEND, "suspend-judgment-hold-winner")
+        a = self.item("a", "p1", "m-1", "confrontation")
+        b = self.item("b", "p2", "m-2", "confrontation")
+        session.battlefield = [a, b]
+        turn = session.phase_tracker["turn"]
+        session.rules_engine["confrontationResult"] = {
+            "turn": turn, "status": "effects", "winnerId": "p1", "loserId": "p2", "stalemate": False,
+            "participantItemIds": ["a", "b"],
+        }
+        action = lambda pid: {"id": "s", "controllerId": "p1", "source": {"cardId": self.SUSPEND, "ownerId": "p1"},
+                              "targets": [{"kind": "player", "playerId": pid}], "ability": ability}
+        self.assertEqual(session.apply_rules_action_result(action("p2"))["status"], "not_winner")
+        self.assertEqual(session.apply_rules_action_result(action("p1"))["status"], "held")
+        self.assertEqual(a["holdUntilResolution"], turn + 1)
+        session.begin_rules_confrontation_cleanup()
+        self.assertEqual(session.rules_field_zone(a), "confrontation")
+        self.assertIn("m-2", p1["zones"]["receptacle"])
+        # Next turn's Resolution releases them.
+        session.phase_tracker["turn"] = turn + 1
+        session.rules_engine["confrontationResult"] = {
+            "turn": turn + 1, "status": "effects", "winnerId": "p1", "loserId": "p2", "stalemate": False,
+            "participantItemIds": ["a"],
+        }
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+        session.begin_rules_confrontation_cleanup()
+        self.assertNotIn("holdUntilResolution", a)
+        choice = session.rules_engine["pendingChoice"]
+        self.assertIsNotNone(choice, "the winner now decides where the released Manifestation goes")
+
+    def test_buddhan_the_transcended_wakes_up_after_three_losses_of_quiet(self):
+        session, p1, p2 = self.setup_game()
+        item = self.item("bud", "p1", self.BUDDHAN, "interzone")
+        session.battlefield = [item]
+        run = lambda ability_id: session.apply_rules_action_result({
+            "id": "b", "controllerId": "p1", "source": {"cardId": self.BUDDHAN, "itemId": "bud", "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.BUDDHAN, ability_id),
+        })
+        run("buddhan-quiet-on-enter")
+        self.assertEqual(item["counters"]["Quiet"], 3)
+        run("buddhan-quiet-power-lost")
+        run("buddhan-quiet-cards-discarded")
+        self.assertNotIn("temperamentOverride", item)
+        run("buddhan-quiet-points-lost")
+        self.assertEqual(item["counters"]["Quiet"], 0)
+        self.assertEqual(item["temperamentOverride"], "hollow")
+        self.assertEqual(session.rules_manifestation_characteristics(item)["temperament"], "hollow")
+        awakened = self.ability(self.BUDDHAN, "buddhan-awakened-exiles-vessels")
+        self.assertEqual(awakened["trigger"]["sourceCounterMax"], {"name": "Quiet", "max": 0})
+        self.put(p1, "receptacle", ["m-3"])
+        self.put(p2, "receptacle", ["m-4", "m-5"])
+        payload = run("buddhan-awakened-exiles-vessels")
+        self.assertEqual(len(payload["each"]), 2)
+        self.assertEqual(p1["zones"]["receptacle"], [])
+        self.assertEqual(len(p2["zones"]["receptacle"]), 1)
+        self.assertEqual(len(p2["zones"]["exile"]), 1)
+
+    def test_jigon_conceals_a_deck_will_that_is_free_only_if_jigon_loses(self):
+        session, p1, p2 = self.setup_game()
+        self.put(p1, "deck", ["will-eph", "m-6", "will-per"])
+        self.put(p1, "hand", ["m-0"])
+        jigon = self.item("jigon", "p1", self.JIGON, "confrontation")
+        session.battlefield = [jigon]
+        session.queue_rules_field_zone_entry_triggers(jigon, "confrontation")
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["destination"], "concealed_field")
+        self.assertEqual(sorted(choice["candidateCardIds"]), ["will-eph", "will-per"])
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-6"])
+        self.assertTrue(error)
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["will-eph"])
+        self.assertIsNone(error)
+        hidden = next(item for item in session.battlefield if item.get("concealedWill"))
+        self.assertFalse(hidden["faceUp"])
+        self.assertNotIn("will-eph", p1["zones"]["deck"])
+        # Opponent cannot see it, owner can.
+        view = lambda pid: {e["id"]: e for e in session.serialize_for(pid, "player")["battlefield"]}
+        self.assertIsNone(view("p2")[hidden["id"]]["cardId"])
+        self.assertEqual(view("p1")[hidden["id"]]["cardId"], "will-eph")
+        # Played as if in hand: tribute is due...
+        session.rules_engine["pendingChoice"] = None
+        session.rules_engine["actionStack"] = []
+        session.rules_engine["priorityPlayerId"] = "p1"
+        source = {"cardId": "will-eph", "zone": "battlefield", "itemId": hidden["id"]}
+        error, action = session.declare_rules_action("p1", "Play", kind="play_card", source=source)
+        self.assertTrue(error, "tribute should be required")
+        # ... unless Jigon lost the confrontation.
+        session.apply_rules_action_result({
+            "id": "j", "controllerId": "p1", "source": {"cardId": self.JIGON, "itemId": "jigon", "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.JIGON, "jigon-frees-concealed-wills"),
+        })
+        self.assertTrue(hidden["concealedFree"])
+        error, action = session.declare_rules_action("p1", "Play", kind="play_card", source=source)
+        self.assertIsNone(error)
+        self.assertIsNone(session.find_battlefield_item(hidden["id"]))
+
+    def test_gnarlipuff_in_an_opponents_vessel_sends_an_interzone_manifestation_back_to_its_deck(self):
+        session, p1, p2 = self.setup_game()
+        session.card_rules[self.GNARLIPUFF].setdefault("type", "manifestation")
+        self.put(p2, "receptacle", {self.GNARLIPUFF: "p1"})
+        self.put(p1, "hand", ["m-0", "m-1", "m-2"])
+        target = self.item("t", "p2", "m-7", "interzone")
+        session.battlefield = [target]
+        session.rules_engine["priorityPlayerId"] = "p1"
+        source = {"cardId": self.GNARLIPUFF, "zone": "receptacle", "containerId": "p2"}
+        error, action = session.declare_rules_action(
+            "p1", "Return", kind="activated_effect", source=source,
+            targets=[{"kind": "card", "itemId": "t", "cardId": "m-7"}],
+            payment_card_ids=["m-0", "m-1", "m-2"], ability_id="gnarlipuff-return-interzone-manifestation")
+        self.assertIsNone(error)
+        self.assertIn(self.GNARLIPUFF, p2["zones"]["receptacle"])
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        self.assertIsNone(session.find_battlefield_item("t"))
+        self.assertEqual(p2["zones"]["deck"][0], "m-7")
+        # Not usable from your own Vessel, or on a card you do not own.
+        self.put(p1, "receptacle", {self.GNARLIPUFF: "p1"})
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, _ = session.declare_rules_action(
+            "p1", "Return", kind="activated_effect", source={**source, "containerId": "p1"},
+            ability_id="gnarlipuff-return-interzone-manifestation")
+        self.assertTrue(error)
+
+    def test_trap_replaces_the_first_manifestation_which_is_then_played_after_the_opponent(self):
+        session, p1, p2 = self.setup_game()
+        session.card_rules["trap"] = {"type": "ephemeral_will", "cost": 0, "playedAbilities": [self.ability("xzh48oy0ramirce_en", "trap-at-revelation")]}
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_choose")
+        session.rules_engine["firstManifestationComplete"] = False
+        self.put(p1, "hand", ["trap", "m-0"])
+        score = p1["score"]
+        self.assertTrue(session.rules_is_trap_card("trap"))
+        self.assertFalse(session.rules_is_trap_card("m-0"))
+        error, _ = session.play_first_manifestation_trap("p1", "m-0")
+        self.assertTrue(error)
+        error, result = session.play_first_manifestation_trap("p1", "trap")
+        self.assertIsNone(error)
+        self.assertEqual(p1["score"], score - 5)
+        self.assertIn("trap", p1["zones"]["graveyard"])
+        self.assertNotIn("trap", p1["zones"]["hand"])
+        self.assertTrue(session.rules_plays_first_manifestation_after("p1"))
+        self.assertFalse(session.rules_plays_first_manifestation_after("p2"))
+        mine = {**self.item("mine", "p1", "m-0", "field"), "faceUp": False}
+        theirs = {**self.item("theirs", "p2", "m-1", "field"), "faceUp": False}
+        session.battlefield = [mine, theirs]
+        self.assertIn("Trap", session.register_first_manifestation("p1", mine))
+        self.assertIsNone(session.register_first_manifestation("p2", theirs))
+        self.assertIsNone(session.validate_first_manifestation("p2")[0])
+        # The Trap player now sees the opponent's card, and the opponent is locked in.
+        view = {e["id"]: e for e in session.serialize_for("p1", "player")["battlefield"]}
+        self.assertEqual(view["theirs"]["cardId"], "m-1")
+        self.assertIn("locked", session.validate_first_manifestation("p2", validated=False)[0])
+        self.assertIsNone(session.register_first_manifestation("p1", mine))
+        error, result = session.validate_first_manifestation("p1")
+        self.assertIsNone(error)
+        self.assertTrue(result["selectionComplete"])
+        # A second Trap in the same step is refused.
+        self.assertTrue(session.play_first_manifestation_trap("p1", "trap")[0])
+
+
 if __name__ == "__main__":
     unittest.main()

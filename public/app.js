@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261010-rules-beta-117";
+const STATIC_ASSET_VERSION = "20261011-rules-beta-119";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -2435,6 +2435,7 @@ function submitRulesBoardFlow(target = null) {
       cardId: flow.source.cardId,
       zone: flow.source.zone,
       itemId: (activated || flow.source.playFromField) ? flow.source.itemId : null,
+      ...(flow.source.containerId ? { containerId: flow.source.containerId } : {}),
     },
     target: "",
     targets: selectedTargets.map(rulesTargetPayload),
@@ -2981,13 +2982,14 @@ function beginRulesBoardAction(source) {
   return true;
 }
 
-function beginRulesHandActivatedAction(cardId, handIndex) {
+function beginRulesHandActivatedAction(cardId, handIndex, zone = "hand", containerId = null) {
   const source = {
     cardId,
-    zone: "hand",
+    zone,
     handIndex,
     actionKind: "activated_effect",
   };
+  if (containerId) source.containerId = containerId;
   const draft = buildRulesActionDraft(source);
   if (!draft.encodedAbility || !rulesDraftCanBePaid(draft)) {
     showToast(t("rulesBoardEffectNotAvailable"), true);
@@ -3236,6 +3238,21 @@ function rulesPersistentWillsAsEphemeralClient() {
   ));
 }
 
+function isTrapCardClient(cardId) {
+  return (playedAbilitiesByCard.get(cardId) || []).some((ability) => ability.result?.kind === "first_manifestation_trap");
+}
+
+function trapPlayableClient(cardId) {
+  const rules = latestState?.rulesEngine;
+  return Boolean(
+    rules?.enabled && !isObserver && isTrapCardClient(cardId)
+    && rulesFirstManifestationActive()
+    && !(rules.firstManifestationItemIds || {})[myPlayerId]
+    && !(rules.firstManifestationValidatedPlayerIds || []).includes(myPlayerId)
+    && !(rules.trapPlayerIds || []).includes(myPlayerId)
+  );
+}
+
 function rulesLimboPlayMode() {
   const turn = Number(latestState?.phaseTracker?.turn || 0);
   const phaseId = currentPhaseUi().phase?.id;
@@ -3307,11 +3324,11 @@ function renderLimboPlayList() {
 
 function rulesActionPaymentDraft(source, card, encodedAbility) {
   const limboPlay = source.playFromField
-    ? "free"
+    ? (source.fieldFree === false ? null : "free")
     : source.zone === "graveyard"
       && ["ephemeral_will", "persistent_will"].includes(card?.type)
       ? rulesLimboPlayMode() : null;
-  const isPrintedWill = (["hand", "suspended"].includes(source.zone) || Boolean(limboPlay))
+  const isPrintedWill = (["hand", "suspended"].includes(source.zone) || Boolean(limboPlay) || Boolean(source.playFromField))
     && ["ephemeral_will", "persistent_will"].includes(card?.type);
   const freeWillPermission = isPrintedWill && (latestState?.rulesEngine?.playPermissions || []).some((permission) => (
     permission.playerId === myPlayerId
@@ -3724,6 +3741,12 @@ function openRulesActionPanel(source) {
 
 function rulesActionContextItem(source) {
   const rules = latestState?.rulesEngine;
+  if (source.zone === "hand" && trapPlayableClient(source.cardId)) {
+    return {
+      label: t("rulesPlayTrap"),
+      onSelect: () => send({ type: "play_first_manifestation_trap", cardId: source.cardId }),
+    };
+  }
   if (!rules?.enabled || rules.priorityPlayerId !== myPlayerId || isObserver) return null;
   if (["hand", "suspended"].includes(source.zone)) {
     const cardType = cardsById.get(source.cardId)?.type;
@@ -5264,6 +5287,45 @@ function stagePileBrowserChoice(ownerId, zone, cardId, entry) {
 // never be clipped by the browser's own scroll container (see the CSS note
 // on .db-card-hover-clone). Generic over the clone class name so the same
 // helper covers both the pile browser's cards and the hand tray's.
+// Cards listed in a choice panel (search, discard, chain, Limbo picker) are
+// small; hovering one shows it at full reading size next to the panel.
+const CHOICE_PREVIEW_SELECTOR = ".rules-choice-card, .limbo-play-card";
+let choicePreviewEl = null;
+function hideChoiceCardPreview() {
+  if (choicePreviewEl) choicePreviewEl.remove();
+  choicePreviewEl = null;
+}
+function showChoiceCardPreview(source) {
+  const image = source.querySelector("img");
+  if (!image || !image.src) return;
+  hideChoiceCardPreview();
+  const preview = document.createElement("div");
+  preview.className = "choice-card-preview";
+  const full = document.createElement("img");
+  full.src = image.src;
+  full.alt = image.alt || "";
+  preview.appendChild(full);
+  document.body.appendChild(preview);
+  const rect = source.getBoundingClientRect();
+  const height = Math.min(window.innerHeight - 24, 560);
+  const width = Math.round(height * 5 / 7);
+  preview.style.width = `${width}px`;
+  preview.style.height = `${height}px`;
+  const roomRight = window.innerWidth - rect.right;
+  const left = roomRight >= width + 16
+    ? rect.right + 12
+    : Math.max(8, rect.left - width - 12);
+  preview.style.left = `${Math.min(left, window.innerWidth - width - 8)}px`;
+  preview.style.top = `${Math.max(12, Math.min(rect.top + rect.height / 2 - height / 2, window.innerHeight - height - 12))}px`;
+  choicePreviewEl = preview;
+}
+document.addEventListener("mouseover", (event) => {
+  const target = event.target instanceof Element ? event.target.closest(CHOICE_PREVIEW_SELECTOR) : null;
+  if (target) showChoiceCardPreview(target);
+  else if (choicePreviewEl) hideChoiceCardPreview();
+});
+document.addEventListener("click", hideChoiceCardPreview, true);
+
 function wireCardHoverZoom(el, cloneClassName) {
   let clone = null;
   let removalObserver = null;
@@ -5346,6 +5408,11 @@ function wirePileBrowserCards(ownerId, zone) {
       const items = [
         { label: t("inspect"), onSelect: () => showInspect(cardId) },
         copyCardMenuItem(cardId, ownerId, zone),
+        ...(zone === "receptacle" && ownerId !== myPlayerId && cardOwnerId === myPlayerId
+          && latestState?.rulesEngine?.enabled
+          && (activatedAbilitiesByCard.get(cardId) || []).some((ability) => (ability.sourceZones || []).includes("receptacle"))
+          ? [{ label: t("rulesDeclareCardAction"), onSelect: () => { $("#deckBrowserCloseBtn").click(); beginRulesHandActivatedAction(cardId, null, "receptacle", ownerId); } }]
+          : []),
         { separator: true },
         { label: t("playFaceUp"), onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "play", faceUp: true, label: t("battlefield") }) },
         { label: t("playFaceDown"), onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "play", faceUp: false, label: t("battlefield") }) },
@@ -5869,6 +5936,7 @@ function handCardIsPlayable(cardId) {
   if (!rules?.enabled || !card || isObserver || rules.pendingChoice) return false;
   if (rules_pregame_active_client() || rules_recovery_mulligan_active_client()) return false;
   if (rulesFirstManifestationActive()) {
+    if (trapPlayableClient(cardId)) return true;
     return (card.type === "manifestation" || card.placeholder)
       && !String(card.effect || "").includes("Cannot be played as First Manifestation")
       && !(rules.firstManifestationItemIds || {})[myPlayerId];
@@ -7618,6 +7686,10 @@ function resolveDrop(ctx, clientX, clientY) {
       return;
     }
     if (latestState?.rulesEngine?.enabled && ctx.fromZone === "hand") {
+      if (trapPlayableClient(ctx.cardId)) {
+        send({ type: "play_first_manifestation_trap", cardId: ctx.cardId });
+        return;
+      }
       if (["ephemeral_will", "persistent_will"].includes(card?.type)) {
         beginRulesBoardAction({
           cardId: ctx.cardId,
@@ -8821,11 +8893,12 @@ function renderBattlefield() {
         ? rulesActionContextItem({ cardId: item.cardId, zone: "battlefield", itemId: item.id })
         : null;
       if (rulesItem) items.push(rulesItem);
-      if (isMine && item.playableFree && limboWillIsPlayable(item.cardId, true)) {
+      if (isMine && (item.playableFree || item.concealedWill) && limboWillIsPlayable(item.cardId, true)) {
+        const fieldFree = Boolean(item.playableFree || item.concealedFree);
         items.push({
-          label: t("rulesPlayFreeFromField"),
+          label: fieldFree ? t("rulesPlayFreeFromField") : t("rulesPlayConcealed"),
           onSelect: () => beginRulesBoardAction({
-            cardId: item.cardId, zone: "battlefield", itemId: item.id, playFromField: true,
+            cardId: item.cardId, zone: "battlefield", itemId: item.id, playFromField: true, fieldFree,
             placement: { x: item.x, y: item.y },
           }),
         });
