@@ -2,13 +2,13 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 357,
-    "explicitAbilities": 457,
+    "explicitCards": 377,
+    "explicitAbilities": 493,
     "statuses": {
-      "automated": 427,
+      "automated": 447,
       "generic": 0,
-      "manual": 23,
-      "partial": 0
+      "manual": 2,
+      "partial": 1
     }
   },
   "cards": {
@@ -5321,10 +5321,18 @@
       "collectionNumber": 313,
       "name": "Ycar, the Fleeting Flow",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "ycar-trades-an-interzone-manifestation-for-a-searched-one"
+      ],
+      "mechanics": [
+        "result:ycar_exchange",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-014": {
       "collectionNumber": 314,
@@ -5407,10 +5415,23 @@
       "collectionNumber": 318,
       "name": "Paciphint, the Pious",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "paciphint-enters-with-flowers",
+        "paciphint-blooms-when-its-owner-loses",
+        "paciphint-sacrifices-an-ally-to-ignore-a-power"
+      ],
+      "mechanics": [
+        "phase-window",
+        "result:add_counter_source",
+        "result:paciphint_swap",
+        "trigger:enters_field",
+        "trigger:player_loses_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-019": {
       "collectionNumber": 319,
@@ -5917,10 +5938,18 @@
       "collectionNumber": 348,
       "name": "Wish Upon the Stars",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "wish-upon-the-stars-exchanges-vessel-manifestations"
+      ],
+      "mechanics": [
+        "result:wish_exchange",
+        "target:zone_card"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-049": {
       "collectionNumber": 349,
@@ -5977,10 +6006,13 @@
       "collectionNumber": 352,
       "name": "Kanopo, the Headless",
       "setName": "Inner Deserts",
-      "status": "manual",
+      "status": "automated",
       "abilityIds": [],
       "mechanics": [],
-      "testRefs": []
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-053": {
       "collectionNumber": 353,
@@ -6016,10 +6048,18 @@
       "collectionNumber": 355,
       "name": "Nghoul-ong, the Tormented",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "nghoulong-exiles-itself-for-a-free-limbo-ephemeral-will"
+      ],
+      "mechanics": [
+        "result:exile_source_grant_limbo_will_play",
+        "trigger:discarded"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-056": {
       "collectionNumber": 356,
@@ -6105,10 +6145,19 @@
       "collectionNumber": 360,
       "name": "Tebebe, Taken by the Dunes",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "partial",
+      "abilityIds": [
+        "tebebe-sacrifices-and-unearths"
+      ],
+      "mechanics": [
+        "result:tebebe_unearth",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ],
+      "notes": "Sacrifice and the 3 Concealed cards are automated, and Concealed Wills can be played for 3 Hollow Essences. A Concealed Manifestation cannot yet be played into the Interzone by the engine."
     },
     "inner-deserts-061": {
       "collectionNumber": 361,
@@ -6131,10 +6180,17 @@
       "collectionNumber": 362,
       "name": "Gigabonblade",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "gigabonblade-gains-persist"
+      ],
+      "mechanics": [
+        "ongoing:grant_persist"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-063": {
       "collectionNumber": 363,
@@ -6477,56 +6533,114 @@
       "collectionNumber": 382,
       "name": "Gorlok, the Blinded Indiscreet",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "gorlok-inspects-and-exiles-an-opponents-drawn-card"
+      ],
+      "mechanics": [
+        "result:gorlok_peek",
+        "trigger:cards_drawn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-083": {
       "collectionNumber": 383,
       "name": "Auction Profiteer",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "auction-profiteer-bids-a-manifestation"
+      ],
+      "mechanics": [
+        "result:auction_offer",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-084": {
       "collectionNumber": 384,
       "name": "Chabak, the Ungrateful",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "chabak-plays-in-support-for-two-manifestations",
+        "chabak-returns-opposing-manifestations-and-exiles-itself"
+      ],
+      "mechanics": [
+        "phase-window",
+        "result:chabak_support",
+        "result:chabak_wins",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-085": {
       "collectionNumber": 385,
       "name": "Fee-fee, the Afflicted",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "fee-fee-spite-upkeep",
+        "fee-fee-cannot-win-out-of-stalemate",
+        "fee-fee-spite-ignores-low-power"
+      ],
+      "mechanics": [
+        "passive:stalemate_ignores_low_power",
+        "passive:stalemate_win_blocked",
+        "result:spite_upkeep",
+        "trigger:beginning_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-086": {
       "collectionNumber": 386,
       "name": "Thoughtcutter",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": [],
-      "notes": "Conditional play requires a Will on top of the Stack, then interrupts and locks the Stack and grants power; generic recognition incorrectly grants unconditional Support from hand."
+      "status": "automated",
+      "abilityIds": [
+        "thoughtcutter-gains-power-per-opposing-stack-card"
+      ],
+      "mechanics": [
+        "conditional-support",
+        "result:thoughtcutter_surge",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-087": {
       "collectionNumber": 387,
       "name": "Moaning Consul",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "consul-chains-from-hand",
+        "consul-triggers-allies-as-lost-then-leaves"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "result:consul_wins",
+        "trigger:enters_field",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-088": {
       "collectionNumber": 388,
@@ -6574,10 +6688,18 @@
       "collectionNumber": 390,
       "name": "Pescojolero, the Ringing King",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "pescojolero-trades-stalemate-manifestations-for-a-vessel-one"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "result:pescojolero_trade"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-091": {
       "collectionNumber": 391,
@@ -6599,19 +6721,43 @@
       "collectionNumber": 392,
       "name": "Discombobulator",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "discombobulator-upkeep-or-exile",
+        "discombobulator-blanks-the-field"
+      ],
+      "mechanics": [
+        "passive:disable_other_effects",
+        "result:unless_payment_exile_source",
+        "trigger:before_revelation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-093": {
       "collectionNumber": 393,
       "name": "Bizarre Mechanism",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "mechanism-starts-with-an-enigma",
+        "mechanism-one-shuffle",
+        "mechanism-two-peek-and-swap",
+        "mechanism-three-bottom-a-card"
+      ],
+      "mechanics": [
+        "result:add_counter_source",
+        "result:bottom_hand_card_remove_counters",
+        "result:peek_top_swap",
+        "result:shuffle_owner_deck",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-094": {
       "collectionNumber": 394,
@@ -6651,10 +6797,18 @@
       "collectionNumber": 396,
       "name": "Lunar Liturgy",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "lunar-liturgy-feeds-the-stalemate-zone"
+      ],
+      "mechanics": [
+        "result:lunar_liturgy",
+        "trigger:beginning_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-097": {
       "collectionNumber": 397,
@@ -6702,10 +6856,25 @@
       "collectionNumber": 400,
       "name": "Juggernut, the Overwhelming",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "juggernut-grows-at-end-of-turn",
+        "juggernut-charges-into-confrontation",
+        "juggernut-exiled-after-winning"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "phase-window",
+        "result:add_counter_source",
+        "result:field_becomes_first_manifestation",
+        "result:move_source_to_owner_exile",
+        "trigger:end_of_turn",
+        "trigger:wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-101": {
       "collectionNumber": 401,
@@ -7058,19 +7227,41 @@
       "collectionNumber": 420,
       "name": "Overwhelming Persuasion",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "persuasion-forces-an-opponent-will-onto-the-field",
+        "persuasion-penalizes-forced-wills-each-turn"
+      ],
+      "mechanics": [
+        "result:persuasion_force",
+        "result:persuasion_penalty",
+        "trigger:end_of_turn",
+        "trigger:revelation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-121": {
       "collectionNumber": 421,
       "name": "Donmo, the Truth-Bender",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "donmo-restores-exhausted-cards",
+        "donmo-gives-opponents-points-for-exhausted"
+      ],
+      "mechanics": [
+        "cost:exhaustSource",
+        "result:restore_exhausted_targets",
+        "result:score_each_opponent",
+        "trigger:end_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-122": {
       "collectionNumber": 422,
@@ -7468,10 +7659,22 @@
       "collectionNumber": 443,
       "name": "Temperamental Splendor",
       "setName": "Inner Deserts",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "splendor-gets-gem-counters",
+        "splendor-chooses-a-base-temperament",
+        "splendor-spends-a-gem-as-excess-essence"
+      ],
+      "mechanics": [
+        "result:add_counter_source",
+        "result:choose_source_temperament",
+        "result:create_essence",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "inner-deserts-144": {
       "collectionNumber": 444,

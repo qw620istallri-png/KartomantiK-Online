@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261011-rules-beta-124";
+const STATIC_ASSET_VERSION = "20261011-rules-beta-125";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -90,8 +90,22 @@ function rulesEssencePaymentPreview(requirements) {
   return { remaining, spent };
 }
 
+const RULES_KANOPO_PATTERN = /you may sacrifice a Manifestation in your Interzone\. If you do, .{0,40}?base power of (\d+)/is;
+
+function rulesTributeSacrificePower(card) {
+  const match = String(card?.effect || "").match(RULES_KANOPO_PATTERN);
+  return match ? Number(match[1]) : null;
+}
+
 function rulesTributeCandidate(reference) {
   const value = String(reference || "");
+  if (value.startsWith("sacrifice|")) {
+    const item = (latestState?.battlefield || []).find(
+      (candidate) => candidate.id === value.slice("sacrifice|".length),
+    );
+    const card = cardsById.get(item?.cardId);
+    return card ? { ...card, power: 0, sacrifice: true, paymentValue: value } : null;
+  }
   if (value.startsWith("battlefield|")) {
     const itemId = value.slice("battlefield|".length);
     const item = (latestState?.battlefield || []).find(
@@ -121,7 +135,16 @@ function rulesTributeCandidate(reference) {
 
 function rulesRemainingAfterManifestations(cardIds, requirements) {
   const remaining = { ...requirements };
-  const cards = cardIds.map(rulesTributeCandidate).filter(Boolean)
+  const candidates = cardIds.map(rulesTributeCandidate).filter(Boolean);
+  let sacrifices = candidates.filter((card) => card.sacrifice).length;
+  const cards = candidates.filter((card) => !card.sacrifice).map((card) => {
+    const sacrificePower = rulesTributeSacrificePower(card);
+    if (sacrifices > 0 && sacrificePower !== null) {
+      sacrifices -= 1;
+      return { ...card, power: sacrificePower };
+    }
+    return card;
+  })
     .sort((a, b) => Number(cardTributeTemperaments(a).includes("transcendent")) - Number(cardTributeTemperaments(b).includes("transcendent")));
   for (const card of cards) {
     const power = Math.max(0, Number(card.power) || 0);
@@ -3129,6 +3152,7 @@ function rulesStructuredActionTargets(encodedAbility) {
       const zonesForType = targetRules?.fieldZonesByType?.[cardsById.get(item.cardId)?.type];
       if (Array.isArray(zonesForType) && !zonesForType.includes(item.fieldZone)) return false;
       if (targetRules?.supportOnly && !item.isSupport) return false;
+      if (targetRules?.exhaustedOnly && Math.round(Number(item.rotation || 0)) % 180 === 0) return false;
       if (targetRules?.counter) {
         const key = Object.keys(item.counters || {}).find(
           (name) => name.toLocaleLowerCase()
@@ -3383,6 +3407,9 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
       paymentRequirements.hollow = Number(paymentRequirements.hollow || 0) + increase;
     }
   }
+  if (source.playFromField && Number(source.surcharge || 0) > 0) {
+    paymentRequirements.hollow = Number(paymentRequirements.hollow || 0) + Number(source.surcharge);
+  }
   if (source.zone === "suspended") {
     const total = Object.values(paymentRequirements)
       .reduce((sum, amount) => sum + Number(amount || 0), 0);
@@ -3515,6 +3542,25 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
       zone: "interzone",
       powerOverride: rulesTributeCandidate(`battlefield|${item.id}`)?.power,
     });
+  }
+  if (manifestations.some((entry) => rulesTributeSacrificePower(cardsById.get(entry.cardId)) !== null)) {
+    for (const item of latestState?.battlefield || []) {
+      if (
+        battlefieldItemControllerId(item) !== myPlayerId
+        || item.fieldZone !== "interzone"
+        || cardsById.get(item.cardId)?.type !== "manifestation"
+        || item.id === source?.itemId
+      ) continue;
+      manifestations.push({
+        cardId: item.cardId,
+        itemId: item.id,
+        index: null,
+        selectionKey: `sacrifice:${item.id}`,
+        paymentValue: `sacrifice|${item.id}`,
+        zone: "interzone",
+        sacrifice: true,
+      });
+    }
   }
   const vesselTributeActive = (latestState?.battlefield || []).some((item) => (
     battlefieldItemControllerId(item) === myPlayerId
@@ -3710,13 +3756,13 @@ function openRulesActionPanel(source) {
   }
 
   $("#rulesTributeList").innerHTML = manifestations.length
-    ? manifestations.map(({ cardId, index, paymentValue, zone }) => {
+    ? manifestations.map(({ cardId, index, paymentValue, zone, sacrifice }) => {
         const tribute = cardsById.get(cardId);
         const temperament = tribute?.temperaments?.[0];
         const power = zone === "interzone"
           ? rulesTributeCandidate(paymentValue)?.power
           : tribute?.power;
-        return `<label class="rules-tribute-choice" title="${esc(cardName(cardId))}"><input type="checkbox" value="${esc(paymentValue)}" ${Number.isInteger(index) ? `data-hand-index="${index}"` : ""}>${temperament ? `<img src="${esc(temperamentSymbol(temperament))}" alt="">` : ""}<span>${esc(cardName(cardId))} · ${esc(rulesText("rulesPowerValue", { power: power ?? "—" }))}${zone === "graveyard" ? ` · ${esc(t("graveyard"))}` : zone === "receptacle" ? ` · ${esc(t("receptacle"))}` : zone === "interzone" ? ` · ${esc(t("interzone"))}` : ""}</span></label>`;
+        return `<label class="rules-tribute-choice" title="${esc(cardName(cardId))}"><input type="checkbox" value="${esc(paymentValue)}" ${Number.isInteger(index) ? `data-hand-index="${index}"` : ""}>${temperament ? `<img src="${esc(temperamentSymbol(temperament))}" alt="">` : ""}<span>${esc(cardName(cardId))} · ${esc(rulesText("rulesPowerValue", { power: power ?? "—" }))}${sacrifice ? ` · ${esc(t("rulesSacrificeLabel"))}` : zone === "graveyard" ? ` · ${esc(t("graveyard"))}` : zone === "receptacle" ? ` · ${esc(t("receptacle"))}` : zone === "interzone" ? ` · ${esc(t("interzone"))}` : ""}</span></label>`;
       }).join("")
     : `<span class="rules-tribute-empty">${esc(hasPrintedTribute && !remainingTemperaments.length ? t("rulesCoveredByEssence") : t("rulesNoTributeCards"))}</span>`;
 
@@ -5984,9 +6030,19 @@ function handCardIsPlayable(cardId) {
     if (phaseId === "end_actions") return !stackHasActions && rulesInterzoneHasRoomClient();
     if (phaseId !== "confrontation_reaction") return false;
   }
+  if (card.type === "manifestation" && rulesTopOfStackIsWillClient(card)) return true;
   return card.type === "manifestation"
     && phaseId === "confrontation_reaction"
     && rulesSupportFromHandAvailableClient(cardId);
+}
+
+function rulesTopOfStackIsWillClient(card) {
+  if (!/As long as the top card on the Stack is a Will, you may play .{0,40} in Support from hand/.test(String(card?.effect || ""))) return false;
+  const stack = latestState?.rulesEngine?.actionStack || [];
+  const top = stack[stack.length - 1];
+  return Boolean(top)
+    && top.kind === "play_card"
+    && ["ephemeral_will", "persistent_will"].includes(cardsById.get(top.source?.cardId)?.type);
 }
 
 function rulesEphemeralPhasesClient(card) {
@@ -6032,6 +6088,7 @@ function rulesSupportFromHandAvailableClient(cardId) {
   const card = cardsById.get(cardId);
   const effect = String(card?.effect || "");
   if (/^Support(?: from hand)?[.;]/.test(effect)) return true;
+  if (rulesTopOfStackIsWillClient(card)) return true;
   if ((latestState?.rulesEngine?.playPermissions || []).some((permission) => (
     permission.playerId === myPlayerId
     && permission.cardId === cardId
@@ -6565,6 +6622,22 @@ function renderRulesChoice() {
         });
       };
     });
+    if (choice.allowSwap) {
+      const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
+      options.insertAdjacentHTML("beforeend", hand.map((cardId, index) => `
+        <button type="button" class="rules-choice-card" data-rules-peek-swap="${index}" title="${esc(cardName(cardId))}">
+          <img src="${esc(cardImage(cardId))}" alt="">
+          <span>${esc(t("rulesPeekSwapWith"))} ${esc(cardName(cardId))}</span>
+        </button>`).join(""));
+      $$("[data-rules-peek-swap]").forEach((button) => {
+        button.onclick = () => {
+          const cardId = hand[Number(button.dataset.rulesPeekSwap)];
+          if (!cardId) return;
+          button.disabled = true;
+          send({ type: "resolve_rules_choice", choiceId: choice.id, option: "swap", cardIds: [cardId] });
+        };
+      });
+    }
     panel.classList.remove("hidden");
     return;
   }
@@ -7150,7 +7223,7 @@ function renderRulesChoice() {
     return;
   }
   if (choice.kind === "reveal_hand_discard") {
-    const pickKey = { womb: "rulesWombPick", bloatuba: "rulesBloatubaPick", gummo: "rulesGummoPick" }[choice.purpose];
+    const pickKey = { womb: "rulesWombPick", bloatuba: "rulesBloatubaPick", gummo: "rulesGummoPick", wish: "rulesWishPick", pescojolero: "rulesPescoPick", lunar: "rulesLunarPick" }[choice.purpose];
     $("#rulesChoiceHeading").textContent = t(pickKey ? `${pickKey}Heading` : "rulesRevealDiscardHeading");
     $("#rulesChoiceText").textContent = rulesText(pickKey ? `${pickKey}Text` : "rulesRevealDiscardText", {
       player: rulesPlayerName(choice.targetPlayerId),
@@ -7325,10 +7398,15 @@ function renderRulesChoice() {
     amphora_offer: ["rulesChoiceAmphoraHeading", "rulesChoiceAmphoraText"],
     obelisk_gift: ["rulesChoiceGiftHeading", "rulesChoiceGiftText"],
     obelisk_reply: ["rulesChoiceGiftHeading", "rulesChoiceGiftText"],
+    persuasion_place: ["rulesChoicePersuasionHeading", "rulesChoicePersuasionText"],
+    deck_bottom_from_hand: ["rulesChoiceBottomHeading", "rulesChoiceBottomText"],
+    auction_bid: ["rulesChoiceAuctionBidHeading", "rulesChoiceAuctionBidText"],
+    auction_answer: ["rulesChoiceAuctionAnswerHeading", "rulesChoiceAuctionAnswerText"],
+    stalemate_for_support: ["rulesChoiceChabakHeading", "rulesChoiceChabakText"],
   }[searching ? "" : choice.destination];
   if (destinationKeys) {
     $("#rulesChoiceHeading").textContent = t(destinationKeys[0]);
-    $("#rulesChoiceText").textContent = rulesText(destinationKeys[1], { card: cardName(choice.sourceCardId), count: choice.count });
+    $("#rulesChoiceText").textContent = rulesText(destinationKeys[1], { card: cardName(choice.sourceCardId), count: choice.count, points: choice.requiredPoints });
   } else $("#rulesChoiceHeading").textContent = t(
     searching ? "rulesChoiceSearchHeading" : handWill ? "rulesChoiceHandWillHeading" : handManifestation ? "rulesChoiceHandHeading" : "rulesChoiceDiscardHeading",
   );
@@ -8953,12 +9031,13 @@ function renderBattlefield() {
           }
           : { label: rulesText("rulesInspectAttached", { card: cardName(entry.cardId) }), onSelect: () => showInspect(entry.cardId) });
       });
-      if (isMine && (item.playableFree || item.concealedWill) && limboWillIsPlayable(item.cardId, true)) {
+      if (isMine && (item.playableFree || item.concealedWill || item.persuaded) && limboWillIsPlayable(item.cardId, true)) {
         const fieldFree = Boolean(item.playableFree || item.concealedFree);
         items.push({
-          label: fieldFree ? t("rulesPlayFreeFromField") : t("rulesPlayConcealed"),
+          label: fieldFree ? t("rulesPlayFreeFromField") : item.persuaded ? t("rulesPlayPersuaded") : t("rulesPlayConcealed"),
           onSelect: () => beginRulesBoardAction({
             cardId: item.cardId, zone: "battlefield", itemId: item.id, playFromField: true, fieldFree,
+            surcharge: item.persuaded ? 2 : 0,
             placement: { x: item.x, y: item.y },
           }),
         });

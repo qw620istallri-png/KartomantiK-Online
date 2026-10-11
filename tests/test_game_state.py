@@ -14352,3 +14352,643 @@ class LotTwentyFourTests(RealCardRulesCase):
         session.rules_engine["trapPlayerIds"] = []
         self.assertFalse(session.rules_plays_first_manifestation_after("p1"))
         self.assertTrue(session.rules_plays_first_manifestation_after("p2"))
+
+
+class LotTwentySevenTests(RealCardRulesCase):
+    """Last Inner Desert cards: Gigabonblade, Donmo, Juggernut."""
+
+    GIGA, DONMO, JUGG = "inner-deserts-062", "inner-deserts-121", "inner-deserts-100"
+    SPLENDOR, DISCO, MECH = "inner-deserts-143", "inner-deserts-092", "inner-deserts-093"
+    NGHOUL, YCAR = "inner-deserts-055", "inner-deserts-013"
+    CONSUL, CHARIOT = "inner-deserts-087", "inner-deserts-132"
+    PACI, CHABAK, AUCTION = "inner-deserts-018", "inner-deserts-084", "inner-deserts-083"
+    GORLOK, WISH, PESCO = "inner-deserts-082", "inner-deserts-048", "inner-deserts-090"
+    THOUGHT, LUNAR, PERSUASION = "inner-deserts-086", "inner-deserts-096", "inner-deserts-120"
+    FEEFEE, TEBEBE, KANOPO = "inner-deserts-085", "inner-deserts-060", "inner-deserts-052"
+    ALL = (GIGA, DONMO, JUGG, SPLENDOR, DISCO, MECH, NGHOUL, YCAR, CONSUL, CHARIOT, PACI, CHABAK, AUCTION, GORLOK, WISH, PESCO, THOUGHT, LUNAR, PERSUASION, FEEFEE, TEBEBE, KANOPO)
+
+    def setup_game(self):
+        session, p1, p2 = self.make_session()
+        session.rules_engine["enabled"] = True
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_effects")
+        return session, p1, p2
+
+    def item(self, item_id, owner, card, zone="field", **extra):
+        extra.setdefault("rotation", 0)
+        extra.setdefault("controllerId", owner)
+        return self.field_item(item_id, owner, card, field_zone=zone, x=0, y=0, stackedOn=None, **extra)
+
+    def act(self, session, card, ability_id, item, targets=(), player="p1"):
+        return session.apply_rules_action_result({
+            "id": "a", "controllerId": player,
+            "source": {"cardId": card, "itemId": item["id"], "ownerId": item["ownerId"]},
+            "targets": list(targets), "ability": self.ability(card, ability_id),
+        })
+
+    def test_gigabonblade_is_exiled_instead_of_leaving_and_weakens_the_whole_field(self):
+        session, p1, p2 = self.setup_game()
+        rules = session.card_rules[self.GIGA]
+        self.assertFalse(rules["canPayTribute"])
+        self.assertEqual(rules["exiledByEffectFieldPenalty"], 2)
+        giga = self.item("giga", "p1", self.GIGA, "confrontation")
+        other = self.item("other", "p2", "m-1", "confrontation")
+        session.battlefield = [giga, other]
+        session._rules_remove_field_item_by_effect(giga, "p1", "graveyard", "top", reason="destroy")
+        self.assertIn(self.GIGA, p1["zones"]["exile"])
+        self.assertNotIn(self.GIGA, p1["zones"]["graveyard"])
+        self.assertEqual(other["counters"]["power"], -2)
+
+    def test_gigabonblade_pays_two_power_for_persist(self):
+        ability = self.ability(self.GIGA, "gigabonblade-gains-persist")
+        self.assertEqual(ability["reduceSourcePower"], 2)
+
+    def test_donmo_restores_exhausted_cards_and_gives_opponents_points_for_each(self):
+        session, p1, p2 = self.setup_game()
+        donmo = self.item("donmo", "p1", self.DONMO, "interzone")
+        tired = self.item("tired", "p1", "m-1", "interzone", rotation=90)
+        tired2 = self.item("tired2", "p1", "m-2", "confrontation", rotation=90)
+        session.battlefield = [donmo, tired, tired2]
+        score = p2["score"]
+        result = self.act(session, self.DONMO, "donmo-gives-opponents-points-for-exhausted", donmo)
+        self.assertEqual(p2["score"], score + 10)
+        restored = self.act(
+            session, self.DONMO, "donmo-restores-exhausted-cards", donmo,
+            targets=[{"kind": "card", "itemId": "tired"}],
+        )
+        self.assertEqual(restored["status"], "restored")
+        self.assertEqual(tired["rotation"], 0.0)
+        self.assertEqual(tired2["rotation"], 90)
+        self.assertIsNotNone(result)
+
+    def test_juggernut_is_a_persistent_will_that_charges_in_and_is_exiled_after_winning(self):
+        session, p1, p2 = self.setup_game()
+        self.assertTrue(session.card_rules[self.JUGG]["playAsPersistentWill"])
+        jugg = self.item("jugg", "p1", self.JUGG, "field")
+        session.battlefield = [jugg]
+        self.act(session, self.JUGG, "juggernut-grows-at-end-of-turn", jugg)
+        self.assertEqual(jugg["counters"]["power"], 3)
+        session.rules_engine["firstManifestationItemIds"] = {}
+        session.rules_engine["firstManifestationComplete"] = False
+        charged = self.act(session, self.JUGG, "juggernut-charges-into-confrontation", jugg)
+        self.assertEqual(charged["status"], "first_manifestation")
+        self.assertEqual(jugg["fieldZone"], "confrontation")
+        self.assertEqual(session.rules_engine["firstManifestationItemIds"]["p1"], jugg["id"])
+        self.act(session, self.JUGG, "juggernut-exiled-after-winning", jugg)
+        self.assertIn(self.JUGG, p1["zones"]["exile"])
+
+    def test_temperamental_splendor_spends_gems_as_essence_and_is_exiled_when_empty(self):
+        session, p1, p2 = self.setup_game()
+        gem = self.item("gem", "p1", self.SPLENDOR, "field")
+        session.battlefield = [gem]
+        self.act(session, self.SPLENDOR, "splendor-gets-gem-counters", gem)
+        self.assertEqual(gem["counters"]["Gem"], 2)
+        self.act(session, self.SPLENDOR, "splendor-chooses-a-base-temperament", gem)
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["kind"], "temperament_choice")
+        self.assertNotIn("hollow", choice["options"])
+        self.assertNotIn("transcendent", choice["options"])
+        error, _ = session.resolve_rules_choice("p1", choice["id"], option="choleric")
+        self.assertIsNone(error)
+        self.assertEqual(gem["chosenTemperament"], "choleric")
+        gem["counters"]["Gem"] = 1
+        made = self.act(session, self.SPLENDOR, "splendor-spends-a-gem-as-excess-essence", gem)
+        self.assertEqual((made["status"], made["temperament"]), ("created", "choleric"))
+        self.assertIn(gem, session.battlefield)
+        gem["counters"]["Gem"] = 0
+        made = self.act(session, self.SPLENDOR, "splendor-spends-a-gem-as-excess-essence", gem)
+        self.assertTrue(made.get("sourceExiled"))
+        self.assertNotIn(gem, session.battlefield)
+        self.assertIn(self.SPLENDOR, p1["zones"]["exile"])
+
+    def test_discombobulator_blanks_other_cards_and_is_exiled_unless_paid(self):
+        session, p1, p2 = self.setup_game()
+        disco = self.item("disco", "p1", self.DISCO, "field", faceUp=True)
+        other = self.item("other", "p2", "m-1", "confrontation", faceUp=True)
+        session.battlefield = [disco, other]
+        self.assertFalse(session.rules_item_effects_active(other))
+        self.assertTrue(session.rules_item_effects_active(disco))
+        self.act(session, self.DISCO, "discombobulator-upkeep-or-exile", disco)
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual((choice["kind"], choice["playerId"]), ("effect_payment", "p1"))
+        error, _ = session.resolve_rules_choice("p1", choice["id"], option="decline")
+        self.assertIsNone(error)
+        self.assertNotIn(disco, session.battlefield)
+        self.assertIn(self.DISCO, p1["zones"]["exile"])
+        self.assertTrue(session.rules_item_effects_active(other))
+
+    def test_bizarre_mechanism_only_offers_the_effect_matching_its_enigma_counters(self):
+        session, p1, p2 = self.setup_game()
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        mech = self.item("mech", "p1", self.MECH, "field", faceUp=True, counters={"Enigma": 1})
+        session.battlefield = [mech]
+        self.put(p1, "deck", ["m-5", "m-6", "m-7"])
+        self.put(p1, "hand", ["m-1", "m-2"])
+        src = {"cardId": self.MECH, "zone": "battlefield", "itemId": "mech"}
+        error, _ = session.declare_rules_action("p1", "x", kind="activated_effect", source=src, ability_id="mechanism-two-peek-and-swap")
+        self.assertTrue(error)
+        error, action = session.declare_rules_action("p1", "x", kind="activated_effect", source=src, ability_id="mechanism-one-shuffle")
+        self.assertIsNone(error, error)
+        self.assertEqual(mech["counters"]["Enigma"], 2)
+        session.rules_engine["actionStack"] = []
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, _ = session.declare_rules_action("p1", "x", kind="activated_effect", source=src, ability_id="mechanism-two-peek-and-swap")
+        self.assertIsNone(error, error)
+        self.assertEqual(mech["counters"]["Enigma"], 3)
+        result = session.apply_rules_action_result({
+            "id": "a", "controllerId": "p1", "source": {"cardId": self.MECH, "itemId": "mech", "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.MECH, "mechanism-two-peek-and-swap"),
+        })
+        self.assertEqual(result["choiceKind"], "peek_top_card")
+        choice = session.rules_engine["pendingChoice"]
+        top = choice["_cardId"]
+        error, _ = session.resolve_rules_choice("p1", choice["id"], option="swap", card_ids=["m-1"])
+        self.assertIsNone(error, error)
+        self.assertEqual(p1["zones"]["deck"][0], "m-1")
+        self.assertIn(top, p1["zones"]["hand"])
+        self.assertNotIn("m-1", p1["zones"]["hand"])
+        session.rules_engine["actionStack"] = []
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, _ = session.declare_rules_action("p1", "x", kind="activated_effect", source=src, ability_id="mechanism-three-bottom-a-card")
+        self.assertIsNone(error, error)
+        result = session.apply_rules_action_result({
+            "id": "b", "controllerId": "p1", "source": {"cardId": self.MECH, "itemId": "mech", "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.MECH, "mechanism-three-bottom-a-card"),
+        })
+        choice = session.rules_engine["pendingChoice"]
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-2"])
+        self.assertIsNone(error, error)
+        self.assertEqual(p1["zones"]["deck"][-1], "m-2")
+        self.assertEqual(mech["counters"]["Enigma"], 1)
+
+    def test_nghoulong_discarded_exiles_itself_and_frees_a_cheap_limbo_ephemeral_will(self):
+        session, p1, p2 = self.setup_game()
+        session.card_rules["cheap"] = {"type": "ephemeral_will", "cost": 2, "powerCost": "{G}{G}", "temperaments": ["phlegmatic"]}
+        session.card_rules["dear"] = {"type": "ephemeral_will", "cost": 4, "powerCost": "{G}{G}{G}{G}", "temperaments": ["phlegmatic"]}
+        session.card_rules["pers"] = {"type": "persistent_will", "cost": 1, "powerCost": "{G}", "temperaments": ["phlegmatic"]}
+        self.put(p1, "graveyard", [self.NGHOUL, "cheap", "dear", "pers"])
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        result = session.apply_rules_action_result({
+            "id": "n", "controllerId": "p1",
+            "source": {"cardId": self.NGHOUL, "zone": "graveyard", "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.NGHOUL, "nghoulong-exiles-itself-for-a-free-limbo-ephemeral-will"),
+        })
+        self.assertEqual(result["status"], "granted")
+        self.assertEqual(result["maxCost"], 3)
+        self.assertIn(self.NGHOUL, p1["zones"]["exile"])
+        for card, expect_ok in (("dear", False), ("pers", False), ("cheap", True)):
+            session.rules_engine["priorityPlayerId"] = "p1"
+            error, _ = session.declare_rules_action(
+                "p1", "Play", kind="play_card",
+                source={"cardId": card, "zone": "graveyard", "containerId": "p1"},
+            )
+            if expect_ok:
+                self.assertIsNone(error, error)
+            else:
+                self.assertTrue(error, card)
+
+    def test_ycar_gives_an_interzone_manifestation_to_the_opponent_vessel_then_searches_one(self):
+        session, p1, p2 = self.setup_game()
+        ycar = self.item("ycar", "p1", self.YCAR, "confrontation")
+        mine = self.item("mine", "p1", "m-1", "interzone")
+        theirs = self.item("theirs", "p2", "m-2", "interzone", controllerId="p1")
+        session.battlefield = [ycar, mine, theirs]
+        self.put(p1, "deck", ["m-5", "m-6", "will-r"])
+        session.card_rules["will-r"] = {"type": "persistent_will", "cost": 1}
+        ability = self.ability(self.YCAR, "ycar-trades-an-interzone-manifestation-for-a-searched-one")
+        bad = session.apply_rules_action_result({
+            "id": "y", "controllerId": "p1", "source": {"cardId": self.YCAR, "itemId": "ycar", "ownerId": "p1"},
+            "targets": [{"kind": "card", "itemId": "theirs"}], "ability": ability,
+        })
+        self.assertEqual(bad["status"], "target_missing")
+        done = session.apply_rules_action_result({
+            "id": "y", "controllerId": "p1", "source": {"cardId": self.YCAR, "itemId": "ycar", "ownerId": "p1"},
+            "targets": [{"kind": "card", "itemId": "mine"}], "ability": ability,
+        })
+        self.assertEqual(done["choiceKind"], "discard_from_hand")
+        self.assertIn("m-1", p2["zones"]["receptacle"])
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(sorted(choice["candidateCardIds"]), ["m-5", "m-6"])
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["will-r"])
+        self.assertTrue(error)
+        error, payload = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-5"])
+        self.assertIsNone(error, error)
+        placed = next(i for i in session.battlefield if i["cardId"] == "m-5")
+        self.assertEqual(session.rules_field_zone(placed), "interzone")
+        self.assertNotIn("m-5", p1["zones"]["deck"])
+
+    def test_moaning_consul_wins_triggers_allies_as_lost_then_goes_to_the_opponent_vessel(self):
+        session, p1, p2 = self.setup_game()
+        consul = self.item("consul", "p1", self.CONSUL, "confrontation")
+        chariot = self.item("chariot", "p1", self.CHARIOT, "confrontation")
+        session.battlefield = [consul, chariot]
+        session.rules_engine["confrontationResult"] = {
+            "winnerId": "p1", "loserId": "p2", "participantItemIds": ["consul", "chariot"],
+        }
+        done = self.act(session, self.CONSUL, "consul-triggers-allies-as-lost-then-leaves", consul)
+        self.assertEqual(done["triggered"], 1)
+        self.assertIn(self.CONSUL, p2["zones"]["receptacle"])
+        self.assertNotIn(consul, session.battlefield)
+        queued = [a for a in session.rules_engine["actionStack"] if a["source"]["cardId"] == self.CHARIOT]
+        self.assertEqual(len(queued), 1)
+
+    def test_paciphint_puts_an_ally_under_its_deck_so_a_confrontation_power_is_ignored(self):
+        session, p1, p2 = self.setup_game()
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        paci = self.item("paci", "p1", self.PACI, "interzone", faceUp=True, counters={"Flower": 2})
+        ally = self.item("ally", "p1", "m-1", "interzone", faceUp=True)
+        enemy = self.item("enemy", "p2", "m-2", "confrontation", faceUp=True)
+        session.card_rules["m-2"]["power"] = 5
+        session.battlefield = [paci, ally, enemy]
+        self.put(p1, "deck", ["m-5"])
+        src = {"cardId": self.PACI, "zone": "battlefield", "itemId": "paci"}
+        error, _ = session.declare_rules_action(
+            "p1", "x", kind="activated_effect", source=src, ability_id="paciphint-sacrifices-an-ally-to-ignore-a-power",
+            targets=[{"kind": "card", "itemId": "paci"}, {"kind": "card", "itemId": "enemy"}],
+        )
+        self.assertTrue(error)
+        error, action = session.declare_rules_action(
+            "p1", "x", kind="activated_effect", source=src, ability_id="paciphint-sacrifices-an-ally-to-ignore-a-power",
+            targets=[{"kind": "card", "itemId": "ally"}, {"kind": "card", "itemId": "enemy"}],
+        )
+        self.assertIsNone(error, error)
+        self.assertEqual(paci["counters"]["Flower"], 1)
+        done = session.apply_rules_action_result(action)
+        self.assertEqual(done["status"], "swapped")
+        self.assertEqual(p1["zones"]["deck"][-1], "m-1")
+        self.assertEqual(session.rules_confrontation_power(enemy), 0)
+
+    def test_chabak_is_played_in_support_for_two_hand_manifestations_and_clears_the_opposition_when_it_wins(self):
+        session, p1, p2 = self.setup_game()
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        self.put(p1, "hand", [self.CHABAK, "m-1"])
+        src = {"cardId": self.CHABAK, "zone": "hand"}
+        error, _ = session.declare_rules_action(
+            "p1", "x", kind="activated_effect", source=src, ability_id="chabak-plays-in-support-for-two-manifestations",
+        )
+        self.assertTrue(error, "needs two other Manifestations")
+        self.put(p1, "hand", [self.CHABAK, "m-1", "m-2", "m-3"])
+        error, action = session.declare_rules_action(
+            "p1", "x", kind="activated_effect", source=src, ability_id="chabak-plays-in-support-for-two-manifestations",
+        )
+        self.assertIsNone(error, error)
+        result = session.apply_rules_action_result(action)
+        self.assertEqual(result["choiceKind"], "discard_from_hand")
+        choice = session.rules_engine["pendingChoice"]
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-1", self.CHABAK])
+        self.assertTrue(error)
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-1", "m-2"])
+        self.assertIsNone(error, error)
+        chabak = next(i for i in session.battlefield if i["cardId"] == self.CHABAK)
+        self.assertTrue(chabak["isSupport"])
+        self.assertEqual(sorted(i["cardId"] for i in session.battlefield if i.get("fieldZone") == "stalemate"), ["m-1", "m-2"])
+        self.assertEqual(p1["zones"]["hand"], ["m-3"])
+        enemy = self.item("enemy", "p2", "m-4", "confrontation")
+        session.battlefield.append(enemy)
+        session.rules_engine["confrontationResult"] = {"winnerId": "p1", "loserId": "p2", "participantItemIds": [chabak["id"]]}
+        done = session.apply_rules_action_result({
+            "id": "w", "controllerId": "p1", "source": {"cardId": self.CHABAK, "itemId": chabak["id"], "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.CHABAK, "chabak-returns-opposing-manifestations-and-exiles-itself"),
+        })
+        self.assertEqual(done["cardIds"], ["m-4"])
+        self.assertEqual(p2["zones"]["deck"][-1], "m-4")
+        self.assertIn(self.CHABAK, p1["zones"]["exile"])
+
+    def run_auction(self, answer):
+        session, p1, p2 = self.setup_game()
+        session.card_points = {"m-1": 20, "m-2": 10, "m-3": 15}
+        self.put(p1, "hand", ["m-1"])
+        self.put(p2, "hand", ["m-2", "m-3"])
+        auction = self.item("auction", "p1", self.AUCTION, "confrontation")
+        session.battlefield = [auction]
+        started = session.apply_rules_action_result({
+            "id": "a", "controllerId": "p1", "optionalAccepted": True,
+            "source": {"cardId": self.AUCTION, "itemId": "auction", "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.AUCTION, "auction-profiteer-bids-a-manifestation"),
+        })
+        self.assertEqual(started["choiceKind"], "discard_from_hand")
+        choice = session.rules_engine["pendingChoice"]
+        error, payload = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-1"])
+        self.assertIsNone(error, error)
+        reply = session.rules_engine["pendingChoice"]
+        self.assertEqual((reply["playerId"], reply["requiredPoints"]), ("p2", 20))
+        error, _ = session.resolve_rules_choice("p2", reply["id"], card_ids=answer)
+        self.assertIsNone(error, error)
+        return session, p2
+
+    def test_auction_profiteer_opponent_who_matches_the_bid_keeps_the_confrontation(self):
+        session, p2 = self.run_auction(["m-2", "m-3"])
+        self.assertIsNone(session.rules_engine["forcedConfrontationWinnerId"])
+        self.assertEqual(p2["zones"]["hand"], [])
+        self.assertEqual(len([i for i in session.battlefield if i.get("fieldZone") == "stalemate"]), 3)
+
+    def test_auction_profiteer_opponent_who_falls_short_loses_the_confrontation(self):
+        session, p2 = self.run_auction(["m-2"])
+        self.assertEqual(session.rules_engine["forcedConfrontationWinnerId"], "p1")
+        self.assertEqual(sorted(p2["zones"]["hand"]), ["m-2", "m-3"])
+
+    def test_gorlok_shows_the_cards_an_opponent_draws_outside_recovery_and_exiles_one(self):
+        session, p1, p2 = self.setup_game()
+        gorlok = self.item("gorlok", "p1", self.GORLOK, "interzone")
+        session.battlefield = [gorlok]
+        self.put(p2, "deck", ["m-5", "m-6", "m-7"])
+        self.put(p2, "hand", [])
+        drawn = session.draw_rules_cards("p2", 2)
+        self.assertEqual(len(drawn), 2)
+        queued = session.queue_rules_observed_event_triggers(defer=True)
+        self.assertEqual([a["source"]["cardId"] for a in queued], [self.GORLOK])
+        result = session.apply_rules_action_result({
+            "id": "g", "controllerId": "p1",
+            "source": {"cardId": self.GORLOK, "itemId": "gorlok", "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.GORLOK, "gorlok-inspects-and-exiles-an-opponents-drawn-card"),
+        })
+        self.assertEqual(result["choiceKind"], "reveal_hand_discard")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(sorted(choice["cardIds"]), sorted(drawn))
+        error, payload = session.resolve_rules_choice("p1", choice["id"], option=0)
+        self.assertIsNone(error, error)
+        self.assertEqual(len(p2["zones"]["hand"]), 1)
+        self.assertEqual(len(p2["zones"]["exile"]), 1)
+        self.assertEqual(gorlok["counters"]["power"], -2)
+
+    def test_wish_upon_the_stars_lets_the_owner_answer_with_a_card_of_equal_or_greater_points(self):
+        session, p1, p2 = self.setup_game()
+        session.card_points = {"m-1": 20, "m-2": 10, "m-3": 30}
+        # p2's card sits in p1's Vessel; p1's cards sit in p2's Vessel.
+        self.put(p1, "receptacle", {"m-1": "p2"})
+        self.put(p2, "receptacle", {"m-2": "p1", "m-3": "p1"})
+        ability = self.ability(self.WISH, "wish-upon-the-stars-exchanges-vessel-manifestations")
+        result = session.apply_rules_action_result({
+            "id": "w", "controllerId": "p1", "source": {"cardId": self.WISH, "zone": "hand", "ownerId": "p1"},
+            "targets": [{"kind": "zone_card", "containerId": "p1", "zone": "receptacle", "cardId": "m-1", "ownerId": "p2"}],
+            "ability": ability,
+        })
+        self.assertEqual(result["playerId"], "p2")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["cardIds"], ["m-3"])
+        error, _ = session.resolve_rules_choice("p2", choice["id"], option="0")
+        self.assertIsNone(error, error)
+        self.assertEqual(p2["zones"]["deck"][0], "m-1")
+        self.assertEqual(p1["zones"]["deck"][0], "m-3")
+        self.assertEqual(p1["zones"]["receptacle"], [])
+        self.assertEqual(p2["zones"]["receptacle"], ["m-2"])
+
+    def test_pescojolero_gives_stalemate_manifestations_and_takes_one_worth_no_more(self):
+        session, p1, p2 = self.setup_game()
+        session.card_points = {"m-1": 20, "m-2": 15, "m-3": 40}
+        pesco = self.item("pesco", "p1", self.PESCO, "interzone")
+        pile = self.item("pile", "p1", "m-1", "stalemate")
+        session.battlefield = [pesco, pile]
+        self.put(p2, "receptacle", {"m-2": "p2", "m-3": "p2"})
+        result = session.apply_rules_action_result({
+            "id": "p", "controllerId": "p1", "source": {"cardId": self.PESCO, "itemId": "pesco", "ownerId": "p1"},
+            "targets": [{"kind": "card", "itemId": "pile"}],
+            "ability": self.ability(self.PESCO, "pescojolero-trades-stalemate-manifestations-for-a-vessel-one"),
+        })
+        self.assertEqual(result["choiceKind"], "reveal_hand_discard")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(sorted(choice["cardIds"]), ["m-1", "m-2"])
+        error, _ = session.resolve_rules_choice("p1", choice["id"], option=str(choice["cardIds"].index("m-2")))
+        self.assertIsNone(error, error)
+        taken = next(i for i in session.battlefield if i["cardId"] == "m-2")
+        self.assertEqual(session.rules_field_zone(taken), "interzone")
+        self.assertEqual(taken["controllerId"], "p1")
+        self.assertIn("m-1", p2["zones"]["receptacle"])
+
+    def test_thoughtcutter_enters_support_over_a_will_and_gains_power_per_opposing_stack_card(self):
+        session, p1, p2 = self.setup_game()
+        self.assertEqual(session.card_rules[self.THOUGHT]["supportFromHandCondition"], {"kind": "top_of_stack_is_will"})
+        session.card_rules[self.THOUGHT]["powerCost"] = "{H}"
+        session.card_rules["will-r"] = {"type": "ephemeral_will", "cost": 1, "powerCost": "{R}", "temperaments": ["choleric"]}
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        self.put(p1, "hand", [self.THOUGHT, "m-1"])
+        src = {"cardId": self.THOUGHT, "zone": "hand"}
+        error, _ = session.declare_rules_action("p1", "x", kind="play_card", source=src, as_support=True)
+        self.assertTrue(error, "no Will on the Stack")
+        session.rules_engine["actionStack"] = [
+            {"id": "w1", "kind": "play_card", "controllerId": "p2", "source": {"cardId": "will-r", "zone": "hand"}, "targets": []},
+        ]
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, _ = session.declare_rules_action("p1", "x", kind="play_card", source=src, as_support=True)
+        self.assertIsNone(error, error)
+        cutter = self.item("cutter", "p1", self.THOUGHT, "confrontation")
+        session.battlefield = [cutter]
+        session.rules_engine["actionStack"] = [
+            {"id": "w1", "kind": "play_card", "controllerId": "p2", "source": {"cardId": "will-r", "zone": "hand"}, "targets": []},
+            {"id": "w2", "kind": "play_card", "controllerId": "p2", "source": {"cardId": "will-r", "zone": "hand"}, "targets": []},
+        ]
+        done = self.act(session, self.THOUGHT, "thoughtcutter-gains-power-per-opposing-stack-card", cutter)
+        self.assertEqual(done["value"], 2)
+        self.assertEqual(session.rules_manifestation_characteristics(cutter)["power"], 3)
+
+    def start_lunar(self, session, p1_items, p2_items, p2_vessel=()):
+        lunar = self.item("lunar", "p1", self.LUNAR, "field")
+        session.battlefield = [lunar, *p1_items, *p2_items]
+        if p2_vessel:
+            self.put(session.players["p2"], "receptacle", list(p2_vessel))
+        return session.apply_rules_action_result({
+            "id": "l", "controllerId": "p1",
+            "source": {"cardId": self.LUNAR, "itemId": "lunar", "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.LUNAR, "lunar-liturgy-feeds-the-stalemate-zone"),
+        })
+
+    def test_lunar_liturgy_everyone_feeds_the_stalemate_zone_and_nobody_skips(self):
+        session, p1, p2 = self.setup_game()
+        mine = self.item("mine", "p1", "m-1", "interzone")
+        result = self.start_lunar(session, [mine], [], p2_vessel=["m-2"])
+        self.assertEqual(result["playerId"], "p1")
+        choice = session.rules_engine["pendingChoice"]
+        error, first = session.resolve_rules_choice("p1", choice["id"], option="0")
+        self.assertIsNone(error, error)
+        self.assertEqual(mine["fieldZone"], "stalemate")
+        reply = session.rules_engine["pendingChoice"]
+        self.assertEqual(reply["playerId"], "p2")
+        error, _ = session.resolve_rules_choice("p2", reply["id"], option="0")
+        self.assertIsNone(error, error)
+        self.assertEqual(p2["zones"]["receptacle"], [])
+        self.assertIsNone(session.rules_engine.get("skipEndPhaseTurn"))
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+
+    def test_lunar_liturgy_an_opponent_without_candidates_makes_the_end_phase_skipped(self):
+        session, p1, p2 = self.setup_game()
+        mine = self.item("mine", "p1", "m-1", "interzone")
+        self.start_lunar(session, [mine], [])
+        choice = session.rules_engine["pendingChoice"]
+        session.resolve_rules_choice("p1", choice["id"], option="0")
+        self.assertEqual(session.rules_engine["skipEndPhaseTurn"], session.phase_tracker["turn"])
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+
+    def test_lunar_liturgy_without_a_manifestation_destroys_itself_and_skips_the_end_phase(self):
+        session, p1, p2 = self.setup_game()
+        result = self.start_lunar(session, [], [])
+        self.assertEqual(result["status"], "destroyed")
+        self.assertEqual(session.rules_engine["skipEndPhaseTurn"], session.phase_tracker["turn"])
+        self.assertIn(self.LUNAR, p1["zones"]["graveyard"])
+
+    def test_a_skipped_end_phase_goes_straight_to_the_next_turn(self):
+        session, p1, p2 = self.setup_game()
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_move")
+        turn = session.phase_tracker["turn"]
+        session.rules_engine["skipEndPhaseTurn"] = turn
+        session.rules_engine["priorityPlayerId"] = "p1"
+        session.pass_rules_priority("p1")
+        session.pass_rules_priority("p2")
+        self.assertEqual(session.phase_tracker["turn"], turn + 1)
+        self.assertIn(session.current_phase_id(), {"recovery_start", "recovery_draw"})
+
+    def test_overwhelming_persuasion_forces_a_will_onto_the_field_that_costs_more_and_drains_points(self):
+        session, p1, p2 = self.setup_game()
+        session.card_rules["will-r"] = {"type": "persistent_will", "cost": 1, "powerCost": "{R}", "temperaments": ["choleric"]}
+        host = self.item("persuasion", "p1", self.PERSUASION, "field")
+        session.battlefield = [host]
+        self.put(p2, "hand", ["will-r", "m-1"])
+        started = session.apply_rules_action_result({
+            "id": "p", "controllerId": "p1", "source": {"cardId": self.PERSUASION, "itemId": "persuasion", "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.PERSUASION, "persuasion-forces-an-opponent-will-onto-the-field"),
+        })
+        self.assertEqual(started["playerId"], "p2")
+        choice = session.rules_engine["pendingChoice"]
+        error, _ = session.resolve_rules_choice("p2", choice["id"], card_ids=["m-1"])
+        self.assertTrue(error)
+        error, _ = session.resolve_rules_choice("p2", choice["id"], card_ids=["will-r"])
+        self.assertIsNone(error, error)
+        forced = next(i for i in session.battlefield if i["cardId"] == "will-r")
+        self.assertTrue(forced["persuaded"])
+        self.assertEqual(forced["controllerId"], "p2")
+        requirements, _ = session.rules_tribute_requirements(
+            "play_card", {"cardId": "will-r", "cardType": "persistent_will", "extraTribute": 2, "controllerId": "p2"}, None, "p2",
+        )
+        self.assertEqual(requirements, {"choleric": 1, "hollow": 2})
+        score = p2["score"]
+        penalty = session.apply_rules_action_result({
+            "id": "q", "controllerId": "p1", "source": {"cardId": self.PERSUASION, "itemId": "persuasion", "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.PERSUASION, "persuasion-penalizes-forced-wills-each-turn"),
+        })
+        self.assertEqual(p2["score"], score - 5)
+        self.assertEqual(penalty["status"], "resolved")
+        # The forced Will can be played from the field (with its surcharge).
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
+        session.rules_engine["priorityPlayerId"] = "p2"
+        error, action = session.declare_rules_action(
+            "p2", "x", kind="play_card", source={"cardId": "will-r", "zone": "battlefield", "itemId": forced["id"]},
+        )
+        self.assertTrue(error, "the surcharge must be paid")
+        session.add_rules_excess_essence("p2", [{"temperament": "choleric", "amount": 1}, {"temperament": "hollow", "amount": 2}])
+        error, action = session.declare_rules_action(
+            "p2", "x", kind="play_card", source={"cardId": "will-r", "zone": "battlefield", "itemId": forced["id"]},
+        )
+        self.assertIsNone(error, error)
+
+    def test_fee_fee_adds_spite_each_turn_and_goes_to_the_opponent_vessel_when_unpaid(self):
+        session, p1, p2 = self.setup_game()
+        fee = self.item("fee", "p1", self.FEEFEE, "stalemate")
+        session.battlefield = [fee]
+        result = self.act(session, self.FEEFEE, "fee-fee-spite-upkeep", fee)
+        self.assertEqual(result["kind"], "choice_required")
+        self.assertEqual(fee["counters"]["Spite"], 1)
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["payment"], "{H}")
+        self.assertEqual(choice["playerId"], "p1")
+        error, outcome = session.resolve_rules_choice("p1", choice["id"], option="decline")
+        self.assertIsNone(error, error)
+        self.assertIn(self.FEEFEE, p2["zones"]["receptacle"])
+        self.assertIsNone(session.find_battlefield_item("fee"))
+
+    def test_fee_fee_upkeep_grows_with_each_spite_counter(self):
+        session, p1, p2 = self.setup_game()
+        fee = self.item("fee", "p1", self.FEEFEE, "stalemate", counters={"Spite": 2})
+        session.battlefield = [fee]
+        self.act(session, self.FEEFEE, "fee-fee-spite-upkeep", fee)
+        self.assertEqual(fee["counters"]["Spite"], 3)
+        self.assertEqual(session.rules_engine["pendingChoice"]["payment"], "{H}{H}{H}")
+
+    def test_fee_fee_cannot_leave_the_stalemate_zone_by_winning_and_ignores_weak_powers(self):
+        session, p1, p2 = self.setup_game()
+        fee = self.item("fee", "p1", self.FEEFEE, "stalemate", counters={"Spite": 1})
+        other = self.item("other", "p2", "m-1", "confrontation")
+        session.battlefield = [fee, other]
+        self.assertTrue(session.rules_stalemate_win_blocked(fee))
+        self.assertFalse(session.rules_stalemate_win_blocked(other))
+        base = session.rules_manifestation_characteristics(other)["power"]
+        fee["counters"]["Spite"] = max(1, base)
+        self.assertEqual(session.rules_confrontation_power(other), 0)
+        fee["counters"]["Spite"] = max(0, base - 1)
+        if base > 1:
+            self.assertEqual(session.rules_confrontation_power(other), base)
+        fee["fieldZone"] = "confrontation"
+        self.assertEqual(session.rules_spite_ignore_threshold(), 0)
+
+    def test_tebebe_sacrifices_the_other_interzone_manifestations_and_conceals_three_cards(self):
+        session, p1, p2 = self.setup_game()
+        tebebe = self.item("tebebe", "p1", self.TEBEBE, "interzone")
+        old = self.item("old", "p1", "m-1", "interzone")
+        foe = self.item("foe", "p2", "m-2", "interzone")
+        session.battlefield = [tebebe, old, foe]
+        self.put(p1, "deck", ["m-3", "m-4", "will-a", "m-5"])
+        result = self.act(session, self.TEBEBE, "tebebe-sacrifices-and-unearths", tebebe)
+        self.assertEqual(result["status"], "unearthed")
+        self.assertIsNone(session.find_battlefield_item("old"))
+        self.assertIsNotNone(session.find_battlefield_item("foe"))
+        self.assertIsNotNone(session.find_battlefield_item("tebebe"))
+        self.assertEqual(p1["zones"]["deck"], ["m-5"])
+        concealed = [i for i in session.battlefield if i.get("tebebeConcealed")]
+        self.assertEqual(sorted(i["cardId"] for i in concealed), ["m-3", "m-4", "will-a"])
+        self.assertTrue(all(not i["faceUp"] for i in concealed))
+
+    def test_kanopo_sacrifice_makes_it_count_for_six(self):
+        session, p1, p2 = self.setup_game()
+        self.assertEqual(session.card_rules[self.KANOPO]["tributeSacrificePower"], 6)
+        self.put(p1, "hand", [self.KANOPO])
+        sac = self.item("sac", "p1", "m-1", "interzone")
+        session.battlefield = [sac]
+        source = {
+            "cardId": "x", "cardType": "persistent_will", "controllerId": "p1",
+            "fixedTribute": {"melancholic": 6},
+        }
+        error, _ = session.rules_action_payment("p1", "play_card", source, [self.KANOPO])
+        self.assertTrue(error, "Kanopo alone is only worth 2")
+        error, payment = session.rules_action_payment(
+            "p1", "play_card", source, [self.KANOPO, "sacrifice|sac"],
+        )
+        self.assertIsNone(error, error)
+        self.assertEqual(payment["sacrificeItemIds"], ["sac"])
+        session.pay_rules_tribute("p1", payment)
+        self.assertIsNone(session.find_battlefield_item("sac"))
+        self.assertIn("m-1", p1["zones"]["graveyard"])
+
+    def test_kanopo_rejects_a_pointless_or_foreign_sacrifice(self):
+        session, p1, p2 = self.setup_game()
+        self.put(p1, "hand", [self.KANOPO])
+        sac = self.item("sac", "p1", "m-1", "interzone")
+        foreign = self.item("foreign", "p2", "m-2", "interzone")
+        session.battlefield = [sac, foreign]
+        small = {"cardId": "x", "cardType": "persistent_will", "controllerId": "p1", "fixedTribute": {"melancholic": 2}}
+        error, _ = session.rules_action_payment("p1", "play_card", small, [self.KANOPO, "sacrifice|sac"])
+        self.assertTrue(error)
+        big = {**small, "fixedTribute": {"melancholic": 6}}
+        error, _ = session.rules_action_payment("p1", "play_card", big, [self.KANOPO, "sacrifice|foreign"])
+        self.assertTrue(error)
+        error, _ = session.rules_action_payment("p1", "play_card", big, ["sacrifice|sac"])
+        self.assertTrue(error)
+
+    def test_a_tebebe_concealed_will_is_played_for_three_hollow_essences(self):
+        session, p1, p2 = self.setup_game()
+        session.card_rules["will-r"] = {"type": "persistent_will", "cost": 1, "powerCost": "{R}", "temperaments": ["choleric"]}
+        item = self.item("hidden", "p1", "will-r", "field", faceUp=False, concealedWill=True, tebebeConcealed=True)
+        session.battlefield = [item]
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        source = {"cardId": "will-r", "zone": "battlefield", "itemId": "hidden"}
+        requirements, _ = session.rules_tribute_requirements(
+            "play_card", {"cardId": "will-r", "cardType": "persistent_will", "controllerId": "p1", "fixedTribute": {"hollow": 3}}, None, "p1",
+        )
+        self.assertEqual(requirements, {"hollow": 3})
+        error, _ = session.declare_rules_action("p1", "x", kind="play_card", source=source)
+        self.assertTrue(error)
+        session.add_rules_excess_essence("p1", [{"temperament": "hollow", "amount": 3}])
+        error, _ = session.declare_rules_action("p1", "x", kind="play_card", source=source)
+        self.assertIsNone(error, error)

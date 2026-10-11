@@ -4939,5 +4939,546 @@
         "kind": "obelisk_gift"
       }
     }
+  ],
+  "inner-deserts-062": [
+    {
+      "id": "gigabonblade-gains-persist",
+      "tribute": "",
+      "sourceFieldZone": "confrontation",
+      "reduceSourcePower": 2,
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ],
+        "fieldZone": "confrontation",
+        "controller": "self",
+        "sourceOnly": true
+      },
+      "ongoingEffect": {
+        "kind": "grant_persist",
+        "duration": "until_end_of_turn"
+      }
+    }
+  ],
+  "inner-deserts-121": [
+    {
+      "id": "donmo-restores-exhausted-cards",
+      "tribute": "",
+      "exhaustSource": true,
+      "sourceFieldZone": "interzone",
+      "targets": {
+        "min": 1,
+        "max": 6,
+        "cardTypes": [
+          "manifestation",
+          "persistent_will"
+        ],
+        "zones": [
+          "battlefield"
+        ],
+        "exhaustedOnly": true
+      },
+      "result": {
+        "kind": "restore_exhausted_targets"
+      }
+    },
+    {
+      "id": "donmo-gives-opponents-points-for-exhausted",
+      "trigger": {
+        "event": "end_of_turn"
+      },
+      "result": {
+        "kind": "score_each_opponent",
+        "value": 5,
+        "perCount": "own_exhausted_cards"
+      }
+    }
+  ],
+  "inner-deserts-100": [
+    {
+      "id": "juggernut-grows-at-end-of-turn",
+      "trigger": {
+        "event": "end_of_turn"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "power",
+        "value": 3
+      }
+    },
+    {
+      "id": "juggernut-charges-into-confrontation",
+      "tribute": "{H}{H}",
+      "phaseIds": [
+        "recovery_end"
+      ],
+      "sourceZones": [
+        "battlefield"
+      ],
+      "sourceFieldZone": "field",
+      "result": {
+        "kind": "field_becomes_first_manifestation"
+      }
+    },
+    {
+      "id": "juggernut-exiled-after-winning",
+      "trigger": {
+        "event": "wins_confrontation"
+      },
+      "result": {
+        "kind": "move_source_to_owner_exile"
+      }
+    }
+  ],
+  "inner-deserts-143": [
+    {
+      "id": "splendor-gets-gem-counters",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Gem",
+        "value": 2
+      }
+    },
+    {
+      "id": "splendor-chooses-a-base-temperament",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "choose_source_temperament",
+        "baseOnly": true
+      }
+    },
+    {
+      "id": "splendor-spends-a-gem-as-excess-essence",
+      "tribute": "",
+      "sourceZones": [
+        "battlefield"
+      ],
+      "removeCountersFromSource": {
+        "name": "Gem",
+        "amount": 1
+      },
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "result": {
+        "kind": "create_essence",
+        "temperament": "source_chosen",
+        "value": 1,
+        "exileSourceIfNoCounter": "Gem"
+      }
+    }
+  ],
+  "inner-deserts-092": [
+    {
+      "id": "discombobulator-upkeep-or-exile",
+      "trigger": {
+        "event": "before_revelation"
+      },
+      "result": {
+        "kind": "unless_payment_exile_source",
+        "payment": "{H}{H}{H}{H}"
+      }
+    },
+    {
+      "id": "discombobulator-blanks-the-field",
+      "passiveEffect": {
+        "kind": "disable_other_effects"
+      }
+    }
+  ],
+  "inner-deserts-093": [
+    {
+      "id": "mechanism-starts-with-an-enigma",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Enigma",
+        "value": 1
+      }
+    },
+    {
+      "id": "mechanism-one-shuffle",
+      "tribute": "",
+      "sourceZones": [
+        "battlefield"
+      ],
+      "requireSourceCounter": {
+        "name": "Enigma",
+        "min": 1,
+        "max": 1
+      },
+      "addCountersToSource": {
+        "name": "Enigma",
+        "amount": 1
+      },
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "result": {
+        "kind": "shuffle_owner_deck"
+      }
+    },
+    {
+      "id": "mechanism-two-peek-and-swap",
+      "tribute": "",
+      "sourceZones": [
+        "battlefield"
+      ],
+      "requireSourceCounter": {
+        "name": "Enigma",
+        "min": 2,
+        "max": 2
+      },
+      "addCountersToSource": {
+        "name": "Enigma",
+        "amount": 1
+      },
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "result": {
+        "kind": "peek_top_swap"
+      }
+    },
+    {
+      "id": "mechanism-three-bottom-a-card",
+      "tribute": "",
+      "sourceZones": [
+        "battlefield"
+      ],
+      "requireSourceCounter": {
+        "name": "Enigma",
+        "min": 3,
+        "max": 3
+      },
+      "requireHandCard": true,
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "result": {
+        "kind": "bottom_hand_card_remove_counters"
+      }
+    }
+  ],
+  "inner-deserts-055": [
+    {
+      "id": "nghoulong-exiles-itself-for-a-free-limbo-ephemeral-will",
+      "optional": true,
+      "trigger": {
+        "event": "discarded"
+      },
+      "result": {
+        "kind": "exile_source_grant_limbo_will_play"
+      }
+    }
+  ],
+  "inner-deserts-013": [
+    {
+      "id": "ycar-trades-an-interzone-manifestation-for-a-searched-one",
+      "optional": true,
+      "trigger": {
+        "event": "wins_confrontation"
+      },
+      "targets": {
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ],
+        "fieldZone": "interzone",
+        "controller": "self",
+        "owner": "self"
+      },
+      "result": {
+        "kind": "ycar_exchange"
+      }
+    }
+  ],
+  "inner-deserts-087": [
+    {
+      "id": "consul-chains-from-hand",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "chain_from_zone",
+        "zone": "hand",
+        "optional": false
+      }
+    },
+    {
+      "id": "consul-triggers-allies-as-lost-then-leaves",
+      "trigger": {
+        "event": "wins_confrontation"
+      },
+      "result": {
+        "kind": "consul_wins"
+      }
+    }
+  ],
+  "inner-deserts-018": [
+    {
+      "id": "paciphint-enters-with-flowers",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Flower",
+        "value": 2
+      }
+    },
+    {
+      "id": "paciphint-blooms-when-its-owner-loses",
+      "trigger": {
+        "event": "player_loses_confrontation",
+        "zone": "interzone",
+        "eventController": "owner"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Flower",
+        "value": 1
+      }
+    },
+    {
+      "id": "paciphint-sacrifices-an-ally-to-ignore-a-power",
+      "tribute": "",
+      "sourceZones": [
+        "battlefield"
+      ],
+      "phaseIds": [
+        "confrontation_reaction"
+      ],
+      "removeCountersFromSource": {
+        "name": "Flower",
+        "amount": 1
+      },
+      "targetGroups": [
+        {
+          "min": 1,
+          "max": 1,
+          "cardType": "manifestation",
+          "zones": [
+            "battlefield"
+          ],
+          "controller": "self",
+          "excludeSource": true
+        },
+        {
+          "min": 1,
+          "max": 1,
+          "cardType": "manifestation",
+          "zones": [
+            "battlefield"
+          ],
+          "fieldZone": "confrontation"
+        }
+      ],
+      "result": {
+        "kind": "paciphint_swap"
+      }
+    }
+  ],
+  "inner-deserts-084": [
+    {
+      "id": "chabak-plays-in-support-for-two-manifestations",
+      "sourceZones": [
+        "hand"
+      ],
+      "tribute": "",
+      "phaseIds": [
+        "confrontation_reaction"
+      ],
+      "requireHandManifestations": 2,
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "result": {
+        "kind": "chabak_support"
+      }
+    },
+    {
+      "id": "chabak-returns-opposing-manifestations-and-exiles-itself",
+      "trigger": {
+        "event": "wins_confrontation"
+      },
+      "result": {
+        "kind": "chabak_wins"
+      }
+    }
+  ],
+  "inner-deserts-083": [
+    {
+      "id": "auction-profiteer-bids-a-manifestation",
+      "optional": true,
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "confrontation"
+      },
+      "result": {
+        "kind": "auction_offer"
+      }
+    }
+  ],
+  "inner-deserts-082": [
+    {
+      "id": "gorlok-inspects-and-exiles-an-opponents-drawn-card",
+      "trigger": {
+        "event": "cards_drawn",
+        "zone": "interzone",
+        "eventController": "opponent"
+      },
+      "result": {
+        "kind": "gorlok_peek"
+      }
+    }
+  ],
+  "inner-deserts-048": [
+    {
+      "id": "wish-upon-the-stars-exchanges-vessel-manifestations",
+      "action": "play_card",
+      "targets": {
+        "kind": "zone_card",
+        "min": 1,
+        "max": 1,
+        "cardType": "manifestation",
+        "zones": [
+          "receptacle"
+        ],
+        "container": "self"
+      },
+      "result": {
+        "kind": "wish_exchange"
+      }
+    }
+  ],
+  "inner-deserts-090": [
+    {
+      "id": "pescojolero-trades-stalemate-manifestations-for-a-vessel-one",
+      "tribute": "",
+      "exhaustSource": true,
+      "sourceZones": [
+        "battlefield"
+      ],
+      "targets": {
+        "min": 1,
+        "max": 6,
+        "cardType": "manifestation",
+        "zones": [
+          "battlefield"
+        ],
+        "fieldZone": "stalemate",
+        "owner": "self"
+      },
+      "result": {
+        "kind": "pescojolero_trade"
+      }
+    }
+  ],
+  "inner-deserts-086": [
+    {
+      "id": "thoughtcutter-gains-power-per-opposing-stack-card",
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "confrontation"
+      },
+      "result": {
+        "kind": "thoughtcutter_surge"
+      }
+    }
+  ],
+  "inner-deserts-096": [
+    {
+      "id": "lunar-liturgy-feeds-the-stalemate-zone",
+      "trigger": {
+        "event": "beginning_of_turn",
+        "zone": "field"
+      },
+      "result": {
+        "kind": "lunar_liturgy"
+      }
+    }
+  ],
+  "inner-deserts-120": [
+    {
+      "id": "persuasion-forces-an-opponent-will-onto-the-field",
+      "trigger": {
+        "event": "revelation"
+      },
+      "result": {
+        "kind": "persuasion_force"
+      }
+    },
+    {
+      "id": "persuasion-penalizes-forced-wills-each-turn",
+      "trigger": {
+        "event": "end_of_turn"
+      },
+      "result": {
+        "kind": "persuasion_penalty"
+      }
+    }
+  ],
+  "inner-deserts-085": [
+    {
+      "id": "fee-fee-spite-upkeep",
+      "trigger": {
+        "event": "beginning_of_turn",
+        "zone": "stalemate"
+      },
+      "result": {
+        "kind": "spite_upkeep"
+      }
+    },
+    {
+      "id": "fee-fee-cannot-win-out-of-stalemate",
+      "passiveEffect": {
+        "kind": "stalemate_win_blocked"
+      }
+    },
+    {
+      "id": "fee-fee-spite-ignores-low-power",
+      "passiveEffect": {
+        "kind": "stalemate_ignores_low_power"
+      }
+    }
+  ],
+  "inner-deserts-060": [
+    {
+      "id": "tebebe-sacrifices-and-unearths",
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "interzone"
+      },
+      "targets": {
+        "min": 0,
+        "max": 0
+      },
+      "result": {
+        "kind": "tebebe_unearth"
+      }
+    }
   ]
 }

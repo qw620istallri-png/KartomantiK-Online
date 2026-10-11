@@ -76,7 +76,7 @@ class AutomationCoverageTests(unittest.TestCase):
         self.assertEqual(cards["inner-deserts-027"]["status"], "automated")
         self.assertEqual(cards["inner-deserts-031"]["status"], "automated")
         self.assertTrue(cards["inner-deserts-031"]["testRefs"])
-        self.assertEqual(cards["inner-deserts-086"]["status"], "manual")
+        self.assertEqual(cards["inner-deserts-086"]["status"], "automated")
 
 
 if __name__ == "__main__":

@@ -236,6 +236,14 @@ def build_card_rules(cards, abilities_by_card):
                 card.get("effect") or "",
                 re.IGNORECASE | re.MULTILINE,
             ),
+            "exileIfLeavesConfrontationByEffect": bool(re.search(
+                r"would leave the Confrontation Zone due to cards or effects, exile it instead",
+                card.get("effect") or "", re.IGNORECASE,
+            )),
+            "exiledByEffectFieldPenalty": int(next(iter(re.findall(
+                r"If it is exiled this way, all Manifestations currently on the field get -(\d+) power",
+                card.get("effect") or "", re.IGNORECASE,
+            )), 0)),
             "playAsPersistentWill": bool(re.search(
                 r"\bCan only be played as if it were a persistent Will\b",
                 card.get("effect") or "",
@@ -283,7 +291,15 @@ def build_card_rules(cards, abilities_by_card):
                 if "an opponent has put a manifestation into Support from their Interzone" in (card.get("effect") or "")
                 else {"kind": "opponent_will_on_stack_targets_confrontation"}
                 if "an opponent controls at least one Will in the stack that targets a manifestation in the Confrontation Zone" in (card.get("effect") or "")
+                else {"kind": "top_of_stack_is_will"}
+                if re.search(r"As long as the top card on the Stack is a Will, you may play .{0,40} in Support from hand", card.get("effect") or "")
                 else None
+            ),
+            "tributeSacrificePower": (
+                int(_kanopo.group(1)) if (_kanopo := re.search(
+                    r"you may sacrifice a Manifestation in your Interzone\. If you do, .{0,40}?base power of (\d+)",
+                    card.get("effect") or "",
+                )) else None
             ),
             "supportFromInterzone": bool(
                 re.search(r"^Support[.;]", card.get("effect") or "")
