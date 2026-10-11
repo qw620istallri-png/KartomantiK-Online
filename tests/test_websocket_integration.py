@@ -87,7 +87,25 @@ class WebSocketRulesIntegrationTests(unittest.IsolatedAsyncioTestCase):
         rules["priorityPlayerId"] = priority
         rules["priorityPasses"] = []
         rules["pendingChoice"] = None
+        rules["autoSkipPhases"] = False
         self.session.phase_tracker["index"] = ADVANCED_PHASES.index(phase_id)
+
+    async def test_passing_with_nothing_to_play_skips_the_empty_phases(self):
+        self.prepare_active_rules("end_actions")
+        self.session.rules_engine["autoSkipPhases"] = True
+        self.session.rules_engine["firstManifestationComplete"] = True
+        for player_id in ("p1", "p2"):
+            self.session.players[player_id]["zones"]["hand"] = []
+        turn = self.session.phase_tracker["turn"]
+        await self.send(self.ws1, {"type": "pass_priority", "passed": True})
+        state = await self.receive_until(
+            self.ws1,
+            lambda message: message.get("type") == "state"
+            and message["phaseTracker"]["turn"] == turn + 1,
+        )
+        self.assertNotEqual(
+            state["phaseTracker"]["index"], ADVANCED_PHASES.index("end_actions")
+        )
 
     async def test_first_manifestations_stay_hidden_through_before_revelation(self):
         self.prepare_active_rules("confrontation_choose")

@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261011-rules-beta-125";
+const STATIC_ASSET_VERSION = "20261011-rules-beta-126";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -1304,6 +1304,11 @@ function renderRulesStack() {
   const current = currentPhaseUi();
   const groupSteps = current.group.sections.flatMap((section) => section.steps);
   const currentStep = Math.max(0, groupSteps.findIndex((step) => step.id === current.phase.id)) + 1;
+  const autoSkipBox = $("#rulesAutoSkip");
+  $("#rulesAutoSkipLabel").textContent = t("rulesAutoSkipLabel");
+  $("#rulesAutoSkipWrap").title = t("rulesAutoSkipHint");
+  $("#rulesAutoSkipWrap").classList.toggle("hidden", isObserver);
+  autoSkipBox.checked = rules.autoSkipPhases !== false;
   $("#passPriorityBtn").textContent = firstManifestation
     ? t(mineFirstValidated ? "rulesFirstManifestationCancel" : "rulesFirstManifestationValidate")
     : canCancelPass
@@ -4591,7 +4596,7 @@ function setMyActivity(activity) {
 // card leaving the battlefield straight into a pile.
 const PLAYER_LOG_TYPES = new Set([
   "draw", "draw_to_limit", "opening_hand_draw", "move_card", "place_card", "remove_battlefield_item", "pass_phase",
-  "rules_action_declared", "rules_action_triggered", "rules_priority_passed", "rules_priority_cancelled", "rules_priority_rolled", "rules_action_resolved", "rules_choice_resolved", "rules_phase_advanced", "rules_confrontation_compared", "rules_confrontation_cleanup", "rules_field_zone_changed",
+  "rules_action_declared", "rules_action_triggered", "rules_priority_passed", "rules_priority_cancelled", "rules_priority_rolled", "rules_action_resolved", "rules_choice_resolved", "rules_phase_advanced", "rules_auto_passed", "rules_auto_skip_changed", "rules_confrontation_compared", "rules_confrontation_cleanup", "rules_field_zone_changed",
 ]);
 
 function isPlayerLogRelevant(e) {
@@ -4765,7 +4770,7 @@ function tournamentLogTone(entry) {
   if (entry.type === "search_zone") return "warning";
   if (["rules_opening_mulligan_required", "rules_recovery_mulligan_required"].includes(entry.type)) return "warning";
   if (["create_tournament", "role_joined", "start_tournament", "end_tournament", "update_tournament_policy"].includes(entry.type)) return "system";
-  if (["shuffle", "search_followed_by_shuffle", "draw", "draw_to_limit", "opening_hand_draw", "place_card", "move_card", "reveal", "scry", "mulligan", "rules_action_declared", "rules_action_triggered", "rules_priority_passed", "rules_priority_cancelled", "rules_priority_rolled", "rules_action_resolved", "rules_choice_resolved", "rules_phase_advanced", "rules_confrontation_compared", "rules_confrontation_cleanup", "rules_field_zone_changed"].includes(entry.type)) return "action";
+  if (["shuffle", "search_followed_by_shuffle", "draw", "draw_to_limit", "opening_hand_draw", "place_card", "move_card", "reveal", "scry", "mulligan", "rules_action_declared", "rules_action_triggered", "rules_priority_passed", "rules_priority_cancelled", "rules_priority_rolled", "rules_action_resolved", "rules_choice_resolved", "rules_phase_advanced", "rules_auto_passed", "rules_auto_skip_changed", "rules_confrontation_compared", "rules_confrontation_cleanup", "rules_field_zone_changed"].includes(entry.type)) return "action";
   return "info";
 }
 
@@ -9360,6 +9365,7 @@ function initGameControls() {
     if (!isObserver && mySeat() === 0) send({ type: "configure_phases", advanced: !latestState?.phaseTracker?.advanced });
   };
   $("#passPriorityBtn").onclick = () => toggleMyPhasePass();
+  $("#rulesAutoSkip").onchange = (event) => send({ type: "set_rules_auto_skip", enabled: event.target.checked });
   $("#gameMoreMenu").addEventListener("click", (event) => {
     if (event.target.closest("button")) $("#gameMoreMenu").open = false;
   });
@@ -9919,6 +9925,12 @@ function formatLogEntry(e, options = {}) {
       player: ownerName(d.playerId),
       rolls: Object.entries(d.rolls || {}).map(([id, value]) => `${ownerName(id)} ${value}`).join(" · "),
     });
+    case "rules_auto_passed": {
+      const lines = phaseLogLinesFor(d, language);
+      const label = [lines.phase, lines.step].filter(Boolean).join(" · ") || d.phaseId || "?";
+      return f("logRulesAutoPassed", { phase: label, turn: d.turn || 1, steps: d.steps || 0 });
+    }
+    case "rules_auto_skip_changed": return f(d.enabled ? "logRulesAutoSkipOn" : "logRulesAutoSkipOff");
     case "rules_phase_advanced": {
       const lines = phaseLogLinesFor(d, language);
       const label = [lines.phase, lines.step].filter(Boolean).join(" · ") || d.phaseId || "?";

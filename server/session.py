@@ -196,6 +196,7 @@ class Session:
         self.pending_hand_requests = {}  # requestId -> {requesterId, targetId, index, action}
         self.rules_engine = {
             "enabled": bool(rules_beta),
+            "autoSkipPhases": True,
             "deckConfirmedPlayerIds": [],
             "openingHandPlayerIds": [],
             "mulliganPlayerIds": [],
@@ -6288,6 +6289,106 @@ class Session:
                 return None
             return "A Persistent Will can only be played during End actions."
         return "This card cannot be played as a Stack action during the current step."
+
+    def rules_match_started(self):
+        return bool(
+            self.phase_tracker["turn"] > 1
+            or len(self.rules_engine.get("readyPlayerIds") or []) >= NUM_SEATS
+            or self.rules_engine.get("firstManifestationComplete")
+            or self.rules_engine.get("firstManifestationItemIds")
+        )
+
+    def rules_player_can_act(self, player_id):
+        """True when the player has any voluntary action available in the current step.
+
+        Deliberately generous: only timing and zone rules are checked, never whether
+        the player can afford the cost, so a phase is never skipped by mistake.
+        """
+        player = self.players[player_id]
+        phase_id = self.current_phase_id()
+        response = phase_id in {"confrontation_reaction", "resolution_effects", "end_actions"}
+        support_locked = self.rules_support_entry_locked(player_id)
+
+        def can_play(card_id, card_type):
+            return self.rules_action_timing_error(
+                "play_card", {"cardId": card_id, "cardType": card_type},
+                player_id=player_id,
+            ) is None
+
+        def can_support(card_id):
+            return not support_locked and self.rules_action_timing_error(
+                "play_card", {"cardId": card_id, "cardType": "manifestation"},
+                as_support=True, player_id=player_id,
+            ) is None
+
+        for card_id in set(player["zones"]["hand"]):
+            metadata = self.card_rules.get(card_id, {})
+            card_type = metadata.get("type")
+            if card_type in RULES_WILL_TYPES and can_play(card_id, card_type):
+                return True
+            if card_type == "manifestation" and can_support(card_id):
+                return True
+            if response and any(
+                "hand" in (ability.get("sourceZones") or [])
+                for ability in metadata.get("activatedAbilities") or []
+            ):
+                return True
+        if response:
+            for card_id in set(player["zones"]["receptacle"]):
+                if any(
+                    "receptacle" in (ability.get("sourceZones") or [])
+                    for ability in self.card_rules.get(card_id, {}).get("activatedAbilities") or []
+                ):
+                    return True
+            if any(
+                entry.get("playerId") == player_id
+                for entry in self.rules_engine.get("playPermissions") or []
+            ):
+                return True
+        for item in self.battlefield:
+            if self.rules_item_controller_id(item) != player_id:
+                continue
+            metadata = self.rules_item_card_rules(item)
+            card_type = metadata.get("type")
+            zone = self.rules_field_zone(item)
+            if (
+                card_type in RULES_WILL_TYPES
+                and (
+                    item.get("concealedWill") or item.get("persuaded")
+                    or item.get("playableFree") == self.phase_tracker["turn"]
+                )
+                and can_play(item.get("cardId"), card_type)
+            ):
+                return True
+            if (
+                card_type == "manifestation" and zone in {"interzone", "stalemate"}
+                and can_support(item.get("cardId"))
+            ):
+                return True
+            if (
+                response and item.get("faceUp")
+                and metadata.get("activatedAbilities")
+                and self.rules_item_effects_active(item)
+            ):
+                return True
+        return False
+
+    def rules_auto_pass_player(self):
+        """The priority holder who has nothing to do, if the engine may pass for them."""
+        engine = self.rules_engine
+        if (
+            not engine.get("enabled") or not engine.get("autoSkipPhases", True)
+            or not self.phase_tracker.get("enabled") or self.ended
+            or len(self.players) < NUM_SEATS or engine.get("pendingChoice")
+            or not self.rules_match_started()
+            or self.rules_first_manifestation_active()
+            or self.rules_recovery_mulligan_active()
+        ):
+            return None
+        player_id = engine.get("priorityPlayerId")
+        if player_id not in self.players or self.rules_player_can_act(player_id):
+            return None
+        return player_id
 
     def declare_rules_action(self, player_id, label, kind="manual", source=None, target=None,
                              targets=None, cost_note=None, payment_card_ids=None, ability_id=None,
@@ -17374,6 +17475,7 @@ class Session:
             "phaseTracker": self.serialize_phase_tracker(),
             "rulesEngine": {
                 "enabled": self.rules_engine["enabled"],
+                "autoSkipPhases": bool(self.rules_engine.get("autoSkipPhases", True)),
                 "deckConfirmedPlayerIds": list(self.rules_engine["deckConfirmedPlayerIds"]),
                 "openingHandPlayerIds": list(self.rules_engine["openingHandPlayerIds"]),
                 "mulliganPlayerIds": list(self.rules_engine["mulliganPlayerIds"]),

@@ -711,6 +711,149 @@ def extract_deck_card_rarities(deck_json, card_ids):
     }
 
 
+async def apply_rules_pass(session, actor_id, passed=None):
+    """Pass priority for a player; shared by the pass message and the auto-pass loop."""
+    if session.rules_first_manifestation_active():
+        return "Play and validate your first Manifestation instead of passing priority."
+    if passed is not None and not isinstance(passed, bool):
+        return "Priority pass state must be a boolean."
+    error, result = session.pass_rules_priority(actor_id, passed=passed)
+    if error:
+        return error
+    if result["status"] == "passed":
+        session.add_log(actor_id, "rules_priority_passed", {
+            "phaseId": session.current_phase_id(),
+            "stackDepth": result["stackDepth"],
+        })
+    elif result["status"] == "cancelled":
+        session.add_log(actor_id, "rules_priority_cancelled", {
+            "phaseId": session.current_phase_id(),
+            "stackDepth": result["stackDepth"],
+        })
+    elif result["status"] == "resolved":
+        await record_rules_resolution(session, result, actor_id)
+    else:
+        if result.get("revealedItemIds"):
+            session.add_log(actor_id, "rules_first_manifestations_revealed", {
+                "itemIds": result["revealedItemIds"],
+            })
+        if result["phaseId"] == "confrontation_immediate" and not session.rules_engine["firstManifestationTriggersQueued"]:
+            triggered_actions = session.queue_rules_revelation_triggers(
+                defer=True
+            )
+            revelation_order, revelation_priority, priority_rolls = session.rules_revelation_order()
+            for item_id in revelation_order:
+                item = session.find_battlefield_item(item_id)
+                if item and not item.get("persistedFirst"):
+                    triggered_actions.extend(session.queue_rules_battlefield_entry_triggers(
+                        item["cardId"], item["ownerId"], item["id"], True,
+                        defer=True,
+                    ))
+                    triggered_actions.extend(
+                        session.queue_rules_manifestation_entry_watchers(
+                            item, defer=True
+                        )
+                    )
+                    triggered_actions.extend(
+                        session.queue_rules_field_zone_entry_triggers(
+                            item, "confrontation", defer=True
+                        )
+                    )
+            if triggered_actions:
+                session.queue_rules_simultaneous_actions(
+                    triggered_actions,
+                    priority_player_id=revelation_priority,
+                )
+            elif revelation_priority:
+                session.rules_engine["priorityPlayerId"] = revelation_priority
+            session.rules_engine["firstManifestationTriggersQueued"] = True
+            log_rules_triggered_actions(session, triggered_actions, actor_id)
+            for immediate_result in session.resolve_rules_immediate_actions():
+                await record_rules_resolution(
+                    session, immediate_result, actor_id
+                )
+            if priority_rolls:
+                session.add_log(actor_id, "rules_priority_rolled", {
+                    "playerId": revelation_priority, "rolls": priority_rolls,
+                    "reason": "revelation_tie",
+                })
+        session.add_log(actor_id, "rules_phase_advanced", {
+            "previousPhaseId": result["previousPhaseId"],
+            "phaseId": result["phaseId"],
+            "turn": result["turn"],
+            "advancedMode": True,
+            "expiredEffectIds": result.get("expiredEffectIds") or [],
+            "expiredEssenceTokenIds": result.get("expiredEssenceTokenIds") or [],
+            "readiedItemIds": result.get("readiedItemIds") or [],
+            "rematchStarted": bool(result.get("rematchStarted")),
+        })
+        log_rules_triggered_actions(
+            session, result.get("beginningTriggeredActions") or [], actor_id
+        )
+        log_rules_triggered_actions(
+            session, result.get("endTriggeredActions") or [], actor_id
+        )
+        log_rules_triggered_actions(
+            session, result.get("resolutionTriggeredActions") or [],
+            actor_id,
+        )
+        log_rules_recovery_sequence(
+            session, result.get("automaticRecovery"), actor_id
+        )
+        confrontation = result.get("confrontationResult")
+        if confrontation and result["phaseId"] == "resolution_compare":
+            session.add_log(actor_id, "rules_confrontation_compared", {
+                "winnerId": confrontation.get("winnerId"),
+                "loserId": confrontation.get("loserId"),
+                "stalemate": confrontation.get("stalemate"),
+                "reason": confrontation.get("reason"),
+                "totals": confrontation.get("totals"),
+                "lastTemperaments": confrontation.get("lastTemperaments"),
+                "priorityPlayerId": confrontation.get("priorityPlayerId"),
+                "priorityRolls": confrontation.get("priorityRolls"),
+                "destroyed": confrontation.get("destroyed") or [],
+            })
+        elif confrontation and result["phaseId"] == "resolution_move":
+            session.add_log(actor_id, "rules_confrontation_cleanup", {
+                "winnerId": confrontation.get("winnerId"),
+                "stalemate": confrontation.get("stalemate"),
+                "captured": confrontation.get("captured") or [],
+                "returned": confrontation.get("returned") or [],
+                "supportExiled": confrontation.get("supportExiled") or [],
+                "supportResolved": confrontation.get("supportResolved") or [],
+                "persisted": confrontation.get("persisted") or [],
+            })
+    return None
+
+
+AUTO_PASS_MESSAGE_TYPES = {
+    "pass_priority", "pass_phase", "declare_rules_action", "resolve_rules_choice",
+    "validate_first_manifestation", "set_rules_auto_skip",
+}
+AUTO_PASS_MAX_STEPS = 60
+
+
+async def auto_advance_rules_phases(session, actor_id):
+    """Pass priority for players with nothing to do, until someone can act."""
+    steps = 0
+    first_phase = session.current_phase_id()
+    first_turn = session.phase_tracker["turn"]
+    while steps < AUTO_PASS_MAX_STEPS:
+        player_id = session.rules_auto_pass_player()
+        if player_id is None:
+            break
+        error = await apply_rules_pass(session, player_id, None)
+        if error:
+            break
+        steps += 1
+    if steps:
+        session.add_log(actor_id, "rules_auto_passed", {
+            "steps": steps, "fromPhaseId": first_phase, "fromTurn": first_turn,
+            "phaseId": session.current_phase_id(), "turn": session.phase_tracker["turn"],
+        })
+    return steps
+
+
 async def handle_message(ws, info, data):
     session = info["session"]
     actor_id = info["playerId"]
@@ -968,6 +1111,17 @@ async def handle_message(ws, info, data):
         session.add_log(actor_id, "rules_deck_confirmed" if confirmed else "rules_deck_unconfirmed", {})
         if confirmed:
             log_rules_opening_sequence(session, result, actor_id)
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "set_rules_auto_skip":
+        if is_observer:
+            return await send_error(ws, "Observers cannot change game options.")
+        enabled = data.get("enabled")
+        if not isinstance(enabled, bool):
+            return await send_error(ws, "The option must be a boolean.")
+        session.rules_engine["autoSkipPhases"] = enabled
+        session.add_log(actor_id, "rules_auto_skip_changed", {"enabled": enabled})
         session.touch()
         await broadcast_state(session)
 
@@ -1871,116 +2025,9 @@ async def handle_message(ws, info, data):
         if not session.phase_tracker["enabled"]:
             return await send_error(ws, "Game phases are not active.")
         if session.rules_engine["enabled"]:
-            if session.rules_first_manifestation_active():
-                return await send_error(ws, "Play and validate your first Manifestation instead of passing priority.")
-            if "passed" in data and not isinstance(data["passed"], bool):
-                return await send_error(ws, "Priority pass state must be a boolean.")
-            error, result = session.pass_rules_priority(actor_id, passed=data.get("passed"))
+            error = await apply_rules_pass(session, actor_id, data.get("passed") if "passed" in data else None)
             if error:
                 return await send_error(ws, error)
-            if result["status"] == "passed":
-                session.add_log(actor_id, "rules_priority_passed", {
-                    "phaseId": session.current_phase_id(),
-                    "stackDepth": result["stackDepth"],
-                })
-            elif result["status"] == "cancelled":
-                session.add_log(actor_id, "rules_priority_cancelled", {
-                    "phaseId": session.current_phase_id(),
-                    "stackDepth": result["stackDepth"],
-                })
-            elif result["status"] == "resolved":
-                await record_rules_resolution(session, result, actor_id)
-            else:
-                if result.get("revealedItemIds"):
-                    session.add_log(actor_id, "rules_first_manifestations_revealed", {
-                        "itemIds": result["revealedItemIds"],
-                    })
-                if result["phaseId"] == "confrontation_immediate" and not session.rules_engine["firstManifestationTriggersQueued"]:
-                    triggered_actions = session.queue_rules_revelation_triggers(
-                        defer=True
-                    )
-                    revelation_order, revelation_priority, priority_rolls = session.rules_revelation_order()
-                    for item_id in revelation_order:
-                        item = session.find_battlefield_item(item_id)
-                        if item and not item.get("persistedFirst"):
-                            triggered_actions.extend(session.queue_rules_battlefield_entry_triggers(
-                                item["cardId"], item["ownerId"], item["id"], True,
-                                defer=True,
-                            ))
-                            triggered_actions.extend(
-                                session.queue_rules_manifestation_entry_watchers(
-                                    item, defer=True
-                                )
-                            )
-                            triggered_actions.extend(
-                                session.queue_rules_field_zone_entry_triggers(
-                                    item, "confrontation", defer=True
-                                )
-                            )
-                    if triggered_actions:
-                        session.queue_rules_simultaneous_actions(
-                            triggered_actions,
-                            priority_player_id=revelation_priority,
-                        )
-                    elif revelation_priority:
-                        session.rules_engine["priorityPlayerId"] = revelation_priority
-                    session.rules_engine["firstManifestationTriggersQueued"] = True
-                    log_rules_triggered_actions(session, triggered_actions, actor_id)
-                    for immediate_result in session.resolve_rules_immediate_actions():
-                        await record_rules_resolution(
-                            session, immediate_result, actor_id
-                        )
-                    if priority_rolls:
-                        session.add_log(actor_id, "rules_priority_rolled", {
-                            "playerId": revelation_priority, "rolls": priority_rolls,
-                            "reason": "revelation_tie",
-                        })
-                session.add_log(actor_id, "rules_phase_advanced", {
-                    "previousPhaseId": result["previousPhaseId"],
-                    "phaseId": result["phaseId"],
-                    "turn": result["turn"],
-                    "advancedMode": True,
-                    "expiredEffectIds": result.get("expiredEffectIds") or [],
-                    "expiredEssenceTokenIds": result.get("expiredEssenceTokenIds") or [],
-                    "readiedItemIds": result.get("readiedItemIds") or [],
-                    "rematchStarted": bool(result.get("rematchStarted")),
-                })
-                log_rules_triggered_actions(
-                    session, result.get("beginningTriggeredActions") or [], actor_id
-                )
-                log_rules_triggered_actions(
-                    session, result.get("endTriggeredActions") or [], actor_id
-                )
-                log_rules_triggered_actions(
-                    session, result.get("resolutionTriggeredActions") or [],
-                    actor_id,
-                )
-                log_rules_recovery_sequence(
-                    session, result.get("automaticRecovery"), actor_id
-                )
-                confrontation = result.get("confrontationResult")
-                if confrontation and result["phaseId"] == "resolution_compare":
-                    session.add_log(actor_id, "rules_confrontation_compared", {
-                        "winnerId": confrontation.get("winnerId"),
-                        "loserId": confrontation.get("loserId"),
-                        "stalemate": confrontation.get("stalemate"),
-                        "reason": confrontation.get("reason"),
-                        "totals": confrontation.get("totals"),
-                        "lastTemperaments": confrontation.get("lastTemperaments"),
-                        "priorityPlayerId": confrontation.get("priorityPlayerId"),
-                        "priorityRolls": confrontation.get("priorityRolls"),
-                        "destroyed": confrontation.get("destroyed") or [],
-                    })
-                elif confrontation and result["phaseId"] == "resolution_move":
-                    session.add_log(actor_id, "rules_confrontation_cleanup", {
-                        "winnerId": confrontation.get("winnerId"),
-                        "stalemate": confrontation.get("stalemate"),
-                        "captured": confrontation.get("captured") or [],
-                        "returned": confrontation.get("returned") or [],
-                        "supportExiled": confrontation.get("supportExiled") or [],
-                        "supportResolved": confrontation.get("supportResolved") or [],
-                        "persisted": confrontation.get("persisted") or [],
-                    })
             session.touch()
             await broadcast_state(session)
             return
@@ -2297,6 +2344,14 @@ async def handler(ws):
                 await handle_join(ws, data)
                 continue
             await handle_message(ws, info, data)
+            session = info["session"]
+            if (
+                data.get("type") in AUTO_PASS_MESSAGE_TYPES
+                and session.rules_engine.get("enabled")
+                and await auto_advance_rules_phases(session, info["playerId"])
+            ):
+                session.touch()
+                await broadcast_state(session)
     except ConnectionClosed:
         pass
     finally:
