@@ -236,6 +236,11 @@ def build_card_rules(cards, abilities_by_card):
                 card.get("effect") or "",
                 re.IGNORECASE | re.MULTILINE,
             ),
+            "playAsPersistentWill": bool(re.search(
+                r"\bCan only be played as if it were a persistent Will\b",
+                card.get("effect") or "",
+                re.IGNORECASE,
+            )),
             "canPayTributeFromInterzone": bool(re.search(
                 r"\bcan be used as tribute from the Interzone\.",
                 card.get("effect") or "",
@@ -1210,16 +1215,21 @@ async def handle_message(ws, info, data):
             )
             if permission_error:
                 return await send_error(ws, permission_error)
+        deck_top_play = bool(
+            not manual_bypass and from_zone == "deck" and source_container_id == actor_id
+            and session.rules_uncovered_deck_top(actor_id) == card_id
+            and card_id in session.manifestation_ids
+        )
         first_manifestation = (
             False if manual_bypass
             else session.rules_first_manifestation_active()
         )
-        if first_manifestation and (source_container_id != actor_id or from_zone != "hand"):
+        if first_manifestation and (source_container_id != actor_id or (from_zone != "hand" and not deck_top_play)):
             return await send_error(ws, "Choose your first Manifestation from your hand.")
         if first_manifestation and not session.rules_card_can_be_first_manifestation(card_id, actor_id):
             return await send_error(ws, "Your first play must be a Manifestation.")
         if (
-            from_zone == "hand"
+            (from_zone == "hand" or deck_top_play)
             and not first_manifestation
             and not manual_bypass
         ):
@@ -1243,7 +1253,7 @@ async def handle_message(ws, info, data):
             zone_play_permission
             or (
                 session.rules_engine["enabled"] and not first_manifestation
-                and card_id in session.manifestation_ids and from_zone == "hand"
+                and card_id in session.manifestation_ids and (from_zone == "hand" or deck_top_play)
                 and session.current_phase_id() == "confrontation_reaction"
             )
         )
@@ -1292,7 +1302,7 @@ async def handle_message(ws, info, data):
             and not first_manifestation
             and card_id in session.manifestation_ids
         ):
-            if from_zone == "hand" and session.current_phase_id() == "confrontation_reaction":
+            if (from_zone == "hand" or deck_top_play) and session.current_phase_id() == "confrontation_reaction":
                 session.mark_rules_support_entry(item)
             elif session.current_phase_group() == "confrontation":
                 session.mark_rules_confrontation_entry(item)
@@ -1779,6 +1789,16 @@ async def handle_message(ws, info, data):
         log_rules_triggered_actions(session, triggered_actions, actor_id)
         for immediate_result in session.resolve_rules_immediate_actions():
             await record_rules_resolution(session, immediate_result, actor_id)
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "toggle_limbo_recovery":
+        if is_observer:
+            return await send_error(ws, "Observers cannot act.")
+        error, result = session.toggle_rules_limbo_recovery(actor_id)
+        if error:
+            return await send_error(ws, error)
+        session.add_log(actor_id, "rules_limbo_recovery_toggle", result)
         session.touch()
         await broadcast_state(session)
 

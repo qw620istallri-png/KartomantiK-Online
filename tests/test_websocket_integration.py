@@ -550,6 +550,33 @@ class WebSocketRulesIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.session.rules_engine["actionStack"], [])
         self.assertEqual(p1["zones"]["hand"], [])
 
+    async def test_peropero_exposes_the_deck_top_and_lets_its_manifestation_be_played(self):
+        peropero = "k6l96o0xphpycpm_en"
+        flem = next(card["id"] for card in server_main.CARD_DATA if card["name"] == "Flem")
+        p1 = self.session.players["p1"]
+        p1["zones"]["deck"] = [flem] + p1["zones"]["deck"][:3]
+        p1["zoneOwners"]["deck"][flem] = "p1"
+        self.prepare_active_rules("end_actions")
+        place = {
+            "type": "place_card", "fromZone": "deck", "cardId": flem,
+            "faceUp": True, "x": 400, "y": 500,
+        }
+        self.session.battlefield.append({
+            "id": "pero", "ownerId": "p1", "controllerId": "p1", "cardId": peropero,
+            "x": 0, "y": 0, "faceUp": True, "rotation": 0, "counters": {},
+            "stackedOn": None, "fieldZone": "field",
+        })
+        self.assertEqual(self.session.serialize_for("p2", "player")["rulesEngine"]["uncoveredTops"], {"p1": flem})
+        await self.send(self.ws1, place)
+        state = await self.receive_until(
+            self.ws1,
+            lambda message: message.get("type") == "state"
+            and any(item.get("cardId") == flem for item in message["battlefield"]),
+        )
+        placed = next(item for item in state["battlefield"] if item.get("cardId") == flem)
+        self.assertEqual(placed["fieldZone"], "interzone")
+        self.assertNotIn(flem, p1["zones"]["deck"])
+
     async def test_atavic_persistent_will_is_playable_before_the_revelation(self):
         fury = "m2l3v60n0iakrm2_en"
         p1 = self.session.players["p1"]

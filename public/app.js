@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261011-rules-beta-121";
+const STATIC_ASSET_VERSION = "20261011-rules-beta-122";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -2955,9 +2955,16 @@ function rulesActivatedActionDraft(item, abilityOverride = null) {
   return { source, draft };
 }
 
+// "Can only be played as if it were a persistent Will" (The Slumberer).
+function rulesPlayType(card) {
+  return /\bCan only be played as if it were a persistent Will\b/i.test(String(card?.effect || ""))
+    ? "persistent_will"
+    : card?.type;
+}
+
 function beginRulesBoardAction(source) {
   const draft = buildRulesActionDraft(source);
-  if (!draft.card || !["ephemeral_will", "persistent_will"].includes(draft.card.type)) return false;
+  if (!draft.card || !["ephemeral_will", "persistent_will"].includes(rulesPlayType(draft.card))) return false;
   const playable = source.playFromField
     ? limboWillIsPlayable(source.cardId, true)
     : source.zone === "graveyard"
@@ -3331,7 +3338,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
       && ["ephemeral_will", "persistent_will"].includes(card?.type)
       ? rulesLimboPlayMode() : null;
   const isPrintedWill = (["hand", "suspended", "attached"].includes(source.zone) || Boolean(limboPlay) || Boolean(source.playFromField))
-    && ["ephemeral_will", "persistent_will"].includes(card?.type);
+    && ["ephemeral_will", "persistent_will"].includes(rulesPlayType(card));
   const freeWillPermission = isPrintedWill && (latestState?.rulesEngine?.playPermissions || []).some((permission) => (
     permission.playerId === myPlayerId
     && permission.fromZone === "hand"
@@ -3751,7 +3758,7 @@ function rulesActionContextItem(source) {
   }
   if (!rules?.enabled || rules.priorityPlayerId !== myPlayerId || isObserver) return null;
   if (["hand", "suspended"].includes(source.zone)) {
-    const cardType = cardsById.get(source.cardId)?.type;
+    const cardType = rulesPlayType(cardsById.get(source.cardId));
     const handAbility = source.zone === "hand"
       ? (activatedAbilitiesByCard.get(source.cardId) || []).find(
           (ability) => (ability.sourceZones || []).includes("hand"),
@@ -5656,9 +5663,10 @@ function pileFieldHtml(ownerId, zone, zoneData, canView, canAct, pos, score, ove
   // shared zones (limbo/exile/vessel) show the actual face of the most
   // recently entered card (index 0, same "top" convention as the deck); the
   // deck itself always stays card-back regardless of who's viewing
-  const topCardId = zone !== "deck" && count > 0 ? (zoneData.cards || [])[0] : null;
+  const uncoveredTop = zone === "deck" ? latestState?.rulesEngine?.uncoveredTops?.[ownerId] : null;
+  const topCardId = uncoveredTop || (zone !== "deck" && count > 0 ? (zoneData.cards || [])[0] : null);
   const topCardOwnerId = topCardId ? (zoneData?.owners?.[topCardId] || ownerId) : null;
-  const canDragTop = pilesLocked && !isObserver && ownerId === myPlayerId && ["graveyard", "exile", "receptacle"].includes(zone);
+  const canDragTop = pilesLocked && !isObserver && ownerId === myPlayerId && (["graveyard", "exile", "receptacle"].includes(zone) || (zone === "deck" && Boolean(uncoveredTop)));
   const topCardHtml = topCardId
     ? `<img class="pile-top-card" src="${esc(cardImage(topCardId))}" alt="${esc(cardName(topCardId))}" title="${esc(cardName(topCardId))}"${canDragTop ? ` data-pile-top-card="${esc(topCardId)}" data-card-owner="${esc(topCardOwnerId)}"` : ""}>`
     : "";
@@ -5947,10 +5955,11 @@ function handCardIsPlayable(cardId) {
   if (rulesCardPlayRestrictedClient(cardId)) return false;
   const stackHasActions = (rules.actionStack || []).length > 0;
   const phaseId = currentPhaseUi().phase?.id;
-  const responsePhase = card.type === "ephemeral_will"
+  const playType = rulesPlayType(card);
+  const responsePhase = playType === "ephemeral_will"
     ? rulesEphemeralPhasesClient(card).includes(phaseId)
     : ["confrontation_reaction", "resolution_effects", "end_actions"].includes(phaseId);
-  if (card.type === "ephemeral_will") {
+  if (playType === "ephemeral_will") {
     if (!responsePhase || !rulesCanAffordCard(cardId)) return false;
     const ability = (playedAbilitiesByCard.get(cardId) || [])[0];
     if (
@@ -5960,7 +5969,7 @@ function handCardIsPlayable(cardId) {
     const draft = ability ? buildRulesActionDraft({ cardId, zone: "hand" }, ability) : null;
     return !draft || Number(draft.targetRules?.min || 0) <= draft.structuredTargets.length;
   }
-  if (card.type === "persistent_will") {
+  if (playType === "persistent_will") {
     if (
       ["confrontation_reaction", "resolution_effects"].includes(phaseId)
       && rulesPersistentWillsAsEphemeralClient()
@@ -6271,6 +6280,9 @@ function placementEntersSupport(payload, source) {
   if (cardsById.get(payload.cardId)?.type !== "manifestation") return false;
   if (currentPhaseUi().phase?.id !== "confrontation_reaction") return false;
   if (source?.zone === "hand") return rulesSupportFromHandAvailableClient(payload.cardId);
+  if (source?.zone === "deck" && latestState?.rulesEngine?.uncoveredTops?.[myPlayerId] === payload.cardId) {
+    return rulesSupportFromHandAvailableClient(payload.cardId);
+  }
   return (latestState?.rulesEngine?.playPermissions || []).some((permission) => (
     permission.playerId === myPlayerId
     && permission.cardId === payload.cardId
@@ -7136,7 +7148,7 @@ function renderRulesChoice() {
     return;
   }
   if (choice.kind === "reveal_hand_discard") {
-    const pickKey = { womb: "rulesWombPick", bloatuba: "rulesBloatubaPick" }[choice.purpose];
+    const pickKey = { womb: "rulesWombPick", bloatuba: "rulesBloatubaPick", gummo: "rulesGummoPick" }[choice.purpose];
     $("#rulesChoiceHeading").textContent = t(pickKey ? `${pickKey}Heading` : "rulesRevealDiscardHeading");
     $("#rulesChoiceText").textContent = rulesText(pickKey ? `${pickKey}Text` : "rulesRevealDiscardText", {
       player: rulesPlayerName(choice.targetPlayerId),
@@ -7305,10 +7317,20 @@ function renderRulesChoice() {
   const cards = searching
     ? choice.candidateCardIds
     : latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
-  $("#rulesChoiceHeading").textContent = t(
+  const destinationKeys = {
+    bullyboo_reveal: ["rulesChoiceRevealWillHeading", "rulesChoiceRevealWillText"],
+    attach_to_source: ["rulesChoicePlaceWillsHeading", "rulesChoicePlaceWillsText"],
+    amphora_offer: ["rulesChoiceAmphoraHeading", "rulesChoiceAmphoraText"],
+    obelisk_gift: ["rulesChoiceGiftHeading", "rulesChoiceGiftText"],
+    obelisk_reply: ["rulesChoiceGiftHeading", "rulesChoiceGiftText"],
+  }[searching ? "" : choice.destination];
+  if (destinationKeys) {
+    $("#rulesChoiceHeading").textContent = t(destinationKeys[0]);
+    $("#rulesChoiceText").textContent = rulesText(destinationKeys[1], { card: cardName(choice.sourceCardId), count: choice.count });
+  } else $("#rulesChoiceHeading").textContent = t(
     searching ? "rulesChoiceSearchHeading" : handWill ? "rulesChoiceHandWillHeading" : handManifestation ? "rulesChoiceHandHeading" : "rulesChoiceDiscardHeading",
   );
-  $("#rulesChoiceText").textContent = rulesText(
+  if (!destinationKeys) $("#rulesChoiceText").textContent = rulesText(
     searching
       ? "rulesChoiceSearchText"
       : handWill
@@ -7698,7 +7720,7 @@ function resolveDrop(ctx, clientX, clientY) {
         send({ type: "play_first_manifestation_trap", cardId: ctx.cardId });
         return;
       }
-      if (["ephemeral_will", "persistent_will"].includes(card?.type)) {
+      if (["ephemeral_will", "persistent_will"].includes(rulesPlayType(card))) {
         beginRulesBoardAction({
           cardId: ctx.cardId,
           zone: "hand",
@@ -8901,6 +8923,13 @@ function renderBattlefield() {
         ? rulesActionContextItem({ cardId: item.cardId, zone: "battlefield", itemId: item.id })
         : null;
       if (rulesItem) items.push(rulesItem);
+      if (isMine && (passiveEffectsByCard.get(item.cardId) || []).some((effect) => effect.kind === "recovery_draw_from_limbo")) {
+        const limboOn = (latestState?.rulesEngine?.limboRecoveryPlayerIds || []).includes(myPlayerId);
+        items.push({
+          label: t(limboOn ? "rulesLimboRecoveryOn" : "rulesLimboRecoveryOff"),
+          onSelect: () => send({ type: "toggle_limbo_recovery" }),
+        });
+      }
       (item.attachedCards || []).forEach((entry) => {
         const attachedCard = cardsById.get(entry.cardId);
         const playable = isMine && ["ephemeral_will", "persistent_will"].includes(attachedCard?.type)

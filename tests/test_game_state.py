@@ -13991,7 +13991,7 @@ class LotTwentyFourTests(RealCardRulesCase):
     """Bullyboo and the cards that keep Wills / Manifestations on a card."""
 
     BULLY = "gz2zjrxqc2rbcwq_en"
-    ALL = (BULLY, "omhqwnu5tvwlzzg_en", "e049wxg2j24nczl_en")
+    ALL = (BULLY, "omhqwnu5tvwlzzg_en", "e049wxg2j24nczl_en", "k6l96o0xphpycpm_en", "hcgvp7lbadlng1h_en", "v6slubph4q5ijfb_en", "nlbgn1ranlrd09r_en", "9bkn03sc9veaa88_en")
 
     def setup_game(self):
         session, p1, p2 = self.make_session()
@@ -14129,3 +14129,198 @@ class LotTwentyFourTests(RealCardRulesCase):
         self.assertNotIn("Placed", kp["counters"])
         base = session.card_rules["m-2"]["power"]
         self.assertEqual(session.rules_manifestation_characteristics(theirs)["power"], base - 1)
+
+    def test_peropero_uncovers_the_deck_top_which_can_enter_support_like_a_hand_card(self):
+        session, p1, p2 = self.setup_game()
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        session.card_rules["6jz7otalrdq0q8u_en"] = {"type": "manifestation", "power": 1, "powerCost": "{H}", "temperaments": ["phlegmatic"], "supportFromHand": True}
+        session.manifestation_ids.add("6jz7otalrdq0q8u_en")
+        self.put(p1, "deck", ["6jz7otalrdq0q8u_en", "m-1"])
+        source = {"cardId": "6jz7otalrdq0q8u_en", "zone": "deck"}
+        error, _ = session.declare_rules_action("p1", "Support", kind="play_card", source=source, as_support=True)
+        self.assertTrue(error, "no Peropero: not playable from the deck")
+        self.assertIsNone(session.serialize_for("p2", "player")["rulesEngine"]["uncoveredTops"].get("p1"))
+        session.battlefield = [self.item("pero", "p1", "k6l96o0xphpycpm_en", "field")]
+        self.assertEqual(session.serialize_for("p2", "player")["rulesEngine"]["uncoveredTops"], {"p1": "6jz7otalrdq0q8u_en"})
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, action = session.declare_rules_action("p1", "Support", kind="play_card", source=source, as_support=True)
+        self.assertIsNone(error, error)
+        self.assertEqual(p1["zones"]["deck"], ["m-1"])
+
+    GUMMO = "hcgvp7lbadlng1h_en"
+
+    def test_gummo_copies_a_vessel_manifestation_and_can_become_the_first_manifestation(self):
+        session, p1, p2 = self.setup_game()
+        session.card_rules["m-7"] = {"type": "manifestation", "power": 7, "powerCost": "{H}", "temperaments": ["phlegmatic"],
+                                      "passiveEffects": [{"kind": "adamant"}]}
+        session.manifestation_ids.add("m-7")
+        self.put(p1, "receptacle", ["m-7"])
+        gummo = self.item("gummo", "p1", self.GUMMO, "interzone")
+        session.battlefield = [gummo]
+        session.queue_rules_triggers(self.GUMMO, "p1", "end_of_turn", item_id="gummo", face_up=True, zone="interzone", controller_id="p1")
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        choice = session.rules_engine["pendingChoice"]
+        if choice["kind"] == "optional_stack_action":
+            session.resolve_rules_choice("p1", choice["id"], option="accept")
+            session.pass_rules_priority("p2")
+            session.pass_rules_priority("p1")
+            choice = session.rules_engine["pendingChoice"]
+        self.assertEqual((choice["kind"], choice["purpose"], choice["cardIds"]), ("reveal_hand_discard", "gummo", ["m-7"]))
+        error, _ = session.resolve_rules_choice("p1", choice["id"], option="0")
+        self.assertIsNone(error)
+        self.assertEqual(gummo["gummoCopy"], "m-7")
+        self.assertEqual(session.rules_manifestation_base_power(gummo), 7)
+        self.assertEqual(session.rules_manifestation_characteristics(gummo)["power"], 7)
+        self.assertIn({"kind": "adamant"}, session.rules_item_card_rules(gummo)["passiveEffects"])
+        self.assertTrue(session.rules_item_card_rules(gummo)["triggeredAbilities"])
+        # End of Recovery: becomes the First Manifestation.
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("recovery_end")
+        session.rules_engine["firstManifestationItemIds"] = {}
+        session.rules_engine["firstManifestationComplete"] = False
+        result = session.apply_rules_action_result({
+            "id": "g", "controllerId": "p1",
+            "source": {"cardId": self.GUMMO, "itemId": "gummo", "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.GUMMO, "gummo-becomes-first-manifestation"),
+        })
+        self.assertEqual(result["status"], "first_manifestation")
+        self.assertEqual(session.rules_engine["firstManifestationItemIds"]["p1"], "gummo")
+        self.assertEqual(gummo["fieldZone"], "confrontation")
+
+    QUASI = "v6slubph4q5ijfb_en"
+
+    def test_quasimillenary_draws_the_recovery_hand_from_limbo_and_exiles_those_cards_later(self):
+        session, p1, p2 = self.setup_game()
+        self.put(p1, "graveyard", ["m-1", "m-2", "m-3"])
+        self.put(p1, "hand", ["m-4"])
+        self.put(p1, "deck", ["m-5", "m-6", "m-7", "m-8"])
+        quasi = self.item("quasi", "p1", self.QUASI, "interzone")
+        session.battlefield = [quasi]
+        error, _ = session.toggle_rules_limbo_recovery("p2")
+        self.assertTrue(error)
+        error, result = session.toggle_rules_limbo_recovery("p1")
+        self.assertIsNone(error)
+        error, drawn = session._draw_rules_recovery_hand("p1", 5)
+        self.assertIsNone(error)
+        self.assertEqual(sorted(drawn["fromLimbo"]), ["m-1", "m-2", "m-3"])
+        self.assertEqual(len(p1["zones"]["hand"]), 5)
+        self.assertEqual(p1["zones"]["graveyard"], [])
+        self.assertEqual(p1["zones"]["deck"], ["m-6", "m-7", "m-8"])
+        view = session.serialize_for("p2", "player")["rulesEngine"]
+        self.assertEqual(sorted(view["uncoveredHand"]["p1"]), ["m-1", "m-2", "m-3"])
+        # Discarding such a card exiles it instead of sending it to Limbo.
+        session.move_zone_card("p1", "hand", "p1", "graveyard", "m-2", "top")
+        self.assertIn("m-2", p1["zones"]["exile"])
+        self.assertNotIn("m-2", p1["zones"]["graveyard"])
+        # Without Quasimillenary in the Interzone the toggle does nothing.
+        session.battlefield = []
+        self.assertFalse(session.rules_quasimillenary_active("p1"))
+
+    SLUMBER = "nlbgn1ranlrd09r_en"
+
+    def test_the_slumberer_plays_as_a_persistent_will_sleeps_then_wakes_as_first_manifestation(self):
+        session, p1, p2 = self.setup_game()
+        self.assertTrue(session.card_rules[self.SLUMBER]["playAsPersistentWill"])
+        self.assertFalse(session.card_rules[self.SLUMBER]["canPayTribute"])
+        self.put(p1, "hand", [self.SLUMBER])
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        source = {"cardId": self.SLUMBER, "zone": "hand"}
+        error, _ = session.declare_rules_action("p1", "Play", kind="play_card", source=source)
+        self.assertTrue(error, "7 tribute is due")
+        session.rules_engine["playPermissions"].append({
+            "id": "free", "playerId": "p1", "cardId": self.SLUMBER, "fromZone": "hand",
+            "phaseIds": list(ADVANCED_PHASES), "asSupport": False, "noTribute": True,
+            "turn": session.phase_tracker["turn"],
+        })
+        error, action = session.declare_rules_action("p1", "Play", kind="play_card", source=source)
+        self.assertIsNone(error, error)
+        self.assertEqual(action["source"]["cardType"], "persistent_will")
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        for _ in range(4):
+            choice = session.rules_engine["pendingChoice"]
+            if choice and choice["kind"] == "optional_stack_action":
+                session.resolve_rules_choice("p1", choice["id"], option="accept")
+            session.pass_rules_priority("p2")
+            session.pass_rules_priority("p1")
+        item = next(i for i in session.battlefield if i["cardId"] == self.SLUMBER)
+        self.assertEqual(item["counters"].get("Sleep"), 3)
+        self.assertEqual(session.rules_field_zone(item), "field")
+        # Winning removes a Sleep counter, losing hands it to the winner's Vessel.
+        item["counters"]["Sleep"] = 1
+        lost = session.apply_rules_action_result({
+            "id": "w", "controllerId": "p1",
+            "source": {"cardId": self.SLUMBER, "itemId": item["id"], "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.SLUMBER, "slumberer-sleeps-deeper"),
+        })
+        self.assertEqual(item["counters"]["Sleep"], 0)
+        session.rules_engine["firstManifestationItemIds"] = {}
+        session.rules_engine["firstManifestationComplete"] = False
+        woke = session.apply_rules_action_result({
+            "id": "x", "controllerId": "p1",
+            "source": {"cardId": self.SLUMBER, "itemId": item["id"], "ownerId": "p1"},
+            "targets": [], "ability": self.ability(self.SLUMBER, "slumberer-wakes-up"),
+        })
+        self.assertEqual(woke["status"], "first_manifestation")
+        self.assertEqual(item["fieldZone"], "confrontation")
+        self.assertTrue(session.rules_item_has_persist(item))
+        self.assertEqual(session.rules_engine["firstManifestationItemIds"]["p1"], item["id"])
+
+    def test_the_slumberer_is_taken_into_the_winners_vessel_when_its_owner_loses(self):
+        session, p1, p2 = self.setup_game()
+        sleeper = self.item("sleep", "p1", self.SLUMBER, "field", counters={"Sleep": 2})
+        session.battlefield = [sleeper]
+        session.rules_engine["confrontationResult"] = {"winnerId": "p2", "loserId": "p1", "participantItemIds": []}
+        session.queue_rules_confrontation_win_triggers()
+        for _ in range(3):
+            choice = session.rules_engine["pendingChoice"]
+            if choice and choice["kind"] == "optional_stack_action":
+                session.resolve_rules_choice(choice["playerId"], choice["id"], option="accept")
+            session.pass_rules_priority("p2")
+            session.pass_rules_priority("p1")
+        self.assertIsNone(session.find_battlefield_item("sleep"))
+        self.assertIn(self.SLUMBER, p2["zones"]["receptacle"])
+
+    OBELISK = "9bkn03sc9veaa88_en"
+
+    def test_obelisk_of_friendship_swaps_two_hidden_gifts_into_the_vessels_and_boosts_the_bigger_giver(self):
+        session, p1, p2 = self.setup_game()
+        session.card_rules["m-1"]["power"] = 5
+        session.card_rules["m-2"]["power"] = 2
+        self.put(p1, "hand", ["m-1", "m-3"])
+        self.put(p2, "hand", ["m-2"])
+        session.battlefield = [
+            self.item("ob", "p1", self.OBELISK, "field"),
+            self.item("first1", "p1", "m-4", "confrontation"),
+            self.item("first2", "p2", "m-5", "confrontation"),
+        ]
+        session.rules_engine["firstManifestationItemIds"] = {"p1": "first1", "p2": "first2"}
+        session.queue_rules_revelation_triggers()
+        for _ in range(2):
+            session.pass_rules_priority("p2")
+            session.pass_rules_priority("p1")
+            choice = session.rules_engine["pendingChoice"]
+            if choice and choice["kind"] == "optional_stack_action":
+                session.resolve_rules_choice("p1", choice["id"], option="accept")
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual((choice["playerId"], choice["destination"]), ("p1", "obelisk_gift"))
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-1"])
+        self.assertIsNone(error)
+        reply = session.rules_engine["pendingChoice"]
+        self.assertEqual((reply["playerId"], reply["destination"]), ("p2", "obelisk_reply"))
+        # The first gift stays secret from the opponent.
+        self.assertNotIn("_giftCardId", session.serialize_for("p2", "player")["rulesEngine"]["pendingChoice"])
+        error, _ = session.resolve_rules_choice("p2", reply["id"], card_ids=["m-2"])
+        self.assertIsNone(error)
+        self.assertIn("m-1", p2["zones"]["receptacle"])
+        self.assertIn("m-2", p1["zones"]["receptacle"])
+        self.assertEqual(session.card_owner_in_zone("p2", "receptacle", "m-1"), "p1")
+        first1 = session.find_battlefield_item("first1")
+        first2 = session.find_battlefield_item("first2")
+        base1 = session.card_rules["m-4"]["power"]
+        base2 = session.card_rules["m-5"]["power"]
+        self.assertEqual(session.rules_manifestation_characteristics(first1)["power"], base1 + 3)
+        self.assertEqual(session.rules_manifestation_characteristics(first2)["power"], base2)

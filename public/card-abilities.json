@@ -4820,5 +4820,112 @@
         "kind": "karmapult_sacrifice"
       }
     }
+  ],
+  "k6l96o0xphpycpm_en": [
+    {
+      "id": "peropero-plays-deck-top-uncovered",
+      "passiveEffect": {
+        "kind": "deck_top_uncovered"
+      }
+    }
+  ],
+  "hcgvp7lbadlng1h_en": [
+    {
+      "id": "gummo-copies-vessel-manifestation",
+      "optional": true,
+      "trigger": {
+        "event": "end_of_turn",
+        "zone": "interzone"
+      },
+      "result": {
+        "kind": "gummo_copy_vessel"
+      }
+    },
+    {
+      "id": "gummo-becomes-first-manifestation",
+      "tribute": "{H}{H}{H}",
+      "phaseIds": [
+        "recovery_end"
+      ],
+      "sourceZones": [
+        "battlefield"
+      ],
+      "result": {
+        "kind": "interzone_becomes_first_manifestation"
+      }
+    }
+  ],
+  "v6slubph4q5ijfb_en": [
+    {
+      "id": "quasimillenary-recovery-draw-from-limbo",
+      "passiveEffect": {
+        "kind": "recovery_draw_from_limbo"
+      }
+    }
+  ],
+  "nlbgn1ranlrd09r_en": [
+    {
+      "id": "slumberer-falls-asleep",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Sleep",
+        "value": 3
+      }
+    },
+    {
+      "id": "slumberer-taken-by-the-winner",
+      "trigger": {
+        "event": "player_loses_confrontation",
+        "eventController": "owner",
+        "sourceCounterMin": {
+          "name": "Sleep",
+          "min": 1
+        }
+      },
+      "result": {
+        "kind": "source_to_winner_vessel"
+      }
+    },
+    {
+      "id": "slumberer-sleeps-deeper",
+      "trigger": {
+        "event": "player_wins_confrontation",
+        "eventController": "owner"
+      },
+      "result": {
+        "kind": "add_counter_source",
+        "counter": "Sleep",
+        "value": -1
+      }
+    },
+    {
+      "id": "slumberer-wakes-up",
+      "trigger": {
+        "event": "beginning_of_turn",
+        "sourceCounterMax": {
+          "name": "Sleep",
+          "max": 0
+        }
+      },
+      "result": {
+        "kind": "slumberer_wakes"
+      }
+    }
+  ],
+  "9bkn03sc9veaa88_en": [
+    {
+      "id": "obelisk-exchanges-gifts",
+      "optional": true,
+      "trigger": {
+        "event": "revelation"
+      },
+      "result": {
+        "kind": "obelisk_gift"
+      }
+    }
   ]
 }

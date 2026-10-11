@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 352,
-    "explicitAbilities": 447,
+    "explicitCards": 357,
+    "explicitAbilities": 456,
     "statuses": {
-      "automated": 422,
+      "automated": 427,
       "generic": 0,
-      "manual": 28,
+      "manual": 23,
       "partial": 0
     }
   },
@@ -130,10 +130,26 @@
       "collectionNumber": 9,
       "name": "The Slumberer",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "slumberer-falls-asleep",
+        "slumberer-taken-by-the-winner",
+        "slumberer-sleeps-deeper",
+        "slumberer-wakes-up"
+      ],
+      "mechanics": [
+        "result:add_counter_source",
+        "result:slumberer_wakes",
+        "result:source_to_winner_vessel",
+        "trigger:beginning_of_turn",
+        "trigger:enters_field",
+        "trigger:player_loses_confrontation",
+        "trigger:player_wins_confrontation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "nu1ycheygeru344_en": {
       "collectionNumber": 10,
@@ -544,10 +560,17 @@
       "collectionNumber": 34,
       "name": "Peropero, the Spirophant",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "peropero-plays-deck-top-uncovered"
+      ],
+      "mechanics": [
+        "passive:deck_top_uncovered"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "msif6nhq0v1zbh0_en": {
       "collectionNumber": 35,
@@ -2124,10 +2147,17 @@
       "collectionNumber": 127,
       "name": "Quasimillenary",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "quasimillenary-recovery-draw-from-limbo"
+      ],
+      "mechanics": [
+        "passive:recovery_draw_from_limbo"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "e1zg2gsn0tfqo1y_en": {
       "collectionNumber": 128,
@@ -3993,10 +4023,18 @@
       "collectionNumber": 239,
       "name": "Obelisk of Friendship",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "obelisk-exchanges-gifts"
+      ],
+      "mechanics": [
+        "result:obelisk_gift",
+        "trigger:revelation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "mwby5hp16qdnjpj_en": {
       "collectionNumber": 240,
@@ -4434,10 +4472,22 @@
       "collectionNumber": 264,
       "name": "Gummo",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "gummo-copies-vessel-manifestation",
+        "gummo-becomes-first-manifestation"
+      ],
+      "mechanics": [
+        "cost:tribute",
+        "phase-window",
+        "result:gummo_copy_vessel",
+        "result:interzone_becomes_first_manifestation",
+        "trigger:end_of_turn"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "g02zvmqx3loxlcv_en": {
       "collectionNumber": 265,
