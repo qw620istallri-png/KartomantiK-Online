@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 345,
-    "explicitAbilities": 438,
+    "explicitCards": 349,
+    "explicitAbilities": 442,
     "statuses": {
-      "automated": 415,
+      "automated": 419,
       "generic": 0,
-      "manual": 35,
+      "manual": 31,
       "partial": 0
     }
   },
@@ -2598,10 +2598,18 @@
       "collectionNumber": 156,
       "name": "Juggling Amphora",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "juggling-amphora-offers-two-manifestations"
+      ],
+      "mechanics": [
+        "result:amphora_offer",
+        "trigger:enters_field_zone"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "dq529rojumn98fp_en": {
       "collectionNumber": 157,
@@ -2625,10 +2633,17 @@
       "collectionNumber": 158,
       "name": "Wandering Outcast",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "wandering-outcast-swaps-with-targeted"
+      ],
+      "mechanics": [
+        "passive:swap_with_targeted_confrontation_manifestation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "o1b1hf2xpmkt8j2_en": {
       "collectionNumber": 159,
@@ -2723,10 +2738,18 @@
       "collectionNumber": 164,
       "name": "Bloatuba",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "bloatuba-chain-reveals-opponent-top"
+      ],
+      "mechanics": [
+        "result:chain_from_zone",
+        "trigger:enters_field"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "kaw822pzpzd2l9k_en": {
       "collectionNumber": 165,
@@ -4050,10 +4073,18 @@
       "collectionNumber": 244,
       "name": "Extortionist Womb",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
-      "mechanics": [],
-      "testRefs": []
+      "status": "automated",
+      "abilityIds": [
+        "extortionist-womb-hand-or-tokens"
+      ],
+      "mechanics": [
+        "result:extortionist_womb",
+        "trigger:revelation"
+      ],
+      "testRefs": [
+        "tests/test_game_state.py",
+        "tests/test_card_catalog.py"
+      ]
     },
     "tm9kt43d14h9ub1_en": {
       "collectionNumber": 245,

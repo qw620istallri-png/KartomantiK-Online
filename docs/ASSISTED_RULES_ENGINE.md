@@ -893,3 +893,10 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Trap : `play_first_manifestation_trap` (main.py) ; `trapPlayerIds` ; un Trap ne se joue pas comme une carte normale. Limite : deadlock possible Trap vs Hermetic Hourglass (chacun attend l'autre), non géré.
 - Zoom 100 % au survol des cartes dans les choix de recherche (`showChoiceCardPreview`).
 - Non testé en navigateur réel : menus Jigon / Gnarlipuff / Trap.
+
+## Lot 23 (Juggling Amphora, Extortionist Womb, Bloatuba, Wandering Outcast)
+
+- Juggling Amphora : `amphora_offer` (choix de 2 manifestations en main, destination `amphora_offer`) puis `binary_choice` purpose `amphora_pick` pour l'adversaire (choix à l'aveugle première/seconde). La choisie entre en Soutien, l'autre va aux Limbes. Avec plus de 2 joueurs l'adversaire est le premier autre joueur (pas de choix).
+- Extortionist Womb : `extortionist_womb` ; l'adversaire accepte ou refuse de montrer sa main (`womb_show`). Si oui, le contrôleur choisit (via `reveal_hand_discard` purpose `womb`) une manifestation que l'adversaire Enchaîne ; sinon, ou si rien n'est chaînable, 2 jetons 2 {H} en Soutien.
+- Bloatuba : `afterChain` `reveal_top_opponent_suspend`. L'adversaire choisit une manifestation parmi les cartes révélées (`reveal_hand_discard` purpose `bloatuba`, cartes du deck), elle est mise en Impasse (suspendue), puis le contrôleur ordonne les autres sous le deck (`deck_reorder`). Les cartes non-manifestation révélées ne s'affichent qu'à l'étape d'ordre.
+- Wandering Outcast : passif `swap_with_targeted_confrontation_manifestation` dans `rules_redirect_targets`. LIMITE : automatique, alors que la carte dit « vous pouvez ».

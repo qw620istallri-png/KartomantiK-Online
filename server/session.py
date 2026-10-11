@@ -24,7 +24,7 @@ RULES_SCORE_COUNTS = {
 }
 RULES_AFTER_CHAIN = {
     "discard_deck_per_base_power", "power_counter_target_per_base_power",
-    "look_top_pick_hand", "boost_controller_first",
+    "look_top_pick_hand", "boost_controller_first", "reveal_top_opponent_suspend",
 }
 ALL_ZONES = PRIVATE_ZONES | SHARED_ZONES
 
@@ -1739,6 +1739,8 @@ class Session:
             "grant_limbo_will_play",
             "will_becomes_support_manifestation",
             "choose_hand_will_as_support_manifestation",
+            "amphora_offer",
+            "extortionist_womb",
             "hold_winner_manifestations",
             "search_deck_will_conceal",
             "free_concealed_wills",
@@ -2577,6 +2579,39 @@ class Session:
             mass = None
             if item is not None and self.rules_item_controller_id(item) != controller_id:
                 owner_id = self.rules_item_controller_id(item)
+                outcast = next((
+                    source for source in self.rules_active_passive_sources(
+                        "swap_with_targeted_confrontation_manifestation"
+                    )
+                    if self.rules_item_controller_id(source) == owner_id
+                    and self.rules_field_zone(source) == "interzone"
+                    and self.rules_field_zone(item) == "confrontation"
+                    and not item.get("isSupport")
+                    and self.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"
+                    and not self.rules_item_is_immune(source, controller_id)
+                    and not self.rules_item_is_protected(source, controller_id)
+                ), None)
+                if outcast is not None:
+                    # Swap positions, then the effect targets Wandering Outcast.
+                    for key in ("fieldZone", "x", "y", "stackedOn", "stackOffsetX", "stackOffsetY",
+                                "confrontationOrder", "isSupport"):
+                        a, b = item.get(key), outcast.get(key)
+                        for holder, value in ((item, b), (outcast, a)):
+                            if value is None:
+                                holder.pop(key, None)
+                            else:
+                                holder[key] = value
+                    for other in self.battlefield:
+                        if other.get("stackedOn") == item["id"]:
+                            other["stackedOn"] = outcast["id"]
+                        elif other.get("stackedOn") == outcast["id"]:
+                            other["stackedOn"] = item["id"]
+                    changed = True
+                    redirected.append({
+                        "kind": "card", "itemId": outcast["id"], "cardId": outcast.get("cardId"),
+                        "ownerId": outcast.get("ownerId"),
+                    })
+                    continue
                 mass = next((
                     source for source in self.rules_active_passive_sources(
                         "redirect_opponent_targeting_to_source"
@@ -7810,6 +7845,20 @@ class Session:
                         "kind": "look_top_pick_hand", "playerId": chain_player_id,
                         "count": len(card_ids),
                     }
+            elif after_chain.get("kind") == "reveal_top_opponent_suspend":
+                chain_player_id = chain_controller_id or player_id
+                victims = [pid for pid in self.players if pid != chain_player_id]
+                if victims and base_power > 0:
+                    victim_id = victims[0]
+                    revealed = list(self.players[victim_id]["zones"]["deck"][:base_power])
+                    if revealed:
+                        pending_pick = self.make_bloatuba_choice(
+                            chain_player_id, victim_id, revealed, source_card_id,
+                        )
+                        after_result = {
+                            "kind": "reveal_top_opponent_suspend", "playerId": victim_id,
+                            "cardIds": revealed,
+                        }
             elif after_chain.get("kind") == "boost_controller_first":
                 boost_player_id = chain_controller_id or player_id
                 first_item = self.find_battlefield_item(
@@ -8962,6 +9011,48 @@ class Session:
                 "kind": "choice_required", "choiceId": choice_id,
                 "choiceKind": "discard_from_hand", "playerId": player_id,
                 "count": 1, "requireTypes": sorted(RULES_WILL_TYPES),
+            }
+        if result.get("kind") == "extortionist_womb":
+            opponents = [pid for pid in self.players if pid != player_id]
+            if not opponents:
+                return {"kind": result.get("kind"), "status": "no_opponent"}
+            chooser_id = opponents[0]
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "binary_choice", "purpose": "womb_show",
+                "playerId": chooser_id, "options": ["yes", "no"],
+                "headingKey": "rulesWombHeading", "textKey": "rulesWombText",
+                "yesKey": "rulesWombYes", "noKey": "rulesWombNo",
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+                "relatedCardId": (action.get("source") or {}).get("cardId"),
+                "controllerId": player_id, "actionId": action.get("id"),
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "binary_choice", "playerId": chooser_id,
+            }
+        if result.get("kind") == "amphora_offer":
+            hand = player["zones"]["hand"]
+            if sum(1 for c in hand if self.card_rules.get(c, {}).get("type") == "manifestation") < 2:
+                return {"kind": result.get("kind"), "status": "no_hand_card"}
+            if not action.get("optionalAccepted"):
+                return {"kind": result.get("kind"), "status": "declined"}
+            opponents = [pid for pid in self.players if pid != player_id]
+            if not opponents:
+                return {"kind": result.get("kind"), "status": "no_opponent"}
+            choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": choice_id, "kind": "discard_from_hand",
+                "playerId": player_id, "count": 2, "requireManifestation": True,
+                "destination": "amphora_offer", "chooserId": opponents[0],
+                "actionId": action.get("id"),
+                "controllerId": action.get("controllerId"),
+                "sourceCardId": (action.get("source") or {}).get("cardId"),
+            }
+            return {
+                "kind": "choice_required", "choiceId": choice_id,
+                "choiceKind": "discard_from_hand", "playerId": player_id,
+                "count": 2, "requireManifestation": True,
             }
         if result.get("kind") == "optional_discard_wills_for_power":
             hand = player["zones"]["hand"]
@@ -12922,6 +13013,28 @@ class Session:
         payload.update(proof_payload)
         return payload
 
+    def make_bloatuba_choice(self, controller_id, victim_id, revealed, source_card_id):
+        """Opponent picks a revealed Manifestation to suspend, else the controller orders."""
+        picks = [c for c in revealed if self.card_rules.get(c, {}).get("type") == "manifestation"]
+        if picks:
+            return {
+                "id": new_id(), "kind": "reveal_hand_discard", "purpose": "bloatuba",
+                "playerId": victim_id, "targetPlayerId": victim_id,
+                "cardIds": picks, "_revealed": list(revealed),
+                "controllerId": controller_id, "sourceCardId": source_card_id,
+            }
+        return self.make_bloatuba_reorder(controller_id, victim_id, revealed, source_card_id)
+
+    def make_bloatuba_reorder(self, controller_id, victim_id, remaining, source_card_id):
+        group = {
+            "playerId": victim_id, "cardIds": list(remaining),
+            "topCount": 0, "bottomCount": len(remaining),
+        }
+        return {
+            "id": new_id(), "kind": "deck_reorder", "playerId": controller_id,
+            "sourceCardId": source_card_id, "groups": [group], "_groups": [group],
+        }
+
     def rules_chain_candidates(self, chain_player_id, zone):
         """Chainable Manifestations as {card_id: container_id}.
 
@@ -13245,11 +13358,34 @@ class Session:
             except (TypeError, ValueError):
                 return "Choose a card from the revealed hand.", None
             target_id = choice.get("targetPlayerId")
-            hand = self.players[target_id]["zones"]["hand"] if target_id in self.players else []
+            hand = self.players[target_id]["zones"]["deck" if choice.get("purpose") == "bloatuba" else "hand"] if target_id in self.players else []
             card_ids = choice.get("cardIds") or []
             if not 0 <= index < len(card_ids) or card_ids[index] not in hand:
                 return "Choose a card from the revealed hand.", None
             card_id = card_ids[index]
+            if choice.get("purpose") == "bloatuba":
+                error, _suspended = self.suspend_zone_card(target_id, "deck", card_id)
+                if error:
+                    return error, None
+                remaining = [c for c in choice.get("_revealed") or [] if c != card_id]
+                self.rules_engine["pendingChoice"] = (
+                    self.make_bloatuba_reorder(
+                        choice.get("controllerId"), target_id, remaining, choice.get("sourceCardId"),
+                    ) if remaining else None
+                )
+                return None, {
+                    "kind": "bloatuba_pick", "playerId": player_id,
+                    "targetPlayerId": target_id, "cardId": card_id,
+                    "remaining": remaining,
+                }
+            if choice.get("purpose") == "womb":
+                self.rules_engine["pendingChoice"] = None
+                return self.chain_rules_manifestation(
+                    target_id, "hand", card_id,
+                    action_id=choice.get("actionId"),
+                    source_card_id=choice.get("sourceCardId"),
+                    chain_controller_id=player_id,
+                )
             error, _owner_id = self.move_zone_card(
                 target_id, "hand", target_id, "graveyard", card_id, "top"
             )
@@ -13762,6 +13898,70 @@ class Session:
             return None, {
                 "kind": "temperament_choice", "status": "chosen",
                 "temperament": option, "itemId": choice.get("sourceItemId"),
+            }
+
+        if choice.get("kind") == "binary_choice" and choice.get("purpose") == "womb_show":
+            if option not in choice.get("options", []):
+                return "Choose yes or no.", None
+            self.rules_engine["pendingChoice"] = None
+            controller_id = choice.get("controllerId")
+            hand = list(self.players[player_id]["zones"]["hand"])
+            chainable = [
+                c for c in hand
+                if self.card_rules.get(c, {}).get("type") == "manifestation"
+                and self.rules_card_play_restriction_error(player_id, c) is None
+            ] if option == "yes" and not self.rules_hands_are_immune() else []
+            if not chainable:
+                tokens = self.apply_rules_action_result({
+                    "id": choice.get("actionId") or new_id(), "controllerId": controller_id,
+                    "source": {"cardId": choice.get("sourceCardId"), "ownerId": controller_id},
+                    "targets": [],
+                    "ability": {"result": {
+                        "kind": "create_support_tokens", "count": 2, "power": 2,
+                        "temperament": "hollow",
+                    }},
+                })
+                return None, {
+                    "kind": "womb_show", "status": "tokens",
+                    "shown": option == "yes", "tokens": tokens,
+                    "handProof": hand if option == "yes" else [],
+                }
+            new_choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": new_choice_id, "kind": "reveal_hand_discard", "purpose": "womb",
+                "playerId": controller_id, "targetPlayerId": player_id,
+                "cardIds": chainable,
+                "sourceCardId": choice.get("sourceCardId"),
+                "actionId": choice.get("actionId"),
+            }
+            return None, {
+                "kind": "womb_show", "status": "shown", "handProof": hand,
+                "choiceId": new_choice_id,
+            }
+
+        if choice.get("kind") == "binary_choice" and choice.get("purpose") == "amphora_pick":
+            if option not in choice.get("options", []):
+                return "Choose one of the two manifestations.", None
+            self.rules_engine["pendingChoice"] = None
+            owner_id = choice.get("controllerId")
+            offered = list(choice.get("offeredCardIds") or [])
+            hand = self.players[owner_id]["zones"]["hand"]
+            if len(offered) != 2 or any(c not in hand for c in offered):
+                return None, {"kind": "amphora_pick", "status": "target_missing"}
+            kept, discarded = (offered[0], offered[1]) if option == "yes" else (offered[1], offered[0])
+            moved = self.apply_rules_action_result({
+                "id": new_id(), "controllerId": owner_id,
+                "source": {"cardId": choice.get("sourceCardId"), "ownerId": owner_id},
+                "targets": [{
+                    "kind": "zone_card", "containerId": owner_id, "zone": "hand",
+                    "cardId": kept, "ownerId": owner_id,
+                }],
+                "ability": {"result": {"kind": "move_zone_target_to_field_zone", "asSupport": True}},
+            })
+            self.move_zone_card(owner_id, "hand", owner_id, "graveyard", discarded, "top")
+            return None, {
+                "kind": "amphora_pick", "status": (moved or {}).get("status"),
+                "cardId": kept, "discardedCardId": discarded,
             }
 
         if choice.get("kind") == "binary_choice" and choice.get("purpose") == "support_else_chain":
@@ -14818,6 +15018,24 @@ class Session:
         ):
             return "Choose a valid card type from your hand.", None
         destination = choice.get("destination")
+        if destination == "amphora_offer":
+            new_choice_id = new_id()
+            self.rules_engine["pendingChoice"] = {
+                "id": new_choice_id, "kind": "binary_choice", "purpose": "amphora_pick",
+                "playerId": choice.get("chooserId"), "options": ["yes", "no"],
+                "headingKey": "rulesAmphoraHeading", "textKey": "rulesAmphoraText",
+                "yesKey": "rulesAmphoraFirst", "noKey": "rulesAmphoraSecond",
+                "sourceCardId": choice.get("sourceCardId"),
+                "relatedCardId": choice.get("sourceCardId"),
+                "controllerId": player_id, "offeredCardIds": list(selected),
+            }
+            return None, {
+                "kind": "amphora_offer", "status": "offered", "playerId": player_id,
+                "choiceId": new_choice_id, "cardIds": [],
+                "actionId": choice.get("actionId"),
+                "controllerId": choice.get("controllerId"),
+                "sourceCardId": choice.get("sourceCardId"),
+            }
         for card_id in selected:
             if destination == "support_manifestation":
                 moved = self.apply_rules_action_result({

@@ -13835,3 +13835,153 @@ class LotTwentyTwoTests(RealCardRulesCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class LotTwentyThreeTests(RealCardRulesCase):
+    """Juggling Amphora, Wandering Outcast, Extortionist Womb, Bloatuba."""
+
+    AMPHORA, OUTCAST, WOMB, BLOATUBA = "fw18tebi26jwiqb_en", "h67753m250gg2h6_en", "3diq2d6oy35zoey_en", "vt30v1v8anw5hib_en"
+    ALL = (AMPHORA, OUTCAST, WOMB, BLOATUBA)
+
+    def setup_game(self):
+        session, p1, p2 = self.make_session()
+        session.rules_engine["enabled"] = True
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        return session, p1, p2
+
+    def item(self, item_id, owner, card, zone="field", **extra):
+        return self.field_item(item_id, owner, card, field_zone=zone, controllerId=owner, x=0, y=0, rotation=0, stackedOn=None, **extra)
+
+    def test_juggling_amphora_lets_the_opponent_pick_which_concealed_manifestation_enters_support(self):
+        session, p1, p2 = self.setup_game()
+        self.put(p1, "hand", ["m-0", "m-1", "m-2"])
+        amphora = self.item("amphora", "p1", self.AMPHORA, "confrontation")
+        session.battlefield = [amphora]
+        session.queue_rules_field_zone_entry_triggers(amphora, "confrontation")
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        choice = session.rules_engine["pendingChoice"]
+        if choice["kind"] == "optional_stack_action":
+            error, _ = session.resolve_rules_choice("p1", choice["id"], option="accept")
+            self.assertIsNone(error)
+            session.pass_rules_priority("p2")
+            session.pass_rules_priority("p1")
+            choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["destination"], "amphora_offer")
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-0"])
+        self.assertTrue(error)
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-0", "m-1"])
+        self.assertIsNone(error)
+        pick = session.rules_engine["pendingChoice"]
+        self.assertEqual(pick["playerId"], "p2")
+        error, _ = session.resolve_rules_choice("p2", pick["id"], option="no")
+        self.assertIsNone(error)
+        entered = [i for i in session.battlefield if i["cardId"] == "m-1"]
+        self.assertEqual(len(entered), 1)
+        self.assertTrue(entered[0].get("isSupport"))
+        self.assertEqual(entered[0]["controllerId"], "p1")
+        self.assertIn("m-0", p1["zones"]["graveyard"])
+        self.assertEqual(p1["zones"]["hand"], ["m-2"])
+
+    def reveal_womb(self):
+        session, p1, p2 = self.setup_game()
+        session.battlefield = [self.item("womb", "p1", self.WOMB, "field")]
+        session.queue_rules_revelation_triggers()
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        return session, p1, p2
+
+    def test_extortionist_womb_refusal_gives_two_support_tokens(self):
+        session, p1, p2 = self.reveal_womb()
+        self.put(p2, "hand", ["m-3"])
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual((choice["playerId"], choice["purpose"]), ("p2", "womb_show"))
+        error, _ = session.resolve_rules_choice("p2", choice["id"], option="no")
+        self.assertIsNone(error)
+        support = [i for i in session.battlefield if i["controllerId"] == "p1" and i.get("isSupport")]
+        self.assertEqual(len(support), 2)
+        self.assertEqual(p2["zones"]["hand"], ["m-3"])
+
+    def test_extortionist_womb_shown_hand_forces_a_chain_of_the_picked_manifestation(self):
+        session, p1, p2 = self.reveal_womb()
+        self.put(p2, "hand", ["m-3", "m-4", "will-x"])
+        session.card_rules["will-x"] = {"type": "persistent_will", "cost": 1, "powerCost": "{H}", "temperaments": ["phlegmatic"]}
+        choice = session.rules_engine["pendingChoice"]
+        error, _ = session.resolve_rules_choice("p2", choice["id"], option="yes")
+        self.assertIsNone(error)
+        pick = session.rules_engine["pendingChoice"]
+        self.assertEqual((pick["playerId"], pick["purpose"]), ("p1", "womb"))
+        self.assertEqual(sorted(pick["cardIds"]), ["m-3", "m-4"])
+        error, _ = session.resolve_rules_choice("p1", pick["id"], option="1")
+        self.assertIsNone(error)
+        chained = [i for i in session.battlefield if i["cardId"] == "m-4"]
+        self.assertEqual(len(chained), 1)
+        self.assertEqual(chained[0]["controllerId"], "p2")
+        self.assertTrue(chained[0].get("isChained"))
+        self.assertEqual(len([i for i in session.battlefield if i.get("isSupport")]), 1)
+
+    def test_extortionist_womb_shown_hand_without_manifestation_gives_tokens(self):
+        session, p1, p2 = self.reveal_womb()
+        self.put(p2, "hand", [])
+        choice = session.rules_engine["pendingChoice"]
+        session.resolve_rules_choice("p2", choice["id"], option="yes")
+        self.assertEqual(len([i for i in session.battlefield if i.get("isSupport")]), 2)
+
+    def test_bloatuba_chain_makes_the_opponent_suspend_a_revealed_manifestation_then_orders_the_rest(self):
+        session, p1, p2 = self.setup_game()
+        session.card_rules["m-5"]["power"] = 3
+        self.put(p1, "hand", ["m-5"])
+        self.put(p2, "deck", ["will-x", "m-1", "m-2", "m-3"])
+        session.card_rules["will-x"] = {"type": "persistent_will", "cost": 1, "powerCost": "{H}", "temperaments": ["phlegmatic"]}
+        bloat = self.item("bloat", "p1", self.BLOATUBA, "confrontation")
+        session.battlefield = [bloat]
+        session.queue_rules_battlefield_entry_triggers(self.BLOATUBA, "p1", "bloat", True)
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        for _ in range(4):
+            choice = session.rules_engine["pendingChoice"]
+            if choice and choice["kind"] == "optional_stack_action":
+                session.resolve_rules_choice("p1", choice["id"], option="accept")
+                session.pass_rules_priority("p2")
+                session.pass_rules_priority("p1")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["kind"], "chain_manifestation")
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=["m-5"])
+        self.assertIsNone(error)
+        session.pass_rules_priority("p2")
+        session.pass_rules_priority("p1")
+        pick = session.rules_engine["pendingChoice"]
+        self.assertEqual((pick["playerId"], pick["purpose"]), ("p2", "bloatuba"))
+        self.assertEqual(pick["cardIds"], ["m-1", "m-2"])
+        error, _ = session.resolve_rules_choice("p2", pick["id"], option="1")
+        self.assertIsNone(error)
+        self.assertNotIn("m-2", p2["zones"]["deck"])
+        order = session.rules_engine["pendingChoice"]
+        self.assertEqual((order["kind"], order["playerId"]), ("deck_reorder", "p1"))
+        error, _ = session.resolve_rules_choice("p1", order["id"], option={"groups": [
+            {"playerId": "p2", "top": ["m-1"], "bottom": ["will-x"]},
+        ]})
+        self.assertTrue(error)
+        error, _ = session.resolve_rules_choice("p1", order["id"], option={"groups": [
+            {"playerId": "p2", "top": [], "bottom": ["m-1", "will-x"]},
+        ]})
+        self.assertIsNone(error)
+        self.assertEqual(p2["zones"]["deck"], ["m-3", "m-1", "will-x"])
+
+    def test_wandering_outcast_swaps_places_with_a_targeted_confrontation_manifestation(self):
+        session, p1, p2 = self.setup_game()
+        outcast = self.item("outcast", "p1", self.OUTCAST, "interzone")
+        victim = self.item("victim", "p1", "m-1", "confrontation")
+        victim.update(x=500, y=300)
+        enemy = self.item("enemy", "p2", "m-2", "confrontation")
+        session.battlefield = [outcast, victim, enemy]
+        target = {"kind": "card", "itemId": "victim", "cardId": "m-1", "ownerId": "p1"}
+        redirected = session.rules_redirect_targets("p2", [target])
+        self.assertEqual([t["itemId"] for t in redirected], ["outcast"])
+        self.assertEqual(outcast["fieldZone"], "confrontation")
+        self.assertEqual((outcast["x"], outcast["y"]), (500, 300))
+        self.assertEqual(victim["fieldZone"], "interzone")
+        # The controller's own effects are never redirected, nor is a Field Will.
+        self.assertEqual(session.rules_redirect_targets("p1", [target]), [target])
+        enemy_target = {"kind": "card", "itemId": "enemy", "cardId": "m-2", "ownerId": "p2"}
+        self.assertEqual(session.rules_redirect_targets("p1", [enemy_target]), [enemy_target])

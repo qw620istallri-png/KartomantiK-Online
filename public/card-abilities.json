@@ -4712,5 +4712,55 @@
         "kind": "first_manifestation_trap"
       }
     }
+  ],
+  "fw18tebi26jwiqb_en": [
+    {
+      "id": "juggling-amphora-offers-two-manifestations",
+      "optional": true,
+      "trigger": {
+        "event": "enters_field_zone",
+        "zone": "confrontation"
+      },
+      "result": {
+        "kind": "amphora_offer"
+      }
+    }
+  ],
+  "3diq2d6oy35zoey_en": [
+    {
+      "id": "extortionist-womb-hand-or-tokens",
+      "trigger": {
+        "event": "revelation"
+      },
+      "result": {
+        "kind": "extortionist_womb"
+      }
+    }
+  ],
+  "vt30v1v8anw5hib_en": [
+    {
+      "id": "bloatuba-chain-reveals-opponent-top",
+      "optional": true,
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
+      "result": {
+        "kind": "chain_from_zone",
+        "zone": "hand",
+        "optional": true,
+        "afterChain": {
+          "kind": "reveal_top_opponent_suspend"
+        }
+      }
+    }
+  ],
+  "h67753m250gg2h6_en": [
+    {
+      "id": "wandering-outcast-swaps-with-targeted",
+      "passiveEffect": {
+        "kind": "swap_with_targeted_confrontation_manifestation"
+      }
+    }
   ]
 }
