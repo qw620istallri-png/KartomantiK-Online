@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261012-rules-beta-134";
+const STATIC_ASSET_VERSION = "20261012-rules-beta-135";
 {
   const versionEl = document.getElementById("appVersion");
   const versionMatch = STATIC_ASSET_VERSION.match(/beta-(\d+)/);
@@ -1580,6 +1580,27 @@ function rulesVfxDeclaredTargetElement(declared) {
   }
 }
 
+// Cards leaving the Confrontation Zone at the end of the Resolution: where each
+// one is now (the board has not been redrawn yet) and the pile it is heading to.
+function collectRulesVfxCleanupMoves(details, fallback) {
+  const movements = [...(details.captured || []), ...(details.returned || []), ...(details.supportExiled || [])];
+  const moves = [];
+  movements.forEach((movement) => {
+    if (!movement?.itemId || !["moved", "removed_copy"].includes(movement.status)) return;
+    const origin = rulesVfxCenter(rulesVfxFindBattlefieldItem(movement.itemId));
+    if (!origin) return;
+    const zone = movement.zone || (movement.status === "removed_copy" ? "exile" : "");
+    const containerId = movement.containerId || movement.ownerId;
+    const pile = $$("[data-field-pile]").find((element) => element.dataset.fieldPile === `${containerId}:${zone}`);
+    const cardId = movement.cardId || (latestState?.battlefield || []).find((item) => item.id === movement.itemId)?.cardId;
+    moves.push({
+      cardId, zone, removedCopy: movement.status === "removed_copy", origin,
+      target: rulesVfxCenter(pile) || (zone === "hand" ? rulesVfxPlayerOrigin(containerId) : fallback),
+    });
+  });
+  return moves;
+}
+
 function captureRulesVfxEvent(entry) {
   const details = entry.details || {};
   const fallback = rulesVfxPlayerOrigin(entry.actorId);
@@ -1649,6 +1670,7 @@ function captureRulesVfxEvent(entry) {
     : [];
   return {
     entry,
+    cleanupMoves: entry.type === "rules_confrontation_cleanup" ? collectRulesVfxCleanupMoves(details, fallback) : [],
     spotlightOrigin,
     declaredTargets,
     tributeOrigins,
@@ -2322,6 +2344,24 @@ function playRulesVfxEvent(event) {
     }
     if (entry.type === "rules_action_declared" && !rulesVfxReducedMotion()) playRulesVfxSpotlight(event);
     if (entry.type === "rules_confrontation_cleanup") {
+      const cleanupMoves = event.cleanupMoves || [];
+      const cleanupStep = 380;
+      cleanupMoves.slice(0, 12).forEach((move, index) => {
+        window.setTimeout(() => {
+          if (rulesVfxReducedMotion()) {
+            playRulesVfxImpact(move.target, t(move.zone === "exile" ? "rulesVfxExiled" : "rulesVfxMoved"), "moved");
+            return;
+          }
+          if (move.removedCopy) playRulesVfxDestruction(move.origin, move.target, move.cardId);
+          else playRulesVfxFlight("effect-card", move.origin, move.target, { cardId: move.cardId, index });
+          playRulesVfxImpact(
+            move.target,
+            t(move.zone === "exile" ? "rulesVfxExiled" : "rulesVfxMoved"),
+            move.zone === "exile" ? "destroyed" : "moved",
+            { delay: 380 },
+          );
+        }, vfxMs(index * cleanupStep));
+      });
       if (supportWin) {
         const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
         if (!reduced) playRulesVfxFlight("effect-card", supportWin.origin, supportWin.target, { cardId: supportWin.cardId, index: 0 });
@@ -2332,7 +2372,7 @@ function playRulesVfxEvent(event) {
           playRulesVfxImpact(supportWin.target, t("rulesVfxOpponentVessel"), "resolved");
         }
       }
-      return;
+      return cleanupMoves.length ? 900 + Math.min(cleanupMoves.length, 12) * cleanupStep : 820;
     }
     if (entry.type === "rules_action_triggered") {
       playRulesVfxStackPulse("triggered");
@@ -2775,6 +2815,13 @@ function rulesBoardSelectedPayments(flow = pendingRulesBoardFlow) {
     .filter(Boolean);
 }
 
+function rulesBoardExtraTributeCards(flow) {
+  const chosen = flow?.extraTributeIndexes || new Set();
+  return (flow?.draft?.extraTributeCards || []).filter((entry) => (
+    chosen.has(entry.index) && !flow.selectedPaymentIndexes?.has(entry.index)
+  ));
+}
+
 function rulesBoardMinimumPaymentCount(flow) {
   const candidates = flow.draft.manifestations;
   const remaining = flow.draft.essencePlan.remaining;
@@ -2856,6 +2903,8 @@ function submitRulesBoardFlow(target = null) {
     paymentCardIds: rulesBoardSelectedPayments(flow),
     extraEssenceCount: Number(flow.extraEssenceCount || 0),
   };
+  const extraTribute = rulesBoardExtraTributeCards(flow).map((entry) => entry.cardId);
+  if (extraTribute.length) payload.extraPaymentCardIds = extraTribute;
   if (flow.costCardId) payload.costCardId = flow.costCardId;
   if (flow.draft.encodedAbility?.id) payload.abilityId = flow.draft.encodedAbility.id;
   if (flow.source.placement) payload.placement = flow.source.placement;
@@ -2989,7 +3038,7 @@ function advanceRulesBoardFlow() {
     return;
   }
   if (
-    flow.draft.optionalExtraEssenceMax > 0
+    (flow.draft.optionalExtraEssenceMax > 0 || flow.draft.extraTributeCards?.length)
     && !flow.extraEssenceConfirmed
   ) {
     flow.stage = "extra_essence";
@@ -3260,13 +3309,26 @@ function renderRulesBoardFlow() {
     const current = Math.max(
       0, Math.min(Number(flow.extraEssenceCount || 0), max),
     );
+    if (!flow.extraTributeIndexes) flow.extraTributeIndexes = new Set();
+    const extraCandidates = (flow.draft.extraTributeCards || []).filter(
+      (entry) => !flow.selectedPaymentIndexes?.has(entry.index),
+    );
+    const extraCardsHtml = extraCandidates.length ? `
+      <div class="rules-flow-cost-row rules-extra-tribute-row">
+        <span>${esc(t("rulesOptionalExtraCards"))}</span>
+        <div class="rules-extra-tribute-cards">${extraCandidates.map((entry) => `
+          <button type="button" class="rules-choice-card${flow.extraTributeIndexes.has(entry.index) ? " selected" : ""}" data-extra-tribute="${entry.index}" title="${esc(cardName(entry.cardId))}">
+            <img src="${esc(cardImage(entry.cardId))}" alt="">
+            <span>${esc(cardName(entry.cardId))} (+${entry.power})</span>
+          </button>`).join("")}</div>
+      </div>` : "";
     $("#rulesBoardEssence").classList.add("hidden");
     $("#rulesFlowInstruction").textContent = rulesText(
       "rulesOptionalExtraEssenceInstruction",
-      { max },
+      { max: Number(flow.draft.encodedAbility?.optionalExtraEssence?.max || max) },
     );
-    $("#rulesFlowCost").innerHTML = `
-      <div class="rules-flow-cost-row rules-extra-essence-row">
+    $("#rulesFlowCost").innerHTML = `${extraCardsHtml}
+      <div class="rules-flow-cost-row rules-extra-essence-row"${max > 0 ? "" : " hidden"}>
         <span>${esc(t("rulesOptionalExtraEssence"))}</span>
         <div class="number-stepper">
           <button type="button" id="rulesExtraEssenceMinus" aria-label="${esc(t("decrease"))}">−</button>
@@ -3277,6 +3339,14 @@ function renderRulesBoardFlow() {
       <button type="button" class="primary rules-extra-essence-confirm" id="rulesExtraEssenceConfirm">
         ${esc(t("confirm"))}
       </button>`;
+    $$("[data-extra-tribute]").forEach((button) => {
+      button.onclick = () => {
+        const index = Number(button.dataset.extraTribute);
+        if (flow.extraTributeIndexes.has(index)) flow.extraTributeIndexes.delete(index);
+        else flow.extraTributeIndexes.add(index);
+        button.classList.toggle("selected", flow.extraTributeIndexes.has(index));
+      };
+    });
     const input = $("#rulesExtraEssenceCount");
     const setCount = (value) => {
       flow.extraEssenceCount = Math.max(
@@ -3904,6 +3974,20 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
         totalEssence - mandatoryEssenceSpent,
       ))
     : 0;
+  const extraTributeCards = [];
+  if (encodedAbility?.optionalExtraEssence) {
+    let sourceSkipped = false;
+    (latestState?.players?.[myPlayerId]?.zones?.hand?.cards || []).forEach((cardId, index) => {
+      const card = cardsById.get(cardId);
+      if (card?.type !== "manifestation") return;
+      if (!sourceSkipped && source.zone === "hand" && cardId === source.cardId
+        && (Number.isInteger(source.handIndex) ? index === source.handIndex : true)) {
+        sourceSkipped = true;
+        return;
+      }
+      extraTributeCards.push({ cardId, index, power: Math.max(0, Number(card.power || 0)) });
+    });
+  }
   const remainingTemperaments = Object.entries(essencePlan.remaining)
     .filter(([, amount]) => amount > 0)
     .map(([temperament]) => temperament);
@@ -4054,7 +4138,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
   return {
     paymentRequirements, hasPrintedTribute, essencePlan,
     essenceCostRequirements, essenceCostPlan, essenceCostPayable,
-    optionalExtraEssenceMax, remainingTemperaments, manifestations,
+    optionalExtraEssenceMax, extraTributeCards, remainingTemperaments, manifestations,
   };
 }
 
@@ -4064,7 +4148,7 @@ function rulesInitialActionStage(draft) {
       .some((amount) => amount > 0)
   ) return "payment";
   if (draft.encodedAbility?.additionalCost) return "cost_card";
-  if (draft.optionalExtraEssenceMax > 0) return "extra_essence";
+  if (draft.optionalExtraEssenceMax > 0 || draft.extraTributeCards?.length) return "extra_essence";
   return "target";
 }
 
@@ -4415,13 +4499,7 @@ function paintStaticText() {
   $("#handDiscardRandomBtn").textContent = t("handDiscardRandom");
   $("#handShowBtn").textContent = t("handShow");
   $("#handMulliganBtn").textContent = t("mulligan");
-  $("#handSortLabel").textContent = t("handSort");
-  [["none", "handSortNone"], ["first", "handSortFirst"], ["ephemeral", "handSortEphemeral"], ["support", "handSortSupport"], ["persistent", "handSortPersistent"]]
-    .forEach(([value, key]) => {
-      const option = $(`#handSortSelect option[value="${value}"]`);
-      if (option) option.textContent = t(key);
-    });
-  $("#handSortSelect").value = handSortMode;
+  updateHandSortButton();
   $("#handToolsToggleLabel").textContent = t("handOptions");
   $("#handToolsToggleBtn").title = t("handOptions");
   $("#inspectCloseBtn").textContent = t("close");
@@ -4986,6 +5064,66 @@ function rulesOutcomeText(outcome) {
   return `${t("rulesGameEnded")} ${result} — ${scoreLines.join(" · ")}`;
 }
 
+let gameEndDismissed = false;
+
+function renderGameEndOverlay() {
+  const overlay = $("#gameEndOverlay");
+  if (!overlay) return;
+  if (!latestState?.ended) {
+    gameEndDismissed = false;
+    overlay.classList.add("hidden");
+    return;
+  }
+  if (gameEndDismissed) {
+    overlay.classList.add("hidden");
+    return;
+  }
+  const outcome = latestState.rulesEngine?.outcome;
+  const scores = outcome?.scores || null;
+  const winners = new Set(outcome?.winnerIds || []);
+  $("#gameEndTitle").textContent = scores ? t("rulesGameEnded") : t("sessionEnded");
+  const winnerNames = [...winners].map((id) => latestState.players?.[id]?.name || id);
+  $("#gameEndResult").textContent = scores
+    ? (outcome.draw ? t("rulesResultDraw") : `${winnerNames[0] || "—"} ${t("rulesResultWins")}`)
+    : (outcome ? rulesOutcomeText(outcome) : "");
+  $("#gameEndPlayers").innerHTML = scores ? Object.entries(scores).map(([playerId, score]) => `
+    <div class="game-end-player${winners.has(playerId) && !outcome.draw ? " is-winner" : ""}" style="--owner-color:${playerColor(playerId)}">
+      <strong class="game-end-name">${esc(latestState.players?.[playerId]?.name || playerId)}</strong>
+      <span class="game-end-total">${score.total}</span>
+      <span class="game-end-unit">${esc(t("vesselPoints"))}</span>
+      <ul class="game-end-breakdown">
+        <li><span>${esc(t("rulesVessel"))}</span><b>${score.vesselPoints}</b></li>
+        <li><span>${esc(t("rulesEffects"))}</span><b>${score.effectPoints}</b></li>
+        <li><span>${esc(t("rulesDeckBonus"))}</span><b>${score.deckBonus}</b></li>
+      </ul>
+    </div>`).join("") : "";
+  const canReplay = latestState.mode !== "tournament" && !isObserver && mySeat() === 0;
+  const replay = $("#gameEndReplayBtn");
+  replay.textContent = t("rulesEndReplay");
+  replay.classList.toggle("hidden", latestState.mode === "tournament" || isObserver);
+  replay.disabled = !canReplay;
+  $("#gameEndHint").textContent = t("rulesEndReplayHint");
+  $("#gameEndHint").classList.toggle("hidden", canReplay || latestState.mode === "tournament" || isObserver);
+  $("#gameEndQuitBtn").textContent = t("rulesEndQuit");
+  $("#gameEndCloseBtn").title = t("rulesEndClose");
+  overlay.classList.remove("hidden");
+}
+
+function initGameEndOverlay() {
+  $("#gameEndReplayBtn").onclick = () => {
+    gameEndDismissed = false;
+    send({ type: "reset_board" });
+  };
+  $("#gameEndQuitBtn").onclick = () => {
+    if (!isObserver && mySeat() !== 0) send({ type: "leave_session" });
+    leaveSession();
+  };
+  $("#gameEndCloseBtn").onclick = () => {
+    gameEndDismissed = true;
+    $("#gameEndOverlay").classList.add("hidden");
+  };
+}
+
 function renderAll() {
   if (!latestState) return;
   renderBattlefield();
@@ -5038,6 +5176,7 @@ function renderAll() {
     $("#sessionEndedBanner").classList.toggle("rules-result", Boolean(outcome));
     $("#sessionEndedBanner").classList.remove("hidden");
   }
+  renderGameEndOverlay();
 }
 
 // Always-visible row(s), top-left: a regular player only ever needs their
@@ -5584,6 +5723,25 @@ function confrontationPowerOf(playerId) {
   }, 0);
 }
 
+// The "active" Temperament: the one of the last Manifestation the player added
+// to the Confrontation Zone (the Resolution tiebreak colour).
+function activeTemperamentOf(playerId) {
+  const battlefield = latestState?.battlefield || [];
+  let best = null;
+  battlefield.forEach((item, index) => {
+    if (!item.faceUp || item.fieldZone !== "confrontation") return;
+    if ((item.controllerId || item.ownerId) !== playerId) return;
+    if (cardsById.get(item.cardId)?.type !== "manifestation" && !item.isTokenCard) return;
+    const order = Number(item.confrontationOrder || 0);
+    if (!best || order > best.order || (order === best.order && index > best.index)) {
+      best = { item, order, index };
+    }
+  });
+  if (!best) return "";
+  const temperament = best.item.effectiveTemperament || best.item.temperament || cardsById.get(best.item.cardId)?.temperaments?.[0];
+  return temperament ? `<img class="active-temperament-badge" src="${esc(temperamentSymbol(temperament))}" alt="${esc(temperament)}" title="${esc(t("rulesActiveTemperament"))}">` : "";
+}
+
 function renderMyInfoStrip() {
   const strip = $("#myInfoStrip");
   if (!strip) return;
@@ -5595,7 +5753,7 @@ function renderMyInfoStrip() {
   strip.innerHTML = `
     <span class="my-info-badge" title="${esc(t("hand"))}"><span class="hand-stack-icon" style="--owner-color:${playerColor(me.id)}"><span class="hand-stack-card"></span><span class="hand-stack-card"></span><span class="hand-stack-card"></span></span><b>${handCount}</b></span>
     <span class="opp-vessel-badge" title="${esc(t("receptacle"))}">${receptaclePoints(me.zones.receptacle, me.score)} ${esc(t("vesselPoints"))}</span>
-    <span class="opp-power-badge" title="${esc(t("rulesPowerTotal"))}">⚔ ${confrontationPowerOf(me.id)}</span>`;
+    <span class="opp-power-badge" title="${esc(t("rulesPowerTotal"))}">⚔ ${confrontationPowerOf(me.id)}${activeTemperamentOf(me.id)}</span>`;
 }
 
 function renderOppRows() {
@@ -5644,7 +5802,7 @@ function renderOppRows() {
             <span class="hand-stack-count">${handCount}</span>
           </button>
           <span class="opp-vessel-badge" title="${esc(t("receptacle"))}">${vesselPoints} ${esc(t("vesselPoints"))}</span>
-          <span class="opp-power-badge" title="${esc(t("rulesPowerTotal"))}">⚔ ${confrontationPowerOf(p.id)}</span>
+          <span class="opp-power-badge" title="${esc(t("rulesPowerTotal"))}">⚔ ${confrontationPowerOf(p.id)}${activeTemperamentOf(p.id)}</span>
         </div>
         ${p.activity ? `<div class="opp-activity">${esc(t("activity_" + p.activity))}</div>` : ""}
         ${recentHtml}
@@ -6628,6 +6786,10 @@ function rulesSupportFromHandAvailableClient(cardId) {
   const effect = String(card?.effect || "");
   if (/^Support(?: from hand)?[.;]/.test(effect)) return true;
   if (rulesTopOfStackIsWillClient(card)) return true;
+  if (/5 or more Wills in your Limbo, .*gains Support/i.test(effect)) {
+    const limbo = latestState?.players?.[myPlayerId]?.zones?.graveyard?.cards || [];
+    if (limbo.filter((c) => ["ephemeral_will", "persistent_will"].includes(cardsById.get(c.cardId || c.id || c)?.type)).length >= 5) return true;
+  }
   if ((latestState?.rulesEngine?.playPermissions || []).some((permission) => (
     permission.playerId === myPlayerId
     && permission.cardId === cardId
@@ -6708,21 +6870,51 @@ function rules_recovery_mulligan_active_client() {
 }
 
 // Hand sort: cards matching the chosen category come first (display only)
+// "Sort hand": one button. 1st click sorts in the given order (First Manifestation,
+// Ephemeral Wills, Support only, Persistent Wills); each further click rotates which
+// group comes first, then the last click goes back to the hand's own order.
+const HAND_SORT_CYCLE = ["none", "all", "ephemeral", "support", "persistent"];
+const HAND_SORT_ORDERS = {
+  all: ["first", "ephemeral", "support", "persistent"],
+  ephemeral: ["ephemeral", "support", "persistent", "first"],
+  support: ["support", "persistent", "first", "ephemeral"],
+  persistent: ["persistent", "first", "ephemeral", "support"],
+};
 let handSortMode = "none";
-try { handSortMode = localStorage.getItem("ko_hand_sort") || "none"; } catch (_error) { /* storage unavailable */ }
+try {
+  const storedSort = localStorage.getItem("ko_hand_sort");
+  if (HAND_SORT_CYCLE.includes(storedSort)) handSortMode = storedSort;
+} catch (_error) { /* storage unavailable */ }
 
 function handSortRank(mode) {
   const supportOnly = (card) => card?.type === "manifestation" && (
     /^Support(?: from hand)?[.;]/.test(String(card.effect || ""))
     || String(card.effect || "").includes("Cannot be played as First Manifestation")
   );
-  const matches = {
-    first: (card) => card?.type === "manifestation" && !supportOnly(card),
-    ephemeral: (card) => card?.type === "ephemeral_will",
-    support: supportOnly,
-    persistent: (card) => card?.type === "persistent_will",
-  }[mode];
-  return (cardId) => (matches && matches(cardsById.get(cardId)) ? 0 : 1);
+  const group = (card) => {
+    if (card?.type === "ephemeral_will") return "ephemeral";
+    if (card?.type === "persistent_will") return "persistent";
+    if (supportOnly(card)) return "support";
+    if (card?.type === "manifestation") return "first";
+    return "other";
+  };
+  const order = HAND_SORT_ORDERS[mode];
+  return (cardId) => {
+    if (!order) return 0;
+    const position = order.indexOf(group(cardsById.get(cardId)));
+    return position === -1 ? order.length : position;
+  };
+}
+
+function updateHandSortButton() {
+  const button = $("#handSortBtn");
+  if (!button) return;
+  const labels = {
+    all: "handSortFirst", ephemeral: "handSortEphemeral", support: "handSortSupport", persistent: "handSortPersistent",
+  };
+  button.textContent = handSortMode === "none" ? t("handSortBtn") : `${t("handSortBtn")} · ${t(labels[handSortMode] || "handSortFirst")}`;
+  button.title = t("handSortHint");
+  button.classList.toggle("active", handSortMode !== "none");
 }
 
 function renderHandTray() {
@@ -6866,9 +7058,10 @@ function initHandToolbar() {
   };
   $("#handShowBtn").onclick = () => send({ type: "reveal", zone: "hand" });
   $("#handDiscardRandomBtn").onclick = () => send({ type: "move_card", fromZone: "hand", toZone: "graveyard", random: true });
-  $("#handSortSelect").onchange = (event) => {
-    handSortMode = event.target.value;
+  $("#handSortBtn").onclick = () => {
+    handSortMode = HAND_SORT_CYCLE[(HAND_SORT_CYCLE.indexOf(handSortMode) + 1) % HAND_SORT_CYCLE.length];
     try { localStorage.setItem("ko_hand_sort", handSortMode); } catch (_error) { /* storage unavailable */ }
+    updateHandSortButton();
     renderHandTray();
   };
   $("#handMulliganBtn").onclick = () => {
@@ -7034,7 +7227,34 @@ function renderOpponentDecidingBanner() {
   }))}</span>`;
 }
 
+// "Nobody can play a card or an effect: resolve the Confrontation?" — shown to the
+// player holding priority instead of passing through the Reaction step silently.
+function renderResolvePrompt() {
+  let prompt = document.querySelector("#rulesResolvePrompt");
+  if (!prompt) {
+    prompt = document.createElement("div");
+    prompt.id = "rulesResolvePrompt";
+    prompt.className = "rules-resolve-prompt hidden";
+    prompt.innerHTML = `<span id="rulesResolvePromptText"></span><button type="button" class="primary" id="rulesResolvePromptBtn"></button>`;
+    document.body.appendChild(prompt);
+    prompt.querySelector("button").onclick = () => {
+      prompt.classList.add("hidden");
+      send({ type: "pass_priority" });
+    };
+  }
+  const rules = latestState?.rulesEngine;
+  const show = Boolean(
+    rules?.enabled && rules.resolvePrompt && !isObserver
+    && rules.priorityPlayerId === myPlayerId && !rules.pendingChoice,
+  );
+  prompt.classList.toggle("hidden", !show);
+  if (!show) return;
+  prompt.querySelector("#rulesResolvePromptText").textContent = t("rulesResolvePrompt");
+  prompt.querySelector("button").textContent = t("rulesResolvePromptBtn");
+}
+
 function renderRulesChoice() {
+  renderResolvePrompt();
   renderOpponentDecidingBanner();
   renderRulesChoiceContent();
   syncRulesChoiceSourceCard();
@@ -10192,6 +10412,7 @@ function initGameControls() {
     });
   };
 
+  initGameEndOverlay();
   $("#downloadLogBtn").onclick = () => send({ type: "request_log" });
   $("#logDownloadBtn").onclick = () => downloadLog(latestLogEntries);
 
@@ -10310,7 +10531,7 @@ function toggleInspectPanel() {
 
 function initInspectToolbar() {
   $("#inspectReopenBtn").title = t("reopenLastInspected");
-  $("#inspectReopenBtn").disabled = true;
+  $("#inspectReopenBtn").disabled = false; // clickable from the start: opens an empty inspect panel
   $("#inspectReopenBtn").onclick = toggleInspectPanel;
   applyInspectPanelWidth();
   $("#inspectResizeHandle").addEventListener("pointerdown", (event) => {
@@ -10842,14 +11063,13 @@ async function boot() {
     // the shortcuts keep working while a button/checkbox has focus; only real text fields swallow them
     if (event.target?.closest?.("textarea, select, [contenteditable='true'], input:not([type='checkbox']):not([type='radio']):not([type='button']):not([type='range'])")) return;
     if (event.code === "Enter" || event.code === "NumpadEnter") {
-      // Enter = the "pass phase / priority" button, unless a focused button
-      // already turns Enter into its own click
-      if (event.target?.closest?.("button, a, summary")) return;
+      // Enter is always the "pass phase / priority" button, whichever button has focus
       const passButton = $("#passPriorityBtn");
       if (!latestState || isObserver || !passButton || passButton.disabled || passButton.offsetParent === null) return;
-      if (document.querySelector(".confirm-panel:not(.hidden), #confirmPanel:not(.hidden)")) return;
+      if (document.querySelector("#confirmPanel:not(.hidden)")) return;
       event.preventDefault();
-      if (!event.repeat) passButton.click();
+      // already passed: a second Enter must not cancel the pass
+      if (!event.repeat && !passButton.classList.contains("passed")) passButton.click();
       return;
     }
     if (event.code === "KeyI") {

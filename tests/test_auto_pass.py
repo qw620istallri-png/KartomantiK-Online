@@ -53,11 +53,38 @@ class AutoPassTests(unittest.TestCase):
         self.goto(session, "resolution_effects")
         self.assertEqual(session.rules_auto_pass_player(), "p1")
 
+    def test_the_confrontation_is_never_resolved_while_someone_can_still_act(self):
+        session, p1, p2 = self.make_session()
+        session.players["p1"]["zones"]["hand"] = ["will-ephemeral", "m-support"]
+        session.rules_engine["essenceTokens"] = []
+        self.goto(session, "confrontation_reaction")
+        session.battlefield = [{
+            "id": "tok", "ownerId": "p1", "controllerId": "p1", "cardId": None, "isTokenCard": True,
+            "power": 3, "temperament": "phlegmatic", "faceUp": True, "fieldZone": "confrontation",
+            "x": 0, "y": 0, "rotation": 0, "counters": {}, "stackedOn": None,
+        }]
+        # a Support Manifestation playable from hand keeps p1 in control: no prompt, no auto pass
+        self.assertIsNone(session.rules_auto_pass_player())
+        self.assertFalse(session.rules_confrontation_resolve_prompt())
+        # the opponent holding priority with a playable card is not passed either
+        p1["zones"]["hand"] = []
+        p2["zones"]["hand"] = ["m-support"]
+        session.rules_engine["priorityPlayerId"] = "p2"
+        self.assertIsNone(session.rules_auto_pass_player())
+        self.assertFalse(session.rules_confrontation_resolve_prompt())
+
     def test_a_plain_manifestation_in_hand_is_not_a_support_action(self):
         session, p1, p2 = self.make_session()
         p1["zones"]["hand"] = ["m-1"]
         self.goto(session, "confrontation_reaction")
-        self.assertEqual(session.rules_auto_pass_player(), "p1")
+        # nobody can act: the engine asks before resolving the Confrontation
+        self.assertIsNone(session.rules_auto_pass_player())
+        self.assertTrue(session.rules_confrontation_resolve_prompt())
+        # once the holder confirmed (passed), the other player is passed automatically
+        session.rules_engine["priorityPasses"] = ["p1"]
+        session.rules_engine["priorityPlayerId"] = "p2"
+        self.assertFalse(session.rules_confrontation_resolve_prompt())
+        self.assertEqual(session.rules_auto_pass_player(), "p2")
 
     def test_a_field_ability_without_enough_counters_is_not_an_action(self):
         session, p1, p2 = self.make_session()

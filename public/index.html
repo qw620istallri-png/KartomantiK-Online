@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kartomantik Online</title>
   <link rel="icon" type="image/webp" href="grimoire-icon.webp?v=20260905-1">
-  <link rel="stylesheet" href="style.css?v=20261012-rules-beta-134">
+  <link rel="stylesheet" href="style.css?v=20261012-rules-beta-135">
 </head>
 <body>
 
@@ -210,6 +210,19 @@
     <p class="status-line" id="gameStatusLine"></p>
     <div class="tournament-waiting-banner hidden" id="tournamentWaitingBanner"></div>
     <div class="session-ended-banner hidden" id="sessionEndedBanner"></div>
+    <div class="game-end-overlay hidden" id="gameEndOverlay" role="dialog" aria-modal="true" aria-labelledby="gameEndTitle">
+      <div class="game-end-card">
+        <button type="button" class="game-end-close" id="gameEndCloseBtn" aria-label="Close">✕</button>
+        <h2 id="gameEndTitle"></h2>
+        <p class="game-end-result" id="gameEndResult"></p>
+        <div class="game-end-players" id="gameEndPlayers"></div>
+        <p class="game-end-hint hidden" id="gameEndHint"></p>
+        <div class="game-end-actions">
+          <button type="button" class="primary" id="gameEndReplayBtn"></button>
+          <button type="button" id="gameEndQuitBtn"></button>
+        </div>
+      </div>
+    </div>
     <div class="board-field-wrap" id="battlefieldWrap">
       <section class="rules-pregame-panel hidden" id="rulesPregamePanel" aria-labelledby="rulesPregameTitle" aria-live="polite">
         <div class="rules-pregame-copy">
@@ -342,15 +355,7 @@
             <div class="hand-tool-sep"></div>
             <button class="hand-tool-btn" id="handMulliganBtn"></button>
             <div class="hand-tool-sep"></div>
-            <label class="hand-tool-btn hand-sort" for="handSortSelect"><span id="handSortLabel"></span>
-              <select id="handSortSelect">
-                <option value="none"></option>
-                <option value="first"></option>
-                <option value="ephemeral"></option>
-                <option value="support"></option>
-                <option value="persistent"></option>
-              </select>
-            </label>
+            <button class="hand-tool-btn hand-sort" id="handSortBtn" type="button"></button>
             <span class="hint hand-tool-btn hidden" id="handPickHint"></span>
           </div>
         </div>
@@ -659,7 +664,7 @@
     <p id="tournamentPlayerAlertText"></p>
   </div>
 
-  <script src="i18n.js?v=20261012-rules-beta-134"></script>
-  <script src="app.js?v=20261012-rules-beta-134"></script>
+  <script src="i18n.js?v=20261012-rules-beta-135"></script>
+  <script src="app.js?v=20261012-rules-beta-135"></script>
 </body>
 </html>

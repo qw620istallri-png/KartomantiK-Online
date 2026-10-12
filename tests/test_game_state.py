@@ -3646,6 +3646,35 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertEqual(len(support_tokens), 2)
         self.assertTrue(all(item["power"] == 1 for item in support_tokens))
 
+    def test_rally_extra_manifestations_from_hand_pay_extra_tribute(self):
+        session, p1, _p2 = self.make_session()
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        session.card_rules["rally"] = {
+            "type": "ephemeral_will", "cost": 2, "powerCost": "{G}{G}",
+            "temperaments": ["phlegmatic"],
+            "playedAbilities": [{
+                "id": "rally", "action": "play_card", "targets": {"min": 0, "max": 0},
+                "optionalExtraEssence": {"temperament": "hollow", "max": 20},
+                "result": {"kind": "create_support_tokens_from_optional_extra_essence"},
+            }],
+        }
+        session.card_rules["m-0"]["power"] = 3
+        p1["zones"]["hand"] = ["rally", "m-0"]
+        p1["zoneOwners"]["hand"] = {"rally": "p1", "m-0": "p1"}
+        session.tokens = [{
+            "id": "phl", "ownerId": "p1", "isEssence": True, "isNeutralCounter": False,
+            "temperament": "phlegmatic", "counters": {"essence": 2},
+        }]
+        error, action = session.declare_rules_action(
+            "p1", "Rally", kind="play_card",
+            source={"cardId": "rally", "zone": "hand"},
+            payment_card_ids=[], ability_id="rally",
+            extra_payment_card_ids=["m-0"],
+        )
+        self.assertIsNone(error)
+        self.assertEqual(action["cost"]["optionalExtraEssenceSpent"], 3)
+        self.assertNotIn("m-0", p1["zones"]["hand"])
+
     def test_confrontation_cleanup_captures_loser_then_guides_winner(self):
         session, p1, _p2 = self.make_session()
         session.phase_tracker["index"] = session.phase_sequence().index("resolution_compare")
@@ -3875,6 +3904,16 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertIsNone(session.rules_support_from_hand_error("p1", "m-0"))
         error = session.rules_support_from_hand_error("p1", "m-1")
         self.assertIn("does not have Support from Hand", error)
+
+    def test_conditional_support_from_hand_needs_five_limbo_wills(self):
+        session, p1, _p2 = self.make_session()
+        session.card_rules["m-0"]["supportCondition"] = "five_wills_in_limbo"
+        session.phase_tracker["index"] = session.phase_sequence().index("confrontation_reaction")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        p1["zones"]["graveyard"] = ["will-ephemeral"] * 4
+        self.assertIn("does not have Support from Hand", session.rules_support_from_hand_error("p1", "m-0"))
+        p1["zones"]["graveyard"] = ["will-ephemeral"] * 5
+        self.assertIsNone(session.rules_support_from_hand_error("p1", "m-0"))
 
     def test_first_manifestation_rejects_cards_with_printed_restriction(self):
         session, _p1, _p2 = self.make_session()

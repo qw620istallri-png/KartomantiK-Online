@@ -3072,7 +3072,7 @@ class Session:
 
     def rules_action_payment(self, player_id, kind, source, payment_card_ids,
                              ability=None, targets=None,
-                             extra_essence_count=0):
+                             extra_essence_count=0, extra_payment_card_ids=None):
         if payment_card_ids is None:
             payment_card_ids = []
         if not isinstance(payment_card_ids, list):
@@ -3343,6 +3343,31 @@ class Session:
             for entry in optional_spent:
                 entry["pays"] = "optional_extra"
             essence_spent.extend(optional_spent)
+        extra_cards = [str(c) for c in (extra_payment_card_ids or []) if str(c)]
+        if extra_cards:
+            if not optional_extra:
+                return "This action cannot spend optional extra Tribute.", None
+            pool = list(hand)
+            if source and source.get("zone") == "hand" and source.get("cardId") in pool:
+                pool.remove(source["cardId"])
+            for entry in clean_entries:
+                if entry["zone"] == "hand" and entry["cardId"] in pool:
+                    pool.remove(entry["cardId"])
+            for card_id in extra_cards:
+                metadata = self.card_rules.get(card_id, {})
+                if card_id not in pool or metadata.get("type") != "manifestation":
+                    return "An extra Tribute card is no longer in your Hand.", None
+                if not metadata.get("canPayTribute", True):
+                    return "This Manifestation cannot be used to pay Tribute.", None
+                pool.remove(card_id)
+                value = self.rules_tribute_power_override(player_id, metadata)
+                if value is None:
+                    value = int(metadata.get("power") or 0)
+                optional_extra_count += max(0, int(value))
+                clean_entries.append({"zone": "hand", "cardId": card_id})
+                clean_ids.append(card_id)
+            if optional_extra_count > int(optional_extra.get("max") or 0):
+                return "Too many optional extra Essences were selected.", None
         return None, {
             "cardIds": clean_ids,
             "cardEntries": clean_entries,
@@ -4872,6 +4897,10 @@ class Session:
             and entry.get("asSupport")
             and int(entry.get("turn") or 0) == self.phase_tracker["turn"]
             for entry in self.rules_engine.get("playPermissions") or []
+        ):
+            return True
+        if metadata.get("supportCondition") and self.rules_support_condition_met(
+            {"ownerId": player_id, "controllerId": player_id}, metadata.get("supportCondition")
         ):
             return True
         condition = metadata.get("supportFromHandCondition") or {}
@@ -6479,6 +6508,25 @@ class Session:
                 return True
         return False
 
+    def rules_confrontation_resolve_prompt(self):
+        """True when the Reaction step is open, the Stack is empty and nobody can
+        play a card or an effect: the engine asks before resolving the Confrontation."""
+        engine = self.rules_engine
+        if (
+            not engine.get("enabled") or not engine.get("autoSkipPhases", True)
+            or self.ended or len(self.players) < NUM_SEATS
+            or not self.phase_tracker.get("enabled")
+            or self.current_phase_id() != "confrontation_reaction"
+            or engine.get("actionStack") or engine.get("priorityPasses")
+            or engine.get("pendingChoice")
+            or not self.rules_match_started()
+            or self.rules_first_manifestation_active()
+            or self.rules_recovery_mulligan_active()
+            or engine.get("priorityPlayerId") not in self.players
+        ):
+            return False
+        return not any(self.rules_player_can_act(pid) for pid in self.players)
+
     def rules_auto_pass_player(self):
         """The priority holder who has nothing to do, if the engine may pass for them."""
         engine = self.rules_engine
@@ -6494,12 +6542,15 @@ class Session:
         player_id = engine.get("priorityPlayerId")
         if player_id not in self.players or self.rules_player_can_act(player_id):
             return None
+        if self.rules_confrontation_resolve_prompt():
+            return None  # ask before resolving the Confrontation
         return player_id
 
     def declare_rules_action(self, player_id, label, kind="manual", source=None, target=None,
                              targets=None, cost_note=None, payment_card_ids=None, ability_id=None,
                              placement=None, as_support=False,
-                             extra_essence_count=0, cost_card_id=None, internal=False):
+                             extra_essence_count=0, cost_card_id=None, internal=False,
+                             extra_payment_card_ids=None):
         if not self.rules_engine["enabled"]:
             return "Assisted rules are not active.", None
         if self.ended or player_id not in self.players:
@@ -6567,6 +6618,7 @@ class Session:
             clean_ability,
             clean_targets,
             extra_essence_count,
+            extra_payment_card_ids,
         )
         if payment_error:
             return payment_error, None
@@ -7148,7 +7200,9 @@ class Session:
                     continue
                 if trigger.get("played") and not played:
                     continue
-                if trigger.get("eventController") == "owner" and event_controller_id != owner_id:
+                if trigger.get("eventController") == "owner" and event_controller_id != (
+                    controller_id if controller_id is not None else owner_id
+                ):
                     continue
                 if (
                     trigger.get("enteredFromZone")
@@ -17701,7 +17755,9 @@ class Session:
                 self.rules_engine["enabled"] and item.get("faceUp")
                 and (item.get("isTokenCard") or self.rules_item_card_rules(item).get("type") == "manifestation")
             ):
-                entry["effectivePower"] = self.rules_manifestation_characteristics(item)["power"]
+                characteristics = self.rules_manifestation_characteristics(item)
+                entry["effectivePower"] = characteristics["power"]
+                entry["effectiveTemperament"] = characteristics["temperament"]
             if item.get("stackedOn"):
                 entry["stackedOn"] = item["stackedOn"]
                 entry["stackOffsetX"] = item["stackOffsetX"]
@@ -17755,6 +17811,7 @@ class Session:
                 "tributePowerOverrides": self.rules_tribute_power_overrides_snapshot(),
                 "outcome": self.rules_engine["outcome"],
                 "priorityPlayerId": self.rules_engine["priorityPlayerId"],
+                "resolvePrompt": self.rules_confrontation_resolve_prompt(),
                 "priorityPasses": list(self.rules_engine["priorityPasses"]),
                 "actionStack": list(self.rules_engine["actionStack"]),
                 "lastResolvedAction": self.rules_engine["lastResolvedAction"],

@@ -3209,3 +3209,48 @@ input, textarea, select {
 .rules-stack-panel { inset: 12px 20px auto auto; max-height: calc(100vh - 12px - 300px); }
 #gameScreen.phase-details-visible .rules-stack-panel { top: 12px; }
 #gameScreen.inspect-open .rules-stack-panel { left: auto; right: 20px; }
+/* backdrop hugs the phase elements instead of the full 294px column */
+#phaseTracker { width: fit-content; max-width: min(294px, calc(100vw - 40px)); }
+#phaseTracker::before { inset: -6px -8px -6px -8px; border-radius: 12px; }
+.game-header .board-tools-topright button { background: var(--carbon); border: 1px solid var(--gold); color: var(--gold); min-width: 34px; height: 34px; padding: 0 9px; }
+.game-header .board-tools-topright button:hover:not(:disabled) { background: #2a281c; }
+.game-header .board-tools-topright button:disabled { opacity: .45; }
+.game-header .zoom-controls { gap: 4px; border: 0; padding: 0; background: transparent; }
+/* opening sequence window: upper third of the screen, not the middle */
+.rules-pregame-panel { top: 33%; }
+.active-temperament-badge { width: 22px; height: 22px; margin-left: 6px; vertical-align: middle; object-fit: contain; }
+.rules-resolve-prompt { position: fixed; z-index: 60; top: 74px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 14px; max-width: min(720px, calc(100vw - 32px)); padding: 10px 16px; color: #f6ebc6; font-size: 16px; background: rgba(14, 12, 8, .94); border: 1px solid #b8963f; border-radius: 12px; box-shadow: 0 10px 30px rgba(0, 0, 0, .55); }
+.rules-resolve-prompt button { white-space: nowrap; }
+/* handles use the art-direction gold (var(--gold)), not a flat bright yellow */
+.hand-resize-handle, .hand-view-resize-handle, .reveal-resize-handle, .inspect-resize-handle { filter: none; background: linear-gradient(90deg, transparent, var(--gold) 50%, transparent) !important; box-shadow: 0 0 10px rgba(211, 169, 66, .6); }
+.inspect-resize-handle { background: linear-gradient(180deg, transparent, var(--gold) 50%, transparent) !important; }
+.hand-resize-handle:hover, .hand-view-resize-handle:hover, .reveal-resize-handle:hover, .inspect-resize-handle:hover { filter: brightness(1.15); box-shadow: 0 0 16px rgba(211, 169, 66, .85); }
+.hand-sort { font-size: 14px; }
+/* Deck counter: big, centred on the card */
+.field-pile[data-zone="deck"] .pile-trigger { position: relative; }
+.field-pile[data-zone="deck"] .pile-count { top: 105px; z-index: 3; left: 50%; right: auto; transform: translate(-50%, -50%); font-size: 34px; padding: 4px 16px; border-radius: 22px; box-shadow: 0 3px 10px #000a; pointer-events: none; }
+@media (max-width: 900px) { .field-pile[data-zone="deck"] .pile-count { top: 70px; font-size: 26px; } }
+/* Power badge never wraps; the name shrinks instead */
+.opp-power-badge { white-space: nowrap; flex: 0 0 auto; }
+.opp-rows .opp-info-row .opp-info-main { flex-wrap: nowrap; min-width: 0; gap: 6px; }
+.opp-rows .opp-info-row .hand-mini { min-width: 0; flex: 1 1 auto; }
+.opp-rows .opp-info-row .hand-mini > span:nth-child(2) { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.opp-rows .hand-stack-btn, .opp-rows .opp-vessel-badge, .opp-rows .opponent-hand-visibility { flex: 0 0 auto; }
+/* End-of-game window */
+.game-end-overlay { position: fixed; inset: 0; z-index: 400; display: grid; place-items: center; background: #000000a6; padding: 16px; }
+.game-end-overlay.hidden { display: none; }
+.game-end-card { position: relative; width: min(640px, 100%); padding: 28px 32px 24px; border: 2px solid var(--gold-deep); border-radius: 16px; background: linear-gradient(180deg, #2a2118, #14110a); color: var(--gold-pale); box-shadow: 0 20px 60px #000c; text-align: center; }
+.game-end-card h2 { margin: 0; font-family: var(--display-font); font-size: 34px; letter-spacing: .04em; color: var(--gold); }
+.game-end-result { margin: 6px 0 18px; font-size: 20px; font-weight: 800; }
+.game-end-close { position: absolute; top: 10px; right: 12px; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--gold-deep); background: #1b1810; color: var(--gold-pale); cursor: pointer; }
+.game-end-players { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+.game-end-player { display: grid; justify-items: center; gap: 2px; padding: 14px 12px; border: 2px solid var(--owner-color, var(--gold-deep)); border-radius: 12px; background: #00000040; }
+.game-end-player.is-winner { background: #d3a9421f; box-shadow: 0 0 22px #d3a94266; }
+.game-end-name { font-size: 20px; overflow-wrap: anywhere; }
+.game-end-total { font-size: 56px; font-weight: 900; line-height: 1; color: var(--gold); }
+.game-end-unit { font-size: 14px; text-transform: uppercase; letter-spacing: .12em; color: #cdbb85; }
+.game-end-breakdown { list-style: none; margin: 10px 0 0; padding: 0; width: 100%; display: grid; gap: 3px; font-size: 14px; }
+.game-end-breakdown li { display: flex; justify-content: space-between; gap: 10px; }
+.game-end-hint { margin: 14px 0 0; font-size: 14px; color: #cdbb85; }
+.game-end-actions { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
+.game-end-actions button { min-width: 130px; padding: 10px 20px; font-size: 16px; font-weight: 800; }

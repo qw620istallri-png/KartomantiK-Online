@@ -854,6 +854,8 @@ AUTO_PASS_MESSAGE_TYPES = {
     "place_card", "set_rules_field_zone", "move_card", "move_battlefield_item",
     "copy_card", "flip_card", "request_hand_action", "respond_hand_action",
     "play_first_manifestation_trap", "create_token_card", "toggle_limbo_recovery",
+    # opening / recovery mulligans resume the game at the end of Recovery
+    "mulligan", "draw_to_limit", "set_rules_ready", "set_rules_deck_confirmed", "import_deck",
 }
 AUTO_PASS_MAX_STEPS = 60
 
@@ -1966,6 +1968,7 @@ async def handle_message(ws, info, data):
             as_support=data.get("asSupport", False),
             extra_essence_count=data.get("extraEssenceCount"),
             cost_card_id=data.get("costCardId"),
+            extra_payment_card_ids=data.get("extraPaymentCardIds"),
         )
         if error:
             return await send_error(ws, error)

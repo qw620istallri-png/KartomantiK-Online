@@ -1447,18 +1447,20 @@ function startServer() {
       const draft = rulesStructuredActionTargets({
         targets: { groups: [{ kind: "player", min: 1, max: 1 }, { kind: "card", min: 1, max: 1, cardType: "manifestation", zones: ["battlefield"], controller: "opponent" }], min: 2, max: 2 },
       });
-      const sortSelect = document.querySelector("#handSortSelect");
+      const sortButton = document.querySelector("#handSortBtn");
       return {
         groups: Array.isArray(draft.targetRules.groups) ? draft.targetRules.groups.length : 0,
         playerTargets: draft.structuredTargets.filter((target) => target.kind === "player" && target.targetGroupIndex === 0).length,
-        sortOptions: sortSelect ? sortSelect.options.length : 0,
+        sortButton: Boolean(sortButton),
+        sortCycle: (() => { const seen = []; const saved = handSortMode; for (let i = 0; i < 5; i += 1) { sortButton.click(); seen.push(handSortMode); } handSortMode = saved; updateHandSortButton(); return seen.join(","); })(),
         infoStrip: Boolean(document.querySelector("#myInfoStrip")),
         tokenToolbarHidden: document.querySelector("#tokenToolbar").classList.contains("hidden"),
       };
     });
     assert.equal(groupedTargets.groups, 2, "targets.groups is read like targetGroups");
     assert.equal(groupedTargets.playerTargets, 2, "both players can be chosen as the player target");
-    assert.equal(groupedTargets.sortOptions, 5);
+    assert.equal(groupedTargets.sortButton, true);
+    assert.equal(groupedTargets.sortCycle, "all,ephemeral,support,persistent,none", "the sort button cycles");
     assert.equal(groupedTargets.infoStrip, true);
     assert.equal(groupedTargets.tokenToolbarHidden, true, "beta hides the token and essence buttons");
     const clemencyUi = await page.evaluate(() => {
