@@ -973,3 +973,13 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - `deck_reorder` (Bloatuba et autres) : voies Dessus / Dessous / extra, cartes réordonnées ou déplacées par glisser-déposer (pointer events). Même charge utile qu'avant (`groups[].top/bottom/extra`).
 - Menu clic droit de la main filtré par `betaMenuItems` (Inspecter, actions du moteur, jouer manuellement les cartes manuelles).
 - Main adverse : l'éventail est inversé (cartes courbées vers la table), survol = léger agrandissement sans déplacement ni aperçu.
+
+## Lot de retours beta-133
+
+- Tribut : `rules_manifestations_cover` (serveur) et `rulesRemainingAfterManifestations` (client) cherchent maintenant toutes les affectations carte -> température (ou Creux) au lieu d'un choix glouton : une Volonté à 3 se paie avec une manifestation de 2 et une de 1.
+- Cibles : `targets.groups` est lu comme `targetGroups` (Shattering the Self) ; quand le groupe courant ne contient que des joueurs, `armRulesBoardTargets` ouvre un popup Vous / Adversaire. Les sorts à cible `zone_card` (Revive, Claim the Forsaken) sont jouables depuis la main (`rulesStructuredActionTargets`).
+- Carcass Devourer : `exile_limbo_targets_add_power` sans cibles ouvre un choix (`discard_from_hand` avec `destination: limbo_exile_add_power`, jusqu'à 2 manifestations des Limbes).
+- Atavic : les déclencheurs `card_played` qui ajoutent un compteur à la source sont appliqués tout de suite, sans pile (`queue_rules_triggers`), et un Atavic compte sa propre pose à sa résolution (`rules_apply_self_play_counters`).
+- Bloatuba : la manifestation choisie par l'adversaire arrive sur le terrain en zone Stalemate. Les cartes en Stalemate ne participent plus à la résolution (ni capturées, ni gagnantes).
+- Passage auto : `rules_will_affordable` (une Volonté qu'on ne peut pas payer n'est plus une action), une manifestation en main ne compte que si elle peut aller en Support, les permissions périmées et les capacités de terrain impossibles (compteurs insuffisants, mauvaise zone) ne comptent plus.
+- Interface : tri de la main (liste dans les options de la main, affichage seulement), compteurs main/points/puissance au-dessus des options de la main et puissance de l'adversaire en haut à gauche, bouton de passage qui clignote quand on a la priorité, bandeau de résolution (gagnant + totaux), phases et ciblage plus longs, badge « A » masqué sur les cartes automatisées, liens d'effets visibles seulement au survol du badge, poignées plus saturées, survol de la main jamais sous 100 %, Inspecter suit le survol quand il est ouvert, boutons de jetons/essences masqués en bêta, `.rules-valid-target` ne force plus `position: relative` (les cartes ciblables ne bougent plus).

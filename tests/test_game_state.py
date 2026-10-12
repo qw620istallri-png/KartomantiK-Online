@@ -8706,8 +8706,8 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
                 a for a in self.play_card_of(session, "p1", temperament, 2)
                 if a["source"]["cardId"] == card_id
             ]
-            self.assertEqual(len(queued), 1, card_id)
-            session.apply_rules_action_result(queued[0])
+            # the counter is automatic: nothing goes on the Stack
+            self.assertEqual(queued, [], card_id)
             self.assertEqual(item["counters"][counter], 1)
 
     def test_atavic_manifestations_entering_the_field_also_count(self):
@@ -8717,10 +8717,15 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
             session.find_battlefield_item("entering"), defer=True
         )
         self.assertEqual(
-            [a["ability"]["id"] for a in queued
-             if a["source"]["cardId"] == "erkwir53va9m8gm_en"],
-            ["union-counter-on-own-green-card"],
+            [a for a in queued if a["source"]["cardId"] == "erkwir53va9m8gm_en"], [],
         )
+        self.assertEqual(item["counters"]["Union"], 1)
+
+    def test_an_atavic_counts_its_own_play_when_it_resolves(self):
+        session, _p1, _p2, item = self.atavic_session("erkwir53va9m8gm_en")
+        item["counters"] = {}
+        session.rules_apply_self_play_counters(item)
+        self.assertEqual(item["counters"]["Union"], 1)
 
     def test_atavic_welcome_spends_five_unions_for_two_support_tokens(self):
         session, p1, _p2, item = self.atavic_session("erkwir53va9m8gm_en")
@@ -13833,6 +13838,50 @@ class LotTwentyTwoTests(RealCardRulesCase):
         # A second Trap in the same step is refused.
         self.assertTrue(session.play_first_manifestation_trap("p1", "trap")[0])
 
+
+
+class LotTwentyNineTests(unittest.TestCase):
+    def test_tribute_cover_assigns_each_manifestation_to_its_best_requirement(self):
+        session = Session(rules_beta=True, card_rules={})
+        session.card_rules["big"] = {"type": "manifestation", "power": 2, "temperaments": ["choleric"]}
+        session.card_rules["small"] = {"type": "manifestation", "power": 1, "temperaments": ["choleric"]}
+        # {R}{H}{H}: the 2 must pay Hollow so the 1 can pay the Choleric part
+        covered, _excess = session.rules_manifestations_cover(
+            ["big", "small"], {"choleric": 1, "hollow": 2},
+        )
+        self.assertTrue(covered)
+        covered, _excess = session.rules_manifestations_cover(
+            ["small", "big"], {"choleric": 1, "hollow": 2},
+        )
+        self.assertTrue(covered)
+
+
+class CarcassDevourerChoiceTests(RealCardRulesCase):
+    CARCASS = "zh4rjhzon9qes6m_en"
+    ALL = (CARCASS,)
+
+    def test_carcass_devourer_asks_which_limbo_manifestations_to_exile(self):
+        session, p1, _p2 = self.make_session()
+        self.put(p1, "graveyard", ["m-1", "m-2", "m-3"])
+        item = self.field_item("cd", "p1", self.CARCASS, "interzone")
+        session.battlefield = [item]
+        ability = self.ability(self.CARCASS, "carcass-devourer-eats-limbo")
+        action = {
+            "id": "a1", "controllerId": "p1", "targets": [],
+            "source": {"cardId": self.CARCASS, "itemId": "cd", "zone": "battlefield"},
+            "ability": {**ability, "result": ability["result"]},
+        }
+        outcome = session.apply_rules_action_result(action)
+        self.assertEqual(outcome["kind"], "choice_required")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["playerId"], "p1")
+        self.assertCountEqual(choice["candidateCardIds"], ["m-1", "m-2", "m-3"])
+        error, result = session.resolve_rules_choice("p1", choice["id"], ["m-1", "m-3"])
+        self.assertIsNone(error)
+        self.assertEqual(result["cardIds"], ["m-1", "m-3"])
+        self.assertEqual(p1["zones"]["graveyard"], ["m-2"])
+        self.assertEqual(item["counters"]["power"], 2)
+        self.assertIsNone(session.rules_engine["pendingChoice"])
 
 if __name__ == "__main__":
     unittest.main()

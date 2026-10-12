@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kartomantik Online</title>
   <link rel="icon" type="image/webp" href="grimoire-icon.webp?v=20260905-1">
-  <link rel="stylesheet" href="style.css?v=20261012-rules-beta-132">
+  <link rel="stylesheet" href="style.css?v=20261012-rules-beta-133">
 </head>
 <body>
 
@@ -319,6 +319,7 @@
       </div>
       <div class="hand-area" id="handArea">
         <div class="hand-tools-dock" id="handToolsDock">
+          <div class="my-info-strip hidden" id="myInfoStrip"></div>
           <div class="hand-tools-row">
             <button type="button" class="hand-tools-toggle" id="handToolsToggleBtn" aria-expanded="false" aria-controls="handToolbar">
               <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="6" width="11" height="14" rx="2"/><path d="m9 6 2-2h7a2 2 0 0 1 2 2v10l-5 4"/><path d="M7.5 10h4M7.5 13h4M7.5 16h2.5"/></svg>
@@ -338,6 +339,16 @@
             <button class="hand-tool-btn" id="handShowBtn"></button>
             <div class="hand-tool-sep"></div>
             <button class="hand-tool-btn" id="handMulliganBtn"></button>
+            <div class="hand-tool-sep"></div>
+            <label class="hand-tool-btn hand-sort" for="handSortSelect"><span id="handSortLabel"></span>
+              <select id="handSortSelect">
+                <option value="none"></option>
+                <option value="first"></option>
+                <option value="ephemeral"></option>
+                <option value="support"></option>
+                <option value="persistent"></option>
+              </select>
+            </label>
             <span class="hint hand-tool-btn hidden" id="handPickHint"></span>
           </div>
         </div>
@@ -645,7 +656,7 @@
     <p id="tournamentPlayerAlertText"></p>
   </div>
 
-  <script src="i18n.js?v=20261012-rules-beta-132"></script>
-  <script src="app.js?v=20261012-rules-beta-132"></script>
+  <script src="i18n.js?v=20261012-rules-beta-133"></script>
+  <script src="app.js?v=20261012-rules-beta-133"></script>
 </body>
 </html>

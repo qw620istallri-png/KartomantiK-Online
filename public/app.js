@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261012-rules-beta-132";
+const STATIC_ASSET_VERSION = "20261012-rules-beta-133";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -146,27 +146,42 @@ function rulesRemainingAfterManifestations(cardIds, requirements) {
     return card;
   })
     .sort((a, b) => Number(cardTributeTemperaments(a).includes("transcendent")) - Number(cardTributeTemperaments(b).includes("transcendent")));
-  for (const card of cards) {
+  // Every card pays exactly one temperament (or Hollow): search all the ways to
+  // assign them, so a greedy choice never makes a payable Tribute look short.
+  const options = (state, card) => {
     const power = Math.max(0, Number(card.power) || 0);
-    const printedTemperament = card.temperaments?.[0];
-    const tributeTemperaments = cardTributeTemperaments(card);
-    let temperament = printedTemperament;
-    let used = 0;
-    if (tributeTemperaments.includes("transcendent")) {
-      for (const required of Object.keys(remaining)) {
-        const amount = Math.min(power - used, remaining[required]);
-        remaining[required] -= amount;
+    const tribute = cardTributeTemperaments(card);
+    if (tribute.includes("transcendent")) {
+      const left = { ...state };
+      let used = 0;
+      for (const required of Object.keys(left)) {
+        const amount = Math.min(power - used, left[required]);
+        left[required] -= amount;
         used += amount;
         if (used >= power) break;
       }
-    } else {
-      let payable = tributeTemperaments.find(
-        (candidate) => Object.hasOwn(remaining, candidate) && remaining[candidate] > 0,
-      );
-      if (!payable && Number(remaining.hollow || 0) > 0) payable = "hollow";
-      if (payable && Object.hasOwn(remaining, payable)) remaining[payable] -= Math.min(power, remaining[payable]);
+      return [left];
     }
-  }
+    const result = [];
+    for (const candidate of [...tribute, "hollow"]) {
+      if (Object.hasOwn(state, candidate) && state[candidate] > 0) {
+        result.push({ ...state, [candidate]: state[candidate] - Math.min(power, state[candidate]) });
+      }
+    }
+    return result.length ? result : [{ ...state }];
+  };
+  const missing = (state) => Object.values(state).reduce((sum, amount) => sum + Math.max(0, amount), 0);
+  let best = null;
+  const search = (index, state) => {
+    if (best !== null && missing(best) === 0) return;
+    if (index === cards.length) {
+      if (best === null || missing(state) < missing(best)) best = state;
+      return;
+    }
+    for (const next of options(state, cards[index])) search(index + 1, next);
+  };
+  search(0, remaining);
+  Object.assign(remaining, best || {});
   return remaining;
 }
 
@@ -317,6 +332,7 @@ function cardAutomationCoverage(cardId) {
 function automationCoverageBadgeHtml(cardId, force = false) {
   if (!force && !latestState?.rulesEngine?.enabled && !rulesBetaActivated) return "";
   const coverage = cardAutomationCoverage(cardId);
+  if (coverage.status === "automated" && !force) return "";
   const key = `automationStatus_${coverage.status}`;
   return `<span class="automation-coverage-badge status-${esc(coverage.status)}" title="${esc(t(key))}" aria-label="${esc(t(key))}">${esc(t(`automationStatusShort_${coverage.status}`))}</span>`;
 }
@@ -1324,6 +1340,7 @@ function renderRulesStack() {
     : t(current.phase.detail);
   $("#passPriorityBtn").classList.toggle("hidden", firstManifestation ? isObserver : (!myPriority && !canCancelPass));
   $("#passPriorityBtn").classList.toggle("passed", canCancelPass);
+  $("#passPriorityBtn").classList.toggle("must-act", myPriority && !canCancelPass);
   $("#passPriorityBtn").classList.toggle("offers-response", myPriority && stack.length > 0 && !resolutionArmed);
   $("#passPriorityBtn").classList.toggle("resolves-stack", myPriority && resolutionArmed);
   $("#passPriorityBtn").classList.toggle("opponent-validated", firstManifestation && opponentFirstValidated && !mineFirstValidated);
@@ -1668,7 +1685,7 @@ function prepareRulesVfxBatch(nextState) {
   const fresh = entries.filter((entry) => Number(entry.sequence) > lastRulesVfxSequence);
   lastRulesVfxSequence = Math.max(lastRulesVfxSequence, newest);
   return fresh
-    .filter((entry) => ["rules_action_declared", "rules_action_triggered", "rules_action_resolved", "rules_choice_resolved", "rules_confrontation_cleanup", "rules_phase_advanced"].includes(entry.type))
+    .filter((entry) => ["rules_action_declared", "rules_action_triggered", "rules_action_resolved", "rules_choice_resolved", "rules_confrontation_cleanup", "rules_phase_advanced", "rules_confrontation_compared"].includes(entry.type))
     .map(captureRulesVfxEvent);
 }
 
@@ -2087,12 +2104,13 @@ function playRulesVfxExhaust(sourceRect) {
 }
 
 const RULES_VFX_BEAT_MS = {
-  rules_action_declared: 980,
+  rules_action_declared: 1900,
   rules_action_triggered: 620,
   rules_action_resolved: 900,
   rules_choice_resolved: 760,
   rules_confrontation_cleanup: 820,
-  rules_phase_advanced: 900,
+  rules_phase_advanced: 1700,
+  rules_confrontation_compared: 3400,
 };
 
 function playRulesVfxBatch(batch) {
@@ -2110,8 +2128,8 @@ function playRulesVfxBatch(batch) {
   beats.forEach((event) => {
     const length = RULES_VFX_BEAT_MS[event.entry.type] || 700;
     enqueueRulesVfx(() => {
-      playRulesVfxEvent(event);
-      return length;
+      const played = playRulesVfxEvent(event);
+      return typeof played === "number" ? played : length;
     }, length);
   });
 }
@@ -2147,8 +2165,33 @@ function playRulesVfxPhaseBanner(event) {
     { offset: .18, transform: "translate(-50%,-50%) scaleX(1)", opacity: 1, letterSpacing: ".12em" },
     { offset: .78, transform: "translate(-50%,-50%) scaleX(1)", opacity: 1, letterSpacing: ".1em" },
     { transform: `translate(-50%,-50%) scaleX(${reduced ? 1 : 1.04})`, opacity: 0, letterSpacing: ".1em" },
-  ], { duration: newTurn ? 1250 : 980, easing: "cubic-bezier(.2,.8,.2,1)" });
-  return true;
+  ], { duration: newTurn ? 2800 : 1700, easing: "cubic-bezier(.2,.8,.2,1)" });
+  return newTurn ? 2800 : true;
+}
+
+// Winner and Power totals of the Resolution, shown long enough to read even when the steps are skipped
+function playRulesVfxResolutionBanner(entry) {
+  const details = entry.details || {};
+  const playerName = (playerId) => latestState?.players?.[playerId]?.name || playerId || "?";
+  const totals = Object.entries(details.totals || {})
+    .map(([playerId, value]) => `${esc(playerName(playerId))} <b>${esc(String(value))}</b>`)
+    .join(" · ");
+  $$(".rules-vfx-resolution-banner").forEach((element) => element.remove());
+  const banner = document.createElement("div");
+  banner.className = "rules-vfx-resolution-banner";
+  banner.setAttribute("role", "status");
+  banner.innerHTML = `<small>${esc(t("rulesVfxResolution"))}</small>
+    <strong>${esc(details.stalemate ? t("rulesVfxStalemate") : rulesText("rulesVfxWinner", { player: playerName(details.winnerId) }))}</strong>
+    <span>${totals}</span>`;
+  const anchor = $("#battlefieldWrap")?.getBoundingClientRect?.();
+  banner.style.top = `${Math.round(anchor?.height ? anchor.top + anchor.height * .3 : window.innerHeight * .3)}px`;
+  document.body.appendChild(banner);
+  rulesVfxAnimateAndRemove(banner, [
+    { transform: "translate(-50%,-50%) scale(.85)", opacity: 0 },
+    { offset: .12, transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
+    { offset: .88, transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
+    { transform: "translate(-50%,-50%) scale(1.03)", opacity: 0 },
+  ], { duration: 3300, easing: "cubic-bezier(.2,.8,.2,1)" });
 }
 
 function playRulesVfxSpotlight(event) {
@@ -2191,9 +2234,9 @@ function playRulesVfxSpotlight(event) {
     { transform: `translate3d(${fromX}px,${fromY}px,0) scale(.32) rotate(${isOpponent ? 6 : -6}deg)`, opacity: 0 },
     { offset: .2, transform: "translate3d(0,0,0) scale(1.03) rotate(0deg)", opacity: 1 },
     { offset: .26, transform: "translate3d(0,0,0) scale(1)", opacity: 1 },
-    { offset: .74, transform: "translate3d(0,0,0) scale(1)", opacity: 1 },
+    { offset: .82, transform: "translate3d(0,0,0) scale(1)", opacity: 1 },
     { transform: `translate3d(${toX}px,${toY}px,0) scale(.2)`, opacity: 0 },
-  ], { duration: 1500, easing: "cubic-bezier(.3,.7,.2,1)" });
+  ], { duration: 2700, easing: "cubic-bezier(.3,.7,.2,1)" });
   (declaredTargets || []).forEach((target, index) => {
     // the board was re-rendered since capture: look the target up again
     const element = rulesVfxDeclaredTargetElement(target.declared);
@@ -2202,7 +2245,7 @@ function playRulesVfxSpotlight(event) {
     const angle = Math.atan2(point.y - centerY, point.x - centerX);
     const edge = Math.min(width, height) / 2 + 6;
     playRulesVfxTargetArrow({ x: centerX + Math.cos(angle) * edge, y: centerY + Math.sin(angle) * edge }, point, index);
-    if (element) window.setTimeout(() => playRulesVfxTargetLock(element, 1100), vfxMs(420 + index * 90));
+    if (element) window.setTimeout(() => playRulesVfxTargetLock(element, 2000), vfxMs(420 + index * 90));
     else playRulesVfxPulse(point, "triggered", { delay: 420 + index * 90 });
   });
 }
@@ -2231,7 +2274,7 @@ function playRulesVfxTargetArrow(from, to, index = 0) {
   ], { duration: 700, delay, fill: "both" });
   rulesVfxAnimateAndRemove(svg, [
     { opacity: 1 }, { offset: .82, opacity: 1 }, { opacity: 0 },
-  ], { duration: 1400 + index * 90, easing: "linear" });
+  ], { duration: 2600 + index * 90, easing: "linear" });
 }
 
 function playRulesVfxEvent(event) {
@@ -2239,8 +2282,11 @@ function playRulesVfxEvent(event) {
     const { entry, tributeOrigins, essenceOrigins, sourceRect, sacrifice, effectTarget, movedCard, deckDiscard, supportWin } = event;
     const target = rulesVfxStackTarget();
     if (entry.type === "rules_phase_advanced") {
-      playRulesVfxPhaseBanner(event);
-      return;
+      return playRulesVfxPhaseBanner(event);
+    }
+    if (entry.type === "rules_confrontation_compared") {
+      playRulesVfxResolutionBanner(entry);
+      return 3400;
     }
     if (entry.type === "rules_action_declared" && !rulesVfxReducedMotion()) playRulesVfxSpotlight(event);
     if (entry.type === "rules_confrontation_cleanup") {
@@ -2797,13 +2843,43 @@ function armRulesBoardTargets(flow) {
     (flow.selectedTargets || []).map((target) => target.key)
   );
   const targetGroupIndex = (flow.selectedTargets || []).length;
-  flow.draft.structuredTargets
+  const candidates = flow.draft.structuredTargets
     .filter((target) => (
       !flow.draft.targetRules?.groups
       || target.targetGroupIndex === targetGroupIndex
     ))
-    .filter((target) => !selectedKeys.has(target.key))
-    .forEach((target) => {
+    .filter((target) => !selectedKeys.has(target.key));
+  const commitTarget = (target) => {
+    playRulesVfxTargetLock(rulesTargetElement(target));
+    if (flow.draft.targetRules?.groups) {
+      flow.selectedTargets = [...(flow.selectedTargets || []), target];
+      if (flow.selectedTargets.length < flow.draft.targetRules.groups.length) {
+        renderRulesBoardFlow();
+      } else {
+        scheduleRulesBoardSubmit();
+      }
+    } else {
+      submitRulesBoardFlow(target);
+    }
+  };
+  // Choosing a player: a small popup with one button per player (me / opponent)
+  if (candidates.length && candidates.every((target) => target.kind === "player")) {
+    const popup = document.createElement("div");
+    popup.className = "log-panel rules-choice-panel rules-player-target-panel";
+    popup.innerHTML = `<div class="box">
+      <h2>${esc(t("rulesChoosePlayerTarget"))}</h2>
+      <div class="rules-choice-options">
+        ${candidates.map((target) => `<button type="button" class="rules-choice-player" data-player-target="${esc(target.key)}" style="--player-tone:${esc(playerColor(target.playerId))}">${esc(target.playerId === myPlayerId ? t("rulesTargetSelf") : t("rulesTargetOpponent"))} · ${esc(rulesPlayerName(target.playerId))}</button>`).join("")}
+      </div>
+    </div>`;
+    document.body.appendChild(popup);
+    popup.querySelectorAll("[data-player-target]").forEach((button) => {
+      button.onclick = () => commitTarget(candidates.find((target) => target.key === button.dataset.playerTarget));
+    });
+    rulesBoardTargetCleanup.push(() => popup.remove());
+    return;
+  }
+  candidates.forEach((target) => {
     let element = rulesTargetElement(target);
     let temporaryTarget = false;
     if (!element && target.kind === "zone_card") {
@@ -2834,17 +2910,7 @@ function armRulesBoardTargets(flow) {
     const select = (event) => {
       event.preventDefault();
       event.stopPropagation();
-      playRulesVfxTargetLock(element);
-      if (flow.draft.targetRules?.groups) {
-        flow.selectedTargets = [...(flow.selectedTargets || []), target];
-        if (flow.selectedTargets.length < flow.draft.targetRules.groups.length) {
-          renderRulesBoardFlow();
-        } else {
-          scheduleRulesBoardSubmit();
-        }
-      } else {
-        submitRulesBoardFlow(target);
-      }
+      commitTarget(target);
     };
     element.addEventListener("pointerdown", select, true);
     rulesBoardTargetCleanup.push(() => {
@@ -3409,6 +3475,10 @@ function rulesActionKindOptions(zone) {
 }
 
 function rulesStructuredActionTargets(encodedAbility) {
+  // abilities may spell their target groups as targets.groups (Shattering the Self)
+  if (!Array.isArray(encodedAbility?.targetGroups) && Array.isArray(encodedAbility?.targets?.groups)) {
+    encodedAbility = { ...encodedAbility, targetGroups: encodedAbility.targets.groups };
+  }
   if (Array.isArray(encodedAbility?.targetGroups)) {
     const groups = encodedAbility.targetGroups;
     const structuredTargets = groups.flatMap((group, targetGroupIndex) => (
@@ -3474,7 +3544,7 @@ function rulesStructuredActionTargets(encodedAbility) {
     })
     .map((item) => ({ ...item, kind: "card", zone: "battlefield", key: item.id }));
   const publicZoneTargets = Object.entries(latestState?.players || {}).flatMap(([containerId, player]) => (
-    (allowsFieldCard ? allowedTargetZones : [])
+    (allowsFieldCard || structuredTargetKind === "zone_card" ? allowedTargetZones : [])
       .filter((zone) => zone !== "battlefield")
       .flatMap((zone) => (player.zones?.[zone]?.cards || []).map((cardId, index) => ({
         kind: "zone_card", zone, containerId, cardId,
@@ -4261,6 +4331,13 @@ function paintStaticText() {
   $("#handDiscardRandomBtn").textContent = t("handDiscardRandom");
   $("#handShowBtn").textContent = t("handShow");
   $("#handMulliganBtn").textContent = t("mulligan");
+  $("#handSortLabel").textContent = t("handSort");
+  [["none", "handSortNone"], ["first", "handSortFirst"], ["ephemeral", "handSortEphemeral"], ["support", "handSortSupport"], ["persistent", "handSortPersistent"]]
+    .forEach(([value, key]) => {
+      const option = $(`#handSortSelect option[value="${value}"]`);
+      if (option) option.textContent = t(key);
+    });
+  $("#handSortSelect").value = handSortMode;
   $("#handToolsToggleLabel").textContent = t("handOptions");
   $("#handToolsToggleBtn").title = t("handOptions");
   $("#inspectCloseBtn").textContent = t("close");
@@ -4829,6 +4906,8 @@ function renderAll() {
   renderBattlefield();
   renderHandTray();
   renderOppRows();
+  renderMyInfoStrip();
+  $("#tokenToolbar")?.classList.toggle("hidden", Boolean(latestState?.rulesEngine?.enabled));
   renderPhaseTracker();
   renderRulesStack();
   renderRulesPregame();
@@ -5409,6 +5488,31 @@ function renderPlayerLog(entries, playerId) {
 const recentLogCollapsed = new Set();
 let opponentHandHiddenByUser = false;
 
+// Total Power of a player's face-up Manifestations in the Confrontation Zone
+function confrontationPowerOf(playerId) {
+  return (latestState?.battlefield || []).reduce((total, item) => {
+    if (!item.faceUp || item.fieldZone !== "confrontation") return total;
+    if ((item.controllerId || item.ownerId) !== playerId) return total;
+    if (cardsById.get(item.cardId)?.type !== "manifestation" && !item.isTokenCard) return total;
+    const power = Number(item.effectivePower ?? cardsById.get(item.cardId)?.power ?? item.power);
+    return total + (Number.isFinite(power) ? power : 0);
+  }, 0);
+}
+
+function renderMyInfoStrip() {
+  const strip = $("#myInfoStrip");
+  if (!strip) return;
+  const me = !isObserver ? latestState?.players?.[myPlayerId] : null;
+  strip.classList.toggle("hidden", !me);
+  if (!me) return;
+  const handZone = me.zones.hand;
+  const handCount = handZone.count !== undefined ? handZone.count : (handZone.cards || []).length;
+  strip.innerHTML = `
+    <span class="my-info-badge" title="${esc(t("hand"))}"><span class="hand-stack-icon" style="--owner-color:${playerColor(me.id)}"><span class="hand-stack-card"></span><span class="hand-stack-card"></span><span class="hand-stack-card"></span></span><b>${handCount}</b></span>
+    <span class="opp-vessel-badge" title="${esc(t("receptacle"))}">${receptaclePoints(me.zones.receptacle, me.score)} ${esc(t("vesselPoints"))}</span>
+    <span class="opp-power-badge" title="${esc(t("rulesPowerTotal"))}">⚔ ${confrontationPowerOf(me.id)}</span>`;
+}
+
 function renderOppRows() {
   const rows = $("#oppRows");
   const tracker = latestState.phaseTracker || { enabled: false, advanced: false, index: 0, turn: 1, passedPlayerIds: [] };
@@ -5455,6 +5559,7 @@ function renderOppRows() {
             <span class="hand-stack-count">${handCount}</span>
           </button>
           <span class="opp-vessel-badge" title="${esc(t("receptacle"))}">${vesselPoints} ${esc(t("vesselPoints"))}</span>
+          <span class="opp-power-badge" title="${esc(t("rulesPowerTotal"))}">⚔ ${confrontationPowerOf(p.id)}</span>
         </div>
         ${p.activity ? `<div class="opp-activity">${esc(t("activity_" + p.activity))}</div>` : ""}
         ${recentHtml}
@@ -5678,6 +5783,23 @@ function showChoiceCardPreview(source) {
   preview.style.top = `${Math.max(12, Math.min(rect.top + rect.height / 2 - height / 2, window.innerHeight - height - 12))}px`;
   choicePreviewEl = preview;
 }
+// While the Inspect panel is open, hovering a card shows it there directly
+document.addEventListener("mouseover", (event) => {
+  const panel = $("#inspectPanel");
+  if (!panel || panel.classList.contains("hidden") || !(event.target instanceof Element)) return;
+  if (event.target.closest("#inspectPanel")) return;
+  const hand = event.target.closest("[data-hand-card]");
+  const zone = event.target.closest("[data-zone-card]");
+  const board = event.target.closest(".bf-card[data-item-id]");
+  const opponent = event.target.closest("[data-opponent-hand-card]");
+  let cardId = hand?.dataset.handCard || zone?.dataset.zoneCard?.split(":")[2] || opponent?.dataset.opponentHandCard || null;
+  if (!cardId && board) {
+    const item = (latestState?.battlefield || []).find((candidate) => candidate.id === board.dataset.itemId);
+    if (item && (item.faceUp || (item.ownerId === myPlayerId && !isObserver))) cardId = item.cardId;
+  }
+  if (cardId && cardId !== inspectHistory[0]) showInspect(cardId);
+});
+
 document.addEventListener("mouseover", (event) => {
   const target = event.target instanceof Element ? event.target.closest(CHOICE_PREVIEW_SELECTOR) : null;
   if (target) showChoiceCardPreview(target);
@@ -5719,7 +5841,7 @@ function wireCardHoverZoom(el, cloneClassName) {
       const configuredScale = Number.parseFloat(
         getComputedStyle(document.documentElement).getPropertyValue("--hand-hover-scale")
       ) || 1.3;
-      const scale = Math.max(.2, Math.min(
+      const scale = Math.max(1, Math.min(
         configuredScale,
         (window.innerWidth - margin * 2) / Math.max(cloneWidth, 1),
         (window.innerHeight - margin * 2) / Math.max(cloneHeight, 1),
@@ -6297,6 +6419,19 @@ function renderHandEssenceStrip() {
   strip.setAttribute("aria-label", t("essence"));
 }
 
+// Manifestations with an ability usable from the Hand (e.g. Ranba) stay actionable
+function handCardHasHandAction(cardId) {
+  const rules = latestState?.rulesEngine;
+  const card = cardsById.get(cardId);
+  if (!rules?.enabled || !card || isObserver || rules.pendingChoice || card.type !== "manifestation") return false;
+  if (rules.priorityPlayerId !== myPlayerId) return false;
+  const phaseId = currentPhaseUi().phase?.id;
+  return (activatedAbilitiesByCard.get(cardId) || []).some((ability) => (
+    (ability.sourceZones || []).includes("hand")
+    && (!Array.isArray(ability.phaseIds) || ability.phaseIds.includes(phaseId))
+  ));
+}
+
 function handCardIsPlayable(cardId) {
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
@@ -6324,7 +6459,13 @@ function handCardIsPlayable(cardId) {
       && rules.confrontationResult?.loserId !== myPlayerId
     ) return false;
     const draft = ability ? buildRulesActionDraft({ cardId, zone: "hand" }, ability) : null;
-    return !draft || Number(draft.targetRules?.min || 0) <= draft.structuredTargets.length;
+    if (!draft) return true;
+    if (Array.isArray(draft.targetRules?.groups)) {
+      return draft.targetRules.groups.every((_group, index) => (
+        draft.structuredTargets.some((target) => target.targetGroupIndex === index)
+      ));
+    }
+    return Number(draft.targetRules?.min || 0) <= draft.structuredTargets.length;
   }
   if (playType === "persistent_will") {
     if (
@@ -6477,6 +6618,24 @@ function rules_recovery_mulligan_active_client() {
   );
 }
 
+// Hand sort: cards matching the chosen category come first (display only)
+let handSortMode = "none";
+try { handSortMode = localStorage.getItem("ko_hand_sort") || "none"; } catch (_error) { /* storage unavailable */ }
+
+function handSortRank(mode) {
+  const supportOnly = (card) => card?.type === "manifestation" && (
+    /^Support(?: from hand)?[.;]/.test(String(card.effect || ""))
+    || String(card.effect || "").includes("Cannot be played as First Manifestation")
+  );
+  const matches = {
+    first: (card) => card?.type === "manifestation" && !supportOnly(card),
+    ephemeral: (card) => card?.type === "ephemeral_will",
+    support: supportOnly,
+    persistent: (card) => card?.type === "persistent_will",
+  }[mode];
+  return (cardId) => (matches && matches(cardsById.get(cardId)) ? 0 : 1);
+}
+
 function renderHandTray() {
   const tray = $("#myHandTray");
   tray.dataset.emptyHint = t("handEmptyHint");
@@ -6498,16 +6657,20 @@ function renderHandTray() {
     return;
   }
   const myRevealed = revealedHandCards.get(meId);
-  tray.innerHTML = cards
-    .map((cid, index) => {
+  const sortRank = handSortRank(handSortMode);
+  const displayOrder = cards
+    .map((cid, index) => ({ cid, index }))
+    .sort((first, second) => sortRank(first.cid) - sortRank(second.cid) || first.index - second.index);
+  tray.innerHTML = displayOrder
+    .map(({ cid, index }, position) => {
       const isNew = !previousHandCardIds.has(cid);
       const wasRevealed = myRevealed && myRevealed.has(cid);
       const rarity = rarityForCard(meId, cid);
-      const center = index - (cards.length - 1) / 2;
+      const center = position - (cards.length - 1) / 2;
       const rotate = Math.max(-16, Math.min(16, center * 3.25));
       const arc = Math.abs(center) * Math.abs(center) * 1.35;
-      const playable = handCardIsPlayable(cid);
-      return `<div class="hand-card ${isNew ? "ko-pop-in " : ""}${playable ? "is-playable " : ""}${rarityClassAttr(rarity)}" data-hand-card="${esc(cid)}" data-hand-index="${index}" title="${esc(cardName(cid))}" style="--hand-rotate:${rotate}deg;--hand-arc:${arc}px;--hand-z:${index};${rarityCosmosStyle(cid)}">
+      const playable = handCardIsPlayable(cid) || handCardHasHandAction(cid);
+      return `<div class="hand-card ${isNew ? "ko-pop-in " : ""}${playable ? "is-playable " : ""}${rarityClassAttr(rarity)}" data-hand-card="${esc(cid)}" data-hand-index="${index}" title="${esc(cardName(cid))}" style="--hand-rotate:${rotate}deg;--hand-arc:${arc}px;--hand-z:${position};${rarityCosmosStyle(cid)}">
       ${raritySurfaceMarkup(rarity, `<img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}">`)}
       ${automationCoverageBadgeHtml(cid)}
       ${wasRevealed ? `<span class="hand-card-revealed-icon" title="${esc(t("revealHeader"))}">👁</span>` : ""}
@@ -6526,7 +6689,13 @@ function renderHandTray() {
     const cardId = el.dataset.handCard;
     el.onclick = () => {
       if (toggleRulesBoardPayment(Number(el.dataset.handIndex))) return;
-      if (!handPickMode) return;
+      if (!handPickMode) {
+        // a Manifestation whose ability works from the Hand (Ranba, Diabolical Giant): click to use it
+        if (!pendingRulesBoardFlow && handCardHasHandAction(cardId) && !handCardIsPlayable(cardId)) {
+          beginRulesHandActivatedAction(cardId, Number(el.dataset.handIndex));
+        }
+        return;
+      }
       const mode = handPickMode;
       handPickMode = null;
       updateHandToolbarUi();
@@ -6608,6 +6777,11 @@ function initHandToolbar() {
   };
   $("#handShowBtn").onclick = () => send({ type: "reveal", zone: "hand" });
   $("#handDiscardRandomBtn").onclick = () => send({ type: "move_card", fromZone: "hand", toZone: "graveyard", random: true });
+  $("#handSortSelect").onchange = (event) => {
+    handSortMode = event.target.value;
+    try { localStorage.setItem("ko_hand_sort", handSortMode); } catch (_error) { /* storage unavailable */ }
+    renderHandTray();
+  };
   $("#handMulliganBtn").onclick = () => {
     showConfirm(t("confirmMulligan"), () => send({ type: "mulligan" }));
   };
@@ -7795,7 +7969,8 @@ function renderRulesChoiceContent() {
     auction_bid: ["rulesChoiceAuctionBidHeading", "rulesChoiceAuctionBidText"],
     auction_answer: ["rulesChoiceAuctionAnswerHeading", "rulesChoiceAuctionAnswerText"],
     stalemate_for_support: ["rulesChoiceChabakHeading", "rulesChoiceChabakText"],
-  }[searching ? "" : choice.destination];
+    limbo_exile_add_power: ["rulesChoiceLimboExileHeading", "rulesChoiceLimboExileText"],
+  }[searching && choice.destination !== "limbo_exile_add_power" ? "" : choice.destination];
   if (destinationKeys) {
     $("#rulesChoiceHeading").textContent = t(destinationKeys[0]);
     $("#rulesChoiceText").textContent = rulesText(destinationKeys[1], { card: cardName(choice.sourceCardId), count: choice.count, points: choice.requiredPoints });
@@ -7816,6 +7991,7 @@ function renderRulesChoiceContent() {
       draw: Number(choice.drawAfter || 0),
     },
   );
+  options.classList.add("has-card-picker");
   options.innerHTML = cards.map((cardId, index) => `
     <button type="button" class="rules-choice-card" data-rules-discard-index="${index}" title="${esc(cardName(cardId))}">
       <img src="${esc(cardImage(cardId))}" alt="">
@@ -8226,6 +8402,7 @@ function resolveDrop(ctx, clientX, clientY) {
 }
 
 function reorderHandDrop(cardId, clientX) {
+  if (handSortMode !== "none") return;
   const meId = isObserver ? null : myPlayerId;
   if (!meId || !latestState.players[meId]) return;
   const cards = latestState.players[meId].zones.hand.cards || [];

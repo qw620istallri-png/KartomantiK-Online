@@ -3012,40 +3012,61 @@ class Session:
             or item[1].get("temperaments")
             or []
         ))
-        for _card_id, metadata, power in cards:
-            printed_temperament = next(
-                iter(metadata.get("temperaments") or []), None
-            )
-            tribute_temperaments = list(
+
+        def spend(state, card):
+            """Every way this card can pay the remaining requirements."""
+            _card_id, metadata, power = card
+            printed = next(iter(metadata.get("temperaments") or []), None)
+            tribute = list(
                 metadata.get("tributeTemperaments")
                 or metadata.get("temperaments")
                 or []
             )
-            temperament = printed_temperament
-            used = 0
-            if "transcendent" in tribute_temperaments:
-                temperament = "transcendent"
-                for required_temperament in remaining:
-                    amount = min(power - used, remaining[required_temperament])
-                    remaining[required_temperament] -= amount
+            if "transcendent" in tribute:
+                left = dict(state)
+                used = 0
+                for required in left:
+                    amount = min(power - used, left[required])
+                    left[required] -= amount
                     used += amount
                     if used >= power:
                         break
-            else:
-                payable = next((
-                    candidate for candidate in tribute_temperaments
-                    if candidate in remaining and remaining[candidate] > 0
-                ), None)
-                if payable is None and remaining.get("hollow", 0) > 0:
-                    payable = "hollow"
-                if payable in remaining:
-                    used = min(power, remaining[payable])
-                    remaining[payable] -= used
-                    if payable != "hollow":
-                        temperament = payable
-            if include_excess and power > used and temperament:
-                key = (temperament, "retained") if metadata.get("retainsExcessEssence") else temperament
-                excess[key] = excess.get(key, 0) + power - used
+                return [(left, "transcendent", used)]
+            options = []
+            for candidate in tribute + ["hollow"]:
+                if state.get(candidate, 0) > 0:
+                    left = dict(state)
+                    used = min(power, left[candidate])
+                    left[candidate] -= used
+                    options.append((
+                        left,
+                        printed if candidate == "hollow" else candidate,
+                        used,
+                    ))
+            return options or [(dict(state), printed, 0)]
+
+        best = {}
+
+        def search(index, state, spent):
+            if index == len(cards):
+                missing = sum(max(0, amount) for amount in state.values())
+                wasted = sum(power - used for (_c, _m, power), (_t, used) in zip(cards, spent))
+                score = (missing, wasted)
+                if not best or score < best["score"]:
+                    best.update(score=score, state=state, spent=list(spent))
+                return
+            for left, temperament, used in spend(state, cards[index]):
+                search(index + 1, left, spent + [(temperament, used)])
+                if best and best["score"] == (0, 0):
+                    return
+
+        search(0, remaining, [])
+        remaining = best["state"] if best else remaining
+        if include_excess and best:
+            for (_card_id, metadata, power), (temperament, used) in zip(cards, best["spent"]):
+                if power > used and temperament:
+                    key = (temperament, "retained") if metadata.get("retainsExcessEssence") else temperament
+                    excess[key] = excess.get(key, 0) + power - used
         covered = all(amount <= 0 for amount in remaining.values())
         return covered, excess
 
@@ -6028,8 +6049,9 @@ class Session:
             else []
         )
         captured = []
+        # cards in Stalemate never take part in the resolution
         for item in list(self.rules_confrontation_items_owned_by(
-            loser_id, ("confrontation", "stalemate")
+            loser_id, ("confrontation",)
         )):
             if item.get("id") in rematch_item_ids or self.rules_item_zone_locked(item):
                 continue
@@ -6079,7 +6101,7 @@ class Session:
             captured.append(self._rules_remove_field_item(item, winner_id, "receptacle", "top"))
         own_items = [
             item for item in self.rules_confrontation_items_owned_by(
-                winner_id, ("confrontation", "stalemate")
+                winner_id, ("confrontation",)
             )
             if item.get("id") not in rematch_item_ids
             and not self.rules_item_zone_locked(item)
@@ -6300,11 +6322,82 @@ class Session:
             or self.rules_engine.get("firstManifestationItemIds")
         )
 
+    def rules_field_ability_usable(self, item, ability, zone, phase_id):
+        """Cheap check that an activated ability of a field card could be used right now."""
+        source_zones = ability.get("sourceZones")
+        if source_zones and "battlefield" not in source_zones:
+            return False
+        required_zone = ability.get("sourceFieldZone")
+        if required_zone and required_zone != zone:
+            return False
+        phase_ids = ability.get("phaseIds")
+        if phase_ids and phase_id not in phase_ids:
+            return False
+        removal = ability.get("removeCountersFromSource")
+        if isinstance(removal, dict):
+            counters = item.get("counters") or {}
+            have = sum(
+                int(value or 0) for key, value in counters.items()
+                if str(key).casefold() == str(removal.get("name") or "").casefold()
+            )
+            if have < int(removal.get("amount") or 0):
+                return False
+        return True
+
+    def rules_will_affordable(self, player_id, card_id):
+        """Whether the Tribute of a Will can be paid with what the player has.
+
+        Generous whenever an unusual payment source exists, so a phase is never
+        skipped by mistake.
+        """
+        player = self.players[player_id]
+        metadata = self.card_rules.get(card_id, {})
+        exotic = any(
+            self.rules_active_passive_sources(kind)
+            for kind in (
+                "allow_limbo_tribute_with_counter", "vessel_manifestations_as_tribute",
+                "field_manifestations_as_tribute",
+            )
+        )
+        if exotic or any(
+            entry.get("playerId") == player_id and (entry.get("noTribute") or entry.get("anyWill"))
+            for entry in self.rules_engine.get("playPermissions") or []
+        ):
+            return True
+        if any(
+            self.card_rules.get(other, {}).get("canPayTributeFromLimbo")
+            for other in player["zones"]["graveyard"]
+        ) or any(
+            self.rules_item_controller_id(item) == player_id
+            and self.card_rules.get(item.get("cardId"), {}).get("canPayTributeFromInterzone")
+            for item in self.battlefield
+        ):
+            return True
+        try:
+            requirements, _enforced = self.rules_tribute_requirements(
+                "play_card", {"cardId": card_id, "cardType": metadata.get("type")}, None, player_id,
+            )
+            remaining, _spent = self.rules_essence_payment_plan(player_id, requirements)
+            if all(amount <= 0 for amount in remaining.values()):
+                return True
+            candidates = [
+                other for other in player["zones"]["hand"]
+                if other != card_id and self.card_rules.get(other, {}).get("type") == "manifestation"
+                and self.card_rules.get(other, {}).get("canPayTribute", True)
+            ][:12]
+            for mask in range(1, 1 << len(candidates)):
+                selected = [card for index, card in enumerate(candidates) if mask & (1 << index)]
+                if self.rules_manifestations_cover(selected, remaining, player_id=player_id)[0]:
+                    return True
+            return False
+        except Exception:  # never skip a phase because of a computation problem
+            return True
+
     def rules_player_can_act(self, player_id):
         """True when the player has any voluntary action available in the current step.
 
-        Deliberately generous: only timing and zone rules are checked, never whether
-        the player can afford the cost, so a phase is never skipped by mistake.
+        Deliberately generous: timing and zones are checked, and Will Tributes only
+        when the player clearly cannot pay them, so a phase is never skipped by mistake.
         """
         player = self.players[player_id]
         phase_id = self.current_phase_id()
@@ -6326,9 +6419,15 @@ class Session:
         for card_id in set(player["zones"]["hand"]):
             metadata = self.card_rules.get(card_id, {})
             card_type = metadata.get("type")
-            if card_type in RULES_WILL_TYPES and can_play(card_id, card_type):
+            if (
+                card_type in RULES_WILL_TYPES and can_play(card_id, card_type)
+                and self.rules_will_affordable(player_id, card_id)
+            ):
                 return True
-            if card_type == "manifestation" and can_support(card_id):
+            if (
+                card_type == "manifestation" and can_support(card_id)
+                and self.rules_support_from_hand_available(player_id, card_id)
+            ):
                 return True
             if response and any(
                 "hand" in (ability.get("sourceZones") or [])
@@ -6344,6 +6443,8 @@ class Session:
                     return True
             if any(
                 entry.get("playerId") == player_id
+                and int(entry.get("turn") or self.phase_tracker["turn"]) == self.phase_tracker["turn"]
+                and (not entry.get("phaseIds") or phase_id in entry["phaseIds"])
                 for entry in self.rules_engine.get("playPermissions") or []
             ):
                 return True
@@ -6369,8 +6470,11 @@ class Session:
                 return True
             if (
                 response and item.get("faceUp")
-                and metadata.get("activatedAbilities")
                 and self.rules_item_effects_active(item)
+                and any(
+                    self.rules_field_ability_usable(item, ability, zone, phase_id)
+                    for ability in metadata.get("activatedAbilities") or []
+                )
             ):
                 return True
         return False
@@ -7082,6 +7186,18 @@ class Session:
                     continue
                 fired[fired_key] = self.phase_tracker["turn"]
             raw_result = ability.get("result") or {}
+            if (
+                event == "card_played"
+                and raw_result.get("kind") == "add_counter_source"
+                and not ability.get("optional")
+            ):
+                # Atavic counters are automatic: no Stack, applied as the card is played
+                if self.rules_add_source_counter(item_id, raw_result):
+                    self.add_log(
+                        controller_id, "rules_counter_added",
+                        {"cardId": card_id, "counter": raw_result.get("counter"), "value": raw_result.get("value")},
+                    )
+                continue
             clean_result = self.clean_rules_trigger_result(raw_result) or self.clean_rules_action_result(raw_result)
             target_rules = ability.get("targets") or {}
             clean_targets = (
@@ -7743,6 +7859,42 @@ class Session:
         if queued and not defer:
             self.queue_rules_simultaneous_actions(queued)
         return queued
+
+    def rules_add_source_counter(self, item_id, result):
+        item = self.find_battlefield_item(item_id)
+        if item is None:
+            return False
+        counter_name = str(result.get("counter") or "")
+        if not counter_name:
+            return False
+        counters = item.setdefault("counters", {})
+        counter_key = next((
+            key for key in counters if str(key).casefold() == counter_name.casefold()
+        ), counter_name)
+        counters[counter_key] = max(0, int(counters.get(counter_key) or 0) + int(result.get("value") or 0))
+        return True
+
+    def rules_apply_self_play_counters(self, item):
+        """A Will that counts the cards its controller plays also counts its own play."""
+        if not item or item.get("isTokenCopy"):
+            return
+        card_id = item.get("cardId")
+        metadata = self.card_rules.get(card_id, {})
+        for ability in metadata.get("triggeredAbilities") or []:
+            trigger = ability.get("trigger") or {}
+            result = ability.get("result") or {}
+            if (
+                trigger.get("event") != "card_played"
+                or result.get("kind") != "add_counter_source"
+                or ability.get("optional")
+                or trigger.get("eventController") != "owner"
+            ):
+                continue
+            if trigger.get("cardTemperament") and trigger["cardTemperament"] not in (
+                metadata.get("temperaments") or []
+            ):
+                continue
+            self.rules_add_source_counter(item.get("id"), result)
 
     def queue_rules_persistent_will_entry_watchers(self, item, defer=False):
         if (
@@ -10943,6 +11095,29 @@ class Session:
             source_item = self.find_battlefield_item(
                 (action.get("source") or {}).get("itemId")
             )
+            if not action.get("targets") and not action.get("_limboChosen"):
+                # Carcass Devourer: ask which Manifestations to exile from Limbo
+                limbo = [
+                    card_id for card_id in player["zones"]["graveyard"]
+                    if self.card_rules.get(card_id, {}).get("type") == "manifestation"
+                ]
+                if not limbo:
+                    return {"kind": result.get("kind"), "status": "nothing", "cardIds": [], "power": 0}
+                choice_id = new_id()
+                self.rules_engine["pendingChoice"] = {
+                    "id": choice_id, "kind": "discard_from_hand",
+                    "playerId": player_id, "count": 2, "upTo": True,
+                    "candidateCardIds": limbo, "destination": "limbo_exile_add_power",
+                    "actionId": action.get("id"),
+                    "controllerId": action.get("controllerId"),
+                    "sourceCardId": (action.get("source") or {}).get("cardId"),
+                    "_source": dict(action.get("source") or {}),
+                }
+                return {
+                    "kind": "choice_required", "choiceId": choice_id,
+                    "choiceKind": "discard_from_hand", "playerId": player_id,
+                    "count": 2, "upTo": True, "search": True,
+                }
             exiled, added = [], 0
             for target in action.get("targets") or []:
                 if target.get("kind") != "zone_card" or target.get("zone") != "graveyard":
@@ -14732,9 +14907,18 @@ class Session:
                     "sourceCardId": choice.get("sourceCardId"),
                 }
             if choice.get("purpose") == "bloatuba":
-                error, _suspended = self.suspend_zone_card(target_id, "deck", card_id)
-                if error:
-                    return error, None
+                owner_id = self.take_zone_card(target_id, "deck", card_id)
+                if owner_id is None:
+                    return "That card is no longer on top of the Deck.", None
+                seat = self.players[target_id].get("seat")
+                stalemate_item = {
+                    "id": new_id(), "ownerId": owner_id, "controllerId": target_id,
+                    "cardId": card_id, "x": 650.0, "y": 520.0 if seat != 1 else 980.0,
+                    "faceUp": True, "rotation": 0.0, "counters": {}, "stackedOn": None,
+                    "fieldZone": "stalemate",
+                    "rarity": self.players[owner_id].get("cardRarities", {}).get(card_id),
+                }
+                self.battlefield.append(stalemate_item)
                 remaining = [c for c in choice.get("_revealed") or [] if c != card_id]
                 self.rules_engine["pendingChoice"] = (
                     self.make_bloatuba_reorder(
@@ -14744,6 +14928,7 @@ class Session:
                 return None, {
                     "kind": "bloatuba_pick", "playerId": player_id,
                     "targetPlayerId": target_id, "cardId": card_id,
+                    "itemId": stalemate_item["id"],
                     "remaining": remaining,
                 }
             if choice.get("purpose") == "womb":
@@ -16431,6 +16616,29 @@ class Session:
         required = int(choice.get("count") or 0)
         if len(selected) > required or (len(selected) != required and not choice.get("upTo")):
             return "Choose the required number of cards.", None
+        if choice.get("destination") == "limbo_exile_add_power":
+            limbo_zone = list(self.players[player_id]["zones"]["graveyard"])
+            for card_id in selected:
+                if card_id not in choice["candidateCardIds"] or card_id not in limbo_zone:
+                    return "A selected card is not in your Limbo.", None
+                limbo_zone.remove(card_id)
+            self.rules_engine["pendingChoice"] = None
+            resolution = self.apply_rules_action_result({
+                "id": choice.get("actionId"), "controllerId": player_id,
+                "source": choice.get("_source") or {}, "_limboChosen": True,
+                "targets": [
+                    {"kind": "zone_card", "containerId": player_id, "zone": "graveyard",
+                     "cardId": card_id, "ownerId": player_id}
+                    for card_id in selected
+                ],
+                "ability": {"result": {"kind": "exile_limbo_targets_add_power"}},
+            })
+            return None, {
+                "kind": "exile_limbo_targets_add_power", "playerId": player_id,
+                "cardIds": (resolution or {}).get("cardIds", []), "choiceId": choice_id,
+                "power": (resolution or {}).get("power", 0),
+                "sourceCardId": choice.get("sourceCardId"),
+            }
         if choice.get("candidateCardIds") is not None:
             deck_zone = list(self.players[player_id]["zones"]["deck"])
             for card_id in selected:
@@ -16914,6 +17122,11 @@ class Session:
             entered_item = self.find_battlefield_item(
                 source_resolution.get("itemId")
             )
+            if (
+                resolved.get("kind") == "play_card"
+                and self.rules_item_card_rules(entered_item or {}).get("type") == "persistent_will"
+            ):
+                self.rules_apply_self_play_counters(entered_item)
             triggered_actions.extend(
                 self.queue_rules_manifestation_entry_watchers(
                     entered_item, defer=True

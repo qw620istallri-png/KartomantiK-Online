@@ -13,10 +13,11 @@ from session import ADVANCED_PHASES, Session
 
 class AutoPassTests(unittest.TestCase):
     def make_session(self):
-        manifestation_ids = {f"m-{index}" for index in range(20)}
+        manifestation_ids = {f"m-{index}" for index in range(20)} | {"m-support"}
         card_rules = {
             **{card_id: {"type": "manifestation", "power": 1, "temperaments": ["phlegmatic"]}
                for card_id in manifestation_ids},
+            "m-support": {"type": "manifestation", "power": 1, "temperaments": ["phlegmatic"], "supportFromHand": True},
             "will-ephemeral": {"type": "ephemeral_will", "cost": 1, "powerCost": "{G}", "temperaments": ["phlegmatic"]},
             "will-persistent": {"type": "persistent_will", "cost": 2, "powerCost": "{G}{G}", "temperaments": ["phlegmatic"]},
         }
@@ -42,8 +43,34 @@ class AutoPassTests(unittest.TestCase):
 
     def test_an_ephemeral_will_in_hand_keeps_the_player_in_control_during_reaction(self):
         session, p1, p2 = self.make_session()
+        p1["zones"]["hand"] = ["will-ephemeral", "m-5"]
+        self.goto(session, "resolution_effects")
+        self.assertIsNone(session.rules_auto_pass_player())
+
+    def test_a_will_that_cannot_be_paid_does_not_keep_the_player_in_control(self):
+        session, p1, p2 = self.make_session()
         p1["zones"]["hand"] = ["will-ephemeral"]
         self.goto(session, "resolution_effects")
+        self.assertEqual(session.rules_auto_pass_player(), "p1")
+
+    def test_a_plain_manifestation_in_hand_is_not_a_support_action(self):
+        session, p1, p2 = self.make_session()
+        p1["zones"]["hand"] = ["m-1"]
+        self.goto(session, "confrontation_reaction")
+        self.assertEqual(session.rules_auto_pass_player(), "p1")
+
+    def test_a_field_ability_without_enough_counters_is_not_an_action(self):
+        session, p1, p2 = self.make_session()
+        session.card_rules["counter-card"] = {
+            "type": "persistent_will",
+            "activatedAbilities": [{"id": "spend", "removeCountersFromSource": {"name": "Union", "amount": 5}}],
+        }
+        item = {"id": "cc", "ownerId": "p1", "cardId": "counter-card", "faceUp": True,
+                "fieldZone": "field", "counters": {"Union": 2}}
+        session.battlefield = [item]
+        self.goto(session, "resolution_effects")
+        self.assertEqual(session.rules_auto_pass_player(), "p1")
+        item["counters"]["Union"] = 5
         self.assertIsNone(session.rules_auto_pass_player())
 
     def test_an_ephemeral_will_is_not_an_action_outside_response_windows(self):
@@ -54,7 +81,7 @@ class AutoPassTests(unittest.TestCase):
 
     def test_a_persistent_will_only_counts_in_end_actions(self):
         session, p1, p2 = self.make_session()
-        p1["zones"]["hand"] = ["will-persistent"]
+        p1["zones"]["hand"] = ["will-persistent", "m-5", "m-6"]
         self.goto(session, "resolution_effects")
         self.assertEqual(session.rules_auto_pass_player(), "p1")
         self.goto(session, "end_actions")
@@ -62,7 +89,7 @@ class AutoPassTests(unittest.TestCase):
 
     def test_a_manifestation_in_hand_can_enter_support_during_reaction(self):
         session, p1, p2 = self.make_session()
-        p1["zones"]["hand"] = ["m-1"]
+        p1["zones"]["hand"] = ["m-support"]
         self.goto(session, "confrontation_reaction")
         self.assertIsNone(session.rules_auto_pass_player())
         self.goto(session, "resolution_compare")
@@ -92,7 +119,7 @@ class AutoPassTests(unittest.TestCase):
 
     def test_the_loop_stops_at_the_phase_where_a_player_can_act(self):
         session, p1, p2 = self.make_session()
-        p2["zones"]["hand"] = ["will-ephemeral"]
+        p2["zones"]["hand"] = ["will-ephemeral", "m-5"]
         self.goto(session, "confrontation_before_revelation")
         asyncio.run(server_main.auto_advance_rules_phases(session, "p1"))
         self.assertIn(session.current_phase_id(), {"confrontation_reaction"})

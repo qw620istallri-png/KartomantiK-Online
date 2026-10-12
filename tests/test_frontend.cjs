@@ -1440,6 +1440,24 @@ function startServer() {
     assert.equal(popupLayout.hasSource, true);
     assert.ok(popupLayout.sourceWidth >= 140, "the card is shown large on the left");
     assert.equal(popupLayout.overlayPassThrough, true, "the popup overlay never blocks the top bar");
+    const groupedTargets = await page.evaluate(() => {
+      const draft = rulesStructuredActionTargets({
+        targets: { groups: [{ kind: "player", min: 1, max: 1 }, { kind: "card", min: 1, max: 1, cardType: "manifestation", zones: ["battlefield"], controller: "opponent" }], min: 2, max: 2 },
+      });
+      const sortSelect = document.querySelector("#handSortSelect");
+      return {
+        groups: Array.isArray(draft.targetRules.groups) ? draft.targetRules.groups.length : 0,
+        playerTargets: draft.structuredTargets.filter((target) => target.kind === "player" && target.targetGroupIndex === 0).length,
+        sortOptions: sortSelect ? sortSelect.options.length : 0,
+        infoStrip: Boolean(document.querySelector("#myInfoStrip")),
+        tokenToolbarHidden: document.querySelector("#tokenToolbar").classList.contains("hidden"),
+      };
+    });
+    assert.equal(groupedTargets.groups, 2, "targets.groups is read like targetGroups");
+    assert.equal(groupedTargets.playerTargets, 2, "both players can be chosen as the player target");
+    assert.equal(groupedTargets.sortOptions, 5);
+    assert.equal(groupedTargets.infoStrip, true);
+    assert.equal(groupedTargets.tokenToolbarHidden, true, "beta hides the token and essence buttons");
     const clemencyUi = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
       const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };
