@@ -2975,3 +2975,102 @@ input, textarea, select {
 .rules-choice-source img { width: 100%; height: 100%; object-fit: cover; display: block; }
 #rulesFloatingCardImg { cursor: zoom-in; }
 .rules-choice-head h2 { flex: 1; }
+
+/* ---------------------------------------------------------------- Clean VFX layer
+   One visual language for every rules effect: dark glass pills, a single
+   tone per meaning, soft glows instead of thick borders. Timings come from
+   app.js (vfxMs / --vfx-scale) so the "Animations" speed setting drives all. */
+:root {
+  --vfx-glass: linear-gradient(180deg, #1c2130f0, #0b0e16f2);
+  --vfx-tone: #e9cf8c;
+  --vfx-tone-resolved: #6fdcb4;
+  --vfx-tone-triggered: #78bff0;
+  --vfx-tone-score: #7fe08f;
+  --vfx-tone-loss: #ff7d72;
+  --vfx-tone-discard: #c193ea;
+  --vfx-tone-move: #8fcff2;
+  --vfx-tone-muted: #b4b4b4;
+}
+.rules-vfx-impact,
+.rules-vfx-exhaust-label {
+  --tone: var(--vfx-tone);
+  min-height: 0; padding: 7px 16px 6px; border: 1px solid color-mix(in srgb, var(--tone) 65%, transparent);
+  border-radius: 999px; background: var(--vfx-glass); color: color-mix(in srgb, var(--tone) 35%, #fff);
+  box-shadow: 0 10px 26px #000b, 0 0 22px color-mix(in srgb, var(--tone) 35%, transparent), inset 0 1px 0 #ffffff1f;
+  font-family: var(--display-font); font-size: 14px; font-weight: 800; line-height: 1.1;
+  letter-spacing: .09em; text-transform: uppercase; text-shadow: 0 0 10px color-mix(in srgb, var(--tone) 70%, transparent);
+  backdrop-filter: blur(4px);
+}
+.rules-vfx-impact-resolved { --tone: var(--vfx-tone-resolved); border-color: color-mix(in srgb, var(--tone) 65%, transparent); color: color-mix(in srgb, var(--tone) 35%, #fff); background: var(--vfx-glass); }
+.rules-vfx-impact-triggered,
+.rules-vfx-impact-draw { --tone: var(--vfx-tone-triggered); border-color: color-mix(in srgb, var(--tone) 65%, transparent); color: color-mix(in srgb, var(--tone) 35%, #fff); background: var(--vfx-glass); }
+.rules-vfx-impact-moved { --tone: var(--vfx-tone-move); border-color: color-mix(in srgb, var(--tone) 65%, transparent); color: color-mix(in srgb, var(--tone) 35%, #fff); background: var(--vfx-glass); }
+.rules-vfx-impact-discarded { --tone: var(--vfx-tone-discard); border-color: color-mix(in srgb, var(--tone) 65%, transparent); color: color-mix(in srgb, var(--tone) 35%, #fff); background: var(--vfx-glass); }
+.rules-vfx-impact-destroyed,
+.rules-vfx-impact-sacrificed,
+.rules-vfx-exhaust-label { --tone: var(--vfx-tone-loss); border-color: color-mix(in srgb, var(--tone) 65%, transparent); color: color-mix(in srgb, var(--tone) 35%, #fff); background: var(--vfx-glass); box-shadow: 0 10px 26px #000b, 0 0 22px color-mix(in srgb, var(--tone) 35%, transparent), inset 0 1px 0 #ffffff1f; }
+.rules-vfx-impact-target-gone { --tone: var(--vfx-tone-muted); border-color: #ffffff40; color: #e6e6e6; background: var(--vfx-glass); text-shadow: none; }
+/* points read as numbers, not as words */
+.rules-vfx-impact-score,
+.rules-vfx-impact-score-loss {
+  --tone: var(--vfx-tone-score); padding: 4px 16px 3px; font-size: 24px; letter-spacing: .02em;
+  border-color: color-mix(in srgb, var(--tone) 65%, transparent); color: color-mix(in srgb, var(--tone) 35%, #fff); background: var(--vfx-glass);
+}
+.rules-vfx-impact-score-loss { --tone: var(--vfx-tone-loss); }
+
+/* the card being declared, shown at reading size before it joins the Stack */
+.rules-vfx-spotlight {
+  position: fixed; z-index: 121; pointer-events: none; border-radius: 12px; will-change: transform, opacity;
+  box-shadow: 0 22px 50px #000c, 0 0 0 1px #ffffff2e, 0 0 34px color-mix(in srgb, var(--owner-color, var(--gold)) 55%, transparent);
+}
+.rules-vfx-spotlight img { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+.rules-vfx-spotlight-sheen {
+  position: absolute; inset: 0; overflow: hidden; border-radius: inherit;
+  background: linear-gradient(115deg, transparent 35%, #ffffff55 50%, transparent 65%) no-repeat;
+  background-size: 250% 100%; background-position: 130% 0;
+  animation: rules-vfx-sheen calc(.9s * var(--vfx-scale, 1)) calc(.25s * var(--vfx-scale, 1)) ease-out both;
+}
+@keyframes rules-vfx-sheen { to { background-position: -30% 0; } }
+.rules-vfx-spotlight-caption {
+  position: absolute; left: 50%; bottom: -14px; transform: translateX(-50%); max-width: 120%;
+  padding: 4px 12px; border-radius: 999px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  border: 1px solid color-mix(in srgb, var(--owner-color, var(--gold)) 70%, transparent);
+  background: var(--vfx-glass); color: #fff; font-size: 14px; font-weight: 800; letter-spacing: .06em;
+  box-shadow: 0 6px 16px #000a;
+}
+
+/* "this card targets that": a drawn arc ending in an arrowhead */
+.rules-vfx-target-arrow { position: fixed; inset: 0; z-index: 122; width: 100vw; height: 100vh; overflow: visible; pointer-events: none; }
+.rules-vfx-target-arrow-glow,
+.rules-vfx-target-arrow-line { fill: none; stroke-linecap: round; stroke-dasharray: 1 1; stroke-dashoffset: 1; }
+.rules-vfx-target-arrow-glow { stroke: #ffcf6a55; stroke-width: 12; filter: blur(4px); }
+.rules-vfx-target-arrow-line { stroke: #ffe3a1; stroke-width: 3.5; filter: drop-shadow(0 0 5px #ffbf47); }
+.rules-vfx-target-arrow-head { fill: #ffe3a1; filter: drop-shadow(0 0 5px #ffbf47); transform-box: fill-box; transform-origin: center; }
+.rules-vfx-target-lock { border-color: #ffe3a1; box-shadow: 0 0 0 2px #b8872c, 0 0 26px #ffc457, inset 0 0 18px #ffd27a55; }
+
+/* phase / turn banner */
+.rules-vfx-phase-banner {
+  position: fixed; left: 50%; z-index: 119; pointer-events: none; width: min(640px, 88vw); padding: 14px 24px 12px;
+  display: grid; justify-items: center; gap: 2px; text-align: center; will-change: transform, opacity;
+  background: linear-gradient(90deg, transparent, #0b0e16e6 18%, #0b0e16e6 82%, transparent);
+  border-block: 1px solid transparent;
+  border-image: linear-gradient(90deg, transparent, #e9cf8caa 30%, #e9cf8caa 70%, transparent) 1;
+  color: var(--gold-pale, #f6e7bd); text-transform: uppercase; text-shadow: 0 0 14px #e9cf8c88;
+}
+.rules-vfx-phase-banner strong { font-family: var(--display-font); font-size: 22px; letter-spacing: inherit; }
+.rules-vfx-phase-banner small { font-size: 14px; font-weight: 800; letter-spacing: .28em; color: #cfd6e6; text-shadow: none; }
+.rules-vfx-phase-banner.is-new-turn strong { font-size: 28px; }
+
+/* battlefield cards drop in instead of popping into place */
+.bf-card.bf-arrive {
+  animation: bf-arrive var(--bf-arrive-duration, .5s) cubic-bezier(.2,.8,.2,1) var(--bf-arrive-delay, 0ms) both;
+}
+@keyframes bf-arrive {
+  from { opacity: 0; transform: translateY(-22px) scale(1.12); filter: brightness(1.7) drop-shadow(0 18px 18px #0009); }
+  65% { opacity: 1; transform: translateY(3px) scale(.985); filter: brightness(1.15); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bf-card.bf-arrive { animation: none; }
+  .rules-vfx-spotlight-sheen { animation: none; }
+}

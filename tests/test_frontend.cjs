@@ -2103,7 +2103,8 @@ function startServer() {
         flight: document.querySelectorAll(".rules-vfx-effect-card").length,
         score: document.querySelector(".rules-vfx-impact-score")?.textContent || "",
       };
-      await new Promise((resolve) => setTimeout(resolve, 1200));
+      // labels now hold long enough to be read (scaled by the speed setting)
+      await new Promise((resolve) => setTimeout(resolve, 2600));
       return {
         pluffEncoded,
         initialReplayCount,
