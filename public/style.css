@@ -3262,3 +3262,4 @@ input, textarea, select {
 /* Inspect arrow-key browsing */
 .bf-card.inspect-cycle-focus { outline: 4px solid var(--gold); outline-offset: 4px; box-shadow: 0 0 26px var(--gold); z-index: 40; }
 .inspect-history-card.is-current { outline: 3px solid var(--gold); outline-offset: 1px; }
+.bf-card .bf-flip-back { position: absolute; inset: 0; z-index: 5; border-radius: inherit; pointer-events: none; backface-visibility: hidden; }

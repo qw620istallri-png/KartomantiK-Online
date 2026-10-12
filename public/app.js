@@ -9902,8 +9902,19 @@ function playCardFlipReveal(el, item) {
   const duration = vfxMs(420 + tier * 90);
   const timing = { duration, delay, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" };
   const lift = 1 + tier * 0.07;
+  // the card first shows its back (until the reveal is announced), then turns edge-on and shows its face once
+  const back = document.createElement("div");
+  back.className = "bf-flip-back back-face";
+  back.style.setProperty("--owner-color", playerColor(item.ownerId));
+  el.appendChild(back);
+  back.animate([
+    { transform: "perspective(900px) rotateY(0deg)", opacity: 1, offset: 0 },
+    { transform: "perspective(900px) rotateY(90deg)", opacity: 1, offset: 0.99 },
+    { transform: "perspective(900px) rotateY(90deg)", opacity: 0, offset: 1 },
+  ], { duration: Math.round(duration * 0.4), delay, easing: "ease-in", fill: "both" })
+    .finished.then(() => back.remove(), () => back.remove());
   face.animate([
-    { transform: "perspective(900px) rotateY(180deg) scale(.92)", filter: "brightness(2.2)", offset: 0 },
+    { transform: "perspective(900px) rotateY(90deg) scale(.92)", filter: "brightness(2.2)", offset: 0 },
     { transform: `perspective(900px) rotateY(90deg) scale(${lift})`, filter: "brightness(1.8)", offset: 0.4 },
     { transform: `perspective(900px) rotateY(0deg) scale(${lift + 0.1})`, filter: `brightness(1.5) drop-shadow(0 0 ${6 + tier * 6}px ${tone})`, offset: 0.72 },
     { transform: "perspective(900px) rotateY(0deg) scale(1)", filter: "brightness(1)", offset: 1 },
