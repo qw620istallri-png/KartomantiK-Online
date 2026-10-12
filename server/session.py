@@ -67,6 +67,8 @@ TRIBUTE_SYMBOL_TEMPERAMENT = {
     "T": "transcendent",
 }
 RULES_WILL_TYPES = {"ephemeral_will", "persistent_will"}
+# Entering a zone with a required target and nothing to target: the card still enters.
+RULES_ENTRY_EVENTS = {"enters_field", "enters_support", "enters_field_zone"}
 RULES_DESTROY_MATCHES = {
     "entered_support_this_turn", "won_confrontation_this_turn",
 }
@@ -6793,6 +6795,31 @@ class Session:
             clean["perCount"] = result["perCount"]
         return clean
 
+    def rules_trigger_has_no_legal_target(self, target_rules, controller_id, event_item_id=None):
+        """True when a required single card target cannot be met by anything on the field.
+
+        The card still enters; its triggered effect is simply not put on the Stack.
+        """
+        target_rules = target_rules or {}
+        if (
+            target_rules.get("groups") or str(target_rules.get("kind") or "card") != "card"
+            or int(target_rules.get("min") or 0) < 1
+            or int(target_rules.get("min") or 0) > 1
+            or set(target_rules.get("zones") or ["battlefield"]) - {"battlefield"}
+        ):
+            return False
+        for item in self.battlefield:
+            error, clean = self.rules_action_targets([{
+                "kind": "card", "itemId": item.get("id"), "cardId": item.get("cardId"),
+            }])
+            if error:
+                continue
+            if self.rules_ability_targets_error(
+                target_rules, clean, controller_id, event_item_id=event_item_id,
+            ) is None:
+                return False
+        return True
+
     def rules_trigger_target_error(self, card_id, event, target_player_id=None, *,
                                    face_up=True, trigger_targets=None, controller_id=None,
                                    event_item_id=None, event_zone=None):
@@ -6847,6 +6874,10 @@ class Session:
             error = self.rules_ability_targets_error(
                 target_rules, targets, controller_id, event_item_id=event_item_id,
             )
+            if error and not targets and event in RULES_ENTRY_EVENTS and self.rules_trigger_has_no_legal_target(
+                target_rules, controller_id, event_item_id
+            ):
+                continue
             if error:
                 return error
         return None
@@ -7079,6 +7110,10 @@ class Session:
                 and int(target_rules.get("min") or 0) > 0
             )
             if target_validation_error and not needs_target_choice:
+                continue
+            if needs_target_choice and event in RULES_ENTRY_EVENTS and self.rules_trigger_has_no_legal_target(
+                target_rules, controller_id, event_item_id
+            ):
                 continue
             if clean_targets:
                 clean_targets = self.rules_redirect_targets(controller_id, clean_targets)
@@ -17977,24 +18012,7 @@ class Session:
             return "The simultaneous first Manifestation step is not active.", None
         confirmed_players = self.rules_engine["firstManifestationValidatedPlayerIds"]
         if not validated:
-            selected_item = self.find_battlefield_item(
-                self.rules_engine["firstManifestationItemIds"].get(player_id)
-            )
-            if selected_item and selected_item.get("persistedFirst"):
-                return "A Persisted First Manifestation is already locked in.", None
-            opponent_confirmed = any(
-                confirmed_id != player_id for confirmed_id in confirmed_players
-            )
-            if opponent_confirmed:
-                return "The opponent has already validated their first Manifestation.", None
-            if any(
-                pid != player_id and self.rules_plays_first_manifestation_after(pid)
-                for pid in self.players
-            ):
-                return "Your opponent plays their First Manifestation after yours (Hermetic Hourglass or Trap): it is locked in.", None
-            if player_id in confirmed_players:
-                confirmed_players.remove(player_id)
-            return None, {"validated": False, "revealed": False}
+            return "Your first Manifestation is final and locked in: it cannot be changed once placed.", None
         item_id = self.rules_engine["firstManifestationItemIds"].get(player_id)
         if not item_id or not self.find_battlefield_item(item_id):
             return "Play a Manifestation face down before validating.", None

@@ -1195,6 +1195,7 @@ function startServer() {
       requestedUx.firstValidatePayload = window.__sent.at(-1);
       latestState.rulesEngine.firstManifestationValidatedPlayerIds = ["p1"];
       renderAll();
+      window.__sent = [];
       document.querySelector("#passPriorityBtn").click();
       requestedUx.firstCancelPayload = window.__sent.at(-1);
       latestState.rulesEngine.firstManifestationValidatedPlayerIds = ["p2"];
@@ -1370,6 +1371,17 @@ function startServer() {
     assert.deepEqual(betaMenu.labels.filter((label) => [betaMenu.inspect, betaMenu.front, betaMenu.back].includes(label)), [betaMenu.inspect, betaMenu.front, betaMenu.back]);
     assert.ok(!betaMenu.labels.includes("Flip"), "beta hides the manual options");
     assert.ok(betaMenu.labels.length <= 5, `beta menu stays minimal: ${betaMenu.labels.join(", ")}`);
+    const betaPiles = await page.evaluate(() => {
+      const deckHtml = zoneActionsHtml("p1", "deck", true);
+      const limboHtml = zoneActionsHtml("p1", "graveyard", true);
+      const vesselHtml = zoneActionsHtml("p2", "receptacle", true);
+      const pile = pileFieldHtml("p1", "receptacle", { cards: [], count: 0 }, true, true, { x: 0, y: 0 }, 0, "k", { x: 0, y: 0 });
+      return { deckHtml, limboHtml, vesselHtml, scoreButtons: pile.includes("data-score-delta") };
+    });
+    assert.equal(betaPiles.deckHtml, "", "beta: no manual deck actions");
+    assert.ok(!/data-shuffle|data-draw|data-reveal-n|data-scry/.test(betaPiles.limboHtml + betaPiles.vesselHtml), "beta: no manual pile actions");
+    assert.ok(betaPiles.limboHtml.includes("data-open-pile-browser") && betaPiles.vesselHtml.includes("data-open-pile-browser"), "beta: Limbo and Vessel stay consultable");
+    assert.equal(betaPiles.scoreButtons, false, "beta: no manual Vessel score buttons");
     const extraReorder = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
       const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };
@@ -3602,7 +3614,7 @@ function startServer() {
     assert.equal(pregameUi.requestedUx.confirmPayload.confirmDeck, true);
     assert.equal(pregameUi.requestedUx.importPanelClosedAfterConfirm, true);
     assert.deepEqual(pregameUi.requestedUx.firstValidatePayload, { type: "validate_first_manifestation", validated: true });
-    assert.deepEqual(pregameUi.requestedUx.firstCancelPayload, { type: "validate_first_manifestation", validated: false });
+    assert.equal(pregameUi.requestedUx.firstCancelPayload, undefined);
     assert.equal(pregameUi.requestedUx.firstOpponentGlow, true);
     assert.deepEqual(pregameUi.requestedUx.pointerEvents, {
       area: "none", tray: "none", card: "auto", handle: "auto",

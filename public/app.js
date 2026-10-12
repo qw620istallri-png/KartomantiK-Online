@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261012-rules-beta-130";
+const STATIC_ASSET_VERSION = "20261012-rules-beta-131";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -1015,8 +1015,9 @@ function toggleMyPhasePass() {
   const rules = latestState?.rulesEngine;
   if (rules?.enabled) {
     if (rulesFirstManifestationActive()) {
-      const validated = !(rules.firstManifestationValidatedPlayerIds || []).includes(myPlayerId);
-      send({ type: "validate_first_manifestation", validated });
+      // a placed first Manifestation is final: validating cannot be undone
+      if ((rules.firstManifestationValidatedPlayerIds || []).includes(myPlayerId)) return;
+      send({ type: "validate_first_manifestation", validated: true });
       return;
     }
     const alreadyPassed = (rules.priorityPasses || []).includes(myPlayerId);
@@ -1310,7 +1311,7 @@ function renderRulesStack() {
   $("#rulesAutoSkipWrap").classList.toggle("hidden", isObserver);
   autoSkipBox.checked = rules.autoSkipPhases !== false;
   $("#passPriorityBtn").textContent = firstManifestation
-    ? t(mineFirstValidated ? "rulesFirstManifestationCancel" : "rulesFirstManifestationValidate")
+    ? t(mineFirstValidated ? "rulesFirstManifestationLocked" : "rulesFirstManifestationValidate")
     : canCancelPass
     ? t("cancelPriorityPass")
     : stack.length && resolutionArmed
@@ -1328,7 +1329,7 @@ function renderRulesStack() {
   $("#passPriorityBtn").classList.toggle("opponent-validated", firstManifestation && opponentFirstValidated && !mineFirstValidated);
   $("#passPriorityBtn").setAttribute("aria-pressed", String(canCancelPass));
   $("#passPriorityBtn").disabled = firstManifestation
-    ? (!mineHasFirstManifestation || isObserver)
+    ? (!mineHasFirstManifestation || isObserver || mineFirstValidated)
     : (!myPriority && !canCancelPass);
 
   const firstPasser = priorityPasses[0];
@@ -5769,12 +5770,12 @@ function wirePileBrowserCards(ownerId, zone) {
     const openMenu = (event) => {
       event.preventDefault();
       const items = [
-        { label: t("inspect"), onSelect: () => showInspect(cardId) },
+        { keepInBeta: true, label: t("inspect"), onSelect: () => showInspect(cardId) },
         copyCardMenuItem(cardId, ownerId, zone),
         ...(zone === "receptacle" && ownerId !== myPlayerId && cardOwnerId === myPlayerId
           && latestState?.rulesEngine?.enabled
           && (activatedAbilitiesByCard.get(cardId) || []).some((ability) => (ability.sourceZones || []).includes("receptacle"))
-          ? [{ label: t("rulesDeclareCardAction"), onSelect: () => { $("#deckBrowserCloseBtn").click(); beginRulesHandActivatedAction(cardId, null, "receptacle", ownerId); } }]
+          ? [{ keepInBeta: true, label: t("rulesDeclareCardAction"), onSelect: () => { $("#deckBrowserCloseBtn").click(); beginRulesHandActivatedAction(cardId, null, "receptacle", ownerId); } }]
           : []),
         { separator: true },
         { label: t("playFaceUp"), onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "play", faceUp: true, label: t("battlefield") }) },
@@ -5789,7 +5790,7 @@ function wirePileBrowserCards(ownerId, zone) {
           onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "move", toOwnerId, toZone: z, label: t(z) }),
         });
       });
-      showContextMenu(event.clientX, event.clientY, items);
+      showContextMenu(event.clientX, event.clientY, betaMenuItems(items));
     };
     el.addEventListener("click", openMenu);
     el.addEventListener("contextmenu", openMenu);
@@ -5920,6 +5921,12 @@ function zoneActionsHtml(ownerId, zone, canAct) {
   const buttons = [];
   if (!canAct) return "";
   const mine = ownerId === myPlayerId;
+  // Beta (assisted rules): the engine draws, shuffles and moves cards; piles
+  // can only be consulted (Limbo, Vessel, own Exile), never the decks
+  if (latestState?.rulesEngine?.enabled) {
+    if (zone === "deck") return "";
+    return `<button data-open-pile-browser="${esc(ownerId)}:${zone}">${esc(t("search"))}</button>`;
+  }
   if (zone === "deck") {
     buttons.push(`<button data-draw="${esc(ownerId)}">${esc(t("drawOne"))}</button>`);
     buttons.push(`<button data-draw-limit="${esc(ownerId)}">${esc(t("drawToLimit"))}</button>`);
@@ -6008,7 +6015,7 @@ function pileFieldHtml(ownerId, zone, zoneData, canView, canAct, pos, score, ove
   const isOpen = expanded.has(key);
   const dropAttr = canAct ? ` data-drop-zone="${esc(key)}"` : "";
   const scoreAdjust =
-    zone === "receptacle" && !isObserver
+    zone === "receptacle" && !isObserver && !latestState?.rulesEngine?.enabled
       ? `<div class="pile-score-adjust">
           <button data-score-delta="${esc(ownerId)}:-10">-10</button><button data-score-delta="${esc(ownerId)}:-5">-5</button>
           <button data-score-delta="${esc(ownerId)}:-1">-1</button><button data-score-delta="${esc(ownerId)}:1">+1</button>
@@ -7904,7 +7911,7 @@ function wireZoneButtons() {
     el.addEventListener("contextmenu", (event) => {
       event.preventDefault();
       const items = [
-        { label: t("inspect"), onSelect: () => showInspect(cardId) },
+        { keepInBeta: true, label: t("inspect"), onSelect: () => showInspect(cardId) },
         copyCardMenuItem(cardId, ownerId, zone),
         { separator: true },
         { label: t("playFaceUp"), onSelect: () => playFromZone(ownerId, zone, cardId, true) },
@@ -7919,7 +7926,7 @@ function wireZoneButtons() {
           onSelect: () => send({ type: "move_card", fromOwnerId: ownerId, fromZone: zone, toOwnerId, toZone: z, cardId }),
         });
       });
-      showContextMenu(event.clientX, event.clientY, items);
+      showContextMenu(event.clientX, event.clientY, betaMenuItems(items));
     });
   });
   $$("[data-preview-card]").forEach((el) => {

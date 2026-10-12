@@ -958,5 +958,10 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 
 ## Première manifestation validée au dépôt, menu clic droit en bêta
 
-- `place_card` pendant l'étape « première manifestation » appelle `apply_first_manifestation_validation` : déposer la carte la valide (le bouton reste utilisable pour annuler tant que l'adversaire n'a pas validé). Les tests WebSocket n'envoient plus de `validate_first_manifestation`.
-- Bêta (`rulesEngine.enabled`) : le menu clic droit des cartes du plateau (cartes, copies, jetons) ne garde que Inspecter, Premier plan / Arrière-plan et les entrées marquées `keepInBeta` qui sont l'unique accès du moteur (actions et capacités, jouer depuis le champ, Support, cartes attachées, bascules Outcast et Karmapult). Les options manuelles (retourner, épuiser, copier, compteurs, déplacements) sont masquées par `betaMenuItems`. Les menus de la main, des piles et des recherches sont inchangés.
+- `place_card` pendant l'étape « première manifestation » appelle `apply_first_manifestation_validation` : déposer la carte la valide (la validation est définitive : `validate_first_manifestation` avec `validated=false` est refusé, le bouton est grisé). Les tests WebSocket n'envoient plus de `validate_first_manifestation`.
+- Bêta (`rulesEngine.enabled`) : le menu clic droit des cartes du plateau (cartes, copies, jetons) ne garde que Inspecter, Premier plan / Arrière-plan et les entrées marquées `keepInBeta` qui sont l'unique accès du moteur (actions et capacités, jouer depuis le champ, Support, cartes attachées, bascules Outcast et Karmapult). Les options manuelles (retourner, épuiser, copier, compteurs, déplacements) sont masquées par `betaMenuItems`. Les menus de la main sont inchangés.
+
+## Piles en bêta, Flower Tender
+
+- Bêta : `zoneActionsHtml` ne propose plus que « Rechercher » (consultation) pour Limbo, Réceptacle et Exil personnel ; plus de pioche, mélange, révélation, scry, défausse ni boutons de score du Réceptacle. Le deck n'a aucune action. Les menus clic droit des piles et de la recherche ne gardent que Inspecter et « déclarer l'action » du Réceptacle (`betaMenuItems`). L'exil adverse reste caché (le serveur n'envoie pas ses cartes).
+- Flower Tender sans cible légale arrive quand même sur le terrain, seul son effet d'entrée est ignoré (`rules_trigger_has_no_legal_target`, événements `RULES_ENTRY_EVENTS`).

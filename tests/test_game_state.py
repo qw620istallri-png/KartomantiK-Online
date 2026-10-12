@@ -393,11 +393,9 @@ class AssistedRulesTests(unittest.TestCase):
         session.battlefield.append(first)
         self.assertIsNone(session.register_first_manifestation("p1", first))
         self.assertTrue(session.validate_first_manifestation("p1")[1]["validated"])
-        cancelled = session.validate_first_manifestation("p1", validated=False)[1]
-        self.assertFalse(cancelled["validated"])
-        self.assertFalse(cancelled["revealed"])
-        self.assertNotIn("p1", session.rules_engine["firstManifestationValidatedPlayerIds"])
-        self.assertFalse(session.validate_first_manifestation("p1")[1]["revealed"])
+        cancel_error, _ = session.validate_first_manifestation("p1", validated=False)
+        self.assertIn("locked", cancel_error)
+        self.assertIn("p1", session.rules_engine["firstManifestationValidatedPlayerIds"])
 
     def test_first_priority_pass_can_be_cancelled(self):
         session, _p1, _p2 = self.make_session()
@@ -14368,7 +14366,8 @@ class LotTwentySevenTests(RealCardRulesCase):
     GORLOK, WISH, PESCO = "inner-deserts-082", "inner-deserts-048", "inner-deserts-090"
     THOUGHT, LUNAR, PERSUASION = "inner-deserts-086", "inner-deserts-096", "inner-deserts-120"
     FEEFEE, TEBEBE, KANOPO = "inner-deserts-085", "inner-deserts-060", "inner-deserts-052"
-    ALL = (GIGA, DONMO, JUGG, SPLENDOR, DISCO, MECH, NGHOUL, YCAR, CONSUL, CHARIOT, PACI, CHABAK, AUCTION, GORLOK, WISH, PESCO, THOUGHT, LUNAR, PERSUASION, FEEFEE, TEBEBE, KANOPO)
+    FLOWER = "6xfwhr4h38wvm4u_en"
+    ALL = (FLOWER, GIGA, DONMO, JUGG, SPLENDOR, DISCO, MECH, NGHOUL, YCAR, CONSUL, CHARIOT, PACI, CHABAK, AUCTION, GORLOK, WISH, PESCO, THOUGHT, LUNAR, PERSUASION, FEEFEE, TEBEBE, KANOPO)
 
     def setup_game(self):
         session, p1, p2 = self.make_session()
@@ -14995,3 +14994,26 @@ class LotTwentySevenTests(RealCardRulesCase):
         session.add_rules_excess_essence("p1", [{"temperament": "hollow", "amount": 3}])
         error, _ = session.declare_rules_action("p1", "x", kind="play_card", source=source)
         self.assertIsNone(error, error)
+
+    def test_flower_tender_enters_even_without_a_target_and_only_its_effect_is_skipped(self):
+        session, p1, p2 = self.setup_game()
+        flower = self.item("ft", "p1", self.FLOWER, "confrontation")
+        session.battlefield = [flower]
+        error = session.rules_trigger_target_error(
+            self.FLOWER, "enters_field_zone", face_up=True, controller_id="p1",
+            event_item_id="ft", event_zone="confrontation",
+        )
+        self.assertIsNone(error)
+        queued = session.queue_rules_triggers(
+            self.FLOWER, "p1", "enters_field_zone", zone="confrontation", item_id="ft",
+            face_up=True, event_item_id="ft", controller_id="p1", defer=True,
+        )
+        self.assertEqual(queued, [])
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+        # With a legal target on the field the target stays required.
+        session.battlefield = [flower, self.item("small", "p2", "m-1", "confrontation")]
+        error = session.rules_trigger_target_error(
+            self.FLOWER, "enters_field_zone", face_up=True, controller_id="p1",
+            event_item_id="ft", event_zone="confrontation",
+        )
+        self.assertTrue(error)
