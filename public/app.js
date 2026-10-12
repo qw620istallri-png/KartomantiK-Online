@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261011-rules-beta-127";
+const STATIC_ASSET_VERSION = "20261011-rules-beta-128";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -5351,14 +5351,14 @@ function stagePileBrowserChoice(ownerId, zone, cardId, entry) {
 // helper covers both the pile browser's cards and the hand tray's.
 // Cards listed in a choice panel (search, discard, chain, Limbo picker) are
 // small; hovering one shows it at full reading size next to the panel.
-const CHOICE_PREVIEW_SELECTOR = ".rules-choice-card, .limbo-play-card";
+const CHOICE_PREVIEW_SELECTOR = ".rules-choice-card, .limbo-play-card, .rules-choice-source, #rulesFloatingCardImg";
 let choicePreviewEl = null;
 function hideChoiceCardPreview() {
   if (choicePreviewEl) choicePreviewEl.remove();
   choicePreviewEl = null;
 }
 function showChoiceCardPreview(source) {
-  const image = source.querySelector("img");
+  const image = source.tagName === "IMG" ? source : source.querySelector("img");
   if (!image || !image.src) return;
   hideChoiceCardPreview();
   const preview = document.createElement("div");
@@ -6414,7 +6414,31 @@ function closeRulesChoicePanel(force = false) {
   $("#rulesChoicePanel").classList.add("hidden");
 }
 
+// Every decision popup shows the card that asks for the decision; hovering it
+// shows the card at full reading size (see CHOICE_PREVIEW_SELECTOR).
+function syncRulesChoiceSourceCard() {
+  const head = document.querySelector("#rulesChoicePanel .rules-choice-head");
+  if (!head) return;
+  head.querySelector(".rules-choice-source")?.remove();
+  if ($("#rulesChoicePanel").classList.contains("hidden")) return;
+  const choice = latestState?.rulesEngine?.pendingChoice;
+  const cardId = pendingTriggeredPlacement?.payload?.cardId
+    || choice?.sourceCardId || choice?.targetCardId || choice?.cardId;
+  const image = cardId ? cardImage(cardId) : "";
+  if (!image) return;
+  const chip = document.createElement("span");
+  chip.className = "rules-choice-source";
+  chip.title = cardName(cardId);
+  chip.innerHTML = `<img src="${esc(image)}" alt="${esc(cardName(cardId))}">`;
+  head.insertBefore(chip, head.firstChild);
+}
+
 function renderRulesChoice() {
+  renderRulesChoiceContent();
+  syncRulesChoiceSourceCard();
+}
+
+function renderRulesChoiceContent() {
   const panel = $("#rulesChoicePanel");
   const closeButton = $("#rulesChoiceCloseBtn");
   const options = $("#rulesChoiceOptions");

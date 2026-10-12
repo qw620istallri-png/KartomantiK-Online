@@ -1303,7 +1303,12 @@ function startServer() {
         window.__sent = [];
         latestState.rulesEngine.pendingChoice = choice;
         renderAll();
+        const chip = document.querySelector("#rulesChoicePanel .rules-choice-source");
+        chip?.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+        const previewShown = Boolean(document.querySelector(".choice-card-preview"));
+        hideChoiceCardPreview();
         return {
+          chip: Boolean(chip), previewShown,
           visible: !document.querySelector("#rulesChoicePanel").classList.contains("hidden"),
           buttons: document.querySelectorAll(selector).length,
           click: () => { document.querySelector(selector)?.click(); return window.__sent.find((payload) => payload.type === "resolve_rules_choice"); },
@@ -1328,13 +1333,15 @@ function startServer() {
       latestState.rulesEngine.pendingChoice = saved.choice;
       renderAll();
       return {
-        distribute: { visible: distribute.visible, buttons: distribute.buttons, payload: distributePayload },
+        distribute: { visible: distribute.visible, buttons: distribute.buttons, payload: distributePayload, chip: distribute.chip, previewShown: distribute.previewShown },
         reveal: { visible: reveal.visible, buttons: reveal.buttons, payload: revealPayload },
         notMine: { visible: opponentSees.visible },
       };
     });
     assert.equal(newChoiceScreens.distribute.visible, true);
     assert.equal(newChoiceScreens.distribute.buttons, 2);
+    assert.equal(newChoiceScreens.distribute.chip, true, "decision popups show the card that asks");
+    assert.equal(newChoiceScreens.distribute.previewShown, true, "hovering it shows the card at full size");
     assert.equal(newChoiceScreens.distribute.payload.itemId, "dist-0");
     assert.equal(newChoiceScreens.reveal.visible, true);
     assert.equal(newChoiceScreens.reveal.buttons, 3);

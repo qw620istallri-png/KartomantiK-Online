@@ -951,3 +951,7 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 
 - Le joueur qui joue sa première manifestation après les autres (Trap via `trapPlayerIds`, ou Hermetic Hourglass) attend que tous les autres l'aient validée. À cet instant leurs premières manifestations sont retournées face visible (`validate_first_manifestation`), puis il choisit la sienne : `register_first_manifestation` la pose face visible et `place_card` la valide aussitôt (`apply_first_manifestation_validation`). Ses déclencheurs d'entrée sont mis en file à la Révélation, pas à la pose.
 - Si tous les joueurs veulent jouer après (deux Trap, Trap contre Hourglass), les demandes s'annulent et le choix reste simultané et caché, comme avant.
+
+## Zoom des cartes dans les popups de décision
+
+- `renderRulesChoice` affiche en tête du popup la carte qui demande la décision (`.rules-choice-source`, tirée de `sourceCardId`, `targetCardId` ou `cardId` du choix, ou du déclencheur à placer) ; le survol l'affiche en grand via `CHOICE_PREVIEW_SELECTOR`, comme pour les cartes listées. Le même zoom s'applique à la carte flottante des flux sur le plateau (`#rulesFloatingCardImg`), qui couvre les cibles et paiements (Knobbly Colossus, Dominate the Aspects). Le test frontend vérifie la pastille et l'aperçu.
