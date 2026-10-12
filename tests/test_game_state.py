@@ -3915,6 +3915,20 @@ class AssistedRulesTests(unittest.TestCase):
         p1["zones"]["graveyard"] = ["will-ephemeral"] * 5
         self.assertIsNone(session.rules_support_from_hand_error("p1", "m-0"))
 
+    def test_twin_headed_druid_support_from_hand_after_losing_previous_confrontation(self):
+        session, p1, _p2 = self.make_session()
+        session.card_rules["m-0"]["supportCondition"] = "lost_previous_confrontation"
+        p1["zones"]["hand"] = ["m-0"]
+        p1["zoneOwners"]["hand"] = {"m-0": "p1"}
+        session.phase_tracker["index"] = session.phase_sequence().index("confrontation_reaction")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        turn = session.phase_tracker["turn"]
+        self.assertIn("does not have Support from Hand", session.rules_support_from_hand_error("p1", "m-0"))
+        self.assertNotIn("m-0", session.rules_conditional_support_hand_card_ids()["p1"])
+        session.rules_engine["confrontationLosses"] = {str(turn - 1): "p1"}
+        self.assertIsNone(session.rules_support_from_hand_error("p1", "m-0"))
+        self.assertIn("m-0", session.rules_conditional_support_hand_card_ids()["p1"])
+
     def test_first_manifestation_rejects_cards_with_printed_restriction(self):
         session, _p1, _p2 = self.make_session()
         session.phase_tracker["index"] = session.phase_sequence().index("confrontation_choose")

@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261012-rules-beta-135";
+const STATIC_ASSET_VERSION = "20261012-rules-beta-136";
 {
   const versionEl = document.getElementById("appVersion");
   const versionMatch = STATIC_ASSET_VERSION.match(/beta-(\d+)/);
@@ -6673,10 +6673,19 @@ function handCardHasHandAction(cardId) {
   if (!rules?.enabled || !card || isObserver || rules.pendingChoice || card.type !== "manifestation") return false;
   if (rules.priorityPlayerId !== myPlayerId) return false;
   const phaseId = currentPhaseUi().phase?.id;
-  return (activatedAbilitiesByCard.get(cardId) || []).some((ability) => (
-    (ability.sourceZones || []).includes("hand")
-    && (!Array.isArray(ability.phaseIds) || ability.phaseIds.includes(phaseId))
-  ));
+  return (activatedAbilitiesByCard.get(cardId) || []).some((ability) => {
+    if (!(ability.sourceZones || []).includes("hand")) return false;
+    if (Array.isArray(ability.phaseIds) && !ability.phaseIds.includes(phaseId)) return false;
+    // highlight only when a required target exists (Glabron needs a Manifestation in your Interzone)
+    const draft = buildRulesActionDraft({ cardId, zone: "hand" }, ability);
+    if (!draft) return true;
+    if (Array.isArray(draft.targetRules?.groups)) {
+      return draft.targetRules.groups.every((_group, index) => (
+        draft.structuredTargets.some((target) => target.targetGroupIndex === index)
+      ));
+    }
+    return Number(draft.targetRules?.min || 0) <= draft.structuredTargets.length;
+  });
 }
 
 function handCardIsPlayable(cardId) {
@@ -6786,6 +6795,7 @@ function rulesSupportFromHandAvailableClient(cardId) {
   const effect = String(card?.effect || "");
   if (/^Support(?: from hand)?[.;]/.test(effect)) return true;
   if (rulesTopOfStackIsWillClient(card)) return true;
+  if ((latestState?.rulesEngine?.conditionalSupportHandCardIds?.[myPlayerId] || []).includes(cardId)) return true;
   if (/5 or more Wills in your Limbo, .*gains Support/i.test(effect)) {
     const limbo = latestState?.players?.[myPlayerId]?.zones?.graveyard?.cards || [];
     if (limbo.filter((c) => ["ephemeral_will", "persistent_will"].includes(cardsById.get(c.cardId || c.id || c)?.type)).length >= 5) return true;
@@ -9772,7 +9782,7 @@ function rulesActivateMarkerMarkup(item) {
     <span>${esc(t("confirmQuestion"))}</span>
     ${available.map(({ ability }, index) => `
       <button type="button" data-rules-activate-confirm="${esc(ability.id)}">
-        ${esc(ability.immediate ? t("rulesImmediateLabel") : `${t("rulesEncodedAbility")} ${index + 1}`)}
+        ${esc(ability.immediate ? t("rulesImmediateLabel") : (available.length > 1 ? `${t("rulesActivateShort")} ${index + 1}` : t("rulesActivateShort")))}
       </button>`).join("")}
     <button type="button" class="rules-activate-cancel" data-rules-activate-cancel aria-label="${esc(t("cancel"))}">×</button>
   </div>`;
@@ -9877,10 +9887,47 @@ function animateBoardCard(el, item, pos) {
       { transform: `rotate(${item.rotation || 0}deg)` },
     ], vfxTiming({ duration: 300, easing: "cubic-bezier(.2,.8,.2,1)" }));
   }
-  if (!previous.faceUp && item.faceUp) {
-    el.querySelector(".bf-card-face")?.animate([
-      { transform: "rotateY(90deg)" }, { transform: "rotateY(0deg)" },
-    ], vfxTiming({ duration: 320, easing: "cubic-bezier(.2,.8,.2,1)" }));
+}
+
+// Reveal flip: power sets the impact tier, a printed effect adds a coloured glow
+function playCardFlipReveal(el, item) {
+  const face = el.querySelector(".bf-card-face");
+  if (!face || rulesVfxReducedMotion()) return;
+  const card = cardsById.get(item.cardId);
+  const power = Math.max(0, Number(item.effectivePower ?? card?.power ?? 0));
+  const tier = power >= 5 ? 3 : power >= 3 ? 2 : 1;
+  const hasEffect = Boolean(card && String(card.effect || "").trim());
+  const tone = card?.glow || "#f1d377";
+  const delay = Math.min(1800, rulesVfxQueueRemaining());
+  const duration = vfxMs(420 + tier * 90);
+  const timing = { duration, delay, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" };
+  const lift = 1 + tier * 0.07;
+  face.animate([
+    { transform: "perspective(900px) rotateY(180deg) scale(.92)", filter: "brightness(2.2)", offset: 0 },
+    { transform: `perspective(900px) rotateY(90deg) scale(${lift})`, filter: "brightness(1.8)", offset: 0.4 },
+    { transform: `perspective(900px) rotateY(0deg) scale(${lift + 0.1})`, filter: `brightness(1.5) drop-shadow(0 0 ${6 + tier * 6}px ${tone})`, offset: 0.72 },
+    { transform: "perspective(900px) rotateY(0deg) scale(1)", filter: "brightness(1)", offset: 1 },
+  ], timing);
+  const impactDelay = delay + Math.round(duration * 0.72);
+  const ring = document.createElement("span");
+  ring.className = `bf-flip-ring tier-${tier}${hasEffect ? " has-effect" : ""}`;
+  ring.style.setProperty("--flip-tone", tone);
+  el.appendChild(ring);
+  ring.animate([
+    { opacity: 0, transform: "scale(.7)" },
+    { opacity: .95, transform: "scale(1)", offset: 0.2 },
+    { opacity: 0, transform: `scale(${1.25 + tier * 0.2})` },
+  ], { duration: vfxMs(520 + tier * 120), delay: impactDelay, easing: "ease-out", fill: "backwards" })
+    .finished.then(() => ring.remove(), () => ring.remove());
+  if (tier >= 2) {
+    const amplitude = tier === 3 ? 7 : 4;
+    el.animate([
+      { transform: "translate(0,0)" },
+      { transform: `translate(${-amplitude}px,${amplitude / 2}px)`, offset: 0.2 },
+      { transform: `translate(${amplitude}px,${-amplitude / 2}px)`, offset: 0.45 },
+      { transform: `translate(${-amplitude / 2}px,0)`, offset: 0.7 },
+      { transform: "translate(0,0)" },
+    ], { duration: vfxMs(320), delay: impactDelay, easing: "ease-out" });
   }
 }
 
@@ -9899,6 +9946,7 @@ function renderBattlefield() {
     const pos = stackedScreenPos(item) || rotateForSeat(item.x, item.y, PILE_W, PILE_H);
     el.style.left = pos.x + "px";
     el.style.top = pos.y + "px";
+    const flippedUp = Boolean(lastBoardLayout?.has(item.id) && !lastBoardLayout.get(item.id).faceUp && item.faceUp);
     boardLayout.set(item.id, { x: pos.x, y: pos.y, rotation: item.rotation || 0, faceUp: Boolean(item.faceUp) });
     animateBoardCard(el, item, pos);
     el.style.setProperty("--owner-color", playerColor(item.ownerId));
@@ -10062,6 +10110,7 @@ function renderBattlefield() {
       showCardLabels(el, canSeeName ? cardName(item.cardId) : null, (latestState.players[item.ownerId] || {}).name || "");
     });
     bf.appendChild(el);
+    if (flippedUp && !item.isTokenCard) playCardFlipReveal(el, item);
     wireRulesEffectMarker(el, ongoingEffects);
     wireRulesActivateMarker(el, item);
     bindRarityPointer(el.querySelector(".bf-card-face.ko-rarity-card"), false, el);
@@ -10461,8 +10510,12 @@ function initTournamentControls() {
 // just the very last one. In-memory only: like other per-session UI state
 // (e.g. revealSentState), it isn't meant to survive a reload.
 let inspectHistory = [];
+let inspectCurrentId = null;
+let inspectBoardItemId = null;
 
-function showInspect(cardId, hidden) {
+function showInspect(cardId, hidden, options = {}) {
+  inspectCurrentId = hidden || !cardsById.get(cardId) ? null : cardId;
+  if (!options.boardItemId) inspectBoardItemId = null;
   const card = cardsById.get(cardId);
   const art = $("#inspectPanel .inspect-img");
   const rarity = !hidden && card ? visibleRarityForCard(cardId) : null;
@@ -10474,7 +10527,10 @@ function showInspect(cardId, hidden) {
   );
   bindRarityPointer(art, false);
   if (!hidden && card) {
-    inspectHistory = [cardId, ...inspectHistory.filter((id) => id !== cardId)].slice(0, 12);
+    // arrow-key browsing keeps the list order stable instead of moving the card to the front
+    if (!options.keepOrder || !inspectHistory.includes(cardId)) {
+      inspectHistory = [cardId, ...inspectHistory.filter((id) => id !== cardId)].slice(0, 12);
+    }
     $("#inspectReopenBtn").disabled = false;
   }
   if (hidden || !card) {
@@ -10497,9 +10553,41 @@ function showInspect(cardId, hidden) {
   $("#gameScreen").classList.add("inspect-open");
 }
 
+// Up/Down walk the inspect history list; Left/Right cycle the cards on the board
+function stepInspectHistory(delta) {
+  if (!inspectHistory.length) return;
+  const index = inspectHistory.indexOf(inspectCurrentId);
+  const next = index < 0 ? 0 : Math.max(0, Math.min(inspectHistory.length - 1, index + delta));
+  showInspect(inspectHistory[next], false, { keepOrder: true });
+}
+
+function inspectableBoardItems() {
+  return (latestState?.battlefield || [])
+    .filter((item) => item.cardId && !item.isTokenCard && (item.faceUp || (!isObserver && item.ownerId === myPlayerId) || isObserver))
+    .map((item) => ({ item, pos: stackedScreenPos(item) || rotateForSeat(item.x, item.y, PILE_W, PILE_H) }))
+    .sort((a, b) => (a.pos.x - b.pos.x) || (a.pos.y - b.pos.y))
+    .map((entry) => entry.item);
+}
+
+function cycleInspectBoard(delta) {
+  const items = inspectableBoardItems();
+  if (!items.length) return;
+  let index = items.findIndex((item) => item.id === inspectBoardItemId);
+  if (index < 0) index = items.findIndex((item) => item.cardId === inspectCurrentId);
+  const next = index < 0 ? (delta > 0 ? 0 : items.length - 1) : (index + delta + items.length) % items.length;
+  const target = items[next];
+  showInspect(target.cardId, false, { boardItemId: target.id });
+  inspectBoardItemId = target.id;
+  const el = document.querySelector(`.bf-card[data-item-id="${CSS.escape(target.id)}"]`);
+  if (el) {
+    el.classList.add("inspect-cycle-focus");
+    setTimeout(() => el.classList.remove("inspect-cycle-focus"), 1400);
+  }
+}
+
 function renderInspectHistory() {
   $("#inspectHistory").innerHTML = inspectHistory
-    .map((cid) => `<button class="inspect-history-card" data-inspect-history="${esc(cid)}" title="${esc(cardName(cid))}"><img src="${esc(cardImage(cid))}" alt=""></button>`)
+    .map((cid) => `<button class="inspect-history-card${cid === inspectCurrentId ? " is-current" : ""}" data-inspect-history="${esc(cid)}" title="${esc(cardName(cid))}"><img src="${esc(cardImage(cid))}" alt=""></button>`)
     .join("");
   $$("#inspectHistory [data-inspect-history]").forEach((btn) => {
     btn.onclick = () => showInspect(btn.dataset.inspectHistory);
@@ -11070,6 +11158,15 @@ async function boot() {
       event.preventDefault();
       // already passed: a second Enter must not cancel the pass
       if (!event.repeat && !passButton.classList.contains("passed")) passButton.click();
+      return;
+    }
+    if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(event.code)) {
+      if (!latestState || event.target?.closest?.("input[type='range'], [role='slider']")) return;
+      if ($("#inspectPanel").classList.contains("hidden")) return;
+      event.preventDefault();
+      if (event.code === "ArrowUp") stepInspectHistory(-1);
+      else if (event.code === "ArrowDown") stepInspectHistory(1);
+      else cycleInspectBoard(event.code === "ArrowRight" ? 1 : -1);
       return;
     }
     if (event.code === "KeyI") {

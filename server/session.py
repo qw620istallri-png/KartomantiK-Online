@@ -4886,6 +4886,20 @@ class Session:
         condition = self.card_rules.get(card_id, {}).get("supportFromHandCondition") or {}
         return condition.get("kind") == "top_of_stack_is_will" and self.rules_top_of_stack_is_will()
 
+    def rules_conditional_support_hand_card_ids(self):
+        """Hand cards whose conditional Support (passive) is currently active, per player."""
+        result = {}
+        for player_id, player in self.players.items():
+            ids = []
+            for card_id in dict.fromkeys(player["zones"].get("hand", [])):
+                condition = self.card_rules.get(card_id, {}).get("supportCondition")
+                if condition and self.rules_support_condition_met(
+                    {"ownerId": player_id, "controllerId": player_id}, condition
+                ):
+                    ids.append(card_id)
+            result[player_id] = ids
+        return result
+
     def rules_support_from_hand_available(self, player_id, card_id):
         metadata = self.card_rules.get(card_id, {})
         if metadata.get("supportFromHand"):
@@ -17812,6 +17826,7 @@ class Session:
                 "outcome": self.rules_engine["outcome"],
                 "priorityPlayerId": self.rules_engine["priorityPlayerId"],
                 "resolvePrompt": self.rules_confrontation_resolve_prompt(),
+                "conditionalSupportHandCardIds": self.rules_conditional_support_hand_card_ids(),
                 "priorityPasses": list(self.rules_engine["priorityPasses"]),
                 "actionStack": list(self.rules_engine["actionStack"]),
                 "lastResolvedAction": self.rules_engine["lastResolvedAction"],

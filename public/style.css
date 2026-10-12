@@ -3254,3 +3254,11 @@ input, textarea, select {
 .game-end-hint { margin: 14px 0 0; font-size: 14px; color: #cdbb85; }
 .game-end-actions { display: flex; justify-content: center; gap: 12px; margin-top: 20px; }
 .game-end-actions button { min-width: 130px; padding: 10px 20px; font-size: 16px; font-weight: 800; }
+/* Reveal flip impact ring */
+.bf-flip-ring { position: absolute; inset: -8px; border-radius: 14px; border: 3px solid var(--flip-tone, #f1d377); box-shadow: 0 0 18px var(--flip-tone, #f1d377), inset 0 0 14px var(--flip-tone, #f1d377); pointer-events: none; z-index: 6; opacity: 0; }
+.bf-flip-ring.tier-2 { border-width: 4px; }
+.bf-flip-ring.tier-3 { border-width: 5px; box-shadow: 0 0 34px var(--flip-tone, #f1d377), inset 0 0 22px var(--flip-tone, #f1d377); }
+.bf-flip-ring.has-effect { outline: 2px dashed var(--flip-tone, #f1d377); outline-offset: 5px; }
+/* Inspect arrow-key browsing */
+.bf-card.inspect-cycle-focus { outline: 4px solid var(--gold); outline-offset: 4px; box-shadow: 0 0 26px var(--gold); z-index: 40; }
+.inspect-history-card.is-current { outline: 3px solid var(--gold); outline-offset: 1px; }
