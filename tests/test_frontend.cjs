@@ -1347,6 +1347,29 @@ function startServer() {
     assert.equal(newChoiceScreens.reveal.buttons, 3);
     assert.equal(newChoiceScreens.reveal.payload.option, "0");
     assert.equal(newChoiceScreens.notMine.visible, false);
+    const betaMenu = await page.evaluate(() => {
+      const ids = [...cardsById.keys()];
+      const saved = latestState.battlefield;
+      latestState.battlefield = [{
+        id: "menu-card", ownerId: myPlayerId, controllerId: myPlayerId, cardId: ids[0],
+        faceUp: true, fieldZone: "interzone", x: 200, y: 200, rotation: 0, counters: {},
+      }];
+      renderAll();
+      const el = [...document.querySelectorAll("#battlefield .bf-card")].find((node) => node.dataset.itemId === "menu-card" || node.dataset.id === "menu-card") || document.querySelector("#battlefield .bf-card");
+      const labels = [];
+      if (el) {
+        el.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: 50, clientY: 50 }));
+        document.querySelectorAll(".ctx-menu button").forEach((button) => labels.push(button.textContent.trim()));
+        closeContextMenu();
+      }
+      latestState.battlefield = saved;
+      renderAll();
+      return { found: Boolean(el), labels, inspect: t("inspect"), front: t("bringToFront"), back: t("sendToBack") };
+    });
+    assert.equal(betaMenu.found, true);
+    assert.deepEqual(betaMenu.labels.filter((label) => [betaMenu.inspect, betaMenu.front, betaMenu.back].includes(label)), [betaMenu.inspect, betaMenu.front, betaMenu.back]);
+    assert.ok(!betaMenu.labels.includes("Flip"), "beta hides the manual options");
+    assert.ok(betaMenu.labels.length <= 5, `beta menu stays minimal: ${betaMenu.labels.join(", ")}`);
     const extraReorder = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
       const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };

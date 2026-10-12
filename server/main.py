@@ -1514,10 +1514,11 @@ async def handle_message(ws, info, data):
             place_details["manualBypass"] = True
         session.add_log(actor_id, "place_card", place_details)
         triggered_actions = []
-        # A First Manifestation played after the opponent's arrives face up and is
-        # validated at once; its entry triggers are queued at the Revelation.
+        # A First Manifestation is validated as soon as it is dropped. One played
+        # after the opponent's arrives face up; its entry triggers are queued at the Revelation.
         revealed_first = bool(first_manifestation and item["faceUp"] and not manual_bypass)
-        if revealed_first:
+        if first_manifestation and not manual_bypass:
+            # Dropping the First Manifestation is its validation.
             apply_first_manifestation_validation(session, actor_id, True)
         if not manual_bypass and not revealed_first:
             triggered_actions.extend(

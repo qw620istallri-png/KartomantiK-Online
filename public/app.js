@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261012-rules-beta-129";
+const STATIC_ASSET_VERSION = "20261012-rules-beta-130";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -8261,6 +8261,20 @@ function closeContextMenuOnOutsideClick(event) {
 //   { html, afterRender: (containerEl) => {...} } — raw markup (e.g. a whole
 //     counter grid) inserted as-is; afterRender wires up its own listeners
 //     since it isn't a single label+action.
+// Beta (assisted rules): board cards keep Inspect, the layer order and the
+// entries that are the engine's only way to act (flagged keepInBeta); every
+// manual option (flip, exhaust, counters, moves...) is hidden.
+function betaMenuItems(items) {
+  if (!latestState?.rulesEngine?.enabled) return items;
+  const kept = [];
+  for (const item of items.filter((entry) => entry && (entry.separator || entry.keepInBeta))) {
+    if (item.separator && (!kept.length || kept[kept.length - 1].separator)) continue;
+    kept.push(item);
+  }
+  while (kept.length && kept[kept.length - 1].separator) kept.pop();
+  return kept;
+}
+
 function showContextMenu(clientX, clientY, items) {
   closeContextMenu();
   const menu = document.createElement("div");
@@ -9357,11 +9371,11 @@ function renderBattlefield() {
         return;
       }
       const zOrderItems = [
-        { label: t("bringToFront"), onSelect: () => send({ type: "reorder_battlefield_item", itemId: item.id, position: "front" }) },
-        { label: t("sendToBack"), onSelect: () => send({ type: "reorder_battlefield_item", itemId: item.id, position: "back" }) },
+        { keepInBeta: true, label: t("bringToFront"), onSelect: () => send({ type: "reorder_battlefield_item", itemId: item.id, position: "front" }) },
+        { keepInBeta: true, label: t("sendToBack"), onSelect: () => send({ type: "reorder_battlefield_item", itemId: item.id, position: "back" }) },
       ];
       if (item.isTokenCard) {
-        showContextMenu(event.clientX, event.clientY, [
+        showContextMenu(event.clientX, event.clientY, betaMenuItems([
           { label: t("exhaust"), onSelect: () => send({ type: "move_battlefield_item", itemId: item.id, x: item.x, y: item.y, rotation: item.rotation ? 0 : 90 }) },
           { separator: true },
           ...zOrderItems,
@@ -9369,39 +9383,43 @@ function renderBattlefield() {
           counterGridMenuItem("power", { itemId: item.id }),
           { separator: true },
           { label: t("remove"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toZone: "graveyard" }) },
-        ]);
+        ]));
         return;
       }
       if (item.isCopy) {
-        const copyItems = [{ label: t("inspect"), onSelect: () => showInspect(item.cardId, false) }];
+        const copyItems = [{ keepInBeta: true, label: t("inspect"), onSelect: () => showInspect(item.cardId, false) }];
         const rulesItem = isMine && item.faceUp
           ? rulesActionContextItem({ cardId: item.cardId, zone: "battlefield", itemId: item.id })
           : null;
-        if (rulesItem) copyItems.push(rulesItem);
+        if (rulesItem) copyItems.push({ ...rulesItem, keepInBeta: true });
         copyItems.push(
+          { separator: true },
+          ...zOrderItems,
           { separator: true },
           counterGridMenuItem("power", { itemId: item.id }),
           { separator: true },
           { label: t("removeCopy"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toZone: "graveyard" }) },
         );
-        showContextMenu(event.clientX, event.clientY, copyItems);
+        showContextMenu(event.clientX, event.clientY, betaMenuItems(copyItems));
         showCardLabels(el, cardName(item.cardId), t("copyStamp"));
         return;
       }
       const items = [];
-      items.push({ label: t("inspect"), onSelect: () => showInspect(item.cardId, !item.faceUp && !canPeek) });
+      items.push({ keepInBeta: true, label: t("inspect"), onSelect: () => showInspect(item.cardId, !item.faceUp && !canPeek) });
       const rulesItem = isMine && item.faceUp
         ? rulesActionContextItem({ cardId: item.cardId, zone: "battlefield", itemId: item.id })
         : null;
-      if (rulesItem) items.push(rulesItem);
+      if (rulesItem) items.push({ ...rulesItem, keepInBeta: true });
       if (isMine && (passiveEffectsByCard.get(item.cardId) || []).some((effect) => effect.kind === "swap_with_targeted_confrontation_manifestation")) {
         items.push({
+          keepInBeta: true,
           label: t(item.outcastOff ? "rulesOutcastOff" : "rulesOutcastOn"),
           onSelect: () => send({ type: "toggle_item_option", itemId: item.id, option: "outcastOff" }),
         });
       }
       if (isMine && (passiveEffectsByCard.get(item.cardId) || []).some((effect) => effect.kind === "interzone_substitute_holder")) {
         items.push({
+          keepInBeta: true,
           label: t(item.karmapultAuto ? "rulesKarmapultAutoOn" : "rulesKarmapultAutoOff"),
           onSelect: () => send({ type: "toggle_item_option", itemId: item.id, option: "karmapultAuto" }),
         });
@@ -9412,17 +9430,19 @@ function renderBattlefield() {
           && (passiveEffectsByCard.get(item.cardId) || []).some((effect) => effect.kind === "play_attached_wills");
         items.push(playable
           ? {
+            keepInBeta: true,
             label: rulesText("rulesPlayAttached", { card: cardName(entry.cardId) }),
             onSelect: () => beginRulesBoardAction({
               cardId: entry.cardId, zone: "attached", itemId: item.id,
               placement: { x: item.x + 40, y: item.y + 40 },
             }),
           }
-          : { label: rulesText("rulesInspectAttached", { card: cardName(entry.cardId) }), onSelect: () => showInspect(entry.cardId) });
+          : { keepInBeta: true, label: rulesText("rulesInspectAttached", { card: cardName(entry.cardId) }), onSelect: () => showInspect(entry.cardId) });
       });
       if (isMine && (item.playableFree || item.concealedWill || item.persuaded) && limboWillIsPlayable(item.cardId, true)) {
         const fieldFree = Boolean(item.playableFree || item.concealedFree);
         items.push({
+          keepInBeta: true,
           label: fieldFree ? t("rulesPlayFreeFromField") : item.persuaded ? t("rulesPlayPersuaded") : t("rulesPlayConcealed"),
           onSelect: () => beginRulesBoardAction({
             cardId: item.cardId, zone: "battlefield", itemId: item.id, playFromField: true, fieldFree,
@@ -9444,6 +9464,7 @@ function renderBattlefield() {
         && rulesBattlefieldSupportAvailableClient(item)
       ) {
         items.push({
+          keepInBeta: true,
           label: t("playInSupport"),
           onSelect: () => {
             const payload = { type: "set_rules_field_zone", itemId: item.id, cardId: item.cardId, faceUp: item.faceUp, fieldZone: "confrontation", x: item.x, y: item.y };
@@ -9469,7 +9490,7 @@ function renderBattlefield() {
         items.push({ label: t("moveToDeckTop"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: "deck", position: "top" }) });
         items.push({ label: t("moveToDeckBottom"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toOwnerId: item.ownerId, toZone: "deck", position: "bottom" }) });
       }
-      showContextMenu(event.clientX, event.clientY, items);
+      showContextMenu(event.clientX, event.clientY, betaMenuItems(items));
       // must run AFTER showContextMenu: it calls closeContextMenu() first
       // (to dismiss any previously-open menu), which would otherwise wipe
       // out labels created before it

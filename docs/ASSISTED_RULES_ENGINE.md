@@ -955,3 +955,8 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 ## Zoom des cartes dans les popups de décision
 
 - `renderRulesChoice` affiche en tête du popup la carte qui demande la décision (`.rules-choice-source`, tirée de `sourceCardId`, `targetCardId` ou `cardId` du choix, ou du déclencheur à placer) ; le survol l'affiche en grand via `CHOICE_PREVIEW_SELECTOR`, comme pour les cartes listées. Le même zoom s'applique à la carte flottante des flux sur le plateau (`#rulesFloatingCardImg`), qui couvre les cibles et paiements (Knobbly Colossus, Dominate the Aspects). Le test frontend vérifie la pastille et l'aperçu.
+
+## Première manifestation validée au dépôt, menu clic droit en bêta
+
+- `place_card` pendant l'étape « première manifestation » appelle `apply_first_manifestation_validation` : déposer la carte la valide (le bouton reste utilisable pour annuler tant que l'adversaire n'a pas validé). Les tests WebSocket n'envoient plus de `validate_first_manifestation`.
+- Bêta (`rulesEngine.enabled`) : le menu clic droit des cartes du plateau (cartes, copies, jetons) ne garde que Inspecter, Premier plan / Arrière-plan et les entrées marquées `keepInBeta` qui sont l'unique accès du moteur (actions et capacités, jouer depuis le champ, Support, cartes attachées, bascules Outcast et Karmapult). Les options manuelles (retourner, épuiser, copier, compteurs, déplacements) sont masquées par `betaMenuItems`. Les menus de la main, des piles et des recherches sont inchangés.

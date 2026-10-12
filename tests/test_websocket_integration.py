@@ -137,29 +137,17 @@ class WebSocketRulesIntegrationTests(unittest.IsolatedAsyncioTestCase):
             "x": 900,
             "y": 500,
         })
-        await self.receive_until(
-            self.ws2,
-            lambda message: message.get("type") == "state"
-            and "p2" in message["rulesEngine"]["firstManifestationItemIds"],
-        )
-        await self.send(self.ws1, {
-            "type": "validate_first_manifestation",
-            "validated": True,
-        })
-        await self.receive_until(
-            self.ws1,
-            lambda message: message.get("type") == "state"
-            and "p1" in message["rulesEngine"]["firstManifestationValidatedPlayerIds"],
-        )
-        await self.send(self.ws2, {
-            "type": "validate_first_manifestation",
-            "validated": True,
-        })
+        # Dropping the First Manifestation validates it: no separate click, so
+        # the second drop already moves the game to Before Revelation.
         before = await self.receive_until(
             self.ws2,
             lambda message: message.get("type") == "state"
             and message["phaseTracker"]["index"]
             == ADVANCED_PHASES.index("confrontation_before_revelation"),
+        )
+        self.assertEqual(
+            sorted(before["rulesEngine"]["firstManifestationValidatedPlayerIds"]),
+            ["p1", "p2"],
         )
         self.assertTrue(all(
             not item["faceUp"] for item in before["battlefield"]
