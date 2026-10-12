@@ -849,6 +849,11 @@ async def apply_rules_pass(session, actor_id, passed=None):
 AUTO_PASS_MESSAGE_TYPES = {
     "pass_priority", "pass_phase", "declare_rules_action", "resolve_rules_choice",
     "validate_first_manifestation", "set_rules_auto_skip",
+    # anything that can put a trigger on the Stack must also let a player who
+    # cannot respond be passed automatically
+    "place_card", "set_rules_field_zone", "move_card", "move_battlefield_item",
+    "copy_card", "flip_card", "request_hand_action", "respond_hand_action",
+    "play_first_manifestation_trap", "create_token_card", "toggle_limbo_recovery",
 }
 AUTO_PASS_MAX_STEPS = 60
 

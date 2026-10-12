@@ -1217,6 +1217,9 @@ function startServer() {
       window.dispatchEvent(new PointerEvent("pointermove", { bubbles: true, clientY: 660 }));
       window.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, clientY: 660 }));
       requestedUx.handResizeDelta = handCardHeight - sizeBefore;
+      toggleHandHidden();
+      requestedUx.handleWhenHandHidden = getComputedStyle(document.querySelector("#handResizeHandle")).display;
+      toggleHandHidden();
 
       latestState = savedState;
       latestState.rulesEngine.priorityPlayerId = "p1";
@@ -3674,6 +3677,7 @@ function startServer() {
       area: "none", tray: "none", card: "auto", handle: "auto",
     });
     assert.equal(pregameUi.requestedUx.handResizeDelta, 40);
+    assert.equal(pregameUi.requestedUx.handleWhenHandHidden, "none");
     assert.equal(pregameUi.deckEditSummary.heading, "Modifier le deck");
     assert.equal(pregameUi.deckEditSummary.panelVisible, true);
     assert.match(pregameUi.deckEditSummary.text, /Current test deck/);

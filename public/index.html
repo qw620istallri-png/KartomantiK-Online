@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Kartomantik Online</title>
   <link rel="icon" type="image/webp" href="grimoire-icon.webp?v=20260905-1">
-  <link rel="stylesheet" href="style.css?v=20261012-rules-beta-133">
+  <link rel="stylesheet" href="style.css?v=20261012-rules-beta-134">
 </head>
 <body>
 
@@ -87,6 +87,7 @@
       </div>
       <button type="button" class="social-link-btn" id="socialLegal"></button>
     </nav>
+    <div class="app-version" id="appVersion" aria-hidden="true"></div>
   </section>
 
   <section id="tournamentScreen" class="hidden">
@@ -169,6 +170,16 @@
           <button type="button" id="rarityEffectsToggleBtn" aria-pressed="false"></button>
           <button type="button" id="gameLanguageBtn"></button>
           <button type="button" id="fullscreenBtn"></button>
+        </div>
+        <div class="board-tools-topright" id="boardToolsTopRight">
+          <div class="zoom-controls">
+            <button id="zoomOutBtn">−</button>
+            <button id="zoomResetBtn">100%</button>
+            <button id="zoomInBtn">+</button>
+          </div>
+          <div class="zoom-controls">
+            <button id="pileCalibrateBtn"></button>
+          </div>
         </div>
       </div>
       <div class="actions">
@@ -296,19 +307,10 @@
         </div>
         <div class="view-toolbar" id="viewToolbar">
           <button id="highlightOwnersBtn" title="Highlight cards by owner color">🎨</button>
+          <button id="viewLockBtn" aria-pressed="false">📌</button>
           <button id="inspectReopenBtn">
             <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"></circle><path d="m15.5 15.5 5 5"></path></svg>
           </button>
-        </div>
-      </div>
-      <div class="board-tools-topright" id="boardToolsTopRight">
-        <div class="zoom-controls">
-          <button id="zoomOutBtn">−</button>
-          <button id="zoomResetBtn">100%</button>
-          <button id="zoomInBtn">+</button>
-        </div>
-        <div class="zoom-controls">
-          <button id="pileCalibrateBtn"></button>
         </div>
       </div>
       <div class="opponent-hand-fan" id="opponentHandFan" aria-live="polite"></div>
@@ -448,6 +450,7 @@
 
   <div class="log-panel inspect-panel hidden" id="inspectPanel">
     <div class="box">
+      <button type="button" class="inspect-x-btn" id="inspectXBtn" aria-label="Fermer" title="Fermer">×</button>
       <div class="inspect-main">
         <div class="inspect-img"><img id="inspectImg" alt=""></div>
         <div class="inspect-text">
@@ -656,7 +659,7 @@
     <p id="tournamentPlayerAlertText"></p>
   </div>
 
-  <script src="i18n.js?v=20261012-rules-beta-133"></script>
-  <script src="app.js?v=20261012-rules-beta-133"></script>
+  <script src="i18n.js?v=20261012-rules-beta-134"></script>
+  <script src="app.js?v=20261012-rules-beta-134"></script>
 </body>
 </html>

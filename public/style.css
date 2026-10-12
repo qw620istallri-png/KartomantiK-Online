@@ -3181,3 +3181,31 @@ input, textarea, select {
   to { box-shadow: 0 0 0 3px #fff0a8ee, 0 0 26px 8px #ffc83dee; }
 }
 @media (prefers-reduced-motion: reduce) { #passPriorityBtn.must-act { animation: none; } }
+.inspect-panel .box { position: relative; }
+.inspect-x-btn { position: absolute; top: 6px; right: 22px; z-index: 3; width: 30px; height: 30px; padding: 0; display: grid; place-items: center; border-radius: 50%; font-size: 20px; line-height: 1; cursor: pointer; }
+.app-version { position: fixed; right: 10px; bottom: 6px; z-index: 5; font-size: 14px; opacity: .45; color: #fff; text-shadow: 0 1px 3px #000a; pointer-events: none; user-select: none; }
+#gameScreen:not(.hidden) ~ .app-version { display: none; }
+/* dark translucent backdrop behind the bottom-right phase elements (never clickable) */
+#phaseTracker { pointer-events: none; isolation: isolate; }
+#phaseTracker > * { pointer-events: auto; }
+#phaseTracker::before { content: ""; position: absolute; inset: -10px -12px -10px -12px; z-index: -1; border-radius: 16px; background: rgba(8, 8, 10, .58); box-shadow: 0 6px 22px rgba(0, 0, 0, .35); pointer-events: none; }
+/* the Stack grows upward to use the free height; scrolling stays possible but its bar is hidden */
+.rules-stack-panel { max-height: calc(100vh - 210px - 70px); scrollbar-width: none; -ms-overflow-style: none; }
+.rules-stack-panel::-webkit-scrollbar, .rules-stack-list::-webkit-scrollbar { display: none; width: 0; height: 0; }
+.rules-stack-list { scrollbar-width: none; -ms-overflow-style: none; }
+.rules-choice-effect { margin: 4px 0 8px; padding: 6px 9px; max-height: 96px; overflow-y: auto; scrollbar-width: none; font-size: 14px; line-height: 1.35; white-space: pre-wrap; color: #f3ead0; background: rgba(0, 0, 0, .32); border-left: 3px solid var(--gold-deep, #8f783d); border-radius: 6px; }
+.rules-choice-effect::-webkit-scrollbar { display: none; }
+.rules-vfx-top-reveal { position: fixed; left: 50%; z-index: 90; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 12px 16px; color: #fff3cf; text-align: center; background: rgba(12, 12, 10, .86); border: 1px solid #8f783d; border-radius: 14px; box-shadow: 0 14px 40px rgba(0, 0, 0, .55); pointer-events: none; perspective: 700px; }
+.rules-vfx-top-reveal small { font-size: 14px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: #cdbb85; }
+.rules-vfx-top-reveal img { width: 190px; border-radius: 10px; box-shadow: 0 8px 22px rgba(0, 0, 0, .6); }
+.rules-vfx-top-reveal strong { font-family: var(--display-font); font-size: 20px; }
+.rules-vfx-top-reveal span { font-size: 16px; font-weight: 700; color: #ffd86b; }
+/* zoom + padlock now live in the top bar */
+.game-header .board-tools-topright { position: static; flex-direction: row; align-items: center; gap: 6px; align-self: flex-end; z-index: auto; }
+.game-header .zoom-controls { background: transparent; border: 1px solid #4a4430; padding: 2px; }
+.game-header .zoom-controls button { min-height: 0; height: 30px; color: inherit; }
+#viewLockBtn.active { background: var(--gold); border-color: var(--gold-deep); }
+/* the Stack sits in the top-right corner of the screen */
+.rules-stack-panel { inset: 12px 20px auto auto; max-height: calc(100vh - 12px - 300px); }
+#gameScreen.phase-details-visible .rules-stack-panel { top: 12px; }
+#gameScreen.inspect-open .rules-stack-panel { left: auto; right: 20px; }

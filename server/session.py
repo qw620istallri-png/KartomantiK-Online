@@ -7874,28 +7874,6 @@ class Session:
         counters[counter_key] = max(0, int(counters.get(counter_key) or 0) + int(result.get("value") or 0))
         return True
 
-    def rules_apply_self_play_counters(self, item):
-        """A Will that counts the cards its controller plays also counts its own play."""
-        if not item or item.get("isTokenCopy"):
-            return
-        card_id = item.get("cardId")
-        metadata = self.card_rules.get(card_id, {})
-        for ability in metadata.get("triggeredAbilities") or []:
-            trigger = ability.get("trigger") or {}
-            result = ability.get("result") or {}
-            if (
-                trigger.get("event") != "card_played"
-                or result.get("kind") != "add_counter_source"
-                or ability.get("optional")
-                or trigger.get("eventController") != "owner"
-            ):
-                continue
-            if trigger.get("cardTemperament") and trigger["cardTemperament"] not in (
-                metadata.get("temperaments") or []
-            ):
-                continue
-            self.rules_add_source_counter(item.get("id"), result)
-
     def queue_rules_persistent_will_entry_watchers(self, item, defer=False):
         if (
             not item
@@ -8804,6 +8782,27 @@ class Session:
             self.apply_rules_entering_manifestation_replacements(item)
         self.battlefield.append(item)
         return item
+
+    def queue_rules_token_copy_entry_triggers(self, copy):
+        """A token copy of a real card enters the battlefield like the card
+        itself: its "enters the field" effects trigger."""
+        if (
+            copy is None or copy.get("isTokenCard") or copy.get("effectsDisabled")
+            or not self.rules_engine["enabled"]
+        ):
+            return []
+        triggered = self.queue_rules_battlefield_entry_triggers(
+            copy["cardId"], copy["ownerId"], copy["id"], True, defer=True,
+        )
+        triggered.extend(self.queue_rules_support_entry_triggers(
+            copy, played=False, defer=True,
+        ))
+        triggered.extend(self.queue_rules_field_zone_entry_triggers(
+            copy, self.rules_field_zone(copy) or "confrontation", defer=True,
+        ))
+        if triggered:
+            self.queue_rules_simultaneous_actions(triggered)
+        return triggered
 
     def _finish_rules_support_returns(self, counts, action):
         effects = []
@@ -11293,11 +11292,13 @@ class Session:
                 item.get("cardId"), player_id,
                 source_item_id=(action.get("source") or {}).get("itemId"),
             )
+            triggered_actions = self.queue_rules_token_copy_entry_triggers(copy)
             return {
                 "kind": result.get("kind"),
                 "status": "created",
                 "targetItemId": item.get("id"),
                 "createdItemId": copy["id"],
+                "triggeredActions": triggered_actions,
             }
         if result.get("kind") == "grant_friendly_interzone_support_until_end_turn":
             item_ids = []
@@ -12373,11 +12374,13 @@ class Session:
                 card_id, player_id,
                 source_item_id=(action.get("source") or {}).get("itemId"),
             )
+            triggered_actions = self.queue_rules_token_copy_entry_triggers(copy)
             return {
                 "kind": result.get("kind"),
                 "status": "resolved",
                 "movement": movement,
                 "copyItemId": copy["id"],
+                "triggeredActions": triggered_actions,
             }
         if result.get("kind") == "copy_related_tribute_if_exhaust":
             source_item = self.find_battlefield_item(
@@ -12402,12 +12405,14 @@ class Session:
                     related_card_id, player_id,
                     source_item_id=source_item.get("id"),
                 )
+                triggered_actions = self.queue_rules_token_copy_entry_triggers(copy)
                 return {
                     "kind": result.get("kind"),
                     "status": "accepted",
                     "playerId": player_id,
                     "relatedCardId": related_card_id,
                     "createdItemId": copy["id"],
+                    "triggeredActions": triggered_actions,
                 }
             choice_id = new_id()
             self.rules_engine["pendingChoice"] = {
@@ -12470,10 +12475,16 @@ class Session:
                 for current_id in self.players
                 if current_id != event_controller_id
             ]
+            triggered_actions = []
+            for created_item in created:
+                triggered_actions.extend(
+                    self.queue_rules_token_copy_entry_triggers(created_item)
+                )
             return {
                 "kind": result.get("kind"),
                 "status": "created",
                 "createdItemIds": [item["id"] for item in created],
+                "triggeredActions": triggered_actions,
             }
         if result.get("kind") == "take_last_opponent_support_to_vessel":
             item = self.rules_last_opponent_support(player_id, 2)
@@ -14057,17 +14068,7 @@ class Session:
                 event_item["cardId"], action.get("controllerId") or player_id,
                 source_item_id=(action.get("source") or {}).get("itemId"),
             )
-            triggered_actions = self.queue_rules_battlefield_entry_triggers(
-                copy["cardId"], copy["ownerId"], copy["id"], True, defer=True,
-            )
-            triggered_actions.extend(self.queue_rules_support_entry_triggers(
-                copy, played=False, defer=True,
-            ))
-            triggered_actions.extend(self.queue_rules_field_zone_entry_triggers(
-                copy, "confrontation", defer=True,
-            ))
-            if triggered_actions:
-                self.queue_rules_simultaneous_actions(triggered_actions)
+            triggered_actions = self.queue_rules_token_copy_entry_triggers(copy)
             return {
                 "kind": result.get("kind"), "status": "created",
                 "cardId": copy.get("cardId"), "itemId": copy["id"],
@@ -15301,6 +15302,7 @@ class Session:
                 return "Choose whether to use the optional triggered effect.", None
             status = "declined"
             created_item_id = None
+            copy_triggered = []
             if option == "accept":
                 source_item = self.find_battlefield_item(
                     choice.get("_sourceItemId")
@@ -15316,8 +15318,11 @@ class Session:
                     source_item_id=source_item.get("id"),
                 )
                 created_item_id = copy["id"]
+                self.rules_engine["pendingChoice"] = None
+                copy_triggered = self.queue_rules_token_copy_entry_triggers(copy)
                 status = "accepted"
-            self.rules_engine["pendingChoice"] = None
+            else:
+                self.rules_engine["pendingChoice"] = None
             return None, {
                 "kind": "optional_trigger",
                 "status": status,
@@ -15325,6 +15330,7 @@ class Session:
                 "sourceCardId": choice.get("sourceCardId"),
                 "relatedCardId": choice.get("_relatedCardId"),
                 "createdItemId": created_item_id,
+                "triggeredActions": copy_triggered,
             }
 
         if choice.get("kind") == "optional_discard_draw":
@@ -17122,11 +17128,6 @@ class Session:
             entered_item = self.find_battlefield_item(
                 source_resolution.get("itemId")
             )
-            if (
-                resolved.get("kind") == "play_card"
-                and self.rules_item_card_rules(entered_item or {}).get("type") == "persistent_will"
-            ):
-                self.rules_apply_self_play_counters(entered_item)
             triggered_actions.extend(
                 self.queue_rules_manifestation_entry_watchers(
                     entered_item, defer=True

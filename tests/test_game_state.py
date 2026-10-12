@@ -8721,12 +8721,6 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         )
         self.assertEqual(item["counters"]["Union"], 1)
 
-    def test_an_atavic_counts_its_own_play_when_it_resolves(self):
-        session, _p1, _p2, item = self.atavic_session("erkwir53va9m8gm_en")
-        item["counters"] = {}
-        session.rules_apply_self_play_counters(item)
-        self.assertEqual(item["counters"]["Union"], 1)
-
     def test_atavic_welcome_spends_five_unions_for_two_support_tokens(self):
         session, p1, _p2, item = self.atavic_session("erkwir53va9m8gm_en")
         session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
@@ -13882,6 +13876,59 @@ class CarcassDevourerChoiceTests(RealCardRulesCase):
         self.assertEqual(p1["zones"]["graveyard"], ["m-2"])
         self.assertEqual(item["counters"]["power"], 2)
         self.assertIsNone(session.rules_engine["pendingChoice"])
+
+class TokenCopyEntersFieldTests(RealCardRulesCase):
+    SKYSAILING, MIRROR = "7g0495fr3188or9_en", "72zvsiuky5ytolh_en"
+    ALL = (SKYSAILING, MIRROR)
+
+    def test_mirror_the_impulse_copy_triggers_enters_the_field_effects(self):
+        session, p1, p2 = self.make_session()
+        source = self.field_item("sky", "p1", self.SKYSAILING)
+        session.battlefield = [source]
+        action = {
+            "controllerId": "p1",
+            "source": {"cardId": self.MIRROR, "zone": "hand"},
+            "targets": [{"kind": "card", "itemId": "sky", "cardId": self.SKYSAILING, "ownerId": "p1"}],
+            "ability": {"result": {"kind": "create_target_token_copy_in_support"}},
+        }
+        result_kind = next(
+            (a.get("result", {}).get("kind")
+             for a in session.card_rules.get(self.MIRROR, {}).get("playedAbilities", [])),
+            None,
+        )
+        if result_kind:
+            action["ability"]["result"]["kind"] = result_kind
+        payload = session.apply_rules_action_result(action)
+        self.assertEqual(payload["status"], "created")
+        self.assertEqual(
+            [entry["ability"]["id"] for entry in payload["triggeredActions"]],
+            ["resolve-top-deck-by-card-type"],
+        )
+
+
+class AtavicDoesNotCountItsOwnPlayTests(RealCardRulesCase):
+    ALL = (
+        "erkwir53va9m8gm_en", "265f4wdooq43pjn_en", "a058t24med4h5nx_en",
+        "rqvzo3iji2a1l65_en", "m2l3v60n0iakrm2_en",
+    )
+
+    def test_an_atavic_never_counts_its_own_play(self):
+        for card_id in self.ALL:
+            session, p1, _p2 = self.make_session()
+            session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_before_revelation")
+            session.rules_engine["priorityPlayerId"] = "p1"
+            p1["zones"]["hand"] = [card_id]
+            error, _action = session.declare_rules_action(
+                "p1", "Atavic", kind="play_card", source={"cardId": card_id, "zone": "hand"},
+            )
+            self.assertIsNone(error, card_id)
+            for _ in range(4):
+                if not session.rules_engine["actionStack"]:
+                    break
+                session.pass_rules_priority(session.rules_engine["priorityPlayerId"])
+            item = next(i for i in session.battlefield if i["cardId"] == card_id)
+            self.assertEqual(sum(item.get("counters", {}).values()), 0, card_id)
+
 
 if __name__ == "__main__":
     unittest.main()

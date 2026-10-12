@@ -7,7 +7,12 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261012-rules-beta-133";
+const STATIC_ASSET_VERSION = "20261012-rules-beta-134";
+{
+  const versionEl = document.getElementById("appVersion");
+  const versionMatch = STATIC_ASSET_VERSION.match(/beta-(\d+)/);
+  if (versionEl) versionEl.textContent = versionMatch ? "beta " + versionMatch[1] : STATIC_ASSET_VERSION;
+}
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -2194,6 +2199,33 @@ function playRulesVfxResolutionBanner(entry) {
   ], { duration: 3300, easing: "cubic-bezier(.2,.8,.2,1)" });
 }
 
+// "Uncover the top card of your deck" (Skysailing Triad...): show the card, then what became of it
+function playRulesVfxTopReveal(entry) {
+  const result = entry.details?.effectResult || {};
+  if (!result.cardId) return 0;
+  $$(".rules-vfx-top-reveal").forEach((element) => element.remove());
+  const outcomeKey = result.status === "drawn" ? "rulesVfxTopDrawn"
+    : result.cardType === "manifestation" && result.status !== "failed" && result.status !== "revealed_no_effect" ? "rulesVfxTopChained"
+    : "rulesVfxTopNoEffect";
+  const panel = document.createElement("div");
+  panel.className = "rules-vfx-top-reveal";
+  panel.setAttribute("role", "status");
+  panel.innerHTML = `<small>${esc(t("rulesVfxTopRevealed"))}</small>
+    <img src="${esc(cardImage(result.cardId))}" alt="${esc(cardName(result.cardId))}">
+    <strong>${esc(cardName(result.cardId))}</strong>
+    <span>${esc(t(outcomeKey))}</span>`;
+  const anchor = $("#battlefieldWrap")?.getBoundingClientRect?.();
+  panel.style.top = `${Math.round(anchor?.height ? anchor.top + anchor.height * .42 : window.innerHeight * .42)}px`;
+  document.body.appendChild(panel);
+  rulesVfxAnimateAndRemove(panel, [
+    { transform: "translate(-50%,-50%) translateY(46px) scale(.55) rotateY(90deg)", opacity: 0 },
+    { offset: .16, transform: "translate(-50%,-50%) scale(1) rotateY(0deg)", opacity: 1 },
+    { offset: .88, transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
+    { transform: "translate(-50%,-50%) scale(.96)", opacity: 0 },
+  ], { duration: 2600, easing: "cubic-bezier(.2,.8,.2,1)" });
+  return 2700;
+}
+
 function playRulesVfxSpotlight(event) {
   const { entry, spotlightOrigin, declaredTargets } = event;
   const cardId = entry.details?.source?.cardId;
@@ -2310,6 +2342,9 @@ function playRulesVfxEvent(event) {
     if (entry.type === "rules_action_resolved") {
       playRulesVfxStackPulse("resolved");
       playRulesVfxImpact(target, t("rulesVfxResolved"), "resolved");
+      if (entry.details?.effectResult?.kind === "resolve_top_deck_by_type" && entry.details.effectResult.cardId) {
+        return playRulesVfxTopReveal(entry);
+      }
       if (entry.details?.effectResult?.kind === "neutralize_stack_action") {
         playRulesVfxImpact(
           target,
@@ -2700,6 +2735,7 @@ function syncRulesStackCopyBoardFlow() {
 function resolveRulesStackCopyTargets(option, target = null) {
   const flow = pendingRulesBoardFlow;
   if (flow?.mode !== "stack_copy_target" || flow.stage === "committing") return;
+  flow.previousStage = flow.stage;
   flow.stage = "committing";
   renderRulesBoardFlow();
   send({
@@ -2720,6 +2756,7 @@ function resolveRulesStackPayment(option) {
     );
     if (Object.values(remaining).some((amount) => amount > 0)) return;
   }
+  flow.previousStage = flow.stage;
   flow.stage = "committing";
   renderRulesBoardFlow();
   send({
@@ -2779,6 +2816,7 @@ function submitRulesBoardFlow(target = null) {
   }
   if (flow.mode === "trigger_target") {
     if (!target) return;
+    flow.previousStage = flow.stage;
     flow.stage = "committing";
     renderRulesBoardFlow();
     send({
@@ -2825,9 +2863,20 @@ function submitRulesBoardFlow(target = null) {
   closeRulesBoardFlow();
 }
 
+// A rejected payment/target must not leave the flow locked in "committing":
+// go back to where the player was so they can choose again (or decline).
+function releaseRulesBoardFlowAfterError() {
+  const flow = pendingRulesBoardFlow;
+  if (!flow || flow.stage !== "committing") return;
+  flow.stage = flow.previousStage && flow.previousStage !== "committing" ? flow.previousStage : "payment";
+  if (flow.stage === "payment") flow.selectedPaymentIndexes = new Set();
+  renderRulesBoardFlow();
+}
+
 function scheduleRulesBoardSubmit() {
   const flow = pendingRulesBoardFlow;
   if (!flow) return;
+  flow.previousStage = flow.stage;
   flow.stage = "committing";
   renderRulesBoardFlow();
   window.setTimeout(() => {
@@ -2970,8 +3019,13 @@ function toggleRulesBoardPayment(index) {
   renderRulesBoardFlow();
   if (!covered) return true;
   if (flow.mode === "stack_payment") return true;
-  const minimum = rulesBoardMinimumPaymentCount(flow);
-  if (selected.length > minimum) {
+  // several Manifestations may pay together; only a card that could be removed
+  // while the Tribute stays fully paid is superfluous (3 + 4 for a 4, not 2 + 3)
+  const superfluous = selected.some((_value, skipped) => rulesManifestationsCover(
+    selected.filter((_other, position) => position !== skipped),
+    flow.draft.essencePlan.remaining,
+  ));
+  if (superfluous) {
     showToast(t("rulesTributeRedundantError"), true);
     return true;
   }
@@ -3701,9 +3755,18 @@ function limboWillIsPlayable(cardId, fromField = false) {
 $("#limboPlayCloseBtn").onclick = () => closeLimboPlayPanel();
 $("#limboPlaySearch").oninput = () => renderLimboPlayList();
 
+// null = the player's Limbo; { itemId } = the Wills placed on a host (Grimoire)
+let limboPlayAttachedHost = null;
+
+function openAttachedPlayPanel(itemId) {
+  limboPlayAttachedHost = itemId;
+  openLimboPlayPanel();
+}
+
 function openLimboPlayPanel() {
-  $("#limboPlayHeading").textContent = t("limboPlayHeading");
-  $("#limboPlaySearch").placeholder = t("limboPlaySearch");
+  const attached = limboPlayAttachedHost !== null;
+  $("#limboPlayHeading").textContent = t(attached ? "attachedPlayHeading" : "limboPlayHeading");
+  $("#limboPlaySearch").placeholder = t(attached ? "attachedPlaySearch" : "limboPlaySearch");
   $("#limboPlaySearch").value = "";
   $("#limboPlayPanel").classList.remove("hidden");
   renderLimboPlayList();
@@ -3711,22 +3774,43 @@ function openLimboPlayPanel() {
 }
 
 function closeLimboPlayPanel() {
+  limboPlayAttachedHost = null;
   $("#limboPlayPanel").classList.add("hidden");
 }
 
 function renderLimboPlayList() {
   const list = $("#limboPlayList");
   const query = $("#limboPlaySearch").value.trim().toLocaleLowerCase();
-  const cards = [...new Set(latestState?.players?.[myPlayerId]?.zones?.graveyard?.cards || [])]
-    .filter((cardId) => limboWillIsPlayable(cardId))
-    .filter((cardId) => !query || cardName(cardId).toLocaleLowerCase().includes(query));
+  const host = limboPlayAttachedHost !== null
+    ? (latestState?.battlefield || []).find((candidate) => candidate.id === limboPlayAttachedHost)
+    : null;
+  const attachedMode = limboPlayAttachedHost !== null;
+  const cards = attachedMode
+    ? [...new Set((host?.attachedCards || []).map((entry) => entry.cardId))]
+      .filter((cardId) => !query || cardName(cardId).toLocaleLowerCase().includes(query))
+    : [...new Set(latestState?.players?.[myPlayerId]?.zones?.graveyard?.cards || [])]
+      .filter((cardId) => limboWillIsPlayable(cardId))
+      .filter((cardId) => !query || cardName(cardId).toLocaleLowerCase().includes(query));
   list.innerHTML = cards.length
     ? cards.map((cardId) => `<button type="button" class="limbo-play-card" data-limbo-play-card="${esc(cardId)}" title="${esc(cardName(cardId))}">
         <img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"><span>${esc(cardName(cardId))}</span></button>`).join("")
-    : `<p>${esc(t("limboPlayEmpty"))}</p>`;
+    : `<p>${esc(t(attachedMode ? "attachedPlayEmpty" : "limboPlayEmpty"))}</p>`;
   list.querySelectorAll("[data-limbo-play-card]").forEach((button) => {
     button.onclick = () => {
       const cardId = button.dataset.limboPlayCard;
+      if (attachedMode) {
+        const canPlay = host && host.ownerId === myPlayerId && !isObserver
+          && ["ephemeral_will", "persistent_will"].includes(cardsById.get(cardId)?.type)
+          && (passiveEffectsByCard.get(host.cardId) || []).some((effect) => effect.kind === "play_attached_wills");
+        closeLimboPlayPanel();
+        if (canPlay) {
+          beginRulesBoardAction({
+            cardId, zone: "attached", itemId: host.id,
+            placement: { x: host.x + 40, y: host.y + 40 },
+          });
+        } else showInspect(cardId);
+        return;
+      }
       closeLimboPlayPanel();
       beginRulesBoardAction({ cardId, zone: "graveyard", placement: { x: 700, y: 300 } });
     };
@@ -4702,6 +4786,7 @@ function handleServerMessage(msg) {
       showToast(localizeServerError(msg.message), true);
     }
     console.warn("Server error:", msg.message);
+    releaseRulesBoardFlowAfterError();
   } else if (msg.type === "log") {
     if (pendingTournamentLogDownload) {
       pendingTournamentLogDownload = false;
@@ -6379,7 +6464,11 @@ function applyHandVisibility(meId) {
   const collapsed = !meId || (handHiddenByUser && !mulliganReviewActive);
   $("#handArea").classList.toggle("hand-collapsed", collapsed);
   $("#myHandTray").classList.toggle("hidden", collapsed);
-  $("#handResizeHandle").classList.toggle("hidden", collapsed);
+  const myHandZone = meId ? latestState?.players?.[meId]?.zones?.hand : null;
+  const myHandCount = myHandZone
+    ? (myHandZone.count !== undefined ? myHandZone.count : (myHandZone.cards || []).length)
+    : 0;
+  $("#handResizeHandle").classList.toggle("hidden", collapsed || myHandCount === 0);
   // the toolbar itself (and the hide/show toggle inside it) always stays put;
   // only its OTHER tool buttons collapse away with the tray
   $("#handToolbar").classList.toggle("hidden", !meId || !handToolsOpen);
@@ -6900,6 +6989,7 @@ function syncRulesChoiceSourceCard() {
   if (!head) return;
   const box = head.parentElement;
   box.querySelector(":scope > .rules-choice-source")?.remove();
+  document.querySelector("#rulesChoicePanel .rules-choice-effect")?.remove();
   box.classList.remove("has-source");
   if ($("#rulesChoicePanel").classList.contains("hidden")) return;
   const choice = latestState?.rulesEngine?.pendingChoice;
@@ -6913,6 +7003,14 @@ function syncRulesChoiceSourceCard() {
   chip.innerHTML = `<img src="${esc(image)}" alt="${esc(cardName(cardId))}">`;
   box.insertBefore(chip, box.firstChild);
   box.classList.add("has-source");
+  // which effect is being resolved: the source card's text, right under the title
+  const effectText = cardId ? cardField(cardsById.get(cardId), "effect") : "";
+  if (effectText) {
+    const effect = document.createElement("p");
+    effect.className = "rules-choice-effect";
+    effect.textContent = effectText;
+    head.insertAdjacentElement("afterend", effect);
+  }
 }
 
 // Banner shown to everyone else while a player resolves a decision.
@@ -7955,9 +8053,12 @@ function renderRulesChoiceContent() {
   const searching = Array.isArray(choice.candidateCardIds);
   const handWill = !searching && choice.destination === "support_manifestation";
   const handManifestation = !searching && (choice.destination || choice.drawByBasePower || choice.destroyTargetItemId);
-  const cards = searching
+  const requiredTypes = Array.isArray(choice.requireTypes) && choice.requireTypes.length ? choice.requireTypes : null;
+  const cards = (searching
     ? choice.candidateCardIds
-    : latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
+    : latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [])
+    // only the card types the effect accepts are offered (e.g. Wills only)
+    .filter((cardId) => !requiredTypes || requiredTypes.includes(cardsById.get(cardId)?.type));
   const destinationKeys = {
     bullyboo_reveal: ["rulesChoiceRevealWillHeading", "rulesChoiceRevealWillText"],
     attach_to_source: ["rulesChoicePlaceWillsHeading", "rulesChoicePlaceWillsText"],
@@ -8626,7 +8727,11 @@ function applyTransform() {
   $("#zoomResetBtn").textContent = Math.round(zoomLevel * 100) + "%";
 }
 
+// "Lock view": freezes the current pan + zoom (wheel, drag and +/- do nothing)
+let viewLocked = false;
+
 function setZoomAt(newZoom, anchorClientX, anchorClientY) {
+  if (viewLocked) return;
   const rect = $("#battlefieldWrap").getBoundingClientRect();
   const ax = anchorClientX - rect.left;
   const ay = anchorClientY - rect.top;
@@ -8665,6 +8770,14 @@ function initZoomControls() {
   $("#zoomInBtn").onclick = () => setZoom(zoomLevel + 0.15);
   $("#zoomOutBtn").onclick = () => setZoom(zoomLevel - 0.15);
   $("#zoomResetBtn").onclick = () => setZoom(1);
+  $("#viewLockBtn").title = t("lockView");
+  $("#viewLockBtn").onclick = () => {
+    viewLocked = !viewLocked;
+    $("#viewLockBtn").classList.toggle("active", viewLocked);
+    $("#viewLockBtn").setAttribute("aria-pressed", String(viewLocked));
+    $("#viewLockBtn").title = t(viewLocked ? "unlockView" : "lockView");
+    ["zoomInBtn", "zoomOutBtn", "zoomResetBtn"].forEach((id) => { $("#" + id).disabled = viewLocked; });
+  };
 
   const wrap = $("#battlefieldWrap");
   wrap.addEventListener(
@@ -8679,6 +8792,7 @@ function initZoomControls() {
   wrap.addEventListener("pointerdown", (event) => {
     if (event.target !== wrap && event.target !== $("#battlefield")) return;
     event.preventDefault();
+    if (viewLocked) return;
     const startX = event.clientX, startY = event.clientY;
     const startPanX = panX, startPanY = panY;
     const move = (e) => {
@@ -9662,21 +9776,13 @@ function renderBattlefield() {
           onSelect: () => send({ type: "toggle_item_option", itemId: item.id, option: "karmapultAuto" }),
         });
       }
-      (item.attachedCards || []).forEach((entry) => {
-        const attachedCard = cardsById.get(entry.cardId);
-        const playable = isMine && ["ephemeral_will", "persistent_will"].includes(attachedCard?.type)
-          && (passiveEffectsByCard.get(item.cardId) || []).some((effect) => effect.kind === "play_attached_wills");
-        items.push(playable
-          ? {
-            keepInBeta: true,
-            label: rulesText("rulesPlayAttached", { card: cardName(entry.cardId) }),
-            onSelect: () => beginRulesBoardAction({
-              cardId: entry.cardId, zone: "attached", itemId: item.id,
-              placement: { x: item.x + 40, y: item.y + 40 },
-            }),
-          }
-          : { keepInBeta: true, label: rulesText("rulesInspectAttached", { card: cardName(entry.cardId) }), onSelect: () => showInspect(entry.cardId) });
-      });
+      if ((item.attachedCards || []).length) {
+        items.push({
+          keepInBeta: true,
+          label: rulesText("rulesAttachedList", { count: item.attachedCards.length }),
+          onSelect: () => openAttachedPlayPanel(item.id),
+        });
+      }
       if (isMine && (item.playableFree || item.concealedWill || item.persuaded) && limboWillIsPlayable(item.cardId, true)) {
         const fieldFree = Boolean(item.playableFree || item.concealedFree);
         items.push({
@@ -10066,15 +10172,6 @@ function initGameControls() {
     const on = $("#battlefield").classList.toggle("highlight-owners");
     $("#highlightOwnersBtn").classList.toggle("active", on);
   };
-  $("#battlefieldWrap").addEventListener("dblclick", (event) => {
-    if (isObserver) return;
-    if (event.target !== $("#battlefield") && event.target !== $("#battlefieldWrap")) return;
-    const label = prompt("Token label (e.g. 1/1):", "");
-    if (label === null) return;
-    const rect = $("#battlefieldWrap").getBoundingClientRect();
-    const logical = rotateForSeat((event.clientX - rect.left - panX) / zoomLevel - 26, (event.clientY - rect.top - panY) / zoomLevel - 26, TOKEN_W, TOKEN_H);
-    send({ type: "add_token", x: logical.x, y: logical.y, label, color: playerColor(myPlayerId) });
-  });
 
   $("#resetBoardBtn").textContent = t("resetBoard");
   $("#resetBoardBtn").onclick = () => {
@@ -10204,6 +10301,10 @@ function toggleInspectPanel() {
     $("#gameScreen").classList.remove("inspect-open");
   } else if (inspectHistory.length) {
     showInspect(inspectHistory[0]);
+  } else {
+    // nothing inspected yet: open it empty, hovering a card then fills it
+    showInspect(null, true);
+    $("#inspectName").textContent = "";
   }
 }
 
@@ -10738,10 +10839,22 @@ async function boot() {
       toggleHandHidden();
       return;
     }
-    if (event.target?.closest?.("input, textarea, select, button, [contenteditable='true']")) return;
+    // the shortcuts keep working while a button/checkbox has focus; only real text fields swallow them
+    if (event.target?.closest?.("textarea, select, [contenteditable='true'], input:not([type='checkbox']):not([type='radio']):not([type='button']):not([type='range'])")) return;
+    if (event.code === "Enter" || event.code === "NumpadEnter") {
+      // Enter = the "pass phase / priority" button, unless a focused button
+      // already turns Enter into its own click
+      if (event.target?.closest?.("button, a, summary")) return;
+      const passButton = $("#passPriorityBtn");
+      if (!latestState || isObserver || !passButton || passButton.disabled || passButton.offsetParent === null) return;
+      if (document.querySelector(".confirm-panel:not(.hidden), #confirmPanel:not(.hidden)")) return;
+      event.preventDefault();
+      if (!event.repeat) passButton.click();
+      return;
+    }
     if (event.code === "KeyI") {
       event.preventDefault();
-      toggleInspectPanel();
+      if (!event.repeat && latestState) toggleInspectPanel();
     } else if (event.code === "KeyH") {
       event.preventDefault();
       $("#hideInterfaceBtn").click();
@@ -10785,6 +10898,7 @@ async function boot() {
     $("#inspectPanel").classList.add("hidden");
     $("#gameScreen").classList.remove("inspect-open");
   };
+  $("#inspectXBtn").onclick = () => $("#inspectCloseBtn").click();
   $("#revealCloseBtn").onclick = () => {
     $("#revealPanel").classList.add("hidden");
     setMyActivity(null);
