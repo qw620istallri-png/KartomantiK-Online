@@ -711,6 +711,26 @@ def extract_deck_card_rarities(deck_json, card_ids):
     }
 
 
+def apply_first_manifestation_validation(session, actor_id, validated):
+    error, result = session.validate_first_manifestation(actor_id, validated=validated)
+    if error:
+        return error
+    session.add_log(
+        actor_id,
+        "rules_first_manifestation_validated" if validated else "rules_first_manifestation_validation_cancelled",
+        {
+            "selectionComplete": bool(result.get("selectionComplete")),
+            "revealed": bool(result.get("revealed")),
+        },
+    )
+    if result["revealed"]:
+        session.add_log(actor_id, "rules_first_manifestations_revealed", {})
+    if result.get("selectionComplete"):
+        triggered_actions = session.queue_rules_before_revelation_triggers()
+        log_rules_triggered_actions(session, triggered_actions, actor_id)
+    return None
+
+
 async def apply_rules_pass(session, actor_id, passed=None):
     """Pass priority for a player; shared by the pass message and the auto-pass loop."""
     if session.rules_first_manifestation_active():
@@ -1494,7 +1514,12 @@ async def handle_message(ws, info, data):
             place_details["manualBypass"] = True
         session.add_log(actor_id, "place_card", place_details)
         triggered_actions = []
-        if not manual_bypass:
+        # A First Manifestation played after the opponent's arrives face up and is
+        # validated at once; its entry triggers are queued at the Revelation.
+        revealed_first = bool(first_manifestation and item["faceUp"] and not manual_bypass)
+        if revealed_first:
+            apply_first_manifestation_validation(session, actor_id, True)
+        if not manual_bypass and not revealed_first:
             triggered_actions.extend(
                 session.queue_rules_battlefield_entry_triggers(
                     card_id, card_owner_id, item["id"], item["faceUp"],
@@ -2000,22 +2025,9 @@ async def handle_message(ws, info, data):
         validated = data.get("validated", True)
         if not isinstance(validated, bool):
             return await send_error(ws, "First Manifestation validation state must be a boolean.")
-        error, result = session.validate_first_manifestation(actor_id, validated=validated)
+        error = apply_first_manifestation_validation(session, actor_id, validated)
         if error:
             return await send_error(ws, error)
-        session.add_log(
-            actor_id,
-            "rules_first_manifestation_validated" if validated else "rules_first_manifestation_validation_cancelled",
-            {
-                "selectionComplete": bool(result.get("selectionComplete")),
-                "revealed": bool(result.get("revealed")),
-            },
-        )
-        if result["revealed"]:
-            session.add_log(actor_id, "rules_first_manifestations_revealed", {})
-        if result.get("selectionComplete"):
-            triggered_actions = session.queue_rules_before_revelation_triggers()
-            log_rules_triggered_actions(session, triggered_actions, actor_id)
         session.touch()
         await broadcast_state(session)
 

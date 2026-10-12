@@ -13821,11 +13821,14 @@ class LotTwentyTwoTests(RealCardRulesCase):
         self.assertIn("Trap", session.register_first_manifestation("p1", mine))
         self.assertIsNone(session.register_first_manifestation("p2", theirs))
         self.assertIsNone(session.validate_first_manifestation("p2")[0])
-        # The Trap player now sees the opponent's card, and the opponent is locked in.
+        # The opponent's First Manifestation is revealed to everyone and locked in.
+        self.assertTrue(theirs["faceUp"])
         view = {e["id"]: e for e in session.serialize_for("p1", "player")["battlefield"]}
         self.assertEqual(view["theirs"]["cardId"], "m-1")
         self.assertIn("locked", session.validate_first_manifestation("p2", validated=False)[0])
+        # The Trap player then chooses theirs, which arrives face up.
         self.assertIsNone(session.register_first_manifestation("p1", mine))
+        self.assertTrue(mine["faceUp"])
         error, result = session.validate_first_manifestation("p1")
         self.assertIsNone(error)
         self.assertTrue(result["selectionComplete"])

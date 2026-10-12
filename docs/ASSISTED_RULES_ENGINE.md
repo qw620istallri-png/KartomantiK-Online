@@ -946,3 +946,8 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - `main.auto_advance_rules_phases(session, actor_id)` boucle (60 passes max) sur `apply_rules_pass` (même code que le message `pass_priority`, donc mêmes journaux, déclencheurs et résolutions). Elle est appelée après `pass_priority`, `pass_phase`, `declare_rules_action`, `resolve_rules_choice`, `validate_first_manifestation` et `set_rules_auto_skip`. Journal `rules_auto_passed`.
 - Conséquence : un joueur sans action est passé d'office, l'autre garde la main ; si personne ne peut agir, la pile se résout et les phases défilent jusqu'à la prochaine décision.
 - Limite : les actions « manuelles » (étiquette libre sur la pile) ne comptent pas comme action possible ; il faut décocher l'option pour s'en servir dans une phase vide. Les tests d'intégration WebSocket désactivent l'option dans `prepare_active_rules`.
+
+## Trap et Hermetic Hourglass : première manifestation révélée
+
+- Le joueur qui joue sa première manifestation après les autres (Trap via `trapPlayerIds`, ou Hermetic Hourglass) attend que tous les autres l'aient validée. À cet instant leurs premières manifestations sont retournées face visible (`validate_first_manifestation`), puis il choisit la sienne : `register_first_manifestation` la pose face visible et `place_card` la valide aussitôt (`apply_first_manifestation_validation`). Ses déclencheurs d'entrée sont mis en file à la Révélation, pas à la pose.
+- Si tous les joueurs veulent jouer après (deux Trap, Trap contre Hourglass), les demandes s'annulent et le choix reste simultané et caché, comme avant.

@@ -17935,7 +17935,12 @@ class Session:
         selected = self.rules_engine["firstManifestationItemIds"]
         if player_id in selected:
             return "You have already chosen your first Manifestation."
-        item["faceUp"] = False
+        # Playing after the opponent (Trap, Hermetic Hourglass): their First
+        # Manifestation is already revealed and this one arrives face up.
+        item["faceUp"] = bool(
+            self.rules_plays_first_manifestation_after(player_id)
+            and not item.get("persistedFirst")
+        )
         self.mark_rules_confrontation_entry(item)
         selected[player_id] = item["id"]
         return None
@@ -17998,6 +18003,15 @@ class Session:
             return order_error, None
         if player_id not in confirmed_players:
             confirmed_players.append(player_id)
+        after_ids = [pid for pid in self.players if self.rules_plays_first_manifestation_after(pid)]
+        first_ids = [pid for pid in self.players if pid not in after_ids]
+        if after_ids and all(pid in confirmed_players for pid in first_ids):
+            for pid in first_ids:
+                revealed_item = self.find_battlefield_item(
+                    self.rules_engine["firstManifestationItemIds"].get(pid)
+                )
+                if revealed_item:
+                    revealed_item["faceUp"] = True
         player_ids = list(self.players)
         revealed = len(player_ids) >= NUM_SEATS and all(pid in confirmed_players for pid in player_ids)
         if revealed:
