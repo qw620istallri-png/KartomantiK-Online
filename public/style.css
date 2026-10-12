@@ -2824,9 +2824,8 @@ input, textarea, select {
 .opponent-hand-card:hover,
 .opponent-hand-card:focus-visible {
   z-index: 30;
-  top: 24px;
   filter: brightness(1.08);
-  transform: translateX(calc(-50% + var(--fan-x))) translateY(var(--fan-arc)) rotate(180deg) scale(1.18);
+  transform: translateX(calc(-50% + var(--fan-x))) translateY(var(--fan-arc)) rotate(calc(180deg + var(--fan-rotate))) scale(1.06);
 }
 
 .hand-area {
@@ -3074,3 +3073,63 @@ input, textarea, select {
   .bf-card.bf-arrive { animation: none; }
   .rules-vfx-spotlight-sheen { animation: none; }
 }
+
+/* Decision popups never cover the top bar (reset / options stay reachable) */
+.game-header { z-index: 90; }
+.game-header-hot-zone { z-index: 91; }
+.rules-choice-panel, .rules-action-declare-panel { pointer-events: none; }
+.rules-choice-panel .box, .rules-action-declare-panel .box { pointer-events: auto; }
+
+/* Decision popup: big card on the left, text and compact buttons on the right */
+.rules-choice-panel .box.has-source {
+  display: grid; grid-template-columns: minmax(150px, 210px) minmax(0, 1fr);
+  column-gap: 22px; align-content: start; width: min(820px, 94vw);
+}
+.rules-choice-panel .box.has-source > .rules-choice-source {
+  grid-column: 1; grid-row: 1 / span 3; width: 100%; height: auto; aspect-ratio: 5 / 7;
+  margin: 0; align-self: start; border-radius: 10px; border-width: 2px; box-shadow: 0 8px 22px #0006;
+}
+.rules-choice-panel .box.has-source > :not(.rules-choice-source) { grid-column: 2; min-width: 0; }
+.rules-choice-options:not(.has-card-picker):not(.has-order):not(.has-destination-card) {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch;
+}
+.rules-choice-options:not(.has-card-picker):not(.has-order):not(.has-destination-card) > .rules-choice-destination,
+.rules-choice-options:not(.has-card-picker):not(.has-order):not(.has-destination-card) > .rules-choice-player {
+  flex: 0 1 auto; min-height: 0; padding: 9px 15px; width: auto;
+}
+.rules-choice-options:not(.has-card-picker):not(.has-order):not(.has-destination-card) .rules-choice-destination svg { width: 26px; height: 26px; }
+@media (max-width: 640px) {
+  .rules-choice-panel .box.has-source { grid-template-columns: 1fr; }
+  .rules-choice-panel .box.has-source > .rules-choice-source { grid-row: auto; width: 120px; margin: 0 auto 10px; }
+  .rules-choice-panel .box.has-source > :not(.rules-choice-source) { grid-column: 1; }
+}
+
+/* Waiting for the other player's decision */
+.rules-opponent-deciding {
+  position: fixed; z-index: 75; top: 54px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 10px; max-width: min(560px, 92vw); padding: 8px 16px;
+  border: 1px solid #b8963f; border-radius: 999px; color: #f3e6bd; background: #1b1810f2;
+  box-shadow: 0 8px 24px #000a; font-size: 14px; pointer-events: none;
+}
+.rules-opponent-deciding img { height: 34px; width: 24px; object-fit: cover; border-radius: 3px; }
+.rules-opponent-deciding.hidden { display: none; }
+
+/* Reorder revealed cards by drag and drop */
+.rules-reorder-group { display: grid; gap: 8px; margin-bottom: 12px; }
+.rules-reorder-lane { display: grid; gap: 4px; }
+.rules-reorder-lane > small { color: #695d48; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 11px; }
+.rules-reorder-strip {
+  display: flex; flex-wrap: wrap; gap: 8px; min-height: 104px; padding: 8px;
+  border: 2px dashed #a89463; border-radius: 10px; background: #e7dcc155;
+}
+.rules-reorder-strip.is-over { background: #fff6df; border-color: #6da5bd; }
+.rules-reorder-card {
+  position: relative; width: 66px; cursor: grab; border-radius: 6px; user-select: none; touch-action: none;
+  transition: transform .12s ease-out, opacity .12s ease-out;
+}
+.rules-reorder-card img { display: block; width: 100%; aspect-ratio: 5 / 7; object-fit: cover; border-radius: 6px; box-shadow: 0 3px 9px #0006; pointer-events: none; }
+.rules-reorder-card b {
+  position: absolute; left: 3px; top: 3px; min-width: 18px; height: 18px; display: grid; place-items: center;
+  border-radius: 9px; background: #1b1810e8; color: #f3e6bd; font-size: 11px;
+}
+.rules-reorder-card.is-dragging { opacity: .35; }

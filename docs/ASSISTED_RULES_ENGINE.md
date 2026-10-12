@@ -965,3 +965,11 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 
 - Bêta : `zoneActionsHtml` ne propose plus que « Rechercher » (consultation) pour Limbo, Réceptacle et Exil personnel ; plus de pioche, mélange, révélation, scry, défausse ni boutons de score du Réceptacle. Le deck n'a aucune action. Les menus clic droit des piles et de la recherche ne gardent que Inspecter et « déclarer l'action » du Réceptacle (`betaMenuItems`). L'exil adverse reste caché (le serveur n'envoie pas ses cartes).
 - Flower Tender sans cible légale arrive quand même sur le terrain, seul son effet d'entrée est ignoré (`rules_trigger_has_no_legal_target`, événements `RULES_ENTRY_EVENTS`).
+
+## Popups de décision, main adverse, Bloatuba
+
+- Popup de choix : grande carte à gauche (`.rules-choice-source`, placée dans `.box.has-source`), boutons compacts à droite, et l'overlay (`.rules-choice-panel`, `.rules-action-declare-panel`) laisse passer la souris ; l'en-tête (z-index 90) reste accessible pour reset et options.
+- `renderOpponentDecidingBanner` : bandeau « {joueur} doit résoudre une décision : {carte} » pour l'autre joueur et les observateurs.
+- `deck_reorder` (Bloatuba et autres) : voies Dessus / Dessous / extra, cartes réordonnées ou déplacées par glisser-déposer (pointer events). Même charge utile qu'avant (`groups[].top/bottom/extra`).
+- Menu clic droit de la main filtré par `betaMenuItems` (Inspecter, actions du moteur, jouer manuellement les cartes manuelles).
+- Main adverse : l'éventail est inversé (cartes courbées vers la table), survol = léger agrandissement sans déplacement ni aperçu.

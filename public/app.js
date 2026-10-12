@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261012-rules-beta-131";
+const STATIC_ASSET_VERSION = "20261012-rules-beta-132";
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
 const MISSING_CARD_IMAGE = `${DECKOMANTIK_DESERT_ASSET_ROOT}/Missing_Card_Image.png`;
@@ -5517,8 +5517,8 @@ function renderOpponentHandFan() {
   fan.title = `${opponent.name}: ${t("viewHand")} (${count})`;
   fan.innerHTML = slots.map((cardId, index) => {
     const center = index - (count - 1) / 2;
-    const rotate = Math.max(-15, Math.min(15, center * 3.5));
-    const arc = Math.abs(center) * Math.abs(center) * 1.7;
+    const rotate = -Math.max(-15, Math.min(15, center * 3.5));
+    const arc = -Math.abs(center) * Math.abs(center) * 1.7;
     const offset = center * 45;
     if (!cardId) {
       return `<button type="button" class="opponent-hand-card is-hidden" data-opponent-hand-slot="${index}" style="--fan-rotate:${rotate}deg;--fan-arc:${arc}px;--fan-x:${offset}px;--fan-z:${index};--owner-color:${esc(playerColor(opponent.id))}" aria-label="${esc(t("cards"))}"></button>`;
@@ -5530,11 +5530,6 @@ function renderOpponentHandFan() {
     if (card) showInspect(card);
     else openHandView(opponent.id);
   };
-  fan.querySelectorAll('[data-opponent-hand-card]').forEach((element) => {
-    const cardId = element.dataset.opponentHandCard;
-    element.onmouseenter = () => showCardPreview(cardId, element);
-    element.onmouseleave = hideCardPreview;
-  });
 }
 
 // Approximates the opponent's hand for a regular player: we only ever learn
@@ -6542,17 +6537,18 @@ function renderHandTray() {
     wireCardHoverZoom(el, "hand-card-hover-clone");
     el.addEventListener("contextmenu", (event) => {
       event.preventDefault();
-      const items = [{ label: t("inspect"), onSelect: () => showInspect(cardId) }];
+      const items = [{ keepInBeta: true, label: t("inspect"), onSelect: () => showInspect(cardId) }];
       const rulesItem = rulesActionContextItem({
         cardId, zone: "hand",
         handIndex: Number(el.dataset.handIndex),
       });
-      if (rulesItem) items.push(rulesItem);
+      if (rulesItem) items.push({ ...rulesItem, keepInBeta: true });
       if (
         latestState?.rulesEngine?.enabled
         && cardAutomationCoverage(cardId).status === "manual"
       ) {
         items.push({
+          keepInBeta: true,
           label: t("rulesPlayManually"),
           onSelect: () => playManuallyFromHand(cardId),
         });
@@ -6569,7 +6565,7 @@ function renderHandTray() {
         { label: t("moveToDeckTop"), onSelect: () => send({ type: "move_card", fromZone: "hand", toZone: "deck", cardId, position: "top" }) },
         { label: t("moveToDeckBottom"), onSelect: () => send({ type: "move_card", fromZone: "hand", toZone: "deck", cardId, position: "bottom" }) },
       );
-      showContextMenu(event.clientX, event.clientY, items);
+      showContextMenu(event.clientX, event.clientY, betaMenuItems(items));
     });
   });
   $$("[data-suspended-card]").forEach((el) => {
@@ -6728,7 +6724,9 @@ function closeRulesChoicePanel(force = false) {
 function syncRulesChoiceSourceCard() {
   const head = document.querySelector("#rulesChoicePanel .rules-choice-head");
   if (!head) return;
-  head.querySelector(".rules-choice-source")?.remove();
+  const box = head.parentElement;
+  box.querySelector(":scope > .rules-choice-source")?.remove();
+  box.classList.remove("has-source");
   if ($("#rulesChoicePanel").classList.contains("hidden")) return;
   const choice = latestState?.rulesEngine?.pendingChoice;
   const cardId = pendingTriggeredPlacement?.payload?.cardId
@@ -6739,10 +6737,33 @@ function syncRulesChoiceSourceCard() {
   chip.className = "rules-choice-source";
   chip.title = cardName(cardId);
   chip.innerHTML = `<img src="${esc(image)}" alt="${esc(cardName(cardId))}">`;
-  head.insertBefore(chip, head.firstChild);
+  box.insertBefore(chip, box.firstChild);
+  box.classList.add("has-source");
+}
+
+// Banner shown to everyone else while a player resolves a decision.
+function renderOpponentDecidingBanner() {
+  let banner = document.querySelector("#rulesOpponentDeciding");
+  if (!banner) {
+    banner = document.createElement("div");
+    banner.id = "rulesOpponentDeciding";
+    banner.className = "rules-opponent-deciding hidden";
+    document.body.appendChild(banner);
+  }
+  const choice = latestState?.rulesEngine?.enabled ? latestState.rulesEngine.pendingChoice : null;
+  const waiting = Boolean(choice && choice.playerId && (isObserver || choice.playerId !== myPlayerId));
+  banner.classList.toggle("hidden", !waiting);
+  if (!waiting) return;
+  const cardId = choice.sourceCardId || choice.targetCardId || choice.cardId;
+  const image = cardId ? cardImage(cardId) : "";
+  banner.innerHTML = `${image ? `<img src="${esc(image)}" alt="">` : ""}<span>${esc(rulesText("rulesOpponentDeciding", {
+    player: rulesPlayerName(choice.playerId),
+    card: cardId ? cardName(cardId) : "",
+  }))}</span>`;
 }
 
 function renderRulesChoice() {
+  renderOpponentDecidingBanner();
   renderRulesChoiceContent();
   syncRulesChoiceSourceCard();
 }
@@ -6861,46 +6882,79 @@ function renderRulesChoiceContent() {
     $("#rulesChoiceText").textContent = rulesText("rulesDeckReorderText", {
       card: cardName(choice.sourceCardId),
     });
+    // Drag and drop: each group has a lane per destination (top / bottom / extra);
+    // dragging a card inside a lane reorders it, dragging it to another lane moves it.
+    const laneDefs = (group) => [
+      { side: "top", label: t("rulesDeckTop") },
+      { side: "bottom", label: t("rulesDeckBottom") },
+      ...(group.extraSide ? [{ side: "extra", label: t(group.extraSide === "hand" ? "rulesDeckToHand" : "rulesDeckExile") }] : []),
+    ];
+    const initialSide = (group, index) => {
+      const topCount = Number(group.topCount);
+      const bottomCount = Number(group.bottomCount);
+      if (group.topCount != null && group.bottomCount != null && Number.isInteger(topCount) && Number.isInteger(bottomCount)) {
+        return index < topCount ? "top" : "bottom";
+      }
+      return "top";
+    };
     options.innerHTML = `
       ${(choice.groups || []).map((group) => `
-        <section class="rules-simultaneous-order" data-rules-deck-group="${esc(group.playerId)}">
+        <section class="rules-reorder-group" data-rules-reorder-group="${esc(group.playerId)}">
           <strong>${esc(rulesPlayerName(group.playerId))}</strong>
-          ${(group.cardIds || []).map((cardId, index) => `
-            <div class="rules-choice-card rules-order-row">
-              <img src="${esc(cardImage(cardId))}" alt="">
-              <span>${esc(cardName(cardId))}</span>
-              <select data-rules-deck-side="${esc(group.playerId)}:${index}">
-                <option value="top">${esc(t("rulesDeckTop"))}</option>
-                <option value="bottom">${esc(t("rulesDeckBottom"))}</option>
-                ${group.extraSide ? `<option value="extra">${esc(t(group.extraSide === "hand" ? "rulesDeckToHand" : "rulesDeckExile"))}</option>` : ""}
-              </select>
-              <input type="number" min="1" max="${group.cardIds.length}" value="${index + 1}" data-rules-deck-order="${esc(group.playerId)}:${index}" aria-label="${esc(t("rulesDeckOrder"))}">
+          ${laneDefs(group).map((lane) => `
+            <div class="rules-reorder-lane">
+              <small>${esc(lane.label)}</small>
+              <div class="rules-reorder-strip" data-rules-reorder-strip="${esc(lane.side)}">
+                ${(group.cardIds || []).map((cardId, index) => initialSide(group, index) === lane.side ? `
+                  <div class="rules-reorder-card rules-choice-card" data-rules-reorder-card="${esc(cardId)}" title="${esc(cardName(cardId))}">
+                    <img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"><b></b>
+                  </div>` : "").join("")}
+              </div>
             </div>`).join("")}
         </section>`).join("")}
       <button type="button" class="primary" id="rulesDeckReorderConfirm">${esc(t("confirm"))}</button>`;
-    (choice.groups || []).forEach((group) => {
-      if (group.topCount == null || group.bottomCount == null) return;
-      const topCount = Number(group.topCount);
-      const bottomCount = Number(group.bottomCount);
-      if (!Number.isInteger(topCount) || !Number.isInteger(bottomCount)) return;
-      (group.cardIds || []).forEach((_cardId, index) => {
-        const select = document.querySelector(`[data-rules-deck-side="${CSS.escape(`${group.playerId}:${index}`)}"]`);
-        if (select) select.value = index < topCount ? "top" : "bottom";
+    const numberStrips = () => {
+      options.querySelectorAll(".rules-reorder-strip").forEach((strip) => {
+        strip.querySelectorAll(".rules-reorder-card").forEach((card, index) => {
+          card.querySelector("b").textContent = String(index + 1);
+        });
+      });
+    };
+    numberStrips();
+    options.querySelectorAll(".rules-reorder-card").forEach((card) => {
+      card.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        const section = card.closest("[data-rules-reorder-group]");
+        card.classList.add("is-dragging");
+        const move = (e) => {
+          const under = document.elementFromPoint(e.clientX, e.clientY);
+          const strip = under?.closest?.(".rules-reorder-strip");
+          options.querySelectorAll(".rules-reorder-strip").forEach((entry) => entry.classList.toggle("is-over", entry === strip));
+          if (!strip || strip.closest("[data-rules-reorder-group]") !== section) return;
+          const siblings = [...strip.querySelectorAll(".rules-reorder-card")].filter((entry) => entry !== card);
+          const before = siblings.find((entry) => {
+            const rect = entry.getBoundingClientRect();
+            return e.clientY < rect.top || (e.clientY <= rect.bottom && e.clientX < rect.left + rect.width / 2);
+          });
+          if (before) strip.insertBefore(card, before);
+          else strip.appendChild(card);
+          numberStrips();
+        };
+        const up = () => {
+          window.removeEventListener("pointermove", move);
+          window.removeEventListener("pointerup", up);
+          card.classList.remove("is-dragging");
+          options.querySelectorAll(".rules-reorder-strip").forEach((entry) => entry.classList.remove("is-over"));
+        };
+        window.addEventListener("pointermove", move);
+        window.addEventListener("pointerup", up);
       });
     });
     $("#rulesDeckReorderConfirm").onclick = (event) => {
       const groups = (choice.groups || []).map((group) => {
-        const entries = (group.cardIds || []).map((cardId, index) => {
-          const key = `${group.playerId}:${index}`;
-          return {
-            cardId,
-            side: document.querySelector(`[data-rules-deck-side="${CSS.escape(key)}"]`)?.value || "top",
-            order: Number(document.querySelector(`[data-rules-deck-order="${CSS.escape(key)}"]`)?.value || index + 1),
-          };
-        });
-        const ordered = (side) => entries.filter((entry) => entry.side === side)
-          .sort((first, second) => first.order - second.order)
-          .map((entry) => entry.cardId);
+        const section = options.querySelector(`[data-rules-reorder-group="${CSS.escape(group.playerId)}"]`);
+        const ordered = (side) => [...section.querySelectorAll(`[data-rules-reorder-strip="${side}"] .rules-reorder-card`)]
+          .map((card) => card.dataset.rulesReorderCard);
         return {
           playerId: group.playerId, top: ordered("top"), bottom: ordered("bottom"),
           ...(group.extraSide ? { extra: ordered("extra") } : {}),

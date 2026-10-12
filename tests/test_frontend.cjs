@@ -1392,8 +1392,14 @@ function startServer() {
         groups: [{ playerId: "p2", cardIds: ids.slice(0, 3), topCount: null, bottomCount: null, extraSide: "exile", extraMin: 0, extraMax: 1 }],
       };
       renderAll();
-      const options = [...document.querySelectorAll("[data-rules-deck-side] option")].map((option) => option.value);
-      document.querySelector('[data-rules-deck-side="p2:1"]').value = "extra";
+      const options = [...document.querySelectorAll("[data-rules-reorder-strip]")].map((strip) => strip.dataset.rulesReorderStrip);
+      // drag the second card onto the "extra" lane with real pointer events
+      const card = document.querySelectorAll('[data-rules-reorder-strip="top"] .rules-reorder-card')[1];
+      const extraStrip = document.querySelector('[data-rules-reorder-strip="extra"]');
+      const rect = extraStrip.getBoundingClientRect();
+      card.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true, clientX: 5, clientY: 5 }));
+      window.dispatchEvent(new PointerEvent("pointermove", { clientX: rect.left + 20, clientY: rect.top + 20 }));
+      window.dispatchEvent(new PointerEvent("pointerup", {}));
       document.querySelector("#rulesDeckReorderConfirm").click();
       const payload = window.__sent.find((entry) => entry.type === "resolve_rules_choice");
       latestState.rulesEngine.priorityPlayerId = saved.priority;
@@ -1404,6 +1410,36 @@ function startServer() {
     assert.deepEqual(extraReorder.options, ["top", "bottom", "extra"]);
     assert.equal(extraReorder.extra.length, 1);
     assert.equal(extraReorder.top, 2);
+    const popupLayout = await page.evaluate(() => {
+      const ids = [...cardsById.keys()];
+      const saved = latestState.rulesEngine.pendingChoice;
+      latestState.rulesEngine.pendingChoice = {
+        id: "wait-1", kind: "score_delta_choice", playerId: myPlayerId === "p1" ? "p2" : "p1", sourceCardId: ids[0], targetPlayerId: "p1", value: 2,
+      };
+      renderAll();
+      const banner = document.querySelector("#rulesOpponentDeciding");
+      const waiting = Boolean(banner && !banner.classList.contains("hidden") && banner.textContent.length > 5);
+      latestState.rulesEngine.pendingChoice = {
+        id: "mine-1", kind: "score_delta_choice", playerId: myPlayerId, sourceCardId: ids[0], targetPlayerId: "p1", value: 2,
+      };
+      renderAll();
+      const box = document.querySelector("#rulesChoicePanel .box");
+      const result = {
+        waiting,
+        bannerHiddenForChooser: document.querySelector("#rulesOpponentDeciding").classList.contains("hidden"),
+        hasSource: box.classList.contains("has-source"),
+        sourceWidth: box.querySelector(".rules-choice-source")?.getBoundingClientRect().width || 0,
+        overlayPassThrough: getComputedStyle(document.querySelector("#rulesChoicePanel")).pointerEvents === "none",
+      };
+      latestState.rulesEngine.pendingChoice = saved;
+      renderAll();
+      return result;
+    });
+    assert.equal(popupLayout.waiting, true, "the other player sees who is deciding");
+    assert.equal(popupLayout.bannerHiddenForChooser, true);
+    assert.equal(popupLayout.hasSource, true);
+    assert.ok(popupLayout.sourceWidth >= 140, "the card is shown large on the left");
+    assert.equal(popupLayout.overlayPassThrough, true, "the popup overlay never blocks the top bar");
     const clemencyUi = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
       const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };
