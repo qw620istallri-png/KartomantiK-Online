@@ -2197,11 +2197,27 @@ function playRulesVfxPhaseBanner(event) {
 }
 
 // Winner and Power totals of the Resolution, shown long enough to read even when the steps are skipped
+function countUpNumber(element, target, duration, delay = 0) {
+  if (!Number.isFinite(target)) { element.textContent = String(target); return; }
+  if (rulesVfxReducedMotion() || target === 0) { element.textContent = String(target); return; }
+  const startAt = performance.now() + delay;
+  const step = (now) => {
+    if (!element.isConnected) return;
+    const progress = Math.min(1, Math.max(0, (now - startAt) / duration));
+    element.textContent = String(Math.round(target * (1 - Math.pow(1 - progress, 3))));
+    if (progress < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+
 function playRulesVfxResolutionBanner(entry) {
   const details = entry.details || {};
   const playerName = (playerId) => latestState?.players?.[playerId]?.name || playerId || "?";
   const totals = Object.entries(details.totals || {})
-    .map(([playerId, value]) => `${esc(playerName(playerId))} <b>${esc(String(value))}</b>`)
+    .map(([playerId, value]) => {
+      const tone = details.stalemate ? "" : playerId === details.winnerId ? " is-winner" : " is-loser";
+      return `<span class="rules-vfx-total${tone}">${esc(playerName(playerId))} <b data-count-to="${esc(String(value))}">0</b></span>`;
+    })
     .join(" · ");
   $$(".rules-vfx-resolution-banner").forEach((element) => element.remove());
   const banner = document.createElement("div");
@@ -2213,6 +2229,8 @@ function playRulesVfxResolutionBanner(entry) {
   const anchor = $("#battlefieldWrap")?.getBoundingClientRect?.();
   banner.style.top = `${Math.round(anchor?.height ? anchor.top + anchor.height * .3 : window.innerHeight * .3)}px`;
   document.body.appendChild(banner);
+  banner.querySelectorAll("[data-count-to]").forEach((counter) => countUpNumber(counter, Number(counter.dataset.countTo), vfxMs(900), vfxMs(350)));
+  if (!details.stalemate && !rulesVfxReducedMotion()) banner.classList.add("has-winner-flash");
   rulesVfxAnimateAndRemove(banner, [
     { transform: "translate(-50%,-50%) scale(.85)", opacity: 0 },
     { offset: .12, transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
@@ -5065,6 +5083,37 @@ function rulesOutcomeText(outcome) {
 }
 
 let gameEndDismissed = false;
+const lastVesselScores = new Map();
+
+// Floating "+N" over a player's points badge whenever it changes
+function animateScoreDeltas() {
+  const players = latestState?.players || {};
+  Object.values(players).forEach((p) => {
+    const value = receptaclePoints(p.zones.receptacle, p.score);
+    const previous = lastVesselScores.get(p.id);
+    lastVesselScores.set(p.id, value);
+    if (previous === undefined || previous === value || rulesVfxReducedMotion()) return;
+    const badge = document.querySelector(`[data-vessel-badge="${CSS.escape(p.id)}"]`);
+    if (!badge) return;
+    const rect = badge.getBoundingClientRect();
+    const delta = value - previous;
+    const float = document.createElement("div");
+    float.className = `score-float ${delta > 0 ? "gain" : "loss"}`;
+    float.textContent = `${delta > 0 ? "+" : ""}${delta}`;
+    float.style.left = `${rect.left + rect.width / 2}px`;
+    float.style.top = `${rect.top}px`;
+    document.body.appendChild(float);
+    badge.animate([
+      { transform: "scale(1)" }, { transform: "scale(1.3)", offset: 0.3 }, { transform: "scale(1)" },
+    ], { duration: vfxMs(600), delay: Math.min(1500, rulesVfxQueueRemaining()) });
+    float.animate([
+      { transform: "translate(-50%, 6px) scale(.6)", opacity: 0 },
+      { transform: "translate(-50%, -14px) scale(1.25)", opacity: 1, offset: 0.25 },
+      { transform: "translate(-50%, -52px) scale(1)", opacity: 0 },
+    ], { duration: vfxMs(1400), delay: Math.min(1500, rulesVfxQueueRemaining()), easing: "ease-out", fill: "both" })
+      .finished.then(() => float.remove(), () => float.remove());
+  });
+}
 
 function renderGameEndOverlay() {
   const overlay = $("#gameEndOverlay");
@@ -5089,7 +5138,7 @@ function renderGameEndOverlay() {
   $("#gameEndPlayers").innerHTML = scores ? Object.entries(scores).map(([playerId, score]) => `
     <div class="game-end-player${winners.has(playerId) && !outcome.draw ? " is-winner" : ""}" style="--owner-color:${playerColor(playerId)}">
       <strong class="game-end-name">${esc(latestState.players?.[playerId]?.name || playerId)}</strong>
-      <span class="game-end-total">${score.total}</span>
+      <span class="game-end-total" data-count-to="${score.total}">0</span>
       <span class="game-end-unit">${esc(t("vesselPoints"))}</span>
       <ul class="game-end-breakdown">
         <li><span>${esc(t("rulesVessel"))}</span><b>${score.vesselPoints}</b></li>
@@ -5107,6 +5156,12 @@ function renderGameEndOverlay() {
   $("#gameEndQuitBtn").textContent = t("rulesEndQuit");
   $("#gameEndCloseBtn").title = t("rulesEndClose");
   overlay.classList.remove("hidden");
+  if (overlay.dataset.countedFor !== JSON.stringify(scores || {})) {
+    overlay.dataset.countedFor = JSON.stringify(scores || {});
+    $$("#gameEndPlayers [data-count-to]").forEach((counter) => countUpNumber(counter, Number(counter.dataset.countTo), 1400, 350));
+  } else {
+    $$("#gameEndPlayers [data-count-to]").forEach((counter) => { counter.textContent = counter.dataset.countTo; });
+  }
 }
 
 function initGameEndOverlay() {
@@ -5177,6 +5232,7 @@ function renderAll() {
     $("#sessionEndedBanner").classList.remove("hidden");
   }
   renderGameEndOverlay();
+  animateScoreDeltas();
 }
 
 // Always-visible row(s), top-left: a regular player only ever needs their
@@ -5752,7 +5808,7 @@ function renderMyInfoStrip() {
   const handCount = handZone.count !== undefined ? handZone.count : (handZone.cards || []).length;
   strip.innerHTML = `
     <span class="my-info-badge" title="${esc(t("hand"))}"><span class="hand-stack-icon" style="--owner-color:${playerColor(me.id)}"><span class="hand-stack-card"></span><span class="hand-stack-card"></span><span class="hand-stack-card"></span></span><b>${handCount}</b></span>
-    <span class="opp-vessel-badge" title="${esc(t("receptacle"))}">${receptaclePoints(me.zones.receptacle, me.score)} ${esc(t("vesselPoints"))}</span>
+    <span class="opp-vessel-badge" data-vessel-badge="${esc(me.id)}" title="${esc(t("receptacle"))}">${receptaclePoints(me.zones.receptacle, me.score)} ${esc(t("vesselPoints"))}</span>
     <span class="opp-power-badge" title="${esc(t("rulesPowerTotal"))}">⚔ ${confrontationPowerOf(me.id)}${activeTemperamentOf(me.id)}</span>`;
 }
 
@@ -5801,7 +5857,7 @@ function renderOppRows() {
             </span>
             <span class="hand-stack-count">${handCount}</span>
           </button>
-          <span class="opp-vessel-badge" title="${esc(t("receptacle"))}">${vesselPoints} ${esc(t("vesselPoints"))}</span>
+          <span class="opp-vessel-badge" data-vessel-badge="${esc(p.id)}" title="${esc(t("receptacle"))}">${vesselPoints} ${esc(t("vesselPoints"))}</span>
           <span class="opp-power-badge" title="${esc(t("rulesPowerTotal"))}">⚔ ${confrontationPowerOf(p.id)}${activeTemperamentOf(p.id)}</span>
         </div>
         ${p.activity ? `<div class="opp-activity">${esc(t("activity_" + p.activity))}</div>` : ""}
@@ -9889,6 +9945,36 @@ function animateBoardCard(el, item, pos) {
   }
 }
 
+// Impact ring (and shake for strong cards) shared by the reveal flip and the arrival on the board
+function playCardImpactRing(el, tier, tone, hasEffect, impactDelay) {
+  const ring = document.createElement("span");
+  ring.className = `bf-flip-ring tier-${tier}${hasEffect ? " has-effect" : ""}`;
+  ring.style.setProperty("--flip-tone", tone);
+  el.appendChild(ring);
+  ring.animate([
+    { opacity: 0, transform: "scale(.7)" },
+    { opacity: .95, transform: "scale(1)", offset: 0.2 },
+    { opacity: 0, transform: `scale(${1.25 + tier * 0.2})` },
+  ], { duration: vfxMs(520 + tier * 120), delay: impactDelay, easing: "ease-out", fill: "backwards" })
+    .finished.then(() => ring.remove(), () => ring.remove());
+  if (tier >= 2) {
+    const amplitude = tier === 3 ? 7 : 4;
+    el.animate([
+      { transform: "translate(0,0)" },
+      { transform: `translate(${-amplitude}px,${amplitude / 2}px)`, offset: 0.2 },
+      { transform: `translate(${amplitude}px,${-amplitude / 2}px)`, offset: 0.45 },
+      { transform: `translate(${-amplitude / 2}px,0)`, offset: 0.7 },
+      { transform: "translate(0,0)" },
+    ], { duration: vfxMs(320), delay: impactDelay, easing: "ease-out" });
+  }
+}
+
+function cardImpactTier(item) {
+  const card = cardsById.get(item.cardId);
+  const power = Math.max(0, Number(item.effectivePower ?? card?.power ?? 0));
+  return power >= 5 ? 3 : power >= 3 ? 2 : 1;
+}
+
 // Reveal flip: power sets the impact tier, a printed effect adds a coloured glow
 function playCardFlipReveal(el, item) {
   const face = el.querySelector(".bf-card-face");
@@ -9919,27 +10005,7 @@ function playCardFlipReveal(el, item) {
     { transform: `perspective(900px) rotateY(0deg) scale(${lift + 0.1})`, filter: `brightness(1.5) drop-shadow(0 0 ${6 + tier * 6}px ${tone})`, offset: 0.72 },
     { transform: "perspective(900px) rotateY(0deg) scale(1)", filter: "brightness(1)", offset: 1 },
   ], timing);
-  const impactDelay = delay + Math.round(duration * 0.72);
-  const ring = document.createElement("span");
-  ring.className = `bf-flip-ring tier-${tier}${hasEffect ? " has-effect" : ""}`;
-  ring.style.setProperty("--flip-tone", tone);
-  el.appendChild(ring);
-  ring.animate([
-    { opacity: 0, transform: "scale(.7)" },
-    { opacity: .95, transform: "scale(1)", offset: 0.2 },
-    { opacity: 0, transform: `scale(${1.25 + tier * 0.2})` },
-  ], { duration: vfxMs(520 + tier * 120), delay: impactDelay, easing: "ease-out", fill: "backwards" })
-    .finished.then(() => ring.remove(), () => ring.remove());
-  if (tier >= 2) {
-    const amplitude = tier === 3 ? 7 : 4;
-    el.animate([
-      { transform: "translate(0,0)" },
-      { transform: `translate(${-amplitude}px,${amplitude / 2}px)`, offset: 0.2 },
-      { transform: `translate(${amplitude}px,${-amplitude / 2}px)`, offset: 0.45 },
-      { transform: `translate(${-amplitude / 2}px,0)`, offset: 0.7 },
-      { transform: "translate(0,0)" },
-    ], { duration: vfxMs(320), delay: impactDelay, easing: "ease-out" });
-  }
+  playCardImpactRing(el, tier, tone, hasEffect, delay + Math.round(duration * 0.72));
 }
 
 function renderBattlefield() {
@@ -10122,6 +10188,12 @@ function renderBattlefield() {
     });
     bf.appendChild(el);
     if (flippedUp && !item.isTokenCard) playCardFlipReveal(el, item);
+    else if (el.classList.contains("bf-arrive") && !item.isTokenCard && item.cardId && !rulesVfxReducedMotion()) {
+      const arrivalDelay = Number.parseFloat(el.style.getPropertyValue("--bf-arrive-delay")) || 0;
+      const arrivalDuration = Number.parseFloat(el.style.getPropertyValue("--bf-arrive-duration")) || 380;
+      const arrivalCard = cardsById.get(item.cardId);
+      playCardImpactRing(el, cardImpactTier(item), arrivalCard?.glow || "#f1d377", false, arrivalDelay + Math.round(arrivalDuration * 0.8));
+    }
     wireRulesEffectMarker(el, ongoingEffects);
     wireRulesActivateMarker(el, item);
     bindRarityPointer(el.querySelector(".bf-card-face.ko-rarity-card"), false, el);

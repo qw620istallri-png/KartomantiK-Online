@@ -3263,3 +3263,18 @@ input, textarea, select {
 .bf-card.inspect-cycle-focus { outline: 4px solid var(--gold); outline-offset: 4px; box-shadow: 0 0 26px var(--gold); z-index: 40; }
 .inspect-history-card.is-current { outline: 3px solid var(--gold); outline-offset: 1px; }
 .bf-card .bf-flip-back { position: absolute; inset: 0; z-index: 5; border-radius: inherit; pointer-events: none; backface-visibility: hidden; }
+/* Score float, resolution duel, effect aura, end-game glow */
+.score-float { position: fixed; z-index: 300; pointer-events: none; font-size: 26px; font-weight: 900; text-shadow: 0 2px 8px #000d; }
+.score-float.gain { color: #ffe17a; }
+.score-float.loss { color: #ff8a7a; }
+.rules-vfx-total { display: inline-block; transition: opacity .4s, transform .4s; }
+.rules-vfx-total.is-winner { color: var(--gold); text-shadow: 0 0 14px var(--gold); }
+.rules-vfx-total.is-winner b { font-size: 1.35em; }
+.rules-vfx-total.is-loser { opacity: .55; }
+.rules-vfx-resolution-banner.has-winner-flash { animation: banner-winner-flash 1.1s ease-out .6s both; }
+@keyframes banner-winner-flash { 0% { box-shadow: 0 14px 40px #000b; } 35% { box-shadow: 0 0 60px 8px #f1d377cc, 0 14px 40px #000b; } 100% { box-shadow: 0 14px 40px #000b; } }
+.bf-card.has-ongoing-effect:not(.bf-arrive) { animation: effect-aura 2.4s ease-in-out infinite; }
+@keyframes effect-aura { 0%, 100% { filter: drop-shadow(0 0 3px var(--effect-tone, #f1d377)); } 50% { filter: drop-shadow(0 0 11px var(--effect-tone, #f1d377)); } }
+@media (prefers-reduced-motion: reduce) { .bf-card.has-ongoing-effect { animation: none; filter: drop-shadow(0 0 5px var(--effect-tone, #f1d377)); } }
+.game-end-player.is-winner { animation: end-winner-glow 2.2s ease-in-out infinite; }
+@keyframes end-winner-glow { 0%, 100% { box-shadow: 0 0 14px #d3a94244; } 50% { box-shadow: 0 0 38px #f1d377aa; } }
