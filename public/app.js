@@ -1876,19 +1876,209 @@ function playRulesVfxPulse(target, tone = "resolved", options = {}) {
   });
 }
 
+// ---- Particle engine: one look per temperament (embers, spores, glass, mist, sparks, dust, light)
+const VFX_PARTICLE_STYLES = {
+  choleric: { shape: "ember", colors: ["#fff1a8", "#ff8a2a", "#d9381a"], rise: true },
+  phlegmatic: { shape: "spore", colors: ["#e4ffc4", "#7bcf6a", "#3d8a45"], rise: true },
+  vitreous: { shape: "shard", colors: ["#e3f6ff", "#7fc4ff", "#3a7cc4"], rise: false },
+  melancholic: { shape: "mist", colors: ["#ead4ff", "#a06be0", "#5b2f94"], rise: true },
+  capricious: { shape: "spark", colors: ["#fffbd0", "#ffe14a", "#ffb300"], rise: false },
+  hollow: { shape: "dust", colors: ["#e6e6e6", "#a3a3a3", "#6e6e6e"], rise: true },
+  transcendent: { shape: "light", colors: ["#ffffff", "#fff3c4", "#f1d377"], rise: true },
+};
+
+function vfxParticleStyle(temperament) {
+  return VFX_PARTICLE_STYLES[temperament] || VFX_PARTICLE_STYLES.hollow;
+}
+
+// A burst of tinted particles around a point; direction "up" rises, "down" falls, "out" radiates
+function spawnVfxParticles(center, temperament, options = {}) {
+  if (!center || rulesVfxReducedMotion()) return;
+  const style = options.style || vfxParticleStyle(temperament);
+  const count = Math.min(24, Math.max(1, Number(options.count || 8)));
+  const spread = Number(options.spread || 34);
+  const direction = options.direction || (style.rise ? "up" : "out");
+  for (let index = 0; index < count; index += 1) {
+    const particle = document.createElement("span");
+    particle.className = `vfx-particle vfx-particle-${style.shape}`;
+    particle.setAttribute("aria-hidden", "true");
+    particle.style.left = `${center.x}px`;
+    particle.style.top = `${center.y}px`;
+    particle.style.setProperty("--p-color", style.colors[index % style.colors.length]);
+    particle.style.setProperty("--p-size", `${4 + (index % 3) * 2}px`);
+    document.body.appendChild(particle);
+    const angle = (index / count) * Math.PI * 2 + (index % 3) * 0.5;
+    const dx = Math.cos(angle) * spread * (0.5 + (index % 4) * 0.22);
+    const dy = direction === "up"
+      ? -(spread * (0.7 + (index % 4) * 0.35)) + Math.sin(angle) * 8
+      : direction === "down"
+        ? spread * (0.7 + (index % 4) * 0.35) + Math.sin(angle) * 8
+        : Math.sin(angle) * spread * (0.5 + (index % 4) * 0.22);
+    rulesVfxAnimateAndRemove(particle, [
+      { transform: "translate(-50%,-50%) scale(.4) rotate(0deg)", opacity: 0 },
+      { offset: .18, transform: `translate(calc(-50% + ${dx * .3}px), calc(-50% + ${dy * .3}px)) scale(1.1) rotate(${angle * 20}deg)`, opacity: 1 },
+      { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(.2) rotate(${angle * 60}deg)`, opacity: 0 },
+    ], { duration: 640 + (index % 4) * 110, delay: Number(options.delay || 0) + (index % 6) * 26, easing: "cubic-bezier(.2,.7,.3,1)" });
+  }
+}
+
+const VFX_CARD_FLIGHT_KINDS = ["tribute", "sacrifice", "effect-card", "destroy-card", "discard-card", "draw-card"];
+
+// ---- Dedicated card scenes (one-off animations for iconic cards)
+function rulesVfxBoardRect() {
+  const rect = $("#battlefieldWrap")?.getBoundingClientRect?.();
+  return rect?.width ? rect : { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
+}
+
+function rulesVfxPileCenter(playerId, zone) {
+  return rulesVfxCenter($$("[data-field-pile]").find((element) => element.dataset.fieldPile === `${playerId}:${zone}`));
+}
+
+function rulesVfxOverlay(className, keyframes, duration, delay = 0) {
+  const board = rulesVfxBoardRect();
+  const overlay = document.createElement("div");
+  overlay.className = `rules-vfx-scene ${className}`;
+  overlay.setAttribute("aria-hidden", "true");
+  Object.assign(overlay.style, { left: `${board.left}px`, top: `${board.top}px`, width: `${board.width}px`, height: `${board.height}px` });
+  document.body.appendChild(overlay);
+  rulesVfxAnimateAndRemove(overlay, keyframes, { duration, delay, easing: "ease-in-out" });
+  return overlay;
+}
+
+const RULES_VFX_CARD_SCENES = {
+  // mass destruction: a wave of fire sweeps the field
+  "4naoqbqz6ebozj5_en": () => playRulesVfxFireWave("#ff7a2a", "#ffe08a"),
+  "nupb1i59d98g3md_en": () => playRulesVfxFireWave("#d3a942", "#fff3c4"),
+  // rematch: the board rewinds
+  "s6mezxrq1zp2958_en": () => {
+    const board = rulesVfxBoardRect();
+    rulesVfxOverlay("rules-vfx-rewind", [
+      { opacity: 0, transform: "rotate(0deg) scale(.4)" },
+      { opacity: .95, transform: "rotate(-180deg) scale(1)", offset: .35 },
+      { opacity: .95, transform: "rotate(-540deg) scale(1.1)", offset: .75 },
+      { opacity: 0, transform: "rotate(-720deg) scale(1.5)" },
+    ], 1900);
+    spawnVfxParticles({ x: board.left + board.width / 2, y: board.top + board.height / 2 }, "transcendent", { count: 18, spread: 120, direction: "out", delay: 900 });
+  },
+  // hot potato: heat flash then a burst on the card
+  "b4yyd5uut0ga9df_en": (entry, target) => {
+    spawnVfxParticles(target, "choleric", { count: 18, spread: 60, direction: "out" });
+    rulesVfxOverlay("rules-vfx-heat", [{ opacity: 0 }, { opacity: .55, offset: .3 }, { opacity: 0 }], 900);
+  },
+  // greed trap: the jaws snap shut
+  "9phkl58pqrs2j2f_en": (entry, target) => {
+    rulesVfxOverlay("rules-vfx-jaws", [{ opacity: 0 }, { opacity: 1, offset: .4 }, { opacity: 1, offset: .75 }, { opacity: 0 }], 1100);
+    spawnVfxParticles(target, "vitreous", { count: 14, spread: 50, direction: "out", delay: 420 });
+  },
+  // soul-devouring dunes: sand pours over every Limbo
+  "dc44xrlrhikfvlr_en": () => {
+    Object.keys(latestState?.players || {}).forEach((playerId) => {
+      const limbo = rulesVfxPileCenter(playerId, "graveyard");
+      if (!limbo) return;
+      for (let wave = 0; wave < 3; wave += 1) {
+        spawnVfxParticles({ x: limbo.x, y: limbo.y - 60 }, "hollow", {
+          count: 14, spread: 70, direction: "down", delay: wave * 260,
+          style: { shape: "dust", colors: ["#f1d9a0", "#d8b878", "#a8875a"] },
+        });
+      }
+    });
+    rulesVfxOverlay("rules-vfx-sand", [{ opacity: 0 }, { opacity: .5, offset: .3 }, { opacity: 0 }], 1500);
+  },
+  // control swaps: the colours of the field invert for a moment
+  "zk76fhtep0wm3hh_en": () => rulesVfxOverlay("rules-vfx-invert", [{ opacity: 0 }, { opacity: 1, offset: .25 }, { opacity: 1, offset: .5 }, { opacity: 0 }], 900),
+  "0ujeinffs84nrvq_en": () => rulesVfxOverlay("rules-vfx-invert", [{ opacity: 0 }, { opacity: 1, offset: .25 }, { opacity: 1, offset: .5 }, { opacity: 0 }], 900),
+  // omens: the top of the deck fans out
+  "9yylrq6xancbn0m_en": (entry) => {
+    const deck = rulesVfxPileCenter(entry.actorId, "deck");
+    if (!deck) return;
+    for (let index = 0; index < 3; index += 1) {
+      playRulesVfxFlight("draw-card", deck, { x: deck.x + (index - 1) * 70, y: deck.y - 110 }, { index: index * 2, land: false });
+    }
+    spawnVfxParticles(deck, "transcendent", { count: 10, spread: 44, direction: "up" });
+  },
+  // rising from the Limbo
+  "gpxqooqq57loyb8_en": (entry, target) => playRulesVfxRiseFromLimbo(entry, target),
+  "z2fen73ktw8pbqz_en": (entry, target) => playRulesVfxRiseFromLimbo(entry, target),
+};
+
+function playRulesVfxFireWave(core, tip) {
+  const board = rulesVfxBoardRect();
+  const wave = rulesVfxOverlay("rules-vfx-firewave", [
+    { transform: "translateX(-60%)", opacity: 0 },
+    { transform: "translateX(-20%)", opacity: 1, offset: .2 },
+    { transform: "translateX(60%)", opacity: 1, offset: .8 },
+    { transform: "translateX(110%)", opacity: 0 },
+  ], 1500);
+  wave.style.setProperty("--wave-core", core);
+  wave.style.setProperty("--wave-tip", tip);
+  for (let step = 0; step < 6; step += 1) {
+    spawnVfxParticles({ x: board.left + board.width * (0.1 + step * 0.16), y: board.top + board.height * 0.5 }, "choleric", {
+      count: 8, spread: 70, direction: "up", delay: 180 + step * 190,
+      style: { shape: "ember", colors: [tip, core, "#d9381a"] },
+    });
+  }
+}
+
+function playRulesVfxRiseFromLimbo(entry, target) {
+  const limbo = rulesVfxPileCenter(entry.actorId, "graveyard");
+  if (!limbo || !target) return;
+  spawnVfxParticles(limbo, "transcendent", { count: 14, spread: 40, direction: "up" });
+  playRulesVfxFlight("effect-card", limbo, target, { cardId: entry.details?.effectResult?.cardId, index: 0 });
+}
+
+function playRulesVfxCardScene(entry, target) {
+  if (rulesVfxReducedMotion()) return;
+  const scene = RULES_VFX_CARD_SCENES[entry.details?.source?.cardId];
+  if (scene) scene(entry, target);
+}
+
+// A six-sided die tumbles above the Stack and settles on the rolled value
+function playRulesVfxDice(roll, anchor) {
+  if (rulesVfxReducedMotion()) return;
+  const die = document.createElement("div");
+  die.className = "rules-vfx-die";
+  die.setAttribute("aria-hidden", "true");
+  die.innerHTML = `<span class="rules-vfx-die-face">${roll}</span>`;
+  die.style.left = `${anchor.x}px`;
+  die.style.top = `${anchor.y - 70}px`;
+  document.body.appendChild(die);
+  const face = die.querySelector(".rules-vfx-die-face");
+  const tumble = vfxMs(900);
+  const started = performance.now();
+  const timer = window.setInterval(() => {
+    if (performance.now() - started >= tumble) {
+      face.textContent = String(roll);
+      window.clearInterval(timer);
+      return;
+    }
+    face.textContent = String(1 + Math.floor(Math.random() * 6));
+  }, 70);
+  rulesVfxAnimateAndRemove(die, [
+    { transform: "translate(-50%,-50%) rotate(-240deg) scale(.4)", opacity: 0 },
+    { offset: .15, transform: "translate(-50%,-50%) rotate(-120deg) scale(1.1)", opacity: 1 },
+    { offset: .5, transform: "translate(-50%,-50%) rotate(20deg) scale(1)", opacity: 1 },
+    { offset: .6, transform: "translate(-50%,-50%) rotate(0deg) scale(1.25)", opacity: 1 },
+    { offset: .7, transform: "translate(-50%,-50%) rotate(0deg) scale(1)", opacity: 1 },
+    { offset: .92, transform: "translate(-50%,-50%) rotate(0deg) scale(1)", opacity: 1 },
+    { transform: "translate(-50%,-50%) rotate(0deg) scale(.8)", opacity: 0 },
+  ], { duration: 2000, easing: "ease-out" }).finished.finally(() => window.clearInterval(timer));
+  window.setTimeout(() => spawnVfxParticles({ x: anchor.x, y: anchor.y - 70 }, "capricious", { count: 10, spread: 40, direction: "out" }), vfxMs(1100));
+}
+
 function playRulesVfxFlight(kind, origin, target, options = {}) {
   const element = document.createElement("div");
   element.className = `rules-vfx-flight rules-vfx-${kind}`;
   element.setAttribute("aria-hidden", "true");
-  if (["tribute", "sacrifice", "effect-card", "destroy-card", "discard-card"].includes(kind)) {
-    element.innerHTML = `<div class="rules-vfx-flight-card"><img src="${esc(cardImage(options.cardId))}" alt=""><span class="rules-vfx-flight-glint"></span></div>`;
+  if (VFX_CARD_FLIGHT_KINDS.includes(kind)) {
+    const flightImage = kind === "draw-card" ? "card-back.webp?v=20260905-1" : cardImage(options.cardId);
+    element.innerHTML = `<div class="rules-vfx-flight-card"><img src="${esc(flightImage)}" alt=""><span class="rules-vfx-flight-glint"></span></div>`;
   } else {
     element.style.setProperty("--vfx-tone", temperamentInk(options.temperament));
     element.innerHTML = options.temperament
       ? `<img src="${esc(temperamentSymbol(options.temperament))}" alt="">`
       : "";
   }
-  const isCard = ["tribute", "sacrifice", "effect-card", "destroy-card", "discard-card"].includes(kind);
+  const isCard = VFX_CARD_FLIGHT_KINDS.includes(kind);
   const size = !isCard
     ? { width: 28, height: 28 }
     : ["tribute", "sacrifice"].includes(kind)
@@ -1915,6 +2105,26 @@ function playRulesVfxFlight(kind, origin, target, options = {}) {
     playRulesVfxPulse(target, kind === "sacrifice" ? "destroyed" : kind === "discard-card" ? "discarded" : "moved", {
       delay: duration * .62 + Number(options.index || 0) * 36,
     });
+  }
+  // tinted trail and landing burst (family: movement)
+  const flightTemperament = options.temperament || cardsById.get(options.cardId)?.colorKey || null;
+  if (isCard && flightTemperament && !rulesVfxReducedMotion() && kind !== "draw-card") {
+    const trailDelay = Number(options.index || 0) * 36;
+    for (let step = 1; step <= 5; step += 1) {
+      const progress = step / 6;
+      const point = {
+        x: origin.x + dx * progress,
+        y: origin.y + dy * progress - Math.sin(Math.PI * progress) * arc * 0.9,
+      };
+      window.setTimeout(
+        () => spawnVfxParticles(point, flightTemperament, { count: 2, spread: 14 }),
+        vfxMs(trailDelay + duration * progress),
+      );
+    }
+    window.setTimeout(
+      () => spawnVfxParticles(target, flightTemperament, { count: 8, spread: 36 }),
+      vfxMs(trailDelay + duration * 0.7),
+    );
   }
 }
 
@@ -1954,7 +2164,48 @@ function playRulesVfxDestruction(origin, target, cardId) {
   });
   playRulesVfxPulse(origin, "destroyed", { delay: 110 });
   playRulesVfxPulse(target, "discarded", { delay: 520 });
-  window.setTimeout(() => element.remove(), vfxMs(850));
+  playRulesVfxBurn(element, origin);
+  window.setTimeout(() => element.remove(), vfxMs(1500));
+}
+
+// Burning card: a fireball flash, a scorch ring and embers rising from the destroyed card
+function playRulesVfxBurn(host, origin) {
+  host.style.scale = "1.55";
+  const flash = document.createElement("span");
+  flash.className = "rules-vfx-burn-flash";
+  host.appendChild(flash);
+  vfxAnimate(flash, [
+    { transform: "scale(.3)", opacity: 0 },
+    { offset: .18, transform: "scale(1.15)", opacity: .95 },
+    { offset: .5, transform: "scale(1.5)", opacity: .55 },
+    { transform: "scale(1.9)", opacity: 0 },
+  ], { duration: 640, fill: "both", easing: "ease-out" });
+  const scorch = document.createElement("span");
+  scorch.className = "rules-vfx-burn-scorch";
+  host.appendChild(scorch);
+  vfxAnimate(scorch, [
+    { transform: "scale(.6)", opacity: 0 },
+    { offset: .25, transform: "scale(1)", opacity: .9 },
+    { transform: "scale(1.5)", opacity: 0 },
+  ], { duration: 900, fill: "both", easing: "ease-out" });
+  const embers = 16;
+  for (let index = 0; index < embers; index += 1) {
+    const ember = document.createElement("span");
+    ember.className = "rules-vfx-ember";
+    const angle = (index / embers) * Math.PI * 2 + (index % 3) * 0.4;
+    const spread = 22 + (index % 5) * 9;
+    const rise = 38 + (index % 4) * 18;
+    ember.style.left = "50%";
+    ember.style.top = "50%";
+    ember.style.setProperty("--ember-size", `${3 + (index % 3) * 2}px`);
+    host.appendChild(ember);
+    vfxAnimate(ember, [
+      { transform: "translate(-50%,-50%) scale(1)", opacity: 0 },
+      { offset: .15, transform: `translate(calc(-50% + ${Math.cos(angle) * spread * .4}px), calc(-50% + ${Math.sin(angle) * spread * .4}px)) scale(1.1)`, opacity: 1 },
+      { transform: `translate(calc(-50% + ${Math.cos(angle) * spread}px), calc(-50% + ${Math.sin(angle) * spread * .5 - rise}px)) scale(.2)`, opacity: 0 },
+    ], { duration: 780 + (index % 4) * 120, delay: 90 + (index % 6) * 30, fill: "both", easing: "cubic-bezier(.2,.7,.3,1)" });
+  }
+  void origin;
 }
 
 function playRulesVfxTargetLock(element, hold = 0) {
@@ -2393,6 +2644,12 @@ function playRulesVfxEvent(event) {
       return cleanupMoves.length ? 900 + Math.min(cleanupMoves.length, 12) * cleanupStep : 820;
     }
     if (entry.type === "rules_action_triggered") {
+      const triggerRect = event.sourceRect;
+      if (triggerRect?.width && !rulesVfxReducedMotion()) {
+        const triggerTemperament = cardsById.get(entry.details?.source?.cardId)?.colorKey || "capricious";
+        playRulesVfxFlight("essence", { x: triggerRect.left + triggerRect.width / 2, y: triggerRect.top + triggerRect.height / 2 }, rulesVfxStackNoticeTarget(), { temperament: triggerTemperament, index: 0 });
+        spawnVfxParticles({ x: triggerRect.left + triggerRect.width / 2, y: triggerRect.top + triggerRect.height / 2 }, triggerTemperament, { count: 6, spread: 26, direction: "out" });
+      }
       playRulesVfxStackPulse("triggered");
       playRulesVfxImpact(rulesVfxStackNoticeTarget(), t("rulesVfxTriggered"), "triggered");
       return;
@@ -2403,7 +2660,15 @@ function playRulesVfxEvent(event) {
       if (entry.details?.effectResult?.kind === "resolve_top_deck_by_type" && entry.details.effectResult.cardId) {
         return playRulesVfxTopReveal(entry);
       }
+      playRulesVfxCardScene(entry, target);
+      const diceRoll = Number(entry.details?.effectResult?.roll);
+      if (Number.isInteger(diceRoll) && diceRoll >= 1 && diceRoll <= 6) playRulesVfxDice(diceRoll, target);
       if (entry.details?.effectResult?.kind === "neutralize_stack_action") {
+        if (entry.details.effectResult.status === "neutralized") {
+          // the countered effect shatters against a glass shield
+          spawnVfxParticles(target, "vitreous", { count: 16, spread: 54, direction: "out" });
+          spawnVfxParticles(target, "transcendent", { count: 8, spread: 36, direction: "out", delay: 120 });
+        }
         playRulesVfxImpact(
           target,
           t(entry.details.effectResult.status === "neutralized" ? "rulesVfxNeutralized" : "rulesVfxTargetGone"),
@@ -2423,6 +2688,21 @@ function playRulesVfxEvent(event) {
           `${delta >= 0 ? "+" : ""}${delta}`,
           delta < 0 ? "score-loss" : "score",
         );
+      }
+      if (effectTarget && entry.details?.effectResult?.kind === "draw" && !rulesVfxReducedMotion()) {
+        const drawerId = entry.details.effectResult.playerId;
+        const deckPile = $$("[data-field-pile]").find((element) => element.dataset.fieldPile === `${drawerId}:deck`);
+        const deckPoint = rulesVfxCenter(deckPile);
+        if (deckPoint) {
+          const cards = Math.min(5, Math.max(1, Number(entry.details.effectResult.count || 1)));
+          for (let index = 0; index < cards; index += 1) {
+            playRulesVfxFlight("draw-card", deckPoint, {
+              x: effectTarget.x + (index - (cards - 1) / 2) * 34,
+              y: effectTarget.y,
+            }, { index: index * 2, land: false });
+          }
+          spawnVfxParticles(deckPoint, "vitreous", { count: 6, spread: 28 });
+        }
       }
       if (effectTarget && entry.details?.effectResult?.kind === "draw") {
         playRulesVfxImpact(effectTarget, rulesText("rulesVfxDrawn", {
@@ -5103,6 +5383,19 @@ function animateScoreDeltas() {
     float.style.left = `${rect.left + rect.width / 2}px`;
     float.style.top = `${rect.top}px`;
     document.body.appendChild(float);
+    const scoreDelay = Math.min(1500, rulesVfxQueueRemaining());
+    window.setTimeout(() => spawnVfxParticles(
+      { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 },
+      null,
+      {
+        count: Math.min(16, 6 + Math.abs(delta) * 2),
+        spread: 46,
+        direction: delta > 0 ? "up" : "down",
+        style: delta > 0
+          ? { shape: "spark", colors: ["#fffbd0", "#ffe14a", "#f1d377"] }
+          : { shape: "ember", colors: ["#ffd0c4", "#ff6a4a", "#a8281a"] },
+      },
+    ), scoreDelay);
     badge.animate([
       { transform: "scale(1)" }, { transform: "scale(1.3)", offset: 0.3 }, { transform: "scale(1)" },
     ], { duration: vfxMs(600), delay: Math.min(1500, rulesVfxQueueRemaining()) });
@@ -9969,6 +10262,93 @@ function playCardImpactRing(el, tier, tone, hasEffect, impactDelay) {
   }
 }
 
+// Power and counter changes on a board card (families: power, counters)
+function playBoardStatChanges(el, item, previous) {
+  if (rulesVfxReducedMotion() || !lastBoardLayout) return;
+  const arrivalDelay = Math.min(1500, rulesVfxQueueRemaining());
+  if (!previous) {
+    // copies shimmer, tokens crystallise (family: control / copy / tokens)
+    if (item.isCopy || item.isTokenCard) {
+      window.setTimeout(() => spawnVfxParticles(rulesVfxCenter(el), item.isCopy ? "transcendent" : (item.temperament || "hollow"), {
+        count: item.isCopy ? 12 : 9, spread: 40, direction: "out",
+        style: item.isCopy ? { shape: "light", colors: ["#ffffff", "#bfe6ff", "#8fc8ff"] } : { shape: "shard", colors: ["#ffffff", "#d8d8d8", "#9a9a9a"] },
+      }), arrivalDelay + 250);
+    }
+    return;
+  }
+  const controllerNow = battlefieldItemControllerId(item);
+  if (previous.controllerId && controllerNow && previous.controllerId !== controllerNow) {
+    const ownerTone = playerColor(controllerNow);
+    window.setTimeout(() => {
+      if (el.isConnected) playCardImpactRing(el, 3, ownerTone, true, 0);
+      spawnVfxParticles(rulesVfxCenter(el), null, {
+        count: 14, spread: 46, direction: "out",
+        style: { shape: "mist", colors: [ownerTone, "#ffffff", ownerTone] },
+      });
+    }, arrivalDelay);
+  }
+  const ongoingNow = (latestState.rulesEngine?.ongoingEffects || []).filter((effect) => effect.target?.itemId === item.id).length;
+  if (Number(previous.ongoing || 0) > ongoingNow) {
+    // an effect expired: the card dulls for a moment and dust falls off it
+    el.animate([
+      { filter: "grayscale(0)" }, { filter: "grayscale(.9) brightness(.8)", offset: 0.35 }, { filter: "grayscale(0)" },
+    ], { duration: vfxMs(900), delay: arrivalDelay });
+    window.setTimeout(() => spawnVfxParticles(rulesVfxCenter(el), "hollow", { count: 8, spread: 28, direction: "down" }), arrivalDelay);
+  }
+  if (item.isTokenCard) return;
+  const card = cardsById.get(item.cardId);
+  const temperament = card?.colorKey || item.temperament || null;
+  const tone = card?.glow || "#f1d377";
+  const delay = Math.min(1500, rulesVfxQueueRemaining());
+  const centerOf = () => rulesVfxCenter(el);
+  const anchorPoint = centerOf() || { x: 0, y: 0 };
+  const prevPower = previous.power;
+  const nowPower = item.effectivePower ?? null;
+  if (prevPower !== null && prevPower !== undefined && nowPower !== null && Number(prevPower) !== Number(nowPower)) {
+    const delta = Number(nowPower) - Number(prevPower);
+    const label = document.createElement("span");
+    label.className = `bf-stat-float ${delta > 0 ? "gain" : "loss"}`;
+    label.textContent = `${delta > 0 ? "+" : ""}${delta}`;
+    const anchorRect = el.getBoundingClientRect();
+    label.style.left = `${anchorRect.left + anchorRect.width / 2}px`;
+    label.style.top = `${anchorRect.top + anchorRect.height * 0.2}px`;
+    document.body.appendChild(label);
+    label.animate([
+      { transform: "translate(-50%, 8px) scale(.5)", opacity: 0 },
+      { transform: "translate(-50%, -8px) scale(1.4)", opacity: 1, offset: 0.25 },
+      { transform: "translate(-50%, -46px) scale(1)", opacity: 0 },
+    ], { duration: vfxMs(1300), delay, easing: "ease-out", fill: "both" })
+      .finished.then(() => label.remove(), () => label.remove());
+    window.setTimeout(() => spawnVfxParticles(centerOf(), null, {
+      count: Math.min(14, 5 + Math.abs(delta) * 2),
+      spread: 42,
+      direction: delta > 0 ? "up" : "down",
+      style: delta > 0
+        ? { shape: "light", colors: ["#ffffff", "#c9f5c0", "#7bcf6a"] }
+        : { shape: "shard", colors: ["#ffd8d0", "#ff6a4a", "#8a1f12"] },
+    }), delay);
+  }
+  const prevCounters = previous.counters || {};
+  Object.entries(item.counters || {}).forEach(([name, value]) => {
+    const before = Number(prevCounters[name] || 0);
+    const now = Number(value || 0);
+    if (before === now || !Number.isFinite(now)) return;
+    window.setTimeout(() => {
+      const center = centerOf() || { x: anchorPoint.x, y: anchorPoint.y };
+      spawnVfxParticles(center, temperament, {
+        count: Math.min(10, 3 + Math.abs(now - before) * 2),
+        spread: 30,
+        direction: now > before ? "down" : "up",
+      });
+      const crossed = [5, 10].some((threshold) => (before < threshold && now >= threshold));
+      if (crossed) {
+        if (el.isConnected) playCardImpactRing(el, 3, tone, true, 0);
+        spawnVfxParticles(center, "transcendent", { count: 14, spread: 50, direction: "out", delay: 120 });
+      }
+    }, delay);
+  });
+}
+
 function cardImpactTier(item) {
   const card = cardsById.get(item.cardId);
   const power = Math.max(0, Number(item.effectivePower ?? card?.power ?? 0));
@@ -10023,8 +10403,14 @@ function renderBattlefield() {
     const pos = stackedScreenPos(item) || rotateForSeat(item.x, item.y, PILE_W, PILE_H);
     el.style.left = pos.x + "px";
     el.style.top = pos.y + "px";
-    const flippedUp = Boolean(lastBoardLayout?.has(item.id) && !lastBoardLayout.get(item.id).faceUp && item.faceUp);
-    boardLayout.set(item.id, { x: pos.x, y: pos.y, rotation: item.rotation || 0, faceUp: Boolean(item.faceUp) });
+    const previousLayout = lastBoardLayout?.get(item.id) || null;
+    const flippedUp = Boolean(previousLayout && !previousLayout.faceUp && item.faceUp);
+    boardLayout.set(item.id, {
+      x: pos.x, y: pos.y, rotation: item.rotation || 0, faceUp: Boolean(item.faceUp),
+      power: item.effectivePower ?? null, counters: { ...(item.counters || {}) },
+      controllerId: battlefieldItemControllerId(item),
+      ongoing: (latestState.rulesEngine?.ongoingEffects || []).filter((effect) => effect.target?.itemId === item.id).length,
+    });
     animateBoardCard(el, item, pos);
     el.style.setProperty("--owner-color", playerColor(item.ownerId));
     const isMine = !isObserver && battlefieldItemControllerId(item) === myPlayerId;
@@ -10187,6 +10573,7 @@ function renderBattlefield() {
       showCardLabels(el, canSeeName ? cardName(item.cardId) : null, (latestState.players[item.ownerId] || {}).name || "");
     });
     bf.appendChild(el);
+    if (item.faceUp) playBoardStatChanges(el, item, previousLayout);
     if (flippedUp && !item.isTokenCard) playCardFlipReveal(el, item);
     else if (el.classList.contains("bf-arrive") && !item.isTokenCard && item.cardId && !rulesVfxReducedMotion()) {
       const arrivalDelay = Number.parseFloat(el.style.getPropertyValue("--bf-arrive-delay")) || 0;

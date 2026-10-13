@@ -3278,3 +3278,32 @@ input, textarea, select {
 @media (prefers-reduced-motion: reduce) { .bf-card.has-ongoing-effect { animation: none; filter: drop-shadow(0 0 5px var(--effect-tone, #f1d377)); } }
 .game-end-player.is-winner { animation: end-winner-glow 2.2s ease-in-out infinite; }
 @keyframes end-winner-glow { 0%, 100% { box-shadow: 0 0 14px #d3a94244; } 50% { box-shadow: 0 0 38px #f1d377aa; } }
+/* Burning destruction */
+.rules-vfx-burn-flash { position: absolute; inset: -40%; border-radius: 50%; background: radial-gradient(circle, #fff6c8 0%, #ffb23a 28%, #e8531c 55%, transparent 72%); mix-blend-mode: screen; pointer-events: none; }
+.rules-vfx-burn-scorch { position: absolute; inset: -6%; border-radius: 12px; border: 3px solid #ff7a2a; box-shadow: 0 0 18px #ff5b1a, inset 0 0 14px #ff9b3a; pointer-events: none; }
+.rules-vfx-ember { position: absolute; width: var(--ember-size, 4px); height: var(--ember-size, 4px); border-radius: 50%; background: radial-gradient(circle, #fff1a8, #ff8a2a 60%, #d9381a); box-shadow: 0 0 6px #ff9b3a; pointer-events: none; }
+/* Particle engine */
+.vfx-particle { position: fixed; z-index: 260; width: var(--p-size, 5px); height: var(--p-size, 5px); pointer-events: none; background: var(--p-color, #fff); }
+.vfx-particle-ember, .vfx-particle-spark, .vfx-particle-light { border-radius: 50%; box-shadow: 0 0 7px var(--p-color, #fff); }
+.vfx-particle-spore { border-radius: 60% 40% 60% 40%; }
+.vfx-particle-shard { clip-path: polygon(50% 0, 100% 60%, 40% 100%, 0 40%); width: calc(var(--p-size, 5px) * 1.6); height: calc(var(--p-size, 5px) * 1.6); }
+.vfx-particle-mist { border-radius: 50%; width: calc(var(--p-size, 5px) * 3); height: calc(var(--p-size, 5px) * 3); filter: blur(3px); opacity: .7; }
+.vfx-particle-dust { border-radius: 50%; filter: blur(.6px); }
+.vfx-particle-spark { clip-path: polygon(50% 0, 62% 38%, 100% 50%, 62% 62%, 50% 100%, 38% 62%, 0 50%, 38% 38%); border-radius: 0; }
+.rules-vfx-draw-card .rules-vfx-flight-card { border-radius: 6px; box-shadow: 0 4px 10px #0009; }
+@media (prefers-reduced-motion: reduce) { .vfx-particle { display: none; } }
+/* Power / counter changes */
+.bf-stat-float { position: fixed; z-index: 270; pointer-events: none; font-size: 24px; font-weight: 900; text-shadow: 0 2px 8px #000d; opacity: 0; }
+.bf-stat-float.gain { color: #b8ffa8; }
+.bf-stat-float.loss { color: #ff8a7a; }
+/* Dice */
+.rules-vfx-die { position: fixed; z-index: 280; width: 74px; height: 74px; display: grid; place-items: center; border-radius: 14px; background: linear-gradient(145deg, #fffdf2, #d9c98f); border: 2px solid #8a6d1d; box-shadow: 0 10px 28px #000c, inset 0 -6px 10px #0002; pointer-events: none; }
+.rules-vfx-die-face { font-size: 40px; font-weight: 900; color: #2a2210; }
+/* Dedicated card scenes */
+.rules-vfx-scene { position: fixed; z-index: 240; pointer-events: none; overflow: hidden; opacity: 0; }
+.rules-vfx-firewave { background: linear-gradient(90deg, transparent 0%, var(--wave-core, #ff7a2a) 35%, var(--wave-tip, #ffe08a) 50%, var(--wave-core, #ff7a2a) 65%, transparent 100%); mix-blend-mode: screen; width: 45% !important; filter: blur(10px); }
+.rules-vfx-rewind { background: conic-gradient(from 0deg, transparent 0 20%, #f1d37766 30%, transparent 45% 70%, #f1d37766 80%, transparent 95%); border-radius: 50%; mix-blend-mode: screen; }
+.rules-vfx-heat { background: radial-gradient(circle at 50% 50%, #ff5b1a99, transparent 70%); }
+.rules-vfx-jaws { background: linear-gradient(180deg, #14110aee 0 12%, transparent 12% 88%, #14110aee 88% 100%); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); border-block: 4px solid #d3a942; }
+.rules-vfx-sand { background: linear-gradient(180deg, #d8b87855, transparent 60%); }
+.rules-vfx-invert { background: #fff; mix-blend-mode: difference; }
