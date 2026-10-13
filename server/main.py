@@ -636,6 +636,7 @@ def encode_message(payload):
 
 
 async def broadcast_state(session):
+    session.rules_auto_layout()
     stale = []
     role_counts = {
         role: sum(1 for info in connections.values() if info["session"] is session and info.get("role") == role)

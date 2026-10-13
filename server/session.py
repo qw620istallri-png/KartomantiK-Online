@@ -4320,6 +4320,73 @@ class Session:
             return "confrontation"
         return "field"
 
+    # -- board layout (assisted rules) ---------------------------------
+    # Slots on board-bg.webp, in logical coordinates (card = 150 x 210, seat 0 plays at the bottom)
+    def rules_layout_slot(self, zone, seat, index):
+        top = seat == 1
+        if zone == "interzone":
+            return 445.0 + (index % 3) * 305.0 + (index // 3) * 20.0, (285.0 if top else 1064.0) + (index // 3) * 14.0
+        if zone == "confrontation":
+            row = 525.0 if top else 800.0
+            lift = (index // 4) * 30.0
+            return 445.0 + (index % 4) * 215.0 + (index // 4) * 40.0, row + (lift if top else -lift)
+        if zone == "stalemate":
+            return 1429.0 + (index // 2) * 40.0, 560.0 + (index % 2) * 230.0
+        return 445.0 + (index % 5) * 170.0, (45.0 if top else 1300.0) + (index // 5) * 14.0
+
+    @staticmethod
+    def rules_layout_rect(zone, seat):
+        top = seat == 1
+        if zone == "interzone":
+            return (415.0, 271.0, 1322.0, 498.0) if top else (415.0, 1050.0, 1322.0, 1278.0)
+        if zone == "confrontation":
+            return (415.0, 510.0, 1322.0, 1037.0)
+        if zone == "stalemate":
+            return (1354.0, 543.0, 1703.0, 1008.0)
+        return (415.0, 35.0, 1322.0, 270.0) if top else (415.0, 1290.0, 1322.0, 1515.0)
+
+    def rules_auto_layout(self):
+        """Put cards that just changed zone on a free slot of their zone; later manual moves are kept."""
+        if not self.rules_engine.get("enabled") or len(self.players) < NUM_SEATS:
+            return
+        first_ids = set((self.rules_engine.get("firstManifestationItemIds") or {}).values())
+        for item in self.battlefield:
+            if item.get("stackedOn") or item.get("isTokenCard") and not item.get("faceUp"):
+                continue
+            metadata = self.rules_item_card_rules(item)
+            card_type = metadata.get("type")
+            is_manifestation = card_type == "manifestation" or item.get("isTokenCard")
+            if not (
+                is_manifestation and (item.get("faceUp") or item.get("id") in first_ids)
+                or card_type == "persistent_will" and item.get("faceUp")
+            ):
+                continue
+            zone = self.rules_field_zone(item)
+            if zone == "field" and card_type != "persistent_will":
+                continue
+            controller_id = self.rules_item_controller_id(item)
+            seat = (self.players.get(controller_id) or {}).get("seat")
+            key = f"{zone}:{controller_id}"
+            if item.get("layoutKey") == key:
+                continue
+            left, top_edge, right, bottom = self.rules_layout_rect(zone, seat)
+            center_x = float(item.get("x") or 0) + 75.0
+            center_y = float(item.get("y") or 0) + 105.0
+            if left <= center_x <= right and top_edge <= center_y <= bottom:
+                # already placed inside its zone (e.g. dropped there): keep it
+                item["layoutKey"] = key
+                item["layoutSlot"] = None
+                continue
+            taken = {
+                other.get("layoutSlot") for other in self.battlefield
+                if other is not item and other.get("layoutKey") == key
+                and not other.get("stackedOn")
+            }
+            index = next(i for i in range(64) if i not in taken)
+            item["layoutKey"] = key
+            item["layoutSlot"] = index
+            item["x"], item["y"] = self.rules_layout_slot(zone, seat, index)
+
     def rules_item_controller_id(self, item):
         linked = next((
             effect for effect in reversed(
@@ -6002,8 +6069,23 @@ class Session:
     def _queue_next_rules_confrontation_destination(self):
         result = self.rules_engine.get("confrontationResult") or {}
         pending = result.get("pendingOwnItemIds") or []
-        while pending and self.find_battlefield_item(pending[0]) is None:
-            pending.pop(0)
+        while pending:
+            candidate = self.find_battlefield_item(pending[0])
+            if candidate is None:
+                pending.pop(0)
+            elif (
+                (candidate.get("isCopy") or candidate.get("isTokenCard"))
+                and not candidate.get("permanent")
+            ):
+                # temporary Copies and Tokens end with the turn: no deck, no Interzone
+                result.setdefault("returned", []).append(
+                    self._rules_remove_field_item(
+                        candidate, candidate.get("ownerId"), "exile", "top"
+                    )
+                )
+                pending.pop(0)
+            else:
+                break
         if not pending:
             result["status"] = "complete"
             result.pop("pendingOwnItemIds", None)
@@ -6016,7 +6098,10 @@ class Session:
             "playerId": result.get("winnerId"), "itemId": item["id"],
             "cardId": item.get("cardId"), "options": ["interzone", "deck_bottom"],
         }
-        if self.rules_karmapult_holder(result.get("winnerId"), item):
+        if item.get("isCopy") or item.get("isTokenCard"):
+            # a permanent Copy or Token can only stay in the Interzone
+            choice["options"] = ["interzone"]
+        elif self.rules_karmapult_holder(result.get("winnerId"), item):
             choice["options"].append("karmapult")
         self.rules_engine["pendingChoice"] = choice
         result["status"] = "cleanup_choice"
@@ -8031,11 +8116,16 @@ class Session:
             if int(memory.get("queuedTurn") or 0) == turn:
                 continue
             memory["queuedTurn"] = turn
+            # the delayed effect belongs to the card that created it (Coral Skull), not to the Will it returns
+            shown_card_id = (
+                (memory.get("data") or {}).get("effectSourceCardId")
+                or memory.get("cardId")
+            )
             queued.append({
                 "id": new_id(),
                 "controllerId": memory.get("controllerId") or memory.get("ownerId"),
                 "label": (
-                    f'{self.card_labels.get(memory.get("cardId"), memory.get("cardId"))}'
+                    f'{self.card_labels.get(shown_card_id, shown_card_id)}'
                     " — delayed effect"
                 ),
                 "kind": "triggered_effect",
@@ -8043,7 +8133,7 @@ class Session:
                     (memory.get("data") or {}).get("optional")
                 ),
                 "source": {
-                    "cardId": memory.get("cardId"),
+                    "cardId": shown_card_id,
                     "zone": "memory",
                     "ownerId": memory.get("ownerId"),
                     "cardType": self.card_rules.get(
@@ -11516,6 +11606,7 @@ class Session:
                     "opponentPayment": result.get("opponentPayment"),
                     "rollReturnOrExile": bool(result.get("rollReturnOrExile")),
                     "requireLostConfrontation": bool(result.get("requireLostConfrontation")),
+                    "effectSourceCardId": (action.get("source") or {}).get("cardId"),
                 },
             )
             return {

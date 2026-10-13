@@ -3307,3 +3307,25 @@ input, textarea, select {
 .rules-vfx-jaws { background: linear-gradient(180deg, #14110aee 0 12%, transparent 12% 88%, #14110aee 88% 100%); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); border-block: 4px solid #d3a942; }
 .rules-vfx-sand { background: linear-gradient(180deg, #d8b87855, transparent 60%); }
 .rules-vfx-invert { background: #fff; mix-blend-mode: difference; }
+.rules-vfx-wither-card {
+  width: 66px; height: 92px; overflow: hidden; border: 1px solid #555; border-radius: 6px;
+  background: #1a1a1a; box-shadow: 0 6px 16px #000b;
+}
+.rules-vfx-wither-card img { object-fit: cover; width: 100%; height: 100%; }
+.rules-choice-options:not(.has-card-picker):not(.has-order):not(.has-destination-card) > .rules-choice-destination {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  grid-template-columns: none; text-align: center; white-space: nowrap; min-width: 120px;
+}
+.rules-choice-options:not(.has-card-picker):not(.has-order):not(.has-destination-card) > .rules-choice-destination strong { align-self: center; white-space: nowrap; }
+.rules-choice-options:not(.has-card-picker):not(.has-order):not(.has-destination-card) > .rules-choice-destination svg { grid-row: auto; }
+.rules-vfx-surge-ring {
+  position: fixed; z-index: 90; pointer-events: none; border-radius: 50%;
+  border: 4px solid #ff8a2a; box-shadow: 0 0 22px #ff5a1fcc, inset 0 0 18px #ffb347aa;
+}
+.inspect-attached { margin-top: 12px; }
+.inspect-attached h3 { margin: 0 0 6px; font-size: 14px; }
+.inspect-attached-list { display: flex; flex-wrap: wrap; gap: 8px; }
+.inspect-attached-list .limbo-play-card { width: 82px; cursor: pointer; }
+.inspect-attached-list .limbo-play-card span { color: inherit; font-size: 14px; }
+.hand-sort-quick { width: 40px; padding: 0; justify-content: center; }
+.hand-sort-quick.active { color: #17120a; background: var(--gold); }

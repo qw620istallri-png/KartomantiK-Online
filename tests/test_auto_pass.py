@@ -156,6 +156,48 @@ class AutoPassTests(unittest.TestCase):
         asyncio.run(server_main.auto_advance_rules_phases(session, "p2"))
         self.assertNotEqual(session.current_phase_id(), "confrontation_reaction")
 
+    def test_copies_and_tokens_never_choose_deck_or_interzone_unless_permanent(self):
+        session, p1, p2 = self.make_session()
+        def item(item_id, **extra):
+            return {
+                "id": item_id, "ownerId": "p1", "controllerId": "p1", "cardId": "m-1",
+                "faceUp": True, "fieldZone": "confrontation", "x": 0, "y": 0,
+                "rotation": 0, "counters": {}, "stackedOn": None, **extra,
+            }
+        session.battlefield = [
+            item("temp-copy", isCopy=True), item("perm-token", isTokenCard=True, permanent=True),
+        ]
+        session.rules_engine["confrontationResult"] = {
+            "winnerId": "p1", "pendingOwnItemIds": ["temp-copy", "perm-token"],
+        }
+        choice = session._queue_next_rules_confrontation_destination()
+        self.assertEqual(choice["itemId"], "perm-token")
+        self.assertEqual(choice["options"], ["interzone"])
+        self.assertIsNone(session.find_battlefield_item("temp-copy"))
+
+    def test_cards_entering_a_zone_are_laid_out_on_free_slots(self):
+        session, p1, p2 = self.make_session()
+        def item(item_id, zone, owner="p1", x=10.0, y=10.0):
+            return {
+                "id": item_id, "ownerId": owner, "controllerId": owner, "cardId": "m-1",
+                "faceUp": True, "fieldZone": zone, "x": x, "y": y,
+                "rotation": 0, "counters": {}, "stackedOn": None,
+            }
+        session.battlefield = [
+            item("a", "interzone"), item("b", "interzone"),
+            item("c", "confrontation", owner="p2"),
+            item("kept", "confrontation", x=500.0, y=800.0),
+        ]
+        session.rules_auto_layout()
+        a, b, c, kept = session.battlefield
+        self.assertEqual((a["x"], a["y"]), (445.0, 1064.0))
+        self.assertEqual((b["x"], b["y"]), (750.0, 1064.0))
+        self.assertEqual(c["y"], 525.0)
+        self.assertEqual((kept["x"], kept["y"]), (500.0, 800.0))
+        a["x"] = 900.0
+        session.rules_auto_layout()
+        self.assertEqual(a["x"], 900.0)
+
 
 if __name__ == "__main__":
     unittest.main()

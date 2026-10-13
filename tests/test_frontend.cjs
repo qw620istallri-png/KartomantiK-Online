@@ -1076,7 +1076,10 @@ function startServer() {
       document.querySelector("#confirmPanelOkBtn").click();
       voluntaryMulligan.payload = window.__sent.at(-1);
       document.querySelector("#handToolsToggleBtn").click();
-      initial.toolsOpen = !document.querySelector("#handToolbar").classList.contains("hidden");
+      // beta: the options collapse to a single sort button
+      initial.toolsOpen = document.querySelector("#handToolbar").classList.contains("hidden")
+        && document.querySelector("#handToolsToggleBtn").classList.contains("hidden")
+        && !document.querySelector("#handSortQuickBtn").classList.contains("hidden");
       latestState.rulesEngine.openingMulliganRequiredPlayerIds = ["p2"];
       latestState.rulesEngine.readyPlayerIds = ["p1"];
       renderAll();
