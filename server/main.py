@@ -1418,6 +1418,13 @@ async def handle_message(ws, info, data):
             and session.rules_uncovered_deck_top(actor_id) == card_id
             and card_id in session.manifestation_ids
         )
+        if (
+            session.rules_engine["enabled"] and not manual_bypass
+            and from_zone != "hand" and not deck_top_play
+            and zone_play_permission is None
+        ):
+            # beta: a card leaves the Limbo, Deck, Vessel or Exile only through the engine, never by a drag
+            return await send_error(ws, "In assisted rules, this card can only leave that zone through its effect.")
         first_manifestation = (
             False if manual_bypass
             else session.rules_first_manifestation_active()

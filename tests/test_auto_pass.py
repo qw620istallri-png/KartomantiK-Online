@@ -193,7 +193,7 @@ class AutoPassTests(unittest.TestCase):
         self.assertEqual((a["x"], a["y"]), (445.0, 1064.0))
         self.assertEqual((b["x"], b["y"]), (750.0, 1064.0))
         self.assertEqual(c["y"], 525.0)
-        self.assertEqual((kept["x"], kept["y"]), (500.0, 800.0))
+        self.assertEqual((kept["x"], kept["y"]), (445.0, 800.0))  # a drop only steers the card to the nearest free slot
         a["x"] = 900.0
         session.rules_auto_layout()
         self.assertEqual(a["x"], 900.0)

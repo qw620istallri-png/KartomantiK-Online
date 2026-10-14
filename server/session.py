@@ -1269,6 +1269,7 @@ class Session:
             kind == "play_card"
             and metadata.get("type") == "persistent_will"
             and self.rules_engine["actionStack"]
+            and self.current_phase_id() != "end_actions"
         ):
             return "A Persistent Will cannot be played as a response.", None
         if (
@@ -1620,6 +1621,8 @@ class Session:
                 clean["fieldZone"] = "interzone"
             if result.get("upTo"):
                 clean["upTo"] = True
+            if result.get("permanent"):
+                clean["permanent"] = True
             return clean
         if kind == "discard_hand_each_opponent":
             return {
@@ -2561,6 +2564,12 @@ class Session:
             )
         clean_result = self.clean_rules_action_result(ability.get("result"))
         target_rules = ability.get("targets") or {}
+        # a card may spell its groups either as targetGroups or as targets.groups
+        raw_target_groups = (
+            ability.get("targetGroups")
+            if isinstance(ability.get("targetGroups"), list)
+            else target_rules.get("groups")
+        )
         allowed_target_keys = {
             "kind", "min", "max", "cardType", "cardTypes", "zones", "controller",
             "fieldZone", "supportOnly", "exhaustedOnly", "maxPoints", "maxPower", "minPower",
@@ -2700,7 +2709,7 @@ class Session:
                     for key, value in group.items()
                     if key in allowed_target_keys
                 }
-                for group in ability.get("targetGroups") or []
+                for group in raw_target_groups or []
                 if isinstance(group, dict)
             ],
         }
@@ -3679,7 +3688,7 @@ class Session:
                 item = {
                     "id": new_id(), "ownerId": owner_id,
                     "controllerId": player_id, "cardId": card_id,
-                    "x": 650.0, "y": 520.0 if seat != 1 else 980.0,
+                    "x": 650.0, "y": 800.0 if seat != 1 else 525.0,
                     "faceUp": True, "rotation": 0.0, "counters": {},
                     "rarity": self.players[owner_id].get(
                         "cardRarities", {}
@@ -4340,7 +4349,8 @@ class Session:
         if zone == "interzone":
             return (415.0, 271.0, 1322.0, 498.0) if top else (415.0, 1050.0, 1322.0, 1278.0)
         if zone == "confrontation":
-            return (415.0, 510.0, 1322.0, 1037.0)
+            # each player keeps to their own half of the Confrontation Zone
+            return (415.0, 510.0, 1322.0, 773.0) if top else (415.0, 773.0, 1322.0, 1037.0)
         if zone == "stalemate":
             return (1354.0, 543.0, 1703.0, 1008.0)
         return (415.0, 35.0, 1322.0, 270.0) if top else (415.0, 1290.0, 1322.0, 1515.0)
@@ -4359,6 +4369,7 @@ class Session:
             if not (
                 is_manifestation and (item.get("faceUp") or item.get("id") in first_ids)
                 or card_type == "persistent_will" and item.get("faceUp")
+                or item.get("isSupport") and item.get("faceUp")
             ):
                 continue
             zone = self.rules_field_zone(item)
@@ -4370,19 +4381,26 @@ class Session:
             if item.get("layoutKey") == key:
                 continue
             left, top_edge, right, bottom = self.rules_layout_rect(zone, seat)
-            center_x = float(item.get("x") or 0) + 75.0
-            center_y = float(item.get("y") or 0) + 105.0
-            if left <= center_x <= right and top_edge <= center_y <= bottom:
-                # already placed inside its zone (e.g. dropped there): keep it
-                item["layoutKey"] = key
-                item["layoutSlot"] = None
-                continue
+            card_x = float(item.get("x") or 0)
+            card_y = float(item.get("y") or 0)
+            dropped_in_zone = (
+                left - 10 <= card_x and card_x + 150.0 <= right + 10
+                and top_edge - 10 <= card_y and card_y + 210.0 <= bottom + 10
+            )
             taken = {
                 other.get("layoutSlot") for other in self.battlefield
                 if other is not item and other.get("layoutKey") == key
                 and not other.get("stackedOn")
             }
-            index = next(i for i in range(64) if i not in taken)
+            free = [i for i in range(64) if i not in taken]
+            if dropped_in_zone:
+                # the drop only steers the card: it takes the free slot of its zone closest to where it was released
+                index = min(free[:4], key=lambda i: (
+                    (self.rules_layout_slot(zone, seat, i)[0] - card_x) ** 2
+                    + (self.rules_layout_slot(zone, seat, i)[1] - card_y) ** 2
+                ))
+            else:
+                index = free[0]
             item["layoutKey"] = key
             item["layoutSlot"] = index
             item["x"], item["y"] = self.rules_layout_slot(zone, seat, index)
@@ -4741,6 +4759,7 @@ class Session:
             }
         self.mark_rules_confrontation_entry(item)
         turn = self.phase_tracker["turn"]
+        item["supportUsedTurn"] = turn
         for bonus in self.rules_engine.get("supportEntryBonuses") or []:
             if bonus.get("turn") == turn and bonus.get("playerId") == self.rules_item_controller_id(item):
                 self.rules_engine["ongoingEffects"].append({
@@ -6461,6 +6480,9 @@ class Session:
         phase_ids = ability.get("phaseIds")
         if phase_ids and phase_id not in phase_ids:
             return False
+        turn = self.phase_tracker["turn"]
+        if ability.get("oncePerTurnSupport") and turn in (item.get("supportUsedTurn"), item.get("supportUntilTurn")):
+            return False
         removal = ability.get("removeCountersFromSource")
         if isinstance(removal, dict):
             counters = item.get("counters") or {}
@@ -6888,7 +6910,7 @@ class Session:
                 stalemate_item = {
                     "id": new_id(), "ownerId": source_owner,
                     "controllerId": player_id, "cardId": clean_source["cardId"],
-                    "x": 650.0, "y": 520.0 if seat != 1 else 980.0,
+                    "x": 650.0, "y": 800.0 if seat != 1 else 525.0,
                     "faceUp": True, "rotation": 0.0, "counters": {},
                     "rarity": self.players[source_owner].get(
                         "cardRarities", {}
@@ -7369,6 +7391,20 @@ class Session:
                 clean_targets = [{"kind": "player", "playerId": resolved_target_player_id}]
             elif target_rules.get("kind") == "player" and target_player_id in self.players:
                 clean_targets = [{"kind": "player", "playerId": target_player_id}]
+            if (
+                not clean_targets and target_rules.get("kind") == "player"
+                and int(target_rules.get("min") or 0) == 1 and int(target_rules.get("max") or 1) == 1
+            ):
+                # a single legal player (the only opponent): nothing to choose
+                legal_players = [
+                    candidate_id for candidate_id in self.players
+                    if self.rules_ability_targets_error(
+                        target_rules, [{"kind": "player", "playerId": candidate_id}],
+                        controller_id, event_item_id=event_item_id,
+                    ) is None
+                ]
+                if len(legal_players) == 1:
+                    clean_targets = [{"kind": "player", "playerId": legal_players[0]}]
             target_validation_error = self.rules_ability_targets_error(
                 target_rules, clean_targets, controller_id,
                 event_item_id=event_item_id,
@@ -7721,6 +7757,27 @@ class Session:
         while next_index < len(actions):
             action = actions[next_index]
             next_index += 1
+            if (
+                ((action.get("ability") or {}).get("result") or {}).get("kind") == "grimoire_place"
+                and not any(
+                    self.card_rules.get(card_id, {}).get("type") in RULES_WILL_TYPES
+                    for card_id in (self.players.get(action.get("controllerId")) or {}).get("zones", {}).get("hand", [])
+                )
+            ):
+                # nothing to place on the Grimoire: the effect is not even offered
+                continue
+            chain_result = (action.get("ability") or {}).get("result") or {}
+            if (
+                action.get("optional") and not action.get("optionalAccepted")
+                and chain_result.get("kind") == "chain_from_zone" and chain_result.get("zone") == "hand"
+            ):
+                # Chain from the hand: no "use the effect?" question; the player simply drags a card or passes
+                if not self.rules_chain_candidates(action.get("controllerId"), "hand"):
+                    continue
+                action["optionalAccepted"] = True
+                action["chainDeclinable"] = True
+                accepted_actions.append(action)
+                continue
             if action.get("optional") and not action.get("optionalAccepted"):
                 controller_id = action.get("controllerId")
                 self.rules_engine["pendingChoice"] = {
@@ -8905,7 +8962,7 @@ class Session:
             "controllerId": controller_id,
             "cardId": card_id,
             "x": 740.0,
-            "y": 620.0 if seat != 1 else 880.0,
+            "y": 800.0 if seat != 1 else 525.0,
             "faceUp": True,
             "rotation": 0.0,
             "counters": {},
@@ -9195,7 +9252,7 @@ class Session:
             item = {
                 "id": new_id(), "ownerId": owner_id,
                 "controllerId": player_id, "cardId": card_id,
-                "x": 740.0, "y": 620.0 if seat != 1 else 880.0,
+                "x": 740.0, "y": 800.0 if seat != 1 else 525.0,
                 "faceUp": True, "rotation": 0.0, "counters": {},
                 "stackedOn": None,
             }
@@ -9431,7 +9488,7 @@ class Session:
             seat = self.players[target_id].get("seat")
             item = {
                 "id": new_id(), "ownerId": owner_id, "controllerId": target_id,
-                "cardId": found, "x": 740.0, "y": 620.0 if seat != 1 else 880.0,
+                "cardId": found, "x": 740.0, "y": 800.0 if seat != 1 else 525.0,
                 "faceUp": True, "rotation": 0.0, "counters": {}, "stackedOn": None,
             }
             self.mark_rules_support_entry(item)
@@ -10217,7 +10274,7 @@ class Session:
                 self.take_zone_card(player_id, "deck", card_id)
                 new_item = {
                     "id": new_id(), "ownerId": player_id, "controllerId": player_id,
-                    "cardId": card_id, "x": 740.0, "y": 620.0 if seat != 1 else 880.0,
+                    "cardId": card_id, "x": 740.0, "y": 800.0 if seat != 1 else 525.0,
                     "faceUp": False, "rotation": 0.0, "counters": {}, "stackedOn": None,
                     "fieldZone": "field", "concealedWill": True, "tebebeConcealed": True,
                 }
@@ -10955,7 +11012,7 @@ class Session:
             seat = self.players[owner_id].get("seat")
             item = {
                 "id": new_id(), "ownerId": owner_id, "controllerId": owner_id,
-                "cardId": card_id, "x": 740.0, "y": 620.0 if seat != 1 else 880.0,
+                "cardId": card_id, "x": 740.0, "y": 800.0 if seat != 1 else 525.0,
                 "faceUp": True, "rotation": 0.0, "counters": {}, "stackedOn": None,
             }
             self.mark_rules_support_entry(item)
@@ -11900,7 +11957,7 @@ class Session:
                 "id": new_id(), "ownerId": owner_id,
                 "controllerId": player_id,
                 "cardId": target.get("cardId"),
-                "x": 740.0, "y": 620.0 if seat != 1 else 880.0,
+                "x": 740.0, "y": 800.0 if seat != 1 else 525.0,
                 "faceUp": True, "rotation": 0.0, "counters": {},
                 "stackedOn": None,
             }
@@ -12013,7 +12070,7 @@ class Session:
             item = {
                 "id": new_id(), "ownerId": owner_id,
                 "controllerId": player_id, "cardId": card_id,
-                "x": 740.0, "y": 620.0 if seat != 1 else 880.0,
+                "x": 740.0, "y": 800.0 if seat != 1 else 525.0,
                 "faceUp": True, "rotation": 0.0, "counters": {},
                 "stackedOn": None,
                 "supportReturn": {"controllerId": player_id},
@@ -12688,7 +12745,7 @@ class Session:
                 item = {
                     "id": new_id(), "ownerId": owner_id,
                     "controllerId": player_id, "cardId": card_id,
-                    "x": 740.0, "y": 620.0 if seat != 1 else 880.0,
+                    "x": 740.0, "y": 800.0 if seat != 1 else 525.0,
                     "faceUp": True, "rotation": 0.0, "counters": {},
                     "stackedOn": None,
                     # Put onto the field, not played: its own effects stay off.
@@ -13830,6 +13887,10 @@ class Session:
                 )
                 for _index in range(int(result.get("count") or 1))
             ]
+            if result.get("permanent"):
+                # "not lost at the Resolution": these tokens stay and can only go to the Interzone
+                for token in created:
+                    token["permanent"] = True
             return {
                 "kind": "create_support_tokens",
                 "status": "created",
@@ -14575,7 +14636,7 @@ class Session:
         seat = self.players[player_id].get("seat")
         item = {
             "id": new_id(), "ownerId": owner_id, "controllerId": player_id,
-            "cardId": card_id, "x": 740.0, "y": 620.0 if seat != 1 else 880.0,
+            "cardId": card_id, "x": 740.0, "y": 800.0 if seat != 1 else 525.0,
             "faceUp": True, "rotation": 0.0, "counters": {}, "stackedOn": None,
             "rarity": self.players[owner_id].get("cardRarities", {}).get(card_id),
         }
@@ -14596,7 +14657,7 @@ class Session:
         seat = self.players[player_id].get("seat")
         item = {
             "id": new_id(), "ownerId": owner_id, "controllerId": player_id,
-            "cardId": card_id, "x": 740.0, "y": 620.0 if seat != 1 else 880.0,
+            "cardId": card_id, "x": 740.0, "y": 800.0 if seat != 1 else 525.0,
             "faceUp": True, "rotation": 0.0, "counters": {}, "stackedOn": None,
         }
         if self.rules_interzone_slot_count(player_id) >= self.rules_interzone_capacity(player_id):
@@ -14693,7 +14754,7 @@ class Session:
             "fromZone": zone,
             "optional": bool(
                 result.get("optional")
-                and not action.get("optionalAccepted")
+                and (not action.get("optionalAccepted") or action.get("chainDeclinable"))
                 and chain_player_id == controller_id
             ),
             "winDestination": result.get("winDestination"),
@@ -14992,7 +15053,7 @@ class Session:
                 seat = self.players[player_id].get("seat")
                 self.battlefield.append({
                     "id": new_id(), "ownerId": owner_id, "controllerId": player_id,
-                    "cardId": entry["cardId"], "x": 650.0, "y": 520.0 if seat != 1 else 980.0,
+                    "cardId": entry["cardId"], "x": 650.0, "y": 800.0 if seat != 1 else 525.0,
                     "faceUp": True, "rotation": 0.0, "counters": {}, "stackedOn": None,
                     "fieldZone": "stalemate",
                 })
@@ -15073,7 +15134,7 @@ class Session:
                 seat = self.players[target_id].get("seat")
                 stalemate_item = {
                     "id": new_id(), "ownerId": owner_id, "controllerId": target_id,
-                    "cardId": card_id, "x": 650.0, "y": 520.0 if seat != 1 else 980.0,
+                    "cardId": card_id, "x": 650.0, "y": 800.0 if seat != 1 else 525.0,
                     "faceUp": True, "rotation": 0.0, "counters": {}, "stackedOn": None,
                     "fieldZone": "stalemate",
                     "rarity": self.players[owner_id].get("cardRarities", {}).get(card_id),
@@ -16829,7 +16890,7 @@ class Session:
                     self.take_zone_card(player_id, "deck", card_id)
                     self.battlefield.append({
                         "id": new_id(), "ownerId": player_id, "controllerId": player_id,
-                        "cardId": card_id, "x": 740.0, "y": 620.0 if seat != 1 else 880.0,
+                        "cardId": card_id, "x": 740.0, "y": 800.0 if seat != 1 else 525.0,
                         "faceUp": False, "rotation": 0.0, "counters": {}, "stackedOn": None,
                         "fieldZone": "field", "concealedWill": True,
                         "jigonItemId": choice.get("jigonItemId"),
@@ -16883,7 +16944,7 @@ class Session:
             seat = self.players[player_id].get("seat")
             item = {
                 "id": new_id(), "ownerId": owner_id, "controllerId": player_id,
-                "cardId": card_id, "x": 740.0, "y": 620.0 if seat != 1 else 880.0,
+                "cardId": card_id, "x": 740.0, "y": 800.0 if seat != 1 else 525.0,
                 "faceUp": True, "rotation": 0.0, "counters": {}, "stackedOn": None,
                 "fieldZone": "field", "persuaded": True, "persuadedBy": choice.get("hostItemId"),
                 "rarity": self.players[owner_id].get("cardRarities", {}).get(card_id),
@@ -16911,7 +16972,7 @@ class Session:
                     continue
                 self.battlefield.append({
                     "id": new_id(), "ownerId": owner_id, "controllerId": player_id,
-                    "cardId": card_id, "x": 650.0, "y": 520.0 if seat != 1 else 980.0,
+                    "cardId": card_id, "x": 650.0, "y": 800.0 if seat != 1 else 525.0,
                     "faceUp": True, "rotation": 0.0, "counters": {},
                     "rarity": self.players[owner_id].get("cardRarities", {}).get(card_id),
                     "stackedOn": None, "fieldZone": "stalemate",
@@ -16959,7 +17020,7 @@ class Session:
                     continue
                 self.battlefield.append({
                     "id": new_id(), "ownerId": owner_id, "controllerId": player_id,
-                    "cardId": card_id, "x": 650.0, "y": 520.0 if seat != 1 else 980.0,
+                    "cardId": card_id, "x": 650.0, "y": 800.0 if seat != 1 else 525.0,
                     "faceUp": True, "rotation": 0.0, "counters": {},
                     "rarity": self.players[owner_id].get("cardRarities", {}).get(card_id),
                     "stackedOn": None, "fieldZone": "stalemate",
@@ -17371,6 +17432,12 @@ class Session:
                 normal_priority if normal_priority in self.players
                 else self.other_rules_player_id(resolved["controllerId"])
             )
+        if (
+            resolved.get("immediate") and not action_stack
+            and ((resolved.get("ability") or {}).get("result") or {}).get("kind") == "grant_source_support_until_end_turn"
+        ):
+            # paying the cost is immediate: the player keeps priority to play the card in Support right away
+            next_priority = resolved.get("controllerId")
         self.rules_engine["priorityPlayerId"] = next_priority
         return {
             "status": "resolved",

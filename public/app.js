@@ -1068,12 +1068,12 @@ function renderConfrontationSummary(rules) {
   if (!visible) return;
   const playerIds = Object.keys(result.totals || {});
   const score = playerIds
-    .map((playerId) => `${rulesPlayerName(playerId)} ${Number(result.totals[playerId] || 0)}`)
-    .join(" · ");
+    .map((playerId) => `<span class="rules-summary-total${!result.stalemate && playerId === result.winnerId ? " is-winner" : ""}" style="--player-tone:${esc(playerColor(playerId))}">${esc(rulesPlayerName(playerId))} <b>${Number(result.totals[playerId] || 0)}</b></span>`)
+    .join("");
   const outcome = result.stalemate
     ? t("rulesConfrontationStalemate")
     : rulesText("rulesConfrontationWinner", { player: rulesPlayerName(result.winnerId) });
-  element.textContent = `${score} — ${outcome}`;
+  element.innerHTML = `${score}<em>${esc(outcome)}</em>`;
   element.classList.toggle("stalemate", Boolean(result.stalemate));
   element.style.setProperty("--winner-tone", result.winnerId ? playerColor(result.winnerId) : "#b8ad91");
 }
@@ -1602,6 +1602,15 @@ function collectRulesVfxCleanupMoves(details, fallback) {
 }
 
 function captureRulesVfxEvent(entry) {
+  const event = captureRulesVfxEventInner(entry);
+  if (entry.type === "rules_confrontation_cleanup") {
+    (event.cleanupMoves || []).slice(0, 12).filter((move) => !move.removedCopy).forEach((move) => rulesVfxHoldCard(move.cardId, move.origin));
+    if (event.supportWin) rulesVfxHoldCard(event.supportWin.cardId, event.supportWin.origin);
+  }
+  return event;
+}
+
+function captureRulesVfxEventInner(entry) {
   const details = entry.details || {};
   const fallback = rulesVfxPlayerOrigin(entry.actorId);
   const tributeOrigins = [];
@@ -1912,8 +1921,8 @@ function vfxParticleStyle(temperament) {
 function spawnVfxParticles(center, temperament, options = {}) {
   if (!center || rulesVfxReducedMotion()) return;
   const style = options.style || vfxParticleStyle(temperament);
-  const count = Math.min(24, Math.max(1, Number(options.count || 8)));
-  const spread = Number(options.spread || 34);
+  const count = Math.min(36, Math.max(1, Math.round(Number(options.count || 8) * 1.4)));
+  const spread = Number(options.spread || 34) * 1.5;
   const direction = options.direction || (style.rise ? "up" : "out");
   for (let index = 0; index < count; index += 1) {
     const particle = document.createElement("span");
@@ -1922,7 +1931,7 @@ function spawnVfxParticles(center, temperament, options = {}) {
     particle.style.left = `${center.x}px`;
     particle.style.top = `${center.y}px`;
     particle.style.setProperty("--p-color", style.colors[index % style.colors.length]);
-    particle.style.setProperty("--p-size", `${4 + (index % 3) * 2}px`);
+    particle.style.setProperty("--p-size", `${7 + (index % 3) * 3}px`);
     document.body.appendChild(particle);
     const angle = (index / count) * Math.PI * 2 + (index % 3) * 0.5;
     const dx = Math.cos(angle) * spread * (0.5 + (index % 4) * 0.22);
@@ -2002,8 +2011,8 @@ const RULES_VFX_CARD_SCENES = {
     rulesVfxOverlay("rules-vfx-sand", [{ opacity: 0 }, { opacity: .5, offset: .3 }, { opacity: 0 }], 1500);
   },
   // control swaps: the colours of the field invert for a moment
-  "zk76fhtep0wm3hh_en": () => rulesVfxOverlay("rules-vfx-invert", [{ opacity: 0 }, { opacity: 1, offset: .25 }, { opacity: 1, offset: .5 }, { opacity: 0 }], 900),
-  "0ujeinffs84nrvq_en": () => rulesVfxOverlay("rules-vfx-invert", [{ opacity: 0 }, { opacity: 1, offset: .25 }, { opacity: 1, offset: .5 }, { opacity: 0 }], 900),
+  "zk76fhtep0wm3hh_en": (entry) => playRulesVfxControlSwap(entry),
+  "0ujeinffs84nrvq_en": (entry) => playRulesVfxControlSwap(entry),
   // omens: the top of the deck fans out
   "9yylrq6xancbn0m_en": (entry) => {
     const deck = rulesVfxPileCenter(entry.actorId, "deck");
@@ -2012,6 +2021,15 @@ const RULES_VFX_CARD_SCENES = {
       playRulesVfxFlight("draw-card", deck, { x: deck.x + (index - 1) * 70, y: deck.y - 110 }, { index: index * 2, land: false });
     }
     spawnVfxParticles(deck, "transcendent", { count: 10, spread: 44, direction: "up" });
+  },
+  // traumatize: a dark red vignette crushes the screen while mist pours over the victim's hand
+  "5r7g2e0r6q17lur_en": (entry) => {
+    const victimId = entry.details?.targets?.find?.((declared) => declared.kind === "player")?.playerId
+      || Object.keys(latestState?.players || {}).find((playerId) => playerId !== entry.actorId);
+    rulesVfxOverlay("rules-vfx-trauma", [{ opacity: 0 }, { opacity: 1, offset: .25 }, { opacity: .8, offset: .6 }, { opacity: 0 }], 1500);
+    const hand = rulesVfxPlayerOrigin(victimId);
+    spawnVfxParticles(hand, "melancholic", { count: 20, spread: 100, direction: "out", delay: 250 });
+    spawnVfxParticles(rulesVfxPlayerOrigin(entry.actorId), "choleric", { count: 10, spread: 60, direction: "up" });
   },
   // atavic oppression: purple mist chokes the opponent's hand, then the owner draws
   "a058t24med4h5nx_en": (entry) => {
@@ -2055,6 +2073,69 @@ function playRulesVfxRiseFromLimbo(entry, target) {
   playRulesVfxFlight("effect-card", limbo, target, { cardId: entry.details?.effectResult?.cardId, index: 0 });
 }
 
+// Control swap: the effect's card in the middle of the screen, the two exchanged cards trade places over ~2 s, then the board follows
+function playRulesVfxControlSwap(entry) {
+  const details = entry?.details || {};
+  const cardIds = (details.targets || details.action?.targets || [])
+    .filter((target) => target?.kind === "card")
+    .map((target) => target.cardId || rulesVfxFindBattlefieldItem(target.itemId)?.cardId)
+    .filter(Boolean)
+    .slice(0, 2);
+  const sourceCardId = details.source?.cardId;
+  if (cardIds.length < 2 || !sourceCardId) {
+    rulesVfxOverlay("rules-vfx-invert", [{ opacity: 0 }, { opacity: 1, offset: .25 }, { opacity: 1, offset: .5 }, { opacity: 0 }], 900);
+    return;
+  }
+  const stage = document.createElement("div");
+  stage.className = "rules-vfx-swap-stage";
+  stage.setAttribute("aria-hidden", "true");
+  stage.innerHTML = `
+    <img class="rules-vfx-swap-source" src="${esc(cardImage(sourceCardId))}" alt="">
+    <div class="rules-vfx-swap-row">
+      <img class="rules-vfx-swap-card" src="${esc(cardImage(cardIds[0]))}" alt="">
+      <img class="rules-vfx-swap-card" src="${esc(cardImage(cardIds[1]))}" alt="">
+    </div>`;
+  document.body.appendChild(stage);
+  const total = vfxMs(2400);
+  rulesVfxAnimateAndRemove(stage, [{ opacity: 0 }, { opacity: 1, offset: .12 }, { opacity: 1, offset: .88 }, { opacity: 0 }], { duration: total, easing: "ease-in-out" });
+  const [left, right] = stage.querySelectorAll(".rules-vfx-swap-card");
+  const gap = 190;
+  const swap = (from, to) => [{ transform: "translateX(0) scale(1)" }, { transform: "translateX(0) scale(1)", offset: .3 }, { transform: `translateX(${to}px) translateY(-26px) scale(1.12)`, offset: .62 }, { transform: `translateX(${to}px) scale(1)`, offset: .75 }, { transform: `translateX(${to}px) scale(1)` }];
+  left.animate(swap(0, gap), { duration: total, easing: "ease-in-out", fill: "both" });
+  right.animate(swap(0, -gap).map((frame) => ({ ...frame, transform: frame.transform.replace("-26px", "26px") })), { duration: total, easing: "ease-in-out", fill: "both" });
+  spawnVfxParticles({ x: window.innerWidth / 2, y: window.innerHeight * .68 }, "capricious", { count: 14, spread: 80, direction: "out", delay: total * .55 });
+  rulesVfxQueueBusyUntil = Math.max(rulesVfxQueueBusyUntil, performance.now() + total);
+}
+
+// The card being resolved appears large for a moment, then flies to where it ends up
+function playRulesVfxResolveReveal(entry) {
+  if (rulesVfxReducedMotion()) return;
+  const details = entry.details || {};
+  const cardId = details.source?.cardId;
+  if (!cardId || !cardImage(cardId)) return;
+  const resolution = details.sourceResolution || {};
+  const ownerId = resolution.ownerId || details.source?.ownerId || entry.actorId;
+  const destination = resolution.itemId
+    ? rulesVfxCenter(rulesVfxFindBattlefieldItem(resolution.itemId))
+    : (resolution.destination === "graveyard" || resolution.destination === "exile")
+      ? rulesVfxPileCenter(ownerId, resolution.destination)
+      : null;
+  const reveal = document.createElement("div");
+  reveal.className = "rules-vfx-resolve-reveal";
+  reveal.setAttribute("aria-hidden", "true");
+  reveal.innerHTML = `<img src="${esc(cardImage(cardId))}" alt="">`;
+  document.body.appendChild(reveal);
+  const dx = destination ? destination.x - window.innerWidth / 2 : 0;
+  const dy = destination ? destination.y - window.innerHeight / 2 : 0;
+  rulesVfxAnimateAndRemove(reveal, [
+    { opacity: 0, transform: "translate(-50%,-50%) scale(.6)" },
+    { opacity: 1, transform: "translate(-50%,-50%) scale(1)", offset: .22 },
+    { opacity: 1, transform: "translate(-50%,-50%) scale(1)", offset: .58 },
+    { opacity: destination ? .9 : 0, transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(${destination ? .32 : 1.08})`, offset: destination ? .94 : 1 },
+    { opacity: 0, transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(.3)` },
+  ], { duration: 1350, easing: "ease-in-out" });
+}
+
 function playRulesVfxCardScene(entry, target) {
   if (rulesVfxReducedMotion()) return;
   const scene = RULES_VFX_CARD_SCENES[entry.details?.source?.cardId];
@@ -2094,6 +2175,41 @@ function playRulesVfxDice(roll, anchor) {
   window.setTimeout(() => spawnVfxParticles({ x: anchor.x, y: anchor.y - 70 }, "capricious", { count: 10, spread: 40, direction: "out" }), vfxMs(1100));
 }
 
+// A card that is about to fly away stays visible at its place until its flight starts, so it never vanishes first
+const rulesVfxHolds = new Map();
+function rulesVfxHoldCard(cardId, origin) {
+  if (!cardId || !origin || rulesVfxReducedMotion()) return;
+  rulesVfxReleaseHold(cardId);
+  const hold = document.createElement("div");
+  hold.className = "rules-vfx-hold";
+  hold.setAttribute("aria-hidden", "true");
+  hold.innerHTML = `<img src="${esc(cardImage(cardId))}" alt="">`;
+  hold.style.left = `${origin.x - 52}px`;
+  hold.style.top = `${origin.y - 73}px`;
+  document.body.appendChild(hold);
+  rulesVfxHolds.set(cardId, { hold, timer: window.setTimeout(() => rulesVfxReleaseHold(cardId), 45000) });
+}
+
+function rulesVfxReleaseHold(cardId) {
+  const entry = rulesVfxHolds.get(cardId);
+  if (!entry) return;
+  window.clearTimeout(entry.timer);
+  entry.hold.remove();
+  rulesVfxHolds.delete(cardId);
+}
+
+// the winner chooses where their Manifestations go before anything flies to a pile
+function rulesVfxAfterWinnerChoices(play, waited = 0) {
+  const result = latestState?.rulesEngine?.confrontationResult;
+  const waiting = latestState?.rulesEngine?.pendingChoice?.kind === "confrontation_destination"
+    || (Array.isArray(result?.pendingOwnItemIds) && result.pendingOwnItemIds.length > 0);
+  if (waiting && waited < 60000) {
+    window.setTimeout(() => rulesVfxAfterWinnerChoices(play, waited + 300), 300);
+    return;
+  }
+  play();
+}
+
 function playRulesVfxFlight(kind, origin, target, options = {}) {
   const element = document.createElement("div");
   element.className = `rules-vfx-flight rules-vfx-${kind}`;
@@ -2108,9 +2224,13 @@ function playRulesVfxFlight(kind, origin, target, options = {}) {
       : "";
   }
   const isCard = VFX_CARD_FLIGHT_KINDS.includes(kind);
+  const big = isCard && Boolean(options.big);
+  if (options.cardId) rulesVfxReleaseHold(options.cardId);
   const size = !isCard
     ? { width: 28, height: 28 }
-    : ["tribute", "sacrifice"].includes(kind)
+    : big
+      ? { width: 104, height: 146 }
+      : ["tribute", "sacrifice"].includes(kind)
       ? { width: 50, height: 70 }
       : { width: 58, height: 81 };
   element.style.left = `${origin.x - size.width / 2}px`;
@@ -2123,7 +2243,7 @@ function playRulesVfxFlight(kind, origin, target, options = {}) {
   const midX = dx * .5;
   const midY = dy * .5 - arc;
   const tilt = isCard ? (options.index % 2 ? 7 : -7) : 0;
-  const duration = isCard ? (kind === "tribute" ? 500 : kind === "sacrifice" ? 540 : 660) : 470;
+  const duration = isCard ? (big ? 1150 : kind === "tribute" ? 500 : kind === "sacrifice" ? 540 : 660) : 470;
   rulesVfxAnimateAndRemove(element, [
     { transform: "translate3d(0,0,0) scale(.92) rotate(0deg)", opacity: 0 },
     { offset: .12, transform: `translate3d(${dx * .05}px,${dy * .05 - 9}px,0) scale(1.05) rotate(${-tilt * .35}deg)`, opacity: 1 },
@@ -2151,7 +2271,7 @@ function playRulesVfxFlight(kind, origin, target, options = {}) {
       );
     }
     window.setTimeout(
-      () => spawnVfxParticles(target, flightTemperament, { count: 8, spread: 36 }),
+      () => spawnVfxParticles(target, flightTemperament, big ? { count: 20, spread: 70 } : { count: 8, spread: 36 }),
       vfxMs(trailDelay + duration * 0.7),
     );
   }
@@ -2471,7 +2591,7 @@ function playRulesVfxExhaust(sourceRect) {
 const RULES_VFX_BEAT_MS = {
   rules_action_declared: 1900,
   rules_action_triggered: 850,
-  rules_action_resolved: 1250,
+  rules_action_resolved: 1700,
   rules_choice_resolved: 1050,
   rules_confrontation_cleanup: 820,
   rules_phase_advanced: 1700,
@@ -2492,10 +2612,12 @@ function playRulesVfxBatch(batch) {
     beats.push(event);
   }
   beats.forEach((event) => {
-    const length = RULES_VFX_BEAT_MS[event.entry.type] || 700;
+    const slowed = VFX_EFFECT_PACE_TYPES.includes(event.entry.type);
+    // effect beats run slower: the estimate must follow, or cards waiting for them land too early
+    const length = (RULES_VFX_BEAT_MS[event.entry.type] || 700) * (slowed ? VFX_EFFECT_PACE : 1);
     enqueueRulesVfx(() => {
       const played = playRulesVfxEvent(event);
-      return typeof played === "number" ? played : length;
+      return !slowed && typeof played === "number" ? played : length;
     }, length);
   });
 }
@@ -2555,9 +2677,9 @@ function playRulesVfxResolutionBanner(entry) {
   const totals = Object.entries(details.totals || {})
     .map(([playerId, value]) => {
       const tone = details.stalemate ? "" : playerId === details.winnerId ? " is-winner" : " is-loser";
-      return `<span class="rules-vfx-total${tone}">${esc(playerName(playerId))} <b data-count-to="${esc(String(value))}">0</b></span>`;
+      return `<span class="rules-vfx-total${tone}" style="--player-tone:${esc(playerColor(playerId))}"><i>${esc(playerName(playerId))}</i><b data-count-to="${esc(String(value))}">0</b></span>`;
     })
-    .join(" · ");
+    .join("");
   $$(".rules-vfx-resolution-banner").forEach((element) => element.remove());
   const banner = document.createElement("div");
   banner.className = "rules-vfx-resolution-banner";
@@ -2696,7 +2818,7 @@ function playRulesVfxEvent(event) {
     const base = typeof played === "number" ? played : RULES_VFX_BEAT_MS[event.entry.type] || 700;
     vfxEffectPaceUntil = performance.now() + vfxMs(base) * VFX_EFFECT_PACE + 300;
   }
-  return slowed && typeof played === "number" ? Math.round(played * VFX_EFFECT_PACE) : played;
+  return played;
 }
 
 function playRulesVfxEventInner(event) {
@@ -2732,30 +2854,32 @@ function playRulesVfxEventInner(event) {
       const cleanupMoves = event.cleanupMoves || [];
       const cleanupStep = 380;
       cleanupMoves.slice(0, 12).forEach((move, index) => {
-        window.setTimeout(() => {
+        window.setTimeout(() => rulesVfxAfterWinnerChoices(() => {
           if (rulesVfxReducedMotion()) {
             playRulesVfxImpact(move.target, t(move.zone === "exile" ? "rulesVfxExiled" : "rulesVfxMoved"), "moved");
             return;
           }
           if (move.removedCopy) playRulesVfxDestruction(move.origin, move.target, move.cardId);
-          else playRulesVfxFlight("effect-card", move.origin, move.target, { cardId: move.cardId, index });
+          else playRulesVfxFlight("effect-card", move.origin, move.target, { cardId: move.cardId, index, big: true });
           playRulesVfxImpact(
             move.target,
             t(move.zone === "exile" ? "rulesVfxExiled" : "rulesVfxMoved"),
             move.zone === "exile" ? "destroyed" : "moved",
             { delay: 380 },
           );
-        }, vfxMs(index * cleanupStep));
+        }), vfxMs(index * cleanupStep));
       });
       if (supportWin) {
-        const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
-        if (!reduced) playRulesVfxFlight("effect-card", supportWin.origin, supportWin.target, { cardId: supportWin.cardId, index: 0 });
-        if (supportWin.kind === "opponent_vessel_score") {
-          const delta = Number(supportWin.delta || 0);
-          playRulesVfxImpact(supportWin.target, `${delta >= 0 ? "+" : ""}${delta}`, delta < 0 ? "score-loss" : "score");
-        } else {
-          playRulesVfxImpact(supportWin.target, t("rulesVfxOpponentVessel"), "resolved");
-        }
+        rulesVfxAfterWinnerChoices(() => {
+          const reduced = window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+          if (!reduced) playRulesVfxFlight("effect-card", supportWin.origin, supportWin.target, { cardId: supportWin.cardId, index: 0, big: true });
+          if (supportWin.kind === "opponent_vessel_score") {
+            const delta = Number(supportWin.delta || 0);
+            playRulesVfxImpact(supportWin.target, `${delta >= 0 ? "+" : ""}${delta}`, delta < 0 ? "score-loss" : "score");
+          } else {
+            playRulesVfxImpact(supportWin.target, t("rulesVfxOpponentVessel"), "resolved");
+          }
+        });
       }
       return cleanupMoves.length ? 900 + Math.min(cleanupMoves.length, 12) * cleanupStep : 820;
     }
@@ -2771,6 +2895,7 @@ function playRulesVfxEventInner(event) {
       return;
     }
     if (entry.type === "rules_action_resolved") {
+      playRulesVfxResolveReveal(entry);
       playRulesVfxStackPulse("resolved");
       playRulesVfxImpact(target, t("rulesVfxResolved"), "resolved");
       if (entry.details?.effectResult?.kind === "resolve_top_deck_by_type" && entry.details.effectResult.cardId) {
@@ -2963,6 +3088,7 @@ function playRulesVfxEventInner(event) {
 
 let pendingRulesActionSource = null;
 let pendingRulesBoardFlow = null;
+let pendingSupportDrop = null;
 let rulesBoardTargetCleanup = [];
 let rulesBoardPointerMove = null;
 
@@ -3506,7 +3632,15 @@ function toggleRulesBoardPayment(index) {
   return true;
 }
 
+let handGhostSignature = "";
 function renderRulesBoardFlow() {
+  const ghostSignature = pendingRulesBoardFlow?.stage === "payment"
+    ? [...pendingRulesBoardFlow.selectedPaymentIndexes].join(",") + "|" + (pendingRulesBoardFlow.draft?.manifestations || []).filter((entry) => entry.zone === "graveyard").map((entry) => entry.selectionKey).join(",")
+    : "";
+  if (ghostSignature !== handGhostSignature) {
+    handGhostSignature = ghostSignature;
+    renderHandTray();
+  }
   syncRulesStackCopyBoardFlow();
   syncRulesStackPaymentBoardFlow();
   syncRulesChainBoardFlow();
@@ -3538,6 +3672,8 @@ function renderRulesBoardFlow() {
   panel.classList.remove("hidden");
   const stackDecision = ["stack_payment", "stack_copy_target"].includes(flow.mode);
   panel.classList.toggle("is-stack-payment", stackDecision);
+  // pre-play choices (payment, cost card, extra essence) open in the middle of the screen; board targets keep the side card
+  panel.classList.toggle("is-centered", !stackDecision && ["choice", "payment", "cost_card", "extra_essence", "committing"].includes(flow.stage));
   $("#rulesFloatingCardImg").src = cardImage(flow.source.cardId);
   $("#rulesFloatingCardImg").alt = cardName(flow.source.cardId);
   $("#rulesFloatingCardName").textContent = cardName(flow.source.cardId);
@@ -3597,6 +3733,15 @@ function renderRulesBoardFlow() {
       zone: t(flow.fromZone),
     });
     $("#rulesFlowCost").innerHTML = `<div class="rules-flow-cost-row"><span>${esc(t("rulesChainResultLabel"))}</span><strong>${esc(t("rulesChainResult"))}</strong></div>`;
+    if (flow.optional) {
+      // no question beforehand: drag a card from the hand, or pass
+      $("#rulesFlowChoiceActions").classList.remove("hidden");
+      const passButton = $("#rulesFlowDeclineBtn");
+      passButton.hidden = false;
+      passButton.disabled = false;
+      passButton.textContent = t("passPhase");
+      $("#rulesFlowPayBtn").classList.add("hidden");
+    }
     clearRulesBoardTargets();
     return;
   }
@@ -3887,6 +4032,8 @@ function rulesActivatedActionDraft(item, abilityOverride = null) {
     && !draft.encodedAbility.sourceZones.includes("battlefield")
   ) return null;
   if (draft.encodedAbility.exhaustSource && Math.round(Number(item.rotation || 0)) % 180 !== 0) return null;
+  const turnNow = Number(latestState?.phaseTracker?.turn || 0);
+  if (ability.oncePerTurnSupport && [item.supportUsedTurn, item.supportUntilTurn].some((value) => Number(value || 0) === turnNow)) return null;
   const counterCost = draft.encodedAbility.removeCountersFromSource;
   if (counterCost?.name) {
     const wanted = String(counterCost.name).toLocaleLowerCase();
@@ -4232,6 +4379,34 @@ function rulesLimboPlayMode() {
   return hollow ? "hollow" : null;
 }
 
+// Cards that can be played from another zone right now (Limbo, Wills placed on a Grimoire) show up as faded cards at the end of the hand
+function rulesGhostHandCards() {
+  const rules = latestState?.rulesEngine;
+  if (!rules?.enabled || isObserver || rules.pendingChoice || !latestState?.players?.[myPlayerId]) return [];
+  const ghosts = [];
+  const paying = pendingRulesBoardFlow?.stage === "payment" ? pendingRulesBoardFlow : null;
+  if (paying) {
+    // Tribute: Limbo cards that may pay it (Forgotten Pile...) appear in the hand like the others
+    for (const candidate of paying.draft?.manifestations || []) {
+      if (candidate.zone === "graveyard") ghosts.push({ cardId: candidate.cardId, zone: "payment", selectionKey: candidate.selectionKey, label: t("graveyard") });
+    }
+    return ghosts;
+  }
+  for (const cardId of new Set(latestState.players[myPlayerId].zones?.graveyard?.cards || [])) {
+    if (limboWillIsPlayable(cardId)) ghosts.push({ cardId, zone: "graveyard", label: t("graveyard") });
+  }
+  for (const host of latestState.battlefield || []) {
+    if (host.ownerId !== myPlayerId || !(host.attachedCards || []).length) continue;
+    if (!(passiveEffectsByCard.get(host.cardId) || []).some((effect) => effect.kind === "play_attached_wills")) continue;
+    for (const cardId of new Set(host.attachedCards.map((entry) => entry.cardId))) {
+      if (["ephemeral_will", "persistent_will"].includes(cardsById.get(cardId)?.type) && handCardIsPlayable(cardId)) {
+        ghosts.push({ cardId, zone: "attached", itemId: host.id, label: cardName(host.cardId) });
+      }
+    }
+  }
+  return ghosts;
+}
+
 function limboWillIsPlayable(cardId, fromField = false) {
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
@@ -4241,7 +4416,7 @@ function limboWillIsPlayable(cardId, fromField = false) {
   if (rulesCardPlayRestrictedClient(cardId)) return false;
   const phaseId = currentPhaseUi().phase?.id;
   if (card.type === "persistent_will") {
-    return phaseId === "end_actions" && !(rules.actionStack || []).length;
+    return phaseId === "end_actions";
   }
   return rulesEphemeralPhasesClient(card).includes(phaseId);
 }
@@ -5258,6 +5433,25 @@ function handleServerMessage(msg) {
       renderAll();
       renderStrokes();
       playRulesEffectVfxChanges(rulesEffectVfxChanges);
+      if (pendingSupportDrop) {
+        const pending = pendingSupportDrop;
+        if (pending.itemId) {
+          const supported = (msg.battlefield || []).find((item) => item.id === pending.itemId);
+          if (!supported || Date.now() - pending.at > 120000) pendingSupportDrop = null;
+          else if (!pendingRulesBoardFlow && Number(supported.supportUntilTurn || 0) === Number(msg.phaseTracker?.turn || 0)) {
+            pendingSupportDrop = null;
+            resolveDrop(pending.ctx, pending.clientX, pending.clientY);
+          }
+        } else {
+        const stillInHand = (msg.players?.[myPlayerId]?.zones?.hand?.cards || []).includes(pending.ctx.cardId);
+        if (!stillInHand || Date.now() - pending.at > 120000) pendingSupportDrop = null;
+        else if (!pendingRulesBoardFlow && handCardIsPlayable(pending.ctx.cardId)
+          && (msg.rulesEngine?.playPermissions || []).some((permission) => permission.playerId === myPlayerId && permission.cardId === pending.ctx.cardId)) {
+          pendingSupportDrop = null;
+          resolveDrop(pending.ctx, pending.clientX, pending.clientY);
+        }
+        }
+      }
     }
   } else if (msg.type === "reveal") {
     if (msg.zone === "hand") {
@@ -7159,6 +7353,8 @@ function handCardHasHandAction(cardId) {
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
   if (!rules?.enabled || !card || isObserver || rules.pendingChoice || card.type !== "manifestation") return false;
+  // while the first Manifestation (or a mulligan) is being chosen, hand effects are not usable
+  if (rules_pregame_active_client() || rules_recovery_mulligan_active_client() || rulesFirstManifestationActive()) return false;
   if (rules.priorityPlayerId !== myPlayerId) return false;
   const phaseId = currentPhaseUi().phase?.id;
   return (activatedAbilitiesByCard.get(cardId) || []).some((ability) => {
@@ -7218,7 +7414,7 @@ function handCardIsPlayable(cardId) {
     ) return rulesCanAffordCard(cardId);
     const timingOk = phaseId === "end_actions"
       || (phaseId === "confrontation_before_revelation" && rulesBeforeRevelationPlayClient(card));
-    return timingOk && !stackHasActions && rulesCanAffordCard(cardId);
+    return timingOk && (!stackHasActions || phaseId === "end_actions") && rulesCanAffordCard(cardId);
   }
   if (card.type === "manifestation" && rulesEndPhaseInterzonePlayClient(card)) {
     if (phaseId === "end_actions") return !stackHasActions && rulesInterzoneHasRoomClient();
@@ -7436,8 +7632,9 @@ function renderHandTray() {
   const suspendedCards = (latestState?.rulesEngine?.suspendedCards || [])
     .filter((entry) => entry.playableByPlayerId === meId && entry.cardId);
   $("#handCardCount").textContent = `${cards.length} ${cards.length === 1 ? t("card") : t("cards")}`;
+  const ghostCards = rulesGhostHandCards();
   const currentIds = new Set([...cards, ...suspendedCards.map((entry) => entry.cardId)]);
-  if (cards.length === 0 && suspendedCards.length === 0) {
+  if (cards.length === 0 && suspendedCards.length === 0 && ghostCards.length === 0) {
     tray.innerHTML = "";
     previousHandCardIds = currentIds;
     return;
@@ -7469,11 +7666,15 @@ function renderHandTray() {
         ${automationCoverageBadgeHtml(cardId)}
         <span class="hand-card-revealed-icon" title="${esc(t("rulesSuspended"))}">S</span>
       </div>`;
-    }).join("");
+    }).join("") + ghostCards.map((ghost, index) => `<div class="hand-card is-playable is-ghost" data-ghost-card="${esc(ghost.cardId)}" data-ghost-zone="${esc(ghost.zone)}" data-ghost-host="${esc(ghost.itemId || "")}" data-ghost-key="${esc(String(ghost.selectionKey ?? ""))}" title="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" style="--hand-rotate:0deg;--hand-arc:0px;--hand-z:${cards.length + suspendedCards.length + index};${rarityCosmosStyle(ghost.cardId)}">
+        ${raritySurfaceMarkup(null, `<img src="${esc(cardImage(ghost.cardId))}" alt="${esc(cardName(ghost.cardId))}">`)}
+        <span class="hand-ghost-label">${esc(ghost.label)}</span>
+      </div>`).join("");
   previousHandCardIds = currentIds;
   $$("[data-hand-card]").forEach((el) => {
     const cardId = el.dataset.handCard;
     el.onclick = () => {
+      if (pickHandDropCard(Number(el.dataset.handIndex))) return;
       if (toggleRulesBoardPayment(Number(el.dataset.handIndex))) return;
       if (!handPickMode) {
         // a Manifestation whose ability works from the Hand (Ranba, Diabolical Giant): click to use it
@@ -7521,6 +7722,28 @@ function renderHandTray() {
         { label: t("moveToDeckBottom"), onSelect: () => send({ type: "move_card", fromZone: "hand", toZone: "deck", cardId, position: "bottom" }) },
       );
       showContextMenu(event.clientX, event.clientY, betaMenuItems(items));
+    });
+  });
+  $$("[data-ghost-card]").forEach((el) => {
+    const cardId = el.dataset.ghostCard;
+    const zone = el.dataset.ghostZone;
+    const itemId = el.dataset.ghostHost || null;
+    if (zone === "payment") {
+      const candidate = pendingRulesBoardFlow?.draft?.manifestations?.find((entry) => String(entry.selectionKey) === el.dataset.ghostKey);
+      el.onclick = () => { if (candidate) toggleRulesBoardPayment(candidate.selectionKey); };
+      el.classList.toggle("is-choice-selected", Boolean(candidate && pendingRulesBoardFlow.selectedPaymentIndexes.has(candidate.selectionKey)));
+      wireCardHoverZoom(el, "hand-card-hover-clone");
+      return;
+    }
+    const startPlay = (placement) => beginRulesBoardAction(zone === "attached"
+      ? { cardId, zone, itemId, placement }
+      : { cardId, zone, placement });
+    el.onclick = () => startPlay({ x: 700, y: 300 });
+    bindCardDragSource(el, { kind: "card", cardId, handIndex: null, cardOwnerId: meId, fromOwnerId: meId, fromZone: zone, ghostHostId: itemId });
+    wireCardHoverZoom(el, "hand-card-hover-clone");
+    el.addEventListener("contextmenu", (event) => {
+      event.preventDefault();
+      showContextMenu(event.clientX, event.clientY, [{ label: t("inspect"), onSelect: () => showInspect(cardId) }]);
     });
   });
   $$("[data-suspended-card]").forEach((el) => {
@@ -7760,11 +7983,63 @@ function renderResolvePrompt() {
   prompt.querySelector("button").textContent = t("rulesResolvePromptBtn");
 }
 
+// "Discard / give a card from your hand" choices: the source card sits in the middle of the screen and a hand card is dragged (or clicked) to pick it
+let handDropSelection = { choiceId: null, indexes: [] };
+function rulesHandDropChoice() {
+  const choice = latestState?.rulesEngine?.pendingChoice;
+  if (!choice || choice.kind !== "discard_from_hand" || choice.playerId !== myPlayerId || isObserver) return null;
+  if (Array.isArray(choice.candidateCardIds)) return null;
+  return choice;
+}
+
+function rulesHandDropSelected(choice) {
+  if (handDropSelection.choiceId !== choice.id) handDropSelection = { choiceId: choice.id, indexes: [] };
+  return handDropSelection.indexes;
+}
+
+function sendHandDropSelection(choice) {
+  const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
+  const cardIds = rulesHandDropSelected(choice).map((index) => hand[index]).filter(Boolean);
+  send({ type: "resolve_rules_choice", choiceId: choice.id, cardIds });
+}
+
+function pickHandDropCard(handIndex) {
+  const choice = rulesHandDropChoice();
+  if (!choice) return false;
+  const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
+  const cardId = hand[handIndex];
+  const requiredTypes = Array.isArray(choice.requireTypes) && choice.requireTypes.length ? choice.requireTypes : null;
+  if (!cardId || (requiredTypes && !requiredTypes.includes(cardsById.get(cardId)?.type))) {
+    showToast(t("rulesBoardCardNotPlayable"), true);
+    return true;
+  }
+  const limit = Number(choice.count || 1);
+  const selected = rulesHandDropSelected(choice);
+  const position = selected.indexOf(handIndex);
+  if (position >= 0) selected.splice(position, 1);
+  else if (selected.length < limit) selected.push(handIndex);
+  if (!choice.upTo && selected.length === limit) sendHandDropSelection(choice);
+  else renderRulesChoice();
+  return true;
+}
+
+let rulesChoiceFlipTimer = null;
 function renderRulesChoice() {
+  const waiting = boardFlipBusyUntil - performance.now();
+  if (waiting > 0 && latestState?.rulesEngine?.pendingChoice?.playerId === myPlayerId && !pendingTriggeredPlacement) {
+    $("#rulesChoicePanel").classList.add("hidden");
+    clearTimeout(rulesChoiceFlipTimer);
+    rulesChoiceFlipTimer = setTimeout(() => { rulesChoiceFlipTimer = null; renderRulesChoice(); }, Math.min(waiting + 30, 2500));
+    return;
+  }
   renderResolvePrompt();
   renderOpponentDecidingBanner();
   renderRulesChoiceContent();
   syncRulesChoiceSourceCard();
+  const handDrop = rulesHandDropChoice();
+  document.body.classList.toggle("hand-drop-choice", Boolean(handDrop) && !$("#rulesChoicePanel").classList.contains("hidden"));
+  const selected = handDrop ? rulesHandDropSelected(handDrop) : [];
+  $$("[data-hand-card]").forEach((card) => card.classList.toggle("is-choice-selected", selected.includes(Number(card.dataset.handIndex))));
 }
 
 function renderRulesChoiceContent() {
@@ -7772,8 +8047,9 @@ function renderRulesChoiceContent() {
   const closeButton = $("#rulesChoiceCloseBtn");
   const options = $("#rulesChoiceOptions");
   options.classList.remove(
-    "has-destination-card", "has-order", "has-card-picker",
+    "has-destination-card", "has-order", "has-card-picker", "is-reveal-hand", "is-destination-screen",
   );
+  panel.classList.remove("cards-screen", "destination-screen", "hand-drop", "replace-screen");
   if (pendingTriggeredPlacement) {
     const { payload } = pendingTriggeredPlacement;
     $("#rulesChoiceHeading").textContent = t("rulesChooseTriggerTargetHeading");
@@ -7781,7 +8057,7 @@ function renderRulesChoiceContent() {
     closeButton.classList.remove("hidden");
     options.innerHTML = Object.entries(latestState?.players || {}).map(([playerId, player]) => `
       <button type="button" class="rules-choice-player" data-rules-player-target="${esc(playerId)}" style="--player-tone:${esc(playerColor(playerId))}">
-        ${esc(player.name || playerId)}
+        ${esc(playerId === myPlayerId ? t("rulesTargetSelf") : t("rulesTargetOpponent"))} · ${esc(rulesPlayerName(playerId))}
       </button>`).join("");
     $$('[data-rules-player-target]').forEach((button) => {
       button.onclick = () => {
@@ -7894,24 +8170,32 @@ function renderRulesChoiceContent() {
       if (group.topCount != null && group.bottomCount != null && Number.isInteger(topCount) && Number.isInteger(bottomCount)) {
         return index < topCount ? "top" : "bottom";
       }
-      return "top";
+      return "pool";
     };
+    // cards-only screen: the cards to place wait in the middle, the destinations sit on the right
+    panel.classList.add("cards-screen");
+    const presetPlacement = (choice.groups || []).some((group) => (group.cardIds || []).some((_id, index) => initialSide(group, index) !== "pool"));
+    const cardMarkup = (cardId) => `
+      <div class="rules-reorder-card rules-choice-card" data-rules-reorder-card="${esc(cardId)}" title="${esc(cardName(cardId))}">
+        <img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"><b></b>
+      </div>`;
     options.innerHTML = `
       ${(choice.groups || []).map((group) => `
         <section class="rules-reorder-group" data-rules-reorder-group="${esc(group.playerId)}">
-          <strong>${esc(rulesPlayerName(group.playerId))}</strong>
-          ${laneDefs(group).map((lane) => `
-            <div class="rules-reorder-lane">
-              <small>${esc(lane.label)}</small>
-              <div class="rules-reorder-strip" data-rules-reorder-strip="${esc(lane.side)}">
-                ${(group.cardIds || []).map((cardId, index) => initialSide(group, index) === lane.side ? `
-                  <div class="rules-reorder-card rules-choice-card" data-rules-reorder-card="${esc(cardId)}" title="${esc(cardName(cardId))}">
-                    <img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"><b></b>
-                  </div>` : "").join("")}
-              </div>
-            </div>`).join("")}
+          <div class="rules-reorder-strip rules-reorder-pool" data-rules-reorder-strip="pool">
+            ${(group.cardIds || []).map((cardId, index) => initialSide(group, index) === "pool" ? cardMarkup(cardId) : "").join("")}
+          </div>
+          <div class="rules-reorder-lanes">
+            ${laneDefs(group).map((lane) => `
+              <div class="rules-reorder-lane">
+                <small>${esc(lane.label)}</small>
+                <div class="rules-reorder-strip" data-rules-reorder-strip="${esc(lane.side)}">
+                  ${(group.cardIds || []).map((cardId, index) => initialSide(group, index) === lane.side ? cardMarkup(cardId) : "").join("")}
+                </div>
+              </div>`).join("")}
+          </div>
         </section>`).join("")}
-      <button type="button" class="primary" id="rulesDeckReorderConfirm">${esc(t("confirm"))}</button>`;
+      ${presetPlacement || !(choice.groups || []).some((group) => (group.cardIds || []).length) ? `<button type="button" class="primary" id="rulesDeckReorderConfirm">${esc(t("confirm"))}</button>` : ""}`;
     const numberStrips = () => {
       options.querySelectorAll(".rules-reorder-strip").forEach((strip) => {
         strip.querySelectorAll(".rules-reorder-card").forEach((card, index) => {
@@ -7926,8 +8210,16 @@ function renderRulesChoiceContent() {
         const section = card.closest("[data-rules-reorder-group]");
         card.classList.add("is-dragging");
         const move = (e) => {
-          const under = document.elementFromPoint(e.clientX, e.clientY);
-          const strip = under?.closest?.(".rules-reorder-strip");
+          // the card snaps to the nearest destination as it gets close, so the drop target is obvious
+          let strip = null;
+          let best = 110;
+          section.querySelectorAll(".rules-reorder-strip").forEach((entry) => {
+            const rect = entry.getBoundingClientRect();
+            const dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
+            const dy = Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom);
+            const distance = Math.hypot(dx, dy);
+            if (distance < best) { best = distance; strip = entry; }
+          });
           options.querySelectorAll(".rules-reorder-strip").forEach((entry) => entry.classList.toggle("is-over", entry === strip));
           if (!strip || strip.closest("[data-rules-reorder-group]") !== section) return;
           const siblings = [...strip.querySelectorAll(".rules-reorder-card")].filter((entry) => entry !== card);
@@ -7944,12 +8236,17 @@ function renderRulesChoiceContent() {
           window.removeEventListener("pointerup", up);
           card.classList.remove("is-dragging");
           options.querySelectorAll(".rules-reorder-strip").forEach((entry) => entry.classList.remove("is-over"));
+          // everything placed: no confirmation step, the choice is sent as soon as the pool is empty
+          if (!options.querySelector('[data-rules-reorder-strip="pool"] .rules-reorder-card')) submitReorder();
         };
         window.addEventListener("pointermove", move);
         window.addEventListener("pointerup", up);
       });
     });
-    $("#rulesDeckReorderConfirm").onclick = (event) => {
+    let reorderSent = false;
+    const submitReorder = () => {
+      if (reorderSent) return;
+      reorderSent = true;
       const groups = (choice.groups || []).map((group) => {
         const section = options.querySelector(`[data-rules-reorder-group="${CSS.escape(group.playerId)}"]`);
         const ordered = (side) => [...section.querySelectorAll(`[data-rules-reorder-strip="${side}"] .rules-reorder-card`)]
@@ -7959,9 +8256,9 @@ function renderRulesChoiceContent() {
           ...(group.extraSide ? { extra: ordered("extra") } : {}),
         };
       });
-      event.currentTarget.disabled = true;
       send({ type: "resolve_rules_choice", choiceId: choice.id, option: { groups } });
     };
+    if ($("#rulesDeckReorderConfirm")) $("#rulesDeckReorderConfirm").onclick = submitReorder;
     panel.classList.remove("hidden");
     return;
   }
@@ -7995,6 +8292,7 @@ function renderRulesChoiceContent() {
     $("#rulesChoiceText").textContent = rulesText("rulesPeekTopCardText", {
       card: cardName(choice.cardId),
     });
+    options.classList.add("has-card-picker");
     options.innerHTML = `
       <button type="button" class="rules-choice-card" data-rules-peek-option="keep">
         <img src="${esc(cardImage(choice.cardId))}" alt="">
@@ -8376,6 +8674,7 @@ function renderRulesChoiceContent() {
     const candidates = (choice.candidateItemIds || [])
       .map((candidateId) => latestState?.battlefield?.find((item) => item.id === candidateId))
       .filter(Boolean);
+    options.classList.add("has-card-picker");
     options.innerHTML = candidates.map((item) => `
       <button type="button" class="rules-choice-card" data-rules-random-target="${esc(item.id)}">
         <img src="${esc(cardImage(item.cardId))}" alt="">
@@ -8476,6 +8775,7 @@ function renderRulesChoiceContent() {
     $("#rulesChoiceText").textContent = rulesText("rulesSuspendWillText", {
       card: cardName(choice.sourceCardId),
     });
+    options.classList.add("has-card-picker");
     options.innerHTML = (choice.cardIds || []).map((cardId, index) => `
       <button type="button" class="rules-choice-card" data-rules-suspend-card="${index}">
         <img src="${esc(cardImage(cardId))}" alt="">
@@ -8546,6 +8846,7 @@ function renderRulesChoiceContent() {
     const candidates = (choice.candidateItemIds || [])
       .map((itemId) => latestState?.battlefield?.find((item) => item.id === itemId))
       .filter(Boolean);
+    options.classList.add("has-card-picker");
     options.innerHTML = candidates.map((item) => `
       <button type="button" class="rules-choice-card" data-rules-persist-item="${esc(item.id)}" title="${esc(cardName(item.cardId))}">
         <img src="${esc(cardImage(item.cardId))}" alt="">
@@ -8571,6 +8872,7 @@ function renderRulesChoiceContent() {
     const candidates = (choice.candidateItemIds || [])
       .map((itemId) => latestState?.battlefield?.find((item) => item.id === itemId))
       .filter(Boolean);
+    options.classList.add("has-card-picker");
     options.innerHTML = candidates.map((item) => `
       <button type="button" class="rules-choice-card" data-rules-pick-item="${esc(item.id)}" title="${esc(cardName(item.cardId))}">
         <img src="${esc(cardImage(item.cardId))}" alt="">
@@ -8595,6 +8897,7 @@ function renderRulesChoiceContent() {
     const candidates = (choice.candidateItemIds || [])
       .map((itemId) => latestState?.battlefield?.find((item) => item.id === itemId))
       .filter(Boolean);
+    options.classList.add("has-card-picker");
     options.innerHTML = candidates.map((item) => `
       <button type="button" class="rules-choice-card" data-rules-distribute-item="${esc(item.id)}" title="${esc(cardName(item.cardId))}">
         <img src="${esc(cardImage(item.cardId))}" alt="">
@@ -8619,6 +8922,8 @@ function renderRulesChoiceContent() {
     $("#rulesChoiceText").textContent = rulesText(pickKey ? `${pickKey}Text` : "rulesRevealDiscardText", {
       player: rulesPlayerName(choice.targetPlayerId),
     });
+    options.classList.add("has-card-picker", "is-reveal-hand");
+    panel.classList.add("cards-screen");
     options.innerHTML = (choice.cardIds || []).map((cardId, index) => `
       <button type="button" class="rules-choice-card" data-rules-reveal-index="${index}" title="${esc(cardName(cardId))}">
         <img src="${esc(cardImage(cardId))}" alt="">
@@ -8669,7 +8974,9 @@ function renderRulesChoiceContent() {
     $("#rulesChoiceText").textContent = rulesText("rulesConfrontationDestinationText", {
       card: cardName(choice.cardId),
     });
-    options.classList.add("has-destination-card");
+    options.classList.add("has-destination-card", "is-destination-screen");
+    panel.classList.add("cards-screen", "destination-screen");
+    closeButton.classList.add("hidden");
     options.innerHTML = `
       <div class="rules-choice-destination-card" draggable="true" tabindex="0" role="img" aria-label="${esc(cardName(choice.cardId))}" title="${esc(cardName(choice.cardId))}">
         <img src="${esc(cardImage(choice.cardId))}" alt="${esc(cardName(choice.cardId))}">
@@ -8686,6 +8993,7 @@ function renderRulesChoiceContent() {
       </button>` : ""}
       ${(choice.options || []).includes("deck_bottom") ? `<button type="button" class="rules-choice-destination" data-rules-destination="deck_bottom">
         <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="11" height="15" rx="2"/><path d="M8 21h11a2 2 0 0 0 2-2V7M10 13l3 3 3-3M13 8v8"/></svg>
+        <img class="rules-destination-back" src="card-back.webp?v=20260905-1" alt="">
         <strong>${esc(t("rulesDeckBottom"))}</strong>
         <span>${esc(t("rulesConfrontationDeckHint"))}</span>
       </button>` : ""}`;
@@ -8707,6 +9015,29 @@ function renderRulesChoiceContent() {
     card.addEventListener("dragend", () => {
       card.classList.remove("is-dragging");
       $$('[data-rules-destination]').forEach((button) => button.classList.remove("is-drop-target"));
+    });
+    // the nearest destination lights up as the card gets close, wherever it is released around it
+    const nearestDestination = (event) => {
+      const direct = event.target?.closest?.("[data-rules-destination]");
+      if (direct) return direct;
+      let best = null;
+      let bestDistance = 130;
+      $$('[data-rules-destination]').forEach((button) => {
+        const rect = button.getBoundingClientRect();
+        const distance = Math.hypot(Math.max(rect.left - event.clientX, 0, event.clientX - rect.right), Math.max(rect.top - event.clientY, 0, event.clientY - rect.bottom));
+        if (distance < bestDistance) { bestDistance = distance; best = button; }
+      });
+      return best;
+    };
+    options.addEventListener("dragover", (event) => {
+      event.preventDefault();
+      if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
+      const near = nearestDestination(event);
+      $$('[data-rules-destination]').forEach((button) => button.classList.toggle("is-drop-target", button === near));
+    });
+    options.addEventListener("drop", (event) => {
+      event.preventDefault();
+      resolveDestination(nearestDestination(event));
     });
     $$('[data-rules-destination]').forEach((button) => {
       button.onclick = () => resolveDestination(button);
@@ -8733,16 +9064,58 @@ function renderRulesChoiceContent() {
     const candidates = (choice.candidateItemIds || [])
       .map((itemId) => latestState?.battlefield?.find((item) => item.id === itemId))
       .filter(Boolean);
-    options.innerHTML = candidates.map((item) => `
-      <button type="button" class="rules-choice-card" data-rules-replace-item="${esc(item.id)}" title="${esc(cardName(item.cardId))}">
-        <img src="${esc(cardImage(item.cardId))}" alt="">
-        <span>${esc(cardName(item.cardId))}</span>
-      </button>`).join("");
-    $$('[data-rules-replace-item]').forEach((button) => {
-      button.onclick = () => {
-        send({ type: "resolve_rules_choice", choiceId: choice.id, itemId: button.dataset.rulesReplaceItem });
-        button.disabled = true;
-      };
+    // cards-only screen: the Interzone cards in the middle, the Deck on the right; drag one onto the Deck (or click it)
+    panel.classList.add("cards-screen", "replace-screen");
+    closeButton.classList.add("hidden");
+    options.innerHTML = `
+      <div class="rules-replace-row">
+        <div class="rules-replace-cards">${candidates.map((item) => `
+          <div class="rules-reorder-card rules-choice-card" data-rules-replace-item="${esc(item.id)}" title="${esc(cardName(item.cardId))}">
+            <img src="${esc(cardImage(item.cardId))}" alt="${esc(cardName(item.cardId))}">
+          </div>`).join("")}</div>
+        <div class="rules-replace-deck" data-rules-replace-deck>
+          <img src="card-back.webp?v=20260905-1" alt="">
+          <strong>${esc(t("rulesDeckBottom"))}</strong>
+        </div>
+      </div>`;
+    const deck = options.querySelector("[data-rules-replace-deck]");
+    const chooseItem = (itemId) => {
+      if (!itemId || deck.dataset.sent) return;
+      deck.dataset.sent = "1";
+      send({ type: "resolve_rules_choice", choiceId: choice.id, itemId });
+    };
+    options.querySelectorAll("[data-rules-replace-item]").forEach((card) => {
+      card.addEventListener("click", () => chooseItem(card.dataset.rulesReplaceItem));
+      card.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        const startX = event.clientX;
+        const startY = event.clientY;
+        let moved = false;
+        const near = (e) => {
+          const rect = deck.getBoundingClientRect();
+          return Math.hypot(Math.max(rect.left - e.clientX, 0, e.clientX - rect.right), Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom)) < 120;
+        };
+        const move = (e) => {
+          if (!moved && Math.hypot(e.clientX - startX, e.clientY - startY) > 5) {
+            moved = true;
+            card.classList.add("is-dragging");
+          }
+          if (moved) {
+            card.style.transform = `translate(${e.clientX - startX}px, ${e.clientY - startY}px)`;
+            deck.classList.toggle("is-over", near(e));
+          }
+        };
+        const up = (e) => {
+          window.removeEventListener("pointermove", move);
+          window.removeEventListener("pointerup", up);
+          deck.classList.remove("is-over");
+          card.classList.remove("is-dragging");
+          card.style.transform = "";
+          if (!moved || near(e)) chooseItem(card.dataset.rulesReplaceItem);
+        };
+        window.addEventListener("pointermove", move);
+        window.addEventListener("pointerup", up);
+      });
     });
     panel.classList.remove("hidden");
     return;
@@ -8819,6 +9192,21 @@ function renderRulesChoiceContent() {
       draw: Number(choice.drawAfter || 0),
     },
   );
+  if (!searching) {
+    // the cards stay in the hand: drag one onto the screen (or click it) instead of picking from a window
+    panel.classList.add("cards-screen", "hand-drop");
+    closeButton.classList.add("hidden");
+    const limit = Number(choice.count || 1);
+    options.innerHTML = limit > 1 || choice.upTo
+      ? `<button type="button" class="primary" id="rulesDiscardConfirm">${esc(choice.upTo && !rulesHandDropSelected(choice).length ? t("passPhase") : t("confirm"))}</button>`
+      : "";
+    if ($("#rulesDiscardConfirm")) $("#rulesDiscardConfirm").onclick = (event) => {
+      event.currentTarget.disabled = true;
+      sendHandDropSelection(choice);
+    };
+    panel.classList.remove("hidden");
+    return;
+  }
   options.classList.add("has-card-picker");
   options.innerHTML = cards.map((cardId, index) => `
     <button type="button" class="rules-choice-card" data-rules-discard-index="${index}" title="${esc(cardName(cardId))}">
@@ -8880,6 +9268,13 @@ function requestCardPlacement(payload, source = null) {
   }
   if (ability.targets?.kind !== "player") {
     beginRulesBoardPlacementTarget(payload, placementSource);
+    return;
+  }
+  const playerIds = Object.keys(latestState?.players || {});
+  const candidates = ability.targets?.controller === "opponent" ? playerIds.filter((id) => id !== myPlayerId) : playerIds;
+  if (candidates.length === 1) {
+    // a single legal player: nothing to choose
+    sendCardPlacement(payload, placementSource, [{ kind: "player", playerId: candidates[0] }]);
     return;
   }
   pendingTriggeredPlacement = { payload, source: placementSource, abilityId: ability.id };
@@ -9097,8 +9492,25 @@ function resolveDrop(ctx, clientX, clientY) {
   const fieldEl = el.closest("#battlefieldWrap");
   const handEl = el.closest("#myHandTray");
 
+  if (ctx.kind === "card" && ctx.fromZone === "hand" && !handEl && rulesHandDropChoice()) {
+    pickHandDropCard(Number(ctx.handIndex));
+    return;
+  }
   if (ctx.kind === "battlefield") {
     const battlefieldItem = latestState?.battlefield?.find((item) => item.id === ctx.itemId);
+    const turnNow = Number(latestState?.phaseTracker?.turn || 0);
+    const supportAbility = latestState?.rulesEngine?.enabled && fieldEl && !zoneEl && battlefieldItem
+      && battlefieldItem.fieldZone === "interzone" && battlefieldItemControllerId(battlefieldItem) === myPlayerId
+      && Number(battlefieldItem.supportUntilTurn || 0) !== turnNow
+      ? rulesActivatedAbilitiesForItem(battlefieldItem).find((ability) => String(ability.result?.kind || "").startsWith("grant_source_support"))
+      : null;
+    if (supportAbility && !pendingRulesBoardFlow) {
+      // Diabolical Giant: dropping it from the Interzone pays the cost first, then the same drop is replayed once it has Support
+      if (beginRulesBoardActivatedAction(battlefieldItem, supportAbility.id)) {
+        pendingSupportDrop = { ctx, clientX, clientY, at: Date.now(), itemId: battlefieldItem.id };
+      }
+      return;
+    }
     if (zoneEl) {
       const [toOwnerId, toZone] = zoneEl.dataset.dropZone.split(":");
       if (battlefieldItem && !battlefieldItem.isTokenCard && !cardDestinationAllowed(battlefieldItem.ownerId, toOwnerId, toZone)) {
@@ -9182,6 +9594,13 @@ function resolveDrop(ctx, clientX, clientY) {
     const logical = rotateForSeat((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
     const anchor = stackAnchorAt(clientX, clientY, null);
     const card = cardsById.get(ctx.cardId);
+    if (latestState?.rulesEngine?.enabled && ctx.fromZone === "attached" && ctx.ghostHostId) {
+      beginRulesBoardAction({
+        cardId: ctx.cardId, zone: "attached", itemId: ctx.ghostHostId,
+        placement: { x: logical.x, y: logical.y },
+      });
+      return;
+    }
     if (
       latestState?.rulesEngine?.enabled
       && ctx.fromZone === "graveyard"
@@ -9194,6 +9613,16 @@ function resolveDrop(ctx, clientX, clientY) {
         zone: "graveyard",
         placement: { x: logical.x, y: logical.y },
       });
+      return;
+    }
+    if (
+      latestState?.rulesEngine?.enabled && ctx.fromZone === "graveyard"
+      && !(latestState.rulesEngine.playPermissions || []).some((permission) => (
+        permission.playerId === myPlayerId && permission.cardId === ctx.cardId && permission.fromZone === "graveyard"
+      ))
+    ) {
+      // beta: a Limbo card only comes back through the engine (Wills above, Support permissions on the card itself)
+      showToast(t("rulesBoardCardNotPlayable"), true);
       return;
     }
     if (latestState?.rulesEngine?.enabled && ctx.fromZone === "hand") {
@@ -9211,6 +9640,17 @@ function resolveDrop(ctx, clientX, clientY) {
         return;
       }
       const firstManifestationPlaceholder = rulesFirstManifestationActive() && Boolean(card?.placeholder);
+      if (
+        card?.type === "manifestation" && !handCardIsPlayable(ctx.cardId) && handCardHasHandAction(ctx.cardId)
+        && (activatedAbilitiesByCard.get(ctx.cardId) || []).some((ability) => String(ability.result?.kind || "").startsWith("grant_source_support"))
+        && !pendingRulesBoardFlow
+      ) {
+        // Timid Brain: dropping the card pays its cost, then the card is played in Support on its own once the permission resolves
+        if (beginRulesHandActivatedAction(ctx.cardId, ctx.handIndex)) {
+          pendingSupportDrop = { ctx, clientX, clientY, at: Date.now() };
+        }
+        return;
+      }
       if ((card?.type !== "manifestation" && !firstManifestationPlaceholder) || !handCardIsPlayable(ctx.cardId)) {
         showToast(t("rulesBoardCardNotPlayable"), true);
         return;
@@ -10507,6 +10947,8 @@ function cardImpactTier(item) {
 }
 
 // Reveal flip: power sets the impact tier, a printed effect adds a coloured glow
+// choice windows wait for the reveal flip to end so they never cover it
+let boardFlipBusyUntil = 0;
 function playCardFlipReveal(el, item) {
   const face = el.querySelector(".bf-card-face");
   if (!face || rulesVfxReducedMotion()) return;
@@ -10517,6 +10959,7 @@ function playCardFlipReveal(el, item) {
   const tone = card?.glow || "#f1d377";
   const delay = Math.min(1800, rulesVfxQueueRemaining());
   const duration = vfxMs(420 + tier * 90);
+  boardFlipBusyUntil = Math.max(boardFlipBusyUntil, performance.now() + delay + duration + 450);
   const timing = { duration, delay, easing: "cubic-bezier(.2,.8,.2,1)", fill: "backwards" };
   const lift = 1 + tier * 0.07;
   // the card first shows its back (until the reveal is announced), then turns edge-on and shows its face once
@@ -10985,7 +11428,8 @@ function initCombatChrome() {
 function initGameControls() {
   $("#rulesFlowCancelBtn").onclick = cancelRulesBoardFlow;
   $("#rulesFlowDeclineBtn").onclick = () => {
-    if (pendingRulesBoardFlow?.mode === "stack_copy_target") resolveRulesStackCopyTargets("keep");
+    if (pendingRulesBoardFlow?.mode === "chain") cancelRulesBoardFlow();
+    else if (pendingRulesBoardFlow?.mode === "stack_copy_target") resolveRulesStackCopyTargets("keep");
     else resolveRulesStackPayment("decline");
   };
   $("#rulesFlowPayBtn").onclick = () => resolveRulesStackPayment("pay");

@@ -5025,6 +5025,7 @@
       "mechanics": [
         "cost:tribute",
         "passive:interzone_substitute_holder",
+        "phase-window",
         "result:karmapult_sacrifice",
         "target:card"
       ],

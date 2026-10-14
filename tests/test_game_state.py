@@ -3186,12 +3186,9 @@ class AssistedRulesTests(unittest.TestCase):
             "urocione", "p1", "urocione-field", True,
         )
         self.assertEqual(len(actions), 1)
-        optional_choice = session.rules_engine["pendingChoice"]
-        self.assertEqual(optional_choice["kind"], "optional_stack_action")
-        self.assertEqual(session.rules_engine["actionStack"], [])
-        self.assertIsNone(session.resolve_rules_choice(
-            "p1", optional_choice["id"], option="accept"
-        )[0])
+        # chain from the hand: no "use the effect?" question, the stack action is queued directly
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+        self.assertEqual(len(session.rules_engine["actionStack"]), 1)
         session.pass_rules_priority("p2")
         error, resolution = session.pass_rules_priority("p1")
 
@@ -3247,7 +3244,11 @@ class AssistedRulesTests(unittest.TestCase):
         session.queue_rules_battlefield_entry_triggers(
             "urocione", "p1", "urocione-field", True,
         )
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+        session.pass_rules_priority("p2")
+        self.assertIsNone(session.pass_rules_priority("p1")[0])
         decline_choice = session.rules_engine["pendingChoice"]
+        self.assertTrue(decline_choice["optional"])
         error, declined = session.resolve_rules_choice(
             "p1", decline_choice["id"], option="decline"
         )
@@ -3259,14 +3260,10 @@ class AssistedRulesTests(unittest.TestCase):
         session.queue_rules_battlefield_entry_triggers(
             "urocione", "p1", "urocione-field", True,
         )
-        accept_choice = session.rules_engine["pendingChoice"]
-        self.assertIsNone(session.resolve_rules_choice(
-            "p1", accept_choice["id"], option="accept"
-        )[0])
         session.pass_rules_priority("p2")
         self.assertIsNone(session.pass_rules_priority("p1")[0])
         chain_choice = session.rules_engine["pendingChoice"]
-        self.assertFalse(chain_choice["optional"])
+        self.assertTrue(chain_choice["optional"])
         self.assertIsNone(session.resolve_rules_choice(
             "p1", chain_choice["id"], ["m-1"],
             placement={"x": 500, "y": 500},
@@ -5376,6 +5373,48 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertIsNone(session.find_battlefield_item("theirs"))
         self.assertEqual(p1["zones"]["deck"], ["m-1"])
         self.assertEqual(session.players["p2"]["zones"]["deck"], ["m-2"])
+
+    def test_shattering_the_self_discards_three_from_the_target_deck_and_weakens(self):
+        session, p1, p2 = self.make_session()
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        session.card_rules["shatter"] = {
+            "type": "ephemeral_will", "powerCost": "{P}{P}",
+            "playedAbilities": [{
+                "id": "shattering-the-self",
+                "action": "play_card",
+                "targets": {"groups": [
+                    {"kind": "player", "min": 1, "max": 1},
+                    {
+                        "kind": "card", "min": 1, "max": 1, "cardType": "manifestation",
+                        "zones": ["battlefield"], "controller": "opponent",
+                    },
+                ], "min": 2, "max": 2},
+                "result": {"kind": "deck_discard_then_weaken", "count": 3},
+            }],
+        }
+        session.card_rules["m-0"].update({"power": 3, "temperaments": ["melancholic"]})
+        theirs = {
+            "id": "theirs", "ownerId": "p2", "cardId": "m-5",
+            "faceUp": True, "fieldZone": "confrontation", "counters": {},
+        }
+        session.battlefield = [theirs]
+        self.fill_deck(p2, ["m-1", "m-2", "will-ephemeral", "m-3"])
+        p1["zones"]["hand"] = ["shatter", "m-0"]
+        p1["zoneOwners"]["hand"] = {"shatter": "p1", "m-0": "p1"}
+        error, _action = session.declare_rules_action(
+            "p1", "Shattering the Self", kind="play_card",
+            source={"cardId": "shatter", "zone": "hand"},
+            targets=[
+                {"kind": "player", "playerId": "p2"},
+                {"kind": "card", "itemId": "theirs", "cardId": "m-5"},
+            ],
+            payment_card_ids=["m-0"], ability_id="shattering-the-self",
+        )
+        self.assertIsNone(error)
+        session.pass_rules_priority("p2")
+        self.assertIsNone(session.pass_rules_priority("p1")[0])
+        self.assertEqual(p2["zones"]["deck"], ["m-3"])
+        self.assertEqual(p2["zones"]["graveyard"][-3:], ["will-ephemeral", "m-2", "m-1"])
 
     def test_lose_effects_and_obscure_disable_actions_and_confrontation_power(self):
         session, p1, _p2 = self.make_session()
@@ -11545,10 +11584,9 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         session.battlefield = [self.field_item("tardi", "p1", self.TARDIGRAMO)]
         self.set_outcome(session, "p1", "p2", "tardi")
         session.queue_rules_confrontation_win_triggers()
-        error, _ = self.accept_and_target(session, "p1", [{"kind": "player", "playerId": "p1"}])
-        self.assertIn("opponent", error)
-        error, _ = self.accept_and_target(session, "p1", [{"kind": "player", "playerId": "p2"}])
-        self.assertIsNone(error)
+        # the only opponent is targeted automatically: no player choice
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+        self.assertEqual(session.rules_engine["actionStack"][-1]["targets"], [{"kind": "player", "playerId": "p2"}])
         self.resolve_stack(session)
         self.assertEqual(p2["zones"]["receptacle"], [])
         self.assertEqual(p2["zones"]["exile"], ["m-8"])
@@ -11558,7 +11596,7 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         session.battlefield = [self.field_item("tardi", "p1", self.TARDIGRAMO)]
         self.set_outcome(session, "p1", "p2", "tardi")
         session.queue_rules_confrontation_win_triggers()
-        self.assertIsNone(self.accept_and_target(session, "p1", [{"kind": "player", "playerId": "p2"}])[0])
+        self.assertIsNone(session.rules_engine["pendingChoice"])
         self.resolve_stack(session)
         self.assertEqual(p2["zones"]["exile"], [])
 

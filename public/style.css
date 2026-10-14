@@ -3264,7 +3264,7 @@ input, textarea, select {
 .inspect-history-card.is-current { outline: 3px solid var(--gold); outline-offset: 1px; }
 .bf-card .bf-flip-back { position: absolute; inset: 0; z-index: 5; border-radius: inherit; pointer-events: none; backface-visibility: hidden; }
 /* Score float, resolution duel, effect aura, end-game glow */
-.score-float { position: fixed; z-index: 300; pointer-events: none; font-size: 26px; font-weight: 900; text-shadow: 0 2px 8px #000d; }
+.score-float { position: fixed; z-index: 300; pointer-events: none; font-size: 36px; font-weight: 900; text-shadow: 0 2px 8px #000d; }
 .score-float.gain { color: #ffe17a; }
 .score-float.loss { color: #ff8a7a; }
 .rules-vfx-total { display: inline-block; transition: opacity .4s, transform .4s; }
@@ -3293,7 +3293,7 @@ input, textarea, select {
 .rules-vfx-draw-card .rules-vfx-flight-card { border-radius: 6px; box-shadow: 0 4px 10px #0009; }
 @media (prefers-reduced-motion: reduce) { .vfx-particle { display: none; } }
 /* Power / counter changes */
-.bf-stat-float { position: fixed; z-index: 270; pointer-events: none; font-size: 24px; font-weight: 900; text-shadow: 0 2px 8px #000d; opacity: 0; }
+.bf-stat-float { position: fixed; z-index: 270; pointer-events: none; font-size: 34px; font-weight: 900; text-shadow: 0 2px 8px #000d; opacity: 0; }
 .bf-stat-float.gain { color: #b8ffa8; }
 .bf-stat-float.loss { color: #ff8a7a; }
 /* Dice */
@@ -3329,3 +3329,116 @@ input, textarea, select {
 .inspect-attached-list .limbo-play-card span { color: inherit; font-size: 14px; }
 .hand-sort-quick { width: 40px; padding: 0; justify-content: center; }
 .hand-sort-quick.active { color: #17120a; background: var(--gold); }
+.rules-vfx-trauma { background: radial-gradient(circle at 50% 50%, transparent 25%, #3a0a1ccc 80%, #12020acc 100%); }
+
+.rules-choice-panel .box:has(.is-reveal-hand) { width: min(980px, 96vw); }
+.rules-choice-options.has-card-picker.is-reveal-hand {
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 8px; max-height: none; overflow: visible; padding: 8px 6px 14px;
+}
+.rules-choice-options.is-reveal-hand .rules-choice-card { padding: 4px; position: relative; transition: transform .14s ease-out; }
+.rules-choice-options.is-reveal-hand .rules-choice-card span { font-size: 11px; margin-top: 4px; }
+.rules-choice-options.is-reveal-hand .rules-choice-card:hover {
+  transform: scale(2.3); z-index: 30; box-shadow: 0 14px 34px #000a;
+}
+.rules-choice-options.is-reveal-hand .rules-choice-card:hover span { font-size: 6px; }
+
+.rules-vfx-resolution-banner > span:last-child { display: flex; gap: 14px; align-items: stretch; justify-content: center; }
+.rules-vfx-total { display: grid; justify-items: center; gap: 2px; min-width: 120px; padding: 6px 18px; border: 2px solid var(--player-tone, #b8ad91); border-radius: 10px; background: color-mix(in srgb, var(--player-tone, #444) 28%, #14110a); }
+.rules-vfx-total i { font-style: normal; font-size: 15px; font-weight: 800; letter-spacing: .04em; color: var(--player-tone, #f6ebc6); filter: brightness(1.5); }
+.rules-vfx-total b { font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }
+.rules-confrontation-summary { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.rules-summary-total { padding: 2px 10px; border-left: 5px solid var(--player-tone, #b8ad91); border-radius: 6px; background: #ffffff14; font-size: 16px; }
+.rules-summary-total b { font-size: 22px; margin-left: 4px; }
+.rules-summary-total.is-winner { box-shadow: 0 0 0 2px var(--winner-tone, #d4af37); }
+.rules-confrontation-summary em { font-style: normal; font-weight: 800; }
+.rules-reorder-card { width: 96px; }
+.rules-reorder-strip { min-height: 150px; }
+.rules-choice-options:has(#rulesDeckReorderConfirm) { grid-template-columns: 1fr; }
+#rulesDeckReorderConfirm { justify-self: center; width: auto; min-width: 160px; min-height: 0; padding: 9px 28px; font-size: 16px; }
+.rules-choice-panel .box:has(#rulesDeckReorderConfirm) { width: min(760px, 96vw); }
+.rules-flow-choice-actions button { height: auto; min-height: 40px; white-space: normal; overflow-wrap: anywhere; text-align: center; overflow: visible; text-overflow: clip; }
+.rules-flow-choice-actions { grid-template-columns: minmax(0, 1fr); }
+.rules-choice-options:not(.has-card-picker):not(.has-order):not(.has-destination-card) > .rules-choice-destination { white-space: normal; height: auto; }
+.rules-choice-options:not(.has-card-picker):not(.has-order):not(.has-destination-card) > .rules-choice-destination strong { white-space: normal; text-align: center; }
+
+.rules-board-flow.is-centered .rules-floating-card {
+  top: 50%; left: 50%; right: auto; width: min(620px, 94vw);
+  transform: translate(-50%, -50%);
+  display: grid; grid-template-columns: clamp(130px, 14vw, 180px) minmax(0, 1fr); gap: 14px; align-items: start;
+  padding: 14px; border: 1px solid #786536; border-radius: 14px; background: #0f0e09f2;
+  box-shadow: 0 0 0 100vmax #0006, 0 20px 50px #000c;
+}
+.rules-board-flow.is-centered .rules-floating-copy { margin-top: 0; }
+.rules-board-flow.is-centered .rules-cost-card-row { flex-wrap: wrap; justify-content: flex-start; }
+.rules-board-flow.is-centered .rules-cost-card-row .rules-choice-card { width: 84px; }
+
+/* ---- cards-only choice screen (reorder, reveal): source card left, cards in the middle, destinations right ---- */
+.rules-choice-panel.cards-screen .box { background: transparent; border: 0; box-shadow: none; width: min(1280px, 98vw); max-width: none; padding: 0; color: #f6edcf; text-shadow: 0 2px 8px #000; }
+.rules-choice-panel.cards-screen .rules-choice-head,
+.rules-choice-panel.cards-screen .rules-choice-effect ~ p { display: none; }
+.rules-choice-panel.cards-screen .box.has-source { grid-template-columns: clamp(180px, 17vw, 270px) minmax(0, 1fr); column-gap: 28px; align-items: center; }
+.rules-choice-panel.cards-screen .box.has-source > .rules-choice-source { width: 100%; height: auto; aspect-ratio: 5 / 7; margin: 0; border-radius: 10px; border: 2px solid #d7ba68; box-shadow: 0 14px 36px #000c; }
+.rules-choice-panel.cards-screen .rules-choice-effect { max-height: none; margin: 0 0 14px; padding: 0; font-size: 20px; line-height: 1.4; text-align: center; background: transparent; border: 0; color: #fff3cf; }
+.rules-choice-panel.cards-screen .rules-choice-options { max-height: none; overflow: visible; display: block; padding: 0; }
+.rules-choice-panel.cards-screen .rules-reorder-group { grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 28px; margin-bottom: 16px; }
+.rules-choice-panel.cards-screen .rules-reorder-lanes { display: grid; gap: 14px; }
+.rules-choice-panel.cards-screen .rules-reorder-lane > small { color: #f6edcf; font-size: 13px; text-align: center; }
+.rules-choice-panel.cards-screen .rules-reorder-strip { background: transparent; border-color: #d7ba6888; min-width: 130px; min-height: 168px; align-items: center; transition: transform .14s ease-out, border-color .14s, box-shadow .14s; }
+.rules-choice-panel.cards-screen .rules-reorder-pool { border-style: none; justify-content: center; min-height: 190px; }
+.rules-choice-panel.cards-screen .rules-reorder-strip.is-over { background: #ffffff12; border-color: #fff3cf; box-shadow: 0 0 0 3px #d7ba6866, 0 0 26px #d7ba68aa; transform: scale(1.05); }
+.rules-choice-panel.cards-screen .rules-reorder-card { width: 112px; }
+.rules-choice-panel.cards-screen .rules-reorder-card:hover:not(.is-dragging) { transform: scale(1.9); z-index: 30; }
+.rules-choice-panel.cards-screen .rules-choice-options.is-reveal-hand { display: grid; }
+
+/* hand-drop choice: the effect's card is shown in the middle on a darker screen, the player drags a hand card onto it */
+.rules-choice-panel.hand-drop { display: grid; place-items: center; background: #05040299; backdrop-filter: none; }
+.rules-choice-panel.hand-drop .box { width: min(760px, 96vw); }
+.rules-choice-panel.hand-drop .box.has-source { grid-template-columns: 1fr; justify-items: center; row-gap: 12px; }
+.rules-choice-panel.hand-drop .box.has-source > .rules-choice-source { grid-column: 1; grid-row: 2; width: clamp(230px, 22vw, 330px); }
+.rules-choice-panel.hand-drop .box.has-source > .rules-choice-effect { grid-column: 1; grid-row: 1; max-width: 640px; }
+.rules-choice-panel.hand-drop .box.has-source > .rules-choice-options { grid-column: 1; grid-row: 3; }
+body.hand-drop-choice .hand-area, body.hand-drop-choice #myHandTray { position: relative; z-index: 90; }
+.hand-card.is-choice-selected { outline: 3px solid var(--gold, #d7ba68); transform: translateY(-18px); }
+
+/* destination screen: the card on the left, one card-shaped drop slot per destination on the right */
+.rules-choice-panel.destination-screen .rules-choice-source { display: none; }
+.rules-choice-panel.destination-screen .box.has-source { display: block; }
+.rules-choice-options.is-destination-screen { display: flex !important; align-items: center; justify-content: space-between; gap: 40px; min-height: 340px; padding: 10px 20px; }
+.rules-choice-options.is-destination-screen .rules-choice-destination-card { flex: 0 0 auto; width: clamp(200px, 17vw, 270px); height: auto; aspect-ratio: 5 / 7; border: 2px solid #d7ba68; box-shadow: 0 14px 36px #000c; }
+.rules-choice-options.is-destination-screen .rules-choice-destination-card img { max-height: none; height: 100%; object-fit: cover; }
+.rules-choice-options.is-destination-screen > .rules-choice-destination {
+  position: relative; flex: 0 0 auto; width: clamp(130px, 11vw, 170px); aspect-ratio: 5 / 7; min-height: 0; padding: 8px;
+  display: grid; place-items: end center; background: transparent; color: #f6edcf; border: 2px dashed #d7ba6888; border-radius: 10px; box-shadow: none; overflow: hidden; white-space: normal;
+}
+.rules-choice-options.is-destination-screen > .rules-choice-destination strong { position: relative; z-index: 1; align-self: end; font-size: 16px; text-shadow: 0 2px 8px #000; white-space: normal; }
+.rules-choice-options.is-destination-screen > .rules-choice-destination span,
+.rules-choice-options.is-destination-screen > .rules-choice-destination svg { display: none; }
+.rules-choice-options.is-destination-screen .rules-destination-back { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .45; }
+.rules-choice-options.is-destination-screen > .rules-choice-destination.is-drop-target { border-style: solid; border-color: #fff3cf; box-shadow: 0 0 0 3px #d7ba6866, 0 0 28px #d7ba68aa; transform: scale(1.07); }
+.rules-choice-options.is-destination-screen > .rules-choice-destination:hover:not(:disabled) { background: #ffffff12; transform: scale(1.04); }
+
+/* playable cards that live in another zone (Limbo, Grimoire): faded at the end of the hand */
+.hand-card.is-ghost { opacity: .55; filter: grayscale(.75); }
+.hand-card.is-ghost:hover { opacity: .95; filter: none; }
+.hand-ghost-label { position: absolute; left: 4px; right: 4px; top: 4px; padding: 2px 4px; font-size: 14px; font-weight: 800; text-align: center; color: #f6edcf; background: #14110ad9; border-radius: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; pointer-events: none; }
+
+.rules-replace-row { display: flex; align-items: center; justify-content: space-between; gap: 40px; padding: 10px 20px; }
+.rules-replace-cards { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; flex: 1 1 auto; }
+.rules-choice-panel.replace-screen .rules-reorder-card { width: 120px; }
+.rules-choice-panel.replace-screen .rules-reorder-card.is-dragging { z-index: 40; pointer-events: none; transition: none; }
+.rules-replace-deck { position: relative; flex: 0 0 auto; width: clamp(130px, 11vw, 170px); aspect-ratio: 5 / 7; border: 2px dashed #d7ba6888; border-radius: 10px; overflow: hidden; display: grid; place-items: end center; padding: 8px; transition: transform .14s ease-out, box-shadow .14s; }
+.rules-replace-deck img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .5; }
+.rules-replace-deck strong { position: relative; font-size: 16px; text-shadow: 0 2px 8px #000; }
+.rules-replace-deck.is-over { border-style: solid; border-color: #fff3cf; box-shadow: 0 0 0 3px #d7ba6866, 0 0 28px #d7ba68aa; transform: scale(1.07); }
+
+.rules-vfx-swap-stage { position: fixed; inset: 0; z-index: 130; display: grid; justify-items: center; align-content: center; gap: 22px; background: #050402a6; pointer-events: none; }
+.rules-vfx-swap-source { width: clamp(180px, 16vw, 250px); aspect-ratio: 5 / 7; border: 2px solid #d7ba68; border-radius: 10px; box-shadow: 0 16px 40px #000d; }
+.rules-vfx-swap-row { display: flex; gap: 40px; }
+.rules-vfx-swap-card { width: clamp(120px, 10vw, 150px); aspect-ratio: 5 / 7; border: 2px solid #f6edcf; border-radius: 8px; box-shadow: 0 10px 26px #000c; }
+
+.rules-vfx-hold { position: fixed; z-index: 118; width: 104px; height: 146px; pointer-events: none; }
+.rules-vfx-hold img { width: 100%; height: 100%; object-fit: cover; border-radius: 6px; box-shadow: 0 8px 22px #000a; }
+
+.rules-vfx-resolve-reveal { position: fixed; left: 50%; top: 50%; z-index: 125; width: clamp(180px, 15vw, 240px); aspect-ratio: 5 / 7; pointer-events: none; }
+.rules-vfx-resolve-reveal img { width: 100%; height: 100%; object-fit: cover; border: 2px solid #d7ba68; border-radius: 10px; box-shadow: 0 16px 40px #000d; }

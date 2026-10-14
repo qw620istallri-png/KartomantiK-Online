@@ -416,7 +416,8 @@ class WebSocketRulesIntegrationTests(unittest.IsolatedAsyncioTestCase):
             item for item in resolved["battlefield"]
             if item.get("cardId") == second_manifestation
         )
-        self.assertEqual((chained["x"], chained["y"]), (400.0, 500.0))
+        # chained cards are laid out on the first free slot of their controller's Confrontation row
+        self.assertEqual((chained["x"], chained["y"]), (445.0, 800.0))
 
     async def test_opponent_chain_choice_is_owned_by_the_chaining_player(self):
         self.prepare_active_rules("confrontation_reaction")

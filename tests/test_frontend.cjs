@@ -1399,21 +1399,24 @@ function startServer() {
       };
       renderAll();
       const options = [...document.querySelectorAll("[data-rules-reorder-strip]")].map((strip) => strip.dataset.rulesReorderStrip);
-      // drag the second card onto the "extra" lane with real pointer events
-      const card = document.querySelectorAll('[data-rules-reorder-strip="top"] .rules-reorder-card')[1];
-      const extraStrip = document.querySelector('[data-rules-reorder-strip="extra"]');
-      const rect = extraStrip.getBoundingClientRect();
-      card.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true, clientX: 5, clientY: 5 }));
-      window.dispatchEvent(new PointerEvent("pointermove", { clientX: rect.left + 20, clientY: rect.top + 20 }));
-      window.dispatchEvent(new PointerEvent("pointerup", {}));
-      document.querySelector("#rulesDeckReorderConfirm").click();
+      // cards wait in the middle pool; drag each onto a destination with real pointer events, the choice is sent when the pool is empty
+      const dragTo = (card, side) => {
+        const rect = document.querySelector(`.rules-reorder-lanes [data-rules-reorder-strip="${side}"]`).getBoundingClientRect();
+        card.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true, clientX: 5, clientY: 5 }));
+        window.dispatchEvent(new PointerEvent("pointermove", { clientX: rect.left + 20, clientY: rect.top + 20 }));
+        window.dispatchEvent(new PointerEvent("pointerup", {}));
+      };
+      const pool = () => document.querySelectorAll('[data-rules-reorder-strip="pool"] .rules-reorder-card');
+      dragTo(pool()[0], "top");
+      dragTo(pool()[0], "extra");
+      dragTo(pool()[0], "top");
       const payload = window.__sent.find((entry) => entry.type === "resolve_rules_choice");
       latestState.rulesEngine.priorityPlayerId = saved.priority;
       latestState.rulesEngine.pendingChoice = saved.choice;
       renderAll();
       return { options: [...new Set(options)], extra: payload?.option?.groups?.[0]?.extra, top: payload?.option?.groups?.[0]?.top?.length };
     });
-    assert.deepEqual(extraReorder.options, ["top", "bottom", "extra"]);
+    assert.deepEqual(extraReorder.options, ["pool", "top", "bottom", "extra"]);
     assert.equal(extraReorder.extra.length, 1);
     assert.equal(extraReorder.top, 2);
     const popupLayout = await page.evaluate(() => {
@@ -1799,11 +1802,11 @@ function startServer() {
       const discardStep = {
         visible: !document.querySelector("#rulesChoicePanel").classList.contains("hidden"),
         closeHidden: document.querySelector("#rulesChoiceCloseBtn").classList.contains("hidden"),
-        cardChoices: document.querySelectorAll("[data-rules-discard-index]").length,
+        cardChoices: document.querySelectorAll("[data-hand-card]").length,
         priorityText: document.querySelector("#rulesPriority").textContent,
         passHidden: document.querySelector("#passPriorityBtn").classList.contains("hidden"),
       };
-      document.querySelector('[data-rules-discard-index="1"]').click();
+      document.querySelector('[data-hand-card][data-hand-index="1"]').click();
       discardStep.payload = window.__sent.find((payload) => payload.type === "resolve_rules_choice");
       window.__sent = [];
       latestState.rulesEngine.pendingChoice = {
@@ -1815,7 +1818,7 @@ function startServer() {
         text: document.querySelector("#rulesChoiceText").textContent,
         expectedDraw: "2",
       };
-      document.querySelector('[data-rules-discard-index="0"]').click();
+      document.querySelector('[data-hand-card][data-hand-index="0"]').click();
       conditionalStep.payload = window.__sent.find((payload) => payload.type === "resolve_rules_choice");
 
       window.__sent = [];
@@ -1827,9 +1830,9 @@ function startServer() {
       const multiDiscardStep = {
         confirmEnabledBeforePick: !document.querySelector("#rulesDiscardConfirm").disabled,
       };
-      document.querySelector('[data-rules-discard-index="0"]').click();
-      document.querySelector('[data-rules-discard-index="1"]').click();
-      multiDiscardStep.selectedCount = document.querySelectorAll("[data-rules-discard-index].selected").length;
+      document.querySelector('[data-hand-card][data-hand-index="0"]').click();
+      document.querySelector('[data-hand-card][data-hand-index="1"]').click();
+      multiDiscardStep.selectedCount = document.querySelectorAll(".hand-card.is-choice-selected").length;
       document.querySelector("#rulesDiscardConfirm").click();
       multiDiscardStep.payload = window.__sent.find((payload) => payload.type === "resolve_rules_choice");
 

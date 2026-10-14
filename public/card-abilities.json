@@ -1445,6 +1445,8 @@
   "0kcy08a6jd7ez7k_en": [
     {
       "id": "lose-ten-to-gain-support",
+      "oncePerTurnSupport": true,
+      "immediate": true,
       "sourceZones": ["hand", "battlefield"],
       "sourceFieldZone": "interzone",
       "loseScore": 10,
@@ -3169,7 +3171,7 @@
       "trigger": { "event": "enters_zone", "zone": "receptacle", "container": "opponent" },
       "result": {
         "kind": "create_support_tokens", "count": 2, "power": 1,
-        "temperament": "phlegmatic", "fieldZone": "interzone"
+        "temperament": "phlegmatic", "fieldZone": "interzone", "permanent": true
       }
     }
   ],
@@ -3732,6 +3734,7 @@
   "5zgq2zcogt4g4d0_en": [
     {
       "id": "timid-brain-discard-will-for-support",
+      "immediate": true,
       "sourceZones": ["hand"],
       "phaseIds": ["confrontation_reaction"],
       "additionalCost": "discard_hand_will",
@@ -4803,6 +4806,7 @@
     },
     {
       "id": "karmapult-sacrifices-for-power-loss",
+      "phaseIds": ["confrontation_reaction"],
       "tribute": "{H}",
       "sourceZones": [
         "battlefield"
