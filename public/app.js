@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261012-rules-beta-136";
+const STATIC_ASSET_VERSION = "20261014-rules-beta-137";
 {
   const versionEl = document.getElementById("appVersion");
   const versionMatch = STATIC_ASSET_VERSION.match(/beta-(\d+)/);
@@ -2129,7 +2129,7 @@ function playRulesVfxResolveReveal(entry) {
   const dy = destination ? destination.y - window.innerHeight / 2 : 0;
   rulesVfxAnimateAndRemove(reveal, [
     { opacity: 0, transform: "translate(-50%,-50%) scale(.6)" },
-    { opacity: 1, transform: "translate(-50%,-50%) scale(1)", offset: .22 },
+    { opacity: 1, transform: "translate(-50%,-50%) scale(1)", offset: .1 },
     { opacity: 1, transform: "translate(-50%,-50%) scale(1)", offset: .58 },
     { opacity: destination ? .9 : 0, transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(${destination ? .32 : 1.08})`, offset: destination ? .94 : 1 },
     { opacity: 0, transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(.3)` },
@@ -2226,13 +2226,19 @@ function playRulesVfxFlight(kind, origin, target, options = {}) {
   const isCard = VFX_CARD_FLIGHT_KINDS.includes(kind);
   const big = isCard && Boolean(options.big);
   if (options.cardId) rulesVfxReleaseHold(options.cardId);
+  // flying cards read at the size of the cards on the board (draw-card had no size at all)
+  const boardCardWidth = $(".bf-card[data-item-id]")?.getBoundingClientRect?.().width || 0;
+  const cardWidth = Math.round(Math.min(110, Math.max(64, boardCardWidth || 72)));
+  const cardSize = (factor) => ({ width: Math.round(cardWidth * factor), height: Math.round(cardWidth * factor * 1.4) });
   const size = !isCard
-    ? { width: 28, height: 28 }
+    ? { width: 34, height: 34 }
     : big
-      ? { width: 104, height: 146 }
+      ? cardSize(1.3)
       : ["tribute", "sacrifice"].includes(kind)
-      ? { width: 50, height: 70 }
-      : { width: 58, height: 81 };
+      ? cardSize(.85)
+      : cardSize(1);
+  element.style.width = `${size.width}px`;
+  element.style.height = `${size.height}px`;
   element.style.left = `${origin.x - size.width / 2}px`;
   element.style.top = `${origin.y - size.height / 2}px`;
   document.body.appendChild(element);
@@ -2589,10 +2595,10 @@ function playRulesVfxExhaust(sourceRect) {
 }
 
 const RULES_VFX_BEAT_MS = {
-  rules_action_declared: 1900,
-  rules_action_triggered: 850,
+  rules_action_declared: 2300,
+  rules_action_triggered: 1150,
   rules_action_resolved: 1700,
-  rules_choice_resolved: 1050,
+  rules_choice_resolved: 1500,
   rules_confrontation_cleanup: 820,
   rules_phase_advanced: 1700,
   rules_confrontation_compared: 3400,
@@ -2613,12 +2619,15 @@ function playRulesVfxBatch(batch) {
   }
   beats.forEach((event) => {
     const slowed = VFX_EFFECT_PACE_TYPES.includes(event.entry.type);
-    // effect beats run slower: the estimate must follow, or cards waiting for them land too early
-    const length = (RULES_VFX_BEAT_MS[event.entry.type] || 700) * (slowed ? VFX_EFFECT_PACE : 1);
+    const base = RULES_VFX_BEAT_MS[event.entry.type] || 700;
+    // effect beats run slower: the estimate must follow, or cards waiting for them land too early.
+    // The beat itself returns its base length: vfxMs() already applies the effect pace while it plays.
+    const estimate = base * (slowed ? VFX_EFFECT_PACE : 1);
     enqueueRulesVfx(() => {
       const played = playRulesVfxEvent(event);
-      return !slowed && typeof played === "number" ? played : length;
-    }, length);
+      if (played === false) return 0;
+      return typeof played === "number" ? played : base;
+    }, estimate);
   });
 }
 
@@ -2812,11 +2821,12 @@ function playRulesVfxTargetArrow(from, to, index = 0) {
 
 function playRulesVfxEvent(event) {
   const slowed = VFX_EFFECT_PACE_TYPES.includes(event.entry?.type);
-  if (slowed) vfxEffectPaceUntil = performance.now() + 4500;
+  // only effect beats run at the slower pace: a banner right after one plays at its normal speed
+  vfxEffectPaceUntil = slowed ? performance.now() + 4500 : 0;
   const played = playRulesVfxEventInner(event);
   if (slowed) {
     const base = typeof played === "number" ? played : RULES_VFX_BEAT_MS[event.entry.type] || 700;
-    vfxEffectPaceUntil = performance.now() + vfxMs(base) * VFX_EFFECT_PACE + 300;
+    vfxEffectPaceUntil = performance.now() + vfxMs(base) + 300;
   }
   return played;
 }
@@ -2847,7 +2857,7 @@ function playRulesVfxEventInner(event) {
         playRulesVfxImpact(hand, rulesText("rulesVfxDrawn", { count }), "draw", { delay: 400 });
         played = 1;
       });
-      return played ? 1100 : 300;
+      return played ? 1700 : 300;
     }
     if (entry.type === "rules_action_declared" && !rulesVfxReducedMotion()) playRulesVfxSpotlight(event);
     if (entry.type === "rules_confrontation_cleanup") {
@@ -2881,7 +2891,7 @@ function playRulesVfxEventInner(event) {
           }
         });
       }
-      return cleanupMoves.length ? 900 + Math.min(cleanupMoves.length, 12) * cleanupStep : 820;
+      return cleanupMoves.length ? 1600 + Math.min(cleanupMoves.length, 12) * cleanupStep : 820;
     }
     if (entry.type === "rules_action_triggered") {
       const triggerRect = event.sourceRect;
@@ -3140,6 +3150,7 @@ function clearRulesBoardTargets() {
 }
 
 function closeRulesBoardFlow() {
+  document.body.classList.remove("flow-uses-hand");
   clearRulesBoardTargets();
   pendingRulesBoardFlow = null;
   $("#rulesBoardFlow")?.classList.add("hidden");
@@ -3294,6 +3305,13 @@ function syncRulesTriggerTargetBoardFlow() {
     selectedPaymentIndexes: new Set(),
     stage: "target",
   };
+  // "another target ..." effects never offer their own card (Zombieswing in the Limbo)
+  if (choice.targetRules?.excludeSource) {
+    const draft = pendingRulesBoardFlow.draft;
+    draft.structuredTargets = draft.structuredTargets.filter((target) => !(
+      target.kind === "zone_card" && target.cardId === choice.sourceCardId
+    ));
+  }
 }
 
 function syncRulesStackCopyBoardFlow() {
@@ -3513,9 +3531,13 @@ function armRulesBoardTargets(flow) {
   // Choosing a player: a small popup with one button per player (me / opponent)
   if (candidates.length && candidates.every((target) => target.kind === "player")) {
     const popup = document.createElement("div");
-    popup.className = "log-panel rules-choice-panel rules-player-target-panel";
-    popup.innerHTML = `<div class="box">
-      <h2>${esc(t("rulesChoosePlayerTarget"))}</h2>
+    popup.className = "log-panel rules-choice-panel rules-player-target-panel cards-screen player-screen effect-screen";
+    const sourceCard = flow.draft.card;
+    const sourceImage = sourceCard?.id ? cardImage(sourceCard.id) : "";
+    const sourceEffect = sourceCard ? cardField(sourceCard, "effect") : "";
+    popup.innerHTML = `<div class="box${sourceImage ? " has-source" : ""}">
+      ${sourceImage ? `<span class="rules-choice-source" title="${esc(cardName(sourceCard.id))}"><img src="${esc(sourceImage)}" alt="${esc(cardName(sourceCard.id))}"></span>` : ""}
+      ${sourceEffect ? `<p class="rules-choice-effect">${esc(sourceEffect)}</p>` : ""}
       <div class="rules-choice-options">
         ${candidates.map((target) => `<button type="button" class="rules-choice-player" data-player-target="${esc(target.key)}" style="--player-tone:${esc(playerColor(target.playerId))}">${esc(target.playerId === myPlayerId ? t("rulesTargetSelf") : t("rulesTargetOpponent"))} · ${esc(rulesPlayerName(target.playerId))}</button>`).join("")}
       </div>
@@ -3523,6 +3545,33 @@ function armRulesBoardTargets(flow) {
     document.body.appendChild(popup);
     popup.querySelectorAll("[data-player-target]").forEach((button) => {
       button.onclick = () => commitTarget(candidates.find((target) => target.key === button.dataset.playerTarget));
+    });
+    rulesBoardTargetCleanup.push(() => popup.remove());
+    return;
+  }
+  // Choosing among public-zone cards (Limbo, Exile...) that have no spot on the board: the cards-only screen
+  if (
+    candidates.length
+    && candidates.every((target) => target.kind === "zone_card" && target.zone !== "hand" && !rulesTargetElement(target))
+  ) {
+    const popup = document.createElement("div");
+    popup.className = "log-panel rules-choice-panel rules-zone-target-panel cards-screen zone-pick-screen effect-screen";
+    const sourceCard = flow.draft.card;
+    const sourceImage = sourceCard?.id ? cardImage(sourceCard.id) : "";
+    const sourceEffect = sourceCard ? cardField(sourceCard, "effect") : "";
+    popup.innerHTML = `<div class="box${sourceImage ? " has-source" : ""}">
+      ${sourceImage ? `<span class="rules-choice-source" title="${esc(cardName(sourceCard.id))}"><img src="${esc(sourceImage)}" alt="${esc(cardName(sourceCard.id))}"></span>` : ""}
+      ${sourceEffect ? `<p class="rules-choice-effect">${esc(sourceEffect)}</p>` : ""}
+      <div class="rules-choice-options has-card-picker">
+        ${candidates.map((target) => `<button type="button" class="rules-choice-card" data-zone-pick="${esc(target.key)}" title="${esc(cardName(target.cardId))}">
+          <img src="${esc(cardImage(target.cardId))}" alt="${esc(cardName(target.cardId))}">
+          <span>${esc(rulesPlayerName(target.containerId))} · ${esc(t(target.zone))}</span>
+        </button>`).join("")}
+      </div>
+    </div>`;
+    document.body.appendChild(popup);
+    popup.querySelectorAll("[data-zone-pick]").forEach((button) => {
+      button.onclick = () => commitTarget(candidates.find((target) => target.key === button.dataset.zonePick));
     });
     rulesBoardTargetCleanup.push(() => popup.remove());
     return;
@@ -3633,6 +3682,7 @@ function toggleRulesBoardPayment(index) {
 }
 
 let handGhostSignature = "";
+let rulesFlowFlipTimer = null;
 function renderRulesBoardFlow() {
   const ghostSignature = pendingRulesBoardFlow?.stage === "payment"
     ? [...pendingRulesBoardFlow.selectedPaymentIndexes].join(",") + "|" + (pendingRulesBoardFlow.draft?.manifestations || []).filter((entry) => entry.zone === "graveyard").map((entry) => entry.selectionKey).join(",")
@@ -3647,8 +3697,20 @@ function renderRulesBoardFlow() {
   syncRulesTriggerTargetBoardFlow();
   const flow = pendingRulesBoardFlow;
   const panel = $("#rulesBoardFlow");
+  // paying from the hand (tribute, card cost): the hand rises above the dark screen
+  document.body.classList.toggle("flow-uses-hand", Boolean(
+    flow && !["stack_payment", "stack_copy_target"].includes(flow.mode) && ["payment", "cost_card"].includes(flow.stage),
+  ));
   if (!flow || !panel) {
     panel?.classList.add("hidden");
+    return;
+  }
+  const flipWait = rulesAnimationsBusyFor();
+  if (flipWait > 0 && ["trigger_target", "chain", "stack_copy_target", "stack_payment"].includes(flow.mode)) {
+    // effect windows wait for the reveal flip to end
+    panel.classList.add("hidden");
+    clearTimeout(rulesFlowFlipTimer);
+    rulesFlowFlipTimer = setTimeout(() => { rulesFlowFlipTimer = null; renderRulesBoardFlow(); }, Math.min(flipWait + 30, 2500));
     return;
   }
   const handSourceStillValid = ["hand", "graveyard"].includes(flow.source.zone)
@@ -7618,6 +7680,14 @@ function updateHandSortButton() {
   }
 }
 
+// extra cards (suspended, Limbo, Grimoire) follow the same curve as the hand
+function handCurveStyle(position, total) {
+  const center = position - (total - 1) / 2;
+  const rotate = Math.max(-16, Math.min(16, center * 3.25));
+  const arc = Math.abs(center) * Math.abs(center) * 1.35;
+  return `--hand-rotate:${rotate}deg;--hand-arc:${arc}px;`;
+}
+
 function renderHandTray() {
   const tray = $("#myHandTray");
   tray.dataset.emptyHint = t("handEmptyHint");
@@ -7649,7 +7719,7 @@ function renderHandTray() {
       const isNew = !previousHandCardIds.has(cid);
       const wasRevealed = myRevealed && myRevealed.has(cid);
       const rarity = rarityForCard(meId, cid);
-      const center = position - (cards.length - 1) / 2;
+      const center = position - (cards.length + suspendedCards.length + ghostCards.length - 1) / 2;
       const rotate = Math.max(-16, Math.min(16, center * 3.25));
       const arc = Math.abs(center) * Math.abs(center) * 1.35;
       const playable = handCardIsPlayable(cid) || handCardHasHandAction(cid);
@@ -7661,12 +7731,13 @@ function renderHandTray() {
     })
     .join("") + suspendedCards.map((entry, index) => {
       const cardId = entry.cardId;
-      return `<div class="hand-card is-playable" data-suspended-card="${esc(cardId)}" data-suspension-id="${esc(entry.id)}" title="${esc(`${cardName(cardId)} · ${t("rulesSuspended")}`)}" style="--hand-rotate:0deg;--hand-arc:0px;--hand-z:${cards.length + index};${rarityCosmosStyle(cardId)}">
+      const curve = handCurveStyle(cards.length + index, cards.length + suspendedCards.length + ghostCards.length);
+      return `<div class="hand-card is-playable" data-suspended-card="${esc(cardId)}" data-suspension-id="${esc(entry.id)}" title="${esc(`${cardName(cardId)} · ${t("rulesSuspended")}`)}" style="${curve}--hand-z:${cards.length + index};${rarityCosmosStyle(cardId)}">
         ${raritySurfaceMarkup(null, `<img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}">`)}
         ${automationCoverageBadgeHtml(cardId)}
         <span class="hand-card-revealed-icon" title="${esc(t("rulesSuspended"))}">S</span>
       </div>`;
-    }).join("") + ghostCards.map((ghost, index) => `<div class="hand-card is-playable is-ghost" data-ghost-card="${esc(ghost.cardId)}" data-ghost-zone="${esc(ghost.zone)}" data-ghost-host="${esc(ghost.itemId || "")}" data-ghost-key="${esc(String(ghost.selectionKey ?? ""))}" title="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" style="--hand-rotate:0deg;--hand-arc:0px;--hand-z:${cards.length + suspendedCards.length + index};${rarityCosmosStyle(ghost.cardId)}">
+    }).join("") + ghostCards.map((ghost, index) => `<div class="hand-card is-playable is-ghost" data-ghost-card="${esc(ghost.cardId)}" data-ghost-zone="${esc(ghost.zone)}" data-ghost-host="${esc(ghost.itemId || "")}" data-ghost-key="${esc(String(ghost.selectionKey ?? ""))}" title="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" style="${handCurveStyle(cards.length + suspendedCards.length + index, cards.length + suspendedCards.length + ghostCards.length)}--hand-z:${cards.length + suspendedCards.length + index};${rarityCosmosStyle(ghost.cardId)}">
         ${raritySurfaceMarkup(null, `<img src="${esc(cardImage(ghost.cardId))}" alt="${esc(cardName(ghost.cardId))}">`)}
         <span class="hand-ghost-label">${esc(ghost.label)}</span>
       </div>`).join("");
@@ -7987,7 +8058,9 @@ function renderResolvePrompt() {
 let handDropSelection = { choiceId: null, indexes: [] };
 function rulesHandDropChoice() {
   const choice = latestState?.rulesEngine?.pendingChoice;
-  if (!choice || choice.kind !== "discard_from_hand" || choice.playerId !== myPlayerId || isObserver) return null;
+  if (!choice || choice.playerId !== myPlayerId || isObserver) return null;
+  if (choice.kind === "peek_top_card") return choice.allowSwap ? choice : null;
+  if (!["discard_from_hand", "hand_overflow"].includes(choice.kind)) return null;
   if (Array.isArray(choice.candidateCardIds)) return null;
   return choice;
 }
@@ -8003,14 +8076,22 @@ function sendHandDropSelection(choice) {
   send({ type: "resolve_rules_choice", choiceId: choice.id, cardIds });
 }
 
-function pickHandDropCard(handIndex) {
+function pickHandDropCard(handIndex, fromDrop = false) {
   const choice = rulesHandDropChoice();
   if (!choice) return false;
+  // a single card is only chosen when it is released on the screen, so hesitating (or a stray click) picks nothing
+  if (!fromDrop && !(Number(choice.count || 1) > 1 || choice.upTo)) return true;
   const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
   const cardId = hand[handIndex];
   const requiredTypes = Array.isArray(choice.requireTypes) && choice.requireTypes.length ? choice.requireTypes : null;
   if (!cardId || (requiredTypes && !requiredTypes.includes(cardsById.get(cardId)?.type))) {
     showToast(t("rulesBoardCardNotPlayable"), true);
+    return true;
+  }
+  if (choice.kind === "peek_top_card") {
+    // a hand card dropped on the peek screen swaps with the top card (a plain click does nothing)
+    if (!fromDrop) return true;
+    send({ type: "resolve_rules_choice", choiceId: choice.id, option: "swap", cardIds: [cardId] });
     return true;
   }
   const limit = Number(choice.count || 1);
@@ -8023,10 +8104,15 @@ function pickHandDropCard(handIndex) {
   return true;
 }
 
+// effect windows open only once the reveal flip and every queued animation have finished
+function rulesAnimationsBusyFor() {
+  return Math.max(boardFlipBusyUntil - performance.now(), rulesVfxQueueRemaining());
+}
+
 let rulesChoiceFlipTimer = null;
 function renderRulesChoice() {
-  const waiting = boardFlipBusyUntil - performance.now();
-  if (waiting > 0 && latestState?.rulesEngine?.pendingChoice?.playerId === myPlayerId && !pendingTriggeredPlacement) {
+  const waiting = rulesAnimationsBusyFor();
+  if (waiting > 0 && latestState?.rulesEngine?.pendingChoice?.playerId === myPlayerId) {
     $("#rulesChoicePanel").classList.add("hidden");
     clearTimeout(rulesChoiceFlipTimer);
     rulesChoiceFlipTimer = setTimeout(() => { rulesChoiceFlipTimer = null; renderRulesChoice(); }, Math.min(waiting + 30, 2500));
@@ -8037,23 +8123,115 @@ function renderRulesChoice() {
   renderRulesChoiceContent();
   syncRulesChoiceSourceCard();
   const handDrop = rulesHandDropChoice();
-  document.body.classList.toggle("hand-drop-choice", Boolean(handDrop) && !$("#rulesChoicePanel").classList.contains("hidden"));
+  const choicePanel = $("#rulesChoicePanel");
+  const choiceOpen = !choicePanel.classList.contains("hidden");
+  document.body.classList.toggle("hand-drop-choice", Boolean(handDrop) && choiceOpen);
+  // a dark choice screen that does not use the hand also blocks it
+  document.body.classList.toggle("choice-blocks-hand", choiceOpen && choicePanel.classList.contains("cards-screen") && !choicePanel.classList.contains("hand-drop") && !choicePanel.classList.contains("hand-swap"));
   const selected = handDrop ? rulesHandDropSelected(handDrop) : [];
   $$("[data-hand-card]").forEach((card) => card.classList.toggle("is-choice-selected", selected.includes(Number(card.dataset.handIndex))));
 }
 
+// A row of cards put in order by dragging them (pointer events: no browser drag image, no tab split).
+function wireDragOrderRow(row, onReorder) {
+  const keys = () => [...row.querySelectorAll("[data-order-key]")].map((entry) => entry.dataset.orderKey);
+  row.querySelectorAll("[data-order-key]").forEach((card) => {
+    card.addEventListener("pointerdown", (event) => {
+      if (event.button !== 0) return;
+      event.preventDefault();
+      const start = keys().join("|");
+      card.classList.add("is-dragging");
+      const move = (e) => {
+        const siblings = [...row.querySelectorAll("[data-order-key]")].filter((entry) => entry !== card);
+        const before = siblings.find((entry) => {
+          const rect = entry.getBoundingClientRect();
+          return e.clientY < rect.top || (e.clientY <= rect.bottom && e.clientX < rect.left + rect.width / 2);
+        });
+        if (before) row.insertBefore(card, before);
+        else row.appendChild(card);
+      };
+      const up = () => {
+        window.removeEventListener("pointermove", move);
+        window.removeEventListener("pointerup", up);
+        card.classList.remove("is-dragging");
+        if (keys().join("|") !== start) onReorder(keys());
+      };
+      window.addEventListener("pointermove", move);
+      window.addEventListener("pointerup", up);
+    });
+  });
+}
+
+function dragOrderCardHtml(key, cardId, label, number) {
+  return `<div class="rules-choice-card" data-order-key="${esc(key)}" title="${esc(cardName(cardId))}">
+    <b class="rules-choice-badge">${number}</b>
+    <img src="${esc(cardImage(cardId))}" alt="" draggable="false">
+    <span>${esc(label || cardName(cardId))}</span>
+  </div>`;
+}
+
+// Drag a single card onto one of several slots (or click a slot); the nearest slot lights up on approach.
+function wireCardToSlots(card, slots, onPick) {
+  const nearest = (e) => {
+    let best = null;
+    let bestDistance = 130;
+    slots.forEach((slot) => {
+      const rect = slot.getBoundingClientRect();
+      const distance = Math.hypot(Math.max(rect.left - e.clientX, 0, e.clientX - rect.right), Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom));
+      if (distance < bestDistance) { bestDistance = distance; best = slot; }
+    });
+    return best;
+  };
+  card.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    const originX = event.clientX;
+    const originY = event.clientY;
+    card.classList.add("is-dragging");
+    const move = (e) => {
+      card.style.transform = `translate(${e.clientX - originX}px, ${e.clientY - originY}px)`;
+      const near = nearest(e);
+      slots.forEach((slot) => slot.classList.toggle("is-over", slot === near));
+    };
+    const up = (e) => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      card.classList.remove("is-dragging");
+      card.style.transform = "";
+      slots.forEach((slot) => slot.classList.remove("is-over"));
+      const near = nearest(e);
+      if (near) onPick(near);
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+  });
+  slots.forEach((slot) => { slot.onclick = () => onPick(slot); });
+}
+
+// Every rules choice uses the same effect screen: dark backdrop, no window, the source card on the left,
+// the effect text and the prompt centered, unframed choices. Specialised screens set their own layout.
 function renderRulesChoiceContent() {
+  const panel = $("#rulesChoicePanel");
+  panel.classList.remove("effect-screen");
+  renderRulesChoiceScreen();
+  const specialised = ["hand-drop", "destination-screen", "replace-screen"].some((name) => panel.classList.contains(name))
+    || latestState?.rulesEngine?.pendingChoice?.kind === "deck_reorder" && !pendingTriggeredPlacement;
+  if (!panel.classList.contains("hidden") && !specialised) panel.classList.add("cards-screen", "effect-screen");
+}
+
+function renderRulesChoiceScreen() {
   const panel = $("#rulesChoicePanel");
   const closeButton = $("#rulesChoiceCloseBtn");
   const options = $("#rulesChoiceOptions");
   options.classList.remove(
     "has-destination-card", "has-order", "has-card-picker", "is-reveal-hand", "is-destination-screen",
   );
-  panel.classList.remove("cards-screen", "destination-screen", "hand-drop", "replace-screen");
+  panel.classList.remove("cards-screen", "destination-screen", "hand-drop", "replace-screen", "chain-screen", "player-screen", "hand-swap");
   if (pendingTriggeredPlacement) {
     const { payload } = pendingTriggeredPlacement;
     $("#rulesChoiceHeading").textContent = t("rulesChooseTriggerTargetHeading");
     $("#rulesChoiceText").textContent = rulesText("rulesChooseTriggerTargetText", { card: cardName(payload.cardId) });
+    panel.classList.add("cards-screen", "player-screen");
     closeButton.classList.remove("hidden");
     options.innerHTML = Object.entries(latestState?.players || {}).map(([playerId, player]) => `
       <button type="button" class="rules-choice-player" data-rules-player-target="${esc(playerId)}" style="--player-tone:${esc(playerColor(playerId))}">
@@ -8088,6 +8266,7 @@ function renderRulesChoiceContent() {
     }
     closeButton.classList.add("hidden");
     options.classList.add("has-card-picker");
+    panel.classList.add("cards-screen", "chain-screen");
     $("#rulesChoiceHeading").textContent = t("rulesChainPileHeading");
     $("#rulesChoiceText").textContent = rulesText(
       "rulesChainPileText",
@@ -8105,8 +8284,7 @@ function renderRulesChoiceContent() {
         </button>`).join("")}
       ${choice.optional ? `
         <button type="button" class="rules-choice-destination rules-chain-decline" data-rules-chain-decline>
-          <strong>${esc(t("rulesChainDecline"))}</strong>
-          <span>${esc(t("rulesDeclineEffect"))}</span>
+          <strong>${esc(t("passPhase"))}</strong>
         </button>` : ""}`;
     $$("[data-rules-chain-card]").forEach((button) => {
       button.onclick = () => {
@@ -8267,21 +8445,37 @@ function renderRulesChoiceContent() {
     $("#rulesChoiceText").textContent = rulesText("rulesGuessTopCardText", {
       player: rulesPlayerName(choice.targetPlayerId),
     });
+    // three rows of unframed chips (type, temperament, power or cost) instead of drop-down menus
+    const guess = {
+      type: (choice.types || [])[0],
+      temperament: (choice.temperaments || [])[0],
+      value: (choice.values || [])[0],
+    };
+    const chipGroup = (field, label, values, render) => `
+      <div class="rules-chip-group">
+        <small>${esc(label)}</small>
+        <div class="rules-chip-row">
+          ${values.map((value) => `<button type="button" class="rules-chip" data-rules-guess-field="${field}" data-rules-guess-value="${esc(value)}" aria-pressed="${String(value) === String(guess[field])}">${render(value)}</button>`).join("")}
+        </div>
+      </div>`;
     options.innerHTML = `
-      <label>${esc(t("type"))}<select id="rulesGuessType">${(choice.types || []).map((value) => `<option value="${esc(value)}">${esc(value === "will" ? t("will") : t("manifestation"))}</option>`).join("")}</select></label>
-      <label>${esc(t("temperament"))}<select id="rulesGuessTemperament">${(choice.temperaments || []).map((value) => `<option value="${esc(value)}">${esc(t(value))}</option>`).join("")}</select></label>
-      <label>${esc(t("rulesPowerOrCost"))}<select id="rulesGuessValue">${(choice.values || []).map((value) => `<option value="${value}">${value}</option>`).join("")}</select></label>
+      ${chipGroup("type", t("type"), choice.types || [], (value) => esc(t(value === "will" ? "rulesTypeWill" : "rulesTypeManifestation")))}
+      ${chipGroup("temperament", t("temperament"), choice.temperaments || [], (value) => `<img src="${esc(temperamentSymbol(value))}" alt="">${esc(t(`temperament${value[0].toUpperCase()}${value.slice(1)}`))}`)}
+      ${chipGroup("value", t("rulesPowerOrCost"), choice.values || [], (value) => esc(value))}
       <button type="button" class="primary" id="rulesGuessConfirm">${esc(t("confirm"))}</button>`;
+    $$("[data-rules-guess-field]").forEach((chip) => {
+      chip.onclick = () => {
+        const field = chip.dataset.rulesGuessField;
+        guess[field] = chip.dataset.rulesGuessValue;
+        $$(`[data-rules-guess-field="${field}"]`).forEach((entry) => entry.setAttribute("aria-pressed", String(entry === chip)));
+      };
+    });
     $("#rulesGuessConfirm").onclick = (event) => {
       event.currentTarget.disabled = true;
       send({
         type: "resolve_rules_choice",
         choiceId: choice.id,
-        option: {
-          type: $("#rulesGuessType").value,
-          temperament: $("#rulesGuessTemperament").value,
-          value: Number($("#rulesGuessValue").value),
-        },
+        option: { type: guess.type, temperament: guess.temperament, value: Number(guess.value) },
       });
     };
     panel.classList.remove("hidden");
@@ -8289,44 +8483,31 @@ function renderRulesChoiceContent() {
   }
   if (choice.kind === "peek_top_card") {
     $("#rulesChoiceHeading").textContent = t("rulesPeekTopCardHeading");
-    $("#rulesChoiceText").textContent = rulesText("rulesPeekTopCardText", {
+    $("#rulesChoiceText").textContent = `${rulesText("rulesPeekTopCardText", {
       card: cardName(choice.cardId),
-    });
-    options.classList.add("has-card-picker");
+    })}${choice.allowSwap ? ` ${t("rulesPeekSwapHint")}` : ""}`;
+    // the peeked card in the middle, dragged (or a slot clicked) to the top or the bottom of the deck;
+    // a hand card dragged onto the screen swaps with it
     options.innerHTML = `
-      <button type="button" class="rules-choice-card" data-rules-peek-option="keep">
-        <img src="${esc(cardImage(choice.cardId))}" alt="">
-        <span>${esc(t("rulesKeepOnTop"))}</span>
-      </button>
-      <button type="button" class="rules-choice-destination" data-rules-peek-option="bottom">
-        <strong>${esc(t("rulesDeckBottom"))}</strong>
-      </button>`;
-    $$("[data-rules-peek-option]").forEach((button) => {
-      button.onclick = () => {
-        button.disabled = true;
-        send({
-          type: "resolve_rules_choice",
-          choiceId: choice.id,
-          option: button.dataset.rulesPeekOption,
-        });
-      };
+      <div class="rules-peek-row">
+        <div class="rules-peek-card" title="${esc(cardName(choice.cardId))}"><img src="${esc(cardImage(choice.cardId))}" alt="${esc(cardName(choice.cardId))}" draggable="false"></div>
+        <div class="rules-peek-slots">
+          <button type="button" class="rules-peek-slot" data-rules-peek-option="keep">
+            <img src="card-back.webp?v=20260905-1" alt=""><strong>${esc(t("rulesKeepOnTopShort"))}</strong>
+          </button>
+          <button type="button" class="rules-peek-slot" data-rules-peek-option="bottom">
+            <img src="card-back.webp?v=20260905-1" alt=""><strong>${esc(t("rulesDeckBottom"))}</strong>
+          </button>
+        </div>
+      </div>`;
+    let peekSent = false;
+    wireCardToSlots(options.querySelector(".rules-peek-card"), [...options.querySelectorAll("[data-rules-peek-option]")], (slot) => {
+      if (peekSent) return;
+      peekSent = true;
+      options.querySelectorAll("button").forEach((button) => { button.disabled = true; });
+      send({ type: "resolve_rules_choice", choiceId: choice.id, option: slot.dataset.rulesPeekOption });
     });
-    if (choice.allowSwap) {
-      const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
-      options.insertAdjacentHTML("beforeend", hand.map((cardId, index) => `
-        <button type="button" class="rules-choice-card" data-rules-peek-swap="${index}" title="${esc(cardName(cardId))}">
-          <img src="${esc(cardImage(cardId))}" alt="">
-          <span>${esc(t("rulesPeekSwapWith"))} ${esc(cardName(cardId))}</span>
-        </button>`).join(""));
-      $$("[data-rules-peek-swap]").forEach((button) => {
-        button.onclick = () => {
-          const cardId = hand[Number(button.dataset.rulesPeekSwap)];
-          if (!cardId) return;
-          button.disabled = true;
-          send({ type: "resolve_rules_choice", choiceId: choice.id, option: "swap", cardIds: [cardId] });
-        };
-      });
-    }
+    if (choice.allowSwap) panel.classList.add("hand-swap");
     panel.classList.remove("hidden");
     return;
   }
@@ -8385,36 +8566,17 @@ function renderRulesChoiceContent() {
     options.classList.add("has-order");
     $("#rulesChoiceHeading").textContent = t("rulesSupportOrderHeading");
     $("#rulesChoiceText").textContent = t("rulesSupportOrderText");
-    const ordered = [...(choice.items || [])];
+    let ordered = [...(choice.items || [])];
     const paintOrder = () => {
       options.innerHTML = `
-        <div class="rules-simultaneous-order">
-          ${ordered.map((item, index) => `
-            <div class="rules-choice-card rules-order-row">
-              <img src="${esc(cardImage(item.cardId))}" alt="">
-              <span><strong>${index + 1}.</strong> ${esc(cardName(item.cardId))}</span>
-              <button type="button" data-rules-support-order-up="${index}" aria-label="${esc(t("rulesMoveEarlier"))}" ${index === 0 ? "disabled" : ""}>↑</button>
-              <button type="button" data-rules-support-order-down="${index}" aria-label="${esc(t("rulesMoveLater"))}" ${index === ordered.length - 1 ? "disabled" : ""}>↓</button>
-            </div>`).join("")}
+        <div class="rules-drag-order">
+          ${ordered.map((item, index) => dragOrderCardHtml(item.itemId, item.cardId, "", index + 1)).join("")}
         </div>
+        <p class="rules-drag-order-hint">${esc(t("rulesDragToOrder"))}</p>
         <button type="button" class="primary" id="rulesSupportOrderConfirm">${esc(t("confirm"))}</button>`;
-      $$("[data-rules-support-order-up]").forEach((button) => {
-        button.onclick = () => {
-          const index = Number(button.dataset.rulesSupportOrderUp);
-          [ordered[index - 1], ordered[index]] = [
-            ordered[index], ordered[index - 1],
-          ];
-          paintOrder();
-        };
-      });
-      $$("[data-rules-support-order-down]").forEach((button) => {
-        button.onclick = () => {
-          const index = Number(button.dataset.rulesSupportOrderDown);
-          [ordered[index], ordered[index + 1]] = [
-            ordered[index + 1], ordered[index],
-          ];
-          paintOrder();
-        };
+      wireDragOrderRow(options.querySelector(".rules-drag-order"), (keys) => {
+        ordered = keys.map((key) => ordered.find((item) => item.itemId === key)).filter(Boolean);
+        paintOrder();
       });
       $("#rulesSupportOrderConfirm").onclick = (event) => {
         event.currentTarget.disabled = true;
@@ -8612,26 +8774,43 @@ function renderRulesChoiceContent() {
           ? t("rulesDeckBottom") : t("graveyard"),
       },
     );
+    const limit = Number(choice.count || 0);
+    if (choice.kind === "hand_overflow") {
+      // the cards stay in the hand: drag (or click) the ones to put away, like a discard from hand
+      panel.classList.add("cards-screen", "hand-drop");
+      options.innerHTML = "";
+      panel.classList.remove("hidden");
+      return;
+    }
+    const selected = new Set();
+    options.classList.add("has-card-picker");
     options.innerHTML = `
-      <div class="rules-simultaneous-order">
-        ${sourceCards.map((cardId, index) => `
-          <label class="rules-choice-card rules-order-row">
-            <input type="checkbox" value="${esc(cardId)}" data-rules-private-card="${index}">
-            <img src="${esc(cardImage(cardId))}" alt="">
-            <span>${esc(cardName(cardId))}</span>
-          </label>`).join("")}
-      </div>
-      <button type="button" class="primary" id="rulesPrivateCardsConfirm">${esc(t("confirm"))}</button>`;
-    $("#rulesPrivateCardsConfirm").onclick = (event) => {
-      const selected = $$("[data-rules-private-card]:checked").map((input) => input.value);
-      if (selected.length !== Number(choice.count || 0)) return;
-      event.currentTarget.disabled = true;
+      ${sourceCards.map((cardId, index) => `
+        <button type="button" class="rules-choice-card" data-rules-private-card="${index}" aria-pressed="false" title="${esc(cardName(cardId))}">
+          <img src="${esc(cardImage(cardId))}" alt="">
+          <span>${esc(cardName(cardId))}</span>
+        </button>`).join("")}
+      ${limit > 1 ? `<button type="button" class="primary" id="rulesPrivateCardsConfirm" disabled>${esc(t("confirm"))}</button>` : ""}`;
+    const sendPrivateCards = () => {
+      options.querySelectorAll("button").forEach((button) => { button.disabled = true; });
       send({
         type: "resolve_rules_choice",
         choiceId: choice.id,
-        cardIds: selected,
+        cardIds: [...selected].map((index) => sourceCards[index]).filter(Boolean),
       });
     };
+    $$("[data-rules-private-card]").forEach((button) => {
+      button.onclick = () => {
+        const index = Number(button.dataset.rulesPrivateCard);
+        if (selected.has(index)) selected.delete(index);
+        else if (selected.size < limit) selected.add(index);
+        button.setAttribute("aria-pressed", selected.has(index) ? "true" : "false");
+        // a single card: picking it is the answer, no confirmation step
+        if (limit <= 1 && selected.size === 1) { sendPrivateCards(); return; }
+        if ($("#rulesPrivateCardsConfirm")) $("#rulesPrivateCardsConfirm").disabled = selected.size !== limit;
+      };
+    });
+    if ($("#rulesPrivateCardsConfirm")) $("#rulesPrivateCardsConfirm").onclick = sendPrivateCards;
     panel.classList.remove("hidden");
     return;
   }
@@ -8644,24 +8823,38 @@ function renderRulesChoiceContent() {
     const candidates = (choice.candidateItemIds || [])
       .map((itemId) => latestState?.battlefield?.find((item) => item.id === itemId))
       .filter(Boolean);
-    options.innerHTML = `
-      ${Array.from({ length: Number(choice.count || 0) }, (_, index) => `
-        <label>${esc(rulesText("rulesPowerLossNumber", { number: index + 1 }))}
-          <select data-rules-power-target="${index}">
-            ${candidates.map((item) => `<option value="${esc(item.id)}">${esc(cardName(item.cardId))}</option>`).join("")}
-          </select>
-        </label>`).join("")}
-      <button type="button" class="primary" id="rulesPowerDistributionConfirm">${esc(t("confirm"))}</button>`;
-    $("#rulesPowerDistributionConfirm").onclick = (event) => {
-      event.currentTarget.disabled = true;
-      send({
-        type: "resolve_rules_choice",
-        choiceId: choice.id,
-        option: {
-          itemIds: $$("[data-rules-power-target]").map((select) => select.value),
-        },
+    // click a card to give it one point of power loss; the choice is sent once every point is assigned
+    const total = Number(choice.count || 0);
+    const assigned = [];
+    options.classList.add("has-card-picker");
+    const paintDistribution = () => {
+      options.innerHTML = `
+        ${candidates.map((item) => {
+          const given = assigned.filter((itemId) => itemId === item.id).length;
+          return `<button type="button" class="rules-choice-card" data-rules-power-target="${esc(item.id)}" aria-pressed="${given ? "true" : "false"}" title="${esc(cardName(item.cardId))}">
+            <b class="rules-choice-badge" data-rules-power-undo="${esc(item.id)}">${given ? `−${given}` : ""}</b>
+            <img src="${esc(cardImage(item.cardId))}" alt="">
+            <span>${esc(cardName(item.cardId))}</span>
+          </button>`;
+        }).join("")}
+        <p class="rules-drag-order-hint">${esc(rulesText("rulesPowerLossLeft", { count: total - assigned.length }))} · ${esc(t("rulesPowerLossHint"))}</p>`;
+      $$("[data-rules-power-target]").forEach((button) => {
+        button.onclick = (event) => {
+          const itemId = button.dataset.rulesPowerTarget;
+          if (event.target.closest("[data-rules-power-undo]")) {
+            assigned.splice(assigned.lastIndexOf(itemId), 1);
+            paintDistribution();
+            return;
+          }
+          if (assigned.length >= total) return;
+          assigned.push(itemId);
+          if (assigned.length < total) { paintDistribution(); return; }
+          options.querySelectorAll("button").forEach((entry) => { entry.disabled = true; });
+          send({ type: "resolve_rules_choice", choiceId: choice.id, option: { itemIds: [...assigned] } });
+        };
       });
     };
+    paintDistribution();
     panel.classList.remove("hidden");
     return;
   }
@@ -8721,52 +8914,94 @@ function renderRulesChoiceContent() {
   }
   if (choice.kind === "confrontation_relocation") {
     $("#rulesChoiceHeading").textContent = t("rulesRelocationHeading");
-    $("#rulesChoiceText").textContent = rulesText("rulesRelocationText", {
+    $("#rulesChoiceText").textContent = `${rulesText("rulesRelocationText", {
       card: cardName(choice.sourceCardId),
-    });
-    options.innerHTML = `
-      ${(choice.groups || []).map((group) => `
-        <section class="rules-simultaneous-order">
-          <strong>${esc(rulesPlayerName(group.playerId))} · ${esc(rulesText("rulesInterzoneSlots", { count: group.interzoneSlots }))}</strong>
-          ${(group.itemIds || []).map((candidateId, index) => {
-            const item = latestState?.battlefield?.find((entry) => entry.id === candidateId);
-            return `<div class="rules-choice-card rules-order-row">
-              <img src="${esc(cardImage(item?.cardId))}" alt="">
-              <span>${esc(cardName(item?.cardId))}</span>
-              <select data-rules-relocation="${esc(`${group.playerId}:${index}`)}">
-                <option value="interzone">${esc(t("interzone"))}</option>
-                <option value="deck">${esc(t("rulesDeckBottom"))}</option>
-              </select>
-              <input type="number" min="1" max="${group.itemIds.length}" value="${index + 1}" data-rules-relocation-order="${esc(`${group.playerId}:${index}`)}" aria-label="${esc(t("rulesDeckOrder"))}">
-            </div>`;
-          }).join("")}
-        </section>`).join("")}
-      <button type="button" class="primary" id="rulesRelocationConfirm">${esc(t("confirm"))}</button>`;
-    $("#rulesRelocationConfirm").onclick = (event) => {
-      const groups = (choice.groups || []).map((group) => {
-        const entries = (group.itemIds || []).map((candidateId, index) => {
-          const key = `${group.playerId}:${index}`;
-          return {
-            itemId: candidateId,
-            destination: document.querySelector(`[data-rules-relocation="${CSS.escape(key)}"]`)?.value,
-            order: Number(document.querySelector(`[data-rules-relocation-order="${CSS.escape(key)}"]`)?.value || index + 1),
-          };
+    })} ${t("rulesRelocationHint")}`;
+    // each Manifestation waits in the middle and is dragged to the Interzone (limited slots) or under the deck, in order
+    const cardOf = (itemId) => latestState?.battlefield?.find((entry) => entry.id === itemId)?.cardId;
+    const laneCard = (itemId) => `
+      <div class="rules-reorder-card rules-choice-card" data-rules-relocation-card="${esc(itemId)}" title="${esc(cardName(cardOf(itemId)))}">
+        <b class="rules-choice-badge"></b>
+        <img src="${esc(cardImage(cardOf(itemId)))}" alt="" draggable="false">
+      </div>`;
+    options.innerHTML = (choice.groups || []).map((group) => `
+      <section class="rules-reorder-group" data-rules-relocation-group="${esc(group.playerId)}" data-slots="${Number(group.interzoneSlots || 0)}">
+        ${(choice.groups || []).length > 1 ? `<strong>${esc(rulesPlayerName(group.playerId))}</strong>` : ""}
+        <div class="rules-reorder-strip rules-reorder-pool" data-rules-relocation-strip="pool">
+          ${(group.itemIds || []).map(laneCard).join("")}
+        </div>
+        <div class="rules-reorder-lanes">
+          <div class="rules-reorder-lane">
+            <small>${esc(t("interzone"))} · ${esc(rulesText("rulesInterzoneSlots", { count: group.interzoneSlots }))}</small>
+            <div class="rules-reorder-strip" data-rules-relocation-strip="interzone"></div>
+          </div>
+          <div class="rules-reorder-lane">
+            <small>${esc(t("rulesDeckBottom"))}</small>
+            <div class="rules-reorder-strip" data-rules-relocation-strip="deck"></div>
+          </div>
+        </div>
+      </section>`).join("");
+    let relocationSent = false;
+    const refreshLanes = () => {
+      options.querySelectorAll("[data-rules-relocation-group]").forEach((section) => {
+        const interzone = section.querySelector('[data-rules-relocation-strip="interzone"]');
+        interzone.classList.toggle("is-full", interzone.children.length >= Number(section.dataset.slots));
+        section.querySelectorAll('[data-rules-relocation-strip="deck"] [data-rules-relocation-card]').forEach((card, index) => {
+          card.querySelector("b").textContent = String(index + 1);
         });
-        return {
-          playerId: group.playerId,
-          interzone: entries.filter((entry) => entry.destination === "interzone").map((entry) => entry.itemId),
-          deckBottom: entries.filter((entry) => entry.destination === "deck")
-            .sort((first, second) => first.order - second.order)
-            .map((entry) => entry.itemId),
-        };
-      });
-      event.currentTarget.disabled = true;
-      send({
-        type: "resolve_rules_choice",
-        choiceId: choice.id,
-        option: { groups },
+        section.querySelectorAll('[data-rules-relocation-strip]:not([data-rules-relocation-strip="deck"]) b').forEach((badge) => { badge.textContent = ""; });
       });
     };
+    const submitRelocation = () => {
+      if (relocationSent) return;
+      relocationSent = true;
+      const groups = (choice.groups || []).map((group) => {
+        const section = options.querySelector(`[data-rules-relocation-group="${CSS.escape(group.playerId)}"]`);
+        const ids = (side) => [...section.querySelectorAll(`[data-rules-relocation-strip="${side}"] [data-rules-relocation-card]`)].map((card) => card.dataset.rulesRelocationCard);
+        return { playerId: group.playerId, interzone: ids("interzone"), deckBottom: ids("deck") };
+      });
+      send({ type: "resolve_rules_choice", choiceId: choice.id, option: { groups } });
+    };
+    options.querySelectorAll("[data-rules-relocation-card]").forEach((card) => {
+      card.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0 || relocationSent) return;
+        event.preventDefault();
+        const section = card.closest("[data-rules-relocation-group]");
+        card.classList.add("is-dragging");
+        const accepts = (strip) => strip.dataset.rulesRelocationStrip !== "interzone"
+          || strip.contains(card) || strip.children.length < Number(section.dataset.slots);
+        const move = (e) => {
+          let strip = null;
+          let best = 110;
+          section.querySelectorAll("[data-rules-relocation-strip]").forEach((entry) => {
+            if (!accepts(entry)) return;
+            const rect = entry.getBoundingClientRect();
+            const distance = Math.hypot(Math.max(rect.left - e.clientX, 0, e.clientX - rect.right), Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom));
+            if (distance < best) { best = distance; strip = entry; }
+          });
+          section.querySelectorAll("[data-rules-relocation-strip]").forEach((entry) => entry.classList.toggle("is-over", entry === strip));
+          if (!strip) return;
+          const before = [...strip.querySelectorAll("[data-rules-relocation-card]")].filter((entry) => entry !== card).find((entry) => {
+            const rect = entry.getBoundingClientRect();
+            return e.clientY < rect.top || (e.clientY <= rect.bottom && e.clientX < rect.left + rect.width / 2);
+          });
+          if (before) strip.insertBefore(card, before);
+          else strip.appendChild(card);
+          refreshLanes();
+        };
+        const up = () => {
+          window.removeEventListener("pointermove", move);
+          window.removeEventListener("pointerup", up);
+          card.classList.remove("is-dragging");
+          section.querySelectorAll("[data-rules-relocation-strip]").forEach((entry) => entry.classList.remove("is-over"));
+          // everything placed: no confirmation step
+          if (!options.querySelector('[data-rules-relocation-strip="pool"] [data-rules-relocation-card]')) submitRelocation();
+        };
+        window.addEventListener("pointermove", move);
+        window.addEventListener("pointerup", up);
+      });
+    });
+    refreshLanes();
     panel.classList.remove("hidden");
     return;
   }
@@ -8800,32 +9035,23 @@ function renderRulesChoiceContent() {
     options.classList.add("has-order");
     $("#rulesChoiceHeading").textContent = t("rulesSimultaneousOrderHeading");
     $("#rulesChoiceText").textContent = t("rulesSimultaneousOrderText");
-    const ordered = [...(choice.actions || [])];
+    let ordered = [...(choice.actions || [])];
     const paintOrder = () => {
       options.innerHTML = `
-        <div class="rules-simultaneous-order">
-          ${ordered.map((action, index) => `
-            <div class="rules-choice-card rules-order-row" data-rules-order-action="${esc(action.actionId)}">
-              <img src="${esc(cardImage(action.cardId))}" alt="">
-              <span><strong>${index + 1}.</strong> ${esc(action.label || cardName(action.cardId))}${action.immediate ? ` · ${esc(t("rulesImmediateLabel"))}` : ""}</span>
-              <button type="button" data-rules-order-up="${index}" aria-label="${esc(t("rulesMoveEarlier"))}" ${index === 0 || (action.immediate && !ordered[index - 1]?.immediate) ? "disabled" : ""}>↑</button>
-              <button type="button" data-rules-order-down="${index}" aria-label="${esc(t("rulesMoveLater"))}" ${index === ordered.length - 1 || (!action.immediate && ordered[index + 1]?.immediate) ? "disabled" : ""}>↓</button>
-            </div>`).join("")}
+        <div class="rules-drag-order">
+          ${ordered.map((action, index) => dragOrderCardHtml(
+            action.actionId, action.cardId,
+            `${action.label || cardName(action.cardId)}${action.immediate ? ` · ${t("rulesImmediateLabel")}` : ""}`,
+            index + 1,
+          )).join("")}
         </div>
+        <p class="rules-drag-order-hint">${esc(t("rulesDragToOrder"))}</p>
         <button type="button" class="primary" id="rulesSimultaneousOrderConfirm">${esc(t("confirm"))}</button>`;
-      $$("[data-rules-order-up]").forEach((button) => {
-        button.onclick = () => {
-          const index = Number(button.dataset.rulesOrderUp);
-          [ordered[index - 1], ordered[index]] = [ordered[index], ordered[index - 1]];
-          paintOrder();
-        };
-      });
-      $$("[data-rules-order-down]").forEach((button) => {
-        button.onclick = () => {
-          const index = Number(button.dataset.rulesOrderDown);
-          [ordered[index], ordered[index + 1]] = [ordered[index + 1], ordered[index]];
-          paintOrder();
-        };
+      wireDragOrderRow(options.querySelector(".rules-drag-order"), (keys) => {
+        const moved = keys.map((key) => ordered.find((action) => action.actionId === key)).filter(Boolean);
+        // immediate actions always stay above the others on the Pile
+        ordered = [...moved.filter((action) => !action.immediate), ...moved.filter((action) => action.immediate)];
+        paintOrder();
       });
       $("#rulesSimultaneousOrderConfirm").onclick = (event) => {
         event.currentTarget.disabled = true;
@@ -8979,7 +9205,7 @@ function renderRulesChoiceContent() {
     closeButton.classList.add("hidden");
     options.innerHTML = `
       <div class="rules-choice-destination-card" draggable="true" tabindex="0" role="img" aria-label="${esc(cardName(choice.cardId))}" title="${esc(cardName(choice.cardId))}">
-        <img src="${esc(cardImage(choice.cardId))}" alt="${esc(cardName(choice.cardId))}">
+        <img draggable="false" src="${esc(cardImage(choice.cardId))}" alt="${esc(cardName(choice.cardId))}">
       </div>
       <button type="button" class="rules-choice-destination" data-rules-destination="interzone">
         <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 7 7-7 11-7-11 7-7Z"/><path d="M8.5 10h7M10 14h4"/></svg>
@@ -9493,7 +9719,7 @@ function resolveDrop(ctx, clientX, clientY) {
   const handEl = el.closest("#myHandTray");
 
   if (ctx.kind === "card" && ctx.fromZone === "hand" && !handEl && rulesHandDropChoice()) {
-    pickHandDropCard(Number(ctx.handIndex));
+    pickHandDropCard(Number(ctx.handIndex), true);
     return;
   }
   if (ctx.kind === "battlefield") {

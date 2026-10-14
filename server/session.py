@@ -7975,6 +7975,18 @@ class Session:
             self.queue_rules_simultaneous_actions(queued)
         return queued
 
+    def queue_rules_effect_support_entry(self, item, from_zone=None):
+        """Queue enter-the-field triggers for a face-up Support put in play by an effect."""
+        triggered = self.queue_rules_battlefield_entry_triggers(
+            item["cardId"], item["ownerId"], item["id"], True, defer=True,
+        )
+        triggered.extend(self.queue_rules_support_entry_triggers(
+            item, played=False, from_zone=from_zone, defer=True,
+        ))
+        if triggered:
+            self.queue_rules_simultaneous_actions(triggered)
+        return triggered
+
     def queue_rules_support_entry_triggers(self, item, *, played=False, from_zone=None,
                                            event_targets=None, defer=False):
         """Queue public watcher effects after a Manifestation enters Support."""
@@ -9493,6 +9505,7 @@ class Session:
             }
             self.mark_rules_support_entry(item)
             self.battlefield.append(item)
+            self.queue_rules_effect_support_entry(item, "deck")
             return {
                 "kind": result.get("kind"), "status": "support",
                 "cardId": found, "itemId": item["id"],
@@ -11017,6 +11030,7 @@ class Session:
             }
             self.mark_rules_support_entry(item)
             self.battlefield.append(item)
+            self.queue_rules_effect_support_entry(item)
             return {
                 "kind": result.get("kind"), "status": "support",
                 "cardId": card_id, "itemId": item["id"],

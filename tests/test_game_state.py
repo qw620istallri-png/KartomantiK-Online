@@ -9588,6 +9588,19 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         support = next(i for i in session.battlefield if i["cardId"] == "m-5")
         self.assertTrue(support["isSupport"])
 
+    def test_consult_into_skysailing_triad_triggers_its_enter_effect(self):
+        consult, triad = "9c7s9dn3sa5dcko_en", "7g0495fr3188or9_en"
+        session, p1, _p2 = self.manual_batch_session(consult, triad, card_type="manifestation")
+        self.put(p1, "deck", [triad, "m-5", "m-6"])
+        self.run_ability(session, consult, [{"kind": "player", "playerId": "p1"}])
+        self.assertTrue(any(i["cardId"] == triad and i["isSupport"] for i in session.battlefield))
+        stack = session.rules_engine.get("actionStack") or []
+        pending = session.rules_engine.get("pendingChoice")
+        self.assertTrue(
+            any((a.get("source") or {}).get("cardId") == triad for a in stack) or pending,
+            "Skysailing Triad's enter effect was not queued",
+        )
+
     def test_easy_batch_eviscerate_discards_after_reorder(self):
         card = "inner-deserts-068"
         session, p1, _p2 = self.manual_batch_session(card)

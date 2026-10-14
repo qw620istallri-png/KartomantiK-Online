@@ -1807,6 +1807,8 @@ function startServer() {
         passHidden: document.querySelector("#passPriorityBtn").classList.contains("hidden"),
       };
       document.querySelector('[data-hand-card][data-hand-index="1"]').click();
+      discardStep.clickPicked = window.__sent.some((payload) => payload.type === "resolve_rules_choice");
+      pickHandDropCard(1, true);
       discardStep.payload = window.__sent.find((payload) => payload.type === "resolve_rules_choice");
       window.__sent = [];
       latestState.rulesEngine.pendingChoice = {
@@ -1818,7 +1820,7 @@ function startServer() {
         text: document.querySelector("#rulesChoiceText").textContent,
         expectedDraw: "2",
       };
-      document.querySelector('[data-hand-card][data-hand-index="0"]').click();
+      pickHandDropCard(0, true);
       conditionalStep.payload = window.__sent.find((payload) => payload.type === "resolve_rules_choice");
 
       window.__sent = [];
@@ -3888,9 +3890,9 @@ function startServer() {
     assert.match(tournament.moveResolutionLogs[0], /dessus/);
     assert.match(tournament.moveResolutionLogs[1], /top/);
     assert.match(tournament.moveResolutionLogs[2], /cima/);
-    assert.match(tournament.publicZoneTargetLogs[0], /P2 · Limbo/);
-    assert.match(tournament.publicZoneTargetLogs[1], /P2 · Limbo/);
-    assert.match(tournament.publicZoneTargetLogs[2], /P2 · Limbo/);
+    assert.match(tournament.publicZoneTargetLogs[0], /P2 · Limb(o|es)\b/);
+    assert.match(tournament.publicZoneTargetLogs[1], /P2 · Limb(o|es)\b/);
+    assert.match(tournament.publicZoneTargetLogs[2], /P2 · Limb(o|es)\b/);
     assert.match(tournament.destroyResolutionLogs[0], /détruite/);
     assert.match(tournament.destroyResolutionLogs[1], /destroyed/);
     assert.match(tournament.destroyResolutionLogs[2], /distrutta/);

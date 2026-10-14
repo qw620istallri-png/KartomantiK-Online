@@ -3347,11 +3347,11 @@ input, textarea, select {
 .rules-vfx-total { display: grid; justify-items: center; gap: 2px; min-width: 120px; padding: 6px 18px; border: 2px solid var(--player-tone, #b8ad91); border-radius: 10px; background: color-mix(in srgb, var(--player-tone, #444) 28%, #14110a); }
 .rules-vfx-total i { font-style: normal; font-size: 15px; font-weight: 800; letter-spacing: .04em; color: var(--player-tone, #f6ebc6); filter: brightness(1.5); }
 .rules-vfx-total b { font-size: 34px; line-height: 1; font-variant-numeric: tabular-nums; }
-.rules-confrontation-summary { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
+.rules-confrontation-summary { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; text-align: center; width: 100%; gap: 8px 12px; }
 .rules-summary-total { padding: 2px 10px; border-left: 5px solid var(--player-tone, #b8ad91); border-radius: 6px; background: #ffffff14; font-size: 16px; }
 .rules-summary-total b { font-size: 22px; margin-left: 4px; }
 .rules-summary-total.is-winner { box-shadow: 0 0 0 2px var(--winner-tone, #d4af37); }
-.rules-confrontation-summary em { font-style: normal; font-weight: 800; }
+.rules-confrontation-summary em { font-style: normal; font-weight: 800; flex: 0 0 100%; text-align: center; }
 .rules-reorder-card { width: 96px; }
 .rules-reorder-strip { min-height: 150px; }
 .rules-choice-options:has(#rulesDeckReorderConfirm) { grid-template-columns: 1fr; }
@@ -3367,7 +3367,7 @@ input, textarea, select {
   transform: translate(-50%, -50%);
   display: grid; grid-template-columns: clamp(130px, 14vw, 180px) minmax(0, 1fr); gap: 14px; align-items: start;
   padding: 14px; border: 1px solid #786536; border-radius: 14px; background: #0f0e09f2;
-  box-shadow: 0 0 0 100vmax #0006, 0 20px 50px #000c;
+  box-shadow: 0 20px 50px #000c;
 }
 .rules-board-flow.is-centered .rules-floating-copy { margin-top: 0; }
 .rules-board-flow.is-centered .rules-cost-card-row { flex-wrap: wrap; justify-content: flex-start; }
@@ -3395,11 +3395,14 @@ input, textarea, select {
 .rules-choice-panel.hand-drop { display: grid; place-items: center; background: #05040299; backdrop-filter: none; }
 .rules-choice-panel.hand-drop .box { width: min(760px, 96vw); }
 .rules-choice-panel.hand-drop .box.has-source { grid-template-columns: 1fr; justify-items: center; row-gap: 12px; }
-.rules-choice-panel.hand-drop .box.has-source > .rules-choice-source { grid-column: 1; grid-row: 2; width: clamp(230px, 22vw, 330px); }
+.rules-choice-panel.hand-drop .box.has-source > .rules-choice-source { grid-column: 1; grid-row: 2; width: clamp(160px, 13vw, 210px); }
+/* the screen is centered in the space above the hand, so the card never covers it */
+.rules-choice-panel.hand-drop { padding-bottom: 230px; box-sizing: border-box; }
 .rules-choice-panel.hand-drop .box.has-source > .rules-choice-effect { grid-column: 1; grid-row: 1; max-width: 640px; }
 .rules-choice-panel.hand-drop .box.has-source > .rules-choice-options { grid-column: 1; grid-row: 3; }
-body.hand-drop-choice .hand-area, body.hand-drop-choice #myHandTray { position: relative; z-index: 90; }
-.hand-card.is-choice-selected { outline: 3px solid var(--gold, #d7ba68); transform: translateY(-18px); }
+/* the hand keeps its place (absolute, at the bottom) and only rises above the dark screen */
+body.hand-drop-choice .hand-area { z-index: 90; }
+.hand-card.is-choice-selected { outline: 3px solid var(--gold, #d7ba68); outline-offset: 2px; }
 
 /* destination screen: the card on the left, one card-shaped drop slot per destination on the right */
 .rules-choice-panel.destination-screen .rules-choice-source { display: none; }
@@ -3419,7 +3422,7 @@ body.hand-drop-choice .hand-area, body.hand-drop-choice #myHandTray { position: 
 .rules-choice-options.is-destination-screen > .rules-choice-destination:hover:not(:disabled) { background: #ffffff12; transform: scale(1.04); }
 
 /* playable cards that live in another zone (Limbo, Grimoire): faded at the end of the hand */
-.hand-card.is-ghost { opacity: .55; filter: grayscale(.75); }
+.hand-card.is-ghost { opacity: .82; filter: grayscale(.4); }
 .hand-card.is-ghost:hover { opacity: .95; filter: none; }
 .hand-ghost-label { position: absolute; left: 4px; right: 4px; top: 4px; padding: 2px 4px; font-size: 14px; font-weight: 800; text-align: center; color: #f6edcf; background: #14110ad9; border-radius: 5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; pointer-events: none; }
 
@@ -3442,3 +3445,226 @@ body.hand-drop-choice .hand-area, body.hand-drop-choice #myHandTray { position: 
 
 .rules-vfx-resolve-reveal { position: fixed; left: 50%; top: 50%; z-index: 125; width: clamp(180px, 15vw, 240px); aspect-ratio: 5 / 7; pointer-events: none; }
 .rules-vfx-resolve-reveal img { width: 100%; height: 100%; object-fit: cover; border: 2px solid #d7ba68; border-radius: 10px; box-shadow: 0 16px 40px #000d; }
+
+/* cards-only screens: the card at 100%, nothing behind it, and the hand stays usable only when the choice needs it */
+/* one constant dark screen everywhere; the hand rises above it only when the choice uses it */
+.rules-choice-panel.hand-drop { background: #050402b8; }
+body.choice-blocks-hand .hand-area .hand-card { pointer-events: none; }
+.rules-choice-panel.cards-screen .rules-choice-source,
+.rules-choice-panel.cards-screen .rules-choice-destination-card,
+.rules-vfx-resolve-reveal img, .rules-vfx-swap-source, .rules-vfx-swap-card { background: transparent; border: 0; box-shadow: none; }
+.rules-choice-panel.cards-screen .rules-choice-source img,
+.rules-choice-panel.cards-screen .rules-choice-destination-card img { object-fit: contain; height: auto; background: transparent; filter: drop-shadow(0 12px 22px #000c); }
+.rules-choice-panel.cards-screen .box.has-source > .rules-choice-source { height: auto; overflow: visible; }
+.rules-choice-options.is-destination-screen .rules-choice-destination-card { border: 0; box-shadow: none; }
+.rules-choice-panel.chain-screen .rules-choice-options.has-card-picker { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center; }
+.rules-choice-panel.chain-screen .rules-choice-card { width: 130px; background: transparent; border: 0; color: #f6edcf; }
+.rules-choice-panel.chain-screen .rules-choice-card:hover { transform: scale(1.8); z-index: 30; background: transparent; }
+.rules-choice-panel.chain-screen .rules-chain-decline { width: auto; min-height: 0; min-width: 120px; background: transparent; color: #f6edcf; border: 2px solid #d7ba68aa; }
+.rules-choice-panel.player-screen .rules-choice-options { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; }
+.rules-choice-panel.player-screen .rules-choice-player { min-width: 220px; background: #14110acc; color: #f6edcf; border: 2px solid #d7ba6899; border-left: 8px solid var(--player-tone, #d7ba68); }
+.inspect-panel { z-index: 300; }
+
+.rules-board-flow.is-centered::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: #050402b8; }
+body.flow-uses-hand .hand-area { z-index: 90; }
+/* destination screen polish: framed effect text, centered labels, no scrollbar on hover */
+.rules-choice-panel.destination-screen { overflow: hidden; }
+.rules-choice-panel.destination-screen .box, .rules-choice-panel.destination-screen .rules-choice-options { overflow: visible; }
+.rules-choice-panel.destination-screen .rules-choice-effect { display: block; width: fit-content; max-width: min(640px, 92vw); margin: 0 auto 14px; padding: 8px 16px; background: #0d0a06d9; border: 1px solid #d7ba6877; border-radius: 8px; }
+.rules-choice-options.is-destination-screen > .rules-choice-destination { text-align: center; justify-items: center; }
+.rules-choice-options.is-destination-screen > .rules-choice-destination strong { width: 100%; text-align: center; justify-self: center; }
+.rules-choice-options.is-destination-screen .rules-choice-destination-card img { pointer-events: none; -webkit-user-drag: none; user-select: none; }
+.rules-choice-panel.player-screen .box.has-source > .rules-choice-source { grid-column: 1; grid-row: 1 / span 2; }
+.rules-choice-panel.player-screen .box.has-source > .rules-choice-effect { grid-column: 2; grid-row: 1; align-self: end; }
+.rules-choice-panel.player-screen .box.has-source > .rules-choice-options { grid-column: 2; grid-row: 2; align-items: center; }
+.rules-zone-target-panel .rules-choice-options.has-card-picker { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center; }
+.rules-zone-target-panel .rules-choice-card { width: 130px; background: transparent; border: 0; color: #f6edcf; }
+.rules-zone-target-panel .rules-choice-card:hover { transform: scale(1.8); z-index: 30; background: transparent; }
+.rules-zone-target-panel .box.has-source > .rules-choice-source { grid-column: 1; grid-row: 1 / span 2; }
+.rules-zone-target-panel .box.has-source > .rules-choice-effect { grid-column: 2; grid-row: 1; }
+.rules-zone-target-panel .box.has-source > .rules-choice-options { grid-column: 2; grid-row: 2; }
+
+/* ---- effect screen: every remaining rules choice follows the cards-only style ----
+   dark backdrop, no window, the source card on the left at full size without frame,
+   effect text in a small dark frame, centered prompt, unframed choices stacked in a column */
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen { background: #050402b8; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .box { width: min(1100px, 96vw); max-height: none; overflow: visible; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .box.has-source { grid-template-columns: clamp(200px, 19vw, 290px) minmax(0, 1fr); column-gap: 40px; align-items: center; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .box.has-source > .rules-choice-source { grid-row: 1 / span 4; border: 0; background: transparent; box-shadow: none; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .box > :not(.rules-choice-source) { justify-self: center; width: 100%; max-width: 720px; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-effect { margin: 0 0 12px; padding: 12px 18px; font-size: 18px; border-left: 0; border-radius: 10px; background: #0b0906d0; text-align: center; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-effect ~ p,
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen #rulesChoiceText { display: block; margin: 0 0 18px; font-size: 17px; line-height: 1.45; text-align: center; color: #e9dcb6; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-destination,
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-player {
+  display: grid; grid-template-columns: 1fr; justify-items: center; gap: 2px; width: auto; min-width: 280px; min-height: 0; height: auto;
+  padding: 10px 22px; border: 0; border-radius: 10px; background: transparent; box-shadow: none;
+  color: #f6edcf; text-shadow: 0 2px 8px #000; text-align: center; white-space: normal; transform: none;
+  transition: background .14s ease-out, color .14s ease-out, transform .14s ease-out;
+}
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-destination strong,
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-player { font-family: var(--display-font); font-size: 19px; font-weight: 700; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-destination span { margin: 0; color: #cfc19b; font-size: 14px; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-destination svg { display: none; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-player { color: color-mix(in srgb, var(--player-tone, #f6edcf) 55%, #fff6df); }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-destination:hover:not(:disabled),
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-player:hover:not(:disabled) { background: #ffffff14; color: #ffe7a0; transform: scale(1.04); }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .primary { width: auto; align-self: center; min-width: 200px; margin-top: 10px; font-size: 16px; }
+/* cards to pick: no frame, the card itself, its name under it */
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options.has-card-picker {
+  display: grid; grid-template-columns: repeat(auto-fit, 136px); justify-content: center; gap: 22px 18px; max-height: none; overflow: visible; padding: 0;
+}
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options.has-card-picker > :not(.rules-choice-card) { grid-column: 1 / -1; justify-self: center; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-card {
+  position: relative; width: 136px; min-height: 0; padding: 0; border: 0; background: transparent; box-shadow: none;
+  color: #f6edcf; text-shadow: 0 2px 8px #000; cursor: pointer; transition: transform .14s ease-out;
+}
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-card img { border-radius: 8px; box-shadow: none; filter: drop-shadow(0 10px 18px #000b); }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-card span { font-size: 14px; text-align: center; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-card:hover:not(:disabled) { background: transparent; transform: translateY(-6px) scale(1.06); }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-card.selected img,
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-card[aria-pressed="true"] img { outline: 3px solid #d7ba68; outline-offset: 2px; filter: drop-shadow(0 0 14px #d7ba68cc); }
+.rules-choice-card > b.rules-choice-badge {
+  position: absolute; top: -10px; right: -10px; z-index: 2; display: grid; place-items: center; min-width: 30px; height: 30px; padding: 0 6px;
+  border-radius: 15px; background: #d7ba68; color: #1b160c; font: 800 16px/1 system-ui, sans-serif; text-shadow: none; box-shadow: 0 3px 10px #000a;
+}
+.rules-choice-card > b.rules-choice-badge:empty { display: none; }
+/* order by dragging: a row of cards, numbered left to right */
+.rules-drag-order { display: flex; flex-wrap: wrap; justify-content: center; gap: 18px; }
+.rules-drag-order .rules-choice-card { cursor: grab; touch-action: none; }
+.rules-drag-order .rules-choice-card.is-dragging { z-index: 20; cursor: grabbing; opacity: .85; transform: scale(1.08); transition: none; }
+.rules-drag-order-hint { margin: 2px 0 0; color: #cfc19b; font-size: 14px; text-align: center; }
+/* small unframed option chips (guess the top card) */
+.rules-chip-group { display: grid; justify-items: center; gap: 6px; margin-bottom: 10px; }
+.rules-chip-group > small { color: #cfc19b; font-size: 14px; letter-spacing: .04em; text-transform: uppercase; }
+.rules-chip-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 6px; }
+.rules-chip { display: inline-flex; align-items: center; gap: 6px; min-height: 0; padding: 6px 14px; border: 0; border-radius: 999px; background: transparent; color: #f6edcf; font-size: 16px; text-shadow: 0 2px 6px #000; box-shadow: none; }
+.rules-chip img { width: 20px; height: 20px; object-fit: contain; }
+.rules-chip:hover:not(:disabled) { background: #ffffff14; }
+.rules-chip[aria-pressed="true"] { background: #d7ba68; color: #1b160c; text-shadow: none; }
+/* typed answer (declare a card name) */
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options label { display: grid; justify-items: center; gap: 8px; color: #e9dcb6; font-size: 15px; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options input[type="text"],
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options input:not([type]) {
+  width: min(420px, 80vw); padding: 10px 14px; border: 0; border-bottom: 2px solid #d7ba68; border-radius: 8px 8px 0 0;
+  background: #0b0906d0; color: #f6edcf; font-size: 18px; text-align: center;
+}
+/* lanes reused from the deck reorder screen (confrontation relocation) */
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options:has(.rules-reorder-group) { display: block; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-reorder-group { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 28px; margin-bottom: 16px; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-reorder-group > strong { grid-column: 1 / -1; text-align: center; font-size: 15px; color: #e9dcb6; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-reorder-lanes { display: grid; gap: 14px; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-reorder-lane > small { display: block; color: #f6edcf; font-size: 14px; text-align: center; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-reorder-strip { display: flex; gap: 8px; padding: 8px; background: transparent; border: 2px dashed #d7ba6888; border-radius: 10px; min-width: 130px; min-height: 168px; align-items: center; justify-content: center; transition: transform .14s ease-out, border-color .14s, box-shadow .14s; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-reorder-pool { border-style: none; min-height: 190px; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-reorder-strip.is-over { background: #ffffff12; border-color: #fff3cf; box-shadow: 0 0 0 3px #d7ba6866, 0 0 26px #d7ba68aa; transform: scale(1.05); }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-reorder-strip.is-full:not(.rules-reorder-pool) { border-style: solid; border-color: #d7ba6855; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-reorder-card { position: relative; width: 104px; cursor: grab; touch-action: none; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-reorder-card.is-dragging { z-index: 20; cursor: grabbing; opacity: .85; }
+/* a single card shown big in the middle with drop slots on the right (peek at the top card) */
+.rules-peek-row { display: flex; align-items: center; justify-content: center; gap: 40px; }
+.rules-peek-card { width: clamp(170px, 14vw, 220px); aspect-ratio: 5 / 7; cursor: grab; touch-action: none; transition: transform .14s ease-out; }
+.rules-peek-card.is-dragging { cursor: grabbing; z-index: 20; transition: none; }
+.rules-peek-card img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 14px 26px #000c); pointer-events: none; }
+.rules-peek-slots { display: grid; grid-auto-flow: column; gap: 16px; }
+.rules-peek-slot {
+  position: relative; width: clamp(120px, 10vw, 150px); aspect-ratio: 5 / 7; min-height: 0; padding: 8px; display: grid; place-items: end center; overflow: hidden;
+  border: 2px dashed #d7ba6888; border-radius: 10px; background: transparent; color: #f6edcf; box-shadow: none; transition: transform .14s ease-out, box-shadow .14s;
+}
+.rules-peek-slot img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: .45; }
+.rules-peek-slot strong { position: relative; font-size: 15px; text-align: center; text-shadow: 0 2px 8px #000; }
+.rules-peek-slot.is-over, .rules-peek-slot:hover:not(:disabled) { border-style: solid; border-color: #fff3cf; background: #ffffff12; box-shadow: 0 0 0 3px #d7ba6866, 0 0 26px #d7ba68aa; transform: scale(1.06); }
+/* pre-play steps opened in the middle (payment, cost card, extra Essence): same look as the effect screen */
+.rules-board-flow.is-centered .rules-floating-card {
+  width: min(900px, 94vw); grid-template-columns: clamp(200px, 19vw, 280px) minmax(0, 1fr); gap: 36px; align-items: center;
+  padding: 0; border: 0; border-radius: 0; filter: none;
+  /* the dark screen comes from the ::before layer, which stops above the hand */
+  background: transparent; box-shadow: none;
+}
+.rules-board-flow.is-centered .rules-floating-card > img { border: 0; background: transparent; box-shadow: none; object-fit: contain; filter: drop-shadow(0 18px 30px #000b); }
+.rules-board-flow.is-centered .rules-floating-copy { padding: 14px 18px; border: 0; border-radius: 10px; background: #0b0906d0; box-shadow: none; font-size: 16px; text-align: center; }
+.rules-board-flow.is-centered .rules-floating-copy strong { font-family: var(--display-font); font-size: 19px; }
+.rules-board-flow.is-centered .rules-flow-cost-row { justify-content: center; gap: 14px; }
+.rules-board-flow.is-centered .rules-cost-card-row { justify-content: center; }
+.rules-board-flow.is-centered .rules-cost-card-row .rules-choice-card { border: 0; background: transparent; box-shadow: none; }
+.rules-board-flow.is-centered .rules-flow-cancel { top: -6px; right: -6px; border: 0; background: transparent; box-shadow: none; color: #f6edcf; font-size: 28px; text-shadow: 0 2px 8px #000; }
+.rules-board-flow.is-centered .rules-flow-cancel:hover { background: #ffffff14; color: #ffe7a0; }
+/* effect screens keep one reading order: effect text, prompt, then the choices */
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .box.has-source > :not(.rules-choice-source) { grid-column: 2; grid-row: auto; align-self: auto; }
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .box.has-source > .rules-choice-options { align-items: center; }
+/* discard from the hand: same framed effect text as the other effect screens */
+.rules-choice-panel.hand-drop .rules-choice-effect { padding: 12px 18px; border-left: 0; border-radius: 10px; background: #0b0906d0; font-size: 18px; text-align: center; }
+
+/* ---- dark style for the other windows: confirm, pile browser, card inspect ----
+   same look as the effect screens: a constant dark backdrop, no cream box,
+   cards at full size without a frame, centred text, unframed buttons */
+:is(.confirm-panel, .deck-browser-panel) { background: #050402b8; }
+:is(.confirm-panel, .deck-browser-panel) .box { background: transparent; border: 0; box-shadow: none; color: #f6edcf; text-align: center; }
+:is(.confirm-panel, .deck-browser-panel) button:not(.primary):not(.db-card-undo-btn), #inspectCloseBtn {
+  min-height: 0; padding: 8px 20px; border: 0; border-radius: 10px; background: transparent; box-shadow: none;
+  color: #f6edcf; font-size: 16px; text-shadow: 0 2px 8px #000; transition: background .14s ease-out, color .14s ease-out;
+}
+:is(.confirm-panel, .deck-browser-panel) button:not(.primary):not(.db-card-undo-btn):hover:not(:disabled), #inspectCloseBtn:hover { background: #ffffff14; color: #ffe7a0; }
+:is(.confirm-panel, .deck-browser-panel) button.primary { min-width: 180px; padding: 9px 22px; font-size: 16px; border-radius: 999px; }
+.confirm-panel .box { width: min(560px, 92vw); }
+.confirm-panel #confirmPanelText { font-size: 20px; line-height: 1.45; color: #f6edcf; text-shadow: 0 2px 10px #000; }
+.confirm-panel .box > div { justify-content: center !important; align-items: center; gap: 14px !important; margin-top: 22px !important; }
+.deck-browser-panel .box { overflow: visible; }
+.deck-browser-head { flex-wrap: wrap; justify-content: center; gap: 6px 24px; margin-bottom: 18px; }
+.deck-browser-head h2 { flex: 1 0 100%; margin: 0; font-size: 26px; color: #f6edcf; font-family: var(--display-font); text-shadow: 0 2px 10px #000; }
+.deck-browser-slider-group label { color: #cfc19b; }
+.deck-browser-slider-group input[type="range"] { accent-color: #d7ba68; }
+.deck-browser-cards .db-card { border: 0; box-shadow: none; filter: drop-shadow(0 10px 18px #000b); overflow: visible; }
+.deck-browser-cards .db-card img { border-radius: 8px; }
+.db-card-hover-clone { border: 0; }
+.deck-browser-panel .box > div:last-child { justify-content: center !important; margin-top: 16px !important; }
+/* inspect stays a non-blocking side panel, but dark and unframed */
+.inspect-main { background: #0b0906e6; border: 0; box-shadow: 0 14px 40px #000a; color: #f6edcf; }
+.inspect-panel .inspect-img { border: 0; box-shadow: none; filter: drop-shadow(0 10px 18px #000b); overflow: visible; }
+.inspect-panel .inspect-img img { border-radius: 10px; }
+.inspect-panel .inspect-text h2 { color: #f6edcf; font-family: var(--display-font); text-align: center; border-bottom: 1px solid #d7ba6855; }
+.inspect-panel .inspect-text .meta { color: #cfc19b; text-align: center; }
+.inspect-panel .inspect-text .effect { color: #e9dcb6; font-size: 15px; }
+.inspect-panel .inspect-text > div:last-child { justify-content: center !important; }
+.inspect-x-btn { border: 0; background: #0b0906d0; color: #f6edcf; box-shadow: 0 3px 10px #000a; }
+.inspect-x-btn:hover { background: #2a2216; color: #ffe7a0; }
+.inspect-history-card { border: 0; }
+/* right-click menus: dark, like the rest of the game chrome */
+.ctx-menu { background: #0b0906f2; border: 1px solid #d7ba6840; border-radius: 10px; box-shadow: 0 14px 34px #000c; padding: 5px; color: #f6edcf; }
+.ctx-menu button { color: #f6edcf; border-radius: 6px; }
+.ctx-menu button:hover:not(:disabled) { background: #ffffff14; color: #ffe7a0; }
+.ctx-menu button.ctx-highlight { background: #d7ba68; color: #1b160c; }
+.ctx-menu button.ctx-highlight:hover { background: #e3c77a; color: #1b160c; }
+.ctx-sep { background: #d7ba6833; }
+/* game end: the overlay already says it all, so the long result banner hides
+   while it is open (it comes back when the overlay is closed) */
+.session-ended-banner:has(+ .game-end-overlay:not(.hidden)) { display: none; }
+.game-end-overlay { background: #050402d0; }
+.game-end-card { border: 0; background: transparent; box-shadow: none; }
+.game-end-card h2 { text-shadow: 0 3px 14px #000; }
+.game-end-close { border: 0; background: transparent; font-size: 22px; }
+.game-end-close:hover { background: #ffffff14; color: #ffe7a0; }
+.game-end-player { background: #0b0906b0; }
+.game-end-actions button:not(.primary) { border: 0; background: transparent; box-shadow: none; color: #f6edcf; text-shadow: 0 2px 8px #000; }
+.game-end-actions button:not(.primary):hover:not(:disabled) { background: #ffffff14; color: #ffe7a0; }
+.game-end-actions button.primary { border-radius: 999px; }
+/* stack (top right) and opponent hand view: dark panels without the gold frame */
+#rulesStackPanel { border: 0; background: #0b0906e6; box-shadow: 0 14px 34px #000a; }
+#rulesStackPanel .rules-stack-list li:not(.rules-stack-response-slot) { border: 0; box-shadow: inset 3px 0 0 var(--stack-player-color, #8f783d); }
+#rulesStackPanel .rules-stack-list li.rules-counter-payment-target { box-shadow: inset 3px 0 0 var(--stack-player-color, #8f783d), 0 0 0 2px #d7ba6866, 0 8px 24px #0008; }
+#rulesStackPanel .rules-stack-list li.will-resolve { border: 0; box-shadow: inset 3px 0 0 var(--stack-player-color, #8f783d), 0 0 0 2px #e7c35f59, 0 8px 24px #0009; }
+#rulesStackPanel .rules-stack-list li.rules-stack-response-slot { background: #ffffff0a; box-shadow: none; text-align: center; }
+#rulesStackPanel .rules-stack-card { border: 0; }
+.hand-view-panel { border: 0; background: #0b0906e6; box-shadow: 0 14px 40px #000a; }
+.hand-view-close { border: 0; background: #0b0906d0; color: #f6edcf; box-shadow: 0 3px 10px #000a; }
+.hand-view-close:hover { background: #2a2216; color: #ffe7a0; }
+.hand-view-title { color: #f6edcf; font-size: 16px; }
+/* chat: the longer French/Italian "Send" label must not push out of the panel */
+.chat-input-row input { min-width: 0; }
+.chat-input-row button { flex-shrink: 0; border: 0; background: #d7ba68; color: #1b160c; border-radius: 6px; }
+.chat-input-row button:hover:not(:disabled) { background: #e3c77a; }
+/* VFX labels: readable from across the table */
+.rules-vfx-impact, .rules-vfx-exhaust-label { font-size: 17px; padding: 8px 18px 7px; }
+.rules-vfx-impact-score, .rules-vfx-impact-score-loss { font-size: 26px; }
+.rules-vfx-essence img { width: 24px; height: 24px; }
