@@ -4007,6 +4007,9 @@ class Session:
             result["sourceResolution"] = source_resolution
         ability_result = (target_action.get("ability") or {}).get("result") or {}
         if ability_result.get("kind") == "resolve_effect_memory":
+            for memory_id in ability_result.get("memoryIds") or []:
+                if memory_id != ability_result.get("memoryId"):
+                    self.remove_rules_effect_memory(memory_id)
             removed_memory = self.remove_rules_effect_memory(
                 ability_result.get("memoryId")
             )
@@ -8239,39 +8242,68 @@ class Session:
     def queue_rules_resolution_memory_triggers(self, defer=False):
         turn = self.phase_tracker["turn"]
         queued = []
+        # The delayed effect belongs to the card that created it (Dominate
+        # the Aspects): one trigger per source, moving every card it marked.
+        groups = {}
         for memory in list(self.rules_engine.get("effectMemories") or []):
             if memory.get("kind") != "move_to_deck_at_resolution":
                 continue
             if int(memory.get("queuedTurn") or 0) == turn:
                 continue
             memory["queuedTurn"] = turn
+            data = memory.get("data") or {}
+            source_card_id = data.get("sourceCardId")
+            key = (
+                (memory.get("sourceActionId"), source_card_id)
+                if source_card_id else ("memory", memory["id"])
+            )
+            groups.setdefault(key, []).append(memory)
+        for memories in groups.values():
+            memory = memories[0]
+            data = memory.get("data") or {}
+            source_card_id = data.get("sourceCardId") or memory.get("cardId")
+            source_owner_id = (
+                data.get("sourceOwnerId") if data.get("sourceCardId")
+                else memory.get("ownerId")
+            ) or memory.get("ownerId")
+            item_ids = [
+                (entry.get("data") or {}).get("itemId") for entry in memories
+            ]
             queued.append({
                 "id": new_id(),
                 "controllerId": memory.get("controllerId") or memory.get("ownerId"),
                 "label": (
-                    f'{self.card_labels.get(memory.get("cardId"), memory.get("cardId"))}'
+                    f'{self.card_labels.get(source_card_id, source_card_id)}'
                     " — delayed Resolution effect"
                 ),
                 "kind": "triggered_effect",
                 "source": {
-                    "cardId": memory.get("cardId"),
+                    "cardId": source_card_id,
                     "zone": "memory",
-                    "ownerId": memory.get("ownerId"),
+                    "ownerId": source_owner_id,
                     "cardType": self.card_rules.get(
-                        memory.get("cardId"), {}
+                        source_card_id, {}
                     ).get("type"),
                 },
                 "target": None,
-                "targets": [],
+                "targets": [
+                    {
+                        "kind": "card", "itemId": entry_item_id,
+                        "cardId": entry.get("cardId"),
+                    }
+                    for entry, entry_item_id in zip(memories, item_ids)
+                    if entry_item_id
+                ],
                 "ability": {
                     "id": "memory-move-to-deck-at-resolution",
                     "trigger": {"event": "at_resolution"},
                     "result": {
                         "kind": "resolve_effect_memory",
                         "memoryId": memory["id"],
+                        "memoryIds": [entry["id"] for entry in memories],
                     },
                     "ongoingEffect": None,
-                    "targets": {},
+                    "targets": None,
                 },
                 "cost": {
                     "note": None, "tributeCardIds": [],
@@ -13510,7 +13542,14 @@ class Session:
                         "move_to_deck_at_resolution",
                         controller_id=player_id,
                         source_action_id=action.get("id"),
-                        data={"itemId": item.get("id")},
+                        data={
+                            "itemId": item.get("id"),
+                            "sourceCardId": (action.get("source") or {}).get("cardId"),
+                            "sourceOwnerId": (
+                                (action.get("source") or {}).get("ownerId")
+                                or player_id
+                            ),
+                        },
                     )
                     if memory:
                         memory_ids.append(memory["id"])
@@ -13558,6 +13597,26 @@ class Session:
                 "effectId": effect.get("id"),
                 "previousItemId": previous_item_id,
                 "itemId": target_item.get("id"),
+            }
+        if (
+            result.get("kind") == "resolve_effect_memory"
+            and len(result.get("memoryIds") or []) > 1
+        ):
+            results = []
+            for memory_id in result["memoryIds"]:
+                single = dict(action)
+                single["ability"] = {
+                    **(action.get("ability") or {}),
+                    "result": {"kind": "resolve_effect_memory", "memoryId": memory_id},
+                }
+                results.append(self.apply_rules_action_result(single) or {})
+            moved = [entry for entry in results if entry.get("movement")]
+            return {
+                "kind": "resolve_effect_memory",
+                "status": "moved" if moved else (results[0].get("status") if results else "memory_missing"),
+                "memoryIds": list(result["memoryIds"]),
+                "cardIds": [entry.get("cardId") for entry in results if entry.get("cardId")],
+                "results": results,
             }
         if result.get("kind") == "resolve_effect_memory":
             memory = next((
@@ -16701,6 +16760,10 @@ class Session:
                     "destination": "karmapult", "holderItemId": holder["id"],
                 }
 
+            # a Support (World Spore...) leaves the card it was under: it takes its own Interzone slot
+            if item.get("isSupport") or item.get("stackedOn"):
+                item["stackedOn"] = None
+                item["isSupport"] = False
             interzone_items = self.rules_confrontation_items(player_id, ("interzone",))
             if self.rules_interzone_slot_count(player_id) >= self.rules_interzone_capacity(player_id):
                 share_anchor = self.rules_interzone_share_anchor(player_id, item)

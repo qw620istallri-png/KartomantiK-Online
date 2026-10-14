@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261014-rules-beta-137";
+const STATIC_ASSET_VERSION = "20261014-rules-beta-137-1";
 {
   const versionEl = document.getElementById("appVersion");
   const versionMatch = STATIC_ASSET_VERSION.match(/beta-(\d+)/);
@@ -3697,9 +3697,9 @@ function renderRulesBoardFlow() {
   syncRulesTriggerTargetBoardFlow();
   const flow = pendingRulesBoardFlow;
   const panel = $("#rulesBoardFlow");
-  // paying from the hand (tribute, card cost): the hand rises above the dark screen
+  // paying or chaining from the hand (tribute, card cost, Advocate of Catharsis): the hand rises above the dark screen
   document.body.classList.toggle("flow-uses-hand", Boolean(
-    flow && !["stack_payment", "stack_copy_target"].includes(flow.mode) && ["payment", "cost_card"].includes(flow.stage),
+    flow && flow.mode !== "stack_copy_target" && (flow.mode === "chain" || ["payment", "cost_card"].includes(flow.stage)),
   ));
   if (!flow || !panel) {
     panel?.classList.add("hidden");
@@ -3735,7 +3735,8 @@ function renderRulesBoardFlow() {
   const stackDecision = ["stack_payment", "stack_copy_target"].includes(flow.mode);
   panel.classList.toggle("is-stack-payment", stackDecision);
   // pre-play choices (payment, cost card, extra essence) open in the middle of the screen; board targets keep the side card
-  panel.classList.toggle("is-centered", !stackDecision && ["choice", "payment", "cost_card", "extra_essence", "committing"].includes(flow.stage));
+  // paying a Tribute asked by an effect (stack_payment) uses the same centred dark screen, with the hand above it
+  panel.classList.toggle("is-centered", flow.mode !== "stack_copy_target" && ["choice", "payment", "cost_card", "extra_essence", "committing"].includes(flow.stage));
   $("#rulesFloatingCardImg").src = cardImage(flow.source.cardId);
   $("#rulesFloatingCardImg").alt = cardName(flow.source.cardId);
   $("#rulesFloatingCardName").textContent = cardName(flow.source.cardId);
@@ -5545,6 +5546,8 @@ function handleServerMessage(msg) {
     }
     console.warn("Server error:", msg.message);
     releaseRulesBoardFlowAfterError();
+    // a refused destination leaves the other destinations usable (drag or click)
+    $$("#rulesChoicePanel [data-rules-destination]:disabled").forEach((button) => { button.disabled = false; });
   } else if (msg.type === "log") {
     if (pendingTournamentLogDownload) {
       pendingTournamentLogDownload = false;
@@ -6366,7 +6369,7 @@ function formatPlayerLogEntry(e) {
     case "rules_action_resolved":
       return d.effectResult?.kind === "neutralize_stack_action" && d.effectResult.status === "neutralized"
         ? `${who} ${esc(t("plNeutralizedStackCard"))} ${namedOrUnknownCard(d.effectResult.cardId)}`
-        : `${who} ${esc(t("plResolvedStackAction"))} ${esc(d.label || "")}`;
+        : `${who} ${esc(t("plResolvedStackAction"))} ${esc(d.label || "")}${rulesRollLogText(d.effectResult) ? ` — ${esc(rulesRollLogText(d.effectResult))}` : ""}`;
     case "rules_choice_resolved":
       if (d.kind === "stack_copy_targets") {
         return `${who} ${esc(t("plCopiedStackWill"))} ${namedOrUnknownCard(d.targetCardId)}`;
@@ -11632,6 +11635,7 @@ function initCombatChrome() {
   const show = () => {
     clearTimeout(hideTimer);
     screen.classList.add("header-peek");
+    armIdleHide();
   };
   const scheduleHide = () => {
     clearTimeout(hideTimer);
@@ -11649,6 +11653,22 @@ function initCombatChrome() {
     if ($("#gameMoreMenu").open) show();
     else scheduleHide();
   });
+  // the bar never stays out on its own: 10 s after the last interaction with it, it tucks away
+  // (even when a button inside kept the focus or the More menu was left open)
+  let idleTimer = null;
+  const armIdleHide = () => {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      if (header.matches(":hover")) { armIdleHide(); return; }
+      $("#gameMoreMenu").open = false;
+      if (header.contains(document.activeElement)) document.activeElement.blur();
+      screen.classList.remove("header-peek");
+    }, 10000);
+  };
+  ["mouseenter", "pointermove", "pointerdown", "keydown", "focusin"].forEach((type) => {
+    header.addEventListener(type, armIdleHide, { passive: true });
+  });
+  hotZone.addEventListener("mouseenter", armIdleHide);
 }
 
 function initGameControls() {
@@ -11980,6 +12000,50 @@ function logTemplate(key, values, language, htmlKeys = new Set(), escapeValues =
   });
 }
 
+// A die rolled by a card effect, and what it did, as one line of the logs (plain text)
+function rulesRollLogText(result, language = currentLanguage) {
+  if (!result || typeof result !== "object") return "";
+  const tr = (key, values = {}) => logTemplate(key, values, language);
+  const signed = (value) => `${Number(value) >= 0 ? "+" : ""}${Number(value)}`;
+  const parity = (roll) => tr(Number(roll) % 2 === 0 ? "rulesLogDiceEven" : "rulesLogDiceOdd");
+  if (Array.isArray(result.rolls) && result.rolls.length) {
+    const even = Number(result.evenCount || 0);
+    const odd = Number(result.oddCount || 0);
+    const parts = [];
+    if (even) parts.push(tr("rulesLogDicePowerCounters", { value: signed(even) }));
+    if (odd) parts.push(tr("rulesLogDiceHandDiscard", { count: odd }));
+    return `${tr("rulesLogDiceMany", { rolls: result.rolls.join(", ") })} → ${parts.join(", ") || tr("rulesLogDiceNoEffect")}`;
+  }
+  const roll = Number(result.roll);
+  if (!Number.isInteger(roll) || roll < 1) return "";
+  const head = `${tr("rulesLogDice", { roll })} (${parity(roll)})`;
+  let outcome = "";
+  if (result.status === "source_missing") outcome = tr("rulesLogDiceSourceGone");
+  else if (result.status === "target_missing") outcome = tr("rulesLogDiceTargetGone");
+  else if (result.status === "no_target") outcome = tr("rulesLogDiceNoTarget");
+  else if (result.kind === "choice_required" && result.choiceKind === "random_target_effect") outcome = tr("rulesLogDiceRandomTarget");
+  else if (result.kind === "random_target_effect") outcome = tr("rulesLogDiceRandomTargetHit");
+  else if (result.status === "draw") outcome = tr("rulesLogDiceDraw");
+  else if (result.essences !== undefined) outcome = tr("rulesLogDiceEssence", { count: result.essences });
+  else if (result.discarded !== undefined && typeof result.discarded === "number") {
+    outcome = result.discarded
+      ? `${tr("rulesLogDiceDeckDiscard", { count: result.discarded })}, ${tr("rulesLogDicePowerCounters", { value: signed(result.discarded) })}`
+      : tr("rulesLogDiceNoEffect");
+  } else if (result.kind === "roll_d6_move_source_to_stalemate_on_odd") {
+    outcome = tr(result.status === "moved" ? "rulesLogDiceToStalemate" : "rulesLogDiceStays");
+  } else if (result.delta !== undefined) outcome = tr("rulesLogDicePoints", { value: signed(result.delta) });
+  else if (result.outcome) {
+    const nested = result.outcome;
+    outcome = nested.status === "power" ? tr("rulesLogDicePower", { value: signed(nested.value) })
+      : nested.status === "temperament" ? tr("rulesLogDiceTemperament", { temperament: tr(`temperament${String(nested.temperament || "").replace(/^./, (c) => c.toUpperCase())}`) })
+      : nested.reason === "destroy" || nested.status === "moved" ? tr("rulesLogDiceDestroyed")
+      : tr("rulesLogDiceNoEffect");
+  } else if (result.value !== undefined) {
+    outcome = Number(result.value) ? tr("rulesLogDicePower", { value: signed(result.value) }) : tr("rulesLogDiceNoEffect");
+  }
+  return outcome ? `${head} → ${outcome}` : head;
+}
+
 function formatLogEntry(e, options = {}) {
   const language = options.language || currentLanguage;
   const html = Boolean(options.html);
@@ -12168,9 +12232,15 @@ function formatLogEntry(e, options = {}) {
       if (d.effectResult?.kind === "chain_manifestation" && d.effectResult.status === "no_eligible_card") {
         applied = f("logRulesChainEmpty", { zone: z(d.effectResult.fromZone) });
       }
-      return [resolved, source, sourceResult, applied, active].filter(Boolean).join(" ");
+      const rollText = rulesRollLogText(d.effectResult, language);
+      const dice = rollText ? `${html ? esc(rollText) : rollText}.` : "";
+      return [resolved, source, sourceResult, dice, applied, active].filter(Boolean).join(" ");
     }
     case "rules_choice_resolved":
+      if (d.kind === "random_target_effect" && d.roll) {
+        const rollText = rulesRollLogText(d, language);
+        return `${f("logRulesRandomTargetChosen", { player: ownerName(d.playerId), card: card(latestState?.battlefield?.find((item) => item.id === d.itemId)?.cardId) }, ["card"])} ${html ? esc(rollText) : rollText}.`;
+      }
       if (d.kind === "simultaneous_stack_order") return f("logRulesSimultaneousOrdered", {
         player: ownerName(d.playerId),
         count: (d.actionIds || []).length,
@@ -12296,7 +12366,13 @@ function formatLogEntry(e, options = {}) {
       const persisted = (d.persisted || []).map((result) => (
         f("logRulesPersisted", { card: card(result.cardId) }, ["card"])
       )).join(" ");
-      return [cleanup, support, supportEffects, persisted].filter(Boolean).join(" ");
+      const vesselRolls = [...(d.captured || []), ...(d.returned || [])]
+        .filter((movement) => Number.isInteger(Number(movement.vesselRoll)) && movement.vesselRoll)
+        .map((movement) => f(Number(movement.vesselRoll) % 2 ? "logRulesVesselRollHand" : "logRulesVesselRollVessel", {
+          card: card(movement.cardId), roll: movement.vesselRoll,
+        }, ["card"]))
+        .join(" ");
+      return [cleanup, support, supportEffects, persisted, vesselRolls].filter(Boolean).join(" ");
     }
     case "rules_field_zone_changed": return f("logRulesEnteredConfrontation", { card: card(d.cardId) }, ["card"]);
     case "rules_priority_rolled": return f("logRulesPriorityRolled", {

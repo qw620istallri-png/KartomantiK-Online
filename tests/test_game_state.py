@@ -3672,6 +3672,29 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertEqual(action["cost"]["optionalExtraEssenceSpent"], 3)
         self.assertNotIn("m-0", p1["zones"]["hand"])
 
+    def test_winning_support_gets_its_own_interzone_slot(self):
+        session, _p1, _p2 = self.make_session()
+        session.phase_tracker["index"] = session.phase_sequence().index("resolution_compare")
+        session.card_rules["m-0"]["power"] = 4
+        session.card_rules["m-1"]["power"] = 1
+        session.card_rules["m-2"]["power"] = 1
+        winner = {"id": "winner", "ownerId": "p1", "cardId": "m-0", "faceUp": True, "fieldZone": "confrontation", "confrontationOrder": 1, "counters": {}}
+        spore = {"id": "spore", "ownerId": "p1", "cardId": "m-2", "faceUp": True, "fieldZone": "confrontation", "confrontationOrder": 3, "isSupport": True, "stackedOn": "winner", "counters": {}}
+        loser = {"id": "loser", "ownerId": "p2", "cardId": "m-1", "faceUp": True, "fieldZone": "confrontation", "confrontationOrder": 2, "counters": {}}
+        session.battlefield = [winner, spore, loser]
+        session.prepare_rules_confrontation_result()
+        session.phase_tracker["index"] = session.phase_sequence().index("resolution_move")
+        session.begin_rules_confrontation_cleanup()
+
+        for _ in range(2):
+            choice = session.rules_engine["pendingChoice"]
+            self.assertEqual(choice["kind"], "confrontation_destination")
+            self.assertIsNone(session.resolve_rules_choice("p1", choice["id"], option="interzone")[0])
+
+        self.assertEqual(spore["fieldZone"], "interzone")
+        self.assertIsNone(spore.get("stackedOn"))
+        self.assertFalse(spore.get("isSupport"))
+
     def test_confrontation_cleanup_captures_loser_then_guides_winner(self):
         session, p1, _p2 = self.make_session()
         session.phase_tracker["index"] = session.phase_sequence().index("resolution_compare")
@@ -5360,6 +5383,12 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertEqual(len(session.rules_engine["effectMemories"]), 2)
 
         actions = session.queue_rules_resolution_memory_triggers()
+        self.assertEqual(len(actions), 1)
+        self.assertEqual(actions[0]["source"]["cardId"], "dominate")
+        self.assertEqual(
+            {target["itemId"] for target in actions[0]["targets"]},
+            {"mine", "theirs"},
+        )
         order_choice = session.rules_engine["pendingChoice"]
         if order_choice:
             self.assertIsNone(session.resolve_rules_choice(

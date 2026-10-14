@@ -3668,3 +3668,39 @@ body.flow-uses-hand .hand-area { z-index: 90; }
 .rules-vfx-impact, .rules-vfx-exhaust-label { font-size: 17px; padding: 8px 18px 7px; }
 .rules-vfx-impact-score, .rules-vfx-impact-score-loss { font-size: 26px; }
 .rules-vfx-essence img { width: 24px; height: 24px; }
+/* cards held in place until they fly stay under the choice screens */
+.rules-vfx-hold { z-index: 70; }
+/* effect payment (Tribute to stop an effect) on the centred dark screen */
+.rules-board-flow.is-centered.is-stack-payment .rules-floating-card { right: auto; width: min(900px, 94vw); }
+.rules-board-flow.is-centered #rulesFlowChoiceActions { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-top: 14px; }
+.rules-board-flow.is-centered #rulesFlowChoiceActions.hidden { display: none; }
+.rules-board-flow.is-centered #rulesFlowChoiceActions button { min-width: 240px; border: 0; border-radius: 999px; box-shadow: none; font-size: 16px; }
+.rules-board-flow.is-centered #rulesFlowChoiceActions button:not(.primary) { background: transparent; color: #f6edcf; text-shadow: 0 2px 8px #000; }
+.rules-board-flow.is-centered #rulesFlowChoiceActions button:not(.primary):hover { background: #ffffff14; color: #ffe7a0; }
+/* when the hand is used, the centred screen sits in the upper third so it never covers the hand */
+body.flow-uses-hand .rules-board-flow.is-centered .rules-floating-card { top: 36%; }
+
+/* destination screen: card and destinations grouped in the middle, labels centered in their slot */
+.rules-choice-options.is-destination-screen { justify-content: center; gap: clamp(28px, 4vw, 56px); }
+.rules-choice-options.is-destination-screen > .rules-choice-destination { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.rules-choice-options.is-destination-screen > .rules-choice-destination strong { align-self: center; padding: 0 6px; line-height: 1.25; }
+/* effect screen choices (use the effect / decline...): visible button background */
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-destination {
+  background: #14110ad9; border: 1px solid #d7ba6899; box-shadow: 0 6px 18px #0009;
+}
+:is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-destination:hover:not(:disabled) { background: #2a2214f0; border-color: #d7ba68; }
+
+/* left toolbar: tucked away by default, a thin tab stays at the edge and the bar slides out on hover */
+.side-toolbars {
+  left: 0; padding: 10px 16px 10px 8px;
+  transform: translate(calc(-100% + 12px), -50%);
+  transition: transform .2s ease .45s;
+}
+.side-toolbars > * { opacity: 0; transition: opacity .16s ease .45s; }
+.side-toolbars::after {
+  content: ""; position: absolute; top: 50%; right: 3px; width: 4px; height: 56px; transform: translateY(-50%);
+  border-radius: 3px; background: #d7ba6866; transition: opacity .16s ease .45s; pointer-events: none;
+}
+.side-toolbars:hover { transform: translate(0, -50%); transition-delay: 0s; }
+.side-toolbars:hover > * { opacity: 1; transition-delay: 0s; }
+.side-toolbars:hover::after { opacity: 0; transition-delay: 0s; }
