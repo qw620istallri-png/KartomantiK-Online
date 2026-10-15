@@ -849,7 +849,7 @@ async def apply_rules_pass(session, actor_id, passed=None):
 
 AUTO_PASS_MESSAGE_TYPES = {
     "pass_priority", "pass_phase", "declare_rules_action", "resolve_rules_choice",
-    "validate_first_manifestation", "set_rules_auto_skip",
+    "validate_first_manifestation", "set_rules_auto_skip", "set_rules_pass_all",
     # anything that can put a trigger on the Stack must also let a player who
     # cannot respond be passed automatically
     "place_card", "set_rules_field_zone", "move_card", "move_battlefield_item",
@@ -1139,6 +1139,19 @@ async def handle_message(ws, info, data):
         session.add_log(actor_id, "rules_deck_confirmed" if confirmed else "rules_deck_unconfirmed", {})
         if confirmed:
             log_rules_opening_sequence(session, result, actor_id)
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "set_rules_pass_all":
+        if is_observer:
+            return await send_error(ws, "Observers cannot pass priority.")
+        enabled = data.get("enabled")
+        if not isinstance(enabled, bool):
+            return await send_error(ws, "The option must be a boolean.")
+        error, result = session.set_rules_pass_all(actor_id, enabled)
+        if error:
+            return await send_error(ws, error)
+        session.add_log(actor_id, "rules_pass_all_changed", result)
         session.touch()
         await broadcast_state(session)
 

@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261015-rules-beta-137-1-1";
+const STATIC_ASSET_VERSION = "20261015-rules-beta-137-1-2";
 {
   const versionEl = document.getElementById("appVersion");
   const versionMatch = STATIC_ASSET_VERSION.match(/beta-(\d+)/);
@@ -1060,6 +1060,42 @@ function currentPhaseLabel(tracker = latestState?.phaseTracker) {
   return [lines.phase, lines.step].filter(Boolean).join("\n");
 }
 
+// Holding Enter for PASS_ALL_HOLD_MS fills the pass button and locks "pass
+// everything": the engine passes for me even with playable cards, until a
+// single Enter (or a click on the button) gives control back.
+const PASS_ALL_HOLD_MS = 5000;
+let passAllHoldTimer = null;
+
+function rulesPassAllLocked() {
+  return Boolean(
+    latestState?.rulesEngine?.enabled
+    && (latestState.rulesEngine.passAllPlayerIds || []).includes(myPlayerId)
+  );
+}
+
+function setRulesPassAll(enabled) {
+  cancelPassAllHold();
+  send({ type: "set_rules_pass_all", enabled });
+}
+
+function startPassAllHold() {
+  cancelPassAllHold();
+  if (!latestState?.rulesEngine?.enabled || isObserver || rulesFirstManifestationActive()) return;
+  const button = $("#passPriorityBtn");
+  button?.style.setProperty("--pass-all-hold-ms", `${PASS_ALL_HOLD_MS}ms`);
+  button?.classList.add("pass-all-filling");
+  passAllHoldTimer = setTimeout(() => {
+    passAllHoldTimer = null;
+    setRulesPassAll(true);
+  }, PASS_ALL_HOLD_MS);
+}
+
+function cancelPassAllHold() {
+  if (passAllHoldTimer) clearTimeout(passAllHoldTimer);
+  passAllHoldTimer = null;
+  $("#passPriorityBtn")?.classList.remove("pass-all-filling");
+}
+
 function toggleMyPhasePass() {
   const tracker = latestState?.phaseTracker;
   if (isObserver || !tracker?.enabled) return;
@@ -1361,8 +1397,11 @@ function renderRulesStack() {
   $("#rulesAutoSkipWrap").title = t("rulesAutoSkipHint");
   $("#rulesAutoSkipWrap").classList.toggle("hidden", isObserver);
   autoSkipBox.checked = rules.autoSkipPhases !== false;
+  const passAllLocked = !firstManifestation && rulesPassAllLocked();
   $("#passPriorityBtn").textContent = firstManifestation
     ? t(mineFirstValidated ? "rulesFirstManifestationLocked" : "rulesFirstManifestationValidate")
+    : passAllLocked
+    ? t("rulesPassAllLocked")
     : canCancelPass
     ? t("cancelPriorityPass")
     : stack.length && resolutionArmed
@@ -1370,10 +1409,13 @@ function renderRulesStack() {
     : stack.length
     ? t("rulesPassWithoutResponse")
     : rulesText("rulesPassStep", { current: currentStep, total: groupSteps.length });
-  $("#passPriorityBtn").title = stack.length
+  $("#passPriorityBtn").title = passAllLocked
+    ? t("rulesPassAllLockedHint")
+    : stack.length
     ? t(resolutionArmed ? "rulesResolveTopHint" : "rulesPassWithoutResponseHint")
     : t(current.phase.detail);
-  $("#passPriorityBtn").classList.toggle("hidden", firstManifestation ? isObserver : (!myPriority && !canCancelPass));
+  $("#passPriorityBtn").classList.toggle("hidden", firstManifestation ? isObserver : (!myPriority && !canCancelPass && !passAllLocked));
+  $("#passPriorityBtn").classList.toggle("pass-all-locked", passAllLocked);
   $("#passPriorityBtn").classList.toggle("passed", canCancelPass);
   $("#passPriorityBtn").classList.toggle("must-act", myPriority && !canCancelPass);
   $("#passPriorityBtn").classList.toggle("offers-response", myPriority && stack.length > 0 && !resolutionArmed);
@@ -1382,7 +1424,7 @@ function renderRulesStack() {
   $("#passPriorityBtn").setAttribute("aria-pressed", String(canCancelPass));
   $("#passPriorityBtn").disabled = firstManifestation
     ? (!mineHasFirstManifestation || isObserver || mineFirstValidated)
-    : (!myPriority && !canCancelPass);
+    : (!myPriority && !canCancelPass && !passAllLocked);
 
   const firstPasser = priorityPasses[0];
   const hint = $("#rulesStackHint");
@@ -1718,9 +1760,18 @@ function captureRulesVfxEventInner(entry) {
         removedCopy: movement.status === "removed_copy",
       }))
     : [];
+  // a mass exile (Volcano): remember where every exiled card stood before the board re-renders
+  const massExiled = entry.type === "rules_action_resolved" && details.effectResult?.kind === "exile_all_wills_and_interzones"
+    ? (details.effectResult.itemIds || []).slice(0, 14).map((itemId) => {
+      const element = rulesVfxFindBattlefieldItem(itemId);
+      const image = element?.querySelector("img")?.getAttribute("src");
+      return element && image ? { image, origin: rulesVfxCenter(element) } : null;
+    }).filter(Boolean)
+    : [];
   return {
     entry,
     stateDestroyed,
+    massExiled,
     cleanupMoves: entry.type === "rules_confrontation_cleanup" ? collectRulesVfxCleanupMoves(details, fallback) : [],
     spotlightOrigin,
     declaredTargets,
@@ -2073,6 +2124,8 @@ const RULES_VFX_CARD_SCENES = {
       playRulesVfxFlight("draw-card", deck, mine, { index: 6, land: false });
     }
   },
+  // volcano: the field erupts, ash and embers rise from below
+  "2xqczn7vzkm5n50_en": () => playRulesVfxEruption(),
   // rising from the Limbo
   "gpxqooqq57loyb8_en": (entry, target) => playRulesVfxRiseFromLimbo(entry, target),
   "z2fen73ktw8pbqz_en": (entry, target) => playRulesVfxRiseFromLimbo(entry, target),
@@ -2094,6 +2147,48 @@ function playRulesVfxFireWave(core, tip) {
       style: { shape: "ember", colors: [tip, core, "#d9381a"] },
     });
   }
+}
+
+function playRulesVfxEruption() {
+  const board = rulesVfxBoardRect();
+  rulesVfxOverlay("rules-vfx-eruption", [
+    { opacity: 0, transform: "translateY(35%)" },
+    { opacity: 1, transform: "translateY(0)", offset: .3 },
+    { opacity: .85, transform: "translateY(-8%)", offset: .7 },
+    { opacity: 0, transform: "translateY(-20%)" },
+  ], 1700);
+  $("#battlefieldWrap")?.animate?.([
+    { translate: "0 0" }, { translate: "-6px 3px", offset: .1 }, { translate: "5px -4px", offset: .2 },
+    { translate: "-4px 2px", offset: .3 }, { translate: "3px -2px", offset: .4 }, { translate: "0 0" },
+  ], vfxTiming({ duration: 900, delay: 120 }));
+  for (let step = 0; step < 5; step += 1) {
+    const point = { x: board.left + board.width * (0.12 + step * 0.19), y: board.top + board.height * 0.85 };
+    spawnVfxParticles(point, "choleric", {
+      count: 9, spread: 60, direction: "up", delay: 150 + step * 120,
+      style: { shape: "ember", colors: ["#ffe08a", "#ff7a2a", "#c2311a"] },
+    });
+    spawnVfxParticles(point, "hollow", { count: 8, spread: 80, direction: "up", delay: 450 + step * 120 });
+  }
+}
+
+// An exiled card: it glows, dissolves into pale ash and rises out of the game
+function playRulesVfxExileDissolve(origin, image, delay = 0) {
+  if (rulesVfxReducedMotion() || !origin || !image) return;
+  const element = document.createElement("div");
+  element.className = "rules-vfx-flight rules-vfx-wither-card";
+  element.setAttribute("aria-hidden", "true");
+  element.style.left = `${origin.x - 33}px`;
+  element.style.top = `${origin.y - 46}px`;
+  element.innerHTML = `<img src="${esc(image)}" alt="">`;
+  document.body.appendChild(element);
+  vfxAnimate(element, [
+    { transform: "translate3d(0,0,0) scale(1)", filter: "brightness(1) sepia(0)", opacity: 1 },
+    { offset: .3, transform: "translate3d(0,-2px,0) scale(1.04)", filter: "brightness(1.6) sepia(.8) saturate(2)", opacity: 1 },
+    { offset: .65, transform: "translate3d(0,-14px,0) scale(.98)", filter: "brightness(1.2) grayscale(1) blur(1px)", opacity: .6 },
+    { transform: "translate3d(0,-60px,0) scale(.9)", filter: "brightness(1.4) grayscale(1) blur(4px)", opacity: 0 },
+  ], { duration: 1200, delay, fill: "both", easing: "ease-in" });
+  spawnVfxParticles(origin, "hollow", { count: 12, spread: 40, direction: "up", delay: delay + 350 });
+  window.setTimeout(() => element.remove(), vfxMs(delay + 1400));
 }
 
 function playRulesVfxRiseFromLimbo(entry, target) {
@@ -2942,6 +3037,7 @@ function playRulesVfxEventInner(event) {
         return playRulesVfxTopReveal(entry);
       }
       playRulesVfxCardScene(entry, target);
+      (event.massExiled || []).forEach((card, index) => playRulesVfxExileDissolve(card.origin, card.image, 500 + index * 90));
       (event.stateDestroyed || []).forEach((move, index) => {
         if (rulesVfxReducedMotion()) {
           playRulesVfxImpact(move.target, t("rulesVfxDestroyed") || t("rulesVfxMoved"), "destroyed");
@@ -5591,6 +5687,7 @@ function handleServerMessage(msg) {
     }
     console.warn("Server error:", msg.message);
     releaseRulesBoardFlowAfterError();
+    if (rulesDeckReorderRetry) rulesDeckReorderRetry();
     // a refused destination leaves the other destinations usable (drag or click)
     $$("#rulesChoicePanel [data-rules-destination]:disabled").forEach((button) => { button.disabled = false; });
   } else if (msg.type === "log") {
@@ -5980,7 +6077,7 @@ function setMyActivity(activity) {
 // card leaving the battlefield straight into a pile.
 const PLAYER_LOG_TYPES = new Set([
   "draw", "draw_to_limit", "opening_hand_draw", "move_card", "place_card", "remove_battlefield_item", "pass_phase",
-  "rules_action_declared", "rules_action_triggered", "rules_priority_passed", "rules_priority_cancelled", "rules_priority_rolled", "rules_action_resolved", "rules_choice_resolved", "rules_phase_advanced", "rules_auto_passed", "rules_auto_skip_changed", "rules_confrontation_compared", "rules_confrontation_cleanup", "rules_field_zone_changed",
+  "rules_action_declared", "rules_action_triggered", "rules_priority_passed", "rules_priority_cancelled", "rules_priority_rolled", "rules_action_resolved", "rules_choice_resolved", "rules_phase_advanced", "rules_auto_passed", "rules_auto_skip_changed", "rules_pass_all_changed", "rules_confrontation_compared", "rules_confrontation_cleanup", "rules_field_zone_changed",
 ]);
 
 function isPlayerLogRelevant(e) {
@@ -6154,7 +6251,7 @@ function tournamentLogTone(entry) {
   if (entry.type === "search_zone") return "warning";
   if (["rules_opening_mulligan_required", "rules_recovery_mulligan_required"].includes(entry.type)) return "warning";
   if (["create_tournament", "role_joined", "start_tournament", "end_tournament", "update_tournament_policy"].includes(entry.type)) return "system";
-  if (["shuffle", "search_followed_by_shuffle", "draw", "draw_to_limit", "opening_hand_draw", "place_card", "move_card", "reveal", "scry", "mulligan", "rules_action_declared", "rules_action_triggered", "rules_priority_passed", "rules_priority_cancelled", "rules_priority_rolled", "rules_action_resolved", "rules_choice_resolved", "rules_phase_advanced", "rules_auto_passed", "rules_auto_skip_changed", "rules_confrontation_compared", "rules_confrontation_cleanup", "rules_field_zone_changed"].includes(entry.type)) return "action";
+  if (["shuffle", "search_followed_by_shuffle", "draw", "draw_to_limit", "opening_hand_draw", "place_card", "move_card", "reveal", "scry", "mulligan", "rules_action_declared", "rules_action_triggered", "rules_priority_passed", "rules_priority_cancelled", "rules_priority_rolled", "rules_action_resolved", "rules_choice_resolved", "rules_phase_advanced", "rules_auto_passed", "rules_auto_skip_changed", "rules_pass_all_changed", "rules_confrontation_compared", "rules_confrontation_cleanup", "rules_field_zone_changed"].includes(entry.type)) return "action";
   return "info";
 }
 
@@ -8158,7 +8255,10 @@ function rulesAnimationsBusyFor() {
 }
 
 let rulesChoiceFlipTimer = null;
+let rulesDeckReorderRetry = null;
+
 function renderRulesChoice() {
+  rulesDeckReorderRetry = null;
   const waiting = rulesAnimationsBusyFor();
   if (waiting > 0 && latestState?.rulesEngine?.pendingChoice?.playerId === myPlayerId) {
     $("#rulesChoicePanel").classList.add("hidden");
@@ -8421,7 +8521,42 @@ function renderRulesChoiceScreen() {
               </div>`).join("")}
           </div>
         </section>`).join("")}
+      <p class="rules-reorder-hint hidden" id="rulesDeckReorderHint"></p>
       ${presetPlacement || !(choice.groups || []).some((group) => (group.cardIds || []).length) ? `<button type="button" class="primary" id="rulesDeckReorderConfirm">${esc(t("confirm"))}</button>` : ""}`;
+    // how many cards each destination may hold (Expansive Ponderer: exactly one to the hand)
+    const laneLimit = (group, side) => {
+      if (side === "extra" && group.extraSide) return Number(group.extraMax ?? Infinity);
+      if (side === "top" && group.topCount != null) return Number(group.topCount);
+      if (side === "bottom" && group.bottomCount != null) return Number(group.bottomCount);
+      return Infinity;
+    };
+    const groupFor = (section) => (choice.groups || []).find((group) => group.playerId === section.dataset.rulesReorderGroup);
+    const reorderProblem = () => {
+      for (const group of choice.groups || []) {
+        const section = options.querySelector(`[data-rules-reorder-group="${CSS.escape(group.playerId)}"]`);
+        if (!section) continue;
+        if (section.querySelector('[data-rules-reorder-strip="pool"] .rules-reorder-card')) return "pool";
+        const count = (side) => section.querySelectorAll(`[data-rules-reorder-strip="${side}"] .rules-reorder-card`).length;
+        if (group.extraSide && (count("extra") < Number(group.extraMin || 0) || count("extra") > Number(group.extraMax ?? Infinity))) {
+          return rulesText("rulesDeckReorderExtraCount", {
+            count: Number(group.extraMin || 0) === Number(group.extraMax) ? group.extraMax : `${group.extraMin || 0}–${group.extraMax}`,
+            zone: t(group.extraSide === "hand" ? "rulesDeckToHand" : "rulesDeckExile"),
+          });
+        }
+        if (group.topCount != null && count("top") !== Number(group.topCount)) return t("rulesDeckReorderLaneCount");
+        if (group.bottomCount != null && count("bottom") !== Number(group.bottomCount)) return t("rulesDeckReorderLaneCount");
+      }
+      return null;
+    };
+    const showReorderProblem = () => {
+      const problem = reorderProblem();
+      const hint = $("#rulesDeckReorderHint");
+      if (!hint) return problem;
+      hint.textContent = problem && problem !== "pool" ? problem : "";
+      hint.classList.toggle("hidden", !problem || problem === "pool");
+      if ($("#rulesDeckReorderConfirm")) $("#rulesDeckReorderConfirm").disabled = Boolean(problem);
+      return problem;
+    };
     const numberStrips = () => {
       options.querySelectorAll(".rules-reorder-strip").forEach((strip) => {
         strip.querySelectorAll(".rules-reorder-card").forEach((card, index) => {
@@ -8446,6 +8581,11 @@ function renderRulesChoiceScreen() {
             const distance = Math.hypot(dx, dy);
             if (distance < best) { best = distance; strip = entry; }
           });
+          // a full destination does not take one more card: the card stays where it was
+          if (strip && strip !== card.parentElement) {
+            const held = [...strip.querySelectorAll(".rules-reorder-card")].filter((other) => other !== card).length;
+            if (held >= laneLimit(groupFor(section), strip.dataset.rulesReorderStrip)) strip = null;
+          }
           options.querySelectorAll(".rules-reorder-strip").forEach((entry) => entry.classList.toggle("is-over", entry === strip));
           if (!strip || strip.closest("[data-rules-reorder-group]") !== section) return;
           const siblings = [...strip.querySelectorAll(".rules-reorder-card")].filter((entry) => entry !== card);
@@ -8462,16 +8602,18 @@ function renderRulesChoiceScreen() {
           window.removeEventListener("pointerup", up);
           card.classList.remove("is-dragging");
           options.querySelectorAll(".rules-reorder-strip").forEach((entry) => entry.classList.remove("is-over"));
-          // everything placed: no confirmation step, the choice is sent as soon as the pool is empty
-          if (!options.querySelector('[data-rules-reorder-strip="pool"] .rules-reorder-card')) submitReorder();
+          // everything placed: no confirmation step, the choice is sent as soon as it is valid
+          if (!showReorderProblem()) submitReorder();
         };
         window.addEventListener("pointermove", move);
         window.addEventListener("pointerup", up);
       });
     });
     let reorderSent = false;
+    // a refused distribution can be corrected and sent again
+    rulesDeckReorderRetry = () => { reorderSent = false; showReorderProblem(); };
     const submitReorder = () => {
-      if (reorderSent) return;
+      if (reorderSent || showReorderProblem()) return;
       reorderSent = true;
       const groups = (choice.groups || []).map((group) => {
         const section = options.querySelector(`[data-rules-reorder-group="${CSS.escape(group.playerId)}"]`);
@@ -11265,7 +11407,7 @@ function renderBattlefield() {
 
   latestState.battlefield.forEach((item) => {
     const el = document.createElement("div");
-    el.className = `bf-card${item.isCopy ? " is-copy" : ""}${item.fieldZone ? ` field-zone-${item.fieldZone}` : ""}`;
+    el.className = `bf-card${item.isCopy ? " is-copy" : ""}${item.fieldZone ? ` field-zone-${item.fieldZone}` : ""}${Math.round(Number(item.rotation || 0)) % 180 ? " is-exhausted" : ""}`;
     el.dataset.itemId = item.id;
     if (item.fieldZone) el.dataset.fieldZone = item.fieldZone;
     const pos = stackedScreenPos(item) || rotateForSeat(item.x, item.y, PILE_W, PILE_H);
@@ -11741,7 +11883,10 @@ function initGameControls() {
   $("#phaseAdvancedBtn").onclick = () => {
     if (!isObserver && mySeat() === 0) send({ type: "configure_phases", advanced: !latestState?.phaseTracker?.advanced });
   };
-  $("#passPriorityBtn").onclick = () => toggleMyPhasePass();
+  $("#passPriorityBtn").onclick = () => {
+    if (rulesPassAllLocked()) setRulesPassAll(false);
+    else toggleMyPhasePass();
+  };
   $("#rulesAutoSkip").onchange = (event) => send({ type: "set_rules_auto_skip", enabled: event.target.checked });
   $("#gameMoreMenu").addEventListener("click", (event) => {
     if (event.target.closest("button")) $("#gameMoreMenu").open = false;
@@ -12430,6 +12575,7 @@ function formatLogEntry(e, options = {}) {
       return f("logRulesAutoPassed", { phase: label, turn: d.turn || 1, steps: d.steps || 0 });
     }
     case "rules_auto_skip_changed": return f(d.enabled ? "logRulesAutoSkipOn" : "logRulesAutoSkipOff");
+    case "rules_pass_all_changed": return f(d.enabled ? "logRulesPassAllOn" : "logRulesPassAllOff", { player: ownerName(d.playerId) });
     case "rules_phase_advanced": {
       const lines = phaseLogLinesFor(d, language);
       const label = [lines.phase, lines.step].filter(Boolean).join(" · ") || d.phaseId || "?";
@@ -12598,8 +12744,17 @@ async function boot() {
     if (event.code === "Enter" || event.code === "NumpadEnter") {
       // Enter is always the "pass phase / priority" button, whichever button has focus
       const passButton = $("#passPriorityBtn");
-      if (!latestState || isObserver || !passButton || passButton.disabled || passButton.offsetParent === null) return;
+      if (!latestState || isObserver || !passButton) return;
       if (document.querySelector("#confirmPanel:not(.hidden)")) return;
+      if (rulesPassAllLocked()) {
+        // a single Enter gives control back
+        event.preventDefault();
+        if (!event.repeat) setRulesPassAll(false);
+        return;
+      }
+      // a held Enter (5 s) locks "pass everything"
+      if (!event.repeat) startPassAllHold();
+      if (passButton.disabled || passButton.offsetParent === null) return;
       event.preventDefault();
       // already passed: a second Enter must not cancel the pass
       if (!event.repeat && !passButton.classList.contains("passed")) passButton.click();
@@ -12625,6 +12780,10 @@ async function boot() {
       $("#hideCodesBtn").click();
     }
   });
+  document.addEventListener("keyup", (event) => {
+    if (event.code === "Enter" || event.code === "NumpadEnter") cancelPassAllHold();
+  });
+  window.addEventListener("blur", cancelPassAllHold);
   paintStaticText();
   initLanguageSwitch();
   initConfirmPanel();

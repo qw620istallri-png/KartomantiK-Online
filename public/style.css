@@ -3306,6 +3306,7 @@ input, textarea, select {
 .rules-vfx-heat { background: radial-gradient(circle at 50% 50%, #ff5b1a99, transparent 70%); }
 .rules-vfx-jaws { background: linear-gradient(180deg, #14110aee 0 12%, transparent 12% 88%, #14110aee 88% 100%); clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); border-block: 4px solid #d3a942; }
 .rules-vfx-sand { background: linear-gradient(180deg, #d8b87855, transparent 60%); }
+.rules-vfx-eruption { background: radial-gradient(ellipse 70% 55% at 50% 100%, #ffb34aaa 0%, #e2461c88 30%, #5a1a0e55 60%, transparent 80%), linear-gradient(0deg, #2a2a2a66, transparent 55%); mix-blend-mode: screen; }
 .rules-vfx-invert { background: #fff; mix-blend-mode: difference; }
 .rules-vfx-wither-card {
   width: 66px; height: 92px; overflow: hidden; border: 1px solid #555; border-radius: 6px;
@@ -3706,3 +3707,15 @@ body.flow-uses-hand .rules-board-flow.is-centered .rules-floating-card { top: 36
 .side-toolbars:hover { transform: translate(0, -50%); transition-delay: 0s; }
 .side-toolbars:hover > * { opacity: 1; transition-delay: 0s; }
 .side-toolbars:hover::after { opacity: 0; transition-delay: 0s; }
+/* hold Enter 5 s: the pass button fills up, then stays locked on "pass everything" */
+#passPriorityBtn { position: relative; overflow: hidden; isolation: isolate; }
+#passPriorityBtn.pass-all-filling::after, #passPriorityBtn.pass-all-locked::after {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, #d7ba68cc, #f3dc95cc); transform-origin: left center;
+}
+#passPriorityBtn.pass-all-filling::after { animation: pass-all-fill var(--pass-all-hold-ms, 5000ms) linear forwards; }
+#passPriorityBtn.pass-all-locked { color: #1b1408; border-color: #f3dc95; box-shadow: 0 0 0 2px #d7ba6899, 0 0 18px #d7ba6866; }
+@keyframes pass-all-fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+.rules-reorder-hint { margin: 8px 0 0; font-size: 15px; color: #f3dc95; text-align: center; text-shadow: 0 2px 6px #000; }
+/* an exhausted (turned) card is 60px shorter on screen: its counters (Shymon -2...) follow its edge instead of floating under it */
+.bf-card.is-exhausted .counters { bottom: 14px; }

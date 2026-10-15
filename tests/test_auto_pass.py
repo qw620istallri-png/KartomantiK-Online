@@ -47,6 +47,42 @@ class AutoPassTests(unittest.TestCase):
         self.goto(session, "resolution_effects")
         self.assertIsNone(session.rules_auto_pass_player())
 
+    def test_pass_all_lock_passes_even_with_playable_cards_until_released(self):
+        session, p1, p2 = self.make_session()
+        p1["zones"]["hand"] = ["will-ephemeral", "m-5"]
+        self.goto(session, "resolution_effects")
+        self.assertIsNone(session.rules_auto_pass_player())
+        self.assertIsNone(session.set_rules_pass_all("p1", True)[0])
+        self.assertEqual(session.serialize_for("p1", "player")["rulesEngine"]["passAllPlayerIds"], ["p1"])
+        self.assertEqual(session.rules_auto_pass_player(), "p1")
+        # works with phase skipping turned off, never for the opponent's priority
+        session.rules_engine["autoSkipPhases"] = False
+        self.assertEqual(session.rules_auto_pass_player(), "p1")
+        p2["zones"]["hand"] = ["will-ephemeral", "m-6"]
+        session.rules_engine["priorityPlayerId"] = "p2"
+        self.assertIsNone(session.rules_auto_pass_player())
+        # a required choice still stops it
+        session.rules_engine["priorityPlayerId"] = "p1"
+        session.rules_engine["pendingChoice"] = {"id": "c", "kind": "discard_from_hand", "playerId": "p1"}
+        self.assertIsNone(session.rules_auto_pass_player())
+        session.rules_engine["pendingChoice"] = None
+        self.assertIsNone(session.set_rules_pass_all("p1", False)[0])
+        self.assertIsNone(session.rules_auto_pass_player())
+
+    def test_held_enter_lock_is_set_and_released_over_the_socket_handler(self):
+        session, p1, _p2 = self.make_session()
+        p1["zones"]["hand"] = ["will-ephemeral", "m-5"]
+        self.goto(session, "end_actions")
+        self.assertIsNone(session.rules_auto_pass_player())
+        error, result = session.set_rules_pass_all("p1", True)
+        self.assertIsNone(error)
+        self.assertEqual(result, {"playerId": "p1", "enabled": True})
+        session.set_rules_pass_all("p1", True)
+        self.assertEqual(session.rules_engine["passAllPlayerIds"], ["p1"])
+        self.assertTrue(asyncio.run(server_main.auto_advance_rules_phases(session, "p1")))
+        self.assertNotEqual(session.current_phase_id(), "end_actions")
+        self.assertIn("set_rules_pass_all", server_main.AUTO_PASS_MESSAGE_TYPES)
+
     def test_a_will_that_cannot_be_paid_does_not_keep_the_player_in_control(self):
         session, p1, p2 = self.make_session()
         p1["zones"]["hand"] = ["will-ephemeral"]

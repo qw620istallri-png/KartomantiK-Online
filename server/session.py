@@ -199,6 +199,9 @@ class Session:
         self.rules_engine = {
             "enabled": bool(rules_beta),
             "autoSkipPhases": True,
+            # players who held Enter: the engine passes for them, even with
+            # playable cards, until they press Enter again
+            "passAllPlayerIds": [],
             "deckConfirmedPlayerIds": [],
             "openingHandPlayerIds": [],
             "mulliganPlayerIds": [],
@@ -6669,11 +6672,25 @@ class Session:
             return False
         return not any(self.rules_player_can_act(pid) for pid in self.players)
 
+    def set_rules_pass_all(self, player_id, enabled):
+        if not self.rules_engine.get("enabled") or player_id not in self.players:
+            return "Assisted rules are not active.", None
+        locked = [
+            pid for pid in self.rules_engine.get("passAllPlayerIds") or []
+            if pid != player_id and pid in self.players
+        ]
+        if enabled:
+            locked.append(player_id)
+        self.rules_engine["passAllPlayerIds"] = locked
+        return None, {"playerId": player_id, "enabled": bool(enabled)}
+
     def rules_auto_pass_player(self):
         """The priority holder who has nothing to do, if the engine may pass for them."""
         engine = self.rules_engine
+        pass_all = engine.get("priorityPlayerId") in (engine.get("passAllPlayerIds") or [])
         if (
-            not engine.get("enabled") or not engine.get("autoSkipPhases", True)
+            not engine.get("enabled")
+            or not (engine.get("autoSkipPhases", True) or pass_all)
             or not self.phase_tracker.get("enabled") or self.ended
             or len(self.players) < NUM_SEATS or engine.get("pendingChoice")
             or not self.rules_match_started()
@@ -6682,7 +6699,11 @@ class Session:
         ):
             return None
         player_id = engine.get("priorityPlayerId")
-        if player_id not in self.players or self.rules_player_can_act(player_id):
+        if player_id not in self.players:
+            return None
+        if pass_all:
+            return player_id
+        if self.rules_player_can_act(player_id):
             return None
         if self.rules_confrontation_resolve_prompt():
             return None  # ask before resolving the Confrontation
@@ -8285,6 +8306,11 @@ class Session:
             if memory.get("kind") != "move_to_deck_at_resolution":
                 continue
             if int(memory.get("queuedTurn") or 0) == turn:
+                continue
+            if int(memory.get("createdTurn") or turn) < turn:
+                # a return "at the Resolution" only concerns the turn it was
+                # created in: never move a card a turn later
+                self.remove_rules_effect_memory(memory["id"])
                 continue
             memory["queuedTurn"] = turn
             data = memory.get("data") or {}
@@ -13589,9 +13615,19 @@ class Session:
                     )
                     if memory:
                         memory_ids.append(memory["id"])
+            # played during the Resolution (Dominate the Aspects in the
+            # Effects step): the "at the Resolution" return was already
+            # collected for this turn, so it fires right away, before the
+            # cards are moved by the outcome of the Confrontation.
+            resolution_triggers = (
+                self.queue_rules_resolution_memory_triggers(defer=True)
+                if memory_ids and self.current_phase_id() == "resolution_effects"
+                else []
+            )
             return {
                 "kind": "exchange_control_targets",
                 "status": "exchanged",
+                **({"resolutionTriggers": resolution_triggers} if resolution_triggers else {}),
                 "itemIds": [first["id"], second["id"]],
                 "controllerIds": [
                     self.rules_item_controller_id(first),
@@ -17504,6 +17540,10 @@ class Session:
             effect_result = self.apply_rules_action_result(resolved)
             if effect_result:
                 resolved["effectResult"] = effect_result
+                if isinstance(effect_result, dict):
+                    triggered_actions.extend(
+                        effect_result.pop("resolutionTriggers", None) or []
+                    )
             ongoing_effects = self.create_rules_ongoing_effects(resolved)
             if ongoing_effects:
                 resolved["ongoingEffects"] = ongoing_effects
@@ -18070,6 +18110,7 @@ class Session:
             "rulesEngine": {
                 "enabled": self.rules_engine["enabled"],
                 "autoSkipPhases": bool(self.rules_engine.get("autoSkipPhases", True)),
+                "passAllPlayerIds": list(self.rules_engine.get("passAllPlayerIds") or []),
                 "deckConfirmedPlayerIds": list(self.rules_engine["deckConfirmedPlayerIds"]),
                 "openingHandPlayerIds": list(self.rules_engine["openingHandPlayerIds"]),
                 "mulliganPlayerIds": list(self.rules_engine["mulliganPlayerIds"]),

@@ -5441,6 +5441,68 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertEqual(p1["zones"]["deck"], ["m-1"])
         self.assertEqual(session.players["p2"]["zones"]["deck"], ["m-2"])
 
+    def test_dominate_aspects_played_in_the_effects_step_still_returns_before_cleanup(self):
+        session, p1, p2 = self.make_session()
+        ability = json.loads(
+            (Path(__file__).resolve().parent.parent / "public" / "card-abilities.json")
+            .read_text(encoding="utf-8")
+        )["zk76fhtep0wm3hh_en"][0]
+        session.card_rules["dominate"] = {
+            "type": "ephemeral_will", "powerCost": "{G}", "temperaments": ["phlegmatic"],
+            "playedAbilities": [ability],
+        }
+        session.card_rules["m-1"]["power"] = 1
+        session.card_rules["m-2"]["power"] = 5
+        session.battlefield = [
+            {"id": "mine", "ownerId": "p1", "cardId": "m-1", "faceUp": True,
+             "fieldZone": "confrontation", "counters": {}, "confrontationOrder": 1},
+            {"id": "theirs", "ownerId": "p2", "cardId": "m-2", "faceUp": True,
+             "fieldZone": "confrontation", "counters": {}, "confrontationOrder": 2},
+        ]
+        session.rules_engine["firstManifestationItemIds"] = {"p1": "mine", "p2": "theirs"}
+        session.rules_engine["firstManifestationComplete"] = True
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_compare")
+        self.assertEqual(session.prepare_rules_confrontation_result()["winnerId"], "p2")
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_effects")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        p1["zones"]["hand"] = ["dominate", "m-0"]
+        p1["zoneOwners"]["hand"] = {"dominate": "p1", "m-0": "p1"}
+        error, _action = session.declare_rules_action(
+            "p1", "Dominate", kind="play_card",
+            source={"cardId": "dominate", "zone": "hand"},
+            targets=[
+                {"kind": "card", "itemId": "mine", "cardId": "m-1"},
+                {"kind": "card", "itemId": "theirs", "cardId": "m-2"},
+            ],
+            payment_card_ids=["m-0"], ability_id=ability["id"],
+        )
+        self.assertIsNone(error)
+        for _ in range(4):
+            if not session.rules_engine["actionStack"]:
+                break
+            self.assertIsNone(session.pass_rules_priority(session.rules_engine["priorityPlayerId"])[0])
+        self.assertEqual(session.rules_engine["actionStack"], [])
+        # both exchanged cards are back at the bottom of their owner's deck, not
+        # captured by the winner nor sent to the winner's Interzone
+        self.assertIsNone(session.find_battlefield_item("mine"))
+        self.assertIsNone(session.find_battlefield_item("theirs"))
+        self.assertEqual(p1["zones"]["deck"][-1], "m-1")
+        self.assertEqual(p2["zones"]["deck"][-1], "m-2")
+        self.assertEqual(p2["zones"]["receptacle"], [])
+        self.assertEqual(session.rules_engine["effectMemories"], [])
+
+    def test_a_stale_resolution_return_never_moves_a_card_a_turn_later(self):
+        session, p1, _p2 = self.make_session()
+        session.battlefield = [{"id": "kept", "ownerId": "p1", "cardId": "m-1", "faceUp": True,
+                                "fieldZone": "interzone", "counters": {}}]
+        session.create_rules_effect_memory(
+            "p1", "m-1", "move_to_deck_at_resolution", data={"itemId": "kept"},
+        )
+        session.phase_tracker["turn"] += 1
+        self.assertEqual(session.queue_rules_resolution_memory_triggers(), [])
+        self.assertIsNotNone(session.find_battlefield_item("kept"))
+        self.assertEqual(session.rules_engine["effectMemories"], [])
+
     def test_shattering_the_self_discards_three_from_the_target_deck_and_weakens(self):
         session, p1, p2 = self.make_session()
         session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")

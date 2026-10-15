@@ -139,6 +139,52 @@ function startServer() {
     });
     for (const layer of Object.values(hoverLayers)) assert.ok(layer.clone > layer.hand, JSON.stringify(hoverLayers));
 
+    // an exhausted card keeps its counters against its turned edge (Shymon's -2)
+    const exhaustedCounters = await page.evaluate(() => {
+      const card = document.createElement("div");
+      card.className = "bf-card is-exhausted";
+      card.innerHTML = '<div class="counters"><span class="bf-counter">-2</span></div>';
+      document.querySelector("#battlefield").appendChild(card);
+      const bottom = getComputedStyle(card.querySelector(".counters")).bottom;
+      card.remove();
+      return bottom;
+    });
+    assert.equal(exhaustedCounters, "14px");
+
+    // holding Enter 5 s locks "pass everything"; a single Enter releases it
+    await page.evaluate(() => {
+      window.__passAllSaved = { latestState, myPlayerId, isObserver, send };
+      window.__passAllSent = [];
+      send = (payload) => window.__passAllSent.push(payload);
+      myPlayerId = "p1";
+      isObserver = false;
+      latestState = { rulesEngine: { enabled: true, passAllPlayerIds: [] }, players: {}, phaseTracker: {} };
+      document.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", key: "Enter", bubbles: true }));
+    });
+    await page.waitForTimeout(400);
+    const passAllEarly = await page.evaluate(() => ({
+      filling: document.querySelector("#passPriorityBtn").classList.contains("pass-all-filling"),
+      sent: window.__passAllSent.filter((m) => m.type === "set_rules_pass_all").length,
+    }));
+    assert.deepEqual(passAllEarly, { filling: true, sent: 0 });
+    await page.waitForTimeout(4900);
+    const passAll = await page.evaluate(() => {
+      document.dispatchEvent(new KeyboardEvent("keyup", { code: "Enter", key: "Enter", bubbles: true }));
+      const locked = window.__passAllSent.filter((m) => m.type === "set_rules_pass_all");
+      latestState.rulesEngine.passAllPlayerIds = ["p1"];
+      document.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", key: "Enter", bubbles: true }));
+      document.dispatchEvent(new KeyboardEvent("keyup", { code: "Enter", key: "Enter", bubbles: true }));
+      const all = window.__passAllSent.filter((m) => m.type === "set_rules_pass_all");
+      // a short press does not lock
+      latestState.rulesEngine.passAllPlayerIds = [];
+      document.dispatchEvent(new KeyboardEvent("keydown", { code: "Enter", key: "Enter", bubbles: true }));
+      document.dispatchEvent(new KeyboardEvent("keyup", { code: "Enter", key: "Enter", bubbles: true }));
+      const filling = document.querySelector("#passPriorityBtn").classList.contains("pass-all-filling");
+      ({ latestState, myPlayerId, isObserver, send } = window.__passAllSaved);
+      return { locked: locked.map((m) => m.enabled), all: all.map((m) => m.enabled), filling };
+    });
+    assert.deepEqual(passAll, { locked: [true], all: [true, false], filling: false });
+
     const result = await page.evaluate(() => {
       let rulesBetaPayload = null;
       const originalConnectAndJoin = connectAndJoin;
@@ -1472,6 +1518,45 @@ function startServer() {
     assert.deepEqual(extraReorder.options, ["pool", "top", "bottom", "extra"]);
     assert.equal(extraReorder.extra.length, 1);
     assert.equal(extraReorder.top, 2);
+    // Expansive Ponderer: exactly one card to the hand; a second one is refused,
+    // nothing is sent while the hand is empty, and a refused send can be retried
+    const pondererReorder = await page.evaluate(() => {
+      const ids = [...cardsById.keys()];
+      const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };
+      window.__sent = [];
+      latestState.rulesEngine.pendingChoice = {
+        id: "ponderer-reorder", kind: "deck_reorder", playerId: "p1", sourceCardId: ids[0],
+        groups: [{ playerId: "p1", cardIds: ids.slice(0, 3), topCount: null, bottomCount: null, extraSide: "hand", extraMin: 1, extraMax: 1 }],
+      };
+      renderAll();
+      const dragTo = (card, side) => {
+        const rect = document.querySelector(`.rules-reorder-lanes [data-rules-reorder-strip="${side}"]`).getBoundingClientRect();
+        card.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true, clientX: 5, clientY: 5 }));
+        window.dispatchEvent(new PointerEvent("pointermove", { clientX: rect.left + 20, clientY: rect.top + 20 }));
+        window.dispatchEvent(new PointerEvent("pointerup", {}));
+      };
+      const strip = (side) => document.querySelectorAll(`[data-rules-reorder-strip="${side}"] .rules-reorder-card`);
+      const sent = () => window.__sent.filter((entry) => entry.type === "resolve_rules_choice");
+      dragTo(strip("pool")[0], "extra");
+      dragTo(strip("pool")[0], "extra"); // refused: the hand already holds its one card
+      const afterSecond = { extra: strip("extra").length, pool: strip("pool").length };
+      dragTo(strip("extra")[0], "top"); // hand emptied again
+      dragTo(strip("pool")[0], "top");
+      dragTo(strip("pool")[0], "bottom");
+      const blocked = { sent: sent().length, hint: !document.querySelector("#rulesDeckReorderHint").classList.contains("hidden") };
+      dragTo(strip("top")[0], "extra");
+      const firstSend = sent().length;
+      rulesDeckReorderRetry(); // the server refused it
+      dragTo(strip("top")[0], "bottom");
+      const payload = sent().at(-1);
+      latestState.rulesEngine.priorityPlayerId = saved.priority;
+      latestState.rulesEngine.pendingChoice = saved.choice;
+      renderAll();
+      return { afterSecond, blocked, firstSend, sends: sent().length, extra: payload?.option?.groups?.[0]?.extra?.length };
+    });
+    assert.deepEqual(pondererReorder, {
+      afterSecond: { extra: 1, pool: 2 }, blocked: { sent: 0, hint: true }, firstSend: 1, sends: 2, extra: 1,
+    });
     const popupLayout = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
       const saved = latestState.rulesEngine.pendingChoice;
@@ -2158,6 +2243,27 @@ function startServer() {
         expectedLabel: t("rulesVfxExiled"),
       };
       removeRulesVfx();
+      const volcanoState = structuredClone(exileState);
+      const volcanoVictims = volcanoState.battlefield.filter((item) => item.cardId).slice(0, 2);
+      volcanoState.battlefield = volcanoState.battlefield.filter((item) => !volcanoVictims.includes(item));
+      volcanoState.recentLog.push({
+        sequence: 509.5,
+        type: "rules_action_resolved",
+        actorId: "p1",
+        details: {
+          source: { cardId: "2xqczn7vzkm5n50_en", zone: "battlefield" },
+          effectResult: { kind: "exile_all_wills_and_interzones", status: "exiled", itemIds: volcanoVictims.map((item) => item.id) },
+        },
+      });
+      handleServerMessage(volcanoState);
+      await new Promise((resolve) => setTimeout(resolve, 90));
+      const volcano = {
+        victims: volcanoVictims.length,
+        eruption: document.querySelectorAll(".rules-vfx-scene.rules-vfx-eruption").length,
+        dissolving: document.querySelectorAll(".rules-vfx-wither-card").length,
+      };
+      removeRulesVfx();
+      document.querySelectorAll(".rules-vfx-scene, .rules-vfx-wither-card").forEach((element) => element.remove());
       const destroyState = structuredClone(exileState);
       destroyState.players.p2.zones.receptacle.cards = destroyState.players.p2.zones.receptacle.cards
         .filter((cardId) => cardId !== destroyTargetCardId);
@@ -2276,6 +2382,7 @@ function startServer() {
         drawAfterDiscard,
         moved,
         exiled,
+        volcano,
         destroyed,
         noEligible,
         deckDiscard,
@@ -3802,6 +3909,9 @@ function startServer() {
     assert.equal(rulesVfx.pluffEncoded, true);
     assert(rulesVfx.declared.essence >= 2, JSON.stringify(rulesVfx));
     assert.equal(rulesVfx.declared.tribute, 1);
+    assert.equal(rulesVfx.volcano.victims, 2);
+    assert.equal(rulesVfx.volcano.eruption, 1, JSON.stringify(rulesVfx.volcano));
+    assert.equal(rulesVfx.volcano.dissolving, 2, JSON.stringify(rulesVfx.volcano));
     assert.equal(rulesVfx.declared.exhaust, 1);
     assert(rulesVfx.declared.impact.length > 0);
     assert(rulesVfx.declared.exhaustLabel.length > 0);
