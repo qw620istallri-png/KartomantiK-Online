@@ -1716,6 +1716,44 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertEqual(len(advance["expiredEffectIds"]), 1)
         self.assertEqual(session.rules_engine["ongoingEffects"], [])
 
+    def test_reveal_the_hidden_targets_own_hand_but_not_its_ingredients(self):
+        session, p1, p2 = self.make_session()
+        ability = json.loads(
+            (Path(__file__).resolve().parent.parent / "public" / "card-abilities.json")
+            .read_text(encoding="utf-8")
+        )["u9blfiufeef8djr_en"][0]
+        session.card_rules["will-ephemeral"]["playedAbilities"] = [ability]
+        p1["zones"]["hand"] = ["will-ephemeral", "m-0", "m-1"]
+        p1["zoneOwners"]["hand"] = {"will-ephemeral": "p1", "m-0": "p1", "m-1": "p1"}
+        p2["zones"]["hand"] = ["m-2"]
+        p2["zoneOwners"]["hand"] = {"m-2": "p1"}
+
+        def declare(target_card, container="p1"):
+            return session.declare_rules_action(
+                "p1", "Reveal the Hidden", kind="play_card",
+                source={"cardId": "will-ephemeral", "zone": "hand"},
+                targets=[{"kind": "zone_card", "containerId": container, "zone": "hand", "cardId": target_card}],
+                payment_card_ids=["m-0"], ability_id=ability["id"],
+            )
+
+        error, _ = declare("m-0")
+        self.assertIn("tribute", error)
+        error, _ = declare("will-ephemeral")
+        self.assertIn("tribute", error)
+        error, _ = declare("m-2", container="p2")
+        self.assertIn("public zone", error)
+        self.assertEqual(p1["zones"]["hand"], ["will-ephemeral", "m-0", "m-1"])
+
+        error, action = declare("m-1")
+        self.assertIsNone(error)
+        self.assertEqual(p1["zones"]["hand"], ["m-1"])
+        session.pass_rules_priority("p2")
+        resolve_error, _resolution = session.pass_rules_priority("p1")
+        self.assertIsNone(resolve_error)
+        self.assertEqual(p1["zones"]["hand"], [])
+        moved = next(item for item in session.battlefield if item["cardId"] == "m-1")
+        self.assertEqual(moved["fieldZone"], "interzone")
+
     def test_encoded_played_will_uses_printed_tribute_and_applies_power_modifier(self):
         session, p1, _p2 = self.make_session()
         session.card_rules["will-ephemeral"]["playedAbilities"] = [{
@@ -8668,6 +8706,56 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
     def resolve_stack(session):
         session.pass_rules_priority("p2")
         session.pass_rules_priority("p1")
+
+    def test_inspired_nimbus_captured_by_opponent_grants_its_owner_a_free_will(self):
+        nimbus = "shiox5powdvu5nl_en"
+        session, p1, p2 = self.make_session(nimbus)
+        session.card_rules[nimbus]["power"] = 1
+        session.card_rules["m-2"]["power"] = 4
+        session.card_rules["free-will"] = {
+            "type": "persistent_will", "cost": 3, "powerCost": "{R}{R}{R}",
+            "temperaments": ["choleric"],
+        }
+        session.battlefield = [
+            self.field_item("nimbus-field", "p1", nimbus),
+            self.field_item("foe", "p2", "m-2"),
+        ]
+        session.rules_engine["firstManifestationItemIds"] = {"p1": "nimbus-field", "p2": "foe"}
+        session.rules_engine["firstManifestationComplete"] = True
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_compare")
+        comparison = session.prepare_rules_confrontation_result()
+        self.assertEqual(comparison["winnerId"], "p2")
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_move")
+        cleanup = session.begin_rules_confrontation_cleanup()
+        self.assertIn(nimbus, p2["zones"]["receptacle"])
+        self.assertEqual(
+            [action["source"]["cardId"] for action in cleanup.get("triggeredActions") or []],
+            [nimbus],
+        )
+        self.assertEqual(session.rules_engine["actionStack"][-1]["source"]["cardId"], nimbus)
+        destination = session.rules_engine["pendingChoice"]
+        self.assertEqual(destination["kind"], "confrontation_destination")
+        self.assertIsNone(session.resolve_rules_choice("p2", destination["id"], option="interzone")[0])
+        for _ in range(2):
+            error, _passed = session.pass_rules_priority(session.rules_engine["priorityPlayerId"])
+            self.assertIsNone(error)
+        self.assertEqual(session.rules_engine["actionStack"], [])
+        permission = session.rules_engine["playPermissions"][-1]
+        self.assertEqual(permission["playerId"], "p1")
+        self.assertTrue(permission["anyWill"] and permission["noTribute"])
+        # captured in the owner's own Vessel: no trigger
+        session2, _q1, _q2 = self.make_session(nimbus)
+        session2.put_zone_card("p1", "receptacle", nimbus, "p1", "top")
+        self.assertEqual(session2.queue_rules_zone_entry_triggers(nimbus, "p1", "p1", "receptacle"), [])
+        # the free Will ignores its temperament and tribute
+        self.put(p1, "hand", ["free-will"])
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, action = session.declare_rules_action(
+            "p1", "free will", "play_card", source={"cardId": "free-will", "zone": "hand"},
+        )
+        self.assertIsNone(error)
+        self.assertEqual(action["cost"]["tributeRequirements"], {})
 
     def test_blue_entity_buffs_other_friendly_confrontation_manifestations_on_own_will(self):
         session, p1, p2 = self.make_session("nbms08jb9t9eqbh_en")

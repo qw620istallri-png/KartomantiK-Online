@@ -3467,6 +3467,8 @@ body.choice-blocks-hand .hand-area .hand-card { pointer-events: none; }
 
 .rules-board-flow.is-centered::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; background: #050402b8; }
 body.flow-uses-hand .hand-area { z-index: 90; }
+/* the hover-grow clone lives on <body>: keep it above the raised hand (tribute, hand choices) */
+:is(body.flow-uses-hand, body.hand-drop-choice) .hand-card-hover-clone { z-index: 95; }
 /* destination screen polish: framed effect text, centered labels, no scrollbar on hover */
 .rules-choice-panel.destination-screen { overflow: hidden; }
 .rules-choice-panel.destination-screen .box, .rules-choice-panel.destination-screen .rules-choice-options { overflow: visible; }

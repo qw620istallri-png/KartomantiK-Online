@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261014-rules-beta-137-1";
+const STATIC_ASSET_VERSION = "20261015-rules-beta-137-1-1";
 {
   const versionEl = document.getElementById("appVersion");
   const versionMatch = STATIC_ASSET_VERSION.match(/beta-(\d+)/);
@@ -549,16 +549,36 @@ function parseDeckListText(text) {
       groups.push(current);
       continue;
     }
-    const cardMatch = line.match(/^#?(\d+)\b/);
-    if (cardMatch) {
-      const card = cardsByNumber.get(Number(cardMatch[1]));
-      if (card) {
-        if (!current) { current = { kind: null, cardIds: [] }; groups.push(current); }
-        current.cardIds.push(card.id);
-      }
+    const card = deckListLineCard(line);
+    if (card) {
+      if (!current) { current = { kind: null, cardIds: [] }; groups.push(current); }
+      current.cardIds.push(card.id);
     }
   }
   return { app: "DeckomantiK", groups };
+}
+
+// A DeckomantiK "Copy list" line is "<number> <name>": "#012 Wind Sprout" for
+// the base set, "ID-001 Flem" for an extension (its collector code). Plain
+// numbers ("12 Wind Sprout") and bare names are accepted too.
+function deckListLineCard(line) {
+  const codeMatch = line.match(/^([A-Za-z]{1,4})[-_ ]?(\d{1,3})\b/);
+  if (codeMatch) {
+    const code = `${codeMatch[1]}-${codeMatch[2].padStart(3, "0")}`.toUpperCase();
+    const byCode = [...cardsById.values()].find((card) => String(card.collectorCode || "").toUpperCase() === code);
+    if (byCode) return byCode;
+  }
+  const numberMatch = line.match(/^#?(\d+)\b/);
+  if (numberMatch) return cardsByNumber.get(Number(numberMatch[1])) || null;
+  const name = deckListNormalizedName(line);
+  if (!name) return null;
+  return [...cardsById.values()].find((card) => deckListNormalizedName(card.name) === name
+    || Object.values(card.translations || {}).some((tr) => tr?.name && deckListNormalizedName(tr.name) === name)) || null;
+}
+
+function deckListNormalizedName(value) {
+  return String(value || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()
+    .replace(/^\s*\d+\s*[x×]\s*/i, "").replace(/[^a-z0-9]+/g, " ").trim();
 }
 
 // DeckomantiK's own "share via URL" feature (#dk=<base64url(gzip(JSON))>,
@@ -587,7 +607,8 @@ async function decodeDkShare(token) {
       jsonBytes = new Uint8Array(await new Response(stream).arrayBuffer());
     }
     const payload = JSON.parse(new TextDecoder().decode(jsonBytes));
-    return payload && payload.v === 2 && (payload.d || payload.b) ? payload : null;
+    // v2 stored card indexes, v3 (current DeckomantiK) stores card ids
+    return payload && [2, 3].includes(payload.v) && (payload.d || payload.b) ? payload : null;
   } catch (e) {
     return null;
   }
@@ -597,10 +618,19 @@ async function decodeDkShare(token) {
 // is ordered by collectionNumber starting at 1 with no gaps (index =
 // collectionNumber - 1) — resolving through our own cardsByNumber map (keyed
 // the same way) sidesteps any risk of the two apps' card-id strings differing.
+function dkShareCardId(value) {
+  if (typeof value === "string") {
+    if (cardsById.has(value)) return value;
+    const bare = value.replace(/_(?:en|it)$/i, "").toLowerCase();
+    return [...cardsById.keys()].find((id) => id.replace(/_(?:en|it)$/i, "").toLowerCase() === bare) || null;
+  }
+  return Number.isInteger(value) ? cardsByNumber.get(value + 1)?.id || null : null;
+}
+
 function expandDkShareDeck(d) {
   const groups = (d.g || []).map((g) => ({
     kind: g.k || null,
-    cardIds: (g.c || []).map((index) => cardsByNumber.get(index + 1)?.id).filter(Boolean),
+    cardIds: (g.c || []).map(dkShareCardId).filter(Boolean),
   }));
   return { app: "DeckomantiK", name: d.n, groups };
 }
@@ -3375,6 +3405,20 @@ function resolveRulesStackPayment(option) {
   });
 }
 
+// The played card and the cards paid as its tribute are the "ingredients"
+// of the action: they leave the Hand, so they can never be its Hand target.
+function rulesBoardIngredientTarget(flow, target) {
+  if (target?.kind !== "zone_card" || target.zone !== "hand") return false;
+  const ingredients = new Set(
+    [...rulesBoardSelectedPayments(flow), ...rulesBoardExtraTributeCards(flow).map((entry) => entry.cardId)]
+      .map((ref) => String(ref || ""))
+      .filter((ref) => !ref.includes("|") || ref.startsWith("hand|"))
+      .map((ref) => ref.replace(/^hand\|/, "")),
+  );
+  if (flow?.source?.zone === "hand") ingredients.add(flow.source.cardId);
+  return ingredients.has(target.cardId);
+}
+
 function rulesBoardSelectedPayments(flow = pendingRulesBoardFlow) {
   return [...(flow?.selectedPaymentIndexes || [])]
     .map((selectionKey) => flow?.draft?.manifestations?.find(
@@ -3514,7 +3558,8 @@ function armRulesBoardTargets(flow) {
       !flow.draft.targetRules?.groups
       || target.targetGroupIndex === targetGroupIndex
     ))
-    .filter((target) => !selectedKeys.has(target.key));
+    .filter((target) => !selectedKeys.has(target.key))
+    .filter((target) => !rulesBoardIngredientTarget(flow, target));
   const commitTarget = (target) => {
     playRulesVfxTargetLock(rulesTargetElement(target));
     if (flow.draft.targetRules?.groups) {

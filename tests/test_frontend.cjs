@@ -86,6 +86,59 @@ function startServer() {
       };
     });
 
+    // current DeckomantiK formats: "Copy list" writes "#012 Name" / "ID-001 Name",
+    // share links are v3 with card ids instead of indexes
+    const dkCurrentImport = await page.evaluate(async () => {
+      const ids = [cardsByNumber.get(12).id, cardsByNumber.get(301).id, cardsByNumber.get(302).id];
+      const listText = [
+        "DECKOMANTIK LIST v1",
+        "[Deck] DK current",
+        "",
+        "[Category:manifestations] Manifestations",
+        `#012 ${cardsByNumber.get(12).name}`,
+        `ID-001 ${cardsByNumber.get(301).name}`,
+        `ID-002 ${cardsByNumber.get(302).name}`,
+      ].join("\n");
+      const fromList = await readDeckImportText(listText);
+      const payload = { v: 3, t: "deck", d: { n: "DK share v3", g: [{ n: "Manifestations", k: "manifestations", c: ids }] } };
+      const stream = new Blob([new TextEncoder().encode(JSON.stringify(payload))]).stream().pipeThrough(new CompressionStream("gzip"));
+      const bytes = new Uint8Array(await new Response(stream).arrayBuffer());
+      let binary = "";
+      bytes.forEach((b) => { binary += String.fromCharCode(b); });
+      const token = btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+      const fromUrl = await readDeckImportText(`https://qw620istallri-png.github.io/DECKOMANTIK/#dk=${token}`);
+      return {
+        ids,
+        listIds: fromList.deck.groups.flatMap((g) => g.cardIds),
+        listName: fromList.name,
+        urlIds: fromUrl.deck.groups.flatMap((g) => g.cardIds),
+        urlName: fromUrl.name,
+      };
+    });
+    assert.deepEqual(dkCurrentImport.listIds, dkCurrentImport.ids);
+    assert.equal(dkCurrentImport.listName, "DK current");
+    assert.deepEqual(dkCurrentImport.urlIds, dkCurrentImport.ids);
+    assert.equal(dkCurrentImport.urlName, "DK share v3");
+
+    // the hand hover-grow clone must stay above the hand raised over a choice screen
+    const hoverLayers = await page.evaluate(() => {
+      const clone = document.createElement("div");
+      clone.className = "hand-card-hover-clone";
+      document.body.appendChild(clone);
+      const out = {};
+      for (const cls of ["flow-uses-hand", "hand-drop-choice"]) {
+        document.body.classList.add(cls);
+        out[cls] = {
+          clone: Number(getComputedStyle(clone).zIndex),
+          hand: Number(getComputedStyle(document.querySelector(".hand-area")).zIndex),
+        };
+        document.body.classList.remove(cls);
+      }
+      clone.remove();
+      return out;
+    });
+    for (const layer of Object.values(hoverLayers)) assert.ok(layer.clone > layer.hand, JSON.stringify(hoverLayers));
+
     const result = await page.evaluate(() => {
       let rulesBetaPayload = null;
       const originalConnectAndJoin = connectAndJoin;

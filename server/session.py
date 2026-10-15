@@ -1372,7 +1372,9 @@ class Session:
                 return True
         return False
 
-    def rules_action_targets(self, targets):
+    def rules_action_targets(self, targets, player_id=None):
+        """Clean structured targets; the declaring player's own Hand counts as
+        a legal target zone (Reveal the Hidden), other private zones never do."""
         if targets is None:
             return None, []
         if not isinstance(targets, list):
@@ -1405,7 +1407,8 @@ class Session:
                 zone = str(target.get("zone") or "")
                 card_id = str(target.get("cardId") or "")
                 target_key = (kind, container_id, zone, card_id)
-                if not container_id or zone not in SHARED_ZONES or not card_id:
+                own_hand = zone == "hand" and player_id is not None and container_id == player_id
+                if not container_id or (zone not in SHARED_ZONES and not own_hand) or not card_id:
                     return "Only a card in a public zone can be selected as this target.", None
                 if target_key in seen_targets:
                     continue
@@ -6335,6 +6338,21 @@ class Session:
         result["captured"] = captured
         result["supportExiled"] = support_exiled
         result["supportResolved"] = support_resolved
+        # Inspired Nimbus & co.: cards captured into a Vessel trigger their own
+        # "enters an Empathic Vessel" abilities, and Vessel watchers react now.
+        vessel_triggers = []
+        for movement in captured + [
+            entry.get("movement") or {} for entry in support_resolved
+        ]:
+            if movement.get("status") == "moved" and movement.get("zone") == "receptacle":
+                vessel_triggers.extend(self.queue_rules_zone_entry_triggers(
+                    movement.get("cardId"), movement.get("ownerId"),
+                    movement.get("containerId"), "receptacle", defer=True,
+                ))
+        vessel_triggers.extend(self.queue_rules_observed_event_triggers(defer=True))
+        if vessel_triggers:
+            self.queue_or_defer_rules_simultaneous_actions(vessel_triggers)
+            result["triggeredActions"] = vessel_triggers
         result["rematchItemIds"] = list(rematch_item_ids)
         persist_candidates = [
             item for item in own_items if self.rules_item_has_persist(item)
@@ -6709,9 +6727,27 @@ class Session:
         )
         if timing_error:
             return timing_error, None
-        target_error, clean_targets = self.rules_action_targets(targets)
+        target_error, clean_targets = self.rules_action_targets(targets, player_id)
         if target_error:
             return target_error, None
+        ingredients = (
+            {clean_source.get("cardId")}
+            if (clean_source or {}).get("zone") == "hand" else set()
+        )
+        for refs in (payment_card_ids, extra_payment_card_ids):
+            if isinstance(refs, list):
+                ingredients.update(
+                    card_id for zone, _sep, card_id in (
+                        str(ref or "").rpartition("|") for ref in refs
+                    )
+                    if zone in {"", "hand"}
+                )
+        if any(
+            entry.get("kind") == "zone_card" and entry.get("zone") == "hand"
+            and entry.get("cardId") in ingredients
+            for entry in clean_targets
+        ):
+            return "The played card and its tribute cannot be chosen as its target.", None
         if as_support:
             for event in (
                 "enters_field", "enters_support", "enters_field_zone",
@@ -16470,7 +16506,7 @@ class Session:
             return None, payload
 
         if choice.get("kind") == "trigger_targets":
-            target_error, clean_targets = self.rules_action_targets(targets)
+            target_error, clean_targets = self.rules_action_targets(targets, player_id)
             if target_error:
                 return target_error, None
             ability_error = self.rules_ability_targets_error(
@@ -17688,6 +17724,10 @@ class Session:
             confrontation_result = self.prepare_rules_confrontation_result()
         elif self.current_phase_id() == "resolution_move":
             confrontation_result = self.begin_rules_confrontation_cleanup()
+            if isinstance(confrontation_result, dict):
+                resolution_triggered_actions.extend(
+                    confrontation_result.pop("triggeredActions", None) or []
+                )
         return None, {
             "status": "advanced",
             "previousPhaseId": previous_phase_id,
