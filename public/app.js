@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261017-rules-beta-137-1-2-uib1";
+const STATIC_ASSET_VERSION = "20261017-rules-beta-137-1-2-uib2";
 {
   const versionEl = document.getElementById("appVersion");
   const versionMatch = STATIC_ASSET_VERSION.match(/beta-(\d+)/);
@@ -6501,7 +6501,8 @@ function formatPlayerLogEntry(e) {
         : `${who} ${esc(t("plPassedPhase"))}${lines.phase ? ` — ${esc(lines.phase)}` : ""}${step}`;
     }
     case "rules_action_declared":
-      return `${who} ${esc(t("plDeclaredStackAction"))} ${esc(d.label || "")}`;
+      // the card's name in the reader's language (the engine's label is English)
+      return `${who} ${esc(t("plDeclaredStackAction"))} ${d.source?.cardId ? namedOrUnknownCard(d.source.cardId) : esc(d.label || "")}`;
     case "rules_action_triggered":
       return `${who} ${esc(t("plDeclaredStackAction"))} ${namedOrUnknownCard(d.source?.cardId)}${d.targets?.[0]?.kind === "player" ? ` → ${esc(rulesPlayerName(d.targets[0].playerId))}` : ""}`;
     case "rules_priority_passed":
@@ -6511,7 +6512,7 @@ function formatPlayerLogEntry(e) {
     case "rules_action_resolved":
       return d.effectResult?.kind === "neutralize_stack_action" && d.effectResult.status === "neutralized"
         ? `${who} ${esc(t("plNeutralizedStackCard"))} ${namedOrUnknownCard(d.effectResult.cardId)}`
-        : `${who} ${esc(t("plResolvedStackAction"))} ${esc(d.label || "")}${rulesRollLogText(d.effectResult) ? ` — ${esc(rulesRollLogText(d.effectResult))}` : ""}`;
+        : `${who} ${esc(t("plResolvedStackAction"))} ${d.source?.cardId ? namedOrUnknownCard(d.source.cardId) : esc(d.label || "")}${rulesRollLogText(d.effectResult) ? ` — ${esc(rulesRollLogText(d.effectResult))}` : ""}`;
     case "rules_choice_resolved":
       if (d.kind === "stack_copy_targets") {
         return `${who} ${esc(t("plCopiedStackWill"))} ${namedOrUnknownCard(d.targetCardId)}`;

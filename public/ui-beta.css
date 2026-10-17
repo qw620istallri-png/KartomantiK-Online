@@ -328,26 +328,42 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 .ub-chat-form input { flex: 1; min-width: 0; background: rgba(var(--ub-lo), .3); border: 1px solid var(--ub-line-soft); color: var(--ub-ink); border-radius: 6px; padding: 6px 8px; font: inherit; font-size: 13px; }
 .ub-chat.folded .ub-log, .ub-chat.folded .ub-chat-form { display: none; }
 
-/* tools: the app's own toolbars, laid out as a grid at the bottom of the column */
-.ub-tools { flex: none; display: flex; flex-direction: column; gap: 6px; }
-#gameScreen.ui-beta .ub-tools .side-toolbars {
-  position: static; transform: none; padding: 0; display: flex; flex-direction: row; flex-wrap: wrap; gap: 6px; transition: none;
+/* tools: one row of same-looking buttons; the groups open as small menus above */
+.ub-tools { flex: none; position: relative; }
+.ub-toolrow { display: flex; align-items: center; gap: 4px; flex-wrap: nowrap; }
+.ub-toolslot, .ub-toolmenu { display: contents; }
+.ub-toolmenu { display: block; position: relative; }
+#gameScreen.ui-beta .ub-tools .hand-tools-dock,
+#gameScreen.ui-beta .ub-tools .hand-tools-row { display: contents; }
+#gameScreen.ui-beta .ub-tools .ub-tool,
+#gameScreen.ui-beta .ub-tools .hand-tools-toggle,
+#gameScreen.ui-beta .ub-tools .hand-visibility-toggle,
+#gameScreen.ui-beta .ub-tools #highlightOwnersBtn,
+#gameScreen.ui-beta .ub-tools #inspectReopenBtn,
+#gameScreen.ui-beta .ub-toolpop button {
+  position: static; width: 34px; height: 34px; min-width: 0; min-height: 0; padding: 0; margin: 0; flex: none;
+  border-radius: 8px; border: 1px solid var(--ub-line-soft); background: rgba(var(--ub-hi), .04); box-shadow: none;
+  color: var(--ub-gold-pale); font-size: 14px; display: grid; place-items: center; cursor: pointer; transform: none;
 }
-#gameScreen.ui-beta .ub-tools .side-toolbars::after { display: none; }
-#gameScreen.ui-beta .ub-tools .side-toolbars > * { opacity: 1; transition: none; }
-#gameScreen.ui-beta .ub-tools .side-toolbars > div { display: flex; flex-direction: row; flex-wrap: wrap; gap: 4px; padding: 0; border: 0; background: none; box-shadow: none; }
-#gameScreen.ui-beta .ub-tools .side-toolbars button {
-  width: 36px; height: 36px; padding: 0; border-radius: 8px; border: 1px solid var(--ub-line-soft); background: rgba(var(--ub-hi), .04);
-  color: var(--ub-gold-pale); font-size: 15px; display: grid; place-items: center;
-}
-#gameScreen.ui-beta .ub-tools .side-toolbars button:hover { background: rgba(var(--ub-hi), .1); }
-#gameScreen.ui-beta .ub-tools .side-toolbars button.active { background: rgba(var(--ub-gd), .22); border-color: var(--ub-gold); }
-#gameScreen.ui-beta .ub-tools .side-toolbars .draw-sep { display: none; }
-#gameScreen.ui-beta .ub-tools .side-toolbars svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; }
-#gameScreen.ui-beta .ub-tools .hand-tools-dock { position: relative; left: auto; bottom: auto; z-index: 3; flex-direction: column-reverse; align-items: stretch; }
-#gameScreen.ui-beta .ub-tools .hand-tools-dock .hand-tools-row { flex-wrap: wrap; }
-#gameScreen.ui-beta .ub-tools .hand-toolbar { position: absolute; left: 0; bottom: calc(100% + 6px); flex-wrap: wrap; justify-content: flex-start; width: max-content; max-width: min(560px, 70vw); padding: 8px; border-radius: 10px; border: 1px solid var(--ub-line); background: rgba(var(--ub-pn), .97); box-shadow: 0 16px 40px rgba(0, 0, 0, .55); pointer-events: auto; }
+#gameScreen.ui-beta .ub-tools .hand-tools-toggle.hidden,
+#gameScreen.ui-beta .ub-tools .hand-visibility-toggle.hidden { display: none; }
+#gameScreen.ui-beta .ub-tools #handToolsToggleLabel { display: none; }
+#gameScreen.ui-beta .ub-tools button:hover { background: rgba(var(--ub-hi), .1); }
+#gameScreen.ui-beta .ub-tools button.active,
+#gameScreen.ui-beta .ub-tools button[aria-expanded="true"],
+#gameScreen.ui-beta .ub-tools .hand-visibility-toggle[aria-pressed="true"],
+#gameScreen.ui-beta .ub-toolmenu.open > .ub-tool { background: rgba(var(--ub-gd), .22); border-color: var(--ub-gold); color: var(--ub-gold-pale); }
+#gameScreen.ui-beta .ub-tools svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.ub-toolpop { display: none; position: absolute; left: 0; bottom: calc(100% + 6px); z-index: 5; padding: 6px; border-radius: 10px; border: 1px solid var(--ub-line); background: rgba(var(--ub-pn), .97); box-shadow: 0 16px 40px rgba(0, 0, 0, .55); }
+.ub-toolmenu.open .ub-toolpop { display: block; }
+#gameScreen.ui-beta .ub-toolpop > div { display: flex; flex-direction: row; gap: 4px; padding: 0; margin: 0; border: 0; background: none; box-shadow: none; position: static; opacity: 1; transform: none; }
+#gameScreen.ui-beta .ub-toolpop .draw-sep { display: none; }
+#gameScreen.ui-beta .ub-tools .hand-toolbar { position: absolute; left: 0; bottom: calc(100% + 6px); z-index: 5; flex-wrap: wrap; justify-content: flex-start; width: max-content; max-width: min(560px, 70vw); padding: 8px; border-radius: 10px; border: 1px solid var(--ub-line); background: rgba(var(--ub-pn), .97); box-shadow: 0 16px 40px rgba(0, 0, 0, .55); pointer-events: auto; }
 #gameScreen.ui-beta .ub-tools .hand-toolbar.hidden { display: none; }
+/* the hand's resize grip is not needed: the layout sizes the hand */
+#gameScreen.ui-beta .hand-resize-handle { display: none; }
+/* what is left of the side toolbar at its old place (the view lock) stays hidden */
+#gameScreen.ui-beta #sideToolbars { display: none; }
 
 /* right column: Stack, then the opponent's piles, phase and pass at the bottom */
 .ub-stack { position: relative; flex: 0 1 auto; min-height: 96px; display: flex; flex-direction: column; border-radius: var(--ub-radius); border: 1px solid var(--ub-line-soft); background: rgba(var(--ub-lo), .16); overflow: hidden; }
@@ -441,7 +457,6 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 #gameScreen.ui-beta.ub-compact .ub-piles .field-pile .pile-label { font-size: 10px; letter-spacing: .04em; }
 #gameScreen.ui-beta.ub-compact .ub-who .ub-name { font-size: 13px; }
 #gameScreen.ui-beta.ub-compact .ub-score b { font-size: 14px; }
-#gameScreen.ui-beta.ub-compact .ub-tools .side-toolbars button { width: 30px; height: 30px; font-size: 13px; }
 #gameScreen.ui-beta.ub-compact .ub-pw { font-size: 20px; }
 #gameScreen.ui-beta.ub-compact .ub-who2 { display: none; }
 #gameScreen.ui-beta .ub-phase .rules-priority.is-mine { color: #89e6a7; background: transparent; box-shadow: none; }
@@ -455,9 +470,46 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 #gameScreen.ui-beta.ub-compact .ub-col.left { overflow-y: auto; overscroll-behavior: contain; }
 #gameScreen.ui-beta.ub-compact .ub-col.left > * { flex: none; }
 #gameScreen.ui-beta.ub-compact .ub-col.left .ub-chat-slot { height: 170px; }
-#gameScreen.ui-beta.ub-compact .ub-tools { flex-direction: row; flex-wrap: wrap; }
+#gameScreen.ui-beta.ub-compact .ub-tools .ub-tool,
+#gameScreen.ui-beta.ub-compact .ub-tools .hand-tools-toggle,
+#gameScreen.ui-beta.ub-compact .ub-tools .hand-visibility-toggle,
+#gameScreen.ui-beta.ub-compact .ub-tools #highlightOwnersBtn,
+#gameScreen.ui-beta.ub-compact .ub-tools #inspectReopenBtn { width: 28px; height: 28px; }
 #gameScreen.ui-beta.ub-compact .ub-tabs button { padding: 4px 5px; font-size: 11px; }
 #gameScreen.ui-beta.ub-compact #ubZcMe .ub-zlab,
 #gameScreen.ui-beta.ub-compact #ubZcOpp .ub-zlab { display: none; }
 #gameScreen.ui-beta.ub-compact .ub-chat header .ub-tabs { overflow: hidden; }
 #gameScreen.ui-beta.ub-compact .ub-chat header .ub-iconbtn { width: 26px; height: 26px; flex: none; }
+
+/* choices answered on the board */
+.ub-choice-banner { position: absolute; z-index: 47; left: 50%; top: calc(var(--ub-oppHandH, 70px) + 52px); transform: translateX(-50%); display: flex; align-items: center; gap: 14px; max-width: min(640px, calc(var(--ub-fieldW, 900px) - 40px)); padding: 10px 14px; border-radius: 12px; border: 1px solid var(--ub-gold); background: rgba(var(--ub-pn), .94); box-shadow: 0 14px 34px rgba(0, 0, 0, .45); color: var(--ub-ink); pointer-events: auto; }
+.ub-choice-banner.hidden { display: none; }
+.ub-choice-banner > div:first-child { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.ub-choice-banner strong { font-family: var(--display-font, Georgia, serif); font-weight: 400; color: var(--ub-gold-pale); font-size: 15px; }
+.ub-choice-banner span { font-size: 12.5px; color: var(--ub-muted); }
+.ub-choice-actions { display: flex; gap: 6px; flex: none; }
+.ub-choice-actions button { border-radius: 8px; border: 1px solid var(--ub-line); background: rgba(var(--ub-hi), .05); color: var(--ub-ink); padding: 6px 10px; font-size: 12px; cursor: pointer; white-space: nowrap; }
+.ub-choice-actions button:hover { background: rgba(var(--ub-gd), .18); }
+#rulesChoicePanel.ub-proxied, .rules-player-target-panel.ub-proxied { display: none !important; }
+#gameScreen.ui-beta .bf-card.ub-choice-pick, #gameScreen.ui-beta .bf-card.ub-choice-drag { cursor: pointer; outline: 3px solid var(--ub-gold); outline-offset: 3px; border-radius: 10px; animation: ub-choice-glow 1.4s ease-in-out infinite; z-index: 30 !important; }
+#gameScreen.ui-beta .bf-card.ub-choice-drag { cursor: grab; }
+#gameScreen.ui-beta .bf-card.ub-choice-lifted { opacity: .35; }
+.ub-choice-ghost { box-shadow: 0 20px 40px rgba(0, 0, 0, .6); border-radius: 10px; transition: none !important; animation: none !important; }
+@keyframes ub-choice-glow { 50% { outline-color: rgba(240, 217, 143, .35); } }
+#gameScreen.ui-beta .ub-side.ub-choice-target { box-shadow: inset 0 0 0 3px var(--ub-gold), inset 0 0 60px rgba(var(--ub-gd), .25); cursor: pointer; }
+#gameScreen.ui-beta .ub-who.ub-choice-target { outline: 2px solid var(--ub-gold); cursor: pointer; }
+#gameScreen.ui-beta .ub-izcol.ub-drop-ok, #gameScreen.ui-beta .field-pile.ub-drop-ok { box-shadow: inset 0 0 0 2px rgba(240, 217, 143, .55); border-radius: 10px; }
+#gameScreen.ui-beta .ub-izcol.ub-drop-over, #gameScreen.ui-beta .field-pile.ub-drop-over { box-shadow: inset 0 0 0 3px var(--ub-gold), 0 0 24px rgba(240, 217, 143, .45); background-color: rgba(var(--ub-gd), .14); }
+
+/* an opponent's message while the journal is covered (inspect panel, folded chat) */
+.ub-msg-ping { position: fixed; z-index: 400; left: 12px; bottom: 16px; max-width: min(320px, calc(100vw - 24px)); display: flex; align-items: flex-start; gap: 8px; padding: 9px 12px; border-radius: 12px; border: 1px solid var(--pc, #d3a942); border-left-width: 4px; background: #101c36f2; color: #f5efdf; font: 13px/1.35 system-ui, sans-serif; text-align: left; box-shadow: 0 14px 34px rgba(0, 0, 0, .5); cursor: pointer; opacity: 0; transform: translateY(12px); pointer-events: none; transition: opacity 240ms, transform 240ms; }
+.ub-msg-ping.show { opacity: 1; transform: none; pointer-events: auto; }
+.ub-msg-ping svg { width: 16px; height: 16px; flex: none; margin-top: 1px; fill: none; stroke: var(--pc, #d3a942); stroke-width: 1.8; }
+.ub-msg-ping span { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; }
+.ub-msg-ping b { color: var(--pc, #d3a942); }
+#gameScreen.ui-beta .ub-tools .hand-toolbar { display: flex; flex-direction: column; align-items: stretch; gap: 2px; min-width: 180px; }
+#gameScreen.ui-beta .ub-tools .hand-toolbar.hidden { display: none; }
+#gameScreen.ui-beta .ub-tools .hand-toolbar .hand-tool-btn { width: auto; height: auto; min-height: 0; margin: 0; padding: 7px 10px; border: 0; border-radius: 7px; background: transparent; box-shadow: none; color: var(--ub-ink); font: 13px/1.2 inherit; text-align: left; justify-content: flex-start; }
+#gameScreen.ui-beta .ub-tools .hand-toolbar button.hand-tool-btn:hover { background: rgba(var(--ub-gd), .16); }
+#gameScreen.ui-beta .ub-tools .hand-toolbar .hand-card-count { color: var(--ub-muted); font-size: 12px; }
+#gameScreen.ui-beta .ub-tools .hand-toolbar .hand-tool-sep { height: 1px; width: auto; margin: 3px 4px; background: var(--ub-line-soft); }

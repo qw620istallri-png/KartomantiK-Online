@@ -25,6 +25,15 @@
   };
 
   Object.assign(ui.fr, {
+    ubToolDraw: "Dessin",
+    ubToolCreate: "Créer (jeton, essence, dé)",
+    ubChoosePlayer: "Choisis un joueur",
+    ubClickPlayer: "Clique sur le côté du terrain (ou le nom) du joueur visé.",
+    ubClickCard: "Clique sur une des cartes en surbrillance sur le terrain.",
+    ubDragDestination: "Glisse la carte vers ton Interzone ou sur ton deck.",
+    ubDragToDeck: "Glisse une carte en surbrillance sur ton deck (ou clique dessus).",
+    ubShowChoicePanel: "Voir les options",
+    ubHideChoicePanel: "Choisir sur le terrain",
     ubOption: "UI beta (nouvelle table)",
     ubOptionHint: "Moi à gauche, l’adversaire à droite, colonnes latérales. Réversible à tout moment depuis le menu de la partie.",
     ubMenuToggle: "UI beta",
@@ -65,6 +74,15 @@
     ubFirstManifestation: "Première Manifestation",
   });
   Object.assign(ui.en, {
+    ubToolDraw: "Drawing",
+    ubToolCreate: "Create (token, essence, die)",
+    ubChoosePlayer: "Choose a player",
+    ubClickPlayer: "Click the targeted player's side of the field (or their name).",
+    ubClickCard: "Click one of the highlighted cards on the field.",
+    ubDragDestination: "Drag the card to your Interzone or onto your deck.",
+    ubDragToDeck: "Drag a highlighted card onto your deck (or click it).",
+    ubShowChoicePanel: "See the options",
+    ubHideChoicePanel: "Choose on the field",
     ubOption: "UI beta (new table)",
     ubOptionHint: "Me on the left, the opponent on the right, side columns. Switch back any time from the game menu.",
     ubMenuToggle: "UI beta",
@@ -105,6 +123,15 @@
     ubFirstManifestation: "First Manifestation",
   });
   Object.assign(ui.it, {
+    ubToolDraw: "Disegno",
+    ubToolCreate: "Crea (segnalino, essenza, dado)",
+    ubChoosePlayer: "Scegli un giocatore",
+    ubClickPlayer: "Clicca sul lato del campo (o sul nome) del giocatore bersaglio.",
+    ubClickCard: "Clicca su una delle carte evidenziate sul campo.",
+    ubDragDestination: "Trascina la carta nella tua Interzona o sul tuo mazzo.",
+    ubDragToDeck: "Trascina una carta evidenziata sul tuo mazzo (o cliccala).",
+    ubShowChoicePanel: "Vedi le opzioni",
+    ubHideChoicePanel: "Scegli sul campo",
     ubOption: "UI beta (nuovo tavolo)",
     ubOptionHint: "Io a sinistra, l’avversario a destra, colonne laterali. Reversibile in ogni momento dal menu della partita.",
     ubMenuToggle: "UI beta",
@@ -150,6 +177,16 @@
     chevron: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>',
     send: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12 20 4l-6 16-3-7-7-1Z"/></svg>',
     log: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14M5 10h14M5 15h9M5 20h6"/></svg>',
+    pen: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 20 1-4L16 5l3 3L8 19l-4 1ZM14 7l3 3"/></svg>',
+    erase: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2" stroke-dasharray="3 3"/></svg>',
+    undo: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>',
+    redo: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 14 5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h3"/></svg>',
+    trash: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>',
+    plus: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>',
+    token: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="3" width="11" height="15" rx="2"/><path d="M18 14v6M15 17h6"/></svg>',
+    essence: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11Z"/></svg>',
+    dice: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r=".8"/><circle cx="15" cy="15" r=".8"/><circle cx="15" cy="9" r=".8"/><circle cx="9" cy="15" r=".8"/></svg>',
+    palette: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0 0 18c1.4 0 2-1 2-2 0-1.6-1.6-2 0-3h2a5 5 0 0 0 5-5c0-4.4-4-8-9-8Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg>',
     eye: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.6"/></svg>',
   };
 
@@ -168,6 +205,12 @@
     peekEl: null,
     resizeFrame: 0,
     system: [],
+    iconSwaps: [],
+    choice: null,
+    choiceKey: "",
+    choicePanelShown: "",
+    choiceDrag: null,
+    pingTimer: null,
   };
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -686,19 +729,26 @@
           <form class="ub-chat-form" id="ubChatForm"><input id="ubChatInput" maxlength="500" autocomplete="off"><button type="submit" class="ub-iconbtn" id="ubChatSend">${ICONS.send}</button></form>
         </section>
       </div>
-      <div class="ub-tools" id="ubTools"></div>`;
+      <div class="ub-tools" id="ubTools">
+        <div class="ub-toolrow">
+          <span class="ub-toolslot" id="ubToolHand"></span>
+          <div class="ub-toolmenu"><button type="button" class="ub-tool" data-ub-menu="draw">${ICONS.pen}</button><div class="ub-toolpop" id="ubDrawPop"></div></div>
+          <div class="ub-toolmenu"><button type="button" class="ub-tool" data-ub-menu="create">${ICONS.plus}</button><div class="ub-toolpop" id="ubCreatePop"></div></div>
+          <span class="ub-toolslot" id="ubToolView"></span>
+        </div>
+      </div>`;
     const right = el("aside", "ub-col right");
     right.id = "ubRight";
     right.innerHTML = `
       <div class="ub-who opp" id="ubWhoOpp"></div>
-      <section class="ub-stack" id="ubStack">
-        <header><b></b><small id="ubStackCount"></small></header>
-        <div class="ub-stack-body" id="ubStackBody"><p class="ub-stack-empty" id="ubStackEmpty"></p></div>
-      </section>
       <div class="ub-oppblock" id="ubOppBlock">
         <button type="button" class="ub-oppbar" id="ubOppBar"></button>
         <div class="ub-oppfull"><div><div class="ub-piles" id="ubOppPiles"></div><div class="ub-score" id="ubOppScore"></div></div></div>
       </div>
+      <section class="ub-stack" id="ubStack">
+        <header><b></b><small id="ubStackCount"></small></header>
+        <div class="ub-stack-body" id="ubStackBody"><p class="ub-stack-empty" id="ubStackEmpty"></p></div>
+      </section>
       <div class="ub-phase" id="ubPhase"><button type="button" class="ub-manual-pass hidden" id="ubManualPass" data-pass-phase></button></div>`;
     wrap.appendChild(left);
     wrap.appendChild(right);
@@ -718,6 +768,24 @@
       const opp = sidePlayers().opp;
       if (opp) openPlayerLog(opp.id);
     };
+    document.getElementById("ubTools").addEventListener("click", (event) => {
+      const trigger = event.target.closest("[data-ub-menu]");
+      if (trigger) {
+        const menu = trigger.parentElement;
+        const open = !menu.classList.contains("open");
+        closeToolMenus();
+        menu.classList.toggle("open", open);
+        return;
+      }
+      if (event.target.closest(".ub-toolpop button")) {
+        closeToolMenus();
+        requestAnimationFrame(syncToolState);
+      }
+    });
+    document.addEventListener("pointerdown", (event) => {
+      if (!event.target.closest?.(".ub-toolmenu")) closeToolMenus();
+    }, true);
+    document.addEventListener("pointerdown", onChoicePointerDown, true);
     document.getElementById("ubChatForm").addEventListener("submit", (event) => {
       event.preventDefault();
       const input = document.getElementById("ubChatInput");
@@ -854,6 +922,12 @@
       marker.remove();
     });
     local.homes.clear();
+    local.iconSwaps.forEach(([button, html]) => {
+      button.innerHTML = html;
+      delete button.dataset.ubIcon;
+    });
+    local.iconSwaps = [];
+    closeToolMenus();
     // piles go back onto the board
     const board = document.getElementById("battlefield");
     document.querySelectorAll("#ubMyPiles .field-pile, #ubOppPiles .field-pile").forEach((pile) => board.appendChild(pile));
@@ -862,9 +936,24 @@
   function relocate() {
     adopt(document.getElementById("rulesStackPanel"), document.getElementById("ubStackBody"), document.getElementById("ubStackEmpty"));
     adopt(document.getElementById("phaseTracker"), document.getElementById("ubPhase"), document.getElementById("ubManualPass"));
-    const tools = document.getElementById("ubTools");
-    adopt(document.getElementById("sideToolbars"), tools);
-    adopt(document.getElementById("handToolsDock"), tools);
+    adopt(document.getElementById("handToolsDock"), document.getElementById("ubToolHand"));
+    adopt(document.getElementById("drawToolbar"), document.getElementById("ubDrawPop"));
+    adopt(document.getElementById("tokenToolbar"), document.getElementById("ubCreatePop"));
+    const view = document.getElementById("ubToolView");
+    adopt(document.getElementById("highlightOwnersBtn"), view);
+    adopt(document.getElementById("inspectReopenBtn"), view);
+    // the emoji buttons get line icons so the whole row reads as one set
+    const icons = {
+      drawPenBtn: "pen", drawEraseBtn: "erase", drawUndoBtn: "undo", drawRedoBtn: "redo", drawClearBtn: "trash",
+      createTokenBtn: "token", createEssenceBtn: "essence", createDiceBtn: "dice", highlightOwnersBtn: "palette",
+    };
+    Object.entries(icons).forEach(([id, icon]) => {
+      const button = document.getElementById(id);
+      if (!button || button.dataset.ubIcon) return;
+      local.iconSwaps.push([button, button.innerHTML]);
+      button.dataset.ubIcon = icon;
+      button.innerHTML = ICONS[icon];
+    });
   }
 
   function movePiles() {
@@ -1223,9 +1312,10 @@
     if (!log) return;
     const fresh = chatMessages.length - local.seenChat;
     if (fresh > 0) {
-      const fromOthers = chatMessages.slice(-fresh).filter((message) => message.byId !== myPlayerId).length;
-      if (local.chatFolded || local.chatTab === "log") local.unread += fromOthers;
+      const others = chatMessages.slice(-fresh).filter((message) => message.byId !== myPlayerId);
+      if (local.chatFolded || local.chatTab === "log") local.unread += others.length;
       local.seenChat = chatMessages.length;
+      if (others.length) pingMessage(others[others.length - 1]);
     }
     const tab = local.chatTab;
     const rows = chatEntries().filter((entry) => tab === "all" || entry.kind === tab).map((entry) => {
@@ -1234,14 +1324,18 @@
         return `<p class="msg" style="--pc:${esc(playerColor(message.byId))}"><b>${esc(message.byName)}</b> ${esc(message.text)}</p>`;
       }
       if (entry.note) return `<p class="sys ub-note ${esc(entry.note.level)}">${esc(entry.note.text)}</p>`;
-      const html = isPlayerLogRelevant(entry.entry) && entry.entry.actorId ? formatPlayerLogEntry(entry.entry) : formatLogEntry(entry.entry, { html: true });
-      return html ? `<p class="sys">${html}</p>` : "";
+      const html = (isPlayerLogRelevant(entry.entry) && entry.entry.actorId && formatPlayerLogEntry(entry.entry))
+        || formatLogEntry(entry.entry, { html: true });
+      // an event without a wording of its own would print its raw type name: skip it
+      if (!html || (entry.entry.type.includes("_") && html.includes(entry.entry.type))) return "";
+      return `<p class="sys">${html}</p>`;
     }).join("");
     const nearBottom = log.scrollHeight - log.scrollTop - log.clientHeight < 40;
     log.innerHTML = rows || `<p class="sys">${esc(t("ubNothingYet"))}</p>`;
     if (nearBottom || !log.dataset.ubScrolled) log.scrollTop = log.scrollHeight;
     log.dataset.ubScrolled = "1";
     wireLogCardNames(log);
+    wirePlayerLogCardNames(log);
     const tabs = document.querySelectorAll("#ubChatTabs [data-ub-tab]");
     const labels = { all: "ubTabAll", chat: "ubTabChat", log: "ubTabLog" };
     tabs.forEach((button) => {
@@ -1256,6 +1350,34 @@
     document.getElementById("ubChatInput").placeholder = t("chatPlaceholder");
     document.getElementById("ubChatSend").title = t("chatSend");
     document.getElementById("ubPlayerLogBtn").title = t("logHeader");
+  }
+
+  // the journal sits under the inspect panel when it is open: an opponent's
+  // message still shows up as a small bubble over it
+  function pingMessage(message) {
+    const inspectOpen = !document.getElementById("inspectPanel")?.classList.contains("hidden");
+    if (!active() || !(inspectOpen || local.chatFolded)) return;
+    let ping = document.getElementById("ubMsgPing");
+    if (!ping) {
+      ping = document.createElement("button");
+      ping.type = "button";
+      ping.id = "ubMsgPing";
+      ping.className = "ub-msg-ping";
+      ping.onclick = () => {
+        ping.classList.remove("show");
+        if (!document.getElementById("inspectPanel")?.classList.contains("hidden")) toggleInspectPanel();
+        local.chatTab = "chat";
+        local.unread = 0;
+        setChatFolded(false);
+        renderChat();
+      };
+      document.body.appendChild(ping);
+    }
+    ping.style.setProperty("--pc", playerColor(message.byId));
+    ping.innerHTML = `${ICONS.send}<span><b>${esc(message.byName)}</b> ${esc(message.text)}</span>`;
+    ping.classList.add("show");
+    clearTimeout(local.pingTimer);
+    local.pingTimer = setTimeout(() => ping.classList.remove("show"), 7000);
   }
 
   function renderChrome() {
@@ -1286,6 +1408,8 @@
     document.getElementById("ubStackEmpty").textContent = t("ubStackEmpty");
     renderChat();
     layoutRight();
+    syncToolState();
+    syncBoardChoice();
   }
 
   // ------------------------------------------------------------ toggles
@@ -1310,6 +1434,7 @@
     } else if (screen.classList.contains("ui-beta")) {
       screen.classList.remove("ui-beta", "ub-rules", "ub-compact", "ub-stale-open");
       restoreAll();
+      syncBoardChoice();
       local.placement = null;
       local.geometry = null;
     }
@@ -1392,6 +1517,241 @@
     if (menu) menu.title = t("ubOptionHint");
   }
 
+  // ------------------------------------------------------------ tools row
+
+  function closeToolMenus() {
+    document.querySelectorAll(".ub-toolmenu.open").forEach((menu) => menu.classList.remove("open"));
+  }
+
+  function syncToolState() {
+    const drawing = ["drawPenBtn", "drawEraseBtn"].some((id) => document.getElementById(id)?.classList.contains("active"));
+    document.querySelector('[data-ub-menu="draw"]')?.classList.toggle("active", drawing);
+    const labels = { draw: "ubToolDraw", create: "ubToolCreate" };
+    document.querySelectorAll("[data-ub-menu]").forEach((button) => { button.title = t(labels[button.dataset.ubMenu]); });
+  }
+
+  // ------------------------------------------------------------ choices on the board
+  // Some rules choices name things that are all on screen in this layout (a
+  // card on the field, a player's side, the Interzone, the deck). For those,
+  // the choice screen stays hidden and the player answers on the board: the
+  // board gesture presses the matching button of the hidden screen, so the
+  // engine round-trip stays the one app.js already does.
+
+  const PICK_ATTRS = ["rulesPickItem", "rulesPersistItem", "rulesDistributeItem", "rulesRandomTarget", "rulesReplaceItem"];
+  const kebab = (name) => name.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`);
+
+  function readBoardChoice() {
+    if (!active() || !rulesOn() || isObserver) return null;
+    const panel = document.getElementById("rulesChoicePanel");
+    const popup = document.querySelector("body > .rules-player-target-panel");
+    const source = popup || (panel && !panel.classList.contains("hidden") ? panel : null);
+    if (!source) return null;
+    const pending = latestState?.rulesEngine?.pendingChoice;
+    const choice = {
+      source,
+      key: popup ? `popup:${pending?.id || ""}:${popup.querySelectorAll("button").length}` : `choice:${pending?.id || ""}:${pending?.kind || ""}`,
+      kind: popup ? "player" : pending?.kind || "",
+      items: new Map(),
+      players: new Map(),
+      drag: null,
+      extras: [],
+    };
+    source.querySelectorAll("[data-rules-player-target], [data-player-target]").forEach((button) => {
+      const id = button.dataset.rulesPlayerTarget || String(button.dataset.playerTarget || "").replace(/^player:/, "");
+      if (id) choice.players.set(id, button);
+    });
+    PICK_ATTRS.forEach((attr) => {
+      source.querySelectorAll(`[data-${kebab(attr)}]`).forEach((button) => choice.items.set(button.dataset[attr], button));
+    });
+    if (!popup && pending?.kind === "confrontation_destination" && pending.playerId === myPlayerId) {
+      const buttons = new Map([...source.querySelectorAll("[data-rules-destination]")].map((button) => [button.dataset.rulesDestination, button]));
+      choice.drag = { itemIds: new Set([pending.itemId]), targets: { interzone: buttons.get("interzone"), deck: buttons.get("deck_bottom") } };
+      choice.extras = [...buttons].filter(([key]) => !["interzone", "deck_bottom"].includes(key)).map(([, button]) => button);
+    } else if (!popup && pending?.kind === "confrontation_replace_interzone") {
+      // the chosen Interzone card goes under the deck: drag it onto the deck (or click it)
+      choice.drag = { itemIds: new Set(choice.items.keys()), targets: { deck: "item" } };
+    }
+    // only take over when every option has a place on the board
+    const boardItems = [...choice.items.keys()].every((id) => boardCardEl(id));
+    if (!boardItems || (!choice.items.size && !choice.players.size && !choice.drag)) return null;
+    if (choice.drag && [...choice.drag.itemIds].some((id) => !boardCardEl(id))) return null;
+    return choice;
+  }
+
+  function boardCardEl(itemId) {
+    return [...document.querySelectorAll("#battlefield .bf-card[data-item-id]")].find((card) => card.dataset.itemId === itemId) || null;
+  }
+
+  function myDeckPile() {
+    return document.querySelector('#ubMyPiles .field-pile[data-zone="deck"]');
+  }
+
+  function syncBoardChoice() {
+    const choice = readBoardChoice();
+    document.querySelectorAll(".ub-choice-pick, .ub-choice-drag, .ub-choice-target, .ub-drop-ok").forEach((node) => {
+      node.classList.remove("ub-choice-pick", "ub-choice-drag", "ub-choice-target", "ub-drop-ok");
+    });
+    document.querySelectorAll(".ub-proxied").forEach((node) => node.classList.remove("ub-proxied"));
+    const banner = document.getElementById("ubChoiceBanner");
+    local.choice = choice;
+    if (!choice) {
+      banner?.classList.add("hidden");
+      document.getElementById("gameScreen")?.classList.remove("ub-choosing");
+      local.choiceKey = "";
+      return;
+    }
+    if (local.choiceKey !== choice.key) {
+      local.choiceKey = choice.key;
+      local.choicePanelShown = "";
+    }
+    const panelShown = local.choicePanelShown === choice.key;
+    if (!panelShown) choice.source.classList.add("ub-proxied");
+    document.getElementById("gameScreen").classList.toggle("ub-choosing", !panelShown);
+    choice.items.forEach((_button, itemId) => boardCardEl(itemId)?.classList.add(choice.drag ? "ub-choice-drag" : "ub-choice-pick"));
+    if (choice.drag) {
+      choice.drag.itemIds.forEach((itemId) => boardCardEl(itemId)?.classList.add("ub-choice-drag"));
+      if (choice.drag.targets.interzone) document.getElementById("ubIzMe")?.classList.add("ub-drop-ok");
+      if (choice.drag.targets.deck) myDeckPile()?.classList.add("ub-drop-ok");
+    }
+    const players = sidePlayers();
+    choice.players.forEach((_button, playerId) => {
+      const side = playerId === players.me?.id ? "me" : "opp";
+      document.querySelector(`.ub-side.${side}`)?.classList.add("ub-choice-target");
+      document.getElementById(side === "me" ? "ubWhoMe" : "ubWhoOpp")?.classList.add("ub-choice-target");
+    });
+    renderChoiceBanner(choice, panelShown);
+  }
+
+  function renderChoiceBanner(choice, panelShown) {
+    let banner = document.getElementById("ubChoiceBanner");
+    if (!banner) {
+      banner = document.createElement("div");
+      banner.id = "ubChoiceBanner";
+      banner.className = "ub-choice-banner";
+      document.getElementById("ubField").appendChild(banner);
+    }
+    const heading = choice.kind === "player" ? t("ubChoosePlayer") : document.getElementById("rulesChoiceHeading")?.textContent || "";
+    const hint = choice.drag
+      ? t(choice.drag.targets.interzone ? "ubDragDestination" : "ubDragToDeck")
+      : choice.players.size && !choice.items.size ? t("ubClickPlayer") : t("ubClickCard");
+    banner.innerHTML = `<div><strong>${esc(heading)}</strong><span>${esc(hint)}</span></div>
+      <div class="ub-choice-actions">${choice.extras.map((button, index) => `<button type="button" data-ub-extra="${index}">${esc(button.querySelector("strong")?.textContent || button.textContent.trim())}</button>`).join("")}
+      <button type="button" class="ub-choice-panel-btn">${esc(t(panelShown ? "ubHideChoicePanel" : "ubShowChoicePanel"))}</button></div>`;
+    banner.querySelectorAll("[data-ub-extra]").forEach((button) => {
+      button.onclick = () => choice.extras[Number(button.dataset.ubExtra)]?.click();
+    });
+    banner.querySelector(".ub-choice-panel-btn").onclick = () => {
+      local.choicePanelShown = panelShown ? "" : choice.key;
+      syncBoardChoice();
+    };
+    banner.classList.toggle("hidden", false);
+  }
+
+  function choiceDropTarget(clientX, clientY) {
+    const drag = local.choice?.drag;
+    if (!drag) return null;
+    const within = (node, pad = 0) => {
+      const rect = node?.getBoundingClientRect();
+      return rect && clientX >= rect.left - pad && clientX <= rect.right + pad && clientY >= rect.top - pad && clientY <= rect.bottom + pad;
+    };
+    if (drag.targets.deck && within(myDeckPile(), 24)) return "deck";
+    if (drag.targets.interzone && within(document.getElementById("ubIzMe"))) return "interzone";
+    return null;
+  }
+
+  function onChoicePointerDown(event) {
+    const choice = local.choice;
+    if (!choice || !active() || event.button !== 0 || local.choicePanelShown === choice.key) return;
+    const header = event.target.closest?.("#ubWhoMe, #ubWhoOpp");
+    if (header && !event.target.closest("button") && pickPlayerFromHeader(header.id === "ubWhoMe" ? "me" : "opp")) {
+      event.preventDefault();
+      event.stopPropagation();
+      return;
+    }
+    const card = event.target.closest?.("#battlefield .bf-card[data-item-id]");
+    const itemId = card?.dataset.itemId;
+    if (card && choice.drag?.itemIds.has(itemId)) {
+      event.preventDefault();
+      event.stopPropagation();
+      startChoiceDrag(event, card, itemId);
+      return;
+    }
+    if (card && choice.items.has(itemId)) {
+      event.preventDefault();
+      event.stopPropagation();
+      choice.items.get(itemId).click();
+      return;
+    }
+    if (choice.players.size && !event.target.closest?.(".ub-col, .hand-area, .ub-choice-banner, #inspectPanel")) {
+      const field = document.getElementById("ubField").getBoundingClientRect();
+      const mid = document.querySelector(".ub-midline")?.getBoundingClientRect();
+      const inField = event.clientX >= field.left && event.clientX <= field.right;
+      if (!inField || !mid) return;
+      const players = sidePlayers();
+      const playerId = (event.clientX < mid.left ? players.me : players.opp)?.id;
+      const button = choice.players.get(playerId);
+      if (!button) return;
+      event.preventDefault();
+      event.stopPropagation();
+      button.click();
+    }
+  }
+
+  function pickPlayerFromHeader(side) {
+    const choice = local.choice;
+    if (!choice?.players.size) return false;
+    const players = sidePlayers();
+    const button = choice.players.get(players[side]?.id);
+    if (!button) return false;
+    button.click();
+    return true;
+  }
+
+  function startChoiceDrag(event, card, itemId) {
+    const rect = card.getBoundingClientRect();
+    const ghost = card.cloneNode(true);
+    ghost.removeAttribute("id");
+    ghost.className = `${card.className} ub-choice-ghost`;
+    ghost.querySelectorAll(".ub-first-badge, .rules-target-reticle").forEach((node) => node.remove());
+    Object.assign(ghost.style, {
+      position: "fixed", left: `${rect.left}px`, top: `${rect.top}px`, width: `${rect.width}px`, height: `${rect.height}px`,
+      scale: "1", transform: "none", margin: "0", zIndex: "300", pointerEvents: "none",
+    });
+    const startX = event.clientX;
+    const startY = event.clientY;
+    let moved = false;
+    const move = (e) => {
+      if (!moved && Math.hypot(e.clientX - startX, e.clientY - startY) > 5) {
+        moved = true;
+        document.body.appendChild(ghost);
+        card.classList.add("ub-choice-lifted");
+      }
+      if (!moved) return;
+      ghost.style.transform = `translate(${e.clientX - startX}px, ${e.clientY - startY}px) rotate(-3deg)`;
+      const over = choiceDropTarget(e.clientX, e.clientY);
+      document.getElementById("ubIzMe")?.classList.toggle("ub-drop-over", over === "interzone");
+      myDeckPile()?.classList.toggle("ub-drop-over", over === "deck");
+    };
+    const up = (e) => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+      ghost.remove();
+      card.classList.remove("ub-choice-lifted");
+      document.querySelectorAll(".ub-drop-over").forEach((node) => node.classList.remove("ub-drop-over"));
+      const choice = local.choice;
+      if (!choice?.drag) return;
+      const over = moved ? choiceDropTarget(e.clientX, e.clientY) : null;
+      const target = over && choice.drag.targets[over];
+      if (target === "item") choice.items.get(itemId)?.click();
+      else if (target) target.click();
+      else if (!moved && choice.items.has(itemId)) choice.items.get(itemId).click();
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+  }
+
   // ------------------------------------------------------------ wrapping
 
   function wrap(name, make) {
@@ -1446,6 +1806,21 @@
   wrap("stackAnchorAt", (original) => function uiBetaStackAnchorAt(...args) {
     if (active() && rulesOn()) return null;
     return original.apply(this, args);
+  });
+  wrap("renderRulesChoice", (original) => function uiBetaRenderRulesChoice(...args) {
+    const result = original.apply(this, args);
+    if (local.built) syncBoardChoice();
+    return result;
+  });
+  wrap("armRulesBoardTargets", (original) => function uiBetaArmTargets(...args) {
+    const result = original.apply(this, args);
+    if (local.built) syncBoardChoice();
+    return result;
+  });
+  wrap("clearRulesBoardTargets", (original) => function uiBetaClearTargets(...args) {
+    const result = original.apply(this, args);
+    if (local.built) queueMicrotask(syncBoardChoice);
+    return result;
   });
   wrap("paintStaticText", (original) => function uiBetaPaintStaticText(...args) {
     const result = original.apply(this, args);
