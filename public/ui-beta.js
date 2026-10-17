@@ -26,6 +26,7 @@
 
   Object.assign(ui.fr, {
     ubTurn: "Tour",
+    ubRotate: "Tournez votre appareil en mode paysage pour jouer.",
     ubPassed: "a passé",
     ubTargetHint: "Cible un joueur : son côté du terrain, son total, son nom ou son icône.",
     ubToolDraw: "Dessin",
@@ -78,6 +79,7 @@
   });
   Object.assign(ui.en, {
     ubTurn: "Turn",
+    ubRotate: "Turn your device to landscape to play.",
     ubPassed: "passed",
     ubTargetHint: "Target a player: their side of the field, their total, their name or their icon.",
     ubToolDraw: "Drawing",
@@ -130,6 +132,7 @@
   });
   Object.assign(ui.it, {
     ubTurn: "Turno",
+    ubRotate: "Ruota il dispositivo in orizzontale per giocare.",
     ubPassed: "ha passato",
     ubTargetHint: "Scegli un giocatore: il suo lato del campo, il suo totale, il nome o la sua icona.",
     ubToolDraw: "Disegno",
@@ -184,6 +187,7 @@
   const ICONS = {
     first: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.6 5.6 6 .7-4.5 4.1 1.3 6L12 16.4l-5.4 3 1.3-6-4.5-4.1 6-.7Z"/></svg>',
     chevron: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>',
+    rotate: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="17" rx="2"/><path d="M11 16.5h2M20.5 14a8.5 8.5 0 0 1-6 7.5m0 0 2.2-.4m-2.2.4.6-2.2"/></svg>',
     send: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12 20 4l-6 16-3-7-7-1Z"/></svg>',
     log: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 5h14M5 10h14M5 15h9M5 20h6"/></svg>',
     pen: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 20 1-4L16 5l3 3L8 19l-4 1ZM14 7l3 3"/></svg>',
@@ -224,6 +228,10 @@
     handSeen: null,
     handHidden: new Map(),
     handRevealTimer: null,
+    immersiveTried: false,
+    inGame: false,
+    longPress: null,
+    swallowMenuUntil: 0,
   };
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -390,7 +398,9 @@
     const W = rect.width || window.innerWidth;
     const H = rect.height || window.innerHeight;
     const compact = W < 1100 || H < 640;
-    const colW = Math.round(clamp(W * 0.17, compact ? 150 : 220, 330));
+    // a phone held sideways: very little height, everything gets tighter
+    const phone = H < 520;
+    const colW = Math.round(phone ? clamp(W * 0.16, 118, 170) : clamp(W * 0.17, compact ? 150 : 220, 330));
     const fieldL = colW;
     const fieldR = W - colW;
     const fieldW = fieldR - fieldL;
@@ -404,8 +414,8 @@
     const handH = typeof handCardHeight === "number" ? handCardHeight : 170;
     const handCollapsed = document.getElementById("handArea")?.classList.contains("hand-collapsed");
     const handPeek = handCollapsed ? 48 : Math.round(handH * 0.62 + 18);
-    const oppHandH = Math.round(clamp(H * 0.085, 46, 86));
-    const totalsH = compact ? 44 : 54;
+    const oppHandH = Math.round(phone ? clamp(H * 0.09, 30, 40) : clamp(H * 0.085, 46, 86));
+    const totalsH = phone ? 34 : compact ? 44 : 54;
     const stale = groups.stalemate.length > 0;
     const staleH = stale ? 42 : 0;
     const bandTop = 0;
@@ -413,7 +423,7 @@
     const zcTop = bandTop + bandH;
     const zcBottom = Math.max(zcTop + 120, H - handPeek);
     return {
-      W, H, compact, colW, fieldL, fieldR, cx, izW, gutW, handPeek, oppHandH, totalsH, staleH, bandH,
+      W, H, compact, phone, colW, fieldL, fieldR, cx, izW, gutW, handPeek, oppHandH, totalsH, staleH, bandH,
       zcTop, zcBottom, wrapLeft: rect.left, wrapTop: rect.top,
       izMe: { l: fieldL, r: fieldL + izW },
       izOpp: { l: fieldR - izW, r: fieldR },
@@ -766,6 +776,10 @@
       <div class="ub-phase" id="ubPhase"><button type="button" class="ub-manual-pass hidden" id="ubManualPass" data-pass-phase></button></div>`;
     wrap.appendChild(left);
     wrap.appendChild(right);
+    const rotate = el("div", "ub-rotate");
+    rotate.id = "ubRotate";
+    rotate.innerHTML = `${ICONS.rotate}<p></p>`;
+    document.getElementById("gameScreen").appendChild(rotate);
     // panels keep their own wheel scrolling (the board wheel-zoom is off here)
     [left, right, field].forEach((node) => node.addEventListener("wheel", (event) => event.stopPropagation(), { passive: true }));
 
@@ -1463,6 +1477,7 @@
     screen.style.setProperty("--opp", players.opp ? playerColor(players.opp.id) : "#d3654a");
     screen.classList.toggle("ub-rules", rulesOn());
     screen.classList.toggle("ub-compact", G.compact);
+    screen.classList.toggle("ub-phone", G.phone);
     renderZones(geometry);
     renderInterzones(geometry);
     renderTotals(G, players);
@@ -1499,11 +1514,12 @@
     if (!screen) return;
     if (on) {
       build();
+      localizeToggles();
       screen.classList.add("ui-beta");
       relocate();
       lockHandSize(true);
     } else if (screen.classList.contains("ui-beta")) {
-      screen.classList.remove("ui-beta", "ub-rules", "ub-compact", "ub-stale-open");
+      screen.classList.remove("ui-beta", "ub-rules", "ub-compact", "ub-phone", "ub-stale-open");
       restoreAll();
       lockHandSize(false);
       syncBoardChoice();
@@ -1586,7 +1602,86 @@
       node.textContent = t(names[node.dataset.ubThemeLabel]);
     });
     const menu = document.getElementById("uiBetaMenuBtn");
-    if (menu) menu.title = t("ubOptionHint");
+    if (menu) menu.title = t("ubOptionHint");    const rotate = document.querySelector("#ubRotate p");
+    if (rotate) rotate.textContent = t("ubRotate");
+  }
+
+  // ------------------------------------------------------------ phones and tablets
+
+  function touchDevice() {
+    return Boolean(window.matchMedia?.("(pointer: coarse)").matches)
+      && Math.min(window.screen?.width || 9999, window.screen?.height || 9999) <= 820;
+  }
+
+  // On a phone the new table plays in full screen, held sideways. Browsers only
+  // allow both from a tap, so the first tap after the page opens (and the first
+  // one in each new game) asks for them; leaving full screen is then respected.
+  function goImmersive() {
+    if (local.immersiveTried || !enabled() || !touchDevice()) return;
+    local.immersiveTried = true;
+    const lockLandscape = () => {
+      try { window.screen?.orientation?.lock?.("landscape")?.catch?.(() => {}); } catch (error) { /* not supported (iOS) */ }
+    };
+    const root = document.documentElement;
+    const request = root.requestFullscreen || root.webkitRequestFullscreen;
+    if (document.fullscreenElement || document.webkitFullscreenElement || !request) { lockLandscape(); return; }
+    try {
+      const result = request.call(root, { navigationUI: "hide" });
+      if (result && typeof result.then === "function") result.then(lockLandscape, () => {});
+      else lockLandscape();
+    } catch (error) { /* refused: the page stays as it is */ }
+  }
+
+  // touch has no right click and no hover: holding a card opens the same menu
+  // as a right click (inspect, actions)
+  function onTouchPressStart(event) {
+    if (event.pointerType !== "touch" || !active()) return;
+    cancelLongPress();
+    const target = event.target;
+    if (!(target instanceof Element) || target.closest("input, textarea, select")) return;
+    const press = { x: event.clientX, y: event.clientY, target, id: event.pointerId };
+    press.timer = window.setTimeout(() => {
+      local.longPress = null;
+      if (!target.isConnected) return;
+      local.swallowMenuUntil = Date.now() + 900;
+      navigator.vibrate?.(12);
+      target.dispatchEvent(new MouseEvent("contextmenu", {
+        bubbles: true, cancelable: true, clientX: press.x, clientY: press.y, button: 2,
+      }));
+      local.swallowClick = { until: Date.now() + 700, target };
+    }, 480);
+    local.longPress = press;
+  }
+  function onTouchPressMove(event) {
+    const press = local.longPress;
+    if (press && event.pointerId === press.id && Math.hypot(event.clientX - press.x, event.clientY - press.y) > 10) cancelLongPress();
+  }
+  function cancelLongPress() {
+    if (local.longPress) window.clearTimeout(local.longPress.timer);
+    local.longPress = null;
+  }
+
+  function installTouch() {
+    ["pointerup", "touchend", "click"].forEach((type) => document.addEventListener(type, goImmersive, true));
+    document.addEventListener("pointerdown", onTouchPressStart, true);
+    document.addEventListener("pointermove", onTouchPressMove, true);
+    ["pointerup", "pointercancel"].forEach((type) => document.addEventListener(type, cancelLongPress, true));
+    // the browser's own long-press menu would open a second menu
+    document.addEventListener("contextmenu", (event) => {
+      if (event.isTrusted && Date.now() < local.swallowMenuUntil) {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    }, true);
+    // the tap that ends a long press does not also play or pick the card
+    document.addEventListener("click", (event) => {
+      const swallow = local.swallowClick;
+      if (swallow && Date.now() < swallow.until && event.target instanceof Node && swallow.target.contains(event.target)) {
+        local.swallowClick = null;
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      }
+    }, true);
   }
 
   // ------------------------------------------------------------ hand
@@ -1597,7 +1692,9 @@
     if (typeof handCardHeight !== "number" || typeof applyHandCardHeight !== "function") return;
     if (on) {
       if (local.prevHandH === null) local.prevHandH = handCardHeight;
-      handCardHeight = Math.round(clamp(window.innerHeight * 0.35, 200, 400));
+      handCardHeight = Math.round(window.innerHeight < 520
+        ? clamp(window.innerHeight * 0.3, 90, 160)
+        : clamp(window.innerHeight * 0.35, 200, 400));
     } else if (local.prevHandH !== null) {
       handCardHeight = local.prevHandH;
       local.prevHandH = null;
@@ -1608,7 +1705,7 @@
   // the hovered hand card is read at about 60% of the screen height
   function setHandHoverScale() {
     if (typeof handCardHeight !== "number") return;
-    const hoverH = clamp(window.innerHeight * 0.6, 420, 760);
+    const hoverH = window.innerHeight < 520 ? window.innerHeight * 0.8 : clamp(window.innerHeight * 0.6, 420, 760);
     document.documentElement.style.setProperty("--hand-hover-scale", Math.max(1.2, hoverH / handCardHeight).toFixed(3));
   }
 
@@ -1991,6 +2088,10 @@
   wrap("renderAll", (original) => function uiBetaRenderAll(...args) {
     const result = original.apply(this, args);
     if (active()) renderChrome();
+    // a new game asks again for full screen on phones (see goImmersive)
+    const inGame = !document.getElementById("gameScreen")?.classList.contains("hidden");
+    if (inGame && !local.inGame && !document.fullscreenElement) local.immersiveTried = false;
+    local.inGame = inGame;
     return result;
   });
   wrap("renderPiles", (original) => function uiBetaRenderPiles(...args) {
@@ -2112,5 +2213,6 @@
   };
 
   installToggles();
+  installTouch();
   apply();
 })();

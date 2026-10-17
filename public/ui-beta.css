@@ -634,3 +634,98 @@ body:has(#gameScreen.ui-beta:not(.hidden)) .ko-toast.error { top: 50%; left: 50%
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-choice-options.is-reveal-hand .rules-choice-card:hover span { font-size: 13px; color: var(--ub-gold-pale); }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-choice-options.is-reveal-hand .rules-choice-card:disabled { opacity: .5; transform: none; }
 @keyframes ub-panel-in { from { opacity: 0; transform: translateY(10px) scale(.98); } }
+
+/* ---------- touch screens ---------- */
+/* no browser long-press callout, text selection or page gestures on the table */
+#gameScreen.ui-beta { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+#gameScreen.ui-beta :is(input, textarea) { -webkit-user-select: text; user-select: text; }
+#gameScreen.ui-beta .board-field-wrap { touch-action: none; overscroll-behavior: none; }
+#gameScreen.ui-beta :is(.ub-log, .ub-stack-body, .ub-col.left, .ub-oppfull) { touch-action: pan-y; }
+body:has(#gameScreen.ui-beta:not(.hidden)) { overscroll-behavior: none; }
+
+/* held upright, a phone shows a "turn me" screen over the table */
+.ub-rotate { display: none; }
+@media (orientation: portrait) and (pointer: coarse) and (max-width: 820px) {
+  #gameScreen.ui-beta:not(.hidden) .ub-rotate { position: fixed; inset: 0; z-index: 900; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 32px; background: radial-gradient(120% 90% at 50% 40%, var(--ub-bg-2), var(--ub-bg)); color: var(--ub-ink); text-align: center; }
+  #gameScreen.ui-beta .ub-rotate svg { width: 72px; height: 72px; fill: none; stroke: var(--ub-gold-pale); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; animation: ub-rotate-hint 2.4s var(--ub-ease) infinite; }
+  #gameScreen.ui-beta .ub-rotate p { max-width: 280px; margin: 0; font-family: var(--display-font, Georgia, serif); font-size: 19px; line-height: 1.35; color: var(--ub-gold-pale); }
+}
+@keyframes ub-rotate-hint { 0%, 25% { transform: rotate(0); } 55%, 100% { transform: rotate(-90deg); } }
+
+/* ---------- phone held sideways (little height) ---------- */
+#gameScreen.ui-beta.ub-phone .ub-col { padding: 6px; gap: 5px; font-size: 11px; }
+#gameScreen.ui-beta.ub-phone .ub-who { min-height: 0; padding: 3px 6px; }
+#gameScreen.ui-beta.ub-phone .ub-who .ub-name { font-size: 12px; }
+#gameScreen.ui-beta.ub-phone .ub-chip { transform: scale(.85); transform-origin: right center; }
+/* my piles: a 2 x 2 grid of small tiles */
+#gameScreen.ui-beta.ub-phone .ub-piles { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; }
+#gameScreen.ui-beta.ub-phone .ub-piles .field-pile .pile-trigger { min-height: 0; height: 30px; padding: 2px 5px; }
+#gameScreen.ui-beta.ub-phone .ub-piles .field-pile .pile-card { width: 26px; height: 22px; }
+#gameScreen.ui-beta.ub-phone .ub-piles .field-pile .pile-count { font-size: 15px; }
+#gameScreen.ui-beta.ub-phone .ub-col.left { overflow: hidden; }
+#gameScreen.ui-beta.ub-phone .ub-col.left > .ub-chat-slot { flex: 1 1 auto; height: auto; min-height: 0; }
+#gameScreen.ui-beta.ub-phone .ub-chat header { padding: 2px 4px; }
+#gameScreen.ui-beta.ub-phone .ub-log { font-size: 11px; }
+#gameScreen.ui-beta.ub-phone .ub-log p { font-size: 11px; }
+#gameScreen.ui-beta.ub-phone .ub-chat-form { padding: 3px 4px; }
+#gameScreen.ui-beta.ub-phone .ub-chat-form input { height: 26px; font-size: 16px; }
+#gameScreen.ui-beta.ub-phone .ub-toolrow { flex-wrap: wrap; gap: 3px; justify-content: center; }
+#gameScreen.ui-beta.ub-phone .ub-tools :is(.ub-tool, .hand-tools-toggle, .hand-visibility-toggle, #highlightOwnersBtn, #inspectReopenBtn) { width: 24px; height: 24px; }
+#gameScreen.ui-beta.ub-phone .ub-tools svg { width: 14px; height: 14px; }
+/* right column: the phase block stays whole, the stack takes what is left */
+#gameScreen.ui-beta.ub-phone .ub-col.right { overflow: hidden; }
+#gameScreen.ui-beta.ub-phone .ub-oppbar { min-height: 0; padding: 3px 6px; }
+#gameScreen.ui-beta.ub-phone .ub-stack { flex: 1 1 auto; min-height: 44px; }
+#gameScreen.ui-beta.ub-phone .ub-stack header { padding: 4px 8px; }
+#gameScreen.ui-beta.ub-phone .ub-stack header b { font-size: 12px; }
+#gameScreen.ui-beta.ub-phone .ub-stack-empty { padding: 4px; font-size: 11px; }
+#gameScreen.ui-beta.ub-phone .ub-phase { gap: 4px; }
+#gameScreen.ui-beta.ub-phone .ub-phase .phase-tracker { padding: 5px 6px; gap: 4px; }
+#gameScreen.ui-beta.ub-phone .ub-phase .phase-orb { height: 24px; }
+#gameScreen.ui-beta.ub-phone .ub-phase .phase-orb svg { width: 14px; height: 14px; }
+#gameScreen.ui-beta.ub-phone .ub-phase .phase-current-label strong { font-size: 12px; }
+#gameScreen.ui-beta.ub-phone .ub-phase .phase-current-label span { font-size: 10px; line-height: 1.2; }
+#gameScreen.ui-beta.ub-phone .ub-phase .rules-priority { font-size: 10px; line-height: 1.25; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+#gameScreen.ui-beta.ub-phone .ub-phase .phase-pass-button { min-height: 0; padding: 6px 8px; font-size: 13px; }
+#gameScreen.ui-beta.ub-phone .ub-phase .rules-auto-skip { font-size: 10px; }
+/* field */
+#gameScreen.ui-beta.ub-phone .ub-turn { padding: 3px 9px; }
+#gameScreen.ui-beta.ub-phone .ub-turn small { font-size: 10px; }
+#gameScreen.ui-beta.ub-phone .ub-turn b { font-size: 18px; }
+#gameScreen.ui-beta.ub-phone .ub-pw { font-size: 17px; }
+#gameScreen.ui-beta.ub-phone .ub-total { padding: 2px 8px; gap: 6px; }
+#gameScreen.ui-beta.ub-phone .ub-tmp { width: 20px; height: 20px; }
+#gameScreen.ui-beta.ub-phone .ub-av-circle { font-size: 14px; }
+#gameScreen.ui-beta.ub-phone .ub-zc .ub-empty { font-size: 11px; }
+#gameScreen.ui-beta.ub-phone .ub-zlab { font-size: 9px; letter-spacing: .06em; }
+/* the inspected card opens over the table, with a way out */
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #inspectPanel { inset: 0; width: auto; bottom: 0; z-index: 320; padding: 10px; background: rgba(0, 0, 0, .6); pointer-events: auto; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #inspectPanel .box { flex-direction: row; max-width: 760px; margin: 0 auto; border-radius: 14px; border: 1px solid var(--line, #d3a94255); }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #inspectPanel .inspect-main { flex-direction: row; align-items: center; gap: 14px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #inspectPanel .inspect-main > :first-child,
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #inspectPanel .inspect-main > :last-child { margin-top: 0; margin-bottom: 0; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #inspectPanel .inspect-img { flex: none; width: auto; height: calc(100vh - 44px); aspect-ratio: 5 / 7; margin: 0; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #inspectPanel .inspect-img img { height: 100%; width: auto; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #inspectPanel .inspect-text { flex: 1; min-width: 0; max-height: 100%; overflow-y: auto; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #inspectPanel .inspect-history { display: none; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #inspectPanel .inspect-x-btn { width: 34px; height: 34px; z-index: 2; }
+/* panels over the table use the whole width */
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#revealPanel, #handRequestPanel, #rulesChoicePanel.cards-screen:has(.is-reveal-hand)) { left: 0; right: 0; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#revealPanel, #handRequestPanel) .box { max-height: 96vh; padding: 10px 14px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#revealPanel, #handRequestPanel) .box > h2:first-child { font-size: 18px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #revealPanel .reveal-cards { --reveal-card-w: 96px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #handRequestPanel .hand-request-card img { width: 100px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel .rules-choice-options.is-reveal-hand .rules-choice-card { width: 80px; }
+#gameScreen.ui-beta.ub-phone .ub-piles .field-pile { min-width: 0; }
+#gameScreen.ui-beta.ub-phone .ub-piles .field-pile .pile-trigger { overflow: hidden; gap: 4px; }
+#gameScreen.ui-beta.ub-phone #ubPlayerLogBtn { display: none; }
+#gameScreen.ui-beta.ub-phone .ub-tabs button { padding: 3px 4px; font-size: 10px; }
+#gameScreen.ui-beta.ub-phone .ub-oppbar { gap: 3px; overflow: hidden; }
+#gameScreen.ui-beta.ub-phone .ub-oppbar .mini { font-size: 8px; }
+#gameScreen.ui-beta.ub-phone .ub-oppbar .mini b { font-size: 11px; }
+#gameScreen.ui-beta.ub-phone .ub-oppbar .pts { font-size: 13px; }
+#gameScreen.ui-beta.ub-phone .ub-phase .rules-priority { max-height: 3.75em; padding: 0; }
+#gameScreen.ui-beta.ub-phone .ub-phase .rules-auto-skip { max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; justify-content: center; }
+#gameScreen.ui-beta.ub-phone .ub-phase .rules-auto-skip span { overflow: hidden; text-overflow: ellipsis; }
+#gameScreen.ui-beta.ub-phone .ub-oppbar .chev { display: none; }
+#gameScreen.ui-beta.ub-phone .ub-phase :is(.phase-pass-button, .ub-manual-pass) { min-height: 0; height: auto; padding: 6px 6px; font-size: 11px !important; line-height: 1.15; letter-spacing: .02em; white-space: normal; overflow-wrap: anywhere; border-radius: 10px; }

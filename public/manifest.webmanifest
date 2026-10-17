@@ -1,0 +1,12 @@
+{
+  "name": "Kartomantik Online",
+  "short_name": "Kartomantik",
+  "start_url": "./",
+  "display": "fullscreen",
+  "orientation": "landscape",
+  "background_color": "#0b1630",
+  "theme_color": "#0b1630",
+  "icons": [
+    { "src": "grimoire-icon.webp", "type": "image/webp", "sizes": "any", "purpose": "any" }
+  ]
+}
