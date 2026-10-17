@@ -3759,6 +3759,33 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertEqual(p1["zones"]["deck"][-1], "m-0")
         self.assertEqual(result["status"], "complete")
 
+    def test_confrontation_winner_takes_the_stalemate_zone_even_cards_stalemated_this_turn(self):
+        session, p1, _p2 = self.make_session()
+        session.phase_tracker["index"] = session.phase_sequence().index("resolution_compare")
+        session.card_rules["m-0"]["power"] = 4
+        session.card_rules["m-1"]["power"] = 1
+        turn = session.phase_tracker["turn"]
+        winner = {"id": "winner", "ownerId": "p1", "cardId": "m-0", "faceUp": True, "fieldZone": "confrontation", "confrontationOrder": 1, "counters": {}}
+        loser = {"id": "loser", "ownerId": "p2", "cardId": "m-1", "faceUp": True, "fieldZone": "confrontation", "confrontationOrder": 2, "counters": {}}
+        foe_stale = {"id": "foe-stale", "ownerId": "p2", "cardId": "m-2", "faceUp": True, "fieldZone": "stalemate", "stalemateEnteredTurn": turn, "counters": {}}
+        own_stale = {"id": "own-stale", "ownerId": "p1", "cardId": "m-3", "faceUp": True, "fieldZone": "stalemate", "stalemateEnteredTurn": turn, "counters": {}}
+        session.battlefield = [winner, loser, foe_stale, own_stale]
+        session.prepare_rules_confrontation_result()
+        session.phase_tracker["index"] = session.phase_sequence().index("resolution_move")
+
+        result = session.begin_rules_confrontation_cleanup()
+
+        self.assertNotIn(foe_stale, session.battlefield)
+        self.assertCountEqual(p1["zones"]["receptacle"], ["m-1", "m-2"])
+        self.assertEqual(result["stalemateWonItemIds"], ["own-stale"])
+        for _ in range(2):
+            choice = session.rules_engine["pendingChoice"]
+            self.assertEqual(choice["kind"], "confrontation_destination")
+            error, _ = session.resolve_rules_choice("p1", choice["id"], option="deck_bottom")
+            self.assertIsNone(error)
+        self.assertNotIn(own_stale, session.battlefield)
+        self.assertEqual(sorted(p1["zones"]["deck"][-2:]), ["m-0", "m-3"])
+
     def test_wandering_veteran_winning_as_support_is_exiled_without_destination_choice(self):
         session, p1, _p2 = self.make_session()
         session.card_rules["veteran"] = {
@@ -8981,6 +9008,46 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
             self.assertEqual(queued, [], card_id)
             self.assertEqual(item["counters"][counter], 1)
 
+    def test_activating_an_atavic_spends_counters_without_counting_as_a_played_card(self):
+        spend = {
+            "erkwir53va9m8gm_en": "spend-unions-for-support-tokens",
+            "265f4wdooq43pjn_en": "spend-controls-to-bounce-manifestation",
+            "a058t24med4h5nx_en": "spend-fatigues-to-make-opponent-discard",
+            "rqvzo3iji2a1l65_en": "spend-coils-to-stalemate-own-manifestations",
+            "m2l3v60n0iakrm2_en": "spend-violence-to-shrink-manifestation",
+        }
+        for card_id, (counter, _temperament) in self.ATAVIC.items():
+            session, p1, p2, item = self.atavic_session(card_id)
+            session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+            session.rules_engine["priorityPlayerId"] = "p1"
+            session.battlefield.append(self.field_item("foe", "p2", "m-3"))
+            p2["zones"]["hand"] = ["m-1"]
+            item["counters"][counter] = 6
+            ability = spend[card_id]
+            targets = (
+                [{"kind": "card", "itemId": "foe", "cardId": "m-3"}]
+                if card_id in {"265f4wdooq43pjn_en", "m2l3v60n0iakrm2_en"} else None
+            )
+            error, action = session.declare_rules_action(
+                "p1", counter, kind="activated_effect",
+                source={"cardId": card_id, "zone": "battlefield", "itemId": "atavic"},
+                targets=targets, ability_id=ability,
+            )
+            self.assertIsNone(error, card_id)
+            session.queue_rules_tribute_triggers(
+                action["cost"].get("tributeCardIds") or [], "p1",
+                simultaneous_action_id=action["id"],
+            )
+            self.assertEqual(item["counters"][counter], 1, card_id)
+            self.assertFalse(
+                (session.rules_engine.get("willsPlayed") or {}).get("p1"), card_id
+            )
+            for _ in range(6):
+                if not session.rules_engine["actionStack"] or session.rules_engine.get("pendingChoice"):
+                    break
+                session.pass_rules_priority(session.rules_engine["priorityPlayerId"])
+            self.assertEqual(item["counters"][counter], 1, card_id)
+
     def test_atavic_manifestations_entering_the_field_also_count(self):
         session, _p1, _p2, item = self.atavic_session("erkwir53va9m8gm_en")
         session.battlefield.append(self.field_item("entering", "p1", "m-1"))
@@ -14090,9 +14157,12 @@ class LotTwentyTwoTests(RealCardRulesCase):
         self.assertTrue(error)
         error, result = session.play_first_manifestation_trap("p1", "trap")
         self.assertIsNone(error)
-        self.assertEqual(p1["score"], score - 5)
-        self.assertIn("trap", p1["zones"]["graveyard"])
+        # The Trap waits face down: no points lost yet, hidden from the opponent.
+        self.assertEqual(p1["score"], score)
+        self.assertNotIn("trap", p1["zones"]["graveyard"])
         self.assertNotIn("trap", p1["zones"]["hand"])
+        self.assertIsNone(session.serialize_for("p2", "player")["rulesEngine"]["trapCards"]["p1"]["cardId"])
+        self.assertEqual(session.serialize_for("p1", "player")["rulesEngine"]["trapCards"]["p1"]["cardId"], "trap")
         self.assertTrue(session.rules_plays_first_manifestation_after("p1"))
         self.assertFalse(session.rules_plays_first_manifestation_after("p2"))
         mine = {**self.item("mine", "p1", "m-0", "field"), "faceUp": False}
@@ -14100,9 +14170,16 @@ class LotTwentyTwoTests(RealCardRulesCase):
         session.battlefield = [mine, theirs]
         self.assertIn("Trap", session.register_first_manifestation("p1", mine))
         self.assertIsNone(session.register_first_manifestation("p2", theirs))
-        self.assertIsNone(session.validate_first_manifestation("p2")[0])
-        # The opponent's First Manifestation is revealed to everyone and locked in.
+        error, validated = session.validate_first_manifestation("p2")
+        self.assertIsNone(error)
+        # The opponent's First Manifestation is revealed to everyone and locked in,
+        # and the Trap is turned over: it goes to Limbo and costs 5 points.
         self.assertTrue(theirs["faceUp"])
+        self.assertEqual(p1["score"], score - 5)
+        self.assertIn("trap", p1["zones"]["graveyard"])
+        self.assertEqual([(t["playerId"], t["cardId"]) for t in validated["trapsRevealed"]], [("p1", "trap")])
+        trap_view = session.serialize_for("p2", "player")["rulesEngine"]["trapCards"]["p1"]
+        self.assertEqual((trap_view["cardId"], trap_view["revealed"]), ("trap", True))
         view = {e["id"]: e for e in session.serialize_for("p1", "player")["battlefield"]}
         self.assertEqual(view["theirs"]["cardId"], "m-1")
         self.assertIn("locked", session.validate_first_manifestation("p2", validated=False)[0])
@@ -14112,6 +14189,8 @@ class LotTwentyTwoTests(RealCardRulesCase):
         error, result = session.validate_first_manifestation("p1")
         self.assertIsNone(error)
         self.assertTrue(result["selectionComplete"])
+        self.assertEqual(session.rules_engine["trapCards"], {})
+        self.assertEqual(p1["score"], score - 5)
         # A second Trap in the same step is refused.
         self.assertTrue(session.play_first_manifestation_trap("p1", "trap")[0])
 

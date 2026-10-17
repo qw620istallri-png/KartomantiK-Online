@@ -234,6 +234,7 @@ class Session:
             "firstManifestationItemIds": {},
             "firstManifestationValidatedPlayerIds": [],
             "trapPlayerIds": [],
+            "trapCards": {},
             "limboRecoveryPlayerIds": [],
             "limboDrawn": {},
             "firstManifestationComplete": False,
@@ -6255,6 +6256,27 @@ class Session:
                 })
                 continue
             captured.append(self._rules_remove_field_item(item, winner_id, "receptacle", "top"))
+        # The Stalemate Zone is settled by the first confrontation with a winner
+        # (FAQ "How is a Stalemate resolved?"): the winner takes the opponent's
+        # waiting Manifestations into their Vessel and places their own like
+        # winning cards. They are neither winners nor losers, so no win or loss
+        # effect triggers. Cards an effect locked there this turn stay.
+        stalemate_own = []
+        if winner_id in self.players:
+            for item in list(self.battlefield):
+                if self.rules_field_zone(item) != "stalemate" or self.rules_item_zone_locked(item):
+                    continue
+                if item.get("ownerId") == winner_id:
+                    if not self.rules_stalemate_win_blocked(item):
+                        stalemate_own.append(item)
+                    continue
+                movement = self._rules_remove_field_item(
+                    item, winner_id,
+                    "exile" if item.get("isCopy") or item.get("isTokenCard") else "receptacle",
+                    "top",
+                )
+                movement["fromStalemate"] = True
+                captured.append(movement)
         own_items = [
             item for item in self.rules_confrontation_items_owned_by(
                 winner_id, ("confrontation",)
@@ -6360,6 +6382,8 @@ class Session:
         persist_candidates = [
             item for item in own_items if self.rules_item_has_persist(item)
         ]
+        own_items.extend(stalemate_own)
+        result["stalemateWonItemIds"] = [item["id"] for item in stalemate_own]
         result["persisted"] = []
         if len(persist_candidates) == 1:
             persisted = persist_candidates[0]
@@ -6405,6 +6429,7 @@ class Session:
         )
         self.rules_engine["firstManifestationTriggersQueued"] = False
         self.rules_engine["trapPlayerIds"] = []
+        self.flush_rules_traps()
         self.rules_engine["confrontationEntrySequence"] = max(
             (
                 int(item.get("confrontationOrder") or 0)
@@ -8054,6 +8079,7 @@ class Session:
                 ))
         if (
             paid_action
+            and paid_action.get("kind") == "play_card"
             and self.card_rules.get(
                 (paid_action.get("source") or {}).get("cardId"), {}
             ).get("type") in RULES_WILL_TYPES
@@ -18254,6 +18280,14 @@ class Session:
                 "firstManifestationItemIds": dict(self.rules_engine["firstManifestationItemIds"]),
                 "firstManifestationValidatedPlayerIds": list(self.rules_engine["firstManifestationValidatedPlayerIds"]),
                 "trapPlayerIds": list(self.rules_engine.get("trapPlayerIds") or []),
+                # a Trap waiting in place of a First Manifestation: face down for the opponent
+                "trapCards": {
+                    pid: {
+                        "cardId": trap["cardId"] if trap.get("revealed") or viewer_id == pid else None,
+                        "revealed": bool(trap.get("revealed")),
+                    }
+                    for pid, trap in (self.rules_engine.get("trapCards") or {}).items()
+                },
                 "limboRecoveryPlayerIds": list(self.rules_engine.get("limboRecoveryPlayerIds") or []),
                 "uncoveredHand": {
                     pid: [
@@ -18627,12 +18661,34 @@ class Session:
             or player_id in self.rules_engine["trapPlayerIds"]
         ):
             return "You have already chosen your First Manifestation.", None
-        error, _owner_id = self.move_zone_card(player_id, "hand", player_id, "graveyard", card_id, "top")
-        if error:
-            return error, None
-        delta = self.adjust_rules_score(player_id, -5)
+        # The Trap waits face down in the Confrontation Zone, like a First
+        # Manifestation: it is turned over (and the 5 points lost) when the
+        # opponent's First Manifestation is revealed.
+        self.take_zone_card(player_id, "hand", card_id)
+        self.rules_engine.setdefault("trapCards", {})[player_id] = {"cardId": card_id, "revealed": False}
         self.rules_engine["trapPlayerIds"].append(player_id)
-        return None, {"cardId": card_id, "playerId": player_id, "delta": delta}
+        return None, {"playerId": player_id, "delta": 0}
+
+    def reveal_rules_traps(self, player_ids):
+        """Turn the waiting Traps over: each goes to its owner's Limbo and costs 5 points."""
+        revealed = []
+        for pid in player_ids:
+            trap = (self.rules_engine.get("trapCards") or {}).get(pid)
+            if not trap or trap.get("revealed") or pid not in self.players:
+                continue
+            card_id = trap["cardId"]
+            trap["revealed"] = True
+            self.put_zone_card(pid, "hand", card_id, pid, "bottom")
+            self.move_zone_card(pid, "hand", pid, "graveyard", card_id, "top")
+            delta = self.adjust_rules_score(pid, -5)
+            revealed.append({"playerId": pid, "cardId": card_id, "delta": delta})
+        return revealed
+
+    def flush_rules_traps(self):
+        """A Trap still face down when the step ends is turned over anyway."""
+        revealed = self.reveal_rules_traps(list((self.rules_engine.get("trapCards") or {}).keys()))
+        self.rules_engine["trapCards"] = {}
+        return revealed
 
     def register_first_manifestation(self, player_id, item):
         if not self.rules_first_manifestation_active():
@@ -18698,6 +18754,7 @@ class Session:
             confirmed_players.append(player_id)
         after_ids = [pid for pid in self.players if self.rules_plays_first_manifestation_after(pid)]
         first_ids = [pid for pid in self.players if pid not in after_ids]
+        traps_revealed = []
         if after_ids and all(pid in confirmed_players for pid in first_ids):
             for pid in first_ids:
                 revealed_item = self.find_battlefield_item(
@@ -18705,9 +18762,11 @@ class Session:
                 )
                 if revealed_item:
                     revealed_item["faceUp"] = True
+            traps_revealed = self.reveal_rules_traps(after_ids)
         player_ids = list(self.players)
         revealed = len(player_ids) >= NUM_SEATS and all(pid in confirmed_players for pid in player_ids)
         if revealed:
+            traps_revealed += self.flush_rules_traps()
             self.rules_engine["firstManifestationComplete"] = True
             self.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_before_revelation")
             self.rules_engine["priorityPasses"] = []
@@ -18717,7 +18776,10 @@ class Session:
                 last_winner if last_winner in self.players
                 else (first_player.get("id") if first_player else None)
             )
-        return None, {"validated": True, "selectionComplete": revealed, "revealed": False}
+        return None, {
+            "validated": True, "selectionComplete": revealed, "revealed": False,
+            "trapsRevealed": traps_revealed,
+        }
 
     def mulligan_opening_hand(self, player_id, hand_limit=7):
         if not self.rules_pregame_active():

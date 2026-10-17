@@ -7,11 +7,14 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261017-rules-beta-138-1";
+const STATIC_ASSET_VERSION = "20261017-rules-beta-138-2";
 {
   const versionEl = document.getElementById("appVersion");
-  const versionMatch = STATIC_ASSET_VERSION.match(/beta-(\d+)/);
-  if (versionEl) versionEl.textContent = versionMatch ? "beta " + versionMatch[1] : STATIC_ASSET_VERSION;
+  // "...-beta-138-1" reads "beta 138.1" (a release without a fix number reads "138.0")
+  const versionMatch = STATIC_ASSET_VERSION.match(/beta-(\d+(?:-\d+)*)/);
+  const versionParts = versionMatch ? versionMatch[1].split("-") : [];
+  if (versionParts.length === 1) versionParts.push("0");
+  if (versionEl) versionEl.textContent = versionMatch ? "beta " + versionParts.join(".") : STATIC_ASSET_VERSION;
 }
 const staticAsset = (path) => `${path}?v=${STATIC_ASSET_VERSION}`;
 const DECKOMANTIK_DESERT_ASSET_ROOT = "https://qw620istallri-png.github.io/DECKOMANTIK/assets/Desert";
@@ -8259,7 +8262,8 @@ function pickHandDropCard(handIndex, fromDrop = false) {
   if (!fromDrop && !(Number(choice.count || 1) > 1 || choice.upTo)) return true;
   const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
   const cardId = hand[handIndex];
-  const requiredTypes = Array.isArray(choice.requireTypes) && choice.requireTypes.length ? choice.requireTypes : null;
+  const requiredTypes = Array.isArray(choice.requireTypes) && choice.requireTypes.length ? choice.requireTypes
+    : choice.requireManifestation ? ["manifestation"] : null;
   if (!cardId || (requiredTypes && !requiredTypes.includes(cardsById.get(cardId)?.type))) {
     showToast(t("rulesBoardCardNotPlayable"), true);
     return true;
@@ -11502,8 +11506,8 @@ function renderBattlefield() {
         return;
       }
       const zOrderItems = [
-        { keepInBeta: true, label: t("bringToFront"), onSelect: () => send({ type: "reorder_battlefield_item", itemId: item.id, position: "front" }) },
-        { keepInBeta: true, label: t("sendToBack"), onSelect: () => send({ type: "reorder_battlefield_item", itemId: item.id, position: "back" }) },
+        { keepInBeta: true, zOrder: true, label: t("bringToFront"), onSelect: () => send({ type: "reorder_battlefield_item", itemId: item.id, position: "front" }) },
+        { keepInBeta: true, zOrder: true, label: t("sendToBack"), onSelect: () => send({ type: "reorder_battlefield_item", itemId: item.id, position: "back" }) },
       ];
       if (item.isTokenCard) {
         showContextMenu(event.clientX, event.clientY, betaMenuItems([
@@ -12292,6 +12296,8 @@ function formatLogEntry(e, options = {}) {
   const f = (key, values = {}, markup = []) => logTemplate(key, { who, ...values }, language, new Set(html ? ["who", ...markup] : []), html);
   switch (e.type) {
     case "import_deck": return f("logImportDeck", { count: d.count });
+    case "rules_first_manifestation_trap_placed": return f("logRulesTrapPlaced");
+    case "rules_first_manifestation_trap": return f("logRulesTrapRevealed", { card: card(d.cardId), points: Math.abs(Number(d.delta) || 5) }, ["card"]);
     case "draw": return f("logDraw", { count: d.count });
     case "draw_to_limit": return f("logDrawToLimit", { count: d.count });
     case "opening_hand_draw": return f("logOpeningHandDraw", { count: d.count });

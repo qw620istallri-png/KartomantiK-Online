@@ -229,6 +229,7 @@
     handHidden: new Map(),
     handRevealTimer: null,
     immersiveTried: false,
+    destinationShownAt: 0,
     inGame: false,
     longPress: null,
     swallowMenuUntil: 0,
@@ -417,7 +418,7 @@
     const oppHandH = Math.round(phone ? clamp(H * 0.09, 30, 40) : clamp(H * 0.085, 46, 86));
     const totalsH = phone ? 34 : compact ? 44 : 54;
     const stale = groups.stalemate.length > 0;
-    const staleH = stale ? 42 : 0;
+    const staleH = stale ? (phone ? 52 : 84) : 0;
     const bandTop = 0;
     const bandH = oppHandH + totalsH + staleH + 10;
     const zcTop = bandTop + bandH;
@@ -512,14 +513,21 @@
     fitBoard(G);
     const slots = new Map();
     const zc = {};
+    const traps = latestState.rulesEngine?.trapCards || {};
     for (const side of ["me", "opp"]) {
       const area = side === "me" ? G.zcMe : G.zcOpp;
-      const count = groups[side].confrontation.length;
+      // a Trap played in place of the First Manifestation takes a slot like a card
+      const trap = players[side] ? traps[players[side].id] : null;
+      const count = groups[side].confrontation.length + (trap ? 1 : 0);
       const width = area.r - area.l;
       const cardFit = fit(width - 12, area.b - area.t - 30, count, { maxW: Math.min(230, width * 0.62) });
-      zc[side] = { area, fit: cardFit };
+      zc[side] = { area, fit: cardFit, trap: null };
       gridPositions({ l: area.l, r: area.r, t: area.t + 22, b: area.b - 8 }, count, cardFit, { fromRight: side === "me" })
-        .forEach((rect, index) => slots.set(groups[side].confrontation[index].item.id, { ...rect, zone: "confrontation", side }));
+        .forEach((rect, index) => {
+          const entry = groups[side].confrontation[index];
+          if (entry) slots.set(entry.item.id, { ...rect, zone: "confrontation", side });
+          else zc[side].trap = { ...rect, ...trap };
+        });
     }
     const columns = {};
     for (const side of ["me", "opp"]) {
@@ -554,10 +562,12 @@
         }
       } else {
         const stripW = Math.min(640, (G.zcOpp.r - G.zcMe.l) * 0.96);
-        const strip = { l: G.cx - stripW / 2, r: G.cx + stripW / 2, t: G.oppHandH + G.totalsH + 6, h: 36 };
+        const strip = { l: G.cx - stripW / 2, r: G.cx + stripW / 2, t: G.oppHandH + G.totalsH + 6, h: G.staleH - 6 };
         stale.strip = strip;
-        const w = 25;
-        const shown = groups.stalemate.slice(0, 12);
+        const w = Math.floor((strip.h - 16) / RATIO);
+        stale.max = Math.max(1, Math.floor((stripW - 220) / (w + 4)));
+        stale.w = w;
+        const shown = groups.stalemate.slice(0, stale.max);
         const totalW = shown.length * (w + 4) - 4;
         const start = G.cx - totalW / 2;
         groups.stalemate.forEach((entry, index) => {
@@ -827,12 +837,23 @@
       local.oppPilesOpen = !open;
       layoutRight();
     };
-    document.getElementById("ubStaleStrip").onclick = (event) => {
+    const openStalemate = (event) => {
       event.stopPropagation();
       local.staleOpen = true;
       renderBattlefield();
       renderChrome();
     };
+    document.getElementById("ubStaleStrip").onclick = openStalemate;
+    // the board layer sits above the strip: route clicks that land on it
+    document.getElementById("battlefield").addEventListener("click", (event) => {
+      if (!active() || local.staleOpen || event.button !== 0) return;
+      const strip = document.getElementById("ubStaleStrip");
+      if (strip.classList.contains("hidden")) return;
+      const r = strip.getBoundingClientRect();
+      if (event.clientX < r.left || event.clientX > r.right || event.clientY < r.top || event.clientY > r.bottom) return;
+      if (event.target.closest(".bf-card:not(.ub-stale-strip-card)")) return;
+      openStalemate(event);
+    }, true);
     // the expanded stalemate closes on any click outside it (and outside its cards)
     document.addEventListener("pointerdown", (event) => {
       if (!local.staleOpen || !active()) return;
@@ -1149,6 +1170,7 @@
     body += node("transcendent", 0, transY, 14) + node("hollow", 0, hollowY, 14);
     svg.innerHTML = `<defs><marker id="ubArrowHead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>${body}`;
     svg.classList.toggle("duel", Boolean(duel));
+    svg.classList.toggle("has-arrow", body.includes("ub-wheel-arrow"));
     svg.style.setProperty("--me", players.me ? playerColor(players.me.id) : "#3fc9a8");
     svg.style.setProperty("--opp", players.opp ? playerColor(players.opp.id) : "#d3654a");
   }
@@ -1179,8 +1201,10 @@
       node.querySelector(".ub-zlab").textContent = t("ubConfrontation");
       const empty = node.querySelector(".ub-empty");
       const count = groups[side].confrontation.length;
-      empty.textContent = count ? "" : side === "me" ? (isObserver ? "" : t("ubDropHint")) : t("ubWaitingOpponent");
-      empty.hidden = Boolean(count);
+      const trap = geometry.zc?.[side]?.trap;
+      empty.textContent = count || trap ? "" : side === "me" ? (isObserver ? "" : t("ubDropHint")) : t("ubWaitingOpponent");
+      empty.hidden = Boolean(count || trap);
+      renderTrap(side, trap);
     }
     const sides = document.querySelectorAll("#ubField .ub-side");
     sides[0].style.left = `${G.fieldL}px`;
@@ -1204,6 +1228,39 @@
     if (field.dataset.pm !== placing) field.dataset.pm = placing;
   }
 
+  // a Trap waiting face down in the Confrontation Zone, turned over when the
+  // opponent's First Manifestation is revealed
+  function renderTrap(side, trap) {
+    const id = side === "me" ? "ubTrapMe" : "ubTrapOpp";
+    let node = document.getElementById(id);
+    if (!trap) {
+      node?.remove();
+      return;
+    }
+    if (!node) {
+      node = el("div", "ub-trap");
+      node.id = id;
+      document.getElementById("ubField").appendChild(node);
+    }
+    const shown = trap.revealed && trap.cardId;
+    const src = shown ? cardImage(trap.cardId) : (trap.cardId && side === "me" ? cardImage(trap.cardId) : "card-back.webp");
+    const key = `${src}|${shown ? 1 : 0}`;
+    if (node.dataset.key !== key) {
+      const flipping = shown && node.dataset.key && !node.dataset.key.endsWith("|1");
+      node.dataset.key = key;
+      node.innerHTML = `<img src="${esc(src)}" alt="">`;
+      node.classList.toggle("is-hidden", !shown);
+      node.classList.toggle("is-peek", !shown && side === "me" && Boolean(trap.cardId));
+      if (flipping) node.animate([{ transform: "rotateY(90deg)" }, { transform: "rotateY(0)" }], { duration: 420, easing: "cubic-bezier(.22, 1, .36, 1)" });
+    }
+    node.title = shown ? cardName(trap.cardId) : "";
+    node.dataset.logCard = shown ? trap.cardId : "";
+    node.style.left = `${trap.x}px`;
+    node.style.top = `${trap.y}px`;
+    node.style.width = `${trap.w}px`;
+    node.style.height = `${trap.w * RATIO}px`;
+  }
+
   function renderStalemate(geometry) {
     const { G, groups, stale, players } = geometry;
     const strip = document.getElementById("ubStaleStrip");
@@ -1215,8 +1272,9 @@
     if (!has) { local.staleOpen = false; return; }
     if (stale.strip) {
       setBox(strip, { l: stale.strip.l, r: stale.strip.r, t: stale.strip.t, b: stale.strip.t + stale.strip.h });
-      const shown = Math.min(stale.count, 12);
-      strip.innerHTML = `<span class="lab">${esc(t("ubStalemate"))} · ${stale.count}</span><span class="ub-strip-gap" style="width:${shown * 29}px"></span><span class="more">${stale.count > 12 ? `+${stale.count - 12}` : esc(t("ubEnlarge"))}</span>`;
+      const max = stale.max || 12;
+      const shown = Math.min(stale.count, max);
+      strip.innerHTML = `<span class="lab">${esc(t("ubStalemate"))} · ${stale.count}</span><span class="ub-strip-gap" style="width:${shown * ((stale.w || 25) + 4)}px"></span><span class="more">${stale.count > max ? `+${stale.count - max}` : esc(t("ubEnlarge"))}</span>`;
     }
     if (stale.panel) {
       setBox(panel, stale.panel);
@@ -1478,6 +1536,7 @@
     screen.classList.toggle("ub-rules", rulesOn());
     screen.classList.toggle("ub-compact", G.compact);
     screen.classList.toggle("ub-phone", G.phone);
+    fitHand();
     renderZones(geometry);
     renderInterzones(geometry);
     renderTotals(G, players);
@@ -1709,6 +1768,31 @@
     document.documentElement.style.setProperty("--hand-hover-scale", Math.max(1.2, hoverH / handCardHeight).toFixed(3));
   }
 
+  // overlap the hand cards just enough for the whole hand to fit between the columns
+  function fitHand() {
+    const tray = document.getElementById("myHandTray");
+    if (!tray) return;
+    const cards = tray.querySelectorAll(".hand-card");
+    const handH = typeof handCardHeight === "number" ? handCardHeight : 170;
+    const cardW = handH * 0.716;
+    const style = getComputedStyle(tray);
+    const room = tray.clientWidth - parseFloat(style.paddingLeft || 0) - parseFloat(style.paddingRight || 0) - 24;
+    const base = handH * 0.32;
+    const n = cards.length;
+    const needed = n > 1 ? (n * cardW - room) / (n - 1) : 0;
+    const overlap = Math.min(cardW * 0.86, Math.max(base, needed));
+    tray.style.setProperty("--ub-hand-ml", `${-Math.round(overlap)}px`);
+  }
+
+  // when a hand card has to be chosen, the ones that cannot be are dimmed
+  function markHandEligibility() {
+    const drop = typeof rulesHandDropChoice === "function" ? rulesHandDropChoice() : null;
+    const types = drop ? (drop.requireTypes?.length ? drop.requireTypes : drop.requireManifestation ? ["manifestation"] : null) : null;
+    document.querySelectorAll("#myHandTray [data-hand-card]").forEach((card) => {
+      card.classList.toggle("ub-ineligible", Boolean(types) && !types.includes(cardsById.get(card.dataset.handCard)?.type));
+    });
+  }
+
   // a drawn card shows up in the hand when its draw animation lands, not before
   function holdNewHandCards() {
     const cards = [...document.querySelectorAll("#myHandTray [data-hand-card]")];
@@ -1841,7 +1925,10 @@
     if (choice.drag) {
       choice.drag.itemIds.forEach((itemId) => boardCardEl(itemId)?.classList.add("ub-choice-drag"));
       if (choice.drag.targets.interzone) document.getElementById("ubIzMe")?.classList.add("ub-drop-ok");
-      if (choice.drag.targets.deck) myDeckPile()?.classList.add("ub-drop-ok");
+      if (choice.drag.targets.deck) {
+        myDeckPile()?.classList.add("ub-drop-ok");
+        document.getElementById("ubLeft")?.classList.add("ub-drop-ok");
+      }
     }
     for (const side of choiceSides(choice)) {
       playerTargetNodes(side).forEach((node) => node.classList.add("ub-choice-target"));
@@ -1851,7 +1938,8 @@
     if (choice.drag && !panelShown) {
       const holes = [...choice.drag.itemIds].map(boardCardEl);
       if (choice.drag.targets.interzone) holes.push(document.getElementById("ubIzMe"));
-      if (choice.drag.targets.deck) holes.push(myDeckPile());
+      // the whole left column takes a card under the deck
+      if (choice.drag.targets.deck) holes.push(document.getElementById("ubLeft"));
       holes.push(document.getElementById("ubChoiceBanner"));
       setSpotlight(holes.filter(Boolean));
     } else {
@@ -1915,6 +2003,28 @@
       syncBoardChoice();
     };
     banner.classList.remove("hidden");
+    placeChoiceBanner(banner, choice);
+  }
+
+  // the prompt sits at the upper third, but never over the cards it is about:
+  // above them when there is room, otherwise below them
+  function placeChoiceBanner(banner, choice) {
+    const geometry = local.geometry?.G;
+    if (!geometry) return;
+    const ids = choice.drag ? [...choice.drag.itemIds] : [...choice.items.keys()];
+    const rects = ids.map(boardCardEl).filter(Boolean).map((node) => node.getBoundingClientRect()).filter((rect) => rect.width > 0);
+    const half = banner.offsetHeight / 2;
+    const gap = 14;
+    let center = Math.round(geometry.H / 3);
+    if (rects.length) {
+      const top = Math.min(...rects.map((rect) => rect.top));
+      const bottom = Math.max(...rects.map((rect) => rect.bottom));
+      if (center + half + gap > top && center - half - gap < bottom) {
+        const above = top - gap - half;
+        center = above - half >= 6 ? above : Math.min(geometry.H - half - 6, bottom + gap + half);
+      }
+    }
+    banner.style.top = `${Math.round(Math.max(half + 6, center))}px`;
   }
 
   // a dark layer with holes over what can be used
@@ -2143,7 +2253,7 @@
   });
   wrap("renderHandTray", (original) => function uiBetaRenderHandTray(...args) {
     const result = original.apply(this, args);
-    if (active()) holdNewHandCards();
+    if (active()) { holdNewHandCards(); fitHand(); markHandEligibility(); }
     else local.handSeen = null;
     return result;
   });
@@ -2151,13 +2261,30 @@
   wrap("bindCardDragSource", (original) => function uiBetaBindCardDragSource(el, ctx, ...rest) {
     if (ctx?.kind === "battlefield") {
       el.addEventListener("pointerdown", (event) => {
-        if (active() && rulesOn()) event.stopImmediatePropagation();
+        if (!active() || !rulesOn()) return;
+        event.stopImmediatePropagation();
+        if (event.button === 0) dragSupportFromInterzone(el, ctx.itemId, event);
       });
     }
     return original.call(this, el, ctx, ...rest);
   });
   wrap("renderRulesChoice", (original) => function uiBetaRenderRulesChoice(...args) {
-    const result = original.apply(this, args);
+    // the end-of-confrontation destinations come one card after the other: once
+    // the first is on screen the next ones follow at once, without waiting for
+    // the previous card's flight to land
+    const pending = latestState?.rulesEngine?.pendingChoice;
+    const destination = active() && pending?.kind === "confrontation_destination" && pending.playerId === myPlayerId;
+    const chained = destination && Date.now() - local.destinationShownAt < 10000;
+    let result;
+    if (chained && typeof window.rulesAnimationsBusyFor === "function") {
+      const busy = window.rulesAnimationsBusyFor;
+      window.rulesAnimationsBusyFor = () => 0;
+      try { result = original.apply(this, args); } finally { window.rulesAnimationsBusyFor = busy; }
+    } else {
+      result = original.apply(this, args);
+    }
+    if (destination && !document.getElementById("rulesChoicePanel")?.classList.contains("hidden")) local.destinationShownAt = Date.now();
+    if (active()) markHandEligibility();
     if (local.built) syncBoardChoice();
     return result;
   });
@@ -2193,6 +2320,84 @@
     const result = original.call(this, message, kind, ...rest);
     if (active()) pushSystemNote(message, kind || "info");
     return result;
+  });
+  // rules mode: a Manifestation of my Interzone that may enter Support is
+  // dragged onto my Confrontation Zone to play it there (same as the menu)
+  function supportFromInterzoneAllowed(item) {
+    return Boolean(item)
+      && item.fieldZone === "interzone"
+      && battlefieldItemControllerId(item) === myPlayerId
+      && currentPhaseUi().phase?.id === "confrontation_reaction"
+      && latestState.rulesEngine?.priorityPlayerId === myPlayerId
+      && cardsById.get(item.cardId)?.type === "manifestation"
+      && rulesBattlefieldSupportAvailableClient(item);
+  }
+
+  function dragSupportFromInterzone(el, itemId, down) {
+    const item = (latestState?.battlefield || []).find((entry) => entry.id === itemId);
+    if (!supportFromInterzoneAllowed(item)) return;
+    const zc = document.getElementById("ubZcMe");
+    let moved = false;
+    // no native image drag (it would cancel the pointer stream)
+    down.preventDefault();
+    const noNativeDrag = (event) => event.preventDefault();
+    window.addEventListener("dragstart", noNativeDrag, true);
+    const inZone = (event) => {
+      const r = zc.getBoundingClientRect();
+      return event.clientX >= r.left && event.clientX <= r.right && event.clientY >= r.top && event.clientY <= r.bottom;
+    };
+    const move = (event) => {
+      const dx = event.clientX - down.clientX;
+      const dy = event.clientY - down.clientY;
+      if (!moved && Math.hypot(dx, dy) < 6) return;
+      if (!moved) {
+        moved = true;
+        el.classList.add("ub-support-drag");
+        zc.classList.add("ub-drop-ok");
+      }
+      // the board layer is zoomed: move in its own units
+      const parent = el.parentElement;
+      const k = parent && parent.offsetWidth ? parent.getBoundingClientRect().width / parent.offsetWidth : 1;
+      el.style.translate = `${dx / (k || 1)}px ${dy / (k || 1)}px`;
+      zc.classList.toggle("ub-drop-hover", inZone(event));
+    };
+    const end = (event) => {
+      window.removeEventListener("pointermove", move);
+      window.removeEventListener("pointerup", end);
+      window.removeEventListener("pointercancel", end);
+      window.removeEventListener("dragstart", noNativeDrag, true);
+      el.style.translate = "";
+      el.classList.remove("ub-support-drag");
+      zc.classList.remove("ub-drop-ok", "ub-drop-hover");
+      if (!moved) return;
+      // the click that follows a drag is not a click on the card
+      const swallow = (click) => { click.stopPropagation(); click.preventDefault(); };
+      window.addEventListener("click", swallow, { capture: true, once: true });
+      setTimeout(() => window.removeEventListener("click", swallow, true), 0);
+      if (event.type !== "pointerup" || !inZone(event)) return;
+      const current = (latestState?.battlefield || []).find((entry) => entry.id === itemId);
+      if (!supportFromInterzoneAllowed(current)) return;
+      const payload = { type: "set_rules_field_zone", itemId: current.id, cardId: current.cardId, faceUp: current.faceUp, fieldZone: "confrontation", x: current.x, y: current.y };
+      requestCardPlacement(payload, { cardId: current.cardId, zone: "battlefield", itemId: current.id });
+    };
+    window.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", end);
+    window.addEventListener("pointercancel", end);
+  }
+
+  // the beta table lays cards out itself: no manual layer order
+  wrap("showContextMenu", (original) => function uiBetaShowContextMenu(x, y, items, ...rest) {
+    if (active() && Array.isArray(items)) {
+      const kept = [];
+      for (const item of items.filter((entry) => entry && !entry.zOrder)) {
+        if (item.separator && (!kept.length || kept[kept.length - 1].separator)) continue;
+        kept.push(item);
+      }
+      while (kept.length && kept[kept.length - 1].separator) kept.pop();
+      if (!kept.length) return undefined;
+      items = kept;
+    }
+    return original.call(this, x, y, items, ...rest);
   });
   wrap("showToast", (original) => function uiBetaShowToast(text, isError = false, ...rest) {
     if (active() && !document.getElementById("gameScreen").classList.contains("hidden")) {

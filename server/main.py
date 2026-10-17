@@ -725,6 +725,8 @@ def apply_first_manifestation_validation(session, actor_id, validated):
             "revealed": bool(result.get("revealed")),
         },
     )
+    for trap in result.get("trapsRevealed") or []:
+        session.add_log(trap["playerId"], "rules_first_manifestation_trap", {"cardId": trap["cardId"], "delta": trap.get("delta")})
     if result["revealed"]:
         session.add_log(actor_id, "rules_first_manifestations_revealed", {})
     if result.get("selectionComplete"):
@@ -2046,7 +2048,8 @@ async def handle_message(ws, info, data):
         error, result = session.play_first_manifestation_trap(actor_id, card_id)
         if error:
             return await send_error(ws, error)
-        session.add_log(actor_id, "rules_first_manifestation_trap", {"cardId": card_id, "delta": result.get("delta")})
+        # the Trap stays secret until it is turned over (see validate_first_manifestation)
+        session.add_log(actor_id, "rules_first_manifestation_trap_placed", {})
         session.touch()
         await broadcast_state(session)
 
