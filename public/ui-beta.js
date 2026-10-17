@@ -1277,8 +1277,16 @@
       const points = receptaclePoints(player.zones.receptacle || {}, player.score);
       const state = hasPrio ? t("ubPriority") : hasPassed ? t("ubPassed") : "";
       node.title = `${player.name}${state ? ` · ${state}` : ""}`;
-      node.innerHTML = `<span class="ub-av-circle">${esc((player.name || "?").trim().charAt(0).toUpperCase())}${hasPassed && !hasPrio ? '<i class="ub-av-check">✓</i>' : ""}</span>
-        <span class="ub-av-pts" title="${esc(t("ubReceptacle"))}"><b>${points}</b><small>pts</small></span>`;
+      // the points pill is kept between renders: the "+N" score animation of
+      // the game is anchored on it (data-ub-vessel)
+      if (!node.querySelector(".ub-av-pts")) {
+        node.innerHTML = `<span class="ub-av-circle"></span><span class="ub-av-pts"><b></b><small>pts</small></span>`;
+      }
+      node.querySelector(".ub-av-circle").innerHTML = `${esc((player.name || "?").trim().charAt(0).toUpperCase())}${hasPassed && !hasPrio ? '<i class="ub-av-check">✓</i>' : ""}`;
+      const pill = node.querySelector(".ub-av-pts");
+      pill.title = t("ubReceptacle");
+      pill.dataset.ubVessel = player.id;
+      pill.querySelector("b").textContent = points;
     }
   }
 
@@ -1589,12 +1597,19 @@
     if (typeof handCardHeight !== "number" || typeof applyHandCardHeight !== "function") return;
     if (on) {
       if (local.prevHandH === null) local.prevHandH = handCardHeight;
-      handCardHeight = Math.round(clamp(window.innerHeight * 0.2, 110, 190));
+      handCardHeight = Math.round(clamp(window.innerHeight * 0.35, 200, 400));
     } else if (local.prevHandH !== null) {
       handCardHeight = local.prevHandH;
       local.prevHandH = null;
     }
     applyHandCardHeight();
+  }
+
+  // the hovered hand card is read at about 60% of the screen height
+  function setHandHoverScale() {
+    if (typeof handCardHeight !== "number") return;
+    const hoverH = clamp(window.innerHeight * 0.6, 420, 760);
+    document.documentElement.style.setProperty("--hand-hover-scale", Math.max(1.2, hoverH / handCardHeight).toFixed(3));
   }
 
   // a drawn card shows up in the hand when its draw animation lands, not before
@@ -2019,6 +2034,11 @@
   wrap("stackAnchorAt", (original) => function uiBetaStackAnchorAt(...args) {
     if (active() && rulesOn()) return null;
     return original.apply(this, args);
+  });
+  wrap("applyHandCardHeight", (original) => function uiBetaApplyHandCardHeight(...args) {
+    const result = original.apply(this, args);
+    if (active()) setHandHoverScale();
+    return result;
   });
   wrap("renderHandTray", (original) => function uiBetaRenderHandTray(...args) {
     const result = original.apply(this, args);

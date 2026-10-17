@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261017-rules-beta-137-1-2-uib4";
+const STATIC_ASSET_VERSION = "20261017-rules-beta-138";
 {
   const versionEl = document.getElementById("appVersion");
   const versionMatch = STATIC_ASSET_VERSION.match(/beta-(\d+)/);
@@ -5920,7 +5920,8 @@ function animateScoreDeltas() {
     const previous = lastVesselScores.get(p.id);
     lastVesselScores.set(p.id, value);
     if (previous === undefined || previous === value || rulesVfxReducedMotion()) return;
-    const badge = document.querySelector(`[data-vessel-badge="${CSS.escape(p.id)}"]`);
+    const badge = document.querySelector(`#gameScreen.ui-beta [data-ub-vessel="${CSS.escape(p.id)}"]`)
+      || document.querySelector(`[data-vessel-badge="${CSS.escape(p.id)}"]`);
     if (!badge) return;
     const rect = badge.getBoundingClientRect();
     const delta = value - previous;
@@ -5928,7 +5929,9 @@ function animateScoreDeltas() {
     float.className = `score-float ${delta > 0 ? "gain" : "loss"}`;
     float.textContent = `${delta > 0 ? "+" : ""}${delta}`;
     float.style.left = `${rect.left + rect.width / 2}px`;
-    float.style.top = `${rect.top}px`;
+    // near the top edge the number rises downwards, so it stays on screen
+    const rise = rect.top < 90 ? -1 : 1;
+    float.style.top = `${rise > 0 ? rect.top : rect.bottom}px`;
     document.body.appendChild(float);
     const scoreDelay = Math.min(1500, rulesVfxQueueRemaining());
     window.setTimeout(() => spawnVfxParticles(
@@ -5947,9 +5950,9 @@ function animateScoreDeltas() {
       { transform: "scale(1)" }, { transform: "scale(1.3)", offset: 0.3 }, { transform: "scale(1)" },
     ], { duration: vfxMs(600), delay: Math.min(1500, rulesVfxQueueRemaining()) });
     float.animate([
-      { transform: "translate(-50%, 6px) scale(.6)", opacity: 0 },
-      { transform: "translate(-50%, -14px) scale(1.25)", opacity: 1, offset: 0.25 },
-      { transform: "translate(-50%, -52px) scale(1)", opacity: 0 },
+      { transform: `translate(-50%, ${6 * rise}px) scale(.6)`, opacity: 0 },
+      { transform: `translate(-50%, ${-14 * rise}px) scale(1.25)`, opacity: 1, offset: 0.25 },
+      { transform: `translate(-50%, ${-52 * rise}px) scale(1)`, opacity: 0 },
     ], { duration: vfxMs(1400), delay: Math.min(1500, rulesVfxQueueRemaining()), easing: "ease-out", fill: "both" })
       .finished.then(() => float.remove(), () => float.remove());
   });

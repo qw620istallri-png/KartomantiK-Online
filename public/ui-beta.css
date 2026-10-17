@@ -1,7 +1,8 @@
 /* UI beta: alternative table layout (see ui-beta.js). Every rule is scoped to
    #gameScreen.ui-beta, so the classic table is untouched when it is off. */
 
-#gameScreen.ui-beta {
+#gameScreen.ui-beta,
+#gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel, #rulesChoicePanel) {
   --ub-bg: #0b1630;
   --ub-bg-2: #0f1f40;
   --ub-line: rgba(var(--ub-gd), .28);
@@ -25,10 +26,10 @@
   --ub-oppHandH: 70px;
   --me: #3fc9a8;
   --opp: #d3654a;
-  background: var(--ub-bg);
-  color: var(--ub-ink);
 }
-:root[data-ub-theme="dark"] #gameScreen.ui-beta {
+#gameScreen.ui-beta { background: var(--ub-bg); color: var(--ub-ink); }
+:root[data-ub-theme="dark"] #gameScreen.ui-beta,
+:root[data-ub-theme="dark"] #gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel, #rulesChoicePanel) {
   --ub-bg: #06070a;
   --ub-bg-2: #0e1015;
   --ub-pn: 13, 14, 18;
@@ -36,7 +37,8 @@
   --ub-line: rgba(211, 169, 66, .22);
   --ub-line-soft: rgba(240, 217, 143, .09);
 }
-:root[data-ub-theme="sand"] #gameScreen.ui-beta {
+:root[data-ub-theme="sand"] #gameScreen.ui-beta,
+:root[data-ub-theme="sand"] #gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel, #rulesChoicePanel) {
   --ub-bg: #e6d8ba;
   --ub-bg-2: #f3eada;
   --ub-ink: #2b2216;
@@ -126,14 +128,14 @@
 .ub-pw { font-family: var(--display-font, Georgia, serif); font-size: clamp(22px, 2.6vw, 34px); line-height: 1; font-variant-numeric: tabular-nums; color: var(--ub-ink); }
 .ub-tmp { width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: color-mix(in srgb, var(--tc) 40%, #000); border: 2px solid var(--tc); flex: none; }
 .ub-tmp img { width: 18px; height: 18px; }
-.ub-who2 { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--ub-muted); text-transform: uppercase; letter-spacing: .08em; }
+.ub-who2 { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: clamp(14px, 1.15vw, 22px); color: var(--ub-muted); text-transform: uppercase; letter-spacing: .06em; }
 .ub-total.win { border-color: var(--ub-gold); box-shadow: 0 0 0 3px rgba(var(--ub-gd), .18), 0 0 24px rgba(var(--ub-gd), .35); transform: scale(1.04); }
 .ub-total.win .ub-who2 { color: var(--ub-gold-pale); }
 .ub-total.tie { border-color: rgba(160, 200, 255, .6); }
 .ub-vs { font-family: var(--display-font, Georgia, serif); color: var(--ub-muted); font-size: 13px; }
-.ub-turn { display: flex; flex-direction: row; align-items: baseline; justify-content: center; gap: 5px; white-space: nowrap; padding: 5px 10px; border-radius: 10px; border: 1px solid var(--ub-line-soft); background: rgba(var(--ub-lo), .5); line-height: 1; }
-.ub-turn small { font-family: inherit; font-size: 9px; letter-spacing: .14em; text-transform: uppercase; color: var(--ub-muted); }
-.ub-turn b { font-weight: 400; font-size: 17px; color: var(--ub-gold-pale); font-variant-numeric: tabular-nums; }
+.ub-turn { display: flex; flex-direction: row; align-items: baseline; justify-content: center; gap: 8px; white-space: nowrap; padding: 6px 14px; border-radius: 12px; border: 1px solid var(--ub-line-soft); background: rgba(var(--ub-lo), .5); line-height: 1; }
+.ub-turn small { font-family: inherit; font-size: clamp(12px, .95vw, 18px); letter-spacing: .1em; text-transform: uppercase; color: var(--ub-muted); }
+.ub-turn b { font-weight: 400; font-size: clamp(22px, 1.8vw, 34px); color: var(--ub-gold-pale); font-variant-numeric: tabular-nums; }
 .ub-ess { display: flex; gap: 4px; flex-wrap: wrap; flex: none; }
 .ub-ess span { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px 2px 3px; border-radius: 99px; background: color-mix(in srgb, var(--ink) 28%, rgba(0, 0, 0, .35)); border: 1px solid color-mix(in srgb, var(--ink) 75%, transparent); font-weight: 700; font-variant-numeric: tabular-nums; color: #f0d98f; animation: ub-pop 220ms var(--ub-ease); }
 .ub-ess img { width: 20px; height: 20px; }
@@ -442,6 +444,10 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 #gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .box { position: relative; pointer-events: auto; width: 100%; max-width: none; height: 100%; max-height: none; box-sizing: border-box; display: flex; flex-direction: column; gap: 10px; padding: 12px 12px 6px; overflow: hidden;
   background: linear-gradient(180deg, #111e3a, #0c1428); border-right: 1px solid #d3a94247; }
 #gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .inspect-main { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; color: #f5efdf; }
+/* the card and its text sit in the middle of the column (margins keep the top reachable when it overflows) */
+#gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .inspect-main { display: flex; flex-direction: column; }
+#gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .inspect-main > :first-child { margin-top: auto; }
+#gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .inspect-main > :last-child { margin-bottom: auto; }
 #gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .inspect-img { width: min(100%, calc((100vh - 330px) * .714)); margin: 0 auto 10px; }
 #gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .inspect-text h2 { font-size: 17px; color: #f0d98f; border-bottom: 1px solid #d3a94247; }
 #gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .inspect-text .meta { color: #a9b2c6; font-size: 12px; }
@@ -595,3 +601,36 @@ body.flow-uses-hand #gameScreen.ui-beta .rules-board-flow.is-centered .rules-flo
 /* ---------- errors pop in the middle of the screen ---------- */
 body:has(#gameScreen.ui-beta:not(.hidden)) .ko-toast.error { top: 50%; left: 50%; right: auto; transform: translate(-50%, -50%); max-width: min(460px, 90vw); text-align: center; font-size: 15px; padding: 14px 20px; border: 1px solid #a54848; box-shadow: 0 18px 50px rgba(0, 0, 0, .6); z-index: 400; }
 #gameScreen.ui-beta .rules-board-flow:not(.is-centered) .rules-floating-copy { width: 240px; margin-left: 50%; transform: translateX(-50%); box-sizing: border-box; text-align: center; }
+
+/* ---------- reveal, hand requests and the reveal-and-discard choice: panels in the table's style ---------- */
+#gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel) { left: var(--ub-colW-root, 260px); right: var(--ub-colW-root, 260px); background: rgba(var(--ub-lo), .5); backdrop-filter: blur(3px); color: var(--ub-ink); }
+#gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel) .box { position: relative; max-height: 86vh; padding: 22px 26px 18px; border-radius: 16px; border: 1px solid var(--ub-line); background: linear-gradient(180deg, rgba(var(--ub-pn2), .97), rgba(var(--ub-pn), .97)); box-shadow: 0 24px 60px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(var(--ub-hi), .06); color: var(--ub-ink); animation: ub-panel-in 260ms var(--ub-ease); }
+#gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel) .box > h2:first-child { margin: 0 0 4px; padding: 0; border: 0; font-family: var(--display-font, Georgia, serif); font-weight: 400; font-size: 26px; letter-spacing: .04em; color: var(--ub-gold-pale); }
+#gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel) .box > h2:first-child::after { content: ""; display: block; width: 72px; height: 2px; margin: 10px auto 0; border-radius: 2px; background: linear-gradient(90deg, transparent, var(--ub-gold), transparent); }
+#gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel) :is(.reveal-who, #handRequestText) { margin: 8px 0 16px; font-size: 15px; color: var(--ub-muted); }
+#gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel) button { min-height: 38px; padding: 8px 18px; border-radius: 10px; border: 1px solid var(--ub-line); background: rgba(var(--ub-hi), .04); color: var(--ub-ink); font-size: 14px; letter-spacing: .03em; cursor: pointer; transition: background 160ms, border-color 160ms; }
+#gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel) button:hover { background: rgba(var(--ub-gl), .12); border-color: var(--ub-gold); }
+#gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel) button.primary { background: var(--ub-gold); border-color: var(--ub-gold); color: #17120a; font-weight: 700; }
+#gameScreen.ui-beta:not(.hidden) ~ #revealPanel .box { width: min(100%, 1180px); box-sizing: border-box; }
+#gameScreen.ui-beta:not(.hidden) ~ #revealPanel .reveal-cards { --reveal-card-w: clamp(150px, 11vw, 230px); justify-content: safe center; gap: 18px; padding: 14px 6px 12px; }
+#gameScreen.ui-beta:not(.hidden) ~ #revealPanel .reveal-card { border-radius: 12px; transition: transform 200ms var(--ub-ease), box-shadow 200ms; }
+#gameScreen.ui-beta:not(.hidden) ~ #revealPanel .reveal-card:hover { transform: translateY(-8px); box-shadow: 0 0 0 2px var(--ub-gold), 0 16px 34px rgba(0, 0, 0, .5); }
+#gameScreen.ui-beta:not(.hidden) ~ #revealPanel .reveal-cards img { border: 0; border-radius: 12px; box-shadow: 0 10px 26px rgba(0, 0, 0, .5); }
+#gameScreen.ui-beta:not(.hidden) ~ #revealPanel .reveal-resize-handle { display: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #handRequestPanel .box { width: min(460px, 100%); box-sizing: border-box; }
+#gameScreen.ui-beta:not(.hidden) ~ #handRequestPanel .hand-request-card img { width: clamp(170px, 13vw, 240px); height: auto; aspect-ratio: 5 / 7; border: 0; border-radius: 12px; box-shadow: 0 0 0 2px rgba(var(--ub-gd), .55), 0 14px 32px rgba(0, 0, 0, .55); }
+#gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel) .box > div:last-child { margin-top: 18px !important; justify-content: center !important; gap: 12px !important; }
+/* reveal-and-discard: big cards on the field, the source card on the side */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.cards-screen:has(.is-reveal-hand) { left: var(--ub-colW-root, 260px); right: var(--ub-colW-root, 260px); background: rgba(var(--ub-lo), .55); backdrop-filter: blur(3px); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.cards-screen:has(.is-reveal-hand) .box { width: min(100%, 1180px); box-sizing: border-box; padding: 0 20px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.cards-screen:has(.is-reveal-hand) .box.has-source { grid-template-columns: clamp(150px, 12vw, 220px) minmax(0, 1fr); column-gap: 26px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.cards-screen:has(.is-reveal-hand) .rules-choice-effect { padding: 12px 18px; border-radius: 12px; border: 1px solid var(--ub-line); background: rgba(var(--ub-pn), .9); font-size: 17px; color: var(--ub-ink); text-shadow: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-choice-options.has-card-picker.is-reveal-hand { width: 100%; max-width: none; display: flex; flex-direction: row; align-items: flex-start; flex-wrap: wrap; justify-content: center; gap: 16px; padding: 10px 0 6px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-choice-options.is-reveal-hand .rules-choice-card { width: clamp(120px, 8.5vw, 170px); padding: 0; border: 0; background: none; box-shadow: none; color: var(--ub-ink); transition: transform 200ms var(--ub-ease); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-choice-options.is-reveal-hand .rules-choice-card img { border-radius: 11px; box-shadow: 0 10px 24px rgba(0, 0, 0, .55); transition: box-shadow 200ms; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-choice-options.is-reveal-hand .rules-choice-card span { margin-top: 8px; font-size: 13px; text-align: center; color: var(--ub-ink); text-shadow: 0 1px 4px #000; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-choice-options.is-reveal-hand .rules-choice-card:hover { transform: translateY(-10px); background: none; box-shadow: none; z-index: 2; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-choice-options.is-reveal-hand .rules-choice-card:hover img { box-shadow: 0 0 0 3px var(--opp), 0 0 26px color-mix(in srgb, var(--opp) 60%, transparent), 0 18px 34px rgba(0, 0, 0, .6); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-choice-options.is-reveal-hand .rules-choice-card:hover span { font-size: 13px; color: var(--ub-gold-pale); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-choice-options.is-reveal-hand .rules-choice-card:disabled { opacity: .5; transform: none; }
+@keyframes ub-panel-in { from { opacity: 0; transform: translateY(10px) scale(.98); } }
