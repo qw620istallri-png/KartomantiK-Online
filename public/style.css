@@ -1238,7 +1238,7 @@ input, textarea, select {
    space that used to sit between the resize handle and the toolbar. */
 .hand-card-hover-clone {
   position: fixed; z-index: 60; pointer-events: none; border-radius: 8px; overflow: visible;
-  border: 2px solid var(--carbon); box-shadow: 2px 8px 16px #0005; transition: transform .12s ease; transform: translateY(0) scale(1);
+  border: 2px solid var(--carbon); box-shadow: 2px 8px 16px #0005; transition: transform .12s ease; transform: translateY(0) scale(var(--hand-hover-from, 1));
 }
 .hand-card-hover-clone.zoomed { transform: translateY(-10px) scale(var(--hand-hover-scale, 1.3)); }
 .hand-card-hover-clone img { width: 100%; height: 100%; object-fit: cover; display: block; }
@@ -2476,7 +2476,7 @@ input, textarea, select {
   transition: background-position .08s linear;
 }
 .hand-card-revealed-icon { z-index: 7; }
-.hand-card-hover-clone.ko-rarity-card { transform-style: preserve-3d; will-change: transform; }
+.hand-card-hover-clone.ko-rarity-card { transform-style: preserve-3d; }
 .hand-card-hover-clone.ko-rarity-card.zoomed { transform: perspective(760px) translateY(-10px) scale(var(--hand-hover-scale,1.3)) rotateX(var(--rarity-tilt-y,0deg)) rotateY(var(--rarity-tilt-x,0deg)); }
 .rarity-effects-disabled .ko-rarity-card { animation: none !important; outline: 0 !important; filter: none !important; box-shadow: 2px 4px 8px #0004 !important; }
 .rarity-effects-disabled .ko-rarity-card::before,

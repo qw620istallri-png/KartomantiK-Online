@@ -25,12 +25,15 @@
   };
 
   Object.assign(ui.fr, {
+    ubTurn: "Tour",
+    ubPassed: "a passé",
+    ubTargetHint: "Cible un joueur : son côté du terrain, son total, son nom ou son icône.",
     ubToolDraw: "Dessin",
     ubToolCreate: "Créer (jeton, essence, dé)",
     ubChoosePlayer: "Choisis un joueur",
-    ubClickPlayer: "Clique sur le côté du terrain (ou le nom) du joueur visé.",
+    ubClickPlayer: "Clique sur le côté du terrain, le total, le nom ou l’icône du joueur visé.",
     ubClickCard: "Clique sur une des cartes en surbrillance sur le terrain.",
-    ubDragDestination: "Glisse la carte vers ton Interzone ou sur ton deck.",
+    ubDragDestination: "Glisse la carte dans ta colonne Interzone, ou dans ta colonne (sous ton deck).",
     ubDragToDeck: "Glisse une carte en surbrillance sur ton deck (ou clique dessus).",
     ubShowChoicePanel: "Voir les options",
     ubHideChoicePanel: "Choisir sur le terrain",
@@ -50,15 +53,15 @@
     ubStalemateOf: "À {player}",
     ubNoCard: "Aucune carte",
     ubEnlarge: "Agrandir",
-    ubStack: "Stack",
-    ubStackEmpty: "La Stack est vide.",
+    ubStack: "La Pile",
+    ubStackEmpty: "La Pile est vide.",
     ubTabAll: "Tout",
     ubTabChat: "Chat",
     ubTabLog: "Actions",
     ubNothingYet: "Rien pour l’instant.",
     ubFold: "Replier",
     ubUnfold: "Déplier",
-    ubPilesOf: "Piles de",
+    ubPilesOf: "Decks de",
     ubShowOppPiles: "Afficher les piles adverses",
     ubHideOppPiles: "Replier les piles adverses",
     ubLeads: "mène",
@@ -74,12 +77,15 @@
     ubFirstManifestation: "Première Manifestation",
   });
   Object.assign(ui.en, {
+    ubTurn: "Turn",
+    ubPassed: "passed",
+    ubTargetHint: "Target a player: their side of the field, their total, their name or their icon.",
     ubToolDraw: "Drawing",
     ubToolCreate: "Create (token, essence, die)",
     ubChoosePlayer: "Choose a player",
     ubClickPlayer: "Click the targeted player's side of the field (or their name).",
     ubClickCard: "Click one of the highlighted cards on the field.",
-    ubDragDestination: "Drag the card to your Interzone or onto your deck.",
+    ubDragDestination: "Drag the card into your Interzone column, or into your side column (under your deck).",
     ubDragToDeck: "Drag a highlighted card onto your deck (or click it).",
     ubShowChoicePanel: "See the options",
     ubHideChoicePanel: "Choose on the field",
@@ -123,12 +129,15 @@
     ubFirstManifestation: "First Manifestation",
   });
   Object.assign(ui.it, {
+    ubTurn: "Turno",
+    ubPassed: "ha passato",
+    ubTargetHint: "Scegli un giocatore: il suo lato del campo, il suo totale, il nome o la sua icona.",
     ubToolDraw: "Disegno",
     ubToolCreate: "Crea (segnalino, essenza, dado)",
     ubChoosePlayer: "Scegli un giocatore",
     ubClickPlayer: "Clicca sul lato del campo (o sul nome) del giocatore bersaglio.",
     ubClickCard: "Clicca su una delle carte evidenziate sul campo.",
-    ubDragDestination: "Trascina la carta nella tua Interzona o sul tuo mazzo.",
+    ubDragDestination: "Trascina la carta nella colonna Interzona, o nella tua colonna (sotto il mazzo).",
     ubDragToDeck: "Trascina una carta evidenziata sul tuo mazzo (o cliccala).",
     ubShowChoicePanel: "Vedi le opzioni",
     ubHideChoicePanel: "Scegli sul campo",
@@ -211,6 +220,10 @@
     choicePanelShown: "",
     choiceDrag: null,
     pingTimer: null,
+    prevHandH: null,
+    handSeen: null,
+    handHidden: new Map(),
+    handRevealTimer: null,
   };
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -704,6 +717,7 @@
       <div class="ub-zc opp" id="ubZcOpp"><span class="ub-zlab"></span><p class="ub-empty"></p></div>
       <svg class="ub-wheel" id="ubWheel" viewBox="-62 -62 124 124" aria-hidden="true"></svg>
       <div class="ub-totals" id="ubTotals"></div>
+      <div class="ub-avatar me" id="ubAvMe"></div><div class="ub-avatar opp" id="ubAvOpp"></div>
       <button type="button" class="ub-stale-strip hidden" id="ubStaleStrip"></button>
       <div class="ub-stale-panel hidden" id="ubStalePanel"></div>`;
     wrap.insertBefore(field, document.getElementById("battlefield"));
@@ -844,6 +858,7 @@
       if (!active() || !latestState) return;
       cancelAnimationFrame(local.resizeFrame);
       local.resizeFrame = requestAnimationFrame(() => {
+        lockHandSize(true);
         renderBattlefield();
         renderChrome();
       });
@@ -1062,7 +1077,8 @@
         </div>${essence}
       </div>`;
     };
-    totals.innerHTML = `${block("me", me)}<span class="ub-vs">${lead === "tie" ? "=" : "VS"}</span>${block("opp", opp)}`;
+    const turn = Number(latestState.phaseTracker?.turn || 1);
+    totals.innerHTML = `${block("me", me)}<span class="ub-vs ub-turn" title="${esc(t("ubTurn"))} ${turn}"><small>${esc(t("ubTurn"))}</small><b>${turn}</b></span>${block("opp", opp)}`;
   }
 
   function renderWheel(G, players) {
@@ -1223,6 +1239,36 @@
     });
   }
 
+  // player icons on each side of the opponent's hand: priority / passed state,
+  // and the Vessel total next to them; also a target when a player is chosen
+  function renderAvatars(G, players) {
+    const priorityId = rulesOn() ? latestState.rulesEngine.priorityPlayerId : null;
+    const passed = new Set(rulesOn() ? (latestState.rulesEngine.priorityPasses || []) : (latestState.phaseTracker?.passedPlayerIds || []));
+    const size = Math.round(clamp(G.oppHandH - 14, 30, 46));
+    document.getElementById("gameScreen").style.setProperty("--ub-avW", `${size + 92}px`);
+    for (const side of ["me", "opp"]) {
+      const node = document.getElementById(side === "me" ? "ubAvMe" : "ubAvOpp");
+      const player = players[side];
+      node.hidden = !player;
+      if (!player) continue;
+      node.style.setProperty("--pc", playerColor(player.id));
+      node.style.setProperty("--av", `${size}px`);
+      node.style.top = `${Math.round((G.oppHandH - size) / 2) + 2}px`;
+      if (side === "me") { node.style.left = `${G.fieldL + G.izW + 10}px`; node.style.right = ""; }
+      else { node.style.right = `${G.W - (G.fieldR - G.izW - 10)}px`; node.style.left = ""; }
+      const hasPrio = priorityId === player.id;
+      const hasPassed = passed.has(player.id) && (rulesOn() || latestState.phaseTracker?.enabled);
+      node.classList.toggle("has-prio", hasPrio);
+      node.classList.toggle("has-passed", hasPassed && !hasPrio);
+      node.dataset.playerId = player.id;
+      const points = receptaclePoints(player.zones.receptacle || {}, player.score);
+      const state = hasPrio ? t("ubPriority") : hasPassed ? t("ubPassed") : "";
+      node.title = `${player.name}${state ? ` · ${state}` : ""}`;
+      node.innerHTML = `<span class="ub-av-circle">${esc((player.name || "?").trim().charAt(0).toUpperCase())}${hasPassed && !hasPrio ? '<i class="ub-av-check">✓</i>' : ""}</span>
+        <span class="ub-av-pts" title="${esc(t("ubReceptacle"))}"><b>${points}</b><small>pts</small></span>`;
+    }
+  }
+
   function renderScores(players) {
     for (const side of ["me", "opp"]) {
       const node = document.getElementById(side === "me" ? "ubMyScore" : "ubOppScore");
@@ -1272,6 +1318,8 @@
       open = local.oppPilesOpen;
     }
     block.classList.toggle("open", open);
+    // the toggle only shows up when the column is short of room
+    block.classList.toggle("bar-hidden", local.oppPilesOpen === null && open);
     const bar = document.getElementById("ubOppBar");
     bar.setAttribute("aria-expanded", String(open));
     bar.title = t(open ? "ubHideOppPiles" : "ubShowOppPiles");
@@ -1400,6 +1448,7 @@
     renderWheel(G, players);
     renderStalemate(geometry);
     renderWho(players);
+    renderAvatars(G, players);
     renderScores(players);
     renderOppBar(players);
     renderPhaseExtras();
@@ -1431,9 +1480,11 @@
       build();
       screen.classList.add("ui-beta");
       relocate();
+      lockHandSize(true);
     } else if (screen.classList.contains("ui-beta")) {
       screen.classList.remove("ui-beta", "ub-rules", "ub-compact", "ub-stale-open");
       restoreAll();
+      lockHandSize(false);
       syncBoardChoice();
       local.placement = null;
       local.geometry = null;
@@ -1517,6 +1568,58 @@
     if (menu) menu.title = t("ubOptionHint");
   }
 
+  // ------------------------------------------------------------ hand
+
+  // the hand has one fixed size in this layout (the old resize is ignored and
+  // given back when the layout is switched off)
+  function lockHandSize(on) {
+    if (typeof handCardHeight !== "number" || typeof applyHandCardHeight !== "function") return;
+    if (on) {
+      if (local.prevHandH === null) local.prevHandH = handCardHeight;
+      handCardHeight = Math.round(clamp(window.innerHeight * 0.2, 110, 190));
+    } else if (local.prevHandH !== null) {
+      handCardHeight = local.prevHandH;
+      local.prevHandH = null;
+    }
+    applyHandCardHeight();
+  }
+
+  // a drawn card shows up in the hand when its draw animation lands, not before
+  function holdNewHandCards() {
+    const cards = [...document.querySelectorAll("#myHandTray [data-hand-card]")];
+    const counts = new Map();
+    cards.forEach((card) => counts.set(card.dataset.handCard, (counts.get(card.dataset.handCard) || 0) + 1));
+    const remaining = typeof rulesVfxQueueRemaining === "function" ? rulesVfxQueueRemaining() : 0;
+    if (local.handSeen && remaining > 0) {
+      counts.forEach((count, cardId) => {
+        const fresh = count - (local.handSeen.get(cardId) || 0);
+        if (fresh > 0) local.handHidden.set(cardId, (local.handHidden.get(cardId) || 0) + fresh);
+      });
+    }
+    local.handSeen = counts;
+    const left = new Map(local.handHidden);
+    [...cards].reverse().forEach((card) => {
+      const hidden = left.get(card.dataset.handCard) || 0;
+      card.classList.toggle("ub-draw-pending", hidden > 0);
+      if (hidden > 0) left.set(card.dataset.handCard, hidden - 1);
+    });
+    if (local.handHidden.size && !local.handRevealTimer) scheduleHandReveal(Date.now());
+  }
+
+  function scheduleHandReveal(startedAt) {
+    const remaining = typeof rulesVfxQueueRemaining === "function" ? rulesVfxQueueRemaining() : 0;
+    local.handRevealTimer = setTimeout(() => {
+      local.handRevealTimer = null;
+      const still = typeof rulesVfxQueueRemaining === "function" ? rulesVfxQueueRemaining() : 0;
+      if (still > 0 && Date.now() - startedAt < 8000) {
+        scheduleHandReveal(startedAt);
+        return;
+      }
+      local.handHidden.clear();
+      document.querySelectorAll("#myHandTray .ub-draw-pending").forEach((card) => card.classList.remove("ub-draw-pending"));
+    }, Math.min(Math.max(remaining, 0) + 120, 2500));
+  }
+
   // ------------------------------------------------------------ tools row
 
   function closeToolMenus() {
@@ -1598,6 +1701,8 @@
       banner?.classList.add("hidden");
       document.getElementById("gameScreen")?.classList.remove("ub-choosing");
       local.choiceKey = "";
+      setSpotlight(null);
+      setChoiceArrow(false);
       return;
     }
     if (local.choiceKey !== choice.key) {
@@ -1613,13 +1718,44 @@
       if (choice.drag.targets.interzone) document.getElementById("ubIzMe")?.classList.add("ub-drop-ok");
       if (choice.drag.targets.deck) myDeckPile()?.classList.add("ub-drop-ok");
     }
-    const players = sidePlayers();
-    choice.players.forEach((_button, playerId) => {
-      const side = playerId === players.me?.id ? "me" : "opp";
-      document.querySelector(`.ub-side.${side}`)?.classList.add("ub-choice-target");
-      document.getElementById(side === "me" ? "ubWhoMe" : "ubWhoOpp")?.classList.add("ub-choice-target");
-    });
+    for (const side of choiceSides(choice)) {
+      playerTargetNodes(side).forEach((node) => node.classList.add("ub-choice-target"));
+    }
     renderChoiceBanner(choice, panelShown);
+    // a destination: everything but the places the card can go is dimmed
+    if (choice.drag && !panelShown) {
+      const holes = [...choice.drag.itemIds].map(boardCardEl);
+      if (choice.drag.targets.interzone) holes.push(document.getElementById("ubIzMe"));
+      if (choice.drag.targets.deck) holes.push(myDeckPile());
+      holes.push(document.getElementById("ubChoiceBanner"));
+      setSpotlight(holes.filter(Boolean));
+    } else {
+      setSpotlight(null);
+    }
+    setChoiceArrow(Boolean(choice.players.size) && !panelShown);
+  }
+
+  // which sides of the table can be picked in a player choice
+  function choiceSides(choice) {
+    const players = sidePlayers();
+    return ["me", "opp"].filter((side) => players[side] && choice.players.has(players[side].id));
+  }
+
+  function playerTargetNodes(side) {
+    return [
+      document.querySelector(`#ubField .ub-side.${side}`),
+      document.getElementById(side === "me" ? "ubWhoMe" : "ubWhoOpp"),
+      document.getElementById(side === "me" ? "ubAvMe" : "ubAvOpp"),
+      document.querySelector(`#ubTotals .ub-tside.${side}`),
+    ].filter(Boolean);
+  }
+
+  function choiceSourceCardId(choice) {
+    if (choice.kind === "player" && !document.getElementById("rulesBoardFlow")?.classList.contains("hidden")) return null;
+    const pending = latestState?.rulesEngine?.pendingChoice;
+    let placement = null;
+    try { placement = pendingTriggeredPlacement; } catch (_error) { placement = null; }
+    return placement?.payload?.cardId || pending?.sourceCardId || pending?.cardId || null;
   }
 
   function renderChoiceBanner(choice, panelShown) {
@@ -1628,15 +1764,24 @@
       banner = document.createElement("div");
       banner.id = "ubChoiceBanner";
       banner.className = "ub-choice-banner";
-      document.getElementById("ubField").appendChild(banner);
+      document.getElementById("gameScreen").appendChild(banner);
+    }
+    const geometry = local.geometry?.G;
+    if (geometry) {
+      banner.style.left = `${geometry.cx}px`;
+      banner.style.top = `${Math.round(geometry.H / 3)}px`;
+      banner.style.maxWidth = `${Math.round(Math.min(640, geometry.fieldR - geometry.fieldL - 2 * geometry.izW - 24))}px`;
     }
     const heading = choice.kind === "player" ? t("ubChoosePlayer") : document.getElementById("rulesChoiceHeading")?.textContent || "";
     const hint = choice.drag
       ? t(choice.drag.targets.interzone ? "ubDragDestination" : "ubDragToDeck")
       : choice.players.size && !choice.items.size ? t("ubClickPlayer") : t("ubClickCard");
-    banner.innerHTML = `<div><strong>${esc(heading)}</strong><span>${esc(hint)}</span></div>
+    const cardId = choiceSourceCardId(choice);
+    banner.innerHTML = `${cardId ? `<button type="button" class="ub-choice-source" data-log-card="${esc(cardId)}" title="${esc(cardName(cardId))}"><img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"></button>` : ""}
+      <div class="ub-choice-copy"><strong>${esc(heading)}</strong><span>${esc(hint)}</span></div>
       <div class="ub-choice-actions">${choice.extras.map((button, index) => `<button type="button" data-ub-extra="${index}">${esc(button.querySelector("strong")?.textContent || button.textContent.trim())}</button>`).join("")}
       <button type="button" class="ub-choice-panel-btn">${esc(t(panelShown ? "ubHideChoicePanel" : "ubShowChoicePanel"))}</button></div>`;
+    wireLogCardNames(banner);
     banner.querySelectorAll("[data-ub-extra]").forEach((button) => {
       button.onclick = () => choice.extras[Number(button.dataset.ubExtra)]?.click();
     });
@@ -1644,7 +1789,82 @@
       local.choicePanelShown = panelShown ? "" : choice.key;
       syncBoardChoice();
     };
-    banner.classList.toggle("hidden", false);
+    banner.classList.remove("hidden");
+  }
+
+  // a dark layer with holes over what can be used
+  function setSpotlight(nodes) {
+    let layer = document.getElementById("ubSpotlight");
+    if (!nodes || !nodes.length) {
+      layer?.remove();
+      return;
+    }
+    if (!layer) {
+      layer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      layer.id = "ubSpotlight";
+      layer.setAttribute("class", "ub-spotlight");
+      layer.setAttribute("aria-hidden", "true");
+      document.getElementById("gameScreen").appendChild(layer);
+    }
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+    const pad = 6;
+    const holes = nodes.map((node) => {
+      const r = node.getBoundingClientRect();
+      const x = r.left - pad, y = r.top - pad, w = r.width + pad * 2, h = r.height + pad * 2, k = 12;
+      return `M${x + k} ${y}h${w - 2 * k}a${k} ${k} 0 0 1 ${k} ${k}v${h - 2 * k}a${k} ${k} 0 0 1 -${k} ${k}h-${w - 2 * k}a${k} ${k} 0 0 1 -${k} -${k}v-${h - 2 * k}a${k} ${k} 0 0 1 ${k} -${k}Z`;
+    }).join("");
+    layer.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    layer.innerHTML = `<path fill-rule="evenodd" d="M0 0H${W}V${H}H0Z${holes}"/>`;
+  }
+
+  // player choice: an arrow from the card to the pointer
+  function setChoiceArrow(on) {
+    let svg = document.getElementById("ubChoiceArrow");
+    if (!on) {
+      if (svg) {
+        svg.remove();
+        document.removeEventListener("pointermove", moveChoiceArrow);
+      }
+      return;
+    }
+    if (svg) return;
+    svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    svg.id = "ubChoiceArrow";
+    svg.setAttribute("class", "ub-choice-arrow");
+    svg.setAttribute("aria-hidden", "true");
+    svg.innerHTML = `<defs><marker id="ubArrowHead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 10 5 0 10z"/></marker></defs><path class="ub-arrow-line" marker-end="url(#ubArrowHead)"/>`;
+    document.getElementById("gameScreen").appendChild(svg);
+    document.addEventListener("pointermove", moveChoiceArrow, { passive: true });
+    const opp = document.getElementById("ubAvOpp")?.getBoundingClientRect();
+    if (opp) moveChoiceArrow({ clientX: opp.left + opp.width / 2, clientY: opp.bottom });
+  }
+
+  function moveChoiceArrow(event) {
+    const path = document.querySelector("#ubChoiceArrow .ub-arrow-line");
+    const from = document.querySelector("#ubChoiceBanner .ub-choice-source") || document.getElementById("rulesFloatingCard");
+    const rect = from?.getBoundingClientRect();
+    if (!path || !rect?.width) return;
+    const startX = rect.left + rect.width / 2;
+    const startY = rect.top + rect.height / 2;
+    const curveX = startX + (event.clientX - startX) * .5;
+    const curveY = Math.min(startY, event.clientY) - Math.min(120, Math.abs(event.clientX - startX) * .2 + 40);
+    path.setAttribute("d", `M ${startX} ${startY} Q ${curveX} ${curveY} ${event.clientX} ${event.clientY}`);
+    const players = sidePlayers();
+    const over = sideUnder(event.clientX, event.clientY, event.target);
+    for (const side of ["me", "opp"]) {
+      playerTargetNodes(side).forEach((node) => node.classList.toggle("ub-target-over", over === side && local.choice?.players.has(players[side]?.id)));
+    }
+  }
+
+  // which player a point of the screen names (their half of the field, header, icon or total)
+  function sideUnder(clientX, clientY, target) {
+    const node = target?.closest?.("#ubWhoMe, #ubWhoOpp, #ubAvMe, #ubAvOpp, #ubTotals .ub-tside");
+    if (node) return node.id === "ubWhoMe" || node.id === "ubAvMe" || node.classList.contains("me") ? "me" : "opp";
+    if (target?.closest?.(".ub-col, .hand-area, .ub-choice-banner, #inspectPanel")) return null;
+    const G = local.geometry?.G;
+    if (!G || clientX < G.fieldL || clientX > G.fieldR) return null;
+    return clientX < G.cx ? "me" : "opp";
   }
 
   function choiceDropTarget(clientX, clientY) {
@@ -1654,7 +1874,8 @@
       const rect = node?.getBoundingClientRect();
       return rect && clientX >= rect.left - pad && clientX <= rect.right + pad && clientY >= rect.top - pad && clientY <= rect.bottom + pad;
     };
-    if (drag.targets.deck && within(myDeckPile(), 24)) return "deck";
+    // the deck: the pile itself, or anywhere in my side column
+    if (drag.targets.deck && (within(myDeckPile(), 24) || (drag.targets.interzone && within(document.getElementById("ubLeft"))))) return "deck";
     if (drag.targets.interzone && within(document.getElementById("ubIzMe"))) return "interzone";
     return null;
   }
@@ -1662,12 +1883,7 @@
   function onChoicePointerDown(event) {
     const choice = local.choice;
     if (!choice || !active() || event.button !== 0 || local.choicePanelShown === choice.key) return;
-    const header = event.target.closest?.("#ubWhoMe, #ubWhoOpp");
-    if (header && !event.target.closest("button") && pickPlayerFromHeader(header.id === "ubWhoMe" ? "me" : "opp")) {
-      event.preventDefault();
-      event.stopPropagation();
-      return;
-    }
+    if (event.target.closest?.(".ub-choice-banner")) return;
     const card = event.target.closest?.("#battlefield .bf-card[data-item-id]");
     const itemId = card?.dataset.itemId;
     if (card && choice.drag?.itemIds.has(itemId)) {
@@ -1682,29 +1898,13 @@
       choice.items.get(itemId).click();
       return;
     }
-    if (choice.players.size && !event.target.closest?.(".ub-col, .hand-area, .ub-choice-banner, #inspectPanel")) {
-      const field = document.getElementById("ubField").getBoundingClientRect();
-      const mid = document.querySelector(".ub-midline")?.getBoundingClientRect();
-      const inField = event.clientX >= field.left && event.clientX <= field.right;
-      if (!inField || !mid) return;
-      const players = sidePlayers();
-      const playerId = (event.clientX < mid.left ? players.me : players.opp)?.id;
-      const button = choice.players.get(playerId);
-      if (!button) return;
-      event.preventDefault();
-      event.stopPropagation();
-      button.click();
-    }
-  }
-
-  function pickPlayerFromHeader(side) {
-    const choice = local.choice;
-    if (!choice?.players.size) return false;
-    const players = sidePlayers();
-    const button = choice.players.get(players[side]?.id);
-    if (!button) return false;
+    if (!choice.players.size || event.target.closest?.("button:not(.ub-choice-target)")) return;
+    const side = sideUnder(event.clientX, event.clientY, event.target);
+    const button = side && choice.players.get(sidePlayers()[side]?.id);
+    if (!button) return;
+    event.preventDefault();
+    event.stopPropagation();
     button.click();
-    return true;
   }
 
   function startChoiceDrag(event, card, itemId) {
@@ -1806,6 +2006,21 @@
   wrap("stackAnchorAt", (original) => function uiBetaStackAnchorAt(...args) {
     if (active() && rulesOn()) return null;
     return original.apply(this, args);
+  });
+  wrap("renderHandTray", (original) => function uiBetaRenderHandTray(...args) {
+    const result = original.apply(this, args);
+    if (active()) holdNewHandCards();
+    else local.handSeen = null;
+    return result;
+  });
+  // cards on the field are not moved by hand in the rules mode: the engine places them
+  wrap("bindCardDragSource", (original) => function uiBetaBindCardDragSource(el, ctx, ...rest) {
+    if (ctx?.kind === "battlefield") {
+      el.addEventListener("pointerdown", (event) => {
+        if (active() && rulesOn()) event.stopImmediatePropagation();
+      });
+    }
+    return original.call(this, el, ctx, ...rest);
   });
   wrap("renderRulesChoice", (original) => function uiBetaRenderRulesChoice(...args) {
     const result = original.apply(this, args);

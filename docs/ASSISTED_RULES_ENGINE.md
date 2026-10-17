@@ -991,3 +991,13 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Auto-passage : déclenché après tous les messages pouvant poser quelque chose sur la pile (`AUTO_PASS_MESSAGE_TYPES`).
 - Tribut : l'interface n'impose plus le nombre minimal de cartes ; seule une carte superflue (qu'on pourrait retirer sans casser le paiement) est refusée.
 - Client : numéro de version discret sur l'accueil, Entrée = passer la phase, I ouvre l'inspect même vide, zoom + cadenas dans la barre du haut, verrouillage de la vue (`#viewLockBtn`), pile en haut à droite, animation de révélation du dessus du deck (`playRulesVfxTopReveal`), liste des Volontés posées sur le Grimoire (`openAttachedPlayPanel`), effet de la carte affiché dans les fenêtres de choix, erreur serveur = flux de paiement déverrouillé (`releaseRulesBoardFlowAfterError`).
+
+## Retours de test : Wandering Veteran, Shattering the Self, Censor, Destroy, Borombo, Glabron
+
+- Client : une `playPermission` n'est plus rangée dans `activatedAbilitiesByCard` (même filtre que `build_card_rules`) ; Wandering Veteran n'a plus de bouton d'action sur le terrain.
+- Shattering the Self : le joueur ciblé défausse son propre deck ; le résultat `deck_discard_then_weaken` porte `playerId`, `count` et `cardIds`, et l'animation de défausse part du deck de ce joueur.
+- Coûts supplémentaires (`exile_hand_manifestation`, `discard_hand_will`) : sans carte du bon type en main (hors la source), la carte n'est ni surlignée ni jouable côté client (`rulesAdditionalCostAvailableClient`) et ne compte plus comme action pour le passage automatique (`rules_hand_additional_cost_available`).
+- Cibles client : la zone d'un objet du champ suit `rules_field_zone` (pas de `fieldZone` explicite = `field`, ou `confrontation` pour une Première Manifestation) ; Destroy peut viser une Volonté permanente résolue.
+- Déclenchements simultanés : un déclenchement obligatoire qui attend ses cibles (`trigger_targets`) n'est plus écrasé. Les autres déclenchements du même événement rejoignent son lot (`_optionalStackBatch`), et un déclenchement à cibles arrivé pendant ce choix les demande à son tour (`_preStackTargetChoice`). Borombo choisit sa cible même quand le gagnant a aussi un déclenchement.
+- Glabron : déposer la carte depuis la main ou l'Interzone lance sa capacité (`stalemate_target_grant_source_support` est reconnu comme les autres `grant_source_support`), puis la carte est jouée en Support.
+- Tests : `tests/test_reported_card_bugs.py`.

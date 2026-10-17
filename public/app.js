@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261017-rules-beta-137-1-2-uib2";
+const STATIC_ASSET_VERSION = "20261017-rules-beta-137-1-2-uib3";
 {
   const versionEl = document.getElementById("appVersion");
   const versionMatch = STATIC_ASSET_VERSION.match(/beta-(\d+)/);
@@ -476,7 +476,8 @@ async function loadCardDatabase() {
       activatedAbilitiesByCard = new Map(
         Object.entries(abilityData || {}).map(([cardId, abilities]) => [
           cardId,
-          (Array.isArray(abilities) ? abilities : []).filter((ability) => !ability.trigger && !ability.passiveEffect && ability.action !== "play_card"),
+          // a play permission (Wandering Veteran) is not an ability its card activates on the field
+          (Array.isArray(abilities) ? abilities : []).filter((ability) => !ability.trigger && !ability.passiveEffect && !ability.playPermission && ability.action !== "play_card"),
         ]),
       );
       playedAbilitiesByCard = new Map(
@@ -1723,7 +1724,8 @@ function captureRulesVfxEventInner(entry) {
   const movePile = moveResult?.ownerId && moveResult?.toZone
     ? $$('[data-field-pile]').find((element) => element.dataset.fieldPile === `${moveResult.ownerId}:${moveResult.toZone}`)
     : null;
-  const deckDiscardResult = details.effectResult?.kind === "discard_deck" ? details.effectResult : null;
+  // Shattering the Self reports the targeted player whose deck was discarded
+  const deckDiscardResult = ["discard_deck", "deck_discard_then_weaken"].includes(details.effectResult?.kind) ? details.effectResult : null;
   const deckDiscardSource = deckDiscardResult?.playerId
     ? $$('[data-field-pile]').find((element) => element.dataset.fieldPile === `${deckDiscardResult.playerId}:deck`)
     : null;
@@ -2828,10 +2830,10 @@ function playRulesVfxResolutionBanner(entry) {
   if (!details.stalemate && !rulesVfxReducedMotion()) banner.classList.add("has-winner-flash");
   rulesVfxAnimateAndRemove(banner, [
     { transform: "translate(-50%,-50%) scale(.85)", opacity: 0 },
-    { offset: .12, transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
-    { offset: .88, transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
+    { offset: .09, transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
+    { offset: .91, transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
     { transform: "translate(-50%,-50%) scale(1.03)", opacity: 0 },
-  ], { duration: 3300, easing: "cubic-bezier(.2,.8,.2,1)" });
+  ], { duration: 4400, easing: "linear" });
 }
 
 // "Uncover the top card of your deck" (Skysailing Triad...): show the card, then what became of it
@@ -4165,8 +4167,21 @@ function renderRulesBoardFlow() {
   armRulesBoardTargets(flow);
 }
 
+// "As an additional cost ... reveal and exile a manifestation from your hand" (Censor, Martyrize)
+// or "discard a Will" (Timid Brain): without such a card in hand, the card cannot be played.
+function rulesAdditionalCostAvailableClient(draft) {
+  const kind = draft?.encodedAbility?.additionalCost;
+  if (!["exile_hand_manifestation", "discard_hand_will"].includes(kind)) return true;
+  const hand = [...(latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [])];
+  const sourceIndex = hand.indexOf(draft.card?.id);
+  if (sourceIndex >= 0) hand.splice(sourceIndex, 1);
+  const costTypes = kind === "discard_hand_will" ? ["ephemeral_will", "persistent_will"] : ["manifestation"];
+  return hand.some((cardId) => costTypes.includes(cardsById.get(cardId)?.type));
+}
+
 function rulesDraftCanBePaid(draft) {
   if (!draft) return false;
+  if (!rulesAdditionalCostAvailableClient(draft)) return false;
   if (draft.essenceCostPayable === false) return false;
   if (Object.values(draft.essencePlan.remaining).every((amount) => amount <= 0)) return true;
   const candidates = draft.manifestations.slice(0, 12);
@@ -4413,11 +4428,16 @@ function rulesStructuredActionTargets(encodedAbility) {
     .filter((item) => targetMatchesRules(item.cardId))
     .filter((item) => {
       const controller = item.controllerId || item.ownerId;
+      // same field zone as the server (rules_field_zone): a resolved persistent Will has no
+      // explicit fieldZone and stands in the "field" zone, a First Manifestation in the Confrontation
+      const itemFieldZone = ["field", "confrontation", "interzone", "stalemate"].includes(item.fieldZone)
+        ? item.fieldZone
+        : Object.values(latestState?.rulesEngine?.firstManifestationItemIds || {}).includes(item.id) ? "confrontation" : "field";
       if (targetRules?.controller === "self" && controller !== myPlayerId) return false;
       if (targetRules?.controller === "opponent" && controller === myPlayerId) return false;
       if (targetRules?.owner === "self" && item.ownerId !== myPlayerId) return false;
       if (targetRules?.owner === "opponent" && item.ownerId === myPlayerId) return false;
-      if (targetRules?.fieldZone && item.fieldZone !== targetRules.fieldZone) return false;
+      if (targetRules?.fieldZone && itemFieldZone !== targetRules.fieldZone) return false;
       if (
         targetRules?.firstManifestationOnly
         && !Object.values(
@@ -4425,7 +4445,7 @@ function rulesStructuredActionTargets(encodedAbility) {
         ).includes(item.id)
       ) return false;
       const zonesForType = targetRules?.fieldZonesByType?.[cardsById.get(item.cardId)?.type];
-      if (Array.isArray(zonesForType) && !zonesForType.includes(item.fieldZone)) return false;
+      if (Array.isArray(zonesForType) && !zonesForType.includes(itemFieldZone)) return false;
       if (targetRules?.supportOnly && !item.isSupport) return false;
       if (targetRules?.exhaustedOnly && Math.round(Number(item.rotation || 0)) % 180 === 0) return false;
       if (targetRules?.counter) {
@@ -6986,11 +7006,16 @@ function wireCardHoverZoom(el, cloneClassName) {
         window.innerHeight - margin - halfHeight,
         Math.max(margin + halfHeight, rect.top + rect.height / 2 - 10),
       );
-      clone.style.setProperty("--hand-hover-scale", scale.toFixed(3));
-      clone.style.left = `${centerX - cloneWidth / 2}px`;
+      // The clone is laid out at its zoomed size and starts scaled down, so the
+      // zoomed card is drawn at full resolution instead of an upscaled (blurry) one.
+      clone.style.setProperty("--hand-hover-scale", "1");
+      clone.style.setProperty("--hand-hover-from", (1 / scale).toFixed(4));
+      clone.style.width = `${cloneWidth * scale}px`;
+      clone.style.height = `${cloneHeight * scale}px`;
+      clone.style.left = `${centerX - cloneWidth * scale / 2}px`;
       // The zoom transform includes translateY(-10px); offset the base box so
-      // the final scaled card, not merely its unscaled clone, is clamped.
-      clone.style.top = `${centerY - cloneHeight / 2 + 10}px`;
+      // the final card is clamped.
+      clone.style.top = `${centerY - cloneHeight * scale / 2 + 10}px`;
     }
     document.body.appendChild(clone);
     // State updates rebuild card containers with innerHTML. Removing a
@@ -7571,6 +7596,7 @@ function handCardHasHandAction(cardId) {
     // highlight only when a required target exists (Glabron needs a Manifestation in your Interzone)
     const draft = buildRulesActionDraft({ cardId, zone: "hand" }, ability);
     if (!draft) return true;
+    if (!rulesAdditionalCostAvailableClient(draft)) return false;
     if (Array.isArray(draft.targetRules?.groups)) {
       return draft.targetRules.groups.every((_group, index) => (
         draft.structuredTargets.some((target) => target.targetGroupIndex === index)
@@ -7608,6 +7634,7 @@ function handCardIsPlayable(cardId) {
     ) return false;
     const draft = ability ? buildRulesActionDraft({ cardId, zone: "hand" }, ability) : null;
     if (!draft) return true;
+    if (!rulesAdditionalCostAvailableClient(draft)) return false;
     if (Array.isArray(draft.targetRules?.groups)) {
       return draft.targetRules.groups.every((_group, index) => (
         draft.structuredTargets.some((target) => target.targetGroupIndex === index)
@@ -9927,7 +9954,7 @@ function resolveDrop(ctx, clientX, clientY) {
     const supportAbility = latestState?.rulesEngine?.enabled && fieldEl && !zoneEl && battlefieldItem
       && battlefieldItem.fieldZone === "interzone" && battlefieldItemControllerId(battlefieldItem) === myPlayerId
       && Number(battlefieldItem.supportUntilTurn || 0) !== turnNow
-      ? rulesActivatedAbilitiesForItem(battlefieldItem).find((ability) => String(ability.result?.kind || "").startsWith("grant_source_support"))
+      ? rulesActivatedAbilitiesForItem(battlefieldItem).find((ability) => String(ability.result?.kind || "").includes("grant_source_support"))
       : null;
     if (supportAbility && !pendingRulesBoardFlow) {
       // Diabolical Giant: dropping it from the Interzone pays the cost first, then the same drop is replayed once it has Support
@@ -10060,7 +10087,7 @@ function resolveDrop(ctx, clientX, clientY) {
       const firstManifestationPlaceholder = rulesFirstManifestationActive() && Boolean(card?.placeholder);
       if (
         card?.type === "manifestation" && !handCardIsPlayable(ctx.cardId) && handCardHasHandAction(ctx.cardId)
-        && (activatedAbilitiesByCard.get(ctx.cardId) || []).some((ability) => String(ability.result?.kind || "").startsWith("grant_source_support"))
+        && (activatedAbilitiesByCard.get(ctx.cardId) || []).some((ability) => String(ability.result?.kind || "").includes("grant_source_support"))
         && !pendingRulesBoardFlow
       ) {
         // Timid Brain: dropping the card pays its cost, then the card is played in Support on its own once the permission resolves

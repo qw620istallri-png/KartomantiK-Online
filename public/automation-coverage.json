@@ -2295,7 +2295,8 @@
       ],
       "testRefs": [
         "tests/test_game_state.py",
-        "tests/test_card_catalog.py"
+        "tests/test_card_catalog.py",
+        "tests/test_reported_card_bugs.py"
       ]
     },
     "z2fen73ktw8pbqz_en": {
@@ -3330,7 +3331,8 @@
       ],
       "testRefs": [
         "tests/test_game_state.py",
-        "tests/test_card_catalog.py"
+        "tests/test_card_catalog.py",
+        "tests/test_reported_card_bugs.py"
       ]
     },
     "v1mhtnl7jec5xby_en": {
@@ -3376,7 +3378,8 @@
       ],
       "testRefs": [
         "tests/test_game_state.py",
-        "tests/test_card_catalog.py"
+        "tests/test_card_catalog.py",
+        "tests/test_reported_card_bugs.py"
       ]
     },
     "gz2zjrxqc2rbcwq_en": {
@@ -3544,7 +3547,8 @@
       ],
       "testRefs": [
         "tests/test_game_state.py",
-        "tests/test_card_catalog.py"
+        "tests/test_card_catalog.py",
+        "tests/test_reported_card_bugs.py"
       ]
     },
     "201ug66mqu6gslx_en": {
@@ -4754,7 +4758,8 @@
       ],
       "testRefs": [
         "tests/test_game_state.py",
-        "tests/test_card_catalog.py"
+        "tests/test_card_catalog.py",
+        "tests/test_reported_card_bugs.py"
       ]
     },
     "zni76s4aabicqag_en": {
@@ -4802,7 +4807,8 @@
       ],
       "testRefs": [
         "tests/test_game_state.py",
-        "tests/test_card_catalog.py"
+        "tests/test_card_catalog.py",
+        "tests/test_reported_card_bugs.py"
       ]
     },
     "3gqrmx5jegwz8kb_en": {

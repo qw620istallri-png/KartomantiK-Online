@@ -6567,6 +6567,25 @@ class Session:
         except Exception:  # never skip a phase because of a computation problem
             return True
 
+    def rules_hand_additional_cost_available(self, player_id, source_card_id, ability):
+        """Whether the hand holds the card an additional cost needs (Censor:
+        a Manifestation to reveal and exile; Timid Brain: a Will to discard).
+        The source card itself never pays its own additional cost."""
+        additional_cost = (ability or {}).get("additionalCost")
+        if additional_cost not in {"exile_hand_manifestation", "discard_hand_will"}:
+            return True
+        hand_cards = list(self.players[player_id]["zones"]["hand"])
+        if source_card_id in hand_cards:
+            hand_cards.remove(source_card_id)
+        cost_types = (
+            RULES_WILL_TYPES if additional_cost == "discard_hand_will"
+            else {"manifestation"}
+        )
+        return any(
+            self.card_rules.get(card_id, {}).get("type") in cost_types
+            for card_id in hand_cards
+        )
+
     def rules_player_can_act(self, player_id):
         """True when the player has any voluntary action available in the current step.
 
@@ -6596,6 +6615,10 @@ class Session:
             if (
                 card_type in RULES_WILL_TYPES and can_play(card_id, card_type)
                 and self.rules_will_affordable(player_id, card_id)
+                and all(
+                    self.rules_hand_additional_cost_available(player_id, card_id, ability)
+                    for ability in (metadata.get("playedAbilities") or [])[:1]
+                )
             ):
                 return True
             if (
@@ -6605,6 +6628,7 @@ class Session:
                 return True
             if response and any(
                 "hand" in (ability.get("sourceZones") or [])
+                and self.rules_hand_additional_cost_available(player_id, card_id, ability)
                 for ability in metadata.get("activatedAbilities") or []
             ):
                 return True
@@ -7651,7 +7675,14 @@ class Session:
             if ability.get("immediate"):
                 action["immediate"] = True
             if needs_target_choice:
-                if action["optional"]:
+                # Another trigger of the same event already waits for its targets
+                # (Borombo losing while the winner also triggers): never overwrite
+                # that choice, ask for these targets when the batch reaches it.
+                target_choice_pending = (
+                    (self.rules_engine.get("pendingChoice") or {}).get("kind")
+                    == "trigger_targets"
+                )
+                if action["optional"] or target_choice_pending:
                     action["_preStackTargetChoice"] = {
                         "targetRules": action["ability"]["targets"],
                         "resumeConfrontationCleanup": bool(
@@ -7857,6 +7888,31 @@ class Session:
                 self.rules_engine["priorityPasses"] = []
                 self.rules_engine["priorityPlayerId"] = controller_id
                 return False
+            target_choice = action.pop("_preStackTargetChoice", None)
+            if target_choice:
+                # a mandatory trigger whose targets were deferred: its controller
+                # chooses them now, then the rest of the batch continues
+                controller_id = action.get("controllerId")
+                self.rules_engine["pendingChoice"] = {
+                    "id": new_id(),
+                    "kind": "trigger_targets",
+                    "playerId": controller_id,
+                    "sourceCardId": (action.get("source") or {}).get("cardId"),
+                    "targetRules": target_choice.get("targetRules") or {},
+                    "_triggerAction": action,
+                    "_resumeConfrontationCleanup": bool(
+                        target_choice.get("resumeConfrontationCleanup")
+                    ),
+                    "_optionalStackBatch": {
+                        "actions": actions,
+                        "nextIndex": next_index,
+                        "acceptedActions": accepted_actions,
+                        "priorityPlayerId": priority_player_id,
+                    },
+                }
+                self.rules_engine["priorityPasses"] = []
+                self.rules_engine["priorityPlayerId"] = controller_id
+                return False
             accepted_actions.append(action)
         return self._queue_rules_simultaneous_actions_ready(
             accepted_actions, priority_player_id
@@ -7864,6 +7920,20 @@ class Session:
 
     def queue_rules_simultaneous_actions(self, actions, priority_player_id=None):
         """Confirm optional triggers, then queue one simultaneous event atomically."""
+        pending = self.rules_engine.get("pendingChoice") or {}
+        new_actions = [action for action in actions or [] if isinstance(action, dict)]
+        if new_actions and pending.get("kind") == "trigger_targets":
+            # A trigger of this event is waiting for its targets (Borombo): the
+            # other simultaneous triggers join its batch instead of replacing
+            # the choice, and are confirmed once the targets are chosen.
+            batch = pending.get("_optionalStackBatch")
+            if not isinstance(batch, dict):
+                batch = pending["_optionalStackBatch"] = {
+                    "actions": [], "nextIndex": 0, "acceptedActions": [],
+                    "priorityPlayerId": priority_player_id,
+                }
+            batch["actions"] = [*(batch.get("actions") or []), *new_actions]
+            return False
         return self._continue_rules_optional_stack_choices(
             actions, priority_player_id=priority_player_id
         )
@@ -11506,6 +11576,9 @@ class Session:
                 })
             return {
                 "kind": result.get("kind"), "status": "done",
+                # the targeted player is the one whose deck was discarded
+                "playerId": discarded_player,
+                "count": len(discarded), "cardIds": list(discarded),
                 "discarded": discarded, "manifestations": manifestations,
                 "effects": len(effects),
             }
