@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261015-rules-beta-137-1-2";
+const STATIC_ASSET_VERSION = "20261017-rules-beta-137-1-2-uib1";
 {
   const versionEl = document.getElementById("appVersion");
   const versionMatch = STATIC_ASSET_VERSION.match(/beta-(\d+)/);
@@ -9901,6 +9901,14 @@ function stackOffsetFrom(anchorEl, clientX, clientY) {
   };
 }
 
+function boardDropLogical(fieldEl, clientX, clientY, ctx = null) {
+  // UI beta: the drop picks a slot in the zone under the pointer (or the
+  // card's natural zone) instead of a raw board position
+  if (window.uiBeta?.active()) return window.uiBeta.dropLogical(clientX, clientY, ctx);
+  const rect = fieldEl.getBoundingClientRect();
+  return rotateForSeat((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
+}
+
 function resolveDrop(ctx, clientX, clientY) {
   const el = document.elementFromPoint(clientX, clientY);
   if (!el) return;
@@ -9943,8 +9951,7 @@ function resolveDrop(ctx, clientX, clientY) {
         markLocalBoardMove(ctx.itemId);
         send({ type: "move_battlefield_item", itemId: ctx.itemId, stackOnId: anchor.anchorId, offsetX: offset.x, offsetY: offset.y });
       } else {
-        const rect = fieldEl.getBoundingClientRect();
-        const logical = rotateForSeat((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
+        const logical = boardDropLogical(fieldEl, clientX, clientY, ctx);
         // an explicit unstack, not just an absent stackOnId: dropping in open
         // space is the "detach" gesture, unlike e.g. exhaust which also omits
         // stackOnId but must NOT detach a stacked card as a side effect
@@ -9977,12 +9984,7 @@ function resolveDrop(ctx, clientX, clientY) {
       showToast(t("rulesChainDropInstruction"), true);
       return;
     }
-    const rect = fieldEl.getBoundingClientRect();
-    const logical = rotateForSeat(
-      (clientX - rect.left - panX) / zoomLevel - 75,
-      (clientY - rect.top - panY) / zoomLevel - 105,
-      PILE_W, PILE_H,
-    );
+    const logical = boardDropLogical(fieldEl, clientX, clientY, ctx);
     send({
       type: "resolve_rules_choice",
       choiceId: choice.id,
@@ -10006,8 +10008,7 @@ function resolveDrop(ctx, clientX, clientY) {
     else if (cardDestinationAllowed(cardOwnerId, myPlayerId, "hand")) send({ type: "move_card", fromOwnerId: ctx.fromOwnerId, fromZone: ctx.fromZone, toOwnerId: myPlayerId, toZone: "hand", cardId: ctx.cardId });
     else showToast(t("invalidCardDestination"), true);
   } else if (fieldEl) {
-    const rect = fieldEl.getBoundingClientRect();
-    const logical = rotateForSeat((clientX - rect.left - panX) / zoomLevel - 75, (clientY - rect.top - panY) / zoomLevel - 105, PILE_W, PILE_H);
+    const logical = boardDropLogical(fieldEl, clientX, clientY, ctx);
     const anchor = stackAnchorAt(clientX, clientY, null);
     const card = cardsById.get(ctx.cardId);
     if (latestState?.rulesEngine?.enabled && ctx.fromZone === "attached" && ctx.ghostHostId) {
@@ -11229,9 +11230,11 @@ function animateBoardCard(el, item, pos) {
   if (!previous) return;
   const localMove = recentLocalBoardMoves.get(item.id);
   if (localMove && performance.now() - localMove < 1500) return;
-  const dx = previous.x - pos.x;
-  const dy = previous.y - pos.y;
-  if (Math.hypot(dx, dy) > 3) {
+  // a UI beta card is scaled: its own translate runs in scaled units
+  const scale = Number.parseFloat(el.style.scale) || 1;
+  const dx = (previous.x - pos.x) / scale;
+  const dy = (previous.y - pos.y) / scale;
+  if (Math.hypot(dx, dy) * scale > 3) {
     el.animate([
       { transform: `translate(${dx}px,${dy}px)` },
       { transform: "translate(0,0)" },
@@ -11404,13 +11407,17 @@ function renderBattlefield() {
   const bf = $("#battlefield");
   bf.querySelectorAll(".bf-card, .bf-token").forEach((el) => el.remove());
   const boardLayout = new Map();
+  // UI beta places cards by zone (see ui-beta.js); null on the classic table
+  const betaPlacement = window.uiBeta?.active() ? window.uiBeta.placement() : null;
 
   latestState.battlefield.forEach((item) => {
     const el = document.createElement("div");
     el.className = `bf-card${item.isCopy ? " is-copy" : ""}${item.fieldZone ? ` field-zone-${item.fieldZone}` : ""}${Math.round(Number(item.rotation || 0)) % 180 ? " is-exhausted" : ""}`;
     el.dataset.itemId = item.id;
     if (item.fieldZone) el.dataset.fieldZone = item.fieldZone;
-    const pos = stackedScreenPos(item) || rotateForSeat(item.x, item.y, PILE_W, PILE_H);
+    const betaBox = betaPlacement?.get(item.id) || null;
+    const pos = betaBox || stackedScreenPos(item) || rotateForSeat(item.x, item.y, PILE_W, PILE_H);
+    if (betaBox) el.style.scale = betaBox.k.toFixed(4);
     el.style.left = pos.x + "px";
     el.style.top = pos.y + "px";
     const previousLayout = lastBoardLayout?.get(item.id) || null;
@@ -11582,6 +11589,7 @@ function renderBattlefield() {
       const canSeeName = item.faceUp || canPeek;
       showCardLabels(el, canSeeName ? cardName(item.cardId) : null, (latestState.players[item.ownerId] || {}).name || "");
     });
+    if (betaBox) window.uiBeta.decorateCard(el, item, betaBox);
     bf.appendChild(el);
     if (item.faceUp) playBoardStatChanges(el, item, previousLayout);
     if (flippedUp && !item.isTokenCard) playCardFlipReveal(el, item);
