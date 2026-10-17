@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261017-rules-beta-138-3";
+const STATIC_ASSET_VERSION = "20261017-rules-beta-138-4";
 {
   const versionEl = document.getElementById("appVersion");
   // "...-beta-138-1" reads "beta 138.1" (a release without a fix number reads "138.0")
@@ -6623,7 +6623,8 @@ function confrontationPowerOf(playerId) {
     if (!item.faceUp || item.fieldZone !== "confrontation") return total;
     if ((item.controllerId || item.ownerId) !== playerId) return total;
     if (cardsById.get(item.cardId)?.type !== "manifestation" && !item.isTokenCard) return total;
-    const power = Number(item.effectivePower ?? cardsById.get(item.cardId)?.power ?? item.power);
+    // the server's own count when it sends one (never below 0, ignored Power = 0)
+    const power = Number(item.confrontationPower ?? Math.max(0, Number(item.effectivePower ?? cardsById.get(item.cardId)?.power ?? item.power)));
     return total + (Number.isFinite(power) ? power : 0);
   }, 0);
 }
@@ -8974,7 +8975,17 @@ function renderRulesChoiceScreen() {
     const params = { card: cardName(choice.sourceCardId), target: cardName(choice.relatedCardId) };
     $("#rulesChoiceHeading").textContent = t(choice.headingKey);
     $("#rulesChoiceText").textContent = rulesText(choice.textKey, params);
-    options.innerHTML = `
+    if (choice.purpose === "amphora_pick") {
+      // two face-down manifestations: the picked back enters Support, the other goes to Limbo
+      options.innerHTML = `
+        <div class="rules-amphora-pick">
+          ${[["yes", choice.yesKey], ["no", choice.noKey]].map(([option, key]) => `
+            <button type="button" class="rules-amphora-back" data-rules-binary-option="${option}" title="${esc(rulesText(key, params))}">
+              <img src="card-back.webp?v=20260905-1" alt="${esc(rulesText(key, params))}" draggable="false">
+              <span>${esc(t("rulesAmphoraPick"))}</span>
+            </button>`).join("")}
+        </div>`;
+    } else options.innerHTML = `
       <button type="button" class="rules-choice-destination" data-rules-binary-option="yes">
         <strong>${esc(rulesText(choice.yesKey, params))}</strong>
       </button>
@@ -8983,7 +8994,8 @@ function renderRulesChoiceScreen() {
       </button>`;
     $$("[data-rules-binary-option]").forEach((button) => {
       button.onclick = () => {
-        button.disabled = true;
+        $$("[data-rules-binary-option]").forEach((other) => { other.disabled = true; });
+        button.classList.add("is-picked");
         send({ type: "resolve_rules_choice", choiceId: choice.id, option: button.dataset.rulesBinaryOption });
       };
     });
@@ -9781,6 +9793,15 @@ function requestCardPlacement(payload, source = null) {
     return;
   }
   if (ability.targets?.kind !== "player") {
+    // no legal target for the entry effect: the card is still played, the effect just has nothing to do
+    const draft = buildRulesActionDraft(placementSource, ability);
+    const legal = (draft?.structuredTargets || []).filter((target) => (
+      !ability.targets?.excludeEventSource || !placementSource?.itemId || target.id !== placementSource.itemId
+    ));
+    if (!legal.length && !Array.isArray(ability.targets?.groups)) {
+      sendCardPlacement(payload, placementSource);
+      return;
+    }
     beginRulesBoardPlacementTarget(payload, placementSource);
     return;
   }

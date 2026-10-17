@@ -15510,3 +15510,31 @@ class LotTwentySevenTests(RealCardRulesCase):
             event_item_id="ft", event_zone="confrontation",
         )
         self.assertTrue(error)
+
+
+class FlowerTenderWithoutTargetTests(RealCardRulesCase):
+    FLOWER = "6xfwhr4h38wvm4u_en"
+    ALL = (FLOWER,)
+
+    def test_flower_tender_enters_as_support_when_nothing_small_enough_to_target(self):
+        session, p1, _p2 = self.make_session()
+        session.rules_engine["firstManifestationComplete"] = True
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        p1["zones"]["hand"] = [self.FLOWER]
+        session.battlefield = [self.field_item("big", "p2", "m-3", field_zone="confrontation")]
+        session.card_rules["m-3"]["power"] = 5
+        error, _action = session.declare_rules_action(
+            "p1", "Flower", kind="play_card",
+            source={"cardId": self.FLOWER, "zone": "hand"},
+            as_support=True, targets=[], placement={"x": 0, "y": 0},
+        )
+        self.assertIsNone(error)
+        for _ in range(6):
+            if not session.rules_engine["actionStack"] or session.rules_engine.get("pendingChoice"):
+                break
+            session.pass_rules_priority(session.rules_engine["priorityPlayerId"])
+        self.assertIsNone(session.rules_engine.get("pendingChoice"))
+        self.assertEqual(session.rules_engine["actionStack"], [])
+        flower = next(item for item in session.battlefield if item["cardId"] == self.FLOWER)
+        self.assertTrue(flower.get("isSupport"))

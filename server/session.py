@@ -7547,7 +7547,9 @@ class Session:
             if target_validation_error and not needs_target_choice:
                 continue
             if needs_target_choice and event in RULES_ENTRY_EVENTS and self.rules_trigger_has_no_legal_target(
-                target_rules, controller_id, event_item_id
+                # a card's own entry: it is the event source (Flower Tender
+                # cannot target itself)
+                target_rules, controller_id, event_item_id or item_id
             ):
                 continue
             if clean_targets:
@@ -18207,6 +18209,10 @@ class Session:
                 characteristics = self.rules_manifestation_characteristics(item)
                 entry["effectivePower"] = characteristics["power"]
                 entry["effectiveTemperament"] = characteristics["temperament"]
+                if self.rules_field_zone(item) == "confrontation":
+                    # what this card really adds to the total compared at the Resolution
+                    # (never below 0, ignored Power and Spite thresholds count as 0)
+                    entry["confrontationPower"] = self.rules_confrontation_power(item)
             if item.get("stackedOn"):
                 entry["stackedOn"] = item["stackedOn"]
                 entry["stackOffsetX"] = item["stackOffsetX"]

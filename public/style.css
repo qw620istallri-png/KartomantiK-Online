@@ -3725,3 +3725,15 @@ body.flow-uses-hand .rules-board-flow.is-centered .rules-floating-card { top: 36
 #deckBrowserCloseBtn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 20px !important; font-size: 16px !important; font-weight: 800; color: #1c1608 !important; background: #e7c35f !important; border: 2px solid #fff0bd !important; border-radius: 999px !important; box-shadow: 0 6px 18px #0009, 0 0 18px #e7c35f55; }
 #deckBrowserCloseBtn::before { content: "\2715"; font-size: 15px; }
 #deckBrowserCloseBtn:hover { background: #ffd978 !important; color: #000 !important; }
+
+/* Juggling Amphora: two face-down cards to pick from */
+.rules-amphora-pick { display: flex; justify-content: center; gap: 28px; flex-wrap: wrap; padding: 6px 0 2px; }
+.rules-amphora-back, .rules-amphora-back:hover, .rules-amphora-back:disabled { box-shadow: none; }
+.rules-amphora-back { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; }
+.rules-amphora-back img { width: 140px; aspect-ratio: 5 / 7; object-fit: cover; border-radius: 9px; box-shadow: 0 10px 22px #000a; transition: transform .16s ease, box-shadow .16s ease; pointer-events: none; }
+.rules-amphora-back span { font-weight: 700; font-size: 13px; padding: 4px 10px; border-radius: 999px; background: #0006; border: 1px solid #d8b56a66; }
+.rules-amphora-back:hover:not(:disabled) img, .rules-amphora-back:focus-visible img { transform: translateY(-6px) scale(1.04); box-shadow: 0 0 0 3px #e7c46e, 0 16px 28px #000c; }
+.rules-amphora-back:disabled { cursor: default; }
+.rules-amphora-back:disabled:not(.is-picked) img { opacity: .45; }
+.rules-amphora-back.is-picked img { box-shadow: 0 0 0 3px #e7c46e, 0 16px 28px #000c; }
+@media (max-width: 600px) { .rules-amphora-pick { gap: 16px; } .rules-amphora-back img { width: 104px; } }
