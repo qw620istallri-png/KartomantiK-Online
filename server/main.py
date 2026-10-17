@@ -936,7 +936,7 @@ async def handle_message(ws, info, data):
     ):
         recovery_mulligan_messages = {
             "mulligan", "set_activity", "chat_message", "leave_session", "request_log",
-            "reset_board",
+            "reset_board", "set_rules_pass_all", "set_rules_auto_skip",
         }
         if msg_type not in recovery_mulligan_messages:
             return await send_error(ws, "Complete the required Recovery Mulligan before playing.")
@@ -947,9 +947,12 @@ async def handle_message(ws, info, data):
         and session.rules_engine["enabled"]
         and session.rules_engine.get("pendingChoice")
     ):
+        # options that only change how the engine passes for a player (turning
+        # "pass everything" off, auto-skip) stay open while anyone decides
         pending_choice_messages = {
             "resolve_rules_choice", "set_activity", "chat_message",
             "leave_session", "request_log", "reset_board",
+            "set_rules_pass_all", "set_rules_auto_skip",
         }
         if msg_type not in pending_choice_messages:
             return await send_error(ws, "Complete the required card choice before playing.")

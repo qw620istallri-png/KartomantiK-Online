@@ -3786,6 +3786,24 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertNotIn(own_stale, session.battlefield)
         self.assertEqual(sorted(p1["zones"]["deck"][-2:]), ["m-0", "m-3"])
 
+    def test_zero_against_zero_has_no_winner_even_with_a_dominating_temperament(self):
+        session, _p1, _p2 = self.make_session()
+        session.phase_tracker["index"] = session.phase_sequence().index("resolution_compare")
+        session.card_rules["m-0"].update(power=0, temperaments=["transcendent"])
+        session.card_rules["m-1"].update(power=0, temperaments=["hollow"])
+        session.battlefield = [
+            {"id": "a", "ownerId": "p1", "cardId": "m-0", "faceUp": True, "fieldZone": "confrontation", "confrontationOrder": 1, "counters": {}},
+            {"id": "b", "ownerId": "p2", "cardId": "m-1", "faceUp": True, "fieldZone": "confrontation", "confrontationOrder": 2, "counters": {}},
+        ]
+        result = session.prepare_rules_confrontation_result()
+        self.assertEqual(result["totals"], {"p1": 0, "p2": 0})
+        self.assertIsNone(result["winnerId"])
+        self.assertTrue(result["stalemate"])
+
+    def test_an_empty_side_never_wins_by_temperament(self):
+        self.assertIsNone(Session.rules_temperament_winner(None, "hollow"))
+        self.assertIsNone(Session.rules_temperament_winner("transcendent", None))
+
     def test_wandering_veteran_winning_as_support_is_exiled_without_destination_choice(self):
         session, p1, _p2 = self.make_session()
         session.card_rules["veteran"] = {
@@ -14294,6 +14312,23 @@ class AtavicDoesNotCountItsOwnPlayTests(RealCardRulesCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class AnnihilatingNectarNeedsATargetTests(RealCardRulesCase):
+    NECTAR = "7gd19pmexrjlrap_en"
+    ALL = (NECTAR,)
+
+    def test_nectar_is_not_an_available_play_without_a_manifestation_to_target(self):
+        session, p1, _p2 = self.make_session()
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        for card_id in ("m-1", "m-2", "m-3"):
+            session.card_rules[card_id].update(power=3, temperaments=["capricious"])
+        p1["zones"]["hand"] = [self.NECTAR, "m-1", "m-2", "m-3"]
+        session.battlefield = []
+        self.assertFalse(session.rules_played_ability_has_field_target("p1", self.NECTAR))
+        session.battlefield = [self.field_item("foe", "p2", "m-4")]
+        self.assertTrue(session.rules_played_ability_has_field_target("p1", self.NECTAR))
 
 
 class LotTwentyThreeTests(RealCardRulesCase):

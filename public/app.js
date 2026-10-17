@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261017-rules-beta-138-2";
+const STATIC_ASSET_VERSION = "20261017-rules-beta-138-3";
 {
   const versionEl = document.getElementById("appVersion");
   // "...-beta-138-1" reads "beta 138.1" (a release without a fix number reads "138.0")
@@ -1067,7 +1067,7 @@ function currentPhaseLabel(tracker = latestState?.phaseTracker) {
 // Holding Enter for PASS_ALL_HOLD_MS fills the pass button and locks "pass
 // everything": the engine passes for me even with playable cards, until a
 // single Enter (or a click on the button) gives control back.
-const PASS_ALL_HOLD_MS = 5000;
+const PASS_ALL_HOLD_MS = 3000;
 let passAllHoldTimer = null;
 
 function rulesPassAllLocked() {
@@ -1388,7 +1388,7 @@ function renderRulesStack() {
         const awaitingPayment = rules.pendingChoice?.kind === "stack_counter_payment"
           && rules.pendingChoice.targetActionId === action.id;
         const resolvesOnPass = index === 0 && myPriority && resolutionArmed;
-        return `<li class="${awaitingPayment ? "rules-counter-payment-target " : ""}${resolvesOnPass ? "will-resolve" : ""}" data-stack-action-id="${esc(action.id)}" style="--stack-player-color:${esc(playerColor(action.controllerId))}" title="${esc(`${controller} — ${displayLabel}`)}">${sourceCard}<div class="rules-stack-copy"><div class="rules-stack-main"><span class="rules-stack-index">${index === 0 ? esc(t("rulesStackTop")) : `#${level}`}</span><strong>${esc(displayLabel)}</strong><small>${esc(controller)}</small></div>${resolvesOnPass ? `<span class="rules-stack-resolve-state">${esc(t("rulesStackResolveOnPass"))}</span>` : ""}${awaitingPayment ? `<span class="rules-stack-payment-state">${esc(t("rulesStackPaymentPending"))}</span>` : ""}${details ? `<div class="rules-stack-detail">${details}</div>` : ""}</div></li>`;
+        return `<li class="${awaitingPayment ? "rules-counter-payment-target " : ""}${resolvesOnPass ? "will-resolve" : ""}" data-stack-action-id="${esc(action.id)}" style="--stack-player-color:${esc(playerColor(action.controllerId))}" title="${esc(`${controller} — ${displayLabel}`)}">${sourceCard}<div class="rules-stack-copy"><div class="rules-stack-main"><span class="rules-stack-index">${index === 0 ? esc(t("rulesStackTop")) : `#${level}`}</span><strong>${esc(displayLabel)}</strong><small>${esc(controller)}</small></div>${awaitingPayment ? `<span class="rules-stack-payment-state">${esc(t("rulesStackPaymentPending"))}</span>` : ""}${details ? `<div class="rules-stack-detail">${details}</div>` : ""}</div>${resolvesOnPass ? `<span class="rules-stack-resolve-state">${esc(t("rulesStackResolveOnPass"))}</span>` : ""}</li>`;
       }).join("");
   $("#rulesStackList").innerHTML = responseSlot + stackActions;
   wireRulesStackCardRefs();
@@ -2878,7 +2878,9 @@ function playRulesVfxSpotlight(event) {
   const board = $("#battlefieldWrap")?.getBoundingClientRect?.();
   const area = board?.width ? board : { left: 0, top: 0, width: window.innerWidth, height: window.innerHeight };
   const avoid = [...(declaredTargets || []).map((target) => target.point), spotlightOrigin].filter(Boolean);
-  const candidates = [.22, .78].map((ratio) => ({ x: area.left + area.width * ratio, y: area.top + area.height * .44 }));
+  // beta table: the Interzones sit on the sides, the card always shows in the middle
+  const candidates = (window.uiBeta?.active() ? [.5] : [.22, .78])
+    .map((ratio) => ({ x: area.left + area.width * ratio, y: area.top + area.height * .44 }));
   const spotCenter = candidates
     .map((point) => ({ point, room: Math.min(Infinity, ...avoid.map((other) => Math.hypot(other.x - point.x, other.y - point.y))) }))
     .sort((a, b) => b.room - a.room)[0].point;
@@ -6871,6 +6873,18 @@ function dbCardHtml(ownerId, zone, cid) {
 // which only renders when this viewer canAct on that zone (see
 // zoneActionsHtml) — but stay defensive in case a zone is ever a count-only
 // view (e.g. this got called for someone else's private deck somehow).
+function searchPile(ownerId, zone) {
+  const panel = $("#deckBrowserPanel");
+  // fresh open, or switching to a DIFFERENT pile: clear any pending
+  // staged choices. Re-clicking Search on the pile already open keeps them.
+  if (panel.classList.contains("hidden") || panel.dataset.ownerId !== ownerId || panel.dataset.zone !== zone) {
+    pileBrowserStaged = new Map();
+  }
+  send({ type: "search_zone", ownerId, zone });
+  setMyActivity("search");
+  openPileBrowser(ownerId, zone);
+}
+
 function openPileBrowser(ownerId, zone) {
   const player = latestState.players[ownerId];
   const cards = player?.zones?.[zone]?.cards;
@@ -6967,7 +6981,18 @@ function wireCardHoverZoom(el, cloneClassName) {
   let clone = null;
   let removalObserver = null;
   const clearClone = () => {
-    if (clone) clone.remove();
+    if (clone && clone.classList.contains("ub-grow") && el.isConnected) {
+      // beta table: the card shrinks back into the hand before it shows again
+      const closing = clone;
+      closing.classList.remove("zoomed");
+      setTimeout(() => {
+        closing.remove();
+        if (!clone) el.classList.remove("ub-hover-src");
+      }, 170);
+    } else {
+      if (clone) clone.remove();
+      el.classList.remove("ub-hover-src");
+    }
     clone = null;
     if (removalObserver) removalObserver.disconnect();
     removalObserver = null;
@@ -7022,6 +7047,15 @@ function wireCardHoverZoom(el, cloneClassName) {
       // The zoom transform includes translateY(-10px); offset the base box so
       // the final card is clamped.
       clone.style.top = `${centerY - cloneHeight * scale / 2 + 10}px`;
+      if ($("#gameScreen")?.classList.contains("ui-beta")) {
+        // beta table: the hand card itself grows out of its place in the fan
+        const rotation = getComputedStyle(el).getPropertyValue("--hand-rotate").trim() || "0deg";
+        clone.style.setProperty("--hover-dx", `${rect.left + rect.width / 2 - centerX}px`);
+        clone.style.setProperty("--hover-dy", `${rect.top + rect.height / 2 - (centerY + 10)}px`);
+        clone.style.setProperty("--hover-rot", rotation);
+        clone.classList.add("ub-grow");
+        el.classList.add("ub-hover-src");
+      }
     }
     document.body.appendChild(clone);
     // State updates rebuild card containers with innerHTML. Removing a
@@ -7100,6 +7134,13 @@ function initPileBrowser() {
     pileBrowserStaged = new Map();
     setMyActivity(null);
   };
+  // a click on empty space (outside the cards and the controls) closes it too
+  $("#deckBrowserPanel").addEventListener("click", (event) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+    if (target.closest(".db-card, button, input, label, .deck-browser-slider-group, .ctx-menu, .context-menu")) return;
+    $("#deckBrowserCloseBtn").click();
+  });
   $("#deckBrowserValidateBtn").onclick = () => {
     const { ownerId, zone } = $("#deckBrowserPanel").dataset;
     for (const [cardId, entry] of pileBrowserStaged) {
@@ -7457,7 +7498,15 @@ function renderPiles() {
   });
   wireZoneButtons();
   $$("[data-pile-trigger]").forEach((el) => {
-    el.onclick = () => toggleZone(el.dataset.pileTrigger);
+    el.onclick = () => {
+      const [ownerId, zone] = el.dataset.pileTrigger.split(":");
+      // beta table: a click on a public pile opens its search at once (decks keep their menu)
+      if (window.uiBeta?.active() && zone !== "deck" && latestState?.players?.[ownerId]?.zones?.[zone]?.cards) {
+        searchPile(ownerId, zone);
+        return;
+      }
+      toggleZone(el.dataset.pileTrigger);
+    };
   });
   $$("[data-pile-top-card]").forEach((el) => {
     const pile = el.closest("[data-field-pile]");
@@ -7612,6 +7661,20 @@ function handCardHasHandAction(cardId) {
   });
 }
 
+// a Will whose played ability needs a target (Annihilating Nectar...) is not
+// playable while no legal target exists
+function rulesPlayedAbilityTargetsAvailableClient(cardId) {
+  const ability = (playedAbilitiesByCard.get(cardId) || [])[0];
+  const draft = ability ? buildRulesActionDraft({ cardId, zone: "hand" }, ability) : null;
+  if (!draft) return true;
+  if (Array.isArray(draft.targetRules?.groups)) {
+    return draft.targetRules.groups.every((_group, index) => (
+      draft.structuredTargets.some((target) => target.targetGroupIndex === index)
+    ));
+  }
+  return Number(draft.targetRules?.min || 0) <= draft.structuredTargets.length;
+}
+
 function handCardIsPlayable(cardId) {
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
@@ -7641,21 +7704,17 @@ function handCardIsPlayable(cardId) {
     const draft = ability ? buildRulesActionDraft({ cardId, zone: "hand" }, ability) : null;
     if (!draft) return true;
     if (!rulesAdditionalCostAvailableClient(draft)) return false;
-    if (Array.isArray(draft.targetRules?.groups)) {
-      return draft.targetRules.groups.every((_group, index) => (
-        draft.structuredTargets.some((target) => target.targetGroupIndex === index)
-      ));
-    }
-    return Number(draft.targetRules?.min || 0) <= draft.structuredTargets.length;
+    return rulesPlayedAbilityTargetsAvailableClient(cardId);
   }
   if (playType === "persistent_will") {
     if (
       ["confrontation_reaction", "resolution_effects"].includes(phaseId)
       && rulesPersistentWillsAsEphemeralClient()
-    ) return rulesCanAffordCard(cardId);
+    ) return rulesCanAffordCard(cardId) && rulesPlayedAbilityTargetsAvailableClient(cardId);
     const timingOk = phaseId === "end_actions"
       || (phaseId === "confrontation_before_revelation" && rulesBeforeRevelationPlayClient(card));
-    return timingOk && (!stackHasActions || phaseId === "end_actions") && rulesCanAffordCard(cardId);
+    return timingOk && (!stackHasActions || phaseId === "end_actions") && rulesCanAffordCard(cardId)
+      && rulesPlayedAbilityTargetsAvailableClient(cardId);
   }
   if (card.type === "manifestation" && rulesEndPhaseInterzonePlayClient(card)) {
     if (phaseId === "end_actions") return !stackHasActions && rulesInterzoneHasRoomClient();
@@ -9260,7 +9319,9 @@ function renderRulesChoiceScreen() {
     options.classList.add("has-order");
     $("#rulesChoiceHeading").textContent = t("rulesSimultaneousOrderHeading");
     $("#rulesChoiceText").textContent = t("rulesSimultaneousOrderText");
-    let ordered = [...(choice.actions || [])];
+    // shown in resolution order: the first card resolves first (top of the Pile);
+    // the server takes the list from the bottom of the Pile up
+    let ordered = [...(choice.actions || [])].reverse();
     const paintOrder = () => {
       options.innerHTML = `
         <div class="rules-drag-order">
@@ -9274,8 +9335,8 @@ function renderRulesChoiceScreen() {
         <button type="button" class="primary" id="rulesSimultaneousOrderConfirm">${esc(t("confirm"))}</button>`;
       wireDragOrderRow(options.querySelector(".rules-drag-order"), (keys) => {
         const moved = keys.map((key) => ordered.find((action) => action.actionId === key)).filter(Boolean);
-        // immediate actions always stay above the others on the Pile
-        ordered = [...moved.filter((action) => !action.immediate), ...moved.filter((action) => action.immediate)];
+        // immediate actions always stay above the others on the Pile: they resolve first
+        ordered = [...moved.filter((action) => action.immediate), ...moved.filter((action) => !action.immediate)];
         paintOrder();
       });
       $("#rulesSimultaneousOrderConfirm").onclick = (event) => {
@@ -9283,7 +9344,7 @@ function renderRulesChoiceScreen() {
         send({
           type: "resolve_rules_choice",
           choiceId: choice.id,
-          cardIds: ordered.map((action) => action.actionId),
+          cardIds: ordered.map((action) => action.actionId).reverse(),
         });
       };
     };
@@ -9648,8 +9709,10 @@ function renderRulesChoiceScreen() {
     panel.classList.add("cards-screen", "hand-drop");
     closeButton.classList.add("hidden");
     const limit = Number(choice.count || 1);
+    const picked = rulesHandDropSelected(choice).length;
+    // an exact count sends itself once complete: until then Confirm shows the progress, disabled
     options.innerHTML = limit > 1 || choice.upTo
-      ? `<button type="button" class="primary" id="rulesDiscardConfirm">${esc(choice.upTo && !rulesHandDropSelected(choice).length ? t("passPhase") : t("confirm"))}</button>`
+      ? `<button type="button" class="primary" id="rulesDiscardConfirm"${!choice.upTo && picked < limit ? " disabled" : ""}>${esc(choice.upTo && !picked ? t("passPhase") : t("confirm"))}${!choice.upTo ? ` (${picked}/${limit})` : ""}</button>`
       : "";
     if ($("#rulesDiscardConfirm")) $("#rulesDiscardConfirm").onclick = (event) => {
       event.currentTarget.disabled = true;
@@ -9794,15 +9857,7 @@ function wireZoneButtons() {
     btn.onclick = (e) => {
       e.stopPropagation();
       const [ownerId, zone] = btn.dataset.openPileBrowser.split(":");
-      const panel = $("#deckBrowserPanel");
-      // fresh open, or switching to a DIFFERENT pile: clear any pending
-      // staged choices. Re-clicking Search on the pile already open keeps them.
-      if (panel.classList.contains("hidden") || panel.dataset.ownerId !== ownerId || panel.dataset.zone !== zone) {
-        pileBrowserStaged = new Map();
-      }
-      send({ type: "search_zone", ownerId, zone });
-      setMyActivity("search");
-      openPileBrowser(ownerId, zone);
+      searchPile(ownerId, zone);
     };
   });
   // scoped to the small inline pile lists — the deck/pile BROWSER modal wires
@@ -11926,7 +11981,28 @@ function initGameControls() {
   $("#phaseAdvancedBtn").onclick = () => {
     if (!isObserver && mySeat() === 0) send({ type: "configure_phases", advanced: !latestState?.phaseTracker?.advanced });
   };
+  // holding the button (mouse or touch) locks "pass everything", like a held Enter
+  let passPointerHold = false;
+  let passPointerHoldFired = false;
+  $("#passPriorityBtn").addEventListener("pointerdown", (event) => {
+    passPointerHoldFired = false;
+    if (event.button !== 0 || rulesPassAllLocked()) return;
+    startPassAllHold();
+    passPointerHold = Boolean(passAllHoldTimer);
+  });
+  const endPassPointerHold = () => {
+    if (!passPointerHold) return;
+    passPointerHold = false;
+    if (passAllHoldTimer) cancelPassAllHold();
+    else passPointerHoldFired = true;
+  };
+  ["pointerup", "pointercancel", "pointerleave"].forEach((type) => $("#passPriorityBtn").addEventListener(type, endPassPointerHold));
   $("#passPriorityBtn").onclick = () => {
+    if (passPointerHoldFired) {
+      // the click that ends a completed hold is not a pass
+      passPointerHoldFired = false;
+      return;
+    }
     if (rulesPassAllLocked()) setRulesPassAll(false);
     else toggleMyPhasePass();
   };
@@ -12797,7 +12873,7 @@ async function boot() {
         if (!event.repeat) setRulesPassAll(false);
         return;
       }
-      // a held Enter (5 s) locks "pass everything"
+      // a held Enter (3 s) locks "pass everything"
       if (!event.repeat) startPassAllHold();
       if (passButton.disabled || passButton.offsetParent === null) return;
       event.preventDefault();

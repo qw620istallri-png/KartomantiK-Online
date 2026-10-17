@@ -83,6 +83,30 @@ class AutoPassTests(unittest.TestCase):
         self.assertNotEqual(session.current_phase_id(), "end_actions")
         self.assertIn("set_rules_pass_all", server_main.AUTO_PASS_MESSAGE_TYPES)
 
+    def test_pass_all_can_be_released_while_the_opponent_is_deciding(self):
+        session, _p1, _p2 = self.make_session()
+        self.goto(session, "end_actions", priority="p2")
+        session.status = "active"
+        session.set_rules_pass_all("p1", True)
+        session.rules_engine["pendingChoice"] = {"id": "c", "kind": "binary_choice", "playerId": "p2"}
+        sent = []
+        original_send_error, original_broadcast = server_main.send_error, server_main.broadcast_state
+
+        async def fake_error(_ws, message, code=None):
+            sent.append(message)
+
+        async def fake_broadcast(_session):
+            return None
+
+        server_main.send_error, server_main.broadcast_state = fake_error, fake_broadcast
+        try:
+            info = {"session": session, "playerId": "p1", "role": "player"}
+            asyncio.run(server_main.handle_message(None, info, {"type": "set_rules_pass_all", "enabled": False}))
+        finally:
+            server_main.send_error, server_main.broadcast_state = original_send_error, original_broadcast
+        self.assertEqual(sent, [])
+        self.assertEqual(session.rules_engine["passAllPlayerIds"], [])
+
     def test_a_will_that_cannot_be_paid_does_not_keep_the_player_in_control(self):
         session, p1, p2 = self.make_session()
         p1["zones"]["hand"] = ["will-ephemeral"]

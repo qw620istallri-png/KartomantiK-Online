@@ -469,13 +469,27 @@
     const wills = groups[side].will.length;
     const used = groups[side].interzone.length;
     const capacity = Math.max(player ? interzoneCapacity(player.id) : 3, used);
-    const izShare = wills ? 0.64 : 0.82;
+    // share the height so both zones keep cards as large as possible: the Wills
+    // stay in one column (and the Interzone shrinks) before either doubles up
+    const izOpts = { maxW: Math.min(inner * 0.9, 170), gap: 8, maxCols: 2 };
+    const pzOpts = { maxW: Math.min(inner * 0.9, 150), gap: 8, maxCols: 2 };
+    let izShare = 0.82;
+    if (wills) {
+      let bestScore = -1;
+      for (let share = 0.3; share <= 0.821; share += 0.01) {
+        const a = fit(inner, Math.max(80, available * share), capacity, izOpts);
+        const b = fit(inner, Math.max(40, available * (1 - share)), wills, pzOpts);
+        // the smaller of the two decides; ties keep the larger Interzone
+        const score = Math.min(a.w, b.w) * 1000 + a.w;
+        if (score > bestScore) { bestScore = score; izShare = share; }
+      }
+    }
     const izH = Math.max(80, available * izShare);
     const pzH = Math.max(40, available - izH);
     const izTop = top + labelH;
     const pzTop = izTop + izH + 18 + labelH;
-    const izFit = fit(inner, izH, capacity, { maxW: Math.min(inner * 0.9, 170), gap: 8, maxCols: 2 });
-    const pzFit = fit(inner, pzH, Math.max(wills, 1), { maxW: Math.min(inner * 0.9, 150), gap: 8, maxCols: 2 });
+    const izFit = fit(inner, izH, capacity, izOpts);
+    const pzFit = fit(inner, pzH, Math.max(wills, 1), pzOpts);
     return {
       column, capacity, used, wills,
       iz: { t: izTop, h: izH, fit: izFit, labelY: top },
@@ -844,7 +858,15 @@
       renderChrome();
     };
     document.getElementById("ubStaleStrip").onclick = openStalemate;
-    // the board layer sits above the strip: route clicks that land on it
+    // the board layer sits above the strip: route hovers and clicks that land on it
+    document.getElementById("battlefield").addEventListener("mousemove", (event) => {
+      const strip = document.getElementById("ubStaleStrip");
+      if (!active() || strip.classList.contains("hidden")) return;
+      const r = strip.getBoundingClientRect();
+      const over = event.clientX >= r.left && event.clientX <= r.right && event.clientY >= r.top && event.clientY <= r.bottom;
+      strip.classList.toggle("is-hover", over);
+      document.getElementById("battlefield").style.cursor = over ? "zoom-in" : "";
+    });
     document.getElementById("battlefield").addEventListener("click", (event) => {
       if (!active() || local.staleOpen || event.button !== 0) return;
       const strip = document.getElementById("ubStaleStrip");
@@ -1067,6 +1089,7 @@
     const a = confrontationPowerOf(me.id);
     const b = confrontationPowerOf(opp.id);
     if (a !== b) return a > b ? "me" : "opp";
+    if (a <= 0) return "tie";
     const ta = activeTemperamentKey(me.id);
     const tb = activeTemperamentKey(opp.id);
     if (!ta || !tb || ta === tb) return "tie";
@@ -1138,16 +1161,25 @@
     const duel = players.me && players.opp && sideHasConfrontation(players.me.id) && sideHasConfrontation(players.opp.id)
       && confrontationPowerOf(players.me.id) === confrontationPowerOf(players.opp.id);
     let body = `<circle r="${R}" class="ub-wheel-ring"/>`;
-    RING.forEach((_key, index) => {
+    // every domination as a small arrow (dominant -> dominated)
+    const arrow = (x1, y1, x2, y2, cls, start = 10, end = 11) => {
+      const length = Math.hypot(x2 - x1, y2 - y1) || 1;
+      const ux = (x2 - x1) / length;
+      const uy = (y2 - y1) / length;
+      return `<line class="${cls}" x1="${(x1 + ux * start).toFixed(2)}" y1="${(y1 + uy * start).toFixed(2)}" x2="${(x2 - ux * end).toFixed(2)}" y2="${(y2 - uy * end).toFixed(2)}" marker-end="url(#ubArrowDim)"/>`;
+    };
+    RING.forEach((key, index) => {
       const [x1, y1] = pos(index);
-      const [x2, y2] = pos((index + 2) % 5);
-      body += `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" class="ub-wheel-line"/>`;
+      DOMINATES[key].forEach((target) => {
+        const [x2, y2] = pos(RING.indexOf(target));
+        body += arrow(x1, y1, x2, y2, "ub-wheel-dom");
+      });
     });
     // Transcendent sits a little further from the circle than Hollow, whose
     // icon reads lower on its own
     const transY = -(R + 21);
     const hollowY = R + 17;
-    body += `<line x1="0" y1="${transY + 8}" x2="0" y2="${-R - 2}" class="ub-wheel-line"/><line x1="0" y1="${R + 2}" x2="0" y2="${hollowY - 8}" class="ub-wheel-line"/>`;
+    body += arrow(0, transY, 0, -R, "ub-wheel-dom", 8, 10) + arrow(0, R, 0, hollowY, "ub-wheel-dom", 10, 8);
     const ia = RING.indexOf(ta);
     const ib = RING.indexOf(tb);
     if (ia >= 0 && ib >= 0 && ia !== ib && (DOMINATES[ta].includes(tb) || DOMINATES[tb].includes(ta))) {
@@ -1168,7 +1200,7 @@
       body += node(key, x, y, 17);
     });
     body += node("transcendent", 0, transY, 14) + node("hollow", 0, hollowY, 14);
-    svg.innerHTML = `<defs><marker id="ubArrowHead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>${body}`;
+    svg.innerHTML = `<defs><marker id="ubArrowDim" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker><marker id="ubArrowHead" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z"/></marker></defs>${body}`;
     svg.classList.toggle("duel", Boolean(duel));
     svg.classList.toggle("has-arrow", body.includes("ub-wheel-arrow"));
     svg.style.setProperty("--me", players.me ? playerColor(players.me.id) : "#3fc9a8");
@@ -1305,9 +1337,9 @@
       const handChip = side === "opp"
         ? `<button type="button" class="ub-chip" data-ub-view-hand="${esc(player.id)}" title="${esc(`${t("viewHand")} (${handCount})`)}"><span class="hand-stack-icon" style="--owner-color:${esc(playerColor(player.id))}"><span class="hand-stack-card"></span><span class="hand-stack-card"></span><span class="hand-stack-card"></span></span>${handCount}</button>`
         : `<span class="ub-chip" title="${esc(`${handCount} ${t("ubHandCards")}`)}"><span class="hand-stack-icon" style="--owner-color:${esc(playerColor(player.id))}"><span class="hand-stack-card"></span><span class="hand-stack-card"></span><span class="hand-stack-card"></span></span>${handCount}</span>`;
-      const eye = side === "opp" && !isObserver
-        ? `<button type="button" class="ub-iconbtn" data-ub-toggle-opp-hand aria-pressed="${opponentHandHiddenByUser}" title="${esc(t(opponentHandHiddenByUser ? "showOpponentHand" : "hideOpponentHand"))}">${eyeCardIconSvg(!opponentHandHiddenByUser)}</button>`
-        : "";
+      // no "hide the opponent's hand" eye here: the beta table always shows the fan,
+      // and the button made the opponent's box taller than mine
+      const eye = "";
       const passBadge = passed.has(player.id) && latestState.phaseTracker?.enabled ? `<span class="ub-passed" title="${esc(t("phasePassed"))}">✓</span>` : "";
       const activity = player.activity ? `<span class="ub-activity">${esc(t("activity_" + player.activity))}</span>` : "";
       node.innerHTML = `<span class="ub-dot" title="${esc(priorityId === player.id ? t("ubPriority") : "")}"></span><span class="ub-name" title="${esc(player.name)}">${esc(player.name)}</span>${passBadge}${activity}${handChip}${eye}`;
@@ -2195,9 +2227,44 @@
     window[name] = make(original);
   }
 
+  // cards drawn (hand up, deck down by as many): a "+N" over that player's hand
+  function showDrawDeltas() {
+    const counts = local.handDeckCounts || (local.handDeckCounts = new Map());
+    const inGame = !document.getElementById("gameScreen")?.classList.contains("hidden");
+    for (const player of Object.values(latestState?.players || {})) {
+      const now = { hand: pileCount(player, "hand"), deck: pileCount(player, "deck") };
+      const before = counts.get(player.id);
+      counts.set(player.id, now);
+      if (!before || !inGame) continue;
+      const drawn = Math.min(now.hand - before.hand, before.deck - now.deck);
+      if (drawn > 0) popDrawDelta(player.id, drawn);
+    }
+  }
+
+  function popDrawDelta(playerId, drawn) {
+    const mine = playerId === myPlayerId && !isObserver;
+    const anchor = mine
+      ? document.getElementById("myHandTray")
+      : document.getElementById("opponentHandFan");
+    const rect = anchor?.getBoundingClientRect();
+    if (!rect || !rect.width) return;
+    const pop = document.createElement("div");
+    pop.className = `ub-draw-pop ${mine ? "me" : "opp"}`;
+    pop.style.setProperty("--pc", playerColor(playerId));
+    pop.textContent = `+${drawn}`;
+    pop.setAttribute("aria-hidden", "true");
+    // mine sits above the hand, the opponent's beside their fan (the totals are under it)
+    pop.style.left = mine ? `${rect.left + rect.width / 2}px` : `${rect.right + 46}px`;
+    pop.style.top = mine ? `${Math.max(60, rect.top - 30)}px` : `${Math.max(30, rect.top + rect.height / 2)}px`;
+    document.body.appendChild(pop);
+    setTimeout(() => pop.remove(), 1900);
+  }
+
   wrap("renderAll", (original) => function uiBetaRenderAll(...args) {
     const result = original.apply(this, args);
     if (active()) renderChrome();
+    if (active()) showDrawDeltas();
+    else if (local.handDeckCounts) local.handDeckCounts.clear();
     // a new game asks again for full screen on phones (see goImmersive)
     const inGame = !document.getElementById("gameScreen")?.classList.contains("hidden");
     if (inGame && !local.inGame && !document.fullscreenElement) local.immersiveTried = false;

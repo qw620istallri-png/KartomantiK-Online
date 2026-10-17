@@ -3719,3 +3719,9 @@ body.flow-uses-hand .rules-board-flow.is-centered .rules-floating-card { top: 36
 .rules-reorder-hint { margin: 8px 0 0; font-size: 15px; color: #f3dc95; text-align: center; text-shadow: 0 2px 6px #000; }
 /* an exhausted (turned) card is 60px shorter on screen: its counters (Shymon -2...) follow its edge instead of floating under it */
 .bf-card.is-exhausted .counters { bottom: 14px; }
+/* the "your pass resolves this" badge spans the whole Stack entry */
+.rules-stack-list li > .rules-stack-resolve-state { grid-column: 1 / -1; justify-content: center; text-align: center; margin-top: 0; }
+/* pile search: a close button that reads as one */
+#deckBrowserCloseBtn { display: inline-flex; align-items: center; gap: 8px; padding: 9px 20px !important; font-size: 16px !important; font-weight: 800; color: #1c1608 !important; background: #e7c35f !important; border: 2px solid #fff0bd !important; border-radius: 999px !important; box-shadow: 0 6px 18px #0009, 0 0 18px #e7c35f55; }
+#deckBrowserCloseBtn::before { content: "\2715"; font-size: 15px; }
+#deckBrowserCloseBtn:hover { background: #ffd978 !important; color: #000 !important; }

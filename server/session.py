@@ -5719,7 +5719,7 @@ class Session:
 
     @staticmethod
     def rules_temperament_winner(first, second):
-        if first == second or (not first and not second):
+        if first == second or not first or not second:
             return None
         if first == "transcendent" or second == "hollow":
             return 0
@@ -5979,6 +5979,9 @@ class Session:
             if totals[first_id] != totals[second_id]:
                 winner_id = first_id if totals[first_id] > totals[second_id] else second_id
                 reason = "power"
+            elif totals[first_id] <= 0:
+                # 0 against 0: nobody wins, Temperaments do not decide it
+                pass
             else:
                 temperament_winner = self.rules_temperament_winner(
                     last_temperaments[first_id], last_temperaments[second_id]
@@ -6611,6 +6614,23 @@ class Session:
             for card_id in hand_cards
         )
 
+    def rules_played_ability_has_field_target(self, player_id, card_id):
+        """False only when the played ability needs a card on the field and none is legal."""
+        ability = next(iter(self.card_rules.get(card_id, {}).get("playedAbilities") or []), None)
+        target_rules = (ability or {}).get("targets") or {}
+        if int(target_rules.get("min") or 0) < 1 or target_rules.get("groups"):
+            return True
+        if target_rules.get("kind") not in {None, "card"} or (target_rules.get("zones") or ["battlefield"]) != ["battlefield"]:
+            return True
+        return any(
+            self.rules_ability_targets_error(
+                target_rules,
+                [{"kind": "card", "itemId": item.get("id"), "cardId": item.get("cardId")}],
+                player_id,
+            ) is None
+            for item in self.battlefield
+        )
+
     def rules_player_can_act(self, player_id):
         """True when the player has any voluntary action available in the current step.
 
@@ -6644,6 +6664,7 @@ class Session:
                     self.rules_hand_additional_cost_available(player_id, card_id, ability)
                     for ability in (metadata.get("playedAbilities") or [])[:1]
                 )
+                and self.rules_played_ability_has_field_target(player_id, card_id)
             ):
                 return True
             if (

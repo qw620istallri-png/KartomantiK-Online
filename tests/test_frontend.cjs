@@ -151,7 +151,7 @@ function startServer() {
     });
     assert.equal(exhaustedCounters, "14px");
 
-    // holding Enter 5 s locks "pass everything"; a single Enter releases it
+    // holding Enter 3 s locks "pass everything"; a single Enter releases it
     await page.evaluate(() => {
       window.__passAllSaved = { latestState, myPlayerId, isObserver, send };
       window.__passAllSent = [];
@@ -167,7 +167,7 @@ function startServer() {
       sent: window.__passAllSent.filter((m) => m.type === "set_rules_pass_all").length,
     }));
     assert.deepEqual(passAllEarly, { filling: true, sent: 0 });
-    await page.waitForTimeout(4900);
+    await page.waitForTimeout(2900);
     const passAll = await page.evaluate(() => {
       document.dispatchEvent(new KeyboardEvent("keyup", { code: "Enter", key: "Enter", bubbles: true }));
       const locked = window.__passAllSent.filter((m) => m.type === "set_rules_pass_all");
