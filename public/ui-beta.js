@@ -854,6 +854,11 @@
       });
     });
 
+    document.getElementById("battlefieldWrap").addEventListener("pointerdown", (event) => {
+      if (!active()) return;
+      if (event.target.id === "battlefieldWrap" || event.target.id === "battlefield") event.stopImmediatePropagation();
+    }, true);
+
     window.addEventListener("resize", () => {
       if (!active() || !latestState) return;
       cancelAnimationFrame(local.resizeFrame);
@@ -1175,6 +1180,14 @@
     const priorityId = rulesOn() ? latestState.rulesEngine.priorityPlayerId : null;
     const prio = priorityId ? (priorityId === players.me?.id ? "me" : priorityId === players.opp?.id ? "opp" : "") : "";
     if (field.dataset.prio !== prio) field.dataset.prio = prio;
+    // while the First Manifestations are being placed, the Confrontation Zone
+    // of each player who has not validated yet is outlined in their colour
+    let placing = "";
+    if (rulesOn() && typeof rulesFirstManifestationActive === "function" && rulesFirstManifestationActive()) {
+      const validated = latestState.rulesEngine.firstManifestationValidatedPlayerIds || [];
+      placing = ["me", "opp"].filter((side) => players[side] && !validated.includes(players[side].id)).join(" ");
+    }
+    if (field.dataset.pm !== placing) field.dataset.pm = placing;
   }
 
   function renderStalemate(geometry) {

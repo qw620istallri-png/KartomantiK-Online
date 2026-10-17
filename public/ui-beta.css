@@ -99,8 +99,8 @@
 .ub-side.me::after { box-shadow: inset 4px 0 0 var(--me), inset 0 3px 0 color-mix(in srgb, var(--me) 60%, transparent), inset 0 -3px 0 color-mix(in srgb, var(--me) 60%, transparent), inset 80px 0 90px -70px color-mix(in srgb, var(--me) 60%, transparent); }
 .ub-side.opp::after { box-shadow: inset -4px 0 0 var(--opp), inset 0 3px 0 color-mix(in srgb, var(--opp) 60%, transparent), inset 0 -3px 0 color-mix(in srgb, var(--opp) 60%, transparent), inset -80px 0 90px -70px color-mix(in srgb, var(--opp) 60%, transparent); }
 .ub-zc { transition: box-shadow 500ms var(--ub-ease); }
-.ub-field[data-prio="me"] #ubZcMe { box-shadow: inset 0 0 0 2px var(--me), inset 0 0 70px -20px color-mix(in srgb, var(--me) 70%, transparent), 0 0 22px -6px var(--me); animation: ub-prio-pulse 900ms var(--ub-ease); }
-.ub-field[data-prio="opp"] #ubZcOpp { box-shadow: inset 0 0 0 2px var(--opp), inset 0 0 70px -20px color-mix(in srgb, var(--opp) 70%, transparent), 0 0 22px -6px var(--opp); animation: ub-prio-pulse 900ms var(--ub-ease); }
+.ub-field[data-pm~="me"] #ubZcMe { box-shadow: inset 0 0 0 2px var(--me), inset 0 0 70px -20px color-mix(in srgb, var(--me) 70%, transparent), 0 0 22px -6px var(--me); animation: ub-prio-pulse 900ms var(--ub-ease); }
+.ub-field[data-pm~="opp"] #ubZcOpp { box-shadow: inset 0 0 0 2px var(--opp), inset 0 0 70px -20px color-mix(in srgb, var(--opp) 70%, transparent), 0 0 22px -6px var(--opp); animation: ub-prio-pulse 900ms var(--ub-ease); }
 @keyframes ub-prio-pulse { 0% { opacity: 0; } 35% { opacity: 1; filter: brightness(1.8); } 100% { opacity: 1; } }
 .ub-midline { top: 0; bottom: 0; width: 0; border-left: 1.5px dashed rgba(var(--ub-gl), .3); z-index: -1; }
 
