@@ -8,3 +8,12 @@ sandbox/
 server/sandbox.py
 tests/test_sandbox_scenarios.py
 tools/sandbox_validate_simple.py
+
+# Local dependencies and private handoff material
+node_modules/
+_A_NE_PAS_UPLOADER/
+
+# Local UI/VFX review captures (not production assets)
+reports/KKO_PRO_UI_MOCKUP_*.png
+reports/KKO_VFX_PATH_PREVIEW_*.png
+reports/KKO_NORMAL_SERVER_MAT_VFX_*.png

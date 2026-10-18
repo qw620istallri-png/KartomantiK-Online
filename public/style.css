@@ -1377,8 +1377,6 @@ input, textarea, select {
 
 /* Public, non-blocking feedback for server-confirmed assisted-rules actions. */
 .rules-vfx-flight,
-.rules-vfx-flight-path,
-.rules-vfx-cast-origin,
 .rules-vfx-impact,
 .rules-vfx-exhaust-ring,
 .rules-vfx-exhaust-label,
@@ -1389,33 +1387,6 @@ input, textarea, select {
 .rules-vfx-effect-release,
 .rules-vfx-stack-pulse { position: fixed; z-index: 120; pointer-events: none; }
 .rules-vfx-flight { will-change: transform, opacity; }
-.rules-vfx-flight-path {
-  position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 119;
-  overflow: visible; pointer-events: none; will-change: opacity;
-}
-.rules-vfx-flight-path-aura,
-.rules-vfx-flight-path-core {
-  fill: none; stroke: var(--vfx-path-tone, var(--gold)); stroke-linecap: round;
-  stroke-dasharray: .18 .82; stroke-dashoffset: 1; vector-effect: non-scaling-stroke;
-}
-.rules-vfx-flight-path-aura { stroke-width: 12; opacity: .34; filter: blur(5px); }
-.rules-vfx-flight-path-core { stroke-width: 2.6; filter: drop-shadow(0 0 5px var(--vfx-path-tone, var(--gold))); }
-.rules-vfx-flight-path-sacrifice .rules-vfx-flight-path-core { stroke-dasharray: .09 .045; }
-.rules-vfx-cast-origin {
-  width: 54px; height: 54px; border: 1px solid color-mix(in srgb, var(--vfx-path-tone, var(--gold)) 84%, #fff);
-  border-radius: 50%; box-shadow: 0 0 18px color-mix(in srgb, var(--vfx-path-tone, var(--gold)) 68%, transparent), inset 0 0 13px color-mix(in srgb, var(--vfx-path-tone, var(--gold)) 42%, transparent);
-  will-change: transform, opacity;
-}
-.rules-vfx-cast-origin::before,
-.rules-vfx-cast-origin::after { content: ""; position: absolute; pointer-events: none; }
-.rules-vfx-cast-origin::before {
-  inset: 8px; border: 1px solid var(--vfx-path-tone, var(--gold)); transform: rotate(45deg);
-  box-shadow: 0 0 9px color-mix(in srgb, var(--vfx-path-tone, var(--gold)) 58%, transparent);
-}
-.rules-vfx-cast-origin::after {
-  inset: 17px; border-radius: 50%; background: color-mix(in srgb, var(--vfx-path-tone, var(--gold)) 72%, #fff);
-  box-shadow: 0 0 14px var(--vfx-path-tone, var(--gold));
-}
 .rules-vfx-flight-card { position: relative; width: 100%; height: 100%; overflow: hidden; border-radius: inherit; }
 .rules-vfx-flight img { display: block; width: 100%; height: 100%; object-fit: contain; }
 .rules-vfx-flight-glint {
@@ -3103,8 +3074,6 @@ input, textarea, select {
 @media (prefers-reduced-motion: reduce) {
   .bf-card.bf-arrive { animation: none; }
   .rules-vfx-spotlight-sheen { animation: none; }
-  .rules-vfx-flight-path,
-  .rules-vfx-cast-origin { display: none; }
 }
 
 /* Decision popups never cover the top bar (reset / options stay reachable) */

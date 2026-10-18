@@ -1,0 +1,1628 @@
+{
+  "generatedAt": "2026-10-18T14:20:03.691Z",
+  "cardId": "6jz7otalrdq0q8u_en",
+  "browser": "Google Chrome via Playwright",
+  "profiles": [
+    {
+      "name": "desktop",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "document": {
+        "clientWidth": 1440,
+        "scrollWidth": 1440,
+        "clientHeight": 1000,
+        "scrollHeight": 1000
+      },
+      "horizontalOverflow": false,
+      "verticalOverflow": false,
+      "visibleControls": 37,
+      "smallTargets": [
+        {
+          "id": null,
+          "cls": null,
+          "label": "M6DPRW",
+          "width": 108,
+          "height": 24
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "6R54GX",
+          "width": 157,
+          "height": 24
+        },
+        {
+          "id": "hideCodesBtn",
+          "cls": null,
+          "label": "Masquer les codes (pour le stream)",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "hideInterfaceBtn",
+          "cls": null,
+          "label": "Masquer l’interface (pour le stream)",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "rarityEffectsToggleBtn",
+          "cls": "active",
+          "label": "Désactiver les effets de rareté",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "gameLanguageBtn",
+          "cls": null,
+          "label": "Français → English",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "fullscreenBtn",
+          "cls": null,
+          "label": "Plein écran",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "downloadLogBtn",
+          "cls": null,
+          "label": "Journal",
+          "width": 83,
+          "height": 34
+        },
+        {
+          "id": "uiBetaMenuBtn",
+          "cls": "ui-beta-menu-btn active",
+          "label": "Moi à gauche, l’adversaire à droite, colonnes latérales. Réversible à tout momen",
+          "width": 272,
+          "height": 34
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Actuel",
+          "width": 272,
+          "height": 36
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Crème / sable",
+          "width": 272,
+          "height": 36
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Foncé",
+          "width": 272,
+          "height": 36
+        },
+        {
+          "id": "phaseTrackerBtn",
+          "cls": "active",
+          "label": "Masquer les phases",
+          "width": 272,
+          "height": 34
+        },
+        {
+          "id": "vfxSpeedBtn",
+          "cls": null,
+          "label": "Animations : normales",
+          "width": 272,
+          "height": 34
+        },
+        {
+          "id": "resetBoardBtn",
+          "cls": null,
+          "label": "Réinitialiser le terrain",
+          "width": 272,
+          "height": 34
+        },
+        {
+          "id": "endSessionBtn",
+          "cls": null,
+          "label": "Terminer la session",
+          "width": 272,
+          "height": 34
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Tout",
+          "width": 45,
+          "height": 24
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Chat0",
+          "width": 45,
+          "height": 24
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Actions",
+          "width": 63,
+          "height": 24
+        },
+        {
+          "id": "ubPlayerLogBtn",
+          "cls": "ub-iconbtn",
+          "label": "Journal des actions",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "ubChatFold",
+          "cls": "ub-iconbtn ub-fold",
+          "label": "",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "ubChatInput",
+          "cls": null,
+          "label": "",
+          "width": 170,
+          "height": 30
+        },
+        {
+          "id": "ubChatSend",
+          "cls": "ub-iconbtn",
+          "label": "Envoyer",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "handSortQuickBtn",
+          "cls": "hand-tools-toggle hand-sort-quick",
+          "label": "Trier la main",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "handVisibilityBtn",
+          "cls": "hand-visibility-toggle",
+          "label": "Masquer la main",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": null,
+          "cls": "ub-tool",
+          "label": "Dessin",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": null,
+          "cls": "ub-tool",
+          "label": "Créer (jeton, essence, dé)",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "highlightOwnersBtn",
+          "cls": null,
+          "label": "Highlight cards by owner color",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "inspectReopenBtn",
+          "cls": null,
+          "label": "Revoir la dernière carte inspectée",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": null,
+          "cls": "ub-chip",
+          "label": "Voir la main (4)",
+          "width": 50,
+          "height": 20
+        },
+        {
+          "id": "ubOppBar",
+          "cls": "ub-oppbar",
+          "label": "Afficher les piles adverses",
+          "width": 220,
+          "height": 43
+        },
+        {
+          "id": "rulesAutoSkip",
+          "cls": null,
+          "label": "",
+          "width": 22,
+          "height": 18
+        }
+      ],
+      "unlabeledControls": [
+        {
+          "tag": "BUTTON",
+          "id": "ubChatFold",
+          "cls": "ub-iconbtn ub-fold"
+        },
+        {
+          "tag": "INPUT",
+          "id": "ubChatInput",
+          "cls": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "rulesAutoSkip",
+          "cls": null
+        }
+      ],
+      "brokenImages": [],
+      "clipped": [
+        {
+          "selector": ".game-header",
+          "left": 0,
+          "top": -73,
+          "right": 1440,
+          "bottom": -8,
+          "overflowX": "visible",
+          "overflowY": "visible",
+          "outside": true,
+          "internalClip": false
+        }
+      ],
+      "fixedOverlaps": [
+        {
+          "a": "gameHeaderHotZone",
+          "b": "battlefieldWrap",
+          "area": 17280
+        },
+        {
+          "a": "battlefieldWrap",
+          "b": "sandboxToggle",
+          "area": 3544
+        }
+      ],
+      "betaActive": true,
+      "handCard": {
+        "id": "l4suqymyd2ehsue_en",
+        "draggable": false,
+        "tabindex": null,
+        "role": null
+      },
+      "unlabeledAx": [
+        {
+          "role": "button",
+          "nodeId": "62"
+        }
+      ],
+      "touchLongPress": null,
+      "keyboardSequence": [
+        {
+          "tag": "BODY",
+          "id": null,
+          "label": "Mode tournoi\n      \n      \n        \n          Créer une part",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "M6DPRW",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "6R54GX",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "hideCodesBtn",
+          "label": "Masquer les codes (pour le stream)",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "hideInterfaceBtn",
+          "label": "Masquer l’interface (pour le stream)",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "rarityEffectsToggleBtn",
+          "label": "Désactiver les effets de rareté",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "gameLanguageBtn",
+          "label": "Français → English",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "fullscreenBtn",
+          "label": "Plein écran",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "downloadLogBtn",
+          "label": "Journal",
+          "inViewport": true
+        },
+        {
+          "tag": "SUMMARY",
+          "id": null,
+          "label": "Plus",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "Tout",
+          "inViewport": true
+        }
+      ],
+      "errors": [],
+      "screenshot": "C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\reports\\ui-beta-desktop.png"
+    },
+    {
+      "name": "tablet-touch",
+      "viewport": {
+        "width": 1024,
+        "height": 768
+      },
+      "document": {
+        "clientWidth": 1024,
+        "scrollWidth": 1024,
+        "clientHeight": 768,
+        "scrollHeight": 768
+      },
+      "horizontalOverflow": false,
+      "verticalOverflow": false,
+      "visibleControls": 37,
+      "smallTargets": [
+        {
+          "id": null,
+          "cls": null,
+          "label": "6KCHLA",
+          "width": 104,
+          "height": 24
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "2R57YQ",
+          "width": 151,
+          "height": 24
+        },
+        {
+          "id": "hideCodesBtn",
+          "cls": null,
+          "label": "Masquer les codes (pour le stream)",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "hideInterfaceBtn",
+          "cls": null,
+          "label": "Masquer l’interface (pour le stream)",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "rarityEffectsToggleBtn",
+          "cls": "active",
+          "label": "Désactiver les effets de rareté",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "gameLanguageBtn",
+          "cls": null,
+          "label": "Français → English",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "fullscreenBtn",
+          "cls": null,
+          "label": "Plein écran",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "downloadLogBtn",
+          "cls": null,
+          "label": "Journal",
+          "width": 67,
+          "height": 28
+        },
+        {
+          "id": "uiBetaMenuBtn",
+          "cls": "ui-beta-menu-btn active",
+          "label": "Moi à gauche, l’adversaire à droite, colonnes latérales. Réversible à tout momen",
+          "width": 272,
+          "height": 29
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Actuel",
+          "width": 272,
+          "height": 32
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Crème / sable",
+          "width": 272,
+          "height": 32
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Foncé",
+          "width": 272,
+          "height": 32
+        },
+        {
+          "id": "phaseTrackerBtn",
+          "cls": "active",
+          "label": "Masquer les phases",
+          "width": 272,
+          "height": 28
+        },
+        {
+          "id": "vfxSpeedBtn",
+          "cls": null,
+          "label": "Animations : normales",
+          "width": 272,
+          "height": 28
+        },
+        {
+          "id": "resetBoardBtn",
+          "cls": null,
+          "label": "Réinitialiser le terrain",
+          "width": 272,
+          "height": 28
+        },
+        {
+          "id": "endSessionBtn",
+          "cls": null,
+          "label": "Terminer la session",
+          "width": 272,
+          "height": 28
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Tout",
+          "width": 36,
+          "height": 20
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Chat0",
+          "width": 36,
+          "height": 20
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Actions",
+          "width": 53,
+          "height": 20
+        },
+        {
+          "id": "ubPlayerLogBtn",
+          "cls": "ub-iconbtn",
+          "label": "Journal des actions",
+          "width": 26,
+          "height": 26
+        },
+        {
+          "id": "ubChatFold",
+          "cls": "ub-iconbtn ub-fold",
+          "label": "",
+          "width": 26,
+          "height": 26
+        },
+        {
+          "id": "ubChatInput",
+          "cls": null,
+          "label": "",
+          "width": 107,
+          "height": 30
+        },
+        {
+          "id": "ubChatSend",
+          "cls": "ub-iconbtn",
+          "label": "Envoyer",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "handSortQuickBtn",
+          "cls": "hand-tools-toggle hand-sort-quick",
+          "label": "Trier la main",
+          "width": 28,
+          "height": 28
+        },
+        {
+          "id": "handVisibilityBtn",
+          "cls": "hand-visibility-toggle",
+          "label": "Masquer la main",
+          "width": 28,
+          "height": 28
+        },
+        {
+          "id": null,
+          "cls": "ub-tool",
+          "label": "Dessin",
+          "width": 28,
+          "height": 28
+        },
+        {
+          "id": null,
+          "cls": "ub-tool",
+          "label": "Créer (jeton, essence, dé)",
+          "width": 28,
+          "height": 28
+        },
+        {
+          "id": "highlightOwnersBtn",
+          "cls": null,
+          "label": "Highlight cards by owner color",
+          "width": 28,
+          "height": 28
+        },
+        {
+          "id": "inspectReopenBtn",
+          "cls": null,
+          "label": "Revoir la dernière carte inspectée",
+          "width": 28,
+          "height": 28
+        },
+        {
+          "id": null,
+          "cls": "ub-chip",
+          "label": "Voir la main (4)",
+          "width": 50,
+          "height": 20
+        },
+        {
+          "id": "ubOppBar",
+          "cls": "ub-oppbar",
+          "label": "Afficher les piles adverses",
+          "width": 157,
+          "height": 43
+        },
+        {
+          "id": "rulesAutoSkip",
+          "cls": null,
+          "label": "",
+          "width": 22,
+          "height": 18
+        }
+      ],
+      "unlabeledControls": [
+        {
+          "tag": "BUTTON",
+          "id": "ubChatFold",
+          "cls": "ub-iconbtn ub-fold"
+        },
+        {
+          "tag": "INPUT",
+          "id": "ubChatInput",
+          "cls": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "rulesAutoSkip",
+          "cls": null
+        }
+      ],
+      "brokenImages": [],
+      "clipped": [
+        {
+          "selector": ".game-header",
+          "left": 0,
+          "top": -89,
+          "right": 1024,
+          "bottom": -8,
+          "overflowX": "visible",
+          "overflowY": "visible",
+          "outside": true,
+          "internalClip": false
+        }
+      ],
+      "fixedOverlaps": [
+        {
+          "a": "gameHeaderHotZone",
+          "b": "battlefieldWrap",
+          "area": 12288
+        },
+        {
+          "a": "battlefieldWrap",
+          "b": "sandboxToggle",
+          "area": 3544
+        }
+      ],
+      "betaActive": true,
+      "handCard": {
+        "id": "l4suqymyd2ehsue_en",
+        "draggable": false,
+        "tabindex": null,
+        "role": null
+      },
+      "unlabeledAx": [
+        {
+          "role": "button",
+          "nodeId": "611"
+        }
+      ],
+      "touchLongPress": null,
+      "keyboardSequence": [
+        {
+          "tag": "BODY",
+          "id": null,
+          "label": "Mode tournoi\n      \n      \n        \n          Créer une part",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "6KCHLA",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "2R57YQ",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "hideCodesBtn",
+          "label": "Masquer les codes (pour le stream)",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "hideInterfaceBtn",
+          "label": "Masquer l’interface (pour le stream)",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "rarityEffectsToggleBtn",
+          "label": "Désactiver les effets de rareté",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "gameLanguageBtn",
+          "label": "Français → English",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "fullscreenBtn",
+          "label": "Plein écran",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "downloadLogBtn",
+          "label": "Journal",
+          "inViewport": true
+        },
+        {
+          "tag": "SUMMARY",
+          "id": null,
+          "label": "Plus",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "Tout",
+          "inViewport": true
+        }
+      ],
+      "errors": [],
+      "screenshot": "C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\reports\\ui-beta-tablet-touch.png"
+    },
+    {
+      "name": "phone-landscape",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "document": {
+        "clientWidth": 844,
+        "scrollWidth": 844,
+        "clientHeight": 390,
+        "scrollHeight": 390
+      },
+      "horizontalOverflow": false,
+      "verticalOverflow": false,
+      "visibleControls": 36,
+      "smallTargets": [
+        {
+          "id": null,
+          "cls": null,
+          "label": "K7PFLS",
+          "width": 75,
+          "height": 24
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "X3RUDX",
+          "width": 111,
+          "height": 24
+        },
+        {
+          "id": "hideCodesBtn",
+          "cls": null,
+          "label": "Masquer les codes (pour le stream)",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "hideInterfaceBtn",
+          "cls": null,
+          "label": "Masquer l’interface (pour le stream)",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "rarityEffectsToggleBtn",
+          "cls": "active",
+          "label": "Désactiver les effets de rareté",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "gameLanguageBtn",
+          "cls": null,
+          "label": "Français → English",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "fullscreenBtn",
+          "cls": null,
+          "label": "Plein écran",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "downloadLogBtn",
+          "cls": null,
+          "label": "Journal",
+          "width": 67,
+          "height": 28
+        },
+        {
+          "id": "uiBetaMenuBtn",
+          "cls": "ui-beta-menu-btn active",
+          "label": "Moi à gauche, l’adversaire à droite, colonnes latérales. Réversible à tout momen",
+          "width": 272,
+          "height": 29
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Actuel",
+          "width": 272,
+          "height": 32
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Crème / sable",
+          "width": 272,
+          "height": 32
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Foncé",
+          "width": 272,
+          "height": 32
+        },
+        {
+          "id": "phaseTrackerBtn",
+          "cls": "active",
+          "label": "Masquer les phases",
+          "width": 272,
+          "height": 28
+        },
+        {
+          "id": "vfxSpeedBtn",
+          "cls": null,
+          "label": "Animations : normales",
+          "width": 272,
+          "height": 28
+        },
+        {
+          "id": "resetBoardBtn",
+          "cls": null,
+          "label": "Réinitialiser le terrain",
+          "width": 272,
+          "height": 28
+        },
+        {
+          "id": "endSessionBtn",
+          "cls": null,
+          "label": "Terminer la session",
+          "width": 272,
+          "height": 28
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Tout",
+          "width": 32,
+          "height": 17
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Chat0",
+          "width": 32,
+          "height": 17
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Actions",
+          "width": 47,
+          "height": 17
+        },
+        {
+          "id": "ubChatFold",
+          "cls": "ub-iconbtn ub-fold",
+          "label": "",
+          "width": 26,
+          "height": 26
+        },
+        {
+          "id": "ubChatInput",
+          "cls": null,
+          "label": "",
+          "width": 76,
+          "height": 26
+        },
+        {
+          "id": "ubChatSend",
+          "cls": "ub-iconbtn",
+          "label": "Envoyer",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "handSortQuickBtn",
+          "cls": "hand-tools-toggle hand-sort-quick",
+          "label": "Trier la main",
+          "width": 24,
+          "height": 24
+        },
+        {
+          "id": "handVisibilityBtn",
+          "cls": "hand-visibility-toggle",
+          "label": "Masquer la main",
+          "width": 24,
+          "height": 24
+        },
+        {
+          "id": null,
+          "cls": "ub-tool",
+          "label": "Dessin",
+          "width": 24,
+          "height": 24
+        },
+        {
+          "id": null,
+          "cls": "ub-tool",
+          "label": "Créer (jeton, essence, dé)",
+          "width": 24,
+          "height": 24
+        },
+        {
+          "id": "highlightOwnersBtn",
+          "cls": null,
+          "label": "Highlight cards by owner color",
+          "width": 24,
+          "height": 24
+        },
+        {
+          "id": "inspectReopenBtn",
+          "cls": null,
+          "label": "Revoir la dernière carte inspectée",
+          "width": 24,
+          "height": 24
+        },
+        {
+          "id": null,
+          "cls": "ub-chip",
+          "label": "Voir la main (4)",
+          "width": 43,
+          "height": 17
+        },
+        {
+          "id": "ubOppBar",
+          "cls": "ub-oppbar",
+          "label": "Afficher les piles adverses",
+          "width": 122,
+          "height": 29
+        },
+        {
+          "id": "passPriorityBtn",
+          "cls": "phase-pass-button primary must-act",
+          "label": "Les effets « après la Révélation » se déclenchent. Les joueurs peuvent jouer des",
+          "width": 108,
+          "height": 27
+        },
+        {
+          "id": "rulesAutoSkip",
+          "cls": null,
+          "label": "",
+          "width": 22,
+          "height": 18
+        }
+      ],
+      "unlabeledControls": [
+        {
+          "tag": "BUTTON",
+          "id": "ubChatFold",
+          "cls": "ub-iconbtn ub-fold"
+        },
+        {
+          "tag": "INPUT",
+          "id": "ubChatInput",
+          "cls": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "rulesAutoSkip",
+          "cls": null
+        }
+      ],
+      "brokenImages": [],
+      "clipped": [
+        {
+          "selector": ".game-header",
+          "left": 0,
+          "top": -89,
+          "right": 844,
+          "bottom": -8,
+          "overflowX": "visible",
+          "overflowY": "visible",
+          "outside": true,
+          "internalClip": false
+        }
+      ],
+      "fixedOverlaps": [
+        {
+          "a": "gameHeaderHotZone",
+          "b": "battlefieldWrap",
+          "area": 10128
+        },
+        {
+          "a": "battlefieldWrap",
+          "b": "sandboxToggle",
+          "area": 3544
+        }
+      ],
+      "betaActive": true,
+      "handCard": {
+        "id": "l4suqymyd2ehsue_en",
+        "draggable": false,
+        "tabindex": null,
+        "role": null
+      },
+      "unlabeledAx": [
+        {
+          "role": "button",
+          "nodeId": "594"
+        }
+      ],
+      "touchLongPress": {
+        "menuVisible": true,
+        "actions": [
+          "Inspecter"
+        ]
+      },
+      "keyboardSequence": [
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "Inspecter",
+          "inViewport": true
+        },
+        {
+          "tag": "BODY",
+          "id": null,
+          "label": "Mode tournoi\n      \n      \n        \n          Créer une part",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "K7PFLS",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "X3RUDX",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "hideCodesBtn",
+          "label": "Masquer les codes (pour le stream)",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "hideInterfaceBtn",
+          "label": "Masquer l’interface (pour le stream)",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "rarityEffectsToggleBtn",
+          "label": "Désactiver les effets de rareté",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "gameLanguageBtn",
+          "label": "Français → English",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "fullscreenBtn",
+          "label": "Plein écran",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "downloadLogBtn",
+          "label": "Journal",
+          "inViewport": true
+        },
+        {
+          "tag": "SUMMARY",
+          "id": null,
+          "label": "Plus",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        }
+      ],
+      "errors": [],
+      "screenshot": "C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\reports\\ui-beta-phone-landscape.png"
+    },
+    {
+      "name": "phone-portrait",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "document": {
+        "clientWidth": 390,
+        "scrollWidth": 390,
+        "clientHeight": 844,
+        "scrollHeight": 844
+      },
+      "horizontalOverflow": false,
+      "verticalOverflow": false,
+      "visibleControls": 37,
+      "smallTargets": [
+        {
+          "id": null,
+          "cls": null,
+          "label": "64HYC2",
+          "width": 78,
+          "height": 24
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "VLHESH",
+          "width": 111,
+          "height": 24
+        },
+        {
+          "id": "hideCodesBtn",
+          "cls": null,
+          "label": "Masquer les codes (pour le stream)",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "hideInterfaceBtn",
+          "cls": null,
+          "label": "Masquer l’interface (pour le stream)",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "rarityEffectsToggleBtn",
+          "cls": "active",
+          "label": "Désactiver les effets de rareté",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "gameLanguageBtn",
+          "cls": null,
+          "label": "Français → English",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "fullscreenBtn",
+          "cls": null,
+          "label": "Plein écran",
+          "width": 34,
+          "height": 34
+        },
+        {
+          "id": "downloadLogBtn",
+          "cls": null,
+          "label": "Journal",
+          "width": 67,
+          "height": 28
+        },
+        {
+          "id": "uiBetaMenuBtn",
+          "cls": "ui-beta-menu-btn active",
+          "label": "Moi à gauche, l’adversaire à droite, colonnes latérales. Réversible à tout momen",
+          "width": 272,
+          "height": 29
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Actuel",
+          "width": 272,
+          "height": 32
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Crème / sable",
+          "width": 272,
+          "height": 32
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Foncé",
+          "width": 272,
+          "height": 32
+        },
+        {
+          "id": "phaseTrackerBtn",
+          "cls": "active",
+          "label": "Masquer les phases",
+          "width": 272,
+          "height": 28
+        },
+        {
+          "id": "vfxSpeedBtn",
+          "cls": null,
+          "label": "Animations : normales",
+          "width": 272,
+          "height": 28
+        },
+        {
+          "id": "resetBoardBtn",
+          "cls": null,
+          "label": "Réinitialiser le terrain",
+          "width": 272,
+          "height": 28
+        },
+        {
+          "id": "endSessionBtn",
+          "cls": null,
+          "label": "Terminer la session",
+          "width": 272,
+          "height": 28
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Tout",
+          "width": 36,
+          "height": 20
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Chat0",
+          "width": 36,
+          "height": 20
+        },
+        {
+          "id": null,
+          "cls": null,
+          "label": "Actions",
+          "width": 53,
+          "height": 20
+        },
+        {
+          "id": "ubPlayerLogBtn",
+          "cls": "ub-iconbtn",
+          "label": "Journal des actions",
+          "width": 26,
+          "height": 26
+        },
+        {
+          "id": "ubChatFold",
+          "cls": "ub-iconbtn ub-fold",
+          "label": "",
+          "width": 26,
+          "height": 26
+        },
+        {
+          "id": "ubChatInput",
+          "cls": null,
+          "label": "",
+          "width": 83,
+          "height": 30
+        },
+        {
+          "id": "ubChatSend",
+          "cls": "ub-iconbtn",
+          "label": "Envoyer",
+          "width": 30,
+          "height": 30
+        },
+        {
+          "id": "handSortQuickBtn",
+          "cls": "hand-tools-toggle hand-sort-quick",
+          "label": "Trier la main",
+          "width": 28,
+          "height": 28
+        },
+        {
+          "id": "handVisibilityBtn",
+          "cls": "hand-visibility-toggle",
+          "label": "Masquer la main",
+          "width": 28,
+          "height": 28
+        },
+        {
+          "id": null,
+          "cls": "ub-tool",
+          "label": "Dessin",
+          "width": 28,
+          "height": 28
+        },
+        {
+          "id": null,
+          "cls": "ub-tool",
+          "label": "Créer (jeton, essence, dé)",
+          "width": 28,
+          "height": 28
+        },
+        {
+          "id": "highlightOwnersBtn",
+          "cls": null,
+          "label": "Highlight cards by owner color",
+          "width": 28,
+          "height": 28
+        },
+        {
+          "id": "inspectReopenBtn",
+          "cls": null,
+          "label": "Revoir la dernière carte inspectée",
+          "width": 28,
+          "height": 28
+        },
+        {
+          "id": null,
+          "cls": "ub-chip",
+          "label": "Voir la main (4)",
+          "width": 50,
+          "height": 20
+        },
+        {
+          "id": "ubOppBar",
+          "cls": "ub-oppbar",
+          "label": "Afficher les piles adverses",
+          "width": 133,
+          "height": 43
+        },
+        {
+          "id": "rulesAutoSkip",
+          "cls": null,
+          "label": "",
+          "width": 22,
+          "height": 18
+        }
+      ],
+      "unlabeledControls": [
+        {
+          "tag": "BUTTON",
+          "id": "ubChatFold",
+          "cls": "ub-iconbtn ub-fold"
+        },
+        {
+          "tag": "INPUT",
+          "id": "ubChatInput",
+          "cls": null
+        },
+        {
+          "tag": "INPUT",
+          "id": "rulesAutoSkip",
+          "cls": null
+        }
+      ],
+      "brokenImages": [],
+      "clipped": [
+        {
+          "selector": ".game-header",
+          "left": 0,
+          "top": -89,
+          "right": 390,
+          "bottom": -8,
+          "overflowX": "visible",
+          "overflowY": "visible",
+          "outside": true,
+          "internalClip": false
+        }
+      ],
+      "fixedOverlaps": [
+        {
+          "a": "gameHeaderHotZone",
+          "b": "battlefieldWrap",
+          "area": 4680
+        },
+        {
+          "a": "gameHeaderHotZone",
+          "b": "ubRotate",
+          "area": 4680
+        },
+        {
+          "a": "battlefieldWrap",
+          "b": "ubRotate",
+          "area": 329160
+        },
+        {
+          "a": "battlefieldWrap",
+          "b": "sandboxToggle",
+          "area": 3544
+        },
+        {
+          "a": "ubRotate",
+          "b": "sandboxToggle",
+          "area": 3544
+        }
+      ],
+      "betaActive": true,
+      "handCard": {
+        "id": "l4suqymyd2ehsue_en",
+        "draggable": false,
+        "tabindex": null,
+        "role": null
+      },
+      "unlabeledAx": [
+        {
+          "role": "button",
+          "nodeId": "614"
+        }
+      ],
+      "touchLongPress": null,
+      "keyboardSequence": [
+        {
+          "tag": "BODY",
+          "id": null,
+          "label": "Mode tournoi\n      \n      \n        \n          Créer une part",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "64HYC2",
+          "inViewport": false
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "VLHESH",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "hideCodesBtn",
+          "label": "Masquer les codes (pour le stream)",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "hideInterfaceBtn",
+          "label": "Masquer l’interface (pour le stream)",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "rarityEffectsToggleBtn",
+          "label": "Désactiver les effets de rareté",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "gameLanguageBtn",
+          "label": "Français → English",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "fullscreenBtn",
+          "label": "Plein écran",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": "downloadLogBtn",
+          "label": "Journal",
+          "inViewport": true
+        },
+        {
+          "tag": "SUMMARY",
+          "id": null,
+          "label": "Plus",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "cartes",
+          "inViewport": true
+        },
+        {
+          "tag": "BUTTON",
+          "id": null,
+          "label": "Tout",
+          "inViewport": true
+        }
+      ],
+      "errors": [],
+      "screenshot": "C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\reports\\ui-beta-phone-portrait.png"
+    }
+  ],
+  "remediation": {
+    "updatedAt": "2026-10-18T16:48:03+02:00",
+    "status": "server-and-desktop-findings-fixed",
+    "fixed": [
+      "private-zone-derived-metadata",
+      "private-hand-play-permissions",
+      "invalid-numeric-websocket-input",
+      "non-finite-json-state",
+      "expired-session-cleanup",
+      "hand-card-keyboard-access",
+      "chat-fold-accessible-name"
+    ],
+    "deferred": [
+      "touch-target-size",
+      "portrait-background-inert"
+    ],
+    "structuralDebt": [
+      "large-core-files"
+    ],
+    "verification": {
+      "pythonTests": 594,
+      "pythonStatus": "passed",
+      "frontendStatus": "passed",
+      "keyboardAndBetaChatStatus": "passed",
+      "cardsCertified": 450,
+      "abilities": 493,
+      "paths": 497
+    }
+  }
+}

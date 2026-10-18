@@ -77,7 +77,15 @@
   position: fixed;
   inset: 0;
   cursor: default;
-  background: radial-gradient(120% 90% at 50% 50%, var(--ub-bg-2), var(--ub-bg));
+  background:
+    linear-gradient(90deg,
+      color-mix(in srgb, var(--me) 16%, transparent),
+      transparent 44%,
+      color-mix(in srgb, var(--opp) 16%, transparent)),
+    linear-gradient(
+      color-mix(in srgb, var(--ub-bg) 68%, transparent),
+      color-mix(in srgb, var(--ub-bg) 80%, transparent)),
+    url("home-bg.webp") center / cover no-repeat;
 }
 #gameScreen.ui-beta .board-field-wrap:active { cursor: default; }
 #gameScreen.ui-beta .battlefield { z-index: 2; background: transparent; }

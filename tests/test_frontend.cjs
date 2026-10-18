@@ -2223,8 +2223,6 @@ function startServer() {
       const moved = {
         flight: document.querySelectorAll(".rules-vfx-effect-card").length,
         glint: document.querySelectorAll(".rules-vfx-effect-card .rules-vfx-flight-glint").length,
-        path: document.querySelectorAll(".rules-vfx-flight-path-effect-card").length,
-        origin: document.querySelectorAll(".rules-vfx-cast-origin-effect-card").length,
         label: document.querySelector(".rules-vfx-impact-moved")?.textContent || "",
       };
       removeRulesVfx();
@@ -2397,7 +2395,7 @@ function startServer() {
         noEligible,
         deckDiscard,
         supportWin,
-        remaining: document.querySelectorAll(".rules-vfx-flight-path, .rules-vfx-cast-origin, .rules-vfx-flight, .rules-vfx-impact, .rules-vfx-exhaust-ring, .rules-vfx-exhaust-label, .rules-vfx-impact-burst, .rules-vfx-target-lock, .rules-vfx-effect-cast, .rules-vfx-effect-seal, .rules-vfx-effect-release, .rules-vfx-stack-pulse").length,
+        remaining: document.querySelectorAll(".rules-vfx-flight, .rules-vfx-impact, .rules-vfx-exhaust-ring, .rules-vfx-exhaust-label, .rules-vfx-impact-burst, .rules-vfx-target-lock, .rules-vfx-effect-cast, .rules-vfx-effect-seal, .rules-vfx-effect-release, .rules-vfx-stack-pulse").length,
       };
     }, {
       tributeCardId: rulesStack.tributeCardId,
@@ -3939,8 +3937,6 @@ function startServer() {
     assert.match(rulesVfx.drawAfterDiscard, /2/);
     assert.equal(rulesVfx.moved.flight, 1);
     assert.equal(rulesVfx.moved.glint, 1);
-    assert.equal(rulesVfx.moved.path, 1);
-    assert.equal(rulesVfx.moved.origin, 1);
     assert(rulesVfx.moved.label.length > 0);
     assert.equal(rulesVfx.exiled.flight, 1);
     assert.equal(rulesVfx.exiled.label, rulesVfx.exiled.expectedLabel);

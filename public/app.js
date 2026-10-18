@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261018-rules-beta-138-7";
+const STATIC_ASSET_VERSION = "20261018-rules-beta-138-8";
 {
   const versionEl = document.getElementById("appVersion");
   // "...-beta-138-1" reads "beta 138.1" (a release without a fix number reads "138.0")
@@ -1851,7 +1851,7 @@ function prepareRulesEffectVfxChanges(nextState) {
 function removeRulesVfx() {
   clearRulesVfxQueue();
   rulesVfxActiveLabels.length = 0;
-  $$(".rules-vfx-spotlight, .rules-vfx-target-arrow, .rules-vfx-phase-banner, .rules-vfx-flight-path, .rules-vfx-cast-origin, .rules-vfx-flight, .rules-vfx-impact, .rules-vfx-exhaust-ring, .rules-vfx-exhaust-label, .rules-vfx-impact-burst, .rules-vfx-target-lock, .rules-vfx-effect-cast, .rules-vfx-effect-seal, .rules-vfx-effect-release, .rules-vfx-stack-pulse")
+  $$(".rules-vfx-spotlight, .rules-vfx-target-arrow, .rules-vfx-phase-banner, .rules-vfx-flight, .rules-vfx-impact, .rules-vfx-exhaust-ring, .rules-vfx-exhaust-label, .rules-vfx-impact-burst, .rules-vfx-target-lock, .rules-vfx-effect-cast, .rules-vfx-effect-seal, .rules-vfx-effect-release, .rules-vfx-stack-pulse")
     .forEach((element) => element.remove());
 }
 
@@ -2341,51 +2341,6 @@ function rulesVfxAfterWinnerChoices(play, waited = 0) {
   play();
 }
 
-function playRulesVfxFlightPath(kind, origin, target, options = {}) {
-  if (!origin || !target || kind === "draw-card" || rulesVfxReducedMotion()) return;
-  const delay = Number(options.delay || 0);
-  const duration = Number(options.duration || 620);
-  const arc = Number(options.arc || 80);
-  const tone = options.tone || "var(--gold)";
-  const controlX = origin.x + (target.x - origin.x) * .5;
-  const controlY = origin.y + (target.y - origin.y) * .5 - arc * 1.25;
-  const pathData = `M ${origin.x} ${origin.y} Q ${controlX} ${controlY} ${target.x} ${target.y}`;
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.classList.add("rules-vfx-flight-path", `rules-vfx-flight-path-${kind}`);
-  svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
-  svg.setAttribute("preserveAspectRatio", "none");
-  svg.setAttribute("aria-hidden", "true");
-  svg.style.setProperty("--vfx-path-tone", tone);
-  svg.innerHTML = `<path class="rules-vfx-flight-path-aura" d="${pathData}" pathLength="1"></path><path class="rules-vfx-flight-path-core" d="${pathData}" pathLength="1"></path>`;
-  document.body.appendChild(svg);
-  svg.querySelectorAll("path").forEach((path, index) => {
-    vfxAnimate(path, [
-      { strokeDashoffset: "1", opacity: 0 },
-      { offset: .12, opacity: index ? .95 : .52 },
-      { offset: .82, strokeDashoffset: "-.02", opacity: index ? .82 : .36 },
-      { strokeDashoffset: "-.18", opacity: 0 },
-    ], { duration, delay, easing: "cubic-bezier(.16,1,.3,1)", fill: "both" });
-  });
-  rulesVfxAnimateAndRemove(svg, [
-    { opacity: 1 },
-    { opacity: 1, offset: .76 },
-    { opacity: 0 },
-  ], { duration: duration + 140, delay, easing: "ease-out" });
-
-  const originMark = document.createElement("div");
-  originMark.className = `rules-vfx-cast-origin rules-vfx-cast-origin-${kind}`;
-  originMark.setAttribute("aria-hidden", "true");
-  originMark.style.left = `${origin.x}px`;
-  originMark.style.top = `${origin.y}px`;
-  originMark.style.setProperty("--vfx-path-tone", tone);
-  document.body.appendChild(originMark);
-  rulesVfxAnimateAndRemove(originMark, [
-    { transform: "translate(-50%,-50%) scale(.28) rotate(-24deg)", opacity: 0 },
-    { offset: .24, transform: "translate(-50%,-50%) scale(1) rotate(0deg)", opacity: .95 },
-    { transform: "translate(-50%,-50%) scale(1.48) rotate(34deg)", opacity: 0 },
-  ], { duration: Math.min(520, duration * .72), delay, easing: "cubic-bezier(.16,1,.3,1)" });
-}
-
 function playRulesVfxFlight(kind, origin, target, options = {}) {
   const element = document.createElement("div");
   element.className = `rules-vfx-flight rules-vfx-${kind}`;
@@ -2426,14 +2381,6 @@ function playRulesVfxFlight(kind, origin, target, options = {}) {
   const midY = dy * .5 - arc;
   const tilt = isCard ? (options.index % 2 ? 7 : -7) : 0;
   const duration = isCard ? (big ? 1150 : kind === "tribute" ? 500 : kind === "sacrifice" ? 540 : 660) : 470;
-  const flightTemperament = options.temperament || cardsById.get(options.cardId)?.colorKey || null;
-  const trailDelay = Number(options.index || 0) * 36;
-  playRulesVfxFlightPath(kind, origin, target, {
-    arc,
-    duration,
-    delay: trailDelay,
-    tone: flightTemperament ? temperamentInk(flightTemperament) : "var(--gold)",
-  });
   rulesVfxAnimateAndRemove(element, [
     { transform: "translate3d(0,0,0) scale(.92) rotate(0deg)", opacity: 0 },
     { offset: .12, transform: `translate3d(${dx * .05}px,${dy * .05 - 9}px,0) scale(1.05) rotate(${-tilt * .35}deg)`, opacity: 1 },
@@ -2442,25 +2389,27 @@ function playRulesVfxFlight(kind, origin, target, options = {}) {
   ], { duration, delay: Number(options.index || 0) * 36, easing: "cubic-bezier(.22,.72,.2,1)" });
   if (options.land !== false) {
     playRulesVfxPulse(target, kind === "sacrifice" ? "destroyed" : kind === "discard-card" ? "discarded" : "moved", {
-      delay: duration * .88 + trailDelay,
+      delay: duration * .62 + Number(options.index || 0) * 36,
     });
   }
-  // A restrained particle wake supports the authored path without obscuring cards.
+  // tinted trail and landing burst (family: movement)
+  const flightTemperament = options.temperament || cardsById.get(options.cardId)?.colorKey || null;
   if (isCard && flightTemperament && !rulesVfxReducedMotion() && kind !== "draw-card") {
-    for (let step = 1; step <= 3; step += 1) {
-      const progress = step / 4;
+    const trailDelay = Number(options.index || 0) * 36;
+    for (let step = 1; step <= 5; step += 1) {
+      const progress = step / 6;
       const point = {
         x: origin.x + dx * progress,
         y: origin.y + dy * progress - Math.sin(Math.PI * progress) * arc * 0.9,
       };
       window.setTimeout(
-        () => spawnVfxParticles(point, flightTemperament, { count: 1, spread: 10 }),
+        () => spawnVfxParticles(point, flightTemperament, { count: 2, spread: 14 }),
         vfxMs(trailDelay + duration * progress),
       );
     }
     window.setTimeout(
-      () => spawnVfxParticles(target, flightTemperament, big ? { count: 14, spread: 62 } : { count: 6, spread: 32 }),
-      vfxMs(trailDelay + duration * 0.9),
+      () => spawnVfxParticles(target, flightTemperament, big ? { count: 20, spread: 70 } : { count: 8, spread: 36 }),
+      vfxMs(trailDelay + duration * 0.7),
     );
   }
 }

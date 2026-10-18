@@ -31,8 +31,8 @@ of inactivity once a cleanup loop calls the existing expiration predicate.
 They are always lost when the process restarts.
 
 Static client assets use versioned URLs and long-lived browser/CDN caching.
-Current assisted-rules asset version: `20261018-rules-beta-138-7`.
-When replacing a local asset, bump `20261018-rules-beta-138-7` in `public/index.html`
+Current assisted-rules asset version: `20261018-rules-beta-138-8`.
+When replacing a local asset, bump `20261018-rules-beta-138-8` in `public/index.html`
 and `public/app.js` together.
 
 ## Assisted-rules documentation
