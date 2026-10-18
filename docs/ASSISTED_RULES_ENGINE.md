@@ -352,6 +352,9 @@ depuis l'Interzone avec une puissance de Tribut imprimée différente.
 Le parseur reconnaît maintenant les puissances de Tribut Inner Deserts écrites
 avec les symboles illustrés. Orzo, Faroc-Ko, Philfer, Quasimolg et Proboscidon
 réutilisent ainsi le paiement depuis l'Interzone de World Spore.
+Cette valeur de Tribut s'applique depuis toutes les zones (Main, Interzone,
+Limbes) : Faroc-Ko garde 5 de puissance sur le terrain mais ne paie que 2
+(`tributePowerOverride`, décision du 2026-10-18).
 
 Les primitives existantes couvrent également :
 

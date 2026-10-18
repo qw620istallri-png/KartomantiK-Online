@@ -286,7 +286,10 @@ class CardCatalogTests(unittest.TestCase):
         self.assertEqual(by_name["Zam-za, the Prosperous"]["tributePowerOverride"], {"power": 4, "condition": None})
         self.assertEqual(by_name["Alakazim, the Magician"]["tributePowerOverride"]["condition"], "two_wills_played_this_turn")
         self.assertEqual(by_name["Palgonphio"]["tributePowerOverride"]["condition"], "lost_or_stalemate_previous_turn")
-        self.assertIsNone(by_name["Faroc-Ko, the Insipid"]["tributePowerOverride"])
+        # the printed tribute value holds from any zone, not only from the Interzone
+        self.assertEqual(by_name["Faroc-Ko, the Insipid"]["tributePowerOverride"], {"power": 2, "condition": None})
+        self.assertEqual(by_name["Faroc-Ko, the Insipid"]["power"], 5)
+        self.assertEqual(by_name["World Spore"]["tributePowerOverride"], {"power": 2, "condition": None})
         self.assertEqual(by_name["Zizek, the Immolated"]["confrontationEntryLimboWills"], 6)
         self.assertTrue(by_name["Zizek, the Immolated"]["retainsExcessEssence"])
         self.assertTrue(by_name["Forgotten Pile"]["canPayTributeFromLimbo"])

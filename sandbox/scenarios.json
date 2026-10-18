@@ -1,0 +1,135 @@
+{
+  "schemaVersion": 1,
+  "scenarios": [
+    {
+      "id": "censor-destroys-weaker-fighter",
+      "cardId": "op83bq67vaf368q_en",
+      "title": "Censor : exiler une Manifestation de la main pour détruire",
+      "phase": "confrontation_reaction",
+      "priority": "me",
+      "players": {
+        "me": {"hand": ["$card", {"card": "vanilla:choleric:4", "as": "revealed"}, "vanilla:phlegmatic:2"], "deck": 6, "graveyard": 1},
+        "opp": {"hand": 2, "deck": 6, "graveyard": 1}
+      },
+      "battlefield": [
+        {"id": "my-fighter", "owner": "me", "card": "vanilla:capricious:3", "zone": "confrontation", "first": true},
+        {"id": "opp-fighter", "owner": "opp", "card": {"card": "vanilla:melancholic:2", "as": "victim"}, "zone": "confrontation", "first": true}
+      ],
+      "checks": [
+        "Censor brille comme jouable (coût 0, il faut une Manifestation en main).",
+        "Au lancement, l'UI demande quelle Manifestation de ta main révéler et exiler.",
+        "La cible proposée est une Manifestation en Zone de Confrontation.",
+        "À la résolution, la Manifestation adverse (puissance de base 2) est détruite et part dans ses Limbes."
+      ],
+      "script": [
+        {"label": "Jouer Censor en exilant la Manifestation 4, cible le combattant adverse", "send": {
+          "type": "declare_rules_action", "label": "Censor", "kind": "play_card",
+          "source": {"cardId": "$card", "zone": "hand"},
+          "abilityId": "censor-exiles-hand-manifestation-to-destroy", "costCardId": "%revealed",
+          "targets": [{"kind": "card", "itemId": "@opp-fighter", "cardId": "%victim"}]
+        }},
+        {"label": "La Manifestation révélée est exilée en coût", "expect": {"zone": "me.exile", "contains": "%revealed"}},
+        {"label": "Censor est sur la Pile", "expect": {"stack": 1}},
+        {"label": "Les deux joueurs passent", "resolve": true},
+        {"label": "Le combattant adverse a quitté le terrain", "expect": {"onField": "@opp-fighter", "is": false}},
+        {"label": "Il est dans les Limbes adverses", "expect": {"zone": "opp.graveyard", "contains": "%victim"}}
+      ]
+    },
+    {
+      "id": "shattering-the-self-opponent",
+      "cardId": "k7dq8ye448xwj54_en",
+      "title": "Shattering the Self : l'adversaire défausse 3, sa Manifestation perd 1 par Manifestation",
+      "phase": "confrontation_reaction",
+      "priority": "me",
+      "players": {
+        "me": {"hand": ["$card", {"card": "vanilla:melancholic:2", "as": "pay"}, "vanilla:phlegmatic:2"], "deck": 6, "graveyard": 1},
+        "opp": {"hand": 2, "deck": 6, "graveyard": 0}
+      },
+      "battlefield": [
+        {"id": "my-fighter", "owner": "me", "card": "vanilla:capricious:3", "zone": "confrontation", "first": true},
+        {"id": "opp-fighter", "owner": "opp", "card": {"card": "vanilla:choleric:8", "as": "big"}, "zone": "confrontation", "first": true}
+      ],
+      "checks": [
+        "Shattering the Self demande deux cibles : un joueur, puis une Manifestation adverse.",
+        "Le paiement {P}{P} se fait en tribut avec une Mélancolique de puissance 2.",
+        "À la résolution, 3 cartes du deck adverse vont dans ses Limbes (animation de défausse).",
+        "Migmomirf (puissance 8) passe à 5 : vérifie l'affichage de la puissance modifiée."
+      ],
+      "script": [
+        {"label": "Jouer Shattering the Self : cible l'adversaire et Migmomirf", "send": {
+          "type": "declare_rules_action", "label": "Shattering the Self", "kind": "play_card",
+          "source": {"cardId": "$card", "zone": "hand"}, "abilityId": "shattering-the-self",
+          "paymentCardIds": ["%pay"],
+          "targets": [{"kind": "player", "playerId": "&opp"}, {"kind": "card", "itemId": "@opp-fighter", "cardId": "%big"}]
+        }},
+        {"label": "Les deux joueurs passent", "resolve": true},
+        {"label": "3 cartes défaussées du deck adverse", "expect": {"zone": "opp.graveyard", "count": 3}},
+        {"label": "Migmomirf perd 3 de puissance", "expect": {"power": "@opp-fighter", "eq": 5}}
+      ]
+    },
+    {
+      "id": "destroy-opponent-interzone",
+      "cardId": "f2cj2wys3jhbzci_en",
+      "title": "Destroy : détruire une Manifestation en Interzone (pas en Confrontation)",
+      "phase": "confrontation_reaction",
+      "priority": "me",
+      "players": {
+        "me": {"hand": ["$card", {"card": "vanilla:choleric:3", "as": "pay"}, "vanilla:phlegmatic:2"], "deck": 6, "graveyard": 1},
+        "opp": {"hand": 2, "deck": 6, "graveyard": 0}
+      },
+      "battlefield": [
+        {"id": "my-fighter", "owner": "me", "card": "vanilla:capricious:3", "zone": "confrontation", "first": true},
+        {"id": "opp-fighter", "owner": "opp", "card": "vanilla:phlegmatic:3", "zone": "confrontation", "first": true},
+        {"id": "opp-interzone", "owner": "opp", "card": {"card": "vanilla:vitreous:4", "as": "victim"}, "zone": "interzone"}
+      ],
+      "checks": [
+        "Seule la Manifestation de l'Interzone adverse est ciblable, pas celle en Confrontation.",
+        "Le coût {H}{H}{H} se paie en tribut avec une Manifestation de puissance 3, de n'importe quel tempérament.",
+        "À la résolution, la carte part dans les Limbes adverses."
+      ],
+      "script": [
+        {"label": "Viser la Confrontation est refusé", "expectError": true, "send": {
+          "type": "declare_rules_action", "label": "Destroy", "kind": "play_card",
+          "source": {"cardId": "$card", "zone": "hand"}, "abilityId": "destroy-field-will-or-interzone-manifestation",
+          "paymentCardIds": ["%pay"],
+          "targets": [{"kind": "card", "itemId": "@opp-fighter", "cardId": "x"}]
+        }},
+        {"label": "Jouer Destroy sur l'Interzone adverse", "send": {
+          "type": "declare_rules_action", "label": "Destroy", "kind": "play_card",
+          "source": {"cardId": "$card", "zone": "hand"}, "abilityId": "destroy-field-will-or-interzone-manifestation",
+          "paymentCardIds": ["%pay"],
+          "targets": [{"kind": "card", "itemId": "@opp-interzone", "cardId": "%victim"}]
+        }},
+        {"label": "Les deux joueurs passent", "resolve": true},
+        {"label": "La cible est dans les Limbes adverses", "expect": {"zone": "opp.graveyard", "contains": "%victim"}}
+      ]
+    },
+    {
+      "id": "borombo-loses-and-destroys",
+      "cardId": "70wsdfb29mmcsqf_en",
+      "title": "Borombo perd la Confrontation et détruit le gagnant",
+      "phase": "confrontation_reaction",
+      "priority": "me",
+      "players": {
+        "me": {"hand": 2, "deck": 6, "graveyard": 1},
+        "opp": {"hand": 2, "deck": 6, "graveyard": 1}
+      },
+      "battlefield": [
+        {"id": "borombo", "owner": "me", "card": "$card", "zone": "confrontation", "first": true},
+        {"id": "opp-fighter", "owner": "opp", "card": {"card": "vanilla:vitreous:4", "as": "winner"}, "zone": "confrontation", "first": true}
+      ],
+      "checks": [
+        "Passe : Borombo (Colérique 3) perd contre une Vitreuse 4.",
+        "Au moment de la perte, l'UI te demande une cible en Confrontation adverse.",
+        "À la résolution, le gagnant adverse est détruit."
+      ],
+      "script": [
+        {"label": "Passer jusqu'au choix de cible de Borombo", "passUntil": {"choice": "trigger_targets"}},
+        {"label": "Choisir le combattant adverse", "choose": {"targets": [{"kind": "card", "itemId": "@opp-fighter", "cardId": "%winner"}]}},
+        {"label": "La capacité est sur la Pile", "expect": {"stack": 1}},
+        {"label": "Les deux joueurs passent", "resolve": true},
+        {"label": "Le gagnant est détruit", "expect": {"zone": "opp.graveyard", "contains": "%winner"}}
+      ]
+    }
+  ]
+}

@@ -37,6 +37,7 @@ GLABRON = "x15xumjqqhrnrds_en"
 KNOBBLY_COLOSSUS = "o1b1hf2xpmkt8j2_en"
 STICKY_FASCES_FLY = "inner-deserts-101"
 TIMID_BRAIN = "5zgq2zcogt4g4d0_en"
+FAROC_KO = "inner-deserts-006"
 
 
 def app_function(name):
@@ -60,7 +61,7 @@ def run_node(script):
 class ReportedCardRulesCase(game_state_tests.RealCardRulesCase):
     ALL = (
         WANDERING_VETERAN, SHATTERING_THE_SELF, CENSOR, DESTROY, BOROMBO, GLABRON,
-        KNOBBLY_COLOSSUS, STICKY_FASCES_FLY, TIMID_BRAIN,
+        KNOBBLY_COLOSSUS, STICKY_FASCES_FLY, TIMID_BRAIN, FAROC_KO,
     )
 
     def started_session(self, phase_id="confrontation_reaction", priority="p1"):
@@ -431,3 +432,39 @@ class GlabronTests(ReportedCardRulesCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class FarocKoTributeTests(ReportedCardRulesCase):
+    """Faroc-Ko has 5 power, but used as tribute it is worth 2 from any zone."""
+
+    def play_will(self, session, cost, payment):
+        session.card_rules["will-x"].update({"cost": cost, "powerCost": "{G}" * cost})
+        return session.declare_rules_action(
+            "p1", "Will", kind="play_card", source={"cardId": "will-x", "zone": "hand"},
+            payment_card_ids=payment,
+        )
+
+    def test_from_hand_it_pays_two_not_five(self):
+        self.assertEqual(self.real_rules()[FAROC_KO]["power"], 5)
+        session, p1, _p2 = self.started_session()
+        self.put(p1, "hand", ["will-x", FAROC_KO])
+        error, _ = self.play_will(session, 3, [FAROC_KO])
+        self.assertIsNotNone(error)
+        error, action = self.play_will(session, 2, [FAROC_KO])
+        self.assertIsNone(error)
+        self.assertEqual(action["cost"]["tributeCardIds"], [FAROC_KO])
+
+    def test_from_the_interzone_it_also_pays_two(self):
+        session, p1, _p2 = self.started_session()
+        self.put(p1, "hand", ["will-x"])
+        session.battlefield = [self.field_item("faroc", "p1", FAROC_KO, field_zone="interzone")]
+        error, _ = self.play_will(session, 3, ["battlefield|faroc"])
+        self.assertIsNotNone(error)
+        error, _ = self.play_will(session, 2, ["battlefield|faroc"])
+        self.assertIsNone(error)
+        self.assertIsNone(session.find_battlefield_item("faroc"))
+
+    def test_the_client_hand_shows_the_tribute_value(self):
+        session, p1, _p2 = self.started_session()
+        self.put(p1, "hand", [FAROC_KO])
+        self.assertEqual(session.rules_tribute_power_overrides_snapshot(), {"p1": {FAROC_KO: 2}})

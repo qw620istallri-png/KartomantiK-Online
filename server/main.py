@@ -21,6 +21,7 @@ from websockets.http11 import Response
 from websockets.datastructures import Headers
 from websockets.exceptions import ConnectionClosed
 
+import sandbox
 from session import (
     Session, new_id, validate_tournament_deck,
     PRIVATE_ZONES, SHARED_ZONES, ALL_ZONES,
@@ -132,12 +133,15 @@ def interzone_tribute_power_for_card(card):
 
 
 def tribute_power_override_for_card(card):
+    """Tribute value printed as "if X is used as tribute, it is considered to have a base power of ...".
+
+    It applies wherever the card pays from (hand, Interzone, Limbo): Faroc-Ko keeps
+    its 5 power on the field but only ever pays 2 as tribute (user ruling, 2026-10-18).
+    """
     effect = card.get("effect") or ""
-    if re.search(r"tribute from the Interzone", effect, re.IGNORECASE):
-        return None
     match = re.search(
         r"(?:^|\n)(As long as [^,\n]+, )?if [^,\n]+ is used as tribute, it is considered "
-        r"to have a base power of ([^\n.]+)\.",
+        r"(?:to have a base power of|of base power) ([^\n.]+)\.",
         effect, re.IGNORECASE,
     )
     if not match:
@@ -395,6 +399,7 @@ def build_card_rules(cards, abilities_by_card):
 
 
 CARD_RULES = build_card_rules(CARD_DATA, CARD_ABILITIES)
+SANDBOX_CATALOG = sandbox.Catalog(CARD_DATA, CARD_ABILITIES, CARD_RULES)
 CARD_ID_BY_NUMBER = {int(card.get("collectionNumber") or 0): card["id"] for card in CARD_DATA}
 DEFAULT_TOURNAMENT_POLICY = {
     "bannedCardIds": [CARD_ID_BY_NUMBER[number] for number in (82, 128, 86)],
@@ -588,11 +593,49 @@ def find_session_by_code(code):
 
 # ---------------------------------------------------------------- static files
 
+SANDBOX_HEAD = (
+    '<script>try{localStorage.setItem("ko_ui_beta","1")}catch(e){}</script>'
+    '<link rel="stylesheet" href="/sandbox/panel.css">'
+)
+SANDBOX_BODY = '<script src="/sandbox/panel.js"></script>'
+SANDBOX_FILES = {"/sandbox/panel.js": "panel.js", "/sandbox/panel.css": "panel.css"}
+
+
+def static_response(body, content_type):
+    headers = Headers()
+    headers["Content-Type"] = content_type
+    headers["Content-Length"] = str(len(body))
+    headers["Cache-Control"] = "no-cache"
+    headers["Connection"] = "close"
+    return Response(200, "OK", headers, body)
+
+
+def sandbox_static(path):
+    """Sandbox-only routes: the panel files and the card index. None when not a sandbox path."""
+    if path == "/sandbox/index.json":
+        try:
+            with open(os.path.join(PUBLIC_DIR, "automation-coverage.json"), "r", encoding="utf-8") as coverage_file:
+                coverage = json.load(coverage_file).get("cards") or {}
+        except (OSError, ValueError):
+            coverage = {}
+        body = encode_message({"cards": SANDBOX_CATALOG.index(coverage, sandbox.load_validation())}).encode("utf-8")
+        return static_response(body, "application/json; charset=utf-8")
+    if path in SANDBOX_FILES:
+        with open(os.path.join(sandbox.SANDBOX_DIR, SANDBOX_FILES[path]), "rb") as panel_file:
+            body = panel_file.read()
+        return static_response(body, "text/javascript; charset=utf-8" if path.endswith(".js") else "text/css; charset=utf-8")
+    return None
+
+
 async def serve_static(path):
     versioned = "?v=" in path
+    path = path.split("?", 1)[0]
     if path in ("", "/"):
         path = "/index.html"
-    path = path.split("?", 1)[0]
+    if sandbox.enabled():
+        response = sandbox_static(path)
+        if response is not None:
+            return response
     safe_rel = os.path.normpath(path).lstrip("\\/")
     full_path = os.path.normpath(os.path.join(PUBLIC_DIR, safe_rel))
     # websockets' HTTP support is a thin layer meant for the WS handshake, not
@@ -607,6 +650,9 @@ async def serve_static(path):
         return Response(404, "Not Found", Headers([("Connection", "close")]), b"Not Found")
     with open(full_path, "rb") as f:
         body = f.read()
+    if safe_rel == "index.html" and sandbox.enabled():
+        body = body.replace(b"</head>", SANDBOX_HEAD.encode() + b"</head>", 1)
+        body = body.replace(b"</body>", SANDBOX_BODY.encode() + b"</body>", 1)
     content_type, _ = mimetypes.guess_type(full_path)
     headers = Headers()
     headers["Content-Type"] = content_type or "application/octet-stream"
@@ -891,6 +937,9 @@ async def handle_message(ws, info, data):
     role = info.get("role", "observer" if info.get("isObserver") else "player")
     is_observer = role != "player"
     msg_type = data.get("type")
+
+    if str(msg_type or "").startswith("sandbox_"):
+        return await handle_sandbox_message(ws, info, data)
 
     if session.ended and msg_type not in {
         "chat_message", "leave_session", "request_log", "reset_board",
@@ -2312,6 +2361,18 @@ async def handle_join(ws, data):
         seat = None
         session.add_log(client_id, "create_tournament", {}, actor_name=name)
         log.info("Tournament created: organizer=%s", session.code_organizer)
+    elif data.get("sandbox") and sandbox.enabled():
+        session = new_sandbox_session()
+        scenario = sandbox.find_scenario(
+            SANDBOX_CATALOG, data["sandbox"].get("scenarioId"), data["sandbox"].get("cardId"),
+        ) or sandbox.generic_scenario(SANDBOX_CATALOG, SANDBOX_CATALOG.order[0])
+        session.sandbox_me = client_id
+        session.get_or_create_player(client_id, name, seat=0)
+        sandbox.apply_scenario(session, SANDBOX_CATALOG, scenario, client_id)
+        sessions[session.code_player] = session
+        role = "player"
+        seat = None
+        log.info("Sandbox session %s: %s", session.code_player, scenario["id"])
     elif data.get("createNew"):
         session = Session(
             tournament_policy=normalized_deck_policy(data.get("deckPolicy")) if data.get("banListEnabled") else None,
@@ -2347,6 +2408,8 @@ async def handle_join(ws, data):
         player = session.get_or_create_player(client_id, name, seat=seat)
         player["connected"] = True
         player_id = client_id
+        if getattr(session, "sandbox", None) and client_id == getattr(session, "sandbox_me", None):
+            session.players[sandbox.OPPONENT_ID]["connected"] = True  # the tester plays both seats
 
     connections[ws] = {
         "session": session,
@@ -2371,6 +2434,110 @@ async def handle_join(ws, data):
         "tournamentCodes": session.tournament_codes() if role == "organizer" else None,
     })
     await broadcast_state(session)
+    if getattr(session, "sandbox", None):
+        await send_sandbox_scenario(ws, session)
+
+
+# ---------------------------------------------------------------- card sandbox (KKO_SANDBOX=1)
+
+def new_sandbox_session():
+    return Session(
+        card_points=CARD_POINTS, card_labels=CARD_LABELS, manifestation_ids=CARD_MANIFESTATION_IDS,
+        card_rules=CARD_RULES, rules_beta=True,
+    )
+
+
+async def send_sandbox_scenario(ws, session):
+    scenario = session.sandbox["scenario"]
+    await send_to(ws, {
+        "type": "sandbox_scenario",
+        "scenario": {
+            key: scenario.get(key)
+            for key in ("id", "cardId", "title", "generic", "checks", "phase")
+        } | {"script": [step.get("label") for step in scenario.get("script") or []]},
+        "seat": "opp" if connections.get(ws, {}).get("playerId") == sandbox.OPPONENT_ID else "me",
+        "opponentPasses": sandbox.OPPONENT_ID in session.rules_engine["passAllPlayerIds"],
+    })
+
+
+def sandbox_reload(session, scenario):
+    """Fresh engine state for the same session (codes and connections stay)."""
+    fresh = new_sandbox_session()
+    keep = {"code_player": session.code_player, "code_observer": session.code_observer, "sandbox_me": session.sandbox_me}
+    session.__dict__.clear()
+    session.__dict__.update(fresh.__dict__)
+    session.__dict__.update(keep)
+    session.get_or_create_player(session.sandbox_me, "Testeur", seat=0)
+    sandbox.apply_scenario(session, SANDBOX_CATALOG, scenario, session.sandbox_me)
+    for player in session.players.values():
+        player["connected"] = True
+    for info in connections.values():
+        if info["session"] is session:
+            info["playerId"] = session.sandbox_me
+
+
+async def handle_sandbox_message(ws, info, data):
+    session = info["session"]
+    msg_type = data.get("type")
+    if not sandbox.enabled() or not getattr(session, "sandbox", None):
+        return await send_error(ws, "The card sandbox is not active.")
+    if msg_type == "sandbox_load":
+        scenario = sandbox.find_scenario(SANDBOX_CATALOG, data.get("scenarioId"), data.get("cardId"))
+        if scenario is None:
+            return await send_error(ws, "Unknown sandbox scenario.")
+        sandbox_reload(session, scenario)
+        await send_to(ws, {"type": "joined", "playerId": session.sandbox_me, "isObserver": False, "role": "player",
+                           "mode": session.mode, "rulesBeta": True, "codePlayer": session.code_player,
+                           "codeObserver": session.code_observer})
+    elif msg_type == "sandbox_seat":
+        seats = session.sandbox["seats"]
+        info["playerId"] = seats["opp"] if info["playerId"] == seats["me"] else seats["me"]
+        if info["playerId"] == seats["opp"]:
+            # the tester now holds this seat: the engine must stop passing for it
+            session.rules_engine["passAllPlayerIds"] = [
+                pid for pid in session.rules_engine["passAllPlayerIds"] if pid != seats["opp"]
+            ]
+        await send_to(ws, {"type": "joined", "playerId": info["playerId"], "isObserver": False, "role": "player",
+                           "mode": session.mode, "rulesBeta": True, "codePlayer": session.code_player,
+                           "codeObserver": session.code_observer})
+    elif msg_type == "sandbox_opponent_passes":
+        pass_all = [pid for pid in session.rules_engine["passAllPlayerIds"] if pid != sandbox.OPPONENT_ID]
+        if data.get("on"):
+            pass_all.append(sandbox.OPPONENT_ID)
+        session.rules_engine["passAllPlayerIds"] = pass_all
+        await auto_advance_rules_phases(session, info["playerId"])
+    elif msg_type == "sandbox_run_script":
+        sandbox_reload(session, session.sandbox["scenario"])
+        await send_to(ws, {"type": "joined", "playerId": session.sandbox_me, "isObserver": False, "role": "player",
+                           "mode": session.mode, "rulesBeta": True, "codePlayer": session.code_player,
+                           "codeObserver": session.code_observer})
+        await broadcast_state(session)
+        delay = min(max(float(data.get("delay") or 1.2), 0), 5)
+
+        async def on_step(report):
+            session.touch()
+            await broadcast_state(session)
+            await send_to(ws, {"type": "sandbox_step", "report": report})
+            await asyncio.sleep(delay)
+
+        await asyncio.sleep(delay)
+        reports = await sandbox.run_script(
+            session, handle_message, auto_advance_rules_phases, AUTO_PASS_MESSAGE_TYPES, on_step=on_step,
+        )
+        await send_to(ws, {"type": "sandbox_script_done", "reports": reports})
+    elif msg_type == "sandbox_validate":
+        try:
+            validation = sandbox.save_validation(
+                str(data.get("cardId") or ""), data.get("status"), data.get("note"), data.get("scenarioId"),
+            )
+        except ValueError as error:
+            return await send_error(ws, str(error))
+        return await send_to(ws, {"type": "sandbox_validation", "validation": validation})
+    else:
+        return await send_error(ws, "Unknown sandbox message.")
+    session.touch()
+    await broadcast_state(session)
+    await send_sandbox_scenario(ws, session)
 
 
 async def handler(ws):

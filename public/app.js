@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261017-rules-beta-138-4";
+const STATIC_ASSET_VERSION = "20261018-rules-beta-138-5";
 {
   const versionEl = document.getElementById("appVersion");
   // "...-beta-138-1" reads "beta 138.1" (a release without a fix number reads "138.0")
@@ -5512,7 +5512,7 @@ function connectAndJoin(joinPayload) {
   const proto = location.protocol === "https:" ? "wss:" : "ws:";
   ws = new WebSocket(`${proto}//${location.host}/ws`);
   ws.onopen = () => {
-    ws.send(JSON.stringify({ type: "join", createNew, createTournament, rulesBeta, banListEnabled, deckPolicy: joinPayload.deckPolicy, code: joinedCode, name: joinedName, clientId }));
+    ws.send(JSON.stringify({ type: "join", createNew, createTournament, rulesBeta, banListEnabled, deckPolicy: joinPayload.deckPolicy, code: joinedCode, name: joinedName, clientId, sandbox: joinPayload.sandbox }));
   };
   ws.onmessage = (event) => handleServerMessage(JSON.parse(event.data));
   ws.onclose = () => {
