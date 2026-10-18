@@ -2,3 +2,9 @@ __pycache__/
 *.pyc
 .DS_Store
 Thumbs.db
+
+# Local card sandbox (KKO_SANDBOX=1): stays on the developer machine
+sandbox/
+server/sandbox.py
+tests/test_sandbox_scenarios.py
+tools/sandbox_validate_simple.py

@@ -21,7 +21,10 @@ from websockets.http11 import Response
 from websockets.datastructures import Headers
 from websockets.exceptions import ConnectionClosed
 
-import sandbox
+try:
+    import sandbox  # local card sandbox: kept on the developer's machine, out of git
+except ImportError:
+    sandbox = None
 from session import (
     Session, new_id, validate_tournament_deck,
     PRIVATE_ZONES, SHARED_ZONES, ALL_ZONES,
@@ -399,7 +402,11 @@ def build_card_rules(cards, abilities_by_card):
 
 
 CARD_RULES = build_card_rules(CARD_DATA, CARD_ABILITIES)
-SANDBOX_CATALOG = sandbox.Catalog(CARD_DATA, CARD_ABILITIES, CARD_RULES)
+SANDBOX_CATALOG = sandbox.Catalog(CARD_DATA, CARD_ABILITIES, CARD_RULES) if sandbox else None
+
+
+def sandbox_enabled():
+    return sandbox is not None and sandbox.enabled()
 CARD_ID_BY_NUMBER = {int(card.get("collectionNumber") or 0): card["id"] for card in CARD_DATA}
 DEFAULT_TOURNAMENT_POLICY = {
     "bannedCardIds": [CARD_ID_BY_NUMBER[number] for number in (82, 128, 86)],
@@ -632,7 +639,7 @@ async def serve_static(path):
     path = path.split("?", 1)[0]
     if path in ("", "/"):
         path = "/index.html"
-    if sandbox.enabled():
+    if sandbox_enabled():
         response = sandbox_static(path)
         if response is not None:
             return response
@@ -650,7 +657,7 @@ async def serve_static(path):
         return Response(404, "Not Found", Headers([("Connection", "close")]), b"Not Found")
     with open(full_path, "rb") as f:
         body = f.read()
-    if safe_rel == "index.html" and sandbox.enabled():
+    if safe_rel == "index.html" and sandbox_enabled():
         body = body.replace(b"</head>", SANDBOX_HEAD.encode() + b"</head>", 1)
         body = body.replace(b"</body>", SANDBOX_BODY.encode() + b"</body>", 1)
     content_type, _ = mimetypes.guess_type(full_path)
@@ -2361,7 +2368,7 @@ async def handle_join(ws, data):
         seat = None
         session.add_log(client_id, "create_tournament", {}, actor_name=name)
         log.info("Tournament created: organizer=%s", session.code_organizer)
-    elif data.get("sandbox") and sandbox.enabled():
+    elif data.get("sandbox") and sandbox_enabled():
         session = new_sandbox_session()
         scenario = sandbox.find_scenario(
             SANDBOX_CATALOG, data["sandbox"].get("scenarioId"), data["sandbox"].get("cardId"),
@@ -2479,7 +2486,7 @@ def sandbox_reload(session, scenario):
 async def handle_sandbox_message(ws, info, data):
     session = info["session"]
     msg_type = data.get("type")
-    if not sandbox.enabled() or not getattr(session, "sandbox", None):
+    if not sandbox_enabled() or not getattr(session, "sandbox", None):
         return await send_error(ws, "The card sandbox is not active.")
     if msg_type == "sandbox_load":
         scenario = sandbox.find_scenario(SANDBOX_CATALOG, data.get("scenarioId"), data.get("cardId"))
