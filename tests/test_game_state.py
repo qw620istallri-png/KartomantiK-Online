@@ -7077,6 +7077,12 @@ class AssistedRulesTests(unittest.TestCase):
         session.card_rules["stomper"] = {
             "type": "manifestation", "power": 4,
             "temperaments": ["capricious"],
+            "triggeredAbilities": [{
+                "id": "stomper-revelation",
+                "trigger": {"event": "revelation"},
+                "immediate": True,
+                "result": {"kind": "force_win_if_highest_base_first"},
+            }],
         }
         session.card_rules["other-first"] = {
             "type": "manifestation", "power": 3,
@@ -7096,19 +7102,23 @@ class AssistedRulesTests(unittest.TestCase):
         session.rules_engine["firstManifestationItemIds"] = {
             "p1": "stomper", "p2": "other",
         }
-        result = session.apply_rules_action_result({
-            "controllerId": "p1",
-            "source": {"cardId": "stomper", "itemId": "stomper"},
-            "ability": {"result": {
-                "kind": "force_win_if_highest_base_first"
-            }},
-        })
         session.phase_tracker["index"] = ADVANCED_PHASES.index(
-            "resolution_compare"
+            "confrontation_immediate"
         )
-        comparison = session.prepare_rules_confrontation_result()
+        session.rules_engine["priorityPasses"] = ["p1"]
+        actions = session.queue_rules_revelation_triggers(defer=True)
+        session.queue_rules_simultaneous_actions(actions)
+        resolved = session.resolve_rules_immediate_actions()
+        result = resolved[0]["action"]["effectResult"]
+        comparison = result["confrontationResult"]
 
+        self.assertEqual([action["ability"]["id"] for action in actions], [
+            "stomper-revelation"
+        ])
         self.assertEqual(result["status"], "forced")
+        self.assertEqual(result["phaseId"], "resolution_compare")
+        self.assertEqual(session.current_phase_id(), "resolution_compare")
+        self.assertEqual(session.rules_engine["priorityPasses"], [])
         self.assertEqual(comparison["winnerId"], "p1")
         self.assertEqual(comparison["reason"], "forced")
 

@@ -13709,14 +13709,22 @@ class Session:
                 first_ids.get(controller_id) == source_item.get("id")
                 and source_power >= highest
             )
+            confrontation = None
             if qualifies:
                 self.rules_engine["forcedConfrontationWinnerId"] = controller_id
+                self.phase_tracker["index"] = ADVANCED_PHASES.index(
+                    "resolution_compare"
+                )
+                self.rules_engine["priorityPasses"] = []
+                confrontation = self.prepare_rules_confrontation_result()
             return {
                 "kind": result.get("kind"),
                 "status": "forced" if qualifies else "condition_failed",
                 "playerId": controller_id,
                 "basePower": source_power,
                 "highestBasePower": highest,
+                "phaseId": self.current_phase_id(),
+                "confrontationResult": confrontation,
             }
         if result.get("kind") == "stalemate_unless_opponent_pays":
             controller_id = action.get("controllerId")
