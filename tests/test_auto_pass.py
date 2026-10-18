@@ -182,6 +182,21 @@ class AutoPassTests(unittest.TestCase):
         self.goto(session, "resolution_compare")
         self.assertEqual(session.rules_auto_pass_player(), "p1")
 
+    def test_skipping_phases_is_each_players_own_option(self):
+        session, p1, p2 = self.make_session()
+        self.goto(session, "end_actions")
+        self.assertIsNone(session.set_rules_auto_skip("p1", False)[0])
+        self.assertIsNone(session.rules_auto_pass_player())
+        state = session.serialize_for("p1", "player")["rulesEngine"]
+        self.assertEqual(state["autoSkipOffPlayerIds"], ["p1"])
+        self.assertTrue(state["autoSkipPhases"])
+        # the opponent still has phases skipped for them
+        session.rules_engine["priorityPlayerId"] = "p2"
+        self.assertEqual(session.rules_auto_pass_player(), "p2")
+        self.assertIsNone(session.set_rules_auto_skip("p1", True)[0])
+        session.rules_engine["priorityPlayerId"] = "p1"
+        self.assertEqual(session.rules_auto_pass_player(), "p1")
+
     def test_the_option_a_pending_choice_and_an_unstarted_match_disable_it(self):
         session, p1, p2 = self.make_session()
         self.goto(session, "end_actions")

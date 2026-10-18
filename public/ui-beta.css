@@ -450,7 +450,20 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 #gameScreen.ui-beta .ub-phase .rules-auto-skip input:focus-visible { outline: 2px solid var(--ub-gold-pale); outline-offset: 2px; }
 #gameScreen.ui-beta .ub-phase .rules-auto-skip:has(input:checked) { color: var(--ub-ink); }
 /* manual mode: the phase panel is always shown in the column */
-#gameScreen.ui-beta:not(.ub-rules) .ub-phase.manual .phase-tracker.hidden { display: flex; }
+#gameScreen.ui-beta:not(.ub-rules) .ub-phase.manual .phase-tracker.hidden { display: flex !important; }
+#gameScreen.ui-beta:not(.ub-rules) .ub-phase.manual .rules-priority.hidden { display: none !important; }
+
+/* manual mode: the Stack holds real field cards, newest on top; drag one out to resolve it */
+#gameScreen.ui-beta .ub-mstack { display: flex; flex-wrap: wrap; gap: 8px; padding: 6px 8px 10px; align-content: flex-start; }
+#gameScreen.ui-beta .ub-mstack:empty { display: none; }
+#gameScreen.ui-beta .ub-mstack .bf-card.ub-mstack-card { position: relative !important; left: auto !important; top: auto !important; scale: none !important; zoom: .42; flex: none; cursor: grab; }
+#gameScreen.ui-beta .ub-mstack .bf-card.ub-mstack-card:first-child { box-shadow: 0 0 0 4px var(--ub-gold), 0 10px 24px rgba(0, 0, 0, .45); border-radius: 10px; }
+#gameScreen.ui-beta.ub-dragging .ub-stack.ub-manual { box-shadow: inset 0 0 0 2px rgba(var(--ub-gl), .55); }
+#gameScreen.ui-beta .ub-stack.ub-manual.drop-target-active,
+#gameScreen.ui-beta .ub-stack.ub-manual:has(.drop-target-active) { box-shadow: inset 0 0 0 3px rgba(var(--ub-gl), .9); }
+/* manual mode: the empty Stalemate Zone, a drop band under the totals while a card is dragged */
+.ub-stale-drop { position: absolute; z-index: 6; display: none; align-items: center; justify-content: center; border-radius: 10px; border: 1.5px dashed rgba(160, 200, 255, .55); background: rgba(120, 150, 210, .12); color: var(--ub-stale-ink); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; pointer-events: none; }
+#gameScreen.ui-beta.ub-dragging .ub-stale-drop:not(.hidden) { display: flex; pointer-events: auto; }
 
 /* inspect: replaces the left column */
 #gameScreen.ui-beta ~ .inspect-panel { padding: 0; }

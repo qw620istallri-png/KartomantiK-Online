@@ -5,10 +5,10 @@
     "explicitCards": 377,
     "explicitAbilities": 493,
     "statuses": {
-      "automated": 447,
+      "automated": 448,
       "generic": 0,
       "manual": 2,
-      "partial": 1
+      "partial": 0
     }
   },
   "cards": {
@@ -6152,7 +6152,7 @@
       "collectionNumber": 360,
       "name": "Tebebe, Taken by the Dunes",
       "setName": "Inner Deserts",
-      "status": "partial",
+      "status": "automated",
       "abilityIds": [
         "tebebe-sacrifices-and-unearths"
       ],
@@ -6164,7 +6164,7 @@
         "tests/test_game_state.py",
         "tests/test_card_catalog.py"
       ],
-      "notes": "Sacrifice and the 3 Concealed cards are automated, and Concealed Wills can be played for 3 Hollow Essences. A Concealed Manifestation cannot yet be played into the Interzone by the engine."
+      "notes": "Sacrifice and the 3 Concealed cards are automated. Each Concealed card can be played for 3 Hollow Essences: a Will as usual, a Manifestation into the Interzone (during Reaction or End actions, if the Interzone has room)."
     },
     "inner-deserts-061": {
       "collectionNumber": 361,

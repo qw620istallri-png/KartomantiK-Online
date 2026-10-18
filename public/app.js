@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261018-rules-beta-138-5";
+const STATIC_ASSET_VERSION = "20261018-rules-beta-138-6";
 {
   const versionEl = document.getElementById("appVersion");
   // "...-beta-138-1" reads "beta 138.1" (a release without a fix number reads "138.0")
@@ -1400,7 +1400,8 @@ function renderRulesStack() {
   $("#rulesAutoSkipLabel").textContent = t("rulesAutoSkipLabel");
   $("#rulesAutoSkipWrap").title = t("rulesAutoSkipHint");
   $("#rulesAutoSkipWrap").classList.toggle("hidden", isObserver);
-  autoSkipBox.checked = rules.autoSkipPhases !== false;
+  autoSkipBox.checked = rules.autoSkipPhases !== false
+    && !(rules.autoSkipOffPlayerIds || []).includes(myPlayerId);
   const passAllLocked = !firstManifestation && rulesPassAllLocked();
   $("#passPriorityBtn").textContent = firstManifestation
     ? t(mineFirstValidated ? "rulesFirstManifestationLocked" : "rulesFirstManifestationValidate")
@@ -1850,7 +1851,7 @@ function prepareRulesEffectVfxChanges(nextState) {
 function removeRulesVfx() {
   clearRulesVfxQueue();
   rulesVfxActiveLabels.length = 0;
-  $$(".rules-vfx-spotlight, .rules-vfx-target-arrow, .rules-vfx-phase-banner, .rules-vfx-flight, .rules-vfx-impact, .rules-vfx-exhaust-ring, .rules-vfx-exhaust-label, .rules-vfx-impact-burst, .rules-vfx-target-lock, .rules-vfx-effect-cast, .rules-vfx-effect-seal, .rules-vfx-effect-release, .rules-vfx-stack-pulse")
+  $$(".rules-vfx-spotlight, .rules-vfx-target-arrow, .rules-vfx-phase-banner, .rules-vfx-flight-path, .rules-vfx-cast-origin, .rules-vfx-flight, .rules-vfx-impact, .rules-vfx-exhaust-ring, .rules-vfx-exhaust-label, .rules-vfx-impact-burst, .rules-vfx-target-lock, .rules-vfx-effect-cast, .rules-vfx-effect-seal, .rules-vfx-effect-release, .rules-vfx-stack-pulse")
     .forEach((element) => element.remove());
 }
 
@@ -2340,6 +2341,51 @@ function rulesVfxAfterWinnerChoices(play, waited = 0) {
   play();
 }
 
+function playRulesVfxFlightPath(kind, origin, target, options = {}) {
+  if (!origin || !target || kind === "draw-card" || rulesVfxReducedMotion()) return;
+  const delay = Number(options.delay || 0);
+  const duration = Number(options.duration || 620);
+  const arc = Number(options.arc || 80);
+  const tone = options.tone || "var(--gold)";
+  const controlX = origin.x + (target.x - origin.x) * .5;
+  const controlY = origin.y + (target.y - origin.y) * .5 - arc * 1.25;
+  const pathData = `M ${origin.x} ${origin.y} Q ${controlX} ${controlY} ${target.x} ${target.y}`;
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.classList.add("rules-vfx-flight-path", `rules-vfx-flight-path-${kind}`);
+  svg.setAttribute("viewBox", `0 0 ${window.innerWidth} ${window.innerHeight}`);
+  svg.setAttribute("preserveAspectRatio", "none");
+  svg.setAttribute("aria-hidden", "true");
+  svg.style.setProperty("--vfx-path-tone", tone);
+  svg.innerHTML = `<path class="rules-vfx-flight-path-aura" d="${pathData}" pathLength="1"></path><path class="rules-vfx-flight-path-core" d="${pathData}" pathLength="1"></path>`;
+  document.body.appendChild(svg);
+  svg.querySelectorAll("path").forEach((path, index) => {
+    vfxAnimate(path, [
+      { strokeDashoffset: "1", opacity: 0 },
+      { offset: .12, opacity: index ? .95 : .52 },
+      { offset: .82, strokeDashoffset: "-.02", opacity: index ? .82 : .36 },
+      { strokeDashoffset: "-.18", opacity: 0 },
+    ], { duration, delay, easing: "cubic-bezier(.16,1,.3,1)", fill: "both" });
+  });
+  rulesVfxAnimateAndRemove(svg, [
+    { opacity: 1 },
+    { opacity: 1, offset: .76 },
+    { opacity: 0 },
+  ], { duration: duration + 140, delay, easing: "ease-out" });
+
+  const originMark = document.createElement("div");
+  originMark.className = `rules-vfx-cast-origin rules-vfx-cast-origin-${kind}`;
+  originMark.setAttribute("aria-hidden", "true");
+  originMark.style.left = `${origin.x}px`;
+  originMark.style.top = `${origin.y}px`;
+  originMark.style.setProperty("--vfx-path-tone", tone);
+  document.body.appendChild(originMark);
+  rulesVfxAnimateAndRemove(originMark, [
+    { transform: "translate(-50%,-50%) scale(.28) rotate(-24deg)", opacity: 0 },
+    { offset: .24, transform: "translate(-50%,-50%) scale(1) rotate(0deg)", opacity: .95 },
+    { transform: "translate(-50%,-50%) scale(1.48) rotate(34deg)", opacity: 0 },
+  ], { duration: Math.min(520, duration * .72), delay, easing: "cubic-bezier(.16,1,.3,1)" });
+}
+
 function playRulesVfxFlight(kind, origin, target, options = {}) {
   const element = document.createElement("div");
   element.className = `rules-vfx-flight rules-vfx-${kind}`;
@@ -2380,6 +2426,14 @@ function playRulesVfxFlight(kind, origin, target, options = {}) {
   const midY = dy * .5 - arc;
   const tilt = isCard ? (options.index % 2 ? 7 : -7) : 0;
   const duration = isCard ? (big ? 1150 : kind === "tribute" ? 500 : kind === "sacrifice" ? 540 : 660) : 470;
+  const flightTemperament = options.temperament || cardsById.get(options.cardId)?.colorKey || null;
+  const trailDelay = Number(options.index || 0) * 36;
+  playRulesVfxFlightPath(kind, origin, target, {
+    arc,
+    duration,
+    delay: trailDelay,
+    tone: flightTemperament ? temperamentInk(flightTemperament) : "var(--gold)",
+  });
   rulesVfxAnimateAndRemove(element, [
     { transform: "translate3d(0,0,0) scale(.92) rotate(0deg)", opacity: 0 },
     { offset: .12, transform: `translate3d(${dx * .05}px,${dy * .05 - 9}px,0) scale(1.05) rotate(${-tilt * .35}deg)`, opacity: 1 },
@@ -2388,27 +2442,25 @@ function playRulesVfxFlight(kind, origin, target, options = {}) {
   ], { duration, delay: Number(options.index || 0) * 36, easing: "cubic-bezier(.22,.72,.2,1)" });
   if (options.land !== false) {
     playRulesVfxPulse(target, kind === "sacrifice" ? "destroyed" : kind === "discard-card" ? "discarded" : "moved", {
-      delay: duration * .62 + Number(options.index || 0) * 36,
+      delay: duration * .88 + trailDelay,
     });
   }
-  // tinted trail and landing burst (family: movement)
-  const flightTemperament = options.temperament || cardsById.get(options.cardId)?.colorKey || null;
+  // A restrained particle wake supports the authored path without obscuring cards.
   if (isCard && flightTemperament && !rulesVfxReducedMotion() && kind !== "draw-card") {
-    const trailDelay = Number(options.index || 0) * 36;
-    for (let step = 1; step <= 5; step += 1) {
-      const progress = step / 6;
+    for (let step = 1; step <= 3; step += 1) {
+      const progress = step / 4;
       const point = {
         x: origin.x + dx * progress,
         y: origin.y + dy * progress - Math.sin(Math.PI * progress) * arc * 0.9,
       };
       window.setTimeout(
-        () => spawnVfxParticles(point, flightTemperament, { count: 2, spread: 14 }),
+        () => spawnVfxParticles(point, flightTemperament, { count: 1, spread: 10 }),
         vfxMs(trailDelay + duration * progress),
       );
     }
     window.setTimeout(
-      () => spawnVfxParticles(target, flightTemperament, big ? { count: 20, spread: 70 } : { count: 8, spread: 36 }),
-      vfxMs(trailDelay + duration * 0.7),
+      () => spawnVfxParticles(target, flightTemperament, big ? { count: 14, spread: 62 } : { count: 6, spread: 32 }),
+      vfxMs(trailDelay + duration * 0.9),
     );
   }
 }
@@ -4280,8 +4332,10 @@ function rulesPlayType(card) {
 
 function beginRulesBoardAction(source) {
   const draft = buildRulesActionDraft(source);
-  if (!draft.card || !["ephemeral_will", "persistent_will"].includes(rulesPlayType(draft.card))) return false;
-  const playable = source.playFromField
+  if (!draft.card || !(source.tebebe || ["ephemeral_will", "persistent_will"].includes(rulesPlayType(draft.card)))) return false;
+  const playable = source.tebebe
+    ? tebebeManifestationIsPlayable(latestState?.battlefield?.find((entry) => entry.id === source.itemId))
+    : source.playFromField
     ? limboWillIsPlayable(source.cardId, true)
     : source.zone === "graveyard"
       ? limboWillIsPlayable(source.cardId)
@@ -4636,6 +4690,15 @@ function rulesGhostHandCards() {
   return ghosts;
 }
 
+// Tebebe: a Concealed Manifestation is played into the Interzone for 3 hollow Essences
+function tebebeManifestationIsPlayable(item) {
+  const rules = latestState?.rulesEngine;
+  const card = cardsById.get(item?.cardId);
+  if (!rules?.enabled || !item?.tebebeConcealed || card?.type !== "manifestation" || isObserver || rules.pendingChoice) return false;
+  if (rules.priorityPlayerId !== myPlayerId || rulesCardPlayRestrictedClient(item.cardId)) return false;
+  return ["confrontation_reaction", "end_actions"].includes(currentPhaseUi().phase?.id);
+}
+
 function limboWillIsPlayable(cardId, fromField = false) {
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
@@ -4730,14 +4793,16 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
     && (permission.cardId === source.cardId || permission.anyWill)
     && Number(permission.turn || 0) === Number(latestState?.phaseTracker?.turn || 0)
   ));
-  const paymentRequirements = limboPlay
+  const paymentRequirements = source.fixedHollow
+    ? { hollow: Number(source.fixedHollow) }
+    : limboPlay
     ? (limboPlay === "free" ? {} : { hollow: 1 })
     : freeWillPermission
     ? {}
     : encodedAbility && Object.hasOwn(encodedAbility, "tribute")
     ? printedTributeRequirements({ powerCost: encodedAbility.tribute })
     : isPrintedWill ? printedTributeRequirements(card) : {};
-  let reduction = limboPlay ? 0 : (latestState?.battlefield || []).reduce((total, item) => {
+  let reduction = (limboPlay || source.fixedHollow) ? 0 : (latestState?.battlefield || []).reduce((total, item) => {
     if ((item.controllerId || item.ownerId) !== myPlayerId || item.fieldZone !== "interzone") return total;
     return total + (passiveEffectsByCard.get(item.cardId) || [])
       .filter((effect) => effect.kind === "reduce_will_tribute")
@@ -4755,7 +4820,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
     paymentRequirements[payable] -= 1;
     reduction -= 1;
   }
-  if (isPrintedWill && !limboPlay && !freeWillPermission && !(encodedAbility && Object.hasOwn(encodedAbility, "tribute"))) {
+  if (isPrintedWill && !limboPlay && !source.fixedHollow && !freeWillPermission && !(encodedAbility && Object.hasOwn(encodedAbility, "tribute"))) {
     const increase = (latestState?.battlefield || []).reduce((total, item) => (
       total + (passiveEffectsByCard.get(item.cardId) || [])
         .filter((effect) => effect.kind === "increase_will_tribute")
@@ -7253,6 +7318,9 @@ function zoneActionsHtml(ownerId, zone, canAct) {
     buttons.push(`<button data-discard-top="${esc(ownerId)}" title="${esc(t("discardTop"))}">${esc(t("handDiscard"))}</button>`);
   }
   buttons.push(`<button data-shuffle="${esc(ownerId)}:${zone}">${esc(t("shuffle"))}</button>`);
+  if (zone === "receptacle") {
+    buttons.push(`<button data-discard-random="${esc(ownerId)}:${zone}" title="${esc(t("discardRandomHint"))}">${esc(t("discardRandom"))}</button>`);
+  }
   if (zone === "deck") {
     buttons.push(`<span class="reveal-n-group">
       <input type="number" min="1" max="10" value="1" data-reveal-n-input="${esc(ownerId)}:${zone}">
@@ -7962,7 +8030,7 @@ function renderHandTray() {
       const rotate = Math.max(-16, Math.min(16, center * 3.25));
       const arc = Math.abs(center) * Math.abs(center) * 1.35;
       const playable = handCardIsPlayable(cid) || handCardHasHandAction(cid);
-      return `<div class="hand-card ${isNew ? "ko-pop-in " : ""}${playable ? "is-playable " : ""}${rarityClassAttr(rarity)}" data-hand-card="${esc(cid)}" data-hand-index="${index}" title="${esc(cardName(cid))}" style="--hand-rotate:${rotate}deg;--hand-arc:${arc}px;--hand-z:${position};${rarityCosmosStyle(cid)}">
+      return `<div class="hand-card ${isNew ? "ko-pop-in " : ""}${playable ? "is-playable " : ""}${rarityClassAttr(rarity)}" data-hand-card="${esc(cid)}" data-hand-index="${index}" role="button" tabindex="0" aria-label="${esc(cardName(cid))}" title="${esc(cardName(cid))}" style="--hand-rotate:${rotate}deg;--hand-arc:${arc}px;--hand-z:${position};${rarityCosmosStyle(cid)}">
       ${raritySurfaceMarkup(rarity, `<img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}">`)}
       ${automationCoverageBadgeHtml(cid)}
       ${wasRevealed ? `<span class="hand-card-revealed-icon" title="${esc(t("revealHeader"))}">👁</span>` : ""}
@@ -7971,12 +8039,12 @@ function renderHandTray() {
     .join("") + suspendedCards.map((entry, index) => {
       const cardId = entry.cardId;
       const curve = handCurveStyle(cards.length + index, cards.length + suspendedCards.length + ghostCards.length);
-      return `<div class="hand-card is-playable" data-suspended-card="${esc(cardId)}" data-suspension-id="${esc(entry.id)}" title="${esc(`${cardName(cardId)} · ${t("rulesSuspended")}`)}" style="${curve}--hand-z:${cards.length + index};${rarityCosmosStyle(cardId)}">
+      return `<div class="hand-card is-playable" data-suspended-card="${esc(cardId)}" data-suspension-id="${esc(entry.id)}" role="button" tabindex="0" aria-label="${esc(`${cardName(cardId)} · ${t("rulesSuspended")}`)}" title="${esc(`${cardName(cardId)} · ${t("rulesSuspended")}`)}" style="${curve}--hand-z:${cards.length + index};${rarityCosmosStyle(cardId)}">
         ${raritySurfaceMarkup(null, `<img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}">`)}
         ${automationCoverageBadgeHtml(cardId)}
         <span class="hand-card-revealed-icon" title="${esc(t("rulesSuspended"))}">S</span>
       </div>`;
-    }).join("") + ghostCards.map((ghost, index) => `<div class="hand-card is-playable is-ghost" data-ghost-card="${esc(ghost.cardId)}" data-ghost-zone="${esc(ghost.zone)}" data-ghost-host="${esc(ghost.itemId || "")}" data-ghost-key="${esc(String(ghost.selectionKey ?? ""))}" title="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" style="${handCurveStyle(cards.length + suspendedCards.length + index, cards.length + suspendedCards.length + ghostCards.length)}--hand-z:${cards.length + suspendedCards.length + index};${rarityCosmosStyle(ghost.cardId)}">
+    }).join("") + ghostCards.map((ghost, index) => `<div class="hand-card is-playable is-ghost" data-ghost-card="${esc(ghost.cardId)}" data-ghost-zone="${esc(ghost.zone)}" data-ghost-host="${esc(ghost.itemId || "")}" data-ghost-key="${esc(String(ghost.selectionKey ?? ""))}" role="button" tabindex="0" aria-label="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" title="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" style="${handCurveStyle(cards.length + suspendedCards.length + index, cards.length + suspendedCards.length + ghostCards.length)}--hand-z:${cards.length + suspendedCards.length + index};${rarityCosmosStyle(ghost.cardId)}">
         ${raritySurfaceMarkup(null, `<img src="${esc(cardImage(ghost.cardId))}" alt="${esc(cardName(ghost.cardId))}">`)}
         <span class="hand-ghost-label">${esc(ghost.label)}</span>
       </div>`).join("");
@@ -8024,6 +8092,7 @@ function renderHandTray() {
         { separator: true },
         { label: t("playFaceUp"), onSelect: () => playFromHand(cardId, true) },
         { label: t("playFaceDown"), onSelect: () => playFromHand(cardId, false) },
+        ...(manualStackAvailable() ? [{ label: t("ubPlayToStack"), onSelect: () => playFromHandToManualStack(cardId) }] : []),
         { separator: true },
         { label: t("handDiscard"), onSelect: () => send({ type: "move_card", fromZone: "hand", toZone: "graveyard", cardId }) },
         { label: t("show"), onSelect: () => send({ type: "reveal", zone: "hand", cardId }) },
@@ -8068,6 +8137,22 @@ function renderHandTray() {
       const rulesItem = rulesActionContextItem({ cardId, zone: "suspended" });
       if (rulesItem) items.push(rulesItem);
       showContextMenu(event.clientX, event.clientY, items);
+    });
+  });
+  $$(`[data-hand-card], [data-ghost-card], [data-suspended-card]`).forEach((el) => {
+    el.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        el.click();
+        return;
+      }
+      if (event.key === "ContextMenu" || (event.shiftKey && event.key === "F10")) {
+        event.preventDefault();
+        const rect = el.getBoundingClientRect();
+        el.dispatchEvent(new MouseEvent("contextmenu", {
+          bubbles: true, clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2,
+        }));
+      }
     });
   });
 }
@@ -9816,6 +9901,36 @@ function requestCardPlacement(payload, source = null) {
   renderRulesChoice();
 }
 
+// Manual play in the new table: the Stack is a place cards wait in until a
+// player drags them out to resolve them
+function manualStackAvailable() {
+  return Boolean(window.uiBeta?.active() && !latestState?.rulesEngine?.enabled && !isObserver);
+}
+
+function playFromHandToManualStack(cardId) {
+  const view = fieldCenterLogical();
+  const center = rotateForSeat(view.x, view.y);
+  send({ type: "place_card", fromZone: "hand", cardId, faceUp: true, x: center.x - 75, y: center.y - 105, manualStack: true });
+}
+
+// Manual play: the Stalemate Zone is read from the position, so a card is
+// sent there by moving it onto the next free Stalemate slot
+function manualStalemateSlot(excludeId = null) {
+  const inside = (item) => {
+    const cx = Number(item.x || 0) + 75;
+    const cy = Number(item.y || 0) + 105;
+    return cx >= 1354 && cx <= 1703 && cy >= 543 && cy <= 1008;
+  };
+  const used = (latestState?.battlefield || []).filter((item) => item.id !== excludeId && !item.stackedOn && !item.manualStack && inside(item)).length;
+  return { x: 1429 + Math.floor(used / 2) * 40, y: 560 + (used % 2) * 230 };
+}
+
+function sendItemToManualStalemate(item) {
+  const slot = manualStalemateSlot(item.id);
+  markLocalBoardMove(item.id);
+  send({ type: "move_battlefield_item", itemId: item.id, x: slot.x, y: slot.y, unstack: true, manualStack: false });
+}
+
 function playFromHand(cardId, faceUp) {
   const view = fieldCenterLogical();
   const center = rotateForSeat(view.x, view.y);
@@ -9842,6 +9957,14 @@ function wireZoneButtons() {
     btn.onclick = (e) => {
       e.stopPropagation();
       send({ type: "move_card", fromOwnerId: btn.dataset.discardTop, fromZone: "deck", toOwnerId: btn.dataset.discardTop, toZone: "graveyard" });
+    };
+  });
+  $$("[data-discard-random]").forEach((btn) => {
+    const [ownerId, zone] = btn.dataset.discardRandom.split(":");
+    btn.onclick = (e) => {
+      e.stopPropagation();
+      send({ type: "move_card", fromOwnerId: ownerId, fromZone: zone, toOwnerId: ownerId, toZone: "graveyard", random: true, toCardOwner: true });
+      pulseZone(ownerId, zone);
     };
   });
   $$("[data-shuffle]").forEach((btn) => {
@@ -10031,6 +10154,21 @@ function resolveDrop(ctx, clientX, clientY) {
     pickHandDropCard(Number(ctx.handIndex), true);
     return;
   }
+  const manualStackDrop = manualStackAvailable() && el.closest("#ubStack");
+  if (manualStackDrop && ctx.kind === "battlefield") {
+    markLocalBoardMove(ctx.itemId);
+    send({ type: "move_battlefield_item", itemId: ctx.itemId, manualStack: true, unstack: true });
+    return;
+  }
+  if (manualStackDrop && ctx.kind === "card" && !rulesHandDropChoice()) {
+    const view = fieldCenterLogical();
+    const center = rotateForSeat(view.x, view.y);
+    send({
+      type: "place_card", ownerId: ctx.fromOwnerId, fromZone: ctx.fromZone, cardId: ctx.cardId, faceUp: true,
+      x: center.x - 75, y: center.y - 105, manualStack: true,
+    });
+    return;
+  }
   if (ctx.kind === "battlefield") {
     const battlefieldItem = latestState?.battlefield?.find((item) => item.id === ctx.itemId);
     const turnNow = Number(latestState?.phaseTracker?.turn || 0);
@@ -10060,14 +10198,20 @@ function resolveDrop(ctx, clientX, clientY) {
       if (anchor) {
         const offset = stackOffsetFrom(anchor.anchorEl, clientX, clientY);
         markLocalBoardMove(ctx.itemId);
-        send({ type: "move_battlefield_item", itemId: ctx.itemId, stackOnId: anchor.anchorId, offsetX: offset.x, offsetY: offset.y });
+        send({
+          type: "move_battlefield_item", itemId: ctx.itemId, stackOnId: anchor.anchorId, offsetX: offset.x, offsetY: offset.y,
+          ...(battlefieldItem?.manualStack ? { manualStack: false } : {}),
+        });
       } else {
         const logical = boardDropLogical(fieldEl, clientX, clientY, ctx);
         // an explicit unstack, not just an absent stackOnId: dropping in open
         // space is the "detach" gesture, unlike e.g. exhaust which also omits
         // stackOnId but must NOT detach a stacked card as a side effect
         markLocalBoardMove(ctx.itemId);
-        send({ type: "move_battlefield_item", itemId: ctx.itemId, x: logical.x, y: logical.y, unstack: true });
+        send({
+          type: "move_battlefield_item", itemId: ctx.itemId, x: logical.x, y: logical.y, unstack: true,
+          ...(battlefieldItem?.manualStack ? { manualStack: false } : {}),
+        });
       }
     }
     return;
@@ -11617,6 +11761,14 @@ function renderBattlefield() {
       }
       const items = [];
       items.push({ keepInBeta: true, label: t("inspect"), onSelect: () => showInspect(item.cardId, !item.faceUp && !canPeek) });
+      if (manualStackAvailable()) {
+        items.push(item.manualStack
+          ? { label: t("ubTakeFromStack"), onSelect: () => { markLocalBoardMove(item.id); send({ type: "move_battlefield_item", itemId: item.id, manualStack: false }); } }
+          : { label: t("ubPutInStack"), onSelect: () => { markLocalBoardMove(item.id); send({ type: "move_battlefield_item", itemId: item.id, manualStack: true, unstack: true }); } });
+      }
+      if (!latestState?.rulesEngine?.enabled) {
+        items.push({ label: t("ubSendToStalemate"), onSelect: () => sendItemToManualStalemate(item) });
+      }
       const rulesItem = isMine && item.faceUp
         ? rulesActionContextItem({ cardId: item.cardId, zone: "battlefield", itemId: item.id })
         : null;
@@ -11642,6 +11794,17 @@ function renderBattlefield() {
           onSelect: () => openAttachedPlayPanel(item.id),
         });
       }
+      if (isMine && tebebeManifestationIsPlayable(item)) {
+        items.push({
+          keepInBeta: true,
+          label: t("rulesPlayConcealed"),
+          onSelect: () => beginRulesBoardAction({
+            cardId: item.cardId, zone: "battlefield", itemId: item.id, playFromField: true, fieldFree: false, tebebe: true, fixedHollow: 3,
+            placement: { x: item.x, y: item.y },
+          }),
+          highlight: true,
+        });
+      }
       if (isMine && (item.playableFree || item.concealedWill || item.persuaded) && limboWillIsPlayable(item.cardId, true)) {
         const fieldFree = Boolean(item.playableFree || item.concealedFree);
         items.push({
@@ -11650,6 +11813,7 @@ function renderBattlefield() {
           onSelect: () => beginRulesBoardAction({
             cardId: item.cardId, zone: "battlefield", itemId: item.id, playFromField: true, fieldFree,
             surcharge: item.persuaded ? 2 : 0,
+            ...(item.tebebeConcealed ? { fixedHollow: 3 } : {}),
             placement: { x: item.x, y: item.y },
           }),
         });
@@ -12871,7 +13035,7 @@ async function boot() {
     input.value = Math.max(min, Math.min(max, (Number(input.value) || 0) + Number(btn.dataset.step)));
   });
   document.addEventListener("keydown", (event) => {
-    if (event.ctrlKey || event.metaKey || event.altKey) return;
+    if (event.defaultPrevented || event.ctrlKey || event.metaKey || event.altKey) return;
     const editingText = event.target?.closest?.("input, textarea, select, [contenteditable='true']");
     if (event.code === "Space") {
       if (editingText) return;

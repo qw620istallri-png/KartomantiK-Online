@@ -3165,12 +3165,12 @@
       ]
     },
     "inner-deserts-060": {
-      "status": "partial",
+      "status": "automated",
       "testRefs": [
         "tests/test_game_state.py",
         "tests/test_card_catalog.py"
       ],
-      "notes": "Sacrifice and the 3 Concealed cards are automated, and Concealed Wills can be played for 3 Hollow Essences. A Concealed Manifestation cannot yet be played into the Interzone by the engine."
+      "notes": "Sacrifice and the 3 Concealed cards are automated. Each Concealed card can be played for 3 Hollow Essences: a Will as usual, a Manifestation into the Interzone (during Reaction or End actions, if the Interzone has room)."
     }
   }
 }

@@ -9,6 +9,7 @@ import asyncio
 import copy
 import json
 import logging
+import math
 import mimetypes
 import os
 import random
@@ -446,6 +447,19 @@ def find_player_ws(session, player_id):
     return None
 
 
+def apply_manual_stack_field(session, item, data):
+    """Manual play (no assisted rules): a card put "in the Stack" waits there,
+    in order, until a player drags it out to resolve it. Only an explicit
+    manualStack flag changes it, so other moves leave it alone."""
+    if session.rules_engine.get("enabled") or "manualStack" not in data:
+        return
+    if data.get("manualStack"):
+        item["manualStack"] = time.time()
+        item["stackedOn"] = None
+    else:
+        item.pop("manualStack", None)
+
+
 def apply_stack_fields(session, item, data):
     """Set, clear, or leave untouched an item's stackedOn relationship from a
     place_card/move_battlefield_item payload. The offset is screen-space pixels
@@ -572,6 +586,84 @@ def log_rules_recovery_sequence(session, recovery, caused_by_actor_id):
 
 sessions: dict[str, Session] = {}  # keyed by the session's creator/player code
 connections: dict[object, dict] = {}  # websocket -> session, playerId, role, isObserver
+SESSION_CLEANUP_INTERVAL_SECONDS = 60
+
+
+class InvalidClientValue(ValueError):
+    pass
+
+
+CLIENT_FLOAT_FIELDS = {
+    "copy_card": ("x", "y"),
+    "place_card": ("x", "y", "rotation", "offsetX", "offsetY"),
+    "move_battlefield_item": ("x", "y", "rotation", "offsetX", "offsetY"),
+    "remove_strokes_in_rect": ("x0", "y0", "x1", "y1"),
+    "add_token": ("x", "y"),
+    "create_token_card": ("x", "y"),
+    "create_essence_token": ("x", "y"),
+    "move_token": ("x", "y"),
+    "sandbox_run_script": ("delay",),
+}
+CLIENT_INT_FIELDS = {
+    "draw": ("count",),
+    "reveal": ("count",),
+    "scry": ("count",),
+    "request_hand_action": ("index",),
+    "create_token_card": ("power",),
+    "create_essence_token": ("count",),
+    "add_counter": ("delta",),
+    "roll_dice": ("count",),
+    "set_score": ("value", "delta"),
+}
+
+
+def validate_client_numerics(data):
+    """Normalize numeric client fields and reject malformed/non-finite values."""
+    msg_type = data.get("type")
+    try:
+        for field in CLIENT_FLOAT_FIELDS.get(msg_type, ()):
+            if field in data and data[field] not in (None, ""):
+                value = float(data[field])
+                if not math.isfinite(value):
+                    raise InvalidClientValue
+                data[field] = value
+        for field in CLIENT_INT_FIELDS.get(msg_type, ()):
+            if field in data and data[field] not in (None, ""):
+                data[field] = int(data[field])
+        if msg_type == "add_stroke" and "points" in data:
+            points = data["points"]
+            if not isinstance(points, list):
+                raise InvalidClientValue
+            normalized = []
+            for point in points[:400]:
+                if not isinstance(point, (list, tuple)) or len(point) < 2:
+                    raise InvalidClientValue
+                x, y = float(point[0]), float(point[1])
+                if not math.isfinite(x) or not math.isfinite(y):
+                    raise InvalidClientValue
+                normalized.append([x, y])
+            data["points"] = normalized
+    except (TypeError, ValueError, OverflowError):
+        raise InvalidClientValue("Invalid numeric value.") from None
+
+
+def cleanup_expired_sessions():
+    """Remove inactive sessions that have no live websocket connection."""
+    active_sessions = {info["session"] for info in connections.values()}
+    removed_codes = []
+    for code, session in list(sessions.items()):
+        if session not in active_sessions and session.is_expired():
+            sessions.pop(code, None)
+            removed_codes.append(code)
+    return removed_codes
+
+
+async def session_cleanup_loop():
+    while True:
+        await asyncio.sleep(SESSION_CLEANUP_INTERVAL_SECONDS)
+        removed_codes = cleanup_expired_sessions()
+        if removed_codes:
+            log.info("Expired %s inactive session(s)", len(removed_codes))
 
 
 def find_session_by_code(code):
@@ -686,7 +778,7 @@ async def process_request(connection, request):
 # ---------------------------------------------------------------- broadcasting
 
 def encode_message(payload):
-    return json.dumps(payload, separators=(",", ":"), ensure_ascii=False)
+    return json.dumps(payload, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
 
 
 async def broadcast_state(session):
@@ -1223,8 +1315,10 @@ async def handle_message(ws, info, data):
         enabled = data.get("enabled")
         if not isinstance(enabled, bool):
             return await send_error(ws, "The option must be a boolean.")
-        session.rules_engine["autoSkipPhases"] = enabled
-        session.add_log(actor_id, "rules_auto_skip_changed", {"enabled": enabled})
+        error, result = session.set_rules_auto_skip(actor_id, enabled)
+        if error:
+            return await send_error(ws, error)
+        session.add_log(actor_id, "rules_auto_skip_changed", result)
         session.touch()
         await broadcast_state(session)
 
@@ -1425,6 +1519,12 @@ async def handle_message(ws, info, data):
             if not from_player["zones"][from_zone]:
                 return await send_error(ws, "That zone is empty.")
             card_id = random.choice(from_player["zones"][from_zone])
+            if data.get("toCardOwner"):
+                # a random discard goes to the Limbo of whoever owns the card
+                to_owner = session.card_owner_in_zone(from_owner, from_zone, card_id) or from_owner
+                to_player = session.players.get(to_owner)
+                if to_player is None or not session.can_act_on_zone(actor_id, is_observer, to_owner, to_zone):
+                    return await send_error(ws, "You cannot act on the destination zone.")
         elif not card_id:
             # no card specified: take the top/front card (e.g. "discard top of deck")
             if not from_player["zones"][from_zone]:
@@ -1565,6 +1665,7 @@ async def handle_message(ws, info, data):
         stack_error = apply_stack_fields(session, item, data)
         if stack_error:
             return await send_error(ws, stack_error)
+        apply_manual_stack_field(session, item, data)
         first_manifestation_error = (
             None if manual_bypass
             else session.register_first_manifestation(actor_id, item)
@@ -1653,6 +1754,7 @@ async def handle_message(ws, info, data):
         stack_error = apply_stack_fields(session, item, data)
         if stack_error:
             return await send_error(ws, stack_error)
+        apply_manual_stack_field(session, item, data)
         session.add_log(actor_id, "move_battlefield_item", {"itemId": item["id"]})
         session.touch()
         await broadcast_state(session)
@@ -2555,6 +2657,14 @@ async def handler(ws):
             except (ValueError, TypeError):
                 await send_error(ws, "Invalid message.")
                 continue
+            if not isinstance(data, dict):
+                await send_error(ws, "Invalid message.")
+                continue
+            try:
+                validate_client_numerics(data)
+            except InvalidClientValue:
+                await send_error(ws, "Invalid numeric value.")
+                continue
             if ws not in connections:
                 if data.get("type") == "join":
                     await handle_join(ws, data)
@@ -2592,8 +2702,13 @@ async def main():
     host = os.environ.get("HOST", "0.0.0.0")
     port = int(os.environ.get("PORT", "8787"))
     async with serve(handler, host, port, process_request=process_request, compression="deflate"):
+        cleanup_task = asyncio.create_task(session_cleanup_loop())
         log.info("Kartomantik Online listening on %s:%s", host, port)
-        await asyncio.Future()
+        try:
+            await asyncio.Future()
+        finally:
+            cleanup_task.cancel()
+            await asyncio.gather(cleanup_task, return_exceptions=True)
 
 
 if __name__ == "__main__":

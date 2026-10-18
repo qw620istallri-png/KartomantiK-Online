@@ -90,6 +90,36 @@ class WebSocketRulesIntegrationTests(unittest.IsolatedAsyncioTestCase):
         rules["autoSkipPhases"] = False
         self.session.phase_tracker["index"] = ADVANCED_PHASES.index(phase_id)
 
+    async def test_invalid_numeric_payload_returns_error_and_keeps_connection_open(self):
+        await self.ws1.send('{"type":"add_token","x":NaN,"y":0}')
+        error = await self.receive_until(
+            self.ws1, lambda message: message.get("type") == "error"
+        )
+        self.assertEqual(error["message"], "Invalid numeric value.")
+
+        await self.send(self.ws1, {"type": "chat_message", "text": "still connected"})
+        chat = await self.receive_until(
+            self.ws1,
+            lambda message: message.get("type") == "chat_message"
+            and message.get("text") == "still connected",
+        )
+        self.assertEqual(chat["byId"], "p1")
+
+    async def test_non_object_json_returns_error_and_keeps_connection_open(self):
+        await self.ws1.send("[]")
+        error = await self.receive_until(
+            self.ws1, lambda message: message.get("type") == "error"
+        )
+        self.assertEqual(error["message"], "Invalid message.")
+
+        await self.send(self.ws1, {"type": "set_activity", "activity": "ready"})
+        state = await self.receive_until(
+            self.ws1,
+            lambda message: message.get("type") == "state"
+            and message["players"]["p1"].get("activity") == "ready",
+        )
+        self.assertEqual(state["players"]["p1"]["activity"], "ready")
+
     async def test_passing_with_nothing_to_play_skips_the_empty_phases(self):
         self.prepare_active_rules("end_actions")
         self.session.rules_engine["autoSkipPhases"] = True

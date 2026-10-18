@@ -15488,6 +15488,47 @@ class LotTwentySevenTests(RealCardRulesCase):
         error, _ = session.declare_rules_action("p1", "x", kind="play_card", source=source)
         self.assertIsNone(error, error)
 
+    def test_a_tebebe_concealed_manifestation_is_played_into_the_interzone_for_three_hollow(self):
+        session, p1, p2 = self.setup_game()
+        session.card_rules["m-dune"] = {"type": "manifestation", "power": 4, "powerCost": "{R}{R}{R}{R}", "temperaments": ["choleric"]}
+        item = self.item("hidden", "p1", "m-dune", "field", faceUp=False, concealedWill=True, tebebeConcealed=True)
+        session.battlefield = [item]
+        session.rules_engine["priorityPlayerId"] = "p1"
+        source = {"cardId": "m-dune", "zone": "battlefield", "itemId": "hidden"}
+        # outside the Manifestation windows it cannot be played
+        session.phase_tracker["turn"] = 2
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_choose")
+        session.add_rules_excess_essence("p1", [{"temperament": "hollow", "amount": 3}])
+        error, _ = session.declare_rules_action("p1", "x", kind="play_card", source=source)
+        self.assertTrue(error)
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
+        self.assertTrue(session.rules_player_can_act("p1"))
+        error, action = session.declare_rules_action("p1", "x", kind="play_card", source=source)
+        self.assertIsNone(error, error)
+        self.assertIsNone(session.find_battlefield_item("hidden"))
+        session.rules_engine["priorityPlayerId"] = "p1"
+        session.resolve_rules_top_action()
+        played = [i for i in session.battlefield if i.get("cardId") == "m-dune"]
+        self.assertEqual(len(played), 1)
+        self.assertEqual(played[0]["fieldZone"], "interzone")
+        self.assertTrue(played[0]["faceUp"])
+        self.assertFalse(played[0].get("tebebeConcealed"))
+        self.assertFalse(played[0].get("concealedWill"))
+
+    def test_a_tebebe_concealed_manifestation_needs_room_in_the_interzone(self):
+        session, p1, p2 = self.setup_game()
+        session.card_rules["m-dune"] = {"type": "manifestation", "power": 4, "temperaments": ["choleric"]}
+        hidden = self.item("hidden", "p1", "m-dune", "field", faceUp=False, concealedWill=True, tebebeConcealed=True)
+        full = [self.item(f"iz-{n}", "p1", "m-1", "interzone") for n in range(3)]
+        session.battlefield = [hidden, *full]
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        session.add_rules_excess_essence("p1", [{"temperament": "hollow", "amount": 3}])
+        error, _ = session.declare_rules_action(
+            "p1", "x", kind="play_card", source={"cardId": "m-dune", "zone": "battlefield", "itemId": "hidden"},
+        )
+        self.assertEqual(error, "Your Interzone is full.")
+
     def test_flower_tender_enters_even_without_a_target_and_only_its_effect_is_skipped(self):
         session, p1, p2 = self.setup_game()
         flower = self.item("ft", "p1", self.FLOWER, "confrontation")

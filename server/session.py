@@ -199,6 +199,8 @@ class Session:
         self.rules_engine = {
             "enabled": bool(rules_beta),
             "autoSkipPhases": True,
+            # players who turned off "skip phases without action" for themselves
+            "autoSkipOffPlayerIds": [],
             # players who held Enter: the engine passes for them, even with
             # playable cards, until they press Enter again
             "passAllPlayerIds": [],
@@ -1172,7 +1174,12 @@ class Session:
                 return "Only an opponent can activate this effect.", None
             if not item.get("faceUp") and not (kind == "play_card" and item.get("concealedWill")):
                 return "A face-down card cannot declare an effect.", None
-            if kind == "play_card" and not as_support and not (
+            tebebe_manifestation = bool(
+                kind == "play_card" and not as_support
+                and item.get("tebebeConcealed")
+                and metadata.get("type") == "manifestation"
+            )
+            if kind == "play_card" and not as_support and not tebebe_manifestation and not (
                 metadata.get("type") in RULES_WILL_TYPES
                 and (
                     item.get("playableFree") == self.phase_tracker["turn"]
@@ -1181,6 +1188,13 @@ class Session:
                 )
             ):
                 return "A card already on the field cannot be played again.", None
+            if tebebe_manifestation:
+                # Tebebe: a Concealed Manifestation is played into the Interzone
+                if (
+                    self.rules_interzone_slot_count(player_id) >= self.rules_interzone_capacity(player_id)
+                    and not self.rules_interzone_share_anchor(player_id, item)
+                ):
+                    return "Your Interzone is full.", None
             if as_support:
                 if self.current_phase_id() != "confrontation_reaction":
                     return "A Manifestation can enter Support only during Reaction.", None
@@ -3900,6 +3914,40 @@ class Session:
                 "asSupport": True, "fromZone": from_zone,
                 "enteredBattlefield": source.get("zone") != "battlefield",
             }
+        stored_item = action.get("sourceBattlefieldItem")
+        if (
+            source.get("zone") == "battlefield" and source.get("cardType") == "manifestation"
+            and isinstance(stored_item, dict) and stored_item.get("tebebeConcealed")
+        ):
+            # Tebebe: a Manifestation played this way is put into the Interzone
+            owner_id = source.get("ownerId")
+            if player is None or not source_on_stack or owner_id not in self.players:
+                return {"status": "source_missing", "destination": "battlefield"}
+            seat = player.get("seat")
+            item = {
+                key: value for key, value in stored_item.items()
+                if key not in {"concealedWill", "tebebeConcealed", "stackedOn", "stackOffsetX", "stackOffsetY"}
+            }
+            item.update({
+                "controllerId": controller_id, "faceUp": True, "rotation": 0.0,
+                "counters": dict(stored_item.get("counters") or {}),
+                "x": 740.0, "y": 800.0 if seat != 1 else 525.0, "stackedOn": None,
+            })
+            if self.rules_interzone_slot_count(controller_id) >= self.rules_interzone_capacity(controller_id):
+                anchor = self.rules_interzone_share_anchor(controller_id, item)
+                if not anchor:
+                    self.put_zone_card(owner_id, "graveyard", card_id, owner_id, "top")
+                    return {"status": "interzone_full", "destination": "graveyard", "ownerId": owner_id}
+                item.update({"stackedOn": anchor, "stackOffsetX": 18.0, "stackOffsetY": 18.0})
+            item["fieldZone"] = "interzone"
+            self.battlefield.append(item)
+            self.mark_rules_interzone_entry(item)
+            self.transfer_rules_stack_protection(action, item)
+            return {
+                "status": "moved", "destination": "battlefield", "itemId": item["id"],
+                "cardId": card_id, "ownerId": owner_id, "x": item["x"], "y": item["y"],
+                "fieldZone": "interzone", "fromZone": "field",
+            }
         if source.get("zone") not in {"hand", "suspended", "graveyard", "battlefield", "attached", "deck"}:
             return None
         if player is None or (not source_on_stack and card_id not in player["zones"]["hand"]):
@@ -6484,8 +6532,26 @@ class Session:
         phase_id = self.current_phase_id()
         response_phases = {"confrontation_reaction", "resolution_effects", "end_actions"}
         if kind == "activated_effect":
-            return None if phase_id in response_phases else "This effect cannot be activated during the current step."
+            abilities = self.card_rules.get((source or {}).get("cardId"), {}).get(
+                "activatedAbilities"
+            ) or []
+            has_phase_ability = any(
+                phase_id in (ability.get("phaseIds") or [])
+                for ability in abilities
+            )
+            return (
+                None
+                if phase_id in response_phases or has_phase_ability
+                else "This effect cannot be activated during the current step."
+            )
         card_type = (source or {}).get("cardType")
+        if card_type == "manifestation" and (source or {}).get("zone") == "battlefield":
+            played_item = self.find_battlefield_item((source or {}).get("itemId"))
+            if played_item and played_item.get("tebebeConcealed"):
+                # played "as if it were in your hand": the Manifestation windows
+                if phase_id in {"confrontation_reaction", "end_actions"}:
+                    return None
+                return "This Manifestation can only be played during Reaction or End actions."
         if (card_type == "ephemeral_will" and self.card_rules.get((source or {}).get("cardId"), {}).get("reactionEmptyStackOnly")):
             if phase_id != "confrontation_reaction" or self.rules_engine["actionStack"]:
                 return "This card can only be played during Reaction while the Stack is empty."
@@ -6708,6 +6774,15 @@ class Session:
             ):
                 return True
             if (
+                card_type == "manifestation" and item.get("tebebeConcealed")
+                and self.rules_action_timing_error(
+                    "play_card",
+                    {"cardId": item.get("cardId"), "cardType": card_type, "zone": "battlefield", "itemId": item.get("id")},
+                    player_id=player_id,
+                ) is None
+            ):
+                return True
+            if (
                 card_type == "manifestation" and zone in {"interzone", "stalemate"}
                 and can_support(item.get("cardId"))
             ):
@@ -6728,7 +6803,8 @@ class Session:
         play a card or an effect: the engine asks before resolving the Confrontation."""
         engine = self.rules_engine
         if (
-            not engine.get("enabled") or not engine.get("autoSkipPhases", True)
+            not engine.get("enabled")
+            or not self.rules_auto_skip_enabled(engine.get("priorityPlayerId"))
             or self.ended or len(self.players) < NUM_SEATS
             or not self.phase_tracker.get("enabled")
             or self.current_phase_id() != "confrontation_reaction"
@@ -6741,6 +6817,25 @@ class Session:
         ):
             return False
         return not any(self.rules_player_can_act(pid) for pid in self.players)
+
+    def rules_auto_skip_enabled(self, player_id):
+        """Whether the engine may skip phases for this player (each player's own option)."""
+        engine = self.rules_engine
+        return bool(engine.get("autoSkipPhases", True)) and player_id not in (
+            engine.get("autoSkipOffPlayerIds") or []
+        )
+
+    def set_rules_auto_skip(self, player_id, enabled):
+        if player_id not in self.players:
+            return "Unable to change this option.", None
+        off = [
+            pid for pid in self.rules_engine.get("autoSkipOffPlayerIds") or []
+            if pid != player_id and pid in self.players
+        ]
+        if not enabled:
+            off.append(player_id)
+        self.rules_engine["autoSkipOffPlayerIds"] = off
+        return None, {"playerId": player_id, "enabled": bool(enabled)}
 
     def set_rules_pass_all(self, player_id, enabled):
         if not self.rules_engine.get("enabled") or player_id not in self.players:
@@ -6760,7 +6855,7 @@ class Session:
         pass_all = engine.get("priorityPlayerId") in (engine.get("passAllPlayerIds") or [])
         if (
             not engine.get("enabled")
-            or not (engine.get("autoSkipPhases", True) or pass_all)
+            or not (self.rules_auto_skip_enabled(engine.get("priorityPlayerId")) or pass_all)
             or not self.phase_tracker.get("enabled") or self.ended
             or len(self.players) < NUM_SEATS or engine.get("pendingChoice")
             or not self.rules_match_started()
@@ -17629,6 +17724,18 @@ class Session:
                     entered_item, defer=True
                 )
             )
+        if (
+            source_resolution and source_resolution.get("fieldZone") == "interzone"
+            and source_resolution.get("status") == "moved"
+        ):
+            interzone_item = self.find_battlefield_item(source_resolution.get("itemId"))
+            if interzone_item and self.rules_field_zone(interzone_item) == "interzone":
+                triggered_actions.extend(
+                    self.queue_rules_field_zone_entry_triggers(
+                        interzone_item, "interzone",
+                        event_targets=resolved.get("targets"), defer=True,
+                    )
+                )
         if source_resolution and source_resolution.get("asSupport"):
             support_item = self.find_battlefield_item(source_resolution.get("itemId"))
             triggered_actions.extend(self.queue_rules_support_entry_triggers(
@@ -18129,6 +18236,29 @@ class Session:
                 "activity": player.get("activity"),
             }
 
+        zone_entry_turns_view = {}
+        for entry_key, entry_turn in self.rules_engine["zoneEntryTurns"].items():
+            parts = entry_key.split(":", 2)
+            if len(parts) != 3:
+                if can_view_hidden:
+                    zone_entry_turns_view[entry_key] = entry_turn
+                continue
+            owner_id, zone, _card_id = parts
+            if self.can_view_zone(viewer_id, role, owner_id, zone):
+                zone_entry_turns_view[entry_key] = entry_turn
+
+        conditional_support_hand_card_ids = self.rules_conditional_support_hand_card_ids()
+        if not can_view_hidden:
+            conditional_support_hand_card_ids = (
+                {viewer_id: conditional_support_hand_card_ids.get(viewer_id, [])}
+                if viewer_id in self.players else {}
+            )
+
+        play_permissions_view = [
+            dict(entry) for entry in self.rules_engine["playPermissions"]
+            if can_view_hidden or entry.get("playerId") == viewer_id
+        ]
+
         battlefield_view = []
         for item in self.battlefield:
             # the owner sees their own hidden cards; a trusted observer sees everything too
@@ -18159,6 +18289,8 @@ class Session:
                 entry["fieldZone"] = item["fieldZone"]
             if item.get("isSupport"):
                 entry["isSupport"] = True
+            if item.get("manualStack"):
+                entry["manualStack"] = item["manualStack"]
             if item.get("chosenTemperament"):
                 entry["chosenTemperament"] = item["chosenTemperament"]
             if item.get("supportUntilTurn"):
@@ -18192,6 +18324,8 @@ class Session:
                 entry["concealedWill"] = True
                 if item.get("concealedFree"):
                     entry["concealedFree"] = True
+                if item.get("tebebeConcealed"):
+                    entry["tebebeConcealed"] = True
             if item.get("isTokenCard"):
                 entry["isTokenCard"] = True
                 entry["temperament"] = item["temperament"]
@@ -18236,6 +18370,7 @@ class Session:
             "rulesEngine": {
                 "enabled": self.rules_engine["enabled"],
                 "autoSkipPhases": bool(self.rules_engine.get("autoSkipPhases", True)),
+                "autoSkipOffPlayerIds": list(self.rules_engine.get("autoSkipOffPlayerIds") or []),
                 "passAllPlayerIds": list(self.rules_engine.get("passAllPlayerIds") or []),
                 "deckConfirmedPlayerIds": list(self.rules_engine["deckConfirmedPlayerIds"]),
                 "openingHandPlayerIds": list(self.rules_engine["openingHandPlayerIds"]),
@@ -18249,10 +18384,10 @@ class Session:
                 "recoveryMulliganFailedPlayerIds": list(self.rules_engine["recoveryMulliganFailedPlayerIds"]),
                 "beginningTriggersTurn": self.rules_engine["beginningTriggersTurn"],
                 "beginningPermissionsTurn": self.rules_engine["beginningPermissionsTurn"],
-                "playPermissions": [dict(entry) for entry in self.rules_engine["playPermissions"]],
+                "playPermissions": play_permissions_view,
                 "supportEntries": [dict(entry) for entry in self.rules_engine["supportEntries"]],
                 "playRestrictions": [dict(entry) for entry in self.rules_engine["playRestrictions"]],
-                "zoneEntryTurns": dict(self.rules_engine["zoneEntryTurns"]),
+                "zoneEntryTurns": zone_entry_turns_view,
                 "recentLimboEntries": [
                     dict(entry)
                     for entry in self.rules_engine.get(
@@ -18268,7 +18403,7 @@ class Session:
                 "outcome": self.rules_engine["outcome"],
                 "priorityPlayerId": self.rules_engine["priorityPlayerId"],
                 "resolvePrompt": self.rules_confrontation_resolve_prompt(),
-                "conditionalSupportHandCardIds": self.rules_conditional_support_hand_card_ids(),
+                "conditionalSupportHandCardIds": conditional_support_hand_card_ids,
                 "priorityPasses": list(self.rules_engine["priorityPasses"]),
                 "actionStack": list(self.rules_engine["actionStack"]),
                 "lastResolvedAction": self.rules_engine["lastResolvedAction"],

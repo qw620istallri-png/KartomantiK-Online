@@ -63,6 +63,34 @@ function startServer() {
     assert.equal(buttonResult.focusedButtonClicks, 0);
     assert.equal(buttonResult.handHidden, true);
 
+    const keyboardCard = await page.evaluate(() => {
+      const cardId = cardsById.keys().next().value;
+      latestState = {
+        players: { p1: { zones: { hand: { cards: [cardId] } } } },
+        rulesEngine: null,
+      };
+      handHiddenByUser = false;
+      renderHandTray();
+      const card = document.querySelector(`[data-hand-card="${cardId}"]`);
+      card.focus();
+      return {
+        role: card.getAttribute("role"),
+        tabIndex: card.tabIndex,
+        label: card.getAttribute("aria-label"),
+        name: cardName(cardId),
+      };
+    });
+    assert.equal(keyboardCard.role, "button");
+    assert.equal(keyboardCard.tabIndex, 0);
+    assert.equal(keyboardCard.label, keyboardCard.name);
+    await page.keyboard.press("Space");
+    assert.equal(
+      await page.locator("#myHandTray").evaluate((element) => element.classList.contains("hidden")),
+      false,
+    );
+    await page.keyboard.press("Shift+F10");
+    assert.equal(await page.locator(".ctx-menu").count(), 1);
+
     await page.evaluate(() => {
       document.querySelector("#spaceShortcutProbe").remove();
       handHiddenByUser = false;
@@ -81,7 +109,16 @@ function startServer() {
     }));
     assert.equal(chatResult.value, "hello world");
     assert.equal(chatResult.handVisible, true);
-    console.log("Hand space shortcut regression: OK");
+
+    const foldLabel = await page.evaluate(() => {
+      document.getElementById("gameScreen").classList.add("hidden");
+      window.uiBeta.setEnabled(true);
+      const button = document.querySelector("#ubChatFold");
+      return { label: button?.getAttribute("aria-label"), title: button?.title };
+    });
+    assert.ok(foldLabel.label);
+    assert.equal(foldLabel.label, foldLabel.title);
+    console.log("Hand keyboard and beta chat accessibility regression: OK");
   } finally {
     await browser.close();
     await new Promise((resolve) => server.close(resolve));

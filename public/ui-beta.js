@@ -56,6 +56,12 @@
     ubEnlarge: "Agrandir",
     ubStack: "La Pile",
     ubStackEmpty: "La Pile est vide.",
+    ubManualStackEmpty: "Glisse une carte ici pour la jouer dans la Pile, puis sors-la pour la résoudre.",
+    ubPlayToStack: "Jouer dans la Pile",
+    ubPutInStack: "Mettre dans la Pile",
+    ubTakeFromStack: "Sortir de la Pile",
+    ubSendToStalemate: "Envoyer en Zone d’Impasse",
+    ubStalemateDrop: "Zone d’Impasse",
     ubTabAll: "Tout",
     ubTabChat: "Chat",
     ubTabLog: "Actions",
@@ -109,6 +115,12 @@
     ubEnlarge: "Enlarge",
     ubStack: "Stack",
     ubStackEmpty: "The Stack is empty.",
+    ubManualStackEmpty: "Drop a card here to play it on the Stack, then drag it out to resolve it.",
+    ubPlayToStack: "Play on the Stack",
+    ubPutInStack: "Put on the Stack",
+    ubTakeFromStack: "Take off the Stack",
+    ubSendToStalemate: "Send to the Stalemate Zone",
+    ubStalemateDrop: "Stalemate Zone",
     ubTabAll: "All",
     ubTabChat: "Chat",
     ubTabLog: "Actions",
@@ -162,6 +174,12 @@
     ubEnlarge: "Ingrandisci",
     ubStack: "Stack",
     ubStackEmpty: "Lo Stack è vuoto.",
+    ubManualStackEmpty: "Trascina qui una carta per giocarla nello Stack, poi trascinala fuori per risolverla.",
+    ubPlayToStack: "Gioca nello Stack",
+    ubPutInStack: "Metti nello Stack",
+    ubTakeFromStack: "Togli dallo Stack",
+    ubSendToStalemate: "Manda nella Zona di Stallo",
+    ubStalemateDrop: "Zona di Stallo",
     ubTabAll: "Tutto",
     ubTabChat: "Chat",
     ubTabLog: "Azioni",
@@ -175,7 +193,7 @@
     ubDropHint: "Rilascia una carta della mano ovunque sul campo",
     ubWaitingOpponent: "In attesa dell’avversario",
     ubFreeSlot: "libero",
-    ubReceptacle: "Ricettacolo",
+    ubReceptacle: "Bacino Empatico",
     ubBonus: "Bonus",
     ubTotal: "Totale",
     ubPriority: "Priorità",
@@ -349,9 +367,15 @@
       opp: { confrontation: [], interzone: [], will: [] },
       stalemate: [],
       stacked: [],
+      manualStack: [],
     };
     const info = new Map();
     (latestState?.battlefield || []).forEach((item, index) => {
+      // manual play: a card in the Stack is shown in the Stack panel, not on the field
+      if (item.manualStack && !rulesOn()) {
+        groups.manualStack.push(item);
+        return;
+      }
       const entry = { item, index, first: firstIds.has(item.id), ...classify(item, firstIds) };
       info.set(item.id, entry);
       if (item.stackedOn && (latestState.battlefield || []).some((other) => other.id === item.stackedOn)) {
@@ -560,6 +584,11 @@
     // stalemate: a thin strip under the totals, or the open panel
     const staleCount = groups.stalemate.length;
     const stale = { count: staleCount };
+    // manual play: with no card in it, the Stalemate Zone is a drop band under the totals
+    if (!staleCount && !rulesOn()) {
+      const dropW = Math.min(640, (G.zcOpp.r - G.zcMe.l) * 0.96);
+      stale.drop = { l: G.cx - dropW / 2, r: G.cx + dropW / 2, t: G.oppHandH + G.totalsH + 2, b: G.oppHandH + G.totalsH + 2 + (G.phone ? 30 : 44) };
+    }
     if (staleCount) {
       if (local.staleOpen) {
         const panel = staleePanelRect(G);
@@ -668,6 +697,9 @@
     } else if (geometry.stale.strip && inside({ ...geometry.stale.strip, b: geometry.stale.strip.t + geometry.stale.strip.h })) {
       zone = "stalemate";
       side = "me";
+    } else if (geometry.stale.drop && inside(geometry.stale.drop)) {
+      zone = "stalemate";
+      side = "me";
     } else {
       for (const candidate of ["me", "opp"]) {
         const col = columns[candidate];
@@ -753,6 +785,7 @@
       <div class="ub-totals" id="ubTotals"></div>
       <div class="ub-avatar me" id="ubAvMe"></div><div class="ub-avatar opp" id="ubAvOpp"></div>
       <button type="button" class="ub-stale-strip hidden" id="ubStaleStrip"></button>
+      <div class="ub-stale-drop hidden" id="ubStaleDrop"></div>
       <div class="ub-stale-panel hidden" id="ubStalePanel"></div>`;
     wrap.insertBefore(field, document.getElementById("battlefield"));
 
@@ -771,7 +804,7 @@
               <button type="button" role="tab" data-ub-tab="log"></button>
             </div>
             <button type="button" class="ub-iconbtn" id="ubPlayerLogBtn">${ICONS.log}</button>
-            <button type="button" class="ub-iconbtn ub-fold" id="ubChatFold" aria-expanded="true">${ICONS.chevron}</button>
+            <button type="button" class="ub-iconbtn ub-fold" id="ubChatFold" aria-expanded="true" aria-label="${esc(t("ubFold"))}" title="${esc(t("ubFold"))}">${ICONS.chevron}</button>
           </header>
           <div class="ub-log" id="ubChatLog" aria-live="polite"></div>
           <form class="ub-chat-form" id="ubChatForm"><input id="ubChatInput" maxlength="500" autocomplete="off"><button type="submit" class="ub-iconbtn" id="ubChatSend">${ICONS.send}</button></form>
@@ -795,7 +828,7 @@
       </div>
       <section class="ub-stack" id="ubStack">
         <header><b></b><small id="ubStackCount"></small></header>
-        <div class="ub-stack-body" id="ubStackBody"><p class="ub-stack-empty" id="ubStackEmpty"></p></div>
+        <div class="ub-stack-body" id="ubStackBody"><p class="ub-stack-empty" id="ubStackEmpty"></p><div class="ub-mstack" id="ubManualStack"></div></div>
       </section>
       <div class="ub-phase" id="ubPhase"><button type="button" class="ub-manual-pass hidden" id="ubManualPass" data-pass-phase></button></div>`;
     wrap.appendChild(left);
@@ -1298,6 +1331,12 @@
     const strip = document.getElementById("ubStaleStrip");
     const panel = document.getElementById("ubStalePanel");
     const has = stale.count > 0;
+    const drop = document.getElementById("ubStaleDrop");
+    drop.classList.toggle("hidden", !stale.drop);
+    if (stale.drop) {
+      setBox(drop, stale.drop);
+      drop.textContent = t("ubStalemateDrop");
+    }
     strip.classList.toggle("hidden", !has || local.staleOpen);
     panel.classList.toggle("hidden", !has || !local.staleOpen);
     document.getElementById("gameScreen").classList.toggle("ub-stale-open", has && local.staleOpen);
@@ -1415,15 +1454,56 @@
     bar.innerHTML = `<span class="v"><span class="long">${esc(t("ubPilesOf"))} </span>${esc(opp.name)}</span>${mini}<span class="pts">${points}</span><span class="chev">${ICONS.chevron}</span>`;
   }
 
+  function manualStackItems() {
+    if (rulesOn()) return [];
+    return (latestState?.battlefield || []).filter((item) => item.manualStack)
+      .sort((a, b) => Number(b.manualStack) - Number(a.manualStack));
+  }
+
   function syncStackEmpty() {
+    const empty = document.getElementById("ubStackEmpty");
+    const count = document.getElementById("ubStackCount");
+    const stackEl = document.getElementById("ubStack");
+    if (!rulesOn()) {
+      // manual play: the Stack holds the cards players put in it
+      const items = manualStackItems();
+      if (empty) {
+        empty.hidden = items.length > 0;
+        empty.textContent = t(isObserver ? "ubStackEmpty" : "ubManualStackEmpty");
+      }
+      if (count) count.textContent = items.length ? String(items.length) : "";
+      stackEl?.classList.toggle("hidden", false);
+      stackEl?.classList.toggle("ub-manual", true);
+      return;
+    }
+    stackEl?.classList.toggle("ub-manual", false);
     const panel = document.getElementById("rulesStackPanel");
     const hidden = !panel || panel.classList.contains("hidden");
-    const empty = document.getElementById("ubStackEmpty");
-    if (empty) empty.hidden = !hidden;
+    if (empty) {
+      empty.hidden = !hidden;
+      empty.textContent = t("ubStackEmpty");
+    }
     const stack = latestState?.rulesEngine?.actionStack || [];
-    const count = document.getElementById("ubStackCount");
     if (count) count.textContent = stack.length ? String(stack.length) : "";
-    document.getElementById("ubStack")?.classList.toggle("hidden", !rulesOn());
+    stackEl?.classList.toggle("hidden", false);
+  }
+
+  // the cards of the manual Stack keep their own element (drag, menu, preview)
+  // and are just moved into the Stack panel, newest on top
+  function placeManualStackCards() {
+    const list = document.getElementById("ubManualStack");
+    if (!list) return;
+    list.innerHTML = "";
+    if (!active()) return;
+    manualStackItems().forEach((item) => {
+      const card = document.querySelector(`#battlefield .bf-card[data-item-id="${CSS.escape(item.id)}"]`);
+      if (!card) return;
+      card.classList.add("ub-mstack-card");
+      card.style.left = "";
+      card.style.top = "";
+      card.style.scale = "";
+      list.appendChild(card);
+    });
   }
 
   // the opponent's piles fold into a bar when the Stack needs the room
@@ -1434,11 +1514,13 @@
     let open;
     if (local.oppPilesOpen === null) {
       const stackList = document.getElementById("rulesStackList");
-      const stackNeed = (rulesOn() ? (stackList?.scrollHeight || 0) + 60 : 0);
+      const stackNeed = (rulesOn() ? (stackList?.scrollHeight || 0) : (document.getElementById("ubManualStack")?.scrollHeight || 0)) + 60;
       const full = block.querySelector(".ub-oppfull > div");
       const fullH = (full?.scrollHeight || 0) + 50;
       const used = document.getElementById("ubWhoOpp").offsetHeight + document.getElementById("ubPhase").offsetHeight + 60;
-      open = stackNeed + fullH <= column.clientHeight - used;
+      // small screens: folded by default, the bar opens them
+      const smallScreen = window.innerHeight <= 900 || window.innerWidth <= 1500;
+      open = !smallScreen && stackNeed + fullH <= column.clientHeight - used;
     } else {
       open = local.oppPilesOpen;
     }
@@ -1451,17 +1533,47 @@
   }
 
   function renderPhaseExtras() {
-    const button = document.getElementById("ubManualPass");
+    // manual play with phases on: the same phase block and button as the
+    // assisted mode, only the players move the phases themselves
+    document.getElementById("ubManualPass").classList.add("hidden");
     const tracker = latestState.phaseTracker || {};
-    const manual = tracker.enabled && !rulesOn() && !isObserver;
-    button.classList.toggle("hidden", !manual);
-    document.getElementById("ubPhase").classList.toggle("manual", Boolean(manual));
-    if (!manual) return;
+    const manual = Boolean(tracker.enabled && !rulesOn());
+    document.getElementById("ubPhase").classList.toggle("manual", manual);
+    if (!manual) {
+      document.getElementById("rulesPriority")?.classList.remove("hidden");
+      return;
+    }
+    document.getElementById("phaseTracker")?.classList.remove("hidden");
+    ["rulesAutoSkipWrap", "rulesTurnContext", "rulesConfrontationSummary"].forEach((id) => document.getElementById(id)?.classList.add("hidden"));
     const passed = new Set(tracker.passedPlayerIds || []);
     const mine = passed.has(myPlayerId);
-    button.classList.toggle("active", mine);
-    button.textContent = t(mine ? "cancelPhasePass" : "passPhase");
-    wirePhasePassControls(document.getElementById("ubPhase"));
+    const opponentPassed = [...passed].some((playerId) => playerId !== myPlayerId);
+    const priority = document.getElementById("rulesPriority");
+    if (priority) {
+      const opp = sidePlayers().opp;
+      priority.className = "rules-priority";
+      priority.classList.toggle("hidden", !opponentPassed && !mine);
+      priority.textContent = mine
+        ? t("ubWaitingOpponent")
+        : opponentPassed ? `${opp?.name || ""} ${t("ubPassed")}` : "";
+    }
+    const button = document.getElementById("passPriorityBtn");
+    if (!button) return;
+    const current = typeof currentPhaseUi === "function" ? currentPhaseUi() : null;
+    const steps = (current?.group?.sections || []).flatMap((section) => section.steps);
+    const step = Math.max(0, steps.findIndex((entry) => entry.id === current?.phase?.id)) + 1;
+    button.className = "phase-pass-button primary";
+    button.classList.toggle("hidden", isObserver);
+    button.classList.toggle("passed", mine);
+    button.classList.toggle("must-act", !mine);
+    button.disabled = isObserver;
+    button.setAttribute("aria-pressed", String(mine));
+    button.textContent = mine
+      ? t("cancelPhasePass")
+      : tracker.advanced && steps.length
+        ? rulesText("rulesPassStep", { current: step, total: steps.length })
+        : t("passPhase");
+    button.title = current?.phase?.detail ? t(current.phase.detail) : "";
   }
 
   function chatEntries() {
@@ -1523,6 +1635,9 @@
     document.getElementById("ubChatInput").placeholder = t("chatPlaceholder");
     document.getElementById("ubChatSend").title = t("chatSend");
     document.getElementById("ubPlayerLogBtn").title = t("logHeader");
+    const foldButton = document.getElementById("ubChatFold");
+    foldButton.title = t(local.chatFolded ? "ubUnfold" : "ubFold");
+    foldButton.setAttribute("aria-label", foldButton.title);
   }
 
   // the journal sits under the inspect panel when it is open: an opponent's
@@ -1581,7 +1696,6 @@
     renderPhaseExtras();
     syncStackEmpty();
     document.querySelector("#ubStack header b").textContent = t("ubStack");
-    document.getElementById("ubStackEmpty").textContent = t("ubStackEmpty");
     renderChat();
     layoutRight();
     syncToolState();
@@ -2282,6 +2396,20 @@
       repositionOpenPopovers();
     }
     return result;
+  });
+  wrap("renderBattlefield", (original) => function uiBetaRenderBattlefield(...args) {
+    const result = original.apply(this, args);
+    placeManualStackCards();
+    return result;
+  });
+  // while a card is dragged, the drop-only areas (the empty Stalemate band) show up
+  wrap("buildDragGhost", (original) => function uiBetaBuildDragGhost(...args) {
+    if (active()) document.getElementById("gameScreen")?.classList.add("ub-dragging");
+    return original.apply(this, args);
+  });
+  wrap("removeGhost", (original) => function uiBetaRemoveGhost(...args) {
+    document.getElementById("gameScreen")?.classList.remove("ub-dragging");
+    return original.apply(this, args);
   });
   wrap("renderChatMessages", (original) => function uiBetaRenderChatMessages(...args) {
     const result = original.apply(this, args);
