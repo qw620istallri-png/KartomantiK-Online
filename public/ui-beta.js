@@ -52,6 +52,8 @@
     ubStalemateTitle: "Zone d’Impasse",
     ubStalemateHint: "Clique en dehors pour refermer.",
     ubStalemateOf: "À {player}",
+    ubStaleAtStake: "{points} points en jeu",
+    ubPts: "pts",
     ubNoCard: "Aucune carte",
     ubEnlarge: "Agrandir",
     ubStack: "La Pile",
@@ -64,6 +66,8 @@
     ubStalemateDrop: "Zone d’Impasse",
     ubTabAll: "Tout",
     ubTabChat: "Chat",
+    ubObserverTag: "Observateurs",
+    ubObserverPlaceholder: "Message aux observateurs…",
     ubTabLog: "Actions",
     ubNothingYet: "Rien pour l’instant.",
     ubFold: "Replier",
@@ -71,7 +75,6 @@
     ubPilesOf: "Decks de",
     ubShowOppPiles: "Afficher les piles adverses",
     ubHideOppPiles: "Replier les piles adverses",
-    ubLeads: "mène",
     ubDropHint: "Lâche une carte de ta main n’importe où sur le terrain",
     ubWaitingOpponent: "En attente de l’adversaire",
     ubFreeSlot: "libre",
@@ -111,6 +114,8 @@
     ubStalemateTitle: "Stalemate Zone",
     ubStalemateHint: "Click outside to close.",
     ubStalemateOf: "{player}’s",
+    ubStaleAtStake: "{points} points at stake",
+    ubPts: "pts",
     ubNoCard: "No card",
     ubEnlarge: "Enlarge",
     ubStack: "Stack",
@@ -123,6 +128,8 @@
     ubStalemateDrop: "Stalemate Zone",
     ubTabAll: "All",
     ubTabChat: "Chat",
+    ubObserverTag: "Observers",
+    ubObserverPlaceholder: "Message to the observers…",
     ubTabLog: "Actions",
     ubNothingYet: "Nothing yet.",
     ubFold: "Fold",
@@ -130,7 +137,6 @@
     ubPilesOf: "Piles of",
     ubShowOppPiles: "Show the opponent’s piles",
     ubHideOppPiles: "Fold the opponent’s piles",
-    ubLeads: "leads",
     ubDropHint: "Drop a card from your hand anywhere on the field",
     ubWaitingOpponent: "Waiting for the opponent",
     ubFreeSlot: "free",
@@ -170,6 +176,8 @@
     ubStalemateTitle: "Zona di Stallo",
     ubStalemateHint: "Clicca fuori per chiudere.",
     ubStalemateOf: "Di {player}",
+    ubStaleAtStake: "{points} punti in palio",
+    ubPts: "pt",
     ubNoCard: "Nessuna carta",
     ubEnlarge: "Ingrandisci",
     ubStack: "Stack",
@@ -182,6 +190,8 @@
     ubStalemateDrop: "Zona di Stallo",
     ubTabAll: "Tutto",
     ubTabChat: "Chat",
+    ubObserverTag: "Osservatori",
+    ubObserverPlaceholder: "Messaggio agli osservatori…",
     ubTabLog: "Azioni",
     ubNothingYet: "Niente per ora.",
     ubFold: "Chiudi",
@@ -189,7 +199,6 @@
     ubPilesOf: "Pile di",
     ubShowOppPiles: "Mostra le pile avversarie",
     ubHideOppPiles: "Chiudi le pile avversarie",
-    ubLeads: "in vantaggio",
     ubDropHint: "Rilascia una carta della mano ovunque sul campo",
     ubWaitingOpponent: "In attesa dell’avversario",
     ubFreeSlot: "libero",
@@ -225,7 +234,7 @@
     chatTab: "all",
     chatFolded: false,
     unread: 0,
-    seenChat: 0,
+    seenChat: null,
     staleOpen: false,
     oppPilesOpen: null,
     geometry: null,
@@ -599,7 +608,7 @@
           const half = side === "me"
             ? { l: panel.l + 14, r: panel.cx - 7, t: panel.t + 70, b: panel.b - 14 }
             : { l: panel.cx + 7, r: panel.r - 14, t: panel.t + 70, b: panel.b - 14 };
-          const cardFit = fit(half.r - half.l, half.b - half.t - 20, halves[side].length, { maxW: clamp(G.W * 0.09, 80, 130), gap: 10 });
+          const cardFit = fit(half.r - half.l, half.b - half.t - 20, halves[side].length, { maxW: clamp(G.W * 0.13, 100, 200), gap: 10 });
           gridPositions({ ...half, t: half.t + 18 }, halves[side].length, cardFit, { centerY: false })
             .forEach((rect, index) => slots.set(halves[side][index].item.id, { ...rect, zone: "stalemate", side, open: true }));
         }
@@ -617,6 +626,16 @@
           const i = Math.min(index, shown.length - 1);
           slots.set(entry.item.id, { x: start + i * (w + 4), y: strip.t + (strip.h - w * RATIO) / 2, w, zone: "stalemate", side: entry.side, strip: true, hiddenExtra: index >= shown.length });
         });
+      }
+      // a stalemated card whose destination is being chosen leaves the strip:
+      // shown big at the field centre so it can be dragged to the deck or Interzone
+      const pendingDest = latestState?.rulesEngine?.pendingChoice;
+      const destEntry = pendingDest?.kind === "confrontation_destination"
+        && groups.stalemate.find((entry) => entry.item.id === pendingDest.itemId);
+      if (destEntry) {
+        const w = Math.round(clamp(G.W * 0.09, 90, 150));
+        const y = Math.max(G.zcTop + 8, (G.zcTop + G.zcBottom) / 2 - (w * RATIO) / 2);
+        slots.set(destEntry.item.id, { x: G.cx - w / 2, y, w, zone: "stalemate", side: destEntry.side, focus: true });
       }
     }
     // Float and other stacked cards: on top of their anchor, offset, floating
@@ -655,7 +674,7 @@
     const l = G.zcMe.l - 4;
     const r = G.zcOpp.r + 4;
     const t = G.oppHandH + 8;
-    const b = Math.min(G.zcBottom, t + Math.max(320, (G.zcBottom - t) * 0.82));
+    const b = Math.min(G.zcBottom, t + Math.max(340, (G.zcBottom - t) * 0.94));
     return { l, r, t, b, cx: (l + r) / 2 };
   }
 
@@ -672,6 +691,10 @@
     if (meta.open) el.classList.add("ub-stale-open");
     if (meta.strip) el.classList.add("ub-stale-strip-card");
     if (meta.hiddenExtra) el.classList.add("ub-hidden-extra");
+    if (meta.focus) {
+      el.classList.add("ub-stale-focus");
+      el.style.zIndex = "40";
+    }
     if (box.info?.first && cardsById.get(item.cardId)?.type !== "persistent_will") {
       el.insertAdjacentHTML("beforeend", `<span class="ub-first-badge" title="${esc(t("ubFirstManifestation"))}">${ICONS.first}</span>`);
     }
@@ -899,6 +922,21 @@
       const over = event.clientX >= r.left && event.clientX <= r.right && event.clientY >= r.top && event.clientY <= r.bottom;
       strip.classList.toggle("is-hover", over);
       document.getElementById("battlefield").style.cursor = over ? "zoom-in" : "";
+    });
+    // a Trap also sits under the board layer: its card shows in large on hover once it can be seen
+    document.getElementById("battlefield").addEventListener("mousemove", (event) => {
+      if (!active()) return;
+      const trap = [...document.querySelectorAll(".ub-trap")].find((node) => {
+        const r = node.getBoundingClientRect();
+        return event.clientX >= r.left && event.clientX <= r.right && event.clientY >= r.top && event.clientY <= r.bottom;
+      });
+      const cardId = trap && !trap.classList.contains("is-hidden") ? trap.dataset.logCard
+        : trap?.classList.contains("is-peek") ? latestState?.rulesEngine?.trapCards?.[myPlayerId]?.cardId : null;
+      if (cardId) {
+        if (local.peekCard !== trap) schedulePeek(trap, () => cardImage(cardId), 450);
+      } else if (local.peekCard?.classList?.contains("ub-trap")) {
+        hidePeek();
+      }
     });
     document.getElementById("battlefield").addEventListener("click", (event) => {
       if (!active() || local.staleOpen || event.button !== 0) return;
@@ -1167,7 +1205,7 @@
         : "";
       return `<div class="ub-tside ${side}" style="--pc:${esc(playerColor(player.id))}">
         <div class="ub-total ${side}${lead === side ? " win" : ""}${lead === "tie" ? " tie" : ""}" style="--tc:${esc(ink)}" title="${esc(t("rulesPowerTotal"))}">
-          <span class="ub-who2">${esc(player.name)}${lead === side ? ` · ${esc(t("ubLeads"))}` : ""}</span>
+          <span class="ub-who2">${esc(player.name)}</span>
           <span class="ub-pw">${power}</span>
           <span class="ub-tmp">${key ? `<img src="${esc(temperamentSymbol(key))}" alt="${esc(temperamentLabel(key))}" title="${esc(t("rulesActiveTemperament"))}: ${esc(temperamentLabel(key))}">` : ""}</span>
         </div>${essence}
@@ -1267,7 +1305,7 @@
       const empty = node.querySelector(".ub-empty");
       const count = groups[side].confrontation.length;
       const trap = geometry.zc?.[side]?.trap;
-      empty.textContent = count || trap ? "" : side === "me" ? (isObserver ? "" : t("ubDropHint")) : t("ubWaitingOpponent");
+      empty.textContent = count || trap ? "" : side === "me" ? (isObserver ? "" : t("ubDropHint")) : isObserver ? "" : t("ubWaitingOpponent");
       empty.hidden = Boolean(count || trap);
       renderTrap(side, trap);
     }
@@ -1345,17 +1383,23 @@
       setBox(strip, { l: stale.strip.l, r: stale.strip.r, t: stale.strip.t, b: stale.strip.t + stale.strip.h });
       const max = stale.max || 12;
       const shown = Math.min(stale.count, max);
-      strip.innerHTML = `<span class="lab">${esc(t("ubStalemate"))} · ${stale.count}</span><span class="ub-strip-gap" style="width:${shown * ((stale.w || 25) + 4)}px"></span><span class="more">${stale.count > max ? `+${stale.count - max}` : esc(t("ubEnlarge"))}</span>`;
+      strip.innerHTML = `<span class="lab">${esc(t("ubStalemate"))} · ${stale.count} · ${stalePoints(groups.stalemate)} ${esc(t("ubPts"))}</span><span class="ub-strip-gap" style="width:${shown * ((stale.w || 25) + 4)}px"></span><span class="more">${stale.count > max ? `+${stale.count - max}` : esc(t("ubEnlarge"))}</span>`;
     }
     if (stale.panel) {
       setBox(panel, stale.panel);
       const half = (side) => {
         const player = players[side];
-        const n = groups.stalemate.filter((entry) => entry.side === side).length;
-        return `<div class="ub-stale-half ${side}" style="--pc:${player ? esc(playerColor(player.id)) : "transparent"}"><h3>${esc(rulesText("ubStalemateOf", { player: player?.name || "" }))}</h3>${n ? "" : `<span class="ub-none">${esc(t("ubNoCard"))}</span>`}</div>`;
+        const entries = groups.stalemate.filter((entry) => entry.side === side);
+        const n = entries.length;
+        return `<div class="ub-stale-half ${side}" style="--pc:${player ? esc(playerColor(player.id)) : "transparent"}"><h3>${esc(rulesText("ubStalemateOf", { player: player?.name || "" }))}${n ? ` <small>${stalePoints(entries)} ${esc(t("ubPts"))}</small>` : ""}</h3>${n ? "" : `<span class="ub-none">${esc(t("ubNoCard"))}</span>`}</div>`;
       };
-      panel.innerHTML = `<header><h2>${esc(t("ubStalemateTitle"))}</h2><p>${esc(t("ubStalemateHint"))}</p></header><div class="ub-stale-rows">${half("me")}${half("opp")}</div>`;
+      panel.innerHTML = `<header><h2>${esc(t("ubStalemateTitle"))}</h2><b class="ub-stale-total">${esc(rulesText("ubStaleAtStake", { points: stalePoints(groups.stalemate) }))}</b><p>${esc(t("ubStalemateHint"))}</p></header><div class="ub-stale-rows">${half("me")}${half("opp")}</div>`;
     }
+  }
+
+  // the points waiting in the Stalemate Zone (what the next winner takes)
+  function stalePoints(entries) {
+    return entries.reduce((total, entry) => total + (Number(cardsById.get(entry.item.cardId)?.points) || 0), 0);
   }
 
   function pileCount(player, zone) {
@@ -1595,17 +1639,22 @@
     if (!local.built) return;
     const log = document.getElementById("ubChatLog");
     if (!log) return;
-    const fresh = chatMessages.length - local.seenChat;
-    if (fresh > 0) {
-      const others = chatMessages.slice(-fresh).filter((message) => message.byId !== myPlayerId);
+    // count by identity, not by length: the history is capped at 200 and shifts
+    const lastSeen = chatMessages.lastIndexOf(local.seenChat);
+    const fresh = local.seenChat && lastSeen < 0 ? chatMessages.slice(-1) : chatMessages.slice(lastSeen + 1);
+    if (fresh.length) {
+      const others = fresh.filter((message) => message.byId !== myPlayerId && String(message.text || "").trim());
       if (local.chatFolded || local.chatTab === "log") local.unread += others.length;
-      local.seenChat = chatMessages.length;
+      local.seenChat = chatMessages[chatMessages.length - 1];
       if (others.length) pingMessage(others[others.length - 1]);
     }
     const tab = local.chatTab;
     const rows = chatEntries().filter((entry) => tab === "all" || entry.kind === tab).map((entry) => {
       if (entry.kind === "chat") {
         const message = entry.message;
+        if (message.channel === "observers") {
+          return `<p class="msg ub-obs-msg"><span class="ub-obs-tag">${esc(t("ubObserverTag"))}</span><b>${esc(message.byName)}</b> ${esc(message.text)}</p>`;
+        }
         return `<p class="msg" style="--pc:${esc(playerColor(message.byId))}"><b>${esc(message.byName)}</b> ${esc(message.text)}</p>`;
       }
       if (entry.note) return `<p class="sys ub-note ${esc(entry.note.level)}">${esc(entry.note.text)}</p>`;
@@ -1632,7 +1681,7 @@
     const badge = document.querySelector("#ubChatTabs .ub-badge");
     badge.hidden = !local.unread;
     badge.textContent = String(Math.min(local.unread, 99));
-    document.getElementById("ubChatInput").placeholder = t("chatPlaceholder");
+    document.getElementById("ubChatInput").placeholder = t(isObserver && ["observer", "spectator"].includes(connectionRole) ? "ubObserverPlaceholder" : "chatPlaceholder");
     document.getElementById("ubChatSend").title = t("chatSend");
     document.getElementById("ubPlayerLogBtn").title = t("logHeader");
     const foldButton = document.getElementById("ubChatFold");
@@ -1934,9 +1983,14 @@
   function markHandEligibility() {
     const drop = typeof rulesHandDropChoice === "function" ? rulesHandDropChoice() : null;
     const types = drop ? (drop.requireTypes?.length ? drop.requireTypes : drop.requireManifestation ? ["manifestation"] : null) : null;
+    let handTop = Infinity;
     document.querySelectorAll("#myHandTray [data-hand-card]").forEach((card) => {
       card.classList.toggle("ub-ineligible", Boolean(types) && !types.includes(cardsById.get(card.dataset.handCard)?.type));
+      handTop = Math.min(handTop, card.getBoundingClientRect().top);
     });
+    // the hand lives in the fixed field layer, under the choice backdrop: the backdrop
+    // stops above it (ui-beta.css) so the cards to pick stay lit
+    if (drop && Number.isFinite(handTop)) document.documentElement.style.setProperty("--ub-hand-top", `${Math.round(handTop)}px`);
   }
 
   // a drawn card shows up in the hand when its draw animation lands, not before
@@ -1959,6 +2013,8 @@
       if (hidden > 0) left.set(card.dataset.handCard, hidden - 1);
     });
     if (local.handHidden.size && !local.handRevealTimer) scheduleHandReveal(Date.now());
+    // nothing is played from the hand (First Manifestation...) before the draw has landed
+    document.body.classList.toggle("ub-hand-drawing", local.handHidden.size > 0);
   }
 
   function scheduleHandReveal(startedAt) {
@@ -1971,6 +2027,7 @@
         return;
       }
       local.handHidden.clear();
+      document.body.classList.remove("ub-hand-drawing");
       document.querySelectorAll("#myHandTray .ub-draw-pending").forEach((card) => card.classList.remove("ub-draw-pending"));
     }, Math.min(Math.max(remaining, 0) + 120, 2500));
   }
@@ -2374,6 +2431,30 @@
     setTimeout(() => pop.remove(), 1900);
   }
 
+  // every hover preview (Stack, log, Inspect, choices) takes the size of the board one
+  function sizeLikeBoardPeek(preview, anchor) {
+    if (!preview || !anchor?.getBoundingClientRect) return;
+    const rect = anchor.getBoundingClientRect();
+    const height = Math.min(window.innerHeight - 24, Math.max(300, window.innerHeight * 0.52));
+    const width = height / RATIO;
+    const roomRight = window.innerWidth - rect.right;
+    const leftPos = roomRight >= width + 16 ? rect.right + 12 : Math.max(8, rect.left - width - 12);
+    preview.style.width = `${width}px`;
+    preview.style.height = `${height}px`;
+    preview.style.left = `${Math.min(leftPos, window.innerWidth - width - 8)}px`;
+    preview.style.top = `${clamp(rect.top + rect.height / 2 - height / 2, 12, window.innerHeight - height - 12)}px`;
+  }
+  wrap("showCardPreview", (original) => function uiBetaShowCardPreview(cardId, anchorEl, ...rest) {
+    const result = original.call(this, cardId, anchorEl, ...rest);
+    if (active()) sizeLikeBoardPeek(document.querySelector("body > .card-preview:last-of-type"), anchorEl);
+    return result;
+  });
+  wrap("showChoiceCardPreview", (original) => function uiBetaShowChoicePreview(source, ...rest) {
+    const result = original.call(this, source, ...rest);
+    if (active()) sizeLikeBoardPeek(document.querySelector("body > .choice-card-preview:last-of-type"), source);
+    return result;
+  });
+
   wrap("renderAll", (original) => function uiBetaRenderAll(...args) {
     const result = original.apply(this, args);
     if (active()) renderChrome();
@@ -2446,6 +2527,52 @@
     if (active()) setHandHoverScale();
     return result;
   });
+  // an observer sees both hands: the right-hand player's along the top, the
+  // left-hand player's along the bottom (faces when the server sends them)
+  function observerFanHtml(player, bottom) {
+    const hand = player?.zones?.hand || {};
+    const count = hand.count !== undefined ? hand.count : (hand.cards || []).length;
+    const cards = hand.cards || [];
+    return Array.from({ length: count }, (_unused, index) => {
+      const cardId = cards[index] || null;
+      const center = index - (count - 1) / 2;
+      const rotate = (bottom ? 1 : -1) * Math.max(-15, Math.min(15, center * 3.5));
+      const style = `--fan-rotate:${rotate}deg;--fan-arc:${-Math.abs(center) * Math.abs(center) * 1.7}px;--fan-x:${center * 45}px;--fan-z:${index};--owner-color:${esc(playerColor(player.id))}`;
+      return cardId
+        ? `<button type="button" class="opponent-hand-card is-known" data-opponent-hand-card="${esc(cardId)}" style="${style}" title="${esc(cardName(cardId))}"><img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"></button>`
+        : `<button type="button" class="opponent-hand-card is-hidden" style="${style}" aria-label="${esc(t("cards"))}"></button>`;
+    }).join("");
+  }
+  function renderObserverFans() {
+    const top = document.getElementById("opponentHandFan");
+    let bottom = document.getElementById("ubObsHandFan");
+    if (!active() || !isObserver || !top) {
+      bottom?.remove();
+      return;
+    }
+    if (!bottom) {
+      bottom = document.createElement("div");
+      bottom.id = "ubObsHandFan";
+      bottom.className = "opponent-hand-fan ub-obs-hand-fan";
+      top.parentElement.appendChild(bottom);
+    }
+    const { me, opp } = sidePlayers();
+    [[top, opp, false], [bottom, me, true]].forEach(([fan, player, isBottom]) => {
+      fan.classList.toggle("hidden", !player);
+      fan.innerHTML = player ? observerFanHtml(player, isBottom) : "";
+      fan.title = player ? `${player.name}: ${t("viewHand")}` : "";
+      fan.onclick = (event) => {
+        const card = event.target.closest("[data-opponent-hand-card]")?.dataset.opponentHandCard;
+        if (card) showInspect(card);
+        else if (player) openHandView(player.id);
+      };
+    });
+  }
+  wrap("renderOpponentHandFan", (original) => function uiBetaRenderOpponentHandFan(...args) {
+    const result = original.apply(this, args);
+    renderObserverFans();
+    return result;
+  });
   wrap("renderHandTray", (original) => function uiBetaRenderHandTray(...args) {
     const result = original.apply(this, args);
     if (active()) { holdNewHandCards(); fitHand(); markHandEligibility(); }
@@ -2508,7 +2635,6 @@
     if (last && last.text === value && Date.now() / 1000 - last.at < 30) return;
     local.system.push({ at: Date.now() / 1000, text: value, level: level || "info" });
     if (local.system.length > 60) local.system.shift();
-    if (level === "error" && (local.chatFolded || local.chatTab === "chat")) local.unread += 1;
     renderChat();
   }
   wrap("setStatus", (original) => function uiBetaSetStatus(message, kind = "", ...rest) {

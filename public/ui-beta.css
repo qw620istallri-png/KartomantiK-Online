@@ -2,7 +2,7 @@
    #gameScreen.ui-beta, so the classic table is untouched when it is off. */
 
 #gameScreen.ui-beta,
-#gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel, #rulesChoicePanel) {
+#gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel, #rulesChoicePanel, .rules-vfx-top-reveal) {
   --ub-bg: #0b1630;
   --ub-bg-2: #0f1f40;
   --ub-line: rgba(var(--ub-gd), .28);
@@ -29,7 +29,7 @@
 }
 #gameScreen.ui-beta { background: var(--ub-bg); color: var(--ub-ink); }
 :root[data-ub-theme="dark"] #gameScreen.ui-beta,
-:root[data-ub-theme="dark"] #gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel, #rulesChoicePanel) {
+:root[data-ub-theme="dark"] #gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel, #rulesChoicePanel, .rules-vfx-top-reveal) {
   --ub-bg: #06070a;
   --ub-bg-2: #0e1015;
   --ub-pn: 13, 14, 18;
@@ -38,24 +38,35 @@
   --ub-line-soft: rgba(240, 217, 143, .09);
 }
 :root[data-ub-theme="sand"] #gameScreen.ui-beta,
-:root[data-ub-theme="sand"] #gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel, #rulesChoicePanel) {
-  --ub-bg: #e6d8ba;
-  --ub-bg-2: #f3eada;
-  --ub-ink: #2b2216;
-  --ub-muted: #6d6250;
-  --ub-gold: #b8892a;
-  --ub-gold-pale: #835e12;
+:root[data-ub-theme="sand"] #gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel, #rulesChoicePanel, .rules-vfx-top-reveal) {
+  --ub-bg: #c4b18b;
+  --ub-bg-2: #d3c3a1;
+  --ub-ink: #1f170c;
+  --ub-muted: #4a3f2e;
+  --ub-gold: #a67a20;
+  --ub-gold-pale: #6a4908;
   --ub-line: rgba(150, 110, 40, .38);
   --ub-line-soft: rgba(120, 90, 40, .2);
   --ub-hi: 90, 65, 25;
-  --ub-lo: 120, 90, 45;
+  --ub-lo: 244, 236, 218;
   --ub-gl: 130, 95, 35;
   --ub-gd: 170, 125, 40;
-  --ub-pn: 246, 238, 220;
-  --ub-pn2: 239, 229, 206;
+  --ub-pn: 225, 213, 188;
+  --ub-pn2: 215, 202, 174;
   --ub-stale-ink: #2f4d7a;
+  --me: #1d8a70;
+  --opp: #b44a30;
   color-scheme: light;
 }
+/* sand: the texts that use fixed light colours meant for the dark themes */
+:root[data-ub-theme="sand"] #gameScreen.ui-beta .ub-zc .ub-zlab { color: rgba(60, 45, 25, .72); }
+:root[data-ub-theme="sand"] #gameScreen.ui-beta .ub-zc .ub-empty { color: rgba(50, 38, 20, .8); }
+:root[data-ub-theme="sand"] #gameScreen.ui-beta .ub-slot { color: rgba(60, 45, 25, .6); border-color: rgba(var(--ub-gl), .4); }
+:root[data-ub-theme="sand"] #gameScreen.ui-beta :is(.log, .chat-msg, [class*="log"]) b[style*="color"] { filter: brightness(.6) saturate(1.3); }
+:root[data-ub-theme="sand"] #gameScreen.ui-beta .phase-log-step { color: #5e5236; }
+:root[data-ub-theme="sand"] #gameScreen.ui-beta .rules-priority,
+:root[data-ub-theme="sand"] #gameScreen.ui-beta .rules-priority.waiting { color: #3f3524; text-shadow: none; }
+:root[data-ub-theme="sand"] #gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .inspect-text .meta { color: #4a3f2e; }
 
 #gameScreen.ui-beta *,
 #gameScreen.ui-beta { scrollbar-width: none; }
@@ -781,3 +792,91 @@ body.hand-drop-choice #gameScreen.ui-beta .hand-area { z-index: 90; }
 .ub-draw-pop.opp { animation-name: ub-draw-pop-down; }
 @keyframes ub-draw-pop { 0% { opacity: 0; transform: translate(-50%, -20%) scale(.6); } 15% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); } 25% { transform: translate(-50%, -50%) scale(1); } 75% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -110%); } }
 @keyframes ub-draw-pop-down { 0% { opacity: 0; transform: translate(-50%, -80%) scale(.6); } 15% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); } 25% { transform: translate(-50%, -50%) scale(1); } 75% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, 10%); } }
+
+/* choosing cards in hand: the dark backdrop stops above the hand (--ub-hand-top, ui-beta.js) */
+body.hand-drop-choice #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.hand-drop { background: linear-gradient(to bottom, #050402b8 calc(var(--ub-hand-top, 100vh) - 28px), transparent var(--ub-hand-top, 100vh)); }
+
+/* look at the top of the deck (Shababba...): the cards in a row, the top and bottom of the deck as two
+   lanes marked with a card back underneath, an explicit Confirm */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-choice-options:has(.rules-reorder-group) { display: flex; flex-direction: column; align-items: center; gap: 14px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-group { display: flex !important; flex-direction: column; align-items: center; gap: 16px; margin: 0; width: 100%; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-pool { min-height: 0 !important; padding: 0 !important; gap: 12px !important; flex-wrap: nowrap !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-pool:empty { display: none !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-lanes { display: flex !important; flex-wrap: nowrap; justify-content: center; gap: 18px !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-lane { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-lane > small { display: flex !important; align-items: center; gap: 8px; font: 700 13px/1.2 var(--display-font, Georgia, serif) !important; letter-spacing: .08em; text-transform: uppercase; color: var(--ub-gold-pale, #f0d98f) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-back { width: 22px; aspect-ratio: 5 / 7; border-radius: 3px; box-shadow: 0 2px 6px #0008; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-lane .rules-reorder-strip { min-width: min(330px, 26vw) !important; min-height: 122px !important; flex-wrap: nowrap !important; border: 2px dashed rgba(var(--ub-gd, 211, 169, 66), .45) !important; border-radius: 12px !important; background: rgba(0, 0, 0, .22) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-card { width: clamp(64px, 5.6vw, 80px) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-pool .rules-reorder-card { width: clamp(88px, 8vw, 116px) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box:has(.rules-reorder-group) > :not(.rules-choice-source) { max-width: 820px !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-card:hover:not(.is-dragging) { transform: translateY(-6px) scale(1.06) !important; z-index: 30; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-card b { font-family: var(--display-font, Georgia, serif); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-confirm { min-width: 200px; margin-top: 4px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-hint { margin: 0; color: #ffcf8a; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box.has-source:has(.rules-reorder-group) { grid-template-columns: minmax(0, 1fr) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box.has-source:has(.rules-reorder-group) > .rules-choice-source { display: none !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box.has-source:has(.rules-reorder-group) > :not(.rules-choice-source) { grid-column: 1 !important; grid-row: auto !important; }
+body.ub-hand-drawing #gameScreen.ui-beta #myHandTray { pointer-events: none; }
+#gameScreen.ui-beta:not(.hidden) ~ .card-preview, body:has(#gameScreen.ui-beta:not(.hidden)) > .card-preview { border: 0; border-radius: 14px; background: transparent; box-shadow: 0 18px 50px #000c; z-index: 420; }
+.ub-stale-panel .ub-stale-total { margin-left: auto; font: 700 15px/1 var(--display-font, Georgia, serif); color: var(--ub-gold-pale); padding: 4px 12px; border-radius: 99px; background: rgba(var(--ub-gd), .16); border: 1px solid rgba(var(--ub-gd), .4); }
+.ub-stale-half h3 small { font-size: 12px; font-weight: 600; color: var(--ub-muted); margin-left: 6px; }
+
+/* stalemated card whose destination is being chosen: lifted to the field centre */
+#gameScreen.ui-beta .bf-card.ub-stale-focus {
+  box-shadow: 0 0 0 2px rgba(var(--ub-gold-rgb, 214,170,80), .9), 0 14px 34px rgba(0,0,0,.55);
+  animation: ub-stale-focus-pulse 1.6s ease-in-out infinite;
+}
+@keyframes ub-stale-focus-pulse { 50% { box-shadow: 0 0 0 4px rgba(var(--ub-gold-rgb, 214,170,80), .55), 0 14px 34px rgba(0,0,0,.55); } }
+
+/* Skysailing Triad (top card uncovered): a beta-styled card reveal */
+.rules-vfx-top-reveal.is-beta {
+  width: min(300px, 80vw); gap: 8px; padding: 14px 16px 16px;
+  color: var(--ub-ink); background: linear-gradient(180deg, rgba(var(--ub-pn2), .97), rgba(var(--ub-pn), .97));
+  border: 1px solid var(--ub-line); border-top: 3px solid var(--owner-color, var(--ub-gold)); border-radius: 14px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, .5), 0 0 0 1px rgba(var(--ub-lo), .4);
+  font-family: inherit;
+}
+.rules-vfx-top-reveal.is-beta header { display: flex; align-self: stretch; align-items: center; gap: 10px; text-align: left; }
+.rules-vfx-top-reveal.is-beta header .src { width: 34px; border-radius: 4px; box-shadow: 0 2px 6px rgba(0, 0, 0, .4); }
+.rules-vfx-top-reveal.is-beta header span { display: grid; min-width: 0; }
+.rules-vfx-top-reveal.is-beta header b { overflow: hidden; color: var(--ub-gold-pale); font-size: 15px; white-space: nowrap; text-overflow: ellipsis; }
+.rules-vfx-top-reveal.is-beta header small { color: var(--ub-muted); font-size: 14px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+.rules-vfx-top-reveal.is-beta .card { position: relative; margin-top: 2px; }
+.rules-vfx-top-reveal.is-beta .card img { display: block; width: min(200px, 52vw); border-radius: 10px; box-shadow: 0 10px 26px rgba(0, 0, 0, .55); }
+.rules-vfx-top-reveal.is-beta .card i {
+  position: absolute; inset: 0; border-radius: 10px; pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, rgba(255, 255, 255, .35) 50%, transparent 65%) -150% 0 / 250% 100% no-repeat;
+  animation: ub-top-sheen 1.4s .35s ease-out both;
+}
+@keyframes ub-top-sheen { to { background-position: 150% 0; } }
+.rules-vfx-top-reveal.is-beta strong { color: var(--ub-ink); font-size: 18px; }
+.rules-vfx-top-reveal.is-beta em { margin-top: -6px; color: var(--ub-muted); font-size: 14px; font-style: normal; }
+.rules-vfx-top-reveal.is-beta .outcome {
+  padding: 5px 14px; border-radius: 999px; font-size: 15px; font-weight: 800; color: #10180f;
+  background: var(--ub-gold); box-shadow: 0 0 16px rgba(var(--ub-gd), .45);
+}
+.rules-vfx-top-reveal.is-beta.is-drawn .outcome { background: #6fc3ff; box-shadow: 0 0 16px rgba(111, 195, 255, .45); }
+.rules-vfx-top-reveal.is-beta.is-noeffect .outcome { background: rgba(var(--ub-hi), .16); color: var(--ub-ink); box-shadow: none; }
+
+/* the observers' own chat: never sent to the players */
+#gameScreen.ui-beta .ub-obs-msg { opacity: .92; font-style: italic; }
+#gameScreen.ui-beta .ub-obs-tag {
+  display: inline-block; margin-right: 6px; padding: 0 6px; border-radius: 999px; font-style: normal;
+  font-size: 14px; font-weight: 700; color: var(--ub-muted); border: 1px solid var(--ub-line);
+}
+
+/* observer: the left-hand player's hand rises from the bottom edge */
+#gameScreen.ui-beta .ub-obs-hand-fan { top: auto; bottom: 0; }
+#gameScreen.ui-beta .ub-obs-hand-fan .opponent-hand-card {
+  --ub-back-w: clamp(64px, 6vw, 104px);
+  top: auto; bottom: 0;
+  transform: translateX(calc(-50% + var(--fan-x) * 1.2)) translateY(55%) rotate(var(--fan-rotate));
+}
+#gameScreen.ui-beta .ub-obs-hand-fan .opponent-hand-card:hover,
+#gameScreen.ui-beta .ub-obs-hand-fan .opponent-hand-card:focus-visible {
+  transform: translateX(calc(-50% + var(--fan-x) * 1.2)) translateY(-10%) rotate(0deg) scale(1.9);
+}
+
+/* manual phases: who passed reads as plain text, not as a gold pill */
+#gameScreen.ui-beta .ub-phase.manual .rules-priority { background: none; border: 0; box-shadow: none; padding: 0; color: var(--ub-muted); }

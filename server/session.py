@@ -299,6 +299,19 @@ class Session:
     def player_for_seat(self, seat):
         return next((player for player in self.players.values() if player.get("seat") == seat), None)
 
+    def concede(self, player_id):
+        """The conceding player loses at once; everyone else wins."""
+        winner_ids = [pid for pid in self.players if pid != player_id]
+        self.rules_engine["outcome"] = {
+            "reason": "concession",
+            "loserIds": [player_id],
+            "winnerIds": winner_ids,
+            "draw": len(winner_ids) != 1,
+        }
+        self.rules_engine["pendingChoice"] = None
+        self.rules_engine["priorityPlayerId"] = None
+        self.ended = True
+
     def tournament_codes(self):
         if self.mode != "tournament":
             return {}
@@ -1288,6 +1301,12 @@ class Session:
             and metadata.get("type") == "persistent_will"
             and self.rules_engine["actionStack"]
             and self.current_phase_id() != "end_actions"
+            # the Atavic Wills, playable before the Revelation, may answer the
+            # Stack there (even another Atavic)
+            and not (
+                self.current_phase_id() == "confrontation_before_revelation"
+                and self.card_rules.get(card_id, {}).get("playBeforeRevelation")
+            )
         ):
             return "A Persistent Will cannot be played as a response.", None
         if (
@@ -2346,6 +2365,14 @@ class Session:
                 return "This effect requires a card you do not own."
             if target_rules.get("fieldZone") and self.rules_field_zone(item) != target_rules["fieldZone"]:
                 return "This effect requires a target in a different field zone."
+            # the Stalemate Zone is not part of the field: only effects naming it reach it
+            # (a target put into stalemate before its effect resolves is lost)
+            if (
+                self.rules_field_zone(item) == "stalemate"
+                and target_rules.get("fieldZone") != "stalemate"
+                and "stalemate" not in ((target_rules.get("fieldZonesByType") or {}).get(metadata.get("type")) or [])
+            ):
+                return "A card in the Stalemate Zone is not on the field."
             field_zones_by_type = target_rules.get("fieldZonesByType") or {}
             allowed_field_zones = field_zones_by_type.get(metadata.get("type"))
             if (
@@ -5036,10 +5063,15 @@ class Session:
         for player_id, player in self.players.items():
             ids = []
             for card_id in dict.fromkeys(player["zones"].get("hand", [])):
-                condition = self.card_rules.get(card_id, {}).get("supportCondition")
+                metadata = self.card_rules.get(card_id, {})
+                condition = metadata.get("supportCondition")
                 if condition and self.rules_support_condition_met(
                     {"ownerId": player_id, "controllerId": player_id}, condition
                 ):
+                    ids.append(card_id)
+                # conditional Support from hand (Unruly Flail...): the server decides,
+                # so the client never has to re-derive it from the card text
+                elif metadata.get("supportFromHandCondition") and self.rules_support_from_hand_available(player_id, card_id):
                     ids.append(card_id)
             result[player_id] = ids
         return result
@@ -6697,6 +6729,89 @@ class Session:
             for item in self.battlefield
         )
 
+    def rules_ability_clearly_unusable(self, player_id, ability, phase_id, source_card_id=None):
+        """Cheap checks shared by auto-pass: condition, step, Essence cost and
+        a required target on the field or the Stack. True only when the
+        ability certainly cannot be used now."""
+        ability = ability or {}
+        condition = str(ability.get("condition") or "")
+        if condition == "controller_lost_confrontation":
+            confrontation = self.rules_engine.get("confrontationResult") or {}
+            if (
+                confrontation.get("turn") != self.phase_tracker["turn"]
+                or confrontation.get("loserId") != player_id
+            ):
+                return True
+        if condition == "last_opponent_support_low_power" and self.rules_last_opponent_support(player_id, 2) is None:
+            return True
+        phase_ids = [str(entry) for entry in ability.get("phaseIds") or [] if str(entry) in ADVANCED_PHASES]
+        if phase_ids and phase_id not in phase_ids:
+            return True
+        result_kind = (ability.get("result") or {}).get("kind")
+        if result_kind in {"grant_source_support_until_end_turn", "stalemate_target_grant_source_support"} and phase_id != "confrontation_reaction":
+            # Support only matters while Supports can still be played
+            return True
+        if result_kind == "first_manifestation_trap" and phase_id != "confrontation_choose":
+            return True
+        if result_kind == "chain_from_zone" and (ability.get("result") or {}).get("zone") == "hand":
+            hand = list(self.players[player_id]["zones"]["hand"])
+            if source_card_id in hand:
+                hand.remove(source_card_id)
+            if not any(self.card_rules.get(card, {}).get("type") == "manifestation" for card in hand):
+                return True
+        essence_cost = str(ability.get("essenceCost") or "")
+        if essence_cost:
+            try:
+                requirements = self.rules_requirements_from_symbols(essence_cost)
+                remaining, _spent = self.rules_essence_payment_plan(player_id, requirements)
+                if requirements and any(amount > 0 for amount in remaining.values()):
+                    return True
+            except Exception:  # never skip a phase because of a computation problem
+                pass
+        target_rules = ability.get("targets") or {}
+        if int(target_rules.get("min") or 0) >= 1 and not target_rules.get("groups"):
+            kind = target_rules.get("kind")
+            if kind in {"stack_action", "stack_effect"}:
+                stack = self.rules_engine.get("actionStack") or []
+                if kind == "stack_effect":
+                    stack = [entry for entry in stack if entry.get("kind") != "play_card"]
+                if target_rules.get("controller") == "self":
+                    stack = [entry for entry in stack if entry.get("controllerId") == player_id]
+                card_types = target_rules.get("cardTypes")
+                if card_types:
+                    stack = [
+                        entry for entry in stack
+                        if self.card_rules.get((entry.get("source") or {}).get("cardId"), {}).get("type") in card_types
+                    ]
+                if not stack:
+                    return True
+            elif kind in {None, "card"} and (target_rules.get("zones") or ["battlefield"]) == ["battlefield"]:
+                if not any(
+                    self.rules_ability_targets_error(
+                        target_rules,
+                        [{"kind": "card", "itemId": item.get("id"), "cardId": item.get("cardId")}],
+                        player_id,
+                    ) is None
+                    for item in self.battlefield
+                ):
+                    return True
+        return False
+
+    def rules_usable_hand_ability_card_ids(self, player_id):
+        if not self.rules_engine.get("enabled") or player_id not in self.players:
+            return []
+        phase_id = self.current_phase_id()
+        usable = []
+        for card_id in dict.fromkeys(self.players[player_id]["zones"]["hand"]):
+            if any(
+                "hand" in (ability.get("sourceZones") or [])
+                and self.rules_hand_additional_cost_available(player_id, card_id, ability)
+                and not self.rules_ability_clearly_unusable(player_id, ability, phase_id, card_id)
+                for ability in self.card_rules.get(card_id, {}).get("activatedAbilities") or []
+            ):
+                usable.append(card_id)
+        return usable
+
     def rules_player_can_act(self, player_id):
         """True when the player has any voluntary action available in the current step.
 
@@ -6731,6 +6846,10 @@ class Session:
                     for ability in (metadata.get("playedAbilities") or [])[:1]
                 )
                 and self.rules_played_ability_has_field_target(player_id, card_id)
+                and not any(
+                    self.rules_ability_clearly_unusable(player_id, ability, phase_id, card_id)
+                    for ability in (metadata.get("playedAbilities") or [])[:1]
+                )
             ):
                 return True
             if (
@@ -6741,6 +6860,7 @@ class Session:
             if response and any(
                 "hand" in (ability.get("sourceZones") or [])
                 and self.rules_hand_additional_cost_available(player_id, card_id, ability)
+                and not self.rules_ability_clearly_unusable(player_id, ability, phase_id, card_id)
                 for ability in metadata.get("activatedAbilities") or []
             ):
                 return True
@@ -6748,6 +6868,7 @@ class Session:
             for card_id in set(player["zones"]["receptacle"]):
                 if any(
                     "receptacle" in (ability.get("sourceZones") or [])
+                    and not self.rules_ability_clearly_unusable(player_id, ability, phase_id, card_id)
                     for ability in self.card_rules.get(card_id, {}).get("activatedAbilities") or []
                 ):
                     return True
@@ -9292,7 +9413,8 @@ class Session:
         if metadata.get("type") == "persistent_will":
             item["fieldZone"] = "field"
         else:
-            item["fieldZone"] = "confrontation"
+            # a token entering is the latest Confrontation entry (Unpredictable Loudmouth)
+            self.mark_rules_confrontation_entry(item)
             item["isSupport"] = True
         if generic_power is not None:
             item.update({
@@ -9596,6 +9718,8 @@ class Session:
                 self.mark_rules_interzone_entry(item)
             elif result.get("asSupport"):
                 self.mark_rules_support_entry(item)
+            elif field_zone == "confrontation":
+                self.mark_rules_confrontation_entry(item)
             else:
                 item["fieldZone"] = field_zone
             self.take_zone_card(container_id, zone, card_id)
@@ -18287,6 +18411,10 @@ class Session:
             }
             if item.get("fieldZone"):
                 entry["fieldZone"] = item["fieldZone"]
+            elif self.rules_engine.get("enabled") and self.rules_field_zone(item) == "confrontation":
+                # a First Manifestation stands in the Confrontation (rules_field_zone):
+                # say so, so every client check reads the same zone (Unruly Flail...)
+                entry["fieldZone"] = "confrontation"
             if item.get("isSupport"):
                 entry["isSupport"] = True
             if item.get("manualStack"):
@@ -18442,6 +18570,8 @@ class Session:
                 "firstManifestationItemIds": dict(self.rules_engine["firstManifestationItemIds"]),
                 "firstManifestationValidatedPlayerIds": list(self.rules_engine["firstManifestationValidatedPlayerIds"]),
                 "trapPlayerIds": list(self.rules_engine.get("trapPlayerIds") or []),
+                # hand cards whose hand effect the viewer could use now (Ranba's condition...)
+                "usableHandAbilityCardIds": self.rules_usable_hand_ability_card_ids(viewer_id),
                 # a Trap waiting in place of a First Manifestation: face down for the opponent
                 "trapCards": {
                     pid: {
@@ -18470,7 +18600,10 @@ class Session:
             # the opponent-row mini activity feed updates live without a
             # separate poll — the full log (request_log) is still the
             # authoritative, complete history used for the debug/download panel
-            "recentLog": [self.log_entry_for_role(entry, role) for entry in self.log[-30:]],
+            "recentLog": [
+                self.log_entry_for_role(entry, role) for entry in self.log[-30:]
+                if self.log_entry_visible_to(entry, role)
+            ],
         }
 
     # -- first assisted-rules slice ------------------------------------
@@ -19315,6 +19448,15 @@ class Session:
             "outcome": self.rules_engine["outcome"],
         }
 
+    @staticmethod
+    def log_entry_visible_to(entry, role):
+        """The observers' own chat stays out of what the players receive."""
+        return not (
+            normalize_role(role) == "player"
+            and entry.get("type") == "chat_message"
+            and (entry.get("details") or {}).get("channel") == "observers"
+        )
+
     def log_entry_for_role(self, entry, role):
         if self.mode != "tournament" or normalize_role(role) not in {"player", "spectator"}:
             return entry
@@ -19326,4 +19468,7 @@ class Session:
         return redacted
 
     def serialize_log(self, role="observer"):
-        return {"type": "log", "entries": [self.log_entry_for_role(entry, role) for entry in self.log]}
+        return {"type": "log", "entries": [
+            self.log_entry_for_role(entry, role) for entry in self.log
+            if self.log_entry_visible_to(entry, role)
+        ]}

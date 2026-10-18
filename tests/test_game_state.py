@@ -11187,6 +11187,8 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         }]
         self.assertTrue(session.rules_support_from_hand_available("p1", flail))
         self.assertFalse(session.rules_support_from_hand_available("p2", flail))
+        session.players["p1"]["zones"]["hand"] = [flail]
+        self.assertEqual(session.rules_conditional_support_hand_card_ids()["p1"], [flail])
         target_rules = self.ABILITIES[flail][0]["targets"]
         self.assertIsNone(session.rules_ability_targets_error(target_rules, [{"kind": "stack_action", "actionId": "w1"}], "p1"))
         session.rules_engine["actionStack"][0]["targets"] = [self.card_target("conf2", "m-a")]
@@ -14309,6 +14311,26 @@ class AtavicDoesNotCountItsOwnPlayTests(RealCardRulesCase):
             item = next(i for i in session.battlefield if i["cardId"] == card_id)
             self.assertEqual(sum(item.get("counters", {}).values()), 0, card_id)
 
+    def test_an_atavic_answers_another_atavic_on_the_stack_before_the_revelation(self):
+        welcome, introspection = self.ALL[0], self.ALL[1]
+        session, p1, p2 = self.make_session()
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_before_revelation")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        p1["zones"]["hand"] = [welcome]
+        p2["zones"]["hand"] = [introspection]
+        error, _action = session.declare_rules_action(
+            "p1", "Atavic", kind="play_card", source={"cardId": welcome, "zone": "hand"},
+        )
+        self.assertIsNone(error)
+        self.assertEqual(len(session.rules_engine["actionStack"]), 1)
+        session.rules_engine["priorityPlayerId"] = "p2"
+        self.assertTrue(session.rules_player_can_act("p2"))
+        error, _action = session.declare_rules_action(
+            "p2", "Atavic", kind="play_card", source={"cardId": introspection, "zone": "hand"},
+        )
+        self.assertIsNone(error)
+        self.assertEqual(len(session.rules_engine["actionStack"]), 2)
+
 
 if __name__ == "__main__":
     unittest.main()
@@ -15579,3 +15601,92 @@ class FlowerTenderWithoutTargetTests(RealCardRulesCase):
         self.assertEqual(session.rules_engine["actionStack"], [])
         flower = next(item for item in session.battlefield if item["cardId"] == self.FLOWER)
         self.assertTrue(flower.get("isSupport"))
+
+
+class AutoPassIgnoresUnusableCardsTests(RealCardRulesCase):
+    DENY = "g0mtnp4zbhwj7cb_en"
+    RECALL = "cnqaie6oq458qgq_en"
+    RANBA = "fdnhc537c4xu2wo_en"
+    TRAP = "xzh48oy0ramirce_en"
+    MALALEUCO = "7yu566ip7zuqdoc_en"
+    ALL = (DENY, RECALL, RANBA, TRAP, MALALEUCO)
+
+    def test_cards_that_cannot_be_used_now_do_not_stop_the_auto_pass(self):
+        for card_id in self.ALL:
+            for phase in ("resolution_effects", "end_actions"):
+                session, p1, _p2 = self.make_session()
+                session.rules_engine["enabled"] = True
+                session.rules_engine["firstManifestationComplete"] = True
+                session.phase_tracker["index"] = ADVANCED_PHASES.index(phase)
+                p1["zones"]["hand"] = [card_id]
+                session.battlefield = []
+                self.assertFalse(session.rules_player_can_act("p1"), (card_id, phase))
+
+    def test_deny_counts_once_something_is_on_the_stack(self):
+        session, p1, _p2 = self.make_session()
+        session.rules_engine["enabled"] = True
+        session.rules_engine["firstManifestationComplete"] = True
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_effects")
+        p1["zones"]["hand"] = [self.DENY]
+        session.rules_engine["actionStack"] = [{
+            "id": "x", "controllerId": "p2", "kind": "play_card", "source": {"cardId": "will-x"},
+        }]
+        self.assertTrue(session.rules_player_can_act("p1"))
+
+
+class StalemateIsNotOnTheFieldTests(RealCardRulesCase):
+    INTRO = "265f4wdooq43pjn_en"
+    ALL = (INTRO,)
+
+    def test_a_target_put_into_stalemate_before_introspection_resolves_stays_there(self):
+        session, p1, p2 = self.make_session()
+        session.rules_engine["enabled"] = True
+        foe = self.field_item("foe", "p2", "m-2", field_zone="confrontation")
+        session.battlefield = [foe]
+        ability = next(
+            entry for entry in session.card_rules[self.INTRO]["activatedAbilities"]
+            if entry["id"] == "spend-controls-to-bounce-manifestation"
+        )
+        target = [{"kind": "card", "itemId": "foe", "cardId": "m-2"}]
+        self.assertIsNone(session.rules_ability_targets_error(ability["targets"], target, "p1"))
+        foe["fieldZone"] = "stalemate"
+        self.assertTrue(session.rules_ability_targets_error(ability["targets"], target, "p1"))
+
+
+class LoudmouthOnlyWhenLastTests(RealCardRulesCase):
+    LOUD = "a9bsslut738hm0k_en"
+    ALL = (LOUD,)
+
+    def confrontation(self):
+        session, p1, p2 = self.make_session()
+        session.rules_engine["enabled"] = True
+        session.card_rules["m-1"]["power"] = 10
+        strong = self.field_item("strong", "p1", "m-1", field_zone="interzone")
+        loud = self.field_item("loud", "p2", self.LOUD, field_zone="interzone")
+        session.battlefield = [strong, loud]
+        session.mark_rules_confrontation_entry(strong)
+        session.mark_rules_support_entry(loud)
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_compare")
+        return session, strong, loud
+
+    def test_loudmouth_last_forces_the_stalemate(self):
+        session, _strong, _loud = self.confrontation()
+        self.assertTrue(session.prepare_rules_confrontation_result()["stalemate"])
+
+    def test_a_later_support_cancels_the_loudmouth(self):
+        session, _strong, _loud = self.confrontation()
+        later = self.field_item("later", "p1", "m-2", field_zone="interzone")
+        session.battlefield.append(later)
+        session.mark_rules_support_entry(later)
+        result = session.prepare_rules_confrontation_result()
+        self.assertFalse(result["stalemate"])
+        self.assertEqual(result["winnerId"], "p1")
+
+    def test_a_later_token_cancels_the_loudmouth(self):
+        session, _strong, _loud = self.confrontation()
+        session.apply_rules_action_result({
+            "id": "tok", "controllerId": "p1",
+            "source": {"cardId": "m-3", "ownerId": "p1"}, "targets": [],
+            "ability": {"result": {"kind": "create_support_tokens", "count": 1, "power": 1, "temperament": "phlegmatic"}},
+        })
+        self.assertFalse(session.prepare_rules_confrontation_result()["stalemate"])

@@ -585,6 +585,7 @@ def log_rules_recovery_sequence(session, recovery, caused_by_actor_id):
         session.add_log(caused_by_actor_id, "rules_game_end", recovery["outcome"])
 
 sessions: dict[str, Session] = {}  # keyed by the session's creator/player code
+OBSERVER_CHAT_ROLES = {"observer", "spectator"}
 connections: dict[object, dict] = {}  # websocket -> session, playerId, role, isObserver
 SESSION_CLEANUP_INTERVAL_SECONDS = 60
 
@@ -1072,7 +1073,7 @@ async def handle_message(ws, info, data):
         pregame_messages = {
             "import_deck", "set_rules_deck_confirmed", "draw_to_limit", "mulligan", "set_rules_ready",
             "set_activity", "chat_message", "leave_session", "request_log",
-            "reset_board",
+            "reset_board", "concede",
         }
         if msg_type not in pregame_messages:
             return await send_error(ws, "Finish the opening-hand setup before playing.")
@@ -1084,7 +1085,7 @@ async def handle_message(ws, info, data):
     ):
         recovery_mulligan_messages = {
             "mulligan", "set_activity", "chat_message", "leave_session", "request_log",
-            "reset_board", "set_rules_pass_all", "set_rules_auto_skip",
+            "reset_board", "set_rules_pass_all", "set_rules_auto_skip", "concede",
         }
         if msg_type not in recovery_mulligan_messages:
             return await send_error(ws, "Complete the required Recovery Mulligan before playing.")
@@ -1100,7 +1101,7 @@ async def handle_message(ws, info, data):
         pending_choice_messages = {
             "resolve_rules_choice", "set_activity", "chat_message",
             "leave_session", "request_log", "reset_board",
-            "set_rules_pass_all", "set_rules_auto_skip",
+            "set_rules_pass_all", "set_rules_auto_skip", "concede",
         }
         if msg_type not in pending_choice_messages:
             return await send_error(ws, "Complete the required card choice before playing.")
@@ -2091,13 +2092,24 @@ async def handle_message(ws, info, data):
         if not text:
             return await send_error(ws, "Empty message.")
         actor = session.players.get(actor_id)
-        by_name = actor["name"] if actor else role.title()
-        session.add_log(actor_id, "chat_message", {"text": text}, actor_name=by_name)
+        by_name = actor["name"] if actor else (info.get("displayName") or role.title())
+        # observers and spectators talk among themselves: the players never see it
+        channel = "observers" if role in OBSERVER_CHAT_ROLES else "table"
+        details = {"text": text}
+        if channel == "observers":
+            details["channel"] = channel
+        session.add_log(actor_id, "chat_message", details, actor_name=by_name)
         session.touch()
-        payload = {"type": "chat_message", "byId": actor_id, "byName": by_name, "text": text, "timestamp": time.time()}
+        payload = {
+            "type": "chat_message", "byId": actor_id, "byName": by_name, "text": text,
+            "timestamp": time.time(), "channel": channel, "role": role,
+        }
         for other_ws, other_info in list(connections.items()):
-            if other_info["session"] is session:
-                await send_to(other_ws, payload)
+            if other_info["session"] is not session:
+                continue
+            if channel == "observers" and other_info.get("role", "player") == "player":
+                continue
+            await send_to(other_ws, payload)
 
     elif msg_type == "roll_dice":
         # dice/coin results are always public by nature (no hidden info to
@@ -2313,6 +2325,17 @@ async def handle_message(ws, info, data):
             return await send_error(ws, "Only the session's first player can end it for everyone.")
         session.ended = True
         session.add_log(actor_id, "end_session", {})
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "concede":
+        player = session.players.get(actor_id)
+        if is_observer or player is None:
+            return await send_error(ws, "Only a player can concede.")
+        if session.mode == "tournament" and session.status != "active":
+            return await send_error(ws, "The tournament match is not in progress.")
+        session.concede(actor_id)
+        session.add_log(actor_id, "concede", {})
         session.touch()
         await broadcast_state(session)
 

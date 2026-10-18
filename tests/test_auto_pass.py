@@ -276,3 +276,84 @@ class AutoPassTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ConcedeTests(unittest.TestCase):
+    make_session = AutoPassTests.make_session
+    goto = AutoPassTests.goto
+
+    def send(self, session, actor, data, role="player"):
+        sent = []
+        original_send_error, original_broadcast = server_main.send_error, server_main.broadcast_state
+
+        async def fake_error(_ws, message, code=None):
+            sent.append(message)
+
+        async def fake_broadcast(_session):
+            return None
+
+        server_main.send_error, server_main.broadcast_state = fake_error, fake_broadcast
+        try:
+            asyncio.run(server_main.handle_message(None, {"session": session, "playerId": actor, "role": role}, data))
+        finally:
+            server_main.send_error, server_main.broadcast_state = original_send_error, original_broadcast
+        return sent
+
+    def test_conceding_ends_the_game_for_the_opponent(self):
+        session, _p1, _p2 = self.make_session()
+        self.goto(session, "end_actions", priority="p2")
+        session.status = "active"
+        session.rules_engine["pendingChoice"] = {"id": "c", "kind": "binary_choice", "playerId": "p2"}
+        self.assertEqual(self.send(session, "p1", {"type": "concede"}), [])
+        self.assertTrue(session.ended)
+        outcome = session.rules_engine["outcome"]
+        self.assertEqual((outcome["reason"], outcome["loserIds"], outcome["winnerIds"]), ("concession", ["p1"], ["p2"]))
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+
+    def test_an_observer_cannot_concede(self):
+        session, _p1, _p2 = self.make_session()
+        session.status = "active"
+        self.assertTrue(self.send(session, "obs", {"type": "concede"}, role="observer"))
+        self.assertFalse(session.ended)
+
+
+class ObserverChatTests(unittest.TestCase):
+    make_session = AutoPassTests.make_session
+
+    def chat(self, session, actor, role, text):
+        received = {}
+        originals = server_main.connections, server_main.send_to
+        connections = {
+            "ws-p1": {"session": session, "playerId": "p1", "role": "player"},
+            "ws-p2": {"session": session, "playerId": "p2", "role": "player"},
+            "ws-obs": {"session": session, "playerId": "obs", "role": role},
+        }
+
+        async def fake_send(ws, payload):
+            received.setdefault(ws, []).append(payload)
+
+        server_main.connections, server_main.send_to = connections, fake_send
+        try:
+            info = connections["ws-obs" if actor == "obs" else f"ws-{actor}"]
+            asyncio.run(server_main.handle_message("ws", info, {"type": "chat_message", "text": text}))
+        finally:
+            server_main.connections, server_main.send_to = originals
+        return received
+
+    def test_observer_messages_never_reach_the_players(self):
+        session, _p1, _p2 = self.make_session()
+        for role in ("observer", "spectator"):
+            received = self.chat(session, "obs", role, "nice play")
+            self.assertEqual(sorted(received), ["ws-obs"])
+            self.assertEqual(received["ws-obs"][0]["channel"], "observers")
+        player_log = session.serialize_for("p1", "player")["recentLog"]
+        self.assertFalse([entry for entry in player_log if entry["type"] == "chat_message"])
+        self.assertFalse([entry for entry in session.serialize_log("player")["entries"] if entry["type"] == "chat_message"])
+        observer_log = session.serialize_for("obs", "observer")["recentLog"]
+        self.assertEqual(len([entry for entry in observer_log if entry["type"] == "chat_message"]), 2)
+
+    def test_player_messages_reach_everyone(self):
+        session, _p1, _p2 = self.make_session()
+        received = self.chat(session, "p1", "observer", "hello")
+        self.assertEqual(sorted(received), ["ws-obs", "ws-p1", "ws-p2"])
+        self.assertEqual(received["ws-p2"][0]["channel"], "table")

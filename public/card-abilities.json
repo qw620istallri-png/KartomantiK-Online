@@ -2011,7 +2011,7 @@
       "id": "split-two-limbo-cards-at-end-of-turn-with-ten-controls",
       "optional": true,
       "trigger": {"event": "end_of_turn", "zone": "field", "sourceCounterMin": {"name": "Control", "min": 10}},
-      "targets": {"min": 2, "max": 2, "cardTypes": ["manifestation", "persistent_will", "ephemeral_will"], "zones": ["graveyard"]},
+      "targets": {"min": 2, "max": 2, "cardTypes": ["manifestation", "persistent_will", "ephemeral_will"], "zones": ["graveyard"], "container": "self"},
       "result": {"kind": "split_targeted_limbo_cards"}
     }
   ],

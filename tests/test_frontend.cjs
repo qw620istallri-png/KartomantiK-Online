@@ -733,8 +733,10 @@ function startServer() {
         bubbles: true, cancelable: true, clientX: 320, clientY: 720,
       }));
       const contextLabels = [...document.querySelectorAll(".ctx-menu button")].map((button) => button.textContent.trim());
-      [...document.querySelectorAll(".ctx-menu button")]
-        .find((button) => button.textContent.trim() === t("rulesDeclareCardAction"))?.click();
+      // the free-form "Debug: declare" entry is no longer offered in the menu;
+      // the declaration panel itself still works when opened directly
+      document.querySelector(".ctx-menu")?.remove();
+      openRulesActionPanel({ cardId: sourceCard.id, zone: "hand", handIndex: 0 });
       const declaration = {
         visible: !document.querySelector("#rulesActionPanel").classList.contains("hidden"),
         declareActionText: t("rulesDeclareCardAction"),
@@ -1509,13 +1511,16 @@ function startServer() {
       dragTo(pool()[0], "top");
       dragTo(pool()[0], "extra");
       dragTo(pool()[0], "top");
+      const sentBeforeConfirm = window.__sent.filter((entry) => entry.type === "resolve_rules_choice").length;
+      document.querySelector("#rulesDeckReorderConfirm").click();
       const payload = window.__sent.find((entry) => entry.type === "resolve_rules_choice");
       latestState.rulesEngine.priorityPlayerId = saved.priority;
       latestState.rulesEngine.pendingChoice = saved.choice;
       renderAll();
-      return { options: [...new Set(options)], extra: payload?.option?.groups?.[0]?.extra, top: payload?.option?.groups?.[0]?.top?.length };
+      return { options: [...new Set(options)], sentBeforeConfirm, extra: payload?.option?.groups?.[0]?.extra, top: payload?.option?.groups?.[0]?.top?.length };
     });
     assert.deepEqual(extraReorder.options, ["pool", "top", "bottom", "extra"]);
+    assert.equal(extraReorder.sentBeforeConfirm, 0, "a full placement waits for the confirm button");
     assert.equal(extraReorder.extra.length, 1);
     assert.equal(extraReorder.top, 2);
     // Expansive Ponderer: exactly one card to the hand; a second one is refused,
@@ -1543,11 +1548,14 @@ function startServer() {
       dragTo(strip("extra")[0], "top"); // hand emptied again
       dragTo(strip("pool")[0], "top");
       dragTo(strip("pool")[0], "bottom");
-      const blocked = { sent: sent().length, hint: !document.querySelector("#rulesDeckReorderHint").classList.contains("hidden") };
+      const confirm = document.querySelector("#rulesDeckReorderConfirm");
+      const blocked = { sent: sent().length, hint: !document.querySelector("#rulesDeckReorderHint").classList.contains("hidden"), disabled: confirm.disabled };
       dragTo(strip("top")[0], "extra");
+      document.querySelector("#rulesDeckReorderConfirm").click();
       const firstSend = sent().length;
       rulesDeckReorderRetry(); // the server refused it
       dragTo(strip("top")[0], "bottom");
+      document.querySelector("#rulesDeckReorderConfirm").click();
       const payload = sent().at(-1);
       latestState.rulesEngine.priorityPlayerId = saved.priority;
       latestState.rulesEngine.pendingChoice = saved.choice;
@@ -1555,7 +1563,7 @@ function startServer() {
       return { afterSecond, blocked, firstSend, sends: sent().length, extra: payload?.option?.groups?.[0]?.extra?.length };
     });
     assert.deepEqual(pondererReorder, {
-      afterSecond: { extra: 1, pool: 2 }, blocked: { sent: 0, hint: true }, firstSend: 1, sends: 2, extra: 1,
+      afterSecond: { extra: 1, pool: 2 }, blocked: { sent: 0, hint: true, disabled: true }, firstSend: 1, sends: 2, extra: 1,
     });
     const popupLayout = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
@@ -3523,7 +3531,7 @@ function startServer() {
     assert(rulesStack.priorityText.length > 0);
     assert.equal(rulesStack.passDisabled, false);
     assert(rulesStack.minFont >= 14);
-    assert(rulesStack.declaration.contextLabels.includes(rulesStack.declaration.declareActionText));
+    assert(!rulesStack.declaration.contextLabels.includes(rulesStack.declaration.declareActionText));
     assert.equal(rulesStack.declaration.visible, true);
     assert.equal(rulesStack.declaration.kind, "play_card");
     assert.equal(rulesStack.declaration.kindLocked, true);
