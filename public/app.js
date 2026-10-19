@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261019-rules-beta-139";
+const STATIC_ASSET_VERSION = "20261019-rules-beta-139-1";
 {
   const versionEl = document.getElementById("appVersion");
   // "...-beta-138-1" reads "beta 138.1" (a release without a fix number reads "138.0")

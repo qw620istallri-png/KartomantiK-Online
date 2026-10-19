@@ -133,7 +133,7 @@
       "ongoingEffect": {
         "kind": "power_modifier",
         "valuePerRemovedCounter": 1,
-        "duration": "until_end_of_turn"
+        "duration": "while_target_on_field"
       }
     }
   ],
@@ -984,7 +984,7 @@
       "ongoingEffect": {
         "kind": "power_modifier",
         "value": -2,
-        "duration": "until_end_of_turn"
+        "duration": "while_target_on_field"
       }
     }
   ],
@@ -1947,7 +1947,7 @@
       "id": "shrink-opponent-manifestation-on-discard",
       "trigger": {"event": "cards_discarded"},
       "targets": {"kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"], "controller": "opponent"},
-      "ongoingEffect": {"kind": "power_modifier", "value": -1, "duration": "until_end_of_turn"}
+      "ongoingEffect": {"kind": "power_modifier", "value": -1, "duration": "while_target_on_field"}
     },
     {
       "id": "gain-when-opponent-manifestation-destroyed",
@@ -2066,7 +2066,7 @@
       "id": "spend-violence-to-shrink-manifestation",
       "removeCountersFromSource": {"name": "Violence", "amount": 5},
       "targets": {"min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"]},
-      "ongoingEffect": {"kind": "power_modifier", "value": -2, "duration": "until_end_of_turn"}
+      "ongoingEffect": {"kind": "power_modifier", "value": -2, "duration": "while_target_on_field"}
     },
     {
       "id": "gain-points-on-win-with-ten-violence",
@@ -2535,7 +2535,7 @@
       "id": "incite-to-sacrifice",
       "action": "play_card",
       "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"], "fieldZone": "confrontation" },
-      "ongoingEffect": { "kind": "power_modifier", "value": 6, "duration": "until_end_of_turn" },
+      "ongoingEffect": { "kind": "power_modifier", "value": 6, "duration": "while_target_on_field" },
       "result": { "kind": "exile_target_on_win" }
     }
   ],
@@ -2893,7 +2893,7 @@
         "zones": ["battlefield"], "controller": "self", "excludeEventSource": true
       },
       "result": { "kind": "score_owner_silent", "value": 5 },
-      "ongoingEffect": { "kind": "power_modifier", "value": 1, "duration": "until_end_of_turn" }
+      "ongoingEffect": { "kind": "power_modifier", "value": 1, "duration": "while_target_on_field" }
     }
   ],
   "3oiehnpbub1byg6_en": [
@@ -2982,7 +2982,7 @@
       "targets": {
         "kind": "card", "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"]
       },
-      "ongoingEffect": { "kind": "power_modifier", "value": 1, "duration": "until_end_of_turn" }
+      "ongoingEffect": { "kind": "power_modifier", "value": 1, "duration": "while_target_on_field" }
     }
   ],
   "inner-deserts-071": [
@@ -3595,7 +3595,7 @@
       "id": "damage-distribute-weakness",
       "action": "play_card",
       "targets": { "min": 1, "max": 3, "cardType": "manifestation", "zones": ["battlefield"], "fieldZone": "interzone", "controller": "opponent" },
-      "result": { "kind": "distribute_power", "total": 3, "sign": -1 }
+      "result": { "kind": "distribute_power", "total": 3, "sign": -1, "duration": "while_target_on_field" }
     }
   ],
   "6b4f3yh4tk4091p_en": [
@@ -3604,7 +3604,7 @@
       "optional": true,
       "trigger": { "event": "loses_confrontation" },
       "targets": { "min": 1, "max": 3, "cardType": "manifestation", "zones": ["battlefield"], "fieldZone": "interzone", "controller": "self" },
-      "result": { "kind": "distribute_power", "total": 3, "sign": 1 }
+      "result": { "kind": "distribute_power", "total": 3, "sign": 1, "duration": "while_target_on_field" }
     }
   ],
   "tdy2112mspb7u97_en": [
@@ -3699,7 +3699,7 @@
       "id": "sandokaron-banner-power",
       "removeCountersFromSource": { "name": "Banner", "amount": 1 },
       "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"] },
-      "ongoingEffect": { "kind": "power_modifier", "value": 3, "duration": "until_end_of_turn" }
+      "ongoingEffect": { "kind": "power_modifier", "value": 3, "duration": "while_target_on_field" }
     },
     {
       "id": "sandokaron-banner-essence",
@@ -4807,7 +4807,6 @@
     },
     {
       "id": "karmapult-sacrifices-for-power-loss",
-      "phaseIds": ["confrontation_reaction"],
       "tribute": "{H}",
       "sourceZones": [
         "battlefield"

@@ -1042,3 +1042,14 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Malaleuco : « payez {B}{B}{B} » depuis la main est un tribut (Manifestations ou Essences), plus seulement des Essences (`tribute` dans `card-abilities.json`). Le client choisit la capacité qui nomme la zone de la source (`buildRulesActionDraft`) : depuis la main, c'est la mise en Interzone et non la copie de Volonté.
 - Grimoire : une Volonté placée dessus peut être glissée depuis la main fantôme. Le panneau de jeu ne se ferme plus pour une source `attached` (`renderRulesBoardFlow`). Le passage auto compte ces Volontés comme une action possible (`rules_player_can_act`).
 - Tests : `MalaleucoFromHandTests` et `GrimoireWillTests` dans `tests/test_reported_card_bugs.py`.
+
+## Audit texte/code des decks de départ (beta 139.1)
+
+Relecture des 150 cartes des cinq decks de départ, texte imprimé contre `card-abilities.json`, règles compilées et moteur.
+
+- Tribut et défausse : une Manifestation payée en Tribut depuis la main entre dans les Limbes avec la raison `tribute` (`move_zone_card(..., limbo_reason="tribute")` dans `pay_rules_tribute`). Elle ne produit plus `cards_discarded` ni le déclencheur `discarded`. Corrige Forfog, Pale Entity, Ehgog, Conflux of Catastrophe, Buddhan, Tenebro, Tombloom, Nghoul-ong et le filtre `limboReasons` de Leadenshroud.
+- Modificateurs sans durée : selon le livret, un modificateur est permanent tant que la carte reste sur le champ ou en Impasse. Les gains et pertes de puissance sans « jusqu'à la fin du tour » utilisent `while_target_on_field` : Intoxicating Blossom, Jija, Conflux of Catastrophe, Atavic Fury, Incite to Sacrifice, Linoleus, Ohmom, Sandokaron, Damage et Echo of the Wilds (`distribute_power` accepte `duration`).
+- Stampeding Brood : `create_support_tokens` vers l'Interzone ne crée que les jetons qui tiennent dans les places libres (« jusqu'à deux »).
+- Ataviques : une Manifestation placée (et non jouée) ne compte pas. Malaleuco mis dans l'Interzone depuis la main appelle `queue_rules_manifestation_entry_watchers(..., played=False)`.
+- Karmapult : plus de restriction à la Réaction, sa capacité suit les fenêtres normales des effets activés.
+- Tests : `StarterDeckAuditTests` dans `tests/test_reported_card_bugs.py`.

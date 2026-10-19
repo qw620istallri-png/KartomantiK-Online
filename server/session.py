@@ -517,7 +517,8 @@ class Session:
             return "A card declared in the Stack cannot leave your Hand before it resolves."
         return None
 
-    def move_zone_card(self, from_container_id, from_zone, to_container_id, to_zone, card_id, position="top"):
+    def move_zone_card(self, from_container_id, from_zone, to_container_id, to_zone, card_id, position="top",
+                       limbo_reason="discard"):
         owner_id = self.card_owner_in_zone(from_container_id, from_zone, card_id)
         if owner_id is None or card_id not in self.players[from_container_id]["zones"][from_zone]:
             return "Card not found in source zone.", None
@@ -535,11 +536,13 @@ class Session:
             and from_zone in {"hand", "deck"}
         ):
             self.record_rules_limbo_entry(
-                owner_id, card_id, "discard", from_zone=from_zone
+                owner_id, card_id, limbo_reason, from_zone=from_zone
             )
-            self.record_rules_observed_event("cards_discarded", owner_id)
-            if from_zone == "deck":
-                self.record_rules_observed_event("deck_cards_discarded", owner_id)
+            # Only a discard is a discard: a Tribute moved from the Hand is not
+            if limbo_reason == "discard":
+                self.record_rules_observed_event("cards_discarded", owner_id)
+                if from_zone == "deck":
+                    self.record_rules_observed_event("deck_cards_discarded", owner_id)
         if (
             self.rules_engine.get("enabled")
             and from_zone == "deck" and to_zone == "hand"
@@ -1806,10 +1809,13 @@ class Session:
             total = int(result.get("total") or 0)
             if total < 1:
                 return None
-            return {
+            clean = {
                 "kind": kind, "total": min(total, 20),
                 "sign": -1 if result.get("sign") == -1 else 1,
             }
+            if result.get("duration") in RULES_EFFECT_DURATIONS:
+                clean["duration"] = result["duration"]
+            return clean
         if kind == "reveal_hand_discard_choice":
             return {
                 "kind": kind,
@@ -3548,7 +3554,11 @@ class Session:
                     "id": f'{(action.get("ability") or {}).get("id")}:distribute',
                     "ongoingEffect": {
                         "kind": "power_modifier", "value": sign * int(amount),
-                        "duration": "until_end_of_turn",
+                        # printed "distribute" without a duration is a permanent modifier
+                        "duration": (
+                            ((action.get("ability") or {}).get("result") or {}).get("duration")
+                            or "until_end_of_turn"
+                        ),
                     },
                 },
             })
@@ -3764,7 +3774,8 @@ class Session:
             zone = "deck" if destination == "deck_bottom" else "graveyard"
             position = "bottom" if destination == "deck_bottom" else "top"
             error, _ = self.move_zone_card(
-                player_id, "hand", owner_id, zone, card_id, position
+                player_id, "hand", owner_id, zone, card_id, position,
+                limbo_reason="tribute",
             )
             if error:
                 raise RuntimeError(f"Validated Tribute payment failed: {error}")
@@ -8589,7 +8600,7 @@ class Session:
             return True
         return False
 
-    def queue_rules_manifestation_entry_watchers(self, item, defer=False):
+    def queue_rules_manifestation_entry_watchers(self, item, defer=False, played=True):
         if (
             not item
             or not item.get("faceUp")
@@ -8612,7 +8623,8 @@ class Session:
                 defer=True,
                 controller_id=self.rules_item_controller_id(source),
             ))
-            if self.rules_item_effects_active(source):
+            # a card "put" somewhere is moved, not played (Malaleuco into the Interzone)
+            if played and self.rules_item_effects_active(source):
                 queued.extend(self.queue_rules_triggers(
                     source.get("cardId"), source.get("ownerId"),
                     "card_played",
@@ -14549,6 +14561,11 @@ class Session:
             source_item = self.find_battlefield_item(
                 (action.get("source") or {}).get("itemId")
             )
+            count = int(result.get("count") or 1)
+            if result.get("fieldZone") == "interzone":
+                # Stampeding Brood: "up to" two tokens, never past the Interzone spaces
+                count = max(0, min(count, self.rules_interzone_capacity(player_id)
+                                   - self.rules_interzone_slot_count(player_id)))
             created = [
                 self.create_rules_token_copy(
                     None, player_id,
@@ -14557,7 +14574,7 @@ class Session:
                     generic_temperament=result.get("temperament"),
                     field_zone=result.get("fieldZone"),
                 )
-                for _index in range(int(result.get("count") or 1))
+                for _index in range(count)
             ]
             if result.get("permanent"):
                 # "not lost at the Resolution": these tokens stay and can only go to the Interzone
@@ -14936,7 +14953,9 @@ class Session:
                 item, "interzone", defer=True,
             ))
             triggered_actions.extend(
-                self.queue_rules_manifestation_entry_watchers(item, defer=True)
+                self.queue_rules_manifestation_entry_watchers(
+                    item, defer=True, played=False,
+                )
             )
             if triggered_actions:
                 self.queue_rules_simultaneous_actions(triggered_actions)

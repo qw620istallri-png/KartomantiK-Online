@@ -728,3 +728,141 @@ class GrimoireWillTests(ReportedCardRulesCase):
             payment_card_ids=[self.TRIBUTE],
         )
         self.assertIsNone(error)
+
+
+class StarterDeckAuditTests(ReportedCardRulesCase):
+    """Card text versus code audit of the five starter decks (beta 140)."""
+
+    FORFOG = "d6jip43i66i34xk_en"
+    STRENGTHEN = "lo85kdsow36bymu_en"
+    BROOD = "je9rwgrjwk97oes_en"
+    DAMAGE = "goxjkkrwos0lhx4_en"
+    MALALEUCO = "7yu566ip7zuqdoc_en"
+    INTROSPECTION = "265f4wdooq43pjn_en"
+    KARMAPULT = "e049wxg2j24nczl_en"
+    ALL = ReportedCardRulesCase.ALL + (
+        FORFOG, STRENGTHEN, BROOD, DAMAGE, MALALEUCO, INTROSPECTION, KARMAPULT,
+    )
+
+    def test_paying_a_tribute_is_not_discarding(self):
+        """Forfog punishes discards; a Manifestation paid as Tribute goes to Limbo without being discarded."""
+        session, _p1, p2 = self.started_session(priority="p2")
+        session.battlefield = [
+            self.field_item("forfog", "p1", self.FORFOG, field_zone="interzone"),
+            self.field_item("t", "p2", "m-3"),
+        ]
+        self.put(p2, "hand", [self.STRENGTHEN, "m-1"])
+        error, _action = session.declare_rules_action(
+            "p2", "Strengthen", kind="play_card", source={"cardId": self.STRENGTHEN, "zone": "hand"},
+            targets=[{"kind": "card", "itemId": "t", "cardId": "m-3"}],
+            payment_card_ids=["m-1"], ability_id="strengthen-power-modifier",
+        )
+        self.assertIsNone(error)
+        self.resolve_top(session, first_passer="p1")
+        self.assertIn("m-1", p2["zones"]["graveyard"])
+        self.assertEqual(p2["score"], 0)
+        tribute_entry = next(
+            entry for entry in session.rules_engine["recentLimboEntries"] if entry["cardId"] == "m-1"
+        )
+        self.assertEqual(tribute_entry["reason"], "tribute")
+
+    def test_a_real_discard_still_triggers_forfog(self):
+        session, _p1, p2 = self.started_session()
+        session.battlefield = [self.field_item("forfog", "p1", self.FORFOG, field_zone="interzone")]
+        self.put(p2, "hand", ["m-1"])
+        error, _owner = session.move_zone_card("p2", "hand", "p2", "graveyard", "m-1")
+        self.assertIsNone(error)
+        kinds = [event["kind"] for event in session.rules_engine["observedEvents"]]
+        self.assertIn("cards_discarded", kinds)
+
+    def brood_tokens(self, occupied):
+        session, p1, _p2 = self.started_session(phase_id="resolution_move")
+        session.battlefield = [
+            self.field_item(f"iz{index}", "p1", f"m-{index}", field_zone="interzone")
+            for index in range(occupied)
+        ]
+        ability = next(a for a in self.ABILITIES[self.BROOD] if a.get("trigger"))
+        session.apply_rules_action_result({
+            "id": "brood", "kind": "triggered_effect", "controllerId": "p1",
+            "source": {"cardId": self.BROOD, "ownerId": "p1"}, "ability": ability, "targets": [],
+        })
+        return session.rules_interzone_slot_count("p1")
+
+    def test_stampeding_brood_never_overfills_the_interzone(self):
+        self.assertEqual(self.brood_tokens(0), 2)
+        self.assertEqual(self.brood_tokens(2), 3)
+        self.assertEqual(self.brood_tokens(3), 3)
+
+    def test_distributed_power_is_a_permanent_modifier(self):
+        """Damage has no "until the end of the turn": the -3 stays on the Interzone card."""
+        session, p1, _p2 = self.started_session()
+        session.card_rules["m-4"]["power"] = 5
+        foe = self.field_item("foe", "p2", "m-4", field_zone="interzone")
+        session.battlefield = [
+            self.field_item("a", "p1", "m-1"), self.field_item("b", "p2", "m-2"), foe,
+        ]
+        session.card_rules["m-5"]["temperaments"] = ["choleric"]
+        session.card_rules["m-5"]["power"] = 2
+        self.put(p1, "hand", [self.DAMAGE, "m-5"])
+        error, _action = session.declare_rules_action(
+            "p1", "Damage", kind="play_card", source={"cardId": self.DAMAGE, "zone": "hand"},
+            targets=[{"kind": "card", "itemId": "foe", "cardId": "m-4"}],
+            payment_card_ids=["m-5"], ability_id="damage-distribute-weakness",
+        )
+        self.assertIsNone(error)
+        self.resolve_top(session)
+        self.assertEqual(session.rules_manifestation_characteristics(foe)["power"], 2)
+        session.phase_tracker["turn"] += 1
+        session.prune_rules_ongoing_effects()
+        self.assertEqual(session.rules_manifestation_characteristics(foe)["power"], 2)
+
+    def test_untimed_power_changes_are_permanent_in_the_shipped_abilities(self):
+        for ability_id in (
+            "spend-petals-for-power", "sacrifice-created-token-for-power-loss",
+            "shrink-opponent-manifestation-on-discard", "spend-violence-to-shrink-manifestation",
+            "incite-to-sacrifice", "linoleus-doubles-down-on-point-gains",
+            "ohmom-boosts-on-own-will", "sandokaron-banner-power",
+            "damage-distribute-weakness", "echo-distribute-power-on-loss",
+        ):
+            ability = next(
+                a for abilities in self.ABILITIES.values() for a in abilities if a.get("id") == ability_id
+            )
+            effects = [ability.get("ongoingEffect"), ability.get("result")] + list(
+                ability.get("ongoingEffects") or []
+            )
+            durations = {e.get("duration") for e in effects if e and e.get("duration")}
+            self.assertEqual(durations, {"while_target_on_field"}, ability_id)
+
+    def test_malaleuco_put_into_the_interzone_is_not_a_played_card(self):
+        session, p1, _p2 = self.started_session()
+        atavic = self.field_item("atavic", "p1", self.INTROSPECTION, field_zone="field")
+        session.battlefield = [
+            self.field_item("a", "p1", "m-1"), self.field_item("b", "p2", "m-2"), atavic,
+        ]
+        for card_id in ("m-3", "m-4", "m-5"):
+            session.card_rules[card_id].update({"temperaments": ["vitreous"], "power": 1})
+        self.put(p1, "hand", [self.MALALEUCO, "m-3", "m-4", "m-5"])
+        error, _action = session.declare_rules_action(
+            "p1", "Malaleuco", kind="activated_effect",
+            source={"cardId": self.MALALEUCO, "zone": "hand"}, ability_id="malaleuco-to-interzone",
+            payment_card_ids=["m-3", "m-4", "m-5"],
+        )
+        self.assertIsNone(error)
+        self.resolve_top(session)
+        self.assertIn(self.MALALEUCO, [item["cardId"] for item in session.battlefield])
+        self.assertFalse((atavic.get("counters") or {}).get("Control"))
+
+    def test_karmapult_can_be_activated_in_the_end_phase(self):
+        session, p1, _p2 = self.started_session(phase_id="end_actions")
+        karmapult = self.field_item("k", "p1", self.KARMAPULT, field_zone="field")
+        karmapult["attachedCards"] = [{"cardId": "m-6", "ownerId": "p1"}]
+        target = self.field_item("iz", "p2", "m-2", field_zone="interzone")
+        session.battlefield = [karmapult, target]
+        self.put(p1, "hand", ["m-1"])
+        error, _action = session.declare_rules_action(
+            "p1", "Karmapult", kind="activated_effect",
+            source={"cardId": self.KARMAPULT, "zone": "battlefield", "itemId": "k"},
+            targets=[{"kind": "card", "itemId": "iz", "cardId": "m-2"}],
+            payment_card_ids=["m-1"], ability_id="karmapult-sacrifices-for-power-loss",
+        )
+        self.assertIsNone(error)
