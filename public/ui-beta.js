@@ -633,9 +633,16 @@
       const destEntry = pendingDest?.kind === "confrontation_destination"
         && groups.stalemate.find((entry) => entry.item.id === pendingDest.itemId);
       if (destEntry) {
+        // in my Confrontation Zone (my own cards there have already left), under the
+        // choice banner (top: a third of the screen) so nothing covers it
         const w = Math.round(clamp(G.W * 0.09, 90, 150));
-        const y = Math.max(G.zcTop + 8, (G.zcTop + G.zcBottom) / 2 - (w * RATIO) / 2);
-        slots.set(destEntry.item.id, { x: G.cx - w / 2, y, w, zone: "stalemate", side: destEntry.side, focus: true });
+        const bannerBottom = G.H / 3 + 90 - (G.wrapTop || 0);
+        const y = Math.min(
+          Math.max(G.zcTop + 8, bannerBottom + 12, (G.zcTop + G.zcBottom) / 2 - (w * RATIO) / 2),
+          Math.max(G.zcTop + 8, G.zcBottom - w * RATIO - 8),
+        );
+        const x = (G.zcMe.l + G.zcMe.r) / 2 - w / 2;
+        slots.set(destEntry.item.id, { x, y, w, zone: "stalemate", side: destEntry.side, focus: true });
       }
     }
     // Float and other stacked cards: on top of their anchor, offset, floating
@@ -1140,7 +1147,7 @@
     (latestState?.battlefield || []).forEach((item, index) => {
       if (!item.faceUp || item.fieldZone !== "confrontation") return;
       if (battlefieldItemControllerId(item) !== playerId) return;
-      if (cardsById.get(item.cardId)?.type !== "manifestation" && !item.isTokenCard) return;
+      if (!fieldItemIsManifestation(item)) return;
       const order = Number(item.confrontationOrder || 0);
       if (!best || order > best.order || (order === best.order && index > best.index)) best = { item, order, index };
     });
@@ -1151,7 +1158,7 @@
   function sideHasConfrontation(playerId) {
     return (latestState?.battlefield || []).some((item) => (
       item.faceUp && item.fieldZone === "confrontation" && battlefieldItemControllerId(item) === playerId
-      && (cardsById.get(item.cardId)?.type === "manifestation" || item.isTokenCard)
+      && fieldItemIsManifestation(item)
     ));
   }
 
@@ -2233,10 +2240,14 @@
   // a dark layer with holes over what can be used
   function setSpotlight(nodes) {
     let layer = document.getElementById("ubSpotlight");
+    local.spotNodes = nodes && nodes.length ? nodes : null;
     if (!nodes || !nodes.length) {
       layer?.remove();
       return;
     }
+    // a card still sliding to its place (board FLIP): the holes follow it until they settle
+    if (!local.spotFollowing) local.spotStill = 0;
+    if (!local.spotFrame) local.spotFrame = requestAnimationFrame(followSpotlight);
     if (!layer) {
       layer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       layer.id = "ubSpotlight";
@@ -2253,7 +2264,25 @@
       return `M${x + k} ${y}h${w - 2 * k}a${k} ${k} 0 0 1 ${k} ${k}v${h - 2 * k}a${k} ${k} 0 0 1 -${k} ${k}h-${w - 2 * k}a${k} ${k} 0 0 1 -${k} -${k}v-${h - 2 * k}a${k} ${k} 0 0 1 ${k} -${k}Z`;
     }).join("");
     layer.setAttribute("viewBox", `0 0 ${W} ${H}`);
-    layer.innerHTML = `<path fill-rule="evenodd" d="M0 0H${W}V${H}H0Z${holes}"/>`;
+    const path = `M0 0H${W}V${H}H0Z${holes}`;
+    if (layer.dataset.path !== path) {
+      layer.dataset.path = path;
+      layer.innerHTML = `<path fill-rule="evenodd" d="${path}"/>`;
+      local.spotStill = 0;
+    } else {
+      local.spotStill = (local.spotStill || 0) + 1;
+    }
+  }
+
+  function followSpotlight() {
+    local.spotFrame = null;
+    const nodes = local.spotNodes;
+    if (!nodes || !document.getElementById("ubSpotlight")) return;
+    const live = nodes.filter((node) => node.isConnected);
+    if (!live.length || local.spotStill > 45) return;
+    local.spotFollowing = true;
+    setSpotlight(live);
+    local.spotFollowing = false;
   }
 
   // player choice: an arrow from the card to the pointer

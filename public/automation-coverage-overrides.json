@@ -677,14 +677,18 @@
       ]
     },
     "9d2y8uy9ut7omyo_en": {
-      "status": "manual",
-      "notes": "Physical throw, rotation, and touched-card detection remain player-applied.",
-      "testRefs": []
+      "status": "automated",
+      "notes": "Errata (2026-10): one card per player is chosen as it enters, one D6 each, a 1 or a 6 hits.",
+      "testRefs": [
+        "tests/test_reported_card_bugs.py"
+      ]
     },
     "b0amfkmb3xewx7x_en": {
-      "status": "manual",
-      "notes": "Physical throw, rotation, and touched-card detection remain player-applied.",
-      "testRefs": []
+      "status": "automated",
+      "notes": "Errata (2026-10): one card per player is chosen as it enters, one D6 each, a 1 or a 6 hits.",
+      "testRefs": [
+        "tests/test_reported_card_bugs.py"
+      ]
     },
     "om4qbiofb0ihq6p_en": {
       "status": "automated",

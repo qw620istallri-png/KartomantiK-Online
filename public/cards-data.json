@@ -11175,7 +11175,7 @@
     "type": "manifestation",
     "typeLabel": "Manifestation",
     "subType": "of Ecstasy",
-    "effect": "Support from hand.\r\nCannot be played as First Manifestation.\r\nWhen Karma Bro is about to enter the Confrontation Zone, throw it from a height of at least 40 cm. If it completes at least one full rotation during the throw, you gain 10 points for each card on the field it touched.",
+    "effect": "Support from hand.\r\nCannot be played as First Manifestation.\r\nWhen Karma Bro is about to enter the Confrontation Zone, choose a card on the field controlled by each player. Roll a D6 for each one of those cards. You gain 10 points for each 1 or 6 you get from the rolls.",
     "originalEffect": "",
     "cost": null,
     "power": 1,
@@ -11197,7 +11197,7 @@
         "name": "Karma Bro",
         "typeLabel": "Manifestazione",
         "subType": "dell'Estasi",
-        "effect": "Supporto dalla mano.\r\nNon può essere giocato come Prima Manifestazione.\r\nQuando Karma Bro sta per entrare nell’Area di Confronto, lancialo da un'altezza di almeno 40 cm. Se compie almeno un giro completo durante il lancio, guadagni 10 punti per ogni carta in campo che ha toccato.",
+        "effect": "Supporto dalla mano.\r\nNon può essere giocato come Prima Manifestazione.\r\nQuando Karma Bro sta per entrare nell’Area di Confronto, scegli una carta in campo controllata da ciascun giocatore. Tira un D6 per ognuna di quelle carte. Guadagni 10 punti per ogni 1 o 6 ottenuto.",
         "originalEffect": "",
         "color": "Trascendente",
         "setName": "Beta",
@@ -11210,7 +11210,7 @@
         "setName": "Beta",
         "searchTerms": "Manifestation · Première Manifestation · Points · champ · Zone de Confrontation · Main · Confrontation · jouer / joué(e) · Soutien · Soutien depuis la main",
         "name": "Karma Bro",
-        "effect": "Soutien depuis la main.\nNe peut pas être joué comme Première Manifestation.\nQuand Karma Bro est sur le point d’entrer dans la Zone de Confrontation, lancez-le depuis une hauteur d’au moins 40 cm. S’il effectue au moins une rotation complète pendant le lancer, vous gagnez 10 points pour chaque carte sur le champ qu’il a touchée."
+        "effect": "Soutien depuis la main.\nNe peut pas être joué comme Première Manifestation.\nQuand Karma Bro est sur le point d’entrer dans la Zone de Confrontation, choisissez une carte sur le champ contrôlée par chaque joueur. Lancez un D6 pour chacune de ces cartes. Vous gagnez 10 points pour chaque 1 ou 6 obtenu."
       }
     }
   },
@@ -11625,7 +11625,7 @@
     "type": "manifestation",
     "typeLabel": "Manifestation",
     "subType": "of Boredom",
-    "effect": "Support from hand.\r\nCannot be played as First Manifestation.\r\nWhen Kaos Bro is about to enter the Confrontation Zone, throw it from a height of at least 40 cm. If it completes at least one full rotation during the throw, all cards on the field it touched are destroyed.",
+    "effect": "Support from hand.\r\nCannot be played as First Manifestation.\r\nWhen Kaos Bro is about to enter the Confrontation Zone, choose a card on the field controlled by each player. Roll a D6 for each one of those cards and, if you roll a 1 or a 6, destroy that card.",
     "originalEffect": "",
     "cost": null,
     "power": 1,
@@ -11647,7 +11647,7 @@
         "name": "Kaos Bro",
         "typeLabel": "Manifestazione",
         "subType": "della Noia",
-        "effect": "Supporto dalla mano.\r\nNon può essere giocato come Prima Manifestazione.\r\nQuando Kaos Bro sta per entrare nell’Area di Confronto, lancialo da un'altezza di almeno 40 cm. Se compie almeno un giro completo durante il lancio, tutte le carte in campo che ha toccato vengono distrutte.",
+        "effect": "Supporto dalla mano.\r\nNon può essere giocato come Prima Manifestazione.\r\nQuando Kaos Bro sta per entrare nell’Area di Confronto, scegli una carta in campo controllata da ciascun giocatore. Tira un D6 per ognuna di quelle carte e, se ottieni 1 o 6, distruggi quella carta.",
         "originalEffect": "",
         "color": "Vacuo",
         "setName": "Beta",
@@ -11660,7 +11660,7 @@
         "setName": "Beta",
         "searchTerms": "Manifestation · Première Manifestation · Creux / Creuse · champ · Zone de Confrontation · Main · Confrontation · jouer / joué(e) · Soutien · Soutien depuis la main",
         "name": "Kaos Bro",
-        "effect": "Soutien depuis la main.\nNe peut pas être jouée comme Première Manifestation.\nQuand Kaos Bro est sur le point d’entrer dans la Zone de Confrontation, lancez-le depuis une hauteur d’au moins 40 cm. S’il effectue au moins une rotation complète au cours de son lancer, détruisez chaque carte sur le champ qu’il a touchée."
+        "effect": "Soutien depuis la main.\nNe peut pas être jouée comme Première Manifestation.\nQuand Kaos Bro est sur le point d’entrer dans la Zone de Confrontation, choisissez une carte sur le champ contrôlée par chaque joueur. Lancez un D6 pour chacune de ces cartes et, si vous obtenez 1 ou 6, détruisez cette carte."
       }
     }
   },

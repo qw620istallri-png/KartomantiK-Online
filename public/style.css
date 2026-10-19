@@ -245,6 +245,15 @@ input, textarea, select {
 .game-more-popover > button,
 .game-more-popover .phase-header-control > button { text-align: left; }
 .game-more-popover .phase-header-control { display: grid; gap: 6px; }
+.game-more-popover .sound-volume-control {
+  display: grid; grid-template-columns: auto 1fr 3.6em; align-items: center; gap: 8px;
+  min-height: 34px; padding: 4px 9px; box-sizing: border-box; font-size: 14px; font-weight: 700;
+  color: var(--gold-pale); background: var(--carbon); border: 1px solid var(--gold-deep); border-radius: 5px;
+}
+.game-more-popover .sound-volume-control input { width: 100%; min-width: 0; margin: 0; accent-color: var(--gold); cursor: pointer; }
+.game-more-popover .sound-volume-control output { text-align: right; font-variant-numeric: tabular-nums; color: var(--gold); }
+/* Recovery: the drawn hand waits for its cards to land before it can be played */
+body.hand-drawing #myHandTray .hand-card { cursor: progress; }
 .game-more-popover #phaseAdvancedBtn { max-width: none; margin-left: 0; padding-inline: 9px; opacity: 1; pointer-events: auto; }
 .game-header .codes { font-size: 14px; color: #cfc7a8; display: flex; align-items: flex-end; gap: 14px; }
 .game-header .codes .code-item { display: grid; gap: 2px; text-align: center; }

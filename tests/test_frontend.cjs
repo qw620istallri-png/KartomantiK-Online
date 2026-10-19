@@ -451,13 +451,15 @@ function startServer() {
         }],
       };
       renderPiles();
-      const playable = document.querySelector('[data-rules-zone-play-card]');
+      renderHandTray();
+      // while playable, the Veteran sits in the hand as a ghost labelled with its zone, not on the pile
+      const playable = document.querySelector('[data-ghost-permission="true"]');
       const initial = {
         exists: Boolean(playable),
         playable: playable?.classList.contains("is-playable") || false,
-        enabled: playable?.dataset.rulesZonePlayEnabled,
-        badge: playable?.querySelector("span")?.textContent || "",
-        badgeFont: parseFloat(getComputedStyle(playable?.querySelector("span")).fontSize),
+        pileIndicator: Boolean(document.querySelector('[data-rules-zone-play-card]')),
+        badge: playable?.querySelector(".hand-ghost-label")?.textContent || "",
+        expectedBadge: t("graveyard"),
       };
       const contexts = [];
       const originalResolveDrop = resolveDrop;
@@ -469,11 +471,14 @@ function startServer() {
 
       latestState.rulesEngine.priorityPlayerId = "p2";
       renderPiles();
+      renderHandTray();
+      const waitingGhost = Boolean(document.querySelector('[data-ghost-permission="true"]'));
       const waiting = document.querySelector('[data-rules-zone-play-card]');
       const waitingState = {
         exists: Boolean(waiting),
         playable: waiting?.classList.contains("is-playable") || false,
         enabled: waiting?.dataset.rulesZonePlayEnabled,
+        ghost: waitingGhost,
       };
 
       latestState.battlefield.push({
@@ -3354,9 +3359,8 @@ function startServer() {
     assert.equal(pileDrag.opponentDraggable, false);
     assert.equal(wanderingVeteranUi.initial.exists, true);
     assert.equal(wanderingVeteranUi.initial.playable, true);
-    assert.equal(wanderingVeteranUi.initial.enabled, "true");
-    assert(wanderingVeteranUi.initial.badge.length > 0);
-    assert(wanderingVeteranUi.initial.badgeFont >= 14);
+    assert.equal(wanderingVeteranUi.initial.pileIndicator, false);
+    assert.equal(wanderingVeteranUi.initial.badge, wanderingVeteranUi.initial.expectedBadge);
     assert.deepEqual(wanderingVeteranUi.dragContext, {
       kind: "card", cardId: wanderingVeteranUi.veteranId, cardOwnerId: "p1",
       fromOwnerId: "p1", fromZone: "graveyard",
@@ -3364,6 +3368,7 @@ function startServer() {
     assert.equal(wanderingVeteranUi.waitingState.exists, true);
     assert.equal(wanderingVeteranUi.waitingState.playable, false);
     assert.equal(wanderingVeteranUi.waitingState.enabled, "false");
+    assert.equal(wanderingVeteranUi.waitingState.ghost, false);
     assert(wanderingVeteranUi.supportMarker.length > 0);
     assert(wanderingVeteranUi.supportMarkerFont >= 14);
     assert.equal(supportUi.firstStep.forbidden, false);

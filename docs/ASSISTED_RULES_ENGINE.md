@@ -403,8 +403,8 @@ dans le résultat structuré de l'action.
 - Pillarpede lance cinq dés, ajoute les bonus pairs et demande la défausse
   privée correspondant aux résultats impairs.
 
-Karma Bro et Kaos Bro restent explicitement `manual` car leur texte dépend d'un
-lancer physique et des cartes réellement touchées.
+Karma Bro et Kaos Bro étaient `manual` (lancer physique) ; depuis leur errata
+d'octobre 2026, ils sont automatisés (voir la section « Errata Kaos Bro et Karma Bro »).
 
 ## Phases et victoire
 
@@ -1004,3 +1004,41 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Déclenchements simultanés : un déclenchement obligatoire qui attend ses cibles (`trigger_targets`) n'est plus écrasé. Les autres déclenchements du même événement rejoignent son lot (`_optionalStackBatch`), et un déclenchement à cibles arrivé pendant ce choix les demande à son tour (`_preStackTargetChoice`). Borombo choisit sa cible même quand le gagnant a aussi un déclenchement.
 - Glabron : déposer la carte depuis la main ou l'Interzone lance sa capacité (`stalemate_target_grant_source_support` est reconnu comme les autres `grant_source_support`), puis la carte est jouée en Support.
 - Tests : `tests/test_reported_card_bugs.py`.
+
+## Retours de test : Loop, Pin Down, passage auto, Récupération, Impasse, Wandering Veteran
+
+- Loop the Insistent : `rules_player_lost_confrontation_this_turn` lit d'abord `confrontationLosses[tour]` ; la Volonté tributée revient en main même si `confrontationResult` a été effacé (rematch, The Stomper). La condition `controller_lost_confrontation` utilise la même fonction.
+- Pin Down (`supportLocks`) : `rulesEngine.supportEntryLocked` est envoyé au client. Les manifestations en main ne sont plus surlignées ni jouables. Les permissions `asSupport`, le Support depuis l'Interzone ou l'Impasse et les capacités qui posent une manifestation en Support (`RULES_SUPPORT_ENTRY_RESULTS`) ne comptent plus comme actions.
+- Impasse : la Zone d'Impasse ne fait pas partie du terrain, donc `rules_item_effects_active` est faux pour ses cartes. Exceptions (`rules_item_functions_in_stalemate`) : `supportFromStalemate` (Nubilung), déclenchements `trigger.zone == "stalemate"` et passifs d'Impasse (Fee-fee). Le client reçoit `effectsInactive` et masque alors les actions de la carte.
+- Passage auto : une permission de jeu ne compte que si sa carte est dans la zone, que la phase est la bonne et que le timing est permis (`rules_play_permission_usable`). Une capacité de terrain ne compte plus si sa source est déjà épuisée, si son tribut est impayable (`rules_requirements_affordable`) ou si elle est clairement inutilisable. Les cibles `zone_card` sont vérifiées sur les vraies cartes des Limbes et du Réceptacle.
+- Récupération : la main reste verrouillée (ni surlignée, ni jouable, ni déplaçable) jusqu'à la fin de l'animation de pioche (`lockHandUntilDrawn`, classe `hand-drawing`).
+- Wandering Veteran : quand sa permission est jouable, il apparaît dans la main en carte fantôme avec l'étiquette « Limbes » (`rulesGhostHandCards`, `data-ghost-permission`). On le joue en le glissant, un clic l'inspecte, et l'indicateur de la pile n'est plus affiché.
+- Choix de destination depuis l'Impasse (bêta) : le voile suit la carte pendant son animation (`setSpotlight` + rAF), la carte à placer est centrée dans la zone de confrontation sous le bandeau, et les cartes fantômes de nettoyage prennent la taille de la carte d'origine (`rulesVfxHoldCard(..., size)`).
+- Son : curseur de volume dans le menu « Plus » (`ko_sound_volume`), appliqué aux `<audio>` et à Web Audio via un gain maître par contexte.
+- Choix sur le terrain : Échap (sortie du plein écran) ne ferme plus un choix que le serveur attend, le choix revient aussitôt (`cancelRulesBoardFlow`). Quand le terrain est reconstruit (plein écran, redimensionnement), les cibles sont réarmées sur les nouvelles cartes (`rearmRulesBoardTargetsIfDetached`).
+- Réorganisation du deck (Expansive Ponderer) en bêta : le panneau prend toute la largeur, sans barre de défilement. La réserve passe à la ligne, les voies sont alignées et il n'y a plus de fond clair derrière les cartes.
+- Tests : `tests/test_reported_card_bugs.py` (Loop, verrou de Support, Impasse) et `tests/test_frontend.cjs` (Wandering Veteran dans la main).
+
+## Errata Kaos Bro et Karma Bro
+
+- Nouveau texte (errata d'octobre 2026) dans `cards-data.json` (en, fr, it) : quand le Bro est sur le point d'entrer dans la Zone de Confrontation, on choisit une carte sur le champ contrôlée par chaque joueur et on lance un D6 pour chacune. Avec Kaos Bro, un 1 ou un 6 détruit la carte ; avec Karma Bro, chaque 1 ou 6 rapporte 10 points.
+- Capacité : déclenchement `enters_field_zone` (confrontation) avec deux groupes de cibles (`controller: self` sans le Bro lui-même, puis `controller: opponent`), choisis au dépôt comme pour Mirrorbeast. Résultat : `roll_d6_each_target` avec `onHit: destroy` ou `onHit: points` et `points: 10`.
+- Client : le dépôt d'une carte dont le déclenchement a des groupes de cibles envoie toutes les cibles choisies (`submitRulesBoardFlow`, mode `placement`). Un dé s'affiche sur chaque carte choisie, et le journal donne les jets et le résultat.
+- Tests : `BroErrataTests` dans `tests/test_reported_card_bugs.py`.
+
+## Ju Lien : puissance de la Volonté et jeu gratuit depuis la main
+
+- Une Volonté devenue Manifestation (Rinq, Ju Lien) est envoyée avec `willManifestation: true`. Le client la compte dans le total de la Confrontation et dans le Tempérament actif (`fieldItemIsManifestation`), et affiche sa puissance (égale à son coût de tribut) en badge.
+- Si la Volonté de Ju Lien gagne (`playableFree` du tour), elle apparaît dans la main en carte fantôme avec l'étiquette « Ju Lien » (zone `field_free`). En la glissant ou en cliquant dessus, on la joue depuis le terrain sans tribut (`playFromField`, `fieldFree`).
+
+## Skysailing Triad et Melancholic Mirror
+
+- Skysailing Triad : la carte du dessus révélée est visible des deux joueurs. Le journal ajoute « Carte du dessus du deck : X (Piochée/Enchaînée) » (`rulesTopRevealLogHtml`). Une Volonté piochée reste connue de l'adversaire et apparaît face visible dans l'éventail de main adverse (`revealedHandCards`).
+- Melancholic Mirror : les tributs payés pendant un choix de paiement d'effet (`immediate_effect_payment`, Bullyboo, `effect_memory_payment`) mettent désormais en file les déclenchements de tribut (`queue_rules_tribute_triggers(..., defer_if_choice=True)`). Le Miroir propose donc de s'épuiser. Il ne réagit qu'aux tributs de son contrôleur (`eventController: owner`).
+- Tests : `MelancholicMirrorTests` dans `tests/test_reported_card_bugs.py`.
+
+## Malaleuco et Grimoire
+
+- Malaleuco : « payez {B}{B}{B} » depuis la main est un tribut (Manifestations ou Essences), plus seulement des Essences (`tribute` dans `card-abilities.json`). Le client choisit la capacité qui nomme la zone de la source (`buildRulesActionDraft`) : depuis la main, c'est la mise en Interzone et non la copie de Volonté.
+- Grimoire : une Volonté placée dessus peut être glissée depuis la main fantôme. Le panneau de jeu ne se ferme plus pour une source `attached` (`renderRulesBoardFlow`). Le passage auto compte ces Volontés comme une action possible (`rules_player_can_act`).
+- Tests : `MalaleucoFromHandTests` et `GrimoireWillTests` dans `tests/test_reported_card_bugs.py`.
