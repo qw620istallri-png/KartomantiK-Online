@@ -1031,3 +1031,16 @@ body.ub-hand-drawing #gameScreen.ui-beta #myHandTray { pointer-events: none; }
 /* the classic table shrinks field cards under 900 px wide; this table sizes every
    card itself from a 150 x 210 card, so it keeps that base size on phones too */
 #gameScreen.ui-beta .bf-card { width: 150px; height: 210px; }
+
+/* phone: no player icons, only the points, kept above the opponent's hand fan;
+   the priority glow moves onto the points */
+#gameScreen.ui-beta.ub-phone .ub-av-circle { display: none; }
+#gameScreen.ui-beta.ub-phone .ub-field > .ub-avatar { z-index: 40; }
+#gameScreen.ui-beta.ub-phone .ub-av-pts { padding: 2px 8px; border-color: color-mix(in srgb, var(--pc) 60%, transparent); background: rgba(var(--ub-lo), .88); box-shadow: 0 2px 8px rgba(0, 0, 0, .45); }
+#gameScreen.ui-beta.ub-phone .ub-av-pts b { font-size: 16px; }
+#gameScreen.ui-beta.ub-phone .ub-avatar.has-prio .ub-av-pts { border-color: var(--ub-gold); box-shadow: 0 0 0 1px var(--ub-gold), 0 0 14px 2px rgba(240, 217, 143, .5); }
+#gameScreen.ui-beta.ub-phone .ub-avatar.has-passed .ub-av-pts { border-color: #4da16a; }
+#gameScreen.ui-beta.ub-phone .ub-totals { gap: 8px; }
+#gameScreen.ui-beta.ub-phone .ub-av-pts small { display: none; }
+#gameScreen.ui-beta.ub-phone .ub-tmp:empty { display: none; }
+@media (max-width: 760px) { #gameScreen.ui-beta.ub-phone .ub-turn small { display: none; } }

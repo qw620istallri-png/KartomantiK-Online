@@ -1590,8 +1590,10 @@
   function renderTotals(G, players) {
     const totals = document.getElementById("ubTotals");
     const { me, opp } = players;
-    totals.style.left = `${G.zcMe.l}px`;
-    totals.style.width = `${G.zcOpp.r - G.zcMe.l}px`;
+    // phone: the points pills sit at both ends of this row (renderAvatars)
+    const inset = G.phone ? Math.max(0, G.fieldL + G.izW + 10 + 46 - G.zcMe.l) : 0;
+    totals.style.left = `${G.zcMe.l + inset}px`;
+    totals.style.width = `${G.zcOpp.r - G.zcMe.l - inset * 2}px`;
     totals.style.top = `${G.oppHandH + 4}px`;
     totals.style.height = `${G.totalsH}px`;
     if (!me) { totals.innerHTML = ""; return; }
@@ -1859,7 +1861,9 @@
       if (!player) continue;
       node.style.setProperty("--pc", playerColor(player.id));
       node.style.setProperty("--av", `${size}px`);
-      node.style.top = `${Math.round((G.oppHandH - size) / 2) + 2}px`;
+      // phone: the opponent's hand fan covers its band, so the points sit in the
+      // totals row under it, at the ends (the totals keep the middle)
+      node.style.top = G.phone ? `${G.oppHandH + 6}px` : `${Math.round((G.oppHandH - size) / 2) + 2}px`;
       if (side === "me") { node.style.left = `${G.fieldL + G.izW + 10}px`; node.style.right = ""; }
       else { node.style.right = `${G.W - (G.fieldR - G.izW - 10)}px`; node.style.left = ""; }
       const hasPrio = priorityId === player.id;
