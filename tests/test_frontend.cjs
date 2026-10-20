@@ -2392,12 +2392,17 @@ function startServer() {
       const betaPanelRect = betaPanel.getBoundingClientRect();
       const betaHand = document.querySelector("#gameScreen.ui-beta .hand-area");
       const betaHandStyle = getComputedStyle(betaHand);
+      // the backdrop dims everything above the hand and stops at its top edge,
+      // so the hand stays bright and takes the pointer
+      const handPeek = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--ub-handPeek-root"));
+      const betaHandCard = document.querySelector("#gameScreen.ui-beta [data-hand-card]").getBoundingClientRect();
+      const handHit = document.elementFromPoint(betaHandCard.left + betaHandCard.width / 2, innerHeight - handPeek / 2);
       const betaDiscardBackdrop = {
         fullViewport: Math.abs(betaPanelRect.left) < 1 && Math.abs(betaPanelRect.top) < 1
-          && Math.abs(betaPanelRect.width - innerWidth) < 1 && Math.abs(betaPanelRect.height - innerHeight) < 1,
+          && Math.abs(betaPanelRect.width - innerWidth) < 1 && Math.abs(betaPanelRect.bottom - (innerHeight - handPeek)) < 2,
         solidBackdrop: betaPanelStyle.backgroundImage === "none"
           && betaPanelStyle.backgroundColor !== "rgba(0, 0, 0, 0)",
-        handAboveBackdrop: Number(betaHandStyle.zIndex) > Number(betaPanelStyle.zIndex),
+        handAboveBackdrop: Boolean(handHit?.closest("#gameScreen.ui-beta .hand-area")) && betaHandStyle.display !== "none",
         selectableCards: document.querySelectorAll("#gameScreen.ui-beta [data-hand-card]").length,
       };
       window.uiBeta.setEnabled(false);

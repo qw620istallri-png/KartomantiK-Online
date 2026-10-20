@@ -2196,6 +2196,7 @@
     const screen = document.getElementById("gameScreen");
     screen.style.setProperty("--ub-colW", `${G.colW}px`);
     document.documentElement.style.setProperty("--ub-colW-root", `${G.colW}px`);
+    document.documentElement.style.setProperty("--ub-handPeek-root", `${G.handPeek}px`);
     screen.style.setProperty("--ub-izW", `${G.izW}px`);
     screen.style.setProperty("--ub-oppHandH", `${G.oppHandH}px`);
     screen.style.setProperty("--ub-bandH", `${G.bandH}px`);
@@ -2564,6 +2565,14 @@
     header.setAttribute("role", "button");
     header.tabIndex = 0;
     header.title = t("ubStackOpen");
+    // phone: the Stack is a row of card pictures; any tap on it opens the details
+    stack.addEventListener("click", (event) => {
+      if (!active() || stack.classList.contains("ub-expanded") || !document.getElementById("gameScreen").classList.contains("ub-phone")) return;
+      if (!event.target.closest(".rules-stack-list, .ub-mstack")) return;
+      event.preventDefault();
+      event.stopPropagation();
+      setStackExpanded(true);
+    }, true);
     stack.addEventListener("click", (event) => {
       if (!active()) return;
       const open = stack.classList.contains("ub-expanded");
@@ -2815,13 +2824,13 @@
   function placeChoiceBanner(banner, choice) {
     const geometry = local.geometry?.G;
     if (!geometry) return;
-    // phone, moving cards: the prompt stands over the left column, clear of
-    // the Confrontation Zone (the column still takes a card under the deck)
+    // phone, moving cards: the prompt stands over the right column, clear of
+    // the Confrontation Zone and of the left column (a card under the deck)
     const side = Boolean(geometry.phone && choice.drag);
     banner.classList.toggle("ub-choice-side", side);
     if (side) {
       banner.style.maxWidth = `${Math.round(geometry.colW - 8)}px`;
-      banner.style.left = `${Math.round(4 + banner.offsetWidth / 2)}px`;
+      banner.style.left = `${Math.round(window.innerWidth - 4 - banner.offsetWidth / 2)}px`;
       banner.style.top = `${Math.round(geometry.H / 2)}px`;
       return;
     }

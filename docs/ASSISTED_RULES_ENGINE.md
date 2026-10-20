@@ -1302,7 +1302,7 @@ Travail fait sur le PC après la beta 139, jamais publié, récupéré via la br
 - **La Pile** : un clic l'ouvre en grande fenêtre (PC et téléphone) ; l'en-tête, le
   fond ou Échap la referment.
 - **Fin de Confrontation** : plus de bouton « Voir les options » pour déplacer ses
-  Manifestations ; sur téléphone, la demande se place à gauche ; sur des cartes qui se
+  Manifestations ; sur téléphone, la demande se place à droite ; sur des cartes qui se
   chevauchent, seule la carte demandée est prise, sans glisser les autres.
 - **Écrans d'effet sur téléphone** : carte à gauche, texte plus petit à droite ;
   l'étape « Essences supplémentaires » (Ralliement) tient dans l'écran.
@@ -1310,3 +1310,15 @@ Travail fait sur le PC après la beta 139, jamais publié, récupéré via la br
   glisser une carte ne déclenche pas le geste système.
 - **Écran de victoire** : quand un joueur quitte une partie terminée, le résumé est
   figé (`freeze_end_summary`) et garde ses noms, points et faits marquants.
+
+## Pile compacte, Grimoire et choix depuis la main (beta 139.16)
+
+- **La Pile sur téléphone** : seulement les visuels des cartes, en ligne (couleur du
+  joueur dessous) ; un tap ouvre la grande fenêtre avec le détail.
+- **Bloc de phase sur téléphone** : la ligne de priorité et les messages sous les
+  phases sont masqués, le bloc reste petit.
+- **Déplacer ses Manifestations** (fin de Confrontation, téléphone) : la demande se
+  place à droite.
+- **Choix depuis la main** (Grimoire, défausse…) : le fond sombre s'arrête au-dessus de
+  la main, qui reste visible et utilisable ; sur téléphone la carte est à gauche, le
+  texte et le bouton à droite.
