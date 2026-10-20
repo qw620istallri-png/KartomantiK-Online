@@ -121,7 +121,8 @@ function beginRulesBoardAction(source) {
       ? limboWillIsPlayable(source.cardId)
       : handCardIsPlayable(source.cardId);
   if (!playable) {
-    showToast(t("rulesBoardCardNotPlayable"), true);
+    if (source.zone === "hand" && !source.tebebe && !source.playFromField) refuseHandCard(source.cardId, source.handIndex ?? null);
+    else showToast(t("rulesBoardCardNotPlayable"), true);
     return true;
   }
   closeRulesActionPanel();

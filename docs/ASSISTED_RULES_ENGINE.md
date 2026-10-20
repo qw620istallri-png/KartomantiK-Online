@@ -1169,3 +1169,26 @@ Partie réelle pilotée dans Chromium (serveur Python, deux joueurs, UI bêta), 
   préchargés pendant les temps morts (`preloadCardImages`).
 - **Grille** : espacements de `ui-beta.css` alignés sur 2/4/6/8 puis 12/16/20/24/32 px
   et échelle de polices 10–34 px (variables `--ub-space-*`).
+
+## Écran de fin de partie et raisons de refus (beta 139.9)
+
+- **Bilan serveur** (`server/game/summary.py`) : `record_score_history(turn)` note
+  les points de chaque joueur (Réceptacle + points d'effet) à la fin de chaque tour
+  (moteur assisté et phases manuelles) ; `game_summary()` calcule, depuis le
+  journal, les Confrontations gagnées, les actions déclarées et la carte décisive
+  (celle qui a gagné le plus de Confrontations, sinon la plus jouée). Le journal
+  `rules_confrontation_compared` porte désormais `winnerCardIds`. L'état envoyé
+  contient `gameSummary` une fois la partie terminée.
+- **Écran de fin** (`renderGameEndOverlay`, `js/connection.js`) : « Victoire ! » /
+  « Défaite » / « Égalité » pour les joueurs (le gagnant pour les spectateurs),
+  tour de fin et durée, points détaillés, statistiques, carte décisive (aperçu au
+  survol), courbe des points par tour (survol tour par tour, vue en tableau), et
+  « Revanche » / « Exporter le journal » / « Quitter » dans une barre fixée en bas.
+- **Pourquoi une carte ne se joue pas** (`handCardUnplayableReason`,
+  `js/hand.js`) : la même logique que `handCardIsPlayable`, qui renvoie la raison
+  (priorité adverse, mauvaise phase avec les phases possibles, Tribut impayable,
+  coût supplémentaire, aucune cible, Interzone pleine, Pile non vide, pas de
+  Soutien, Première Manifestation…). Elle s'affiche au-dessus de la carte agrandie
+  au survol, dans le message quand la carte est lâchée ou touchée, et la carte
+  tremble (`refuseHandCard`). Toute nouvelle condition de `handCardIsPlayable`
+  doit avoir sa raison ici.

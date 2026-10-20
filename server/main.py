@@ -972,8 +972,14 @@ async def apply_rules_pass(session, actor_id, passed=None):
         )
         confrontation = result.get("confrontationResult")
         if confrontation and result["phaseId"] == "resolution_compare":
+            winner_id = confrontation.get("winnerId")
             session.add_log(actor_id, "rules_confrontation_compared", {
-                "winnerId": confrontation.get("winnerId"),
+                "winnerId": winner_id,
+                # the winning side's cards, for the end-of-game summary
+                "winnerCardIds": [
+                    item["cardId"] for item in session.rules_confrontation_items(winner_id)
+                    if item.get("cardId") and not item.get("isTokenCard")
+                ] if winner_id and not confrontation.get("stalemate") else [],
                 "loserId": confrontation.get("loserId"),
                 "stalemate": confrontation.get("stalemate"),
                 "reason": confrontation.get("reason"),

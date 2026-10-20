@@ -471,7 +471,7 @@ function resolveDrop(ctx, clientX, clientY) {
         return;
       }
       if ((card?.type !== "manifestation" && !firstManifestationPlaceholder) || !handCardIsPlayable(ctx.cardId)) {
-        showToast(t("rulesBoardCardNotPlayable"), true);
+        refuseHandCard(ctx.cardId, ctx.handIndex);
         return;
       }
     }

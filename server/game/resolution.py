@@ -231,6 +231,7 @@ class ResolutionMixin:
             expired_essence_tokens = self.expire_rules_excess_essence(
                 self.phase_tracker["turn"]
             )
+            self.record_score_history(self.phase_tracker["turn"])
             self.phase_tracker["turn"] += 1
             started_new_turn = True
         self.phase_tracker["index"] = next_index

@@ -57,6 +57,7 @@ class PhasesMixin:
         next_index = self.phase_tracker["index"] + 1
         if next_index >= len(sequence):
             next_index = 0
+            self.record_score_history(self.phase_tracker["turn"])
             self.phase_tracker["turn"] += 1
         self.phase_tracker["index"] = next_index
         self.phase_passes.clear()
@@ -78,6 +79,7 @@ class PhasesMixin:
                     self.put_zone_card(container_id, zone, source["cardId"], owner_id, "bottom")
         self.phase_tracker["index"] = 0
         self.phase_tracker["turn"] = 1
+        self.score_history = []
         self.phase_passes.clear()
         self.rules_engine["recoveryDrawTurn"] = None
         self.rules_engine["recoveryMulliganTurn"] = None

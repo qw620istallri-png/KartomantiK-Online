@@ -307,6 +307,7 @@ class ViewMixin:
             "tokens": list(self.tokens),
             "strokes": list(self.strokes),
             "ended": self.ended,
+            "gameSummary": self.game_summary() if self.ended else None,
             "mode": self.mode,
             "tournament": self.tournament_summary(role) if self.mode == "tournament" else None,
             "deckPolicy": {

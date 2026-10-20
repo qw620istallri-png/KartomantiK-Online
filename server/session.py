@@ -38,6 +38,7 @@ from game.choices.payment import PaymentChoicesMixin
 from game.choices.confrontation import ConfrontationChoicesMixin
 from game.choices.cards import CardsChoicesMixin
 from game.choices.decisions import DecisionsChoicesMixin
+from game.summary import SummaryMixin
 
 
 class Session(
@@ -70,6 +71,7 @@ class Session(
     ConfrontationChoicesMixin,
     CardsChoicesMixin,
     DecisionsChoicesMixin,
+    SummaryMixin,
 ):
     def __init__(self, mode="casual", tournament_policy=None, card_points=None, card_labels=None,
                  manifestation_ids=None, card_rules=None, rules_beta=False, ban_list_enabled=False):
@@ -160,3 +162,4 @@ class Session(
         self.created_at = time.time()
         self.last_activity = time.time()
         self.ended = False
+        self.score_history = []  # points of each player at the end of every turn

@@ -61,6 +61,79 @@ function renderHandEssenceStrip() {
 }
 
 // Manifestations with an ability usable from the Hand (e.g. Ranba) stay actionable
+// Why a hand card cannot be played right now, in the player's words ("" when
+// it can, or when the question does not apply). Mirrors handCardIsPlayable.
+function handCardUnplayableReason(cardId) {
+  const rules = latestState?.rulesEngine;
+  const card = cardsById.get(cardId);
+  if (!rules?.enabled || !card || isObserver || handCardIsPlayable(cardId) || handCardHasHandAction(cardId)) return "";
+  if (rules.pendingChoice) return t("unplayablePending");
+  if (handDrawLocked()) return t("unplayableDrawing");
+  if (rules_pregame_active_client() || rules_recovery_mulligan_active_client()) return t("unplayablePregame");
+  if (rulesFirstManifestationActive()) {
+    if ((rules.firstManifestationItemIds || {})[myPlayerId]) return t("unplayableFirstDone");
+    if (card.type !== "manifestation" && !card.placeholder) return t("unplayableFirstType");
+    return t("unplayableFirstForbidden");
+  }
+  if (rules.priorityPlayerId !== myPlayerId) {
+    return rulesText("unplayablePriority", { player: rulesPlayerName(rules.priorityPlayerId) || "—" });
+  }
+  if (rulesCardPlayRestrictedClient(cardId)) return t("unplayableRestricted");
+  const phaseId = currentPhaseUi().phase?.id;
+  const phaseNames = (ids) => ids
+    .map((id) => ADVANCED_PHASES.find((phase) => phase.id === id))
+    .filter(Boolean).map((phase) => t(phase.label)).join(", ");
+  const wrongPhase = (ids) => rulesText("unplayablePhase", { phases: phaseNames(ids) });
+  const payable = () => {
+    if (!rulesCanAffordCard(cardId)) return t("unplayableCost");
+    const ability = (playedAbilitiesByCard.get(cardId) || [])[0];
+    const draft = ability ? buildRulesActionDraft({ cardId, zone: "hand" }, ability) : null;
+    if (draft && !rulesAdditionalCostAvailableClient(draft)) return t("unplayableExtraCost");
+    if (!rulesPlayedAbilityTargetsAvailableClient(cardId)) return t("unplayableNoTarget");
+    return "";
+  };
+  const playType = rulesPlayType(card);
+  if (playType === "ephemeral_will") {
+    const phases = rulesEphemeralPhasesClient(card);
+    if (!phases.includes(phaseId)) return wrongPhase(phases);
+    const ability = (playedAbilitiesByCard.get(cardId) || [])[0];
+    if (ability?.condition === "controller_lost_confrontation" && rules.confrontationResult?.loserId !== myPlayerId) {
+      return t("unplayableLostConfrontation");
+    }
+    return payable() || t("rulesBoardCardNotPlayable");
+  }
+  if (playType === "persistent_will") {
+    const phases = ["end_actions"];
+    if (rulesBeforeRevelationPlayClient(card)) phases.unshift("confrontation_before_revelation");
+    if (rulesPersistentWillsAsEphemeralClient()) phases.unshift("confrontation_reaction", "resolution_effects");
+    if (!phases.includes(phaseId)) return wrongPhase(phases);
+    return payable() || t("rulesBoardCardNotPlayable");
+  }
+  if (card.type !== "manifestation") return t("rulesBoardCardNotPlayable");
+  if (rulesEndPhaseInterzonePlayClient(card)) {
+    if (phaseId === "end_actions") {
+      if ((rules.actionStack || []).length) return t("unplayableStack");
+      if (!rulesInterzoneHasRoomClient()) return t("unplayableInterzoneFull");
+    } else if (phaseId !== "confrontation_reaction") {
+      return wrongPhase(["confrontation_reaction", "end_actions"]);
+    }
+  }
+  if (rulesSupportEntryLockedClient()) return t("unplayableSupportLocked");
+  if (!rulesSupportFromHandAvailableClient(cardId)) return t("unplayableNoSupport");
+  if (phaseId !== "confrontation_reaction") return wrongPhase(["confrontation_reaction"]);
+  return t("rulesBoardCardNotPlayable");
+}
+// a refused hand card says why, and shakes
+function refuseHandCard(cardId, handIndex = null) {
+  showToast(handCardUnplayableReason(cardId) || t("rulesBoardCardNotPlayable"), true);
+  const selector = handIndex === null ? `[data-hand-card="${CSS.escape(cardId)}"]` : `[data-hand-index="${handIndex}"]`;
+  const card = $(`#myHandTray ${selector}`) || $(selector);
+  if (!card || rulesVfxReducedMotion()) return;
+  card.classList.remove("ko-refuse");
+  void card.offsetWidth;
+  card.classList.add("ko-refuse");
+  window.setTimeout(() => card.classList.remove("ko-refuse"), 500);
+}
 function handCardHasHandAction(cardId) {
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
@@ -394,8 +467,11 @@ function renderHandTray() {
       const rotate = Math.max(-16, Math.min(16, center * 3.25));
       const arc = Math.abs(center) * Math.abs(center) * 1.35;
       const playable = handCardIsPlayable(cid) || handCardHasHandAction(cid);
-      return `<div class="hand-card ${isNew ? "ko-pop-in " : ""}${playable ? "is-playable " : ""}${rarityClassAttr(rarity)}" data-hand-card="${esc(cid)}" data-hand-index="${index}" role="button" tabindex="0" aria-label="${esc(cardName(cid))}" title="${esc(cardName(cid))}" style="--hand-rotate:${rotate}deg;--hand-arc:${arc}px;--hand-z:${position};${rarityCosmosStyle(cid)}">
+      const reason = playable ? "" : handCardUnplayableReason(cid);
+      const label = reason ? `${cardName(cid)} — ${reason}` : cardName(cid);
+      return `<div class="hand-card ${isNew ? "ko-pop-in " : ""}${playable ? "is-playable " : ""}${rarityClassAttr(rarity)}" data-hand-card="${esc(cid)}" data-hand-index="${index}"${reason ? ` data-unplayable="${esc(reason)}"` : ""} role="button" tabindex="0" aria-label="${esc(label)}" title="${esc(label)}" style="--hand-rotate:${rotate}deg;--hand-arc:${arc}px;--hand-z:${position};${rarityCosmosStyle(cid)}">
       ${raritySurfaceMarkup(rarity, `<img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}">`)}
+      ${reason ? `<span class="hand-card-reason">${esc(reason)}</span>` : ""}
       ${automationCoverageBadgeHtml(cid)}
       ${wasRevealed ? `<span class="hand-card-revealed-icon" title="${esc(t("revealHeader"))}">👁</span>` : ""}
     </div>`;
@@ -422,6 +498,8 @@ function renderHandTray() {
         // a Manifestation whose ability works from the Hand (Ranba, Diabolical Giant): click to use it
         if (!pendingRulesBoardFlow && handCardHasHandAction(cardId) && !handCardIsPlayable(cardId)) {
           beginRulesHandActivatedAction(cardId, Number(el.dataset.handIndex));
+        } else if (el.dataset.unplayable && !pendingRulesBoardFlow) {
+          refuseHandCard(cardId, Number(el.dataset.handIndex));
         }
         return;
       }

@@ -3854,3 +3854,78 @@ img.ko-img-loading { background: #1d1a14 url('card-back.webp?v=20260905-1') cent
 img.ko-img-in { animation: ko-img-in .3s ease-out; }
 @keyframes ko-img-in { from { opacity: .35; filter: blur(5px); } to { opacity: 1; filter: none; } }
 @media (prefers-reduced-motion: reduce) { img.ko-img-in { animation: none; } }
+
+/* ---------- end-of-game screen (connection.js renderGameEndOverlay) */
+.game-end-overlay { overflow-y: auto; }
+.game-end-card { width: min(880px, 100%); max-height: calc(100dvh - 32px); overflow-y: auto; }
+.game-end-kicker { margin: 0 0 4px; font-size: 12px; letter-spacing: .16em; text-transform: uppercase; color: #cdbb85; }
+.game-end-overlay[data-result="victory"] .game-end-card h2 { font-size: 46px; color: #f3d27a; text-shadow: 0 0 24px #d3a94299, 0 3px 14px #000; }
+.game-end-overlay[data-result="defeat"] .game-end-card h2 { font-size: 40px; color: #c9c3b4; }
+.game-end-overlay[data-result="draw"] .game-end-card h2 { font-size: 40px; }
+.game-end-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; width: 100%; margin: 12px 0 0; }
+.game-end-stats div { padding: 6px 8px; border-radius: 8px; background: #ffffff0d; }
+.game-end-stats dt { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: #cdbb85; }
+.game-end-stats dd { margin: 2px 0 0; font-size: 20px; font-weight: 800; color: #f6edcf; font-variant-numeric: tabular-nums; }
+.game-end-key { display: flex; align-items: center; gap: 12px; width: 100%; margin-top: 12px; padding: 8px; border: 1px solid #ffffff1f; border-radius: 10px; background: #00000033; color: inherit; text-align: left; cursor: pointer; }
+.game-end-key:hover { border-color: var(--owner-color, var(--gold-deep)); background: #ffffff0f; }
+.game-end-key img { width: 56px; aspect-ratio: 5 / 7; object-fit: cover; border-radius: 4px; box-shadow: 0 4px 12px #0008; flex: none; }
+.game-end-key span { display: grid; gap: 2px; min-width: 0; }
+.game-end-key small { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: #cdbb85; }
+.game-end-key b { font-size: 15px; color: #f6edcf; overflow-wrap: anywhere; }
+.game-end-key em { font-style: normal; font-size: 12px; color: #cdbb85; }
+.game-end-chart { margin: 20px 0 0; padding: 12px 16px; border-radius: 12px; background: #0b0906b0; text-align: left; }
+.game-end-chart figcaption { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: #cdbb85; }
+.game-end-legend { display: flex; flex-wrap: wrap; gap: 12px; margin: 6px 0 4px; font-size: 13px; color: #f6edcf; }
+.game-end-legend span, .game-end-tip span { display: inline-flex; align-items: center; gap: 6px; }
+.game-end-legend i, .game-end-tip i { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.game-end-plot { position: relative; }
+.game-end-plot svg { display: block; width: 100%; height: auto; overflow: visible; }
+.game-end-grid { stroke: #ffffff17; stroke-width: 1; }
+.game-end-axis { fill: #a99b78; font-size: 11px; font-variant-numeric: tabular-nums; }
+.game-end-line { fill: none; stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; }
+.game-end-dot { stroke: #14110a; stroke-width: 2; }
+.game-end-label { fill: #f6edcf; font-size: 12px; font-weight: 700; }
+.game-end-hit { fill: transparent; cursor: crosshair; }
+.game-end-cross { stroke: #f6edcf66; stroke-width: 1; stroke-dasharray: 3 3; }
+.game-end-cross.hidden { display: none; }
+.game-end-tip { position: absolute; top: 4px; transform: translateX(10px); display: grid; gap: 2px; padding: 6px 10px; border-radius: 8px; background: #1b1810f2; border: 1px solid #ffffff26; font-size: 12px; color: #f6edcf; pointer-events: none; white-space: nowrap; }
+.game-end-tip.is-left { transform: translateX(calc(-100% - 10px)); }
+.game-end-table summary { margin-top: 6px; font-size: 12px; color: #cdbb85; cursor: pointer; }
+.game-end-table table { margin-top: 6px; border-collapse: collapse; font-size: 12px; color: #f6edcf; font-variant-numeric: tabular-nums; }
+.game-end-table :is(th, td) { padding: 2px 10px; text-align: right; border-bottom: 1px solid #ffffff12; }
+.game-end-table th[scope="row"] { text-align: left; color: #cdbb85; font-weight: 600; }
+.game-end-actions { flex-wrap: wrap; position: sticky; bottom: -24px; z-index: 2; margin-left: -32px; margin-right: -32px; padding: 12px 16px 24px; background: linear-gradient(180deg, transparent, #050402f0 35%); }
+/* a player: total and its breakdown side by side, then the stats beside the key card */
+.game-end-player { grid-template-columns: minmax(96px, auto) 1fr; column-gap: 16px; row-gap: 4px; align-items: center; justify-items: stretch; text-align: left; }
+.game-end-name { grid-column: 1 / -1; text-align: center; }
+.game-end-total { grid-column: 1; grid-row: 2; text-align: center; }
+.game-end-unit { grid-column: 1; grid-row: 3; text-align: center; }
+.game-end-breakdown { grid-column: 2; grid-row: 2 / span 2; margin: 0; }
+.game-end-stats { grid-column: 1; grid-row: 4; grid-template-columns: 1fr; margin: 8px 0 0; align-self: stretch; }
+.game-end-key { grid-column: 2; grid-row: 4; margin-top: 8px; align-self: stretch; }
+.game-end-player:not(:has(.game-end-key)) .game-end-stats { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; }
+.game-end-player:not(:has(.game-end-breakdown)) :is(.game-end-total, .game-end-unit) { grid-column: 1 / -1; }
+@media (max-width: 520px) {
+  .game-end-player { grid-template-columns: 1fr; }
+  .game-end-player > * { grid-column: 1 !important; grid-row: auto !important; }
+}
+@media (max-height: 560px) {
+  .game-end-actions { margin-left: -16px; margin-right: -16px; bottom: -16px; padding: 8px 16px 16px; }
+  .game-end-card { padding: 16px; }
+  .game-end-card h2, .game-end-overlay[data-result] .game-end-card h2 { font-size: 28px; }
+  .game-end-total { font-size: 38px; }
+  .game-end-players { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; }
+  .game-end-actions { margin-top: 12px; }
+  .game-end-actions button { min-width: 0; padding: 8px 14px; font-size: 14px; }
+}
+.game-end-breakdown span { display: inline-block; }
+.game-end-breakdown span::first-letter { text-transform: uppercase; }
+
+/* ---------- why a hand card cannot be played (hand.js handCardUnplayableReason) */
+.hand-card .hand-card-reason { display: none; }
+.hand-card-hover-clone .hand-card-reason {
+  position: absolute; left: 4%; right: 4%; bottom: calc(100% + 8px); z-index: 3; display: block; padding: 6px 8px; border-radius: 6px;
+  background: #1b1810f0; border: 1px solid #c0573f; box-shadow: 0 4px 14px #000a; color: #f6edcf; font-size: 12px; line-height: 1.3; text-align: center;
+}
+.hand-card.ko-refuse { animation: ko-refuse .45s ease-in-out; }
+@keyframes ko-refuse { 20%, 60% { translate: -6px 0; } 40%, 80% { translate: 6px 0; } }

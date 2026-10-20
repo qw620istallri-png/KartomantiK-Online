@@ -814,23 +814,62 @@ function renderGameEndOverlay() {
   }
   const outcome = latestState.rulesEngine?.outcome;
   const scores = outcome?.scores || null;
+  const summary = latestState.gameSummary || null;
   const winners = new Set(outcome?.winnerIds || []);
-  $("#gameEndTitle").textContent = scores || outcome?.reason === "concession" ? t("rulesGameEnded") : t("sessionEnded");
+  const draw = Boolean(outcome?.draw);
   const winnerNames = [...winners].map((id) => latestState.players?.[id]?.name || id);
-  $("#gameEndResult").textContent = scores
-    ? (outcome.draw ? t("rulesResultDraw") : `${winnerNames[0] || "—"} ${t("rulesResultWins")}`)
-    : (outcome ? rulesOutcomeText(outcome) : "");
-  $("#gameEndPlayers").innerHTML = scores ? Object.entries(scores).map(([playerId, score]) => `
-    <div class="game-end-player${winners.has(playerId) && !outcome.draw ? " is-winner" : ""}" style="--owner-color:${playerColor(playerId)}">
-      <strong class="game-end-name">${esc(latestState.players?.[playerId]?.name || playerId)}</strong>
-      <span class="game-end-total" data-count-to="${score.total}">0</span>
-      <span class="game-end-unit">${esc(t("vesselPoints"))}</span>
+  const playing = !isObserver && latestState.players?.[myPlayerId];
+  // a player reads their own result; an observer reads who won
+  $("#gameEndTitle").textContent = !outcome
+    ? t("sessionEnded")
+    : draw ? t("rulesResultDraw")
+    : playing ? t(winners.has(myPlayerId) ? "gameEndVictory" : "gameEndDefeat")
+    : `${winnerNames[0] || "—"} ${t("rulesResultWins")}`;
+  overlay.dataset.result = !outcome ? "" : draw ? "draw" : playing ? (winners.has(myPlayerId) ? "victory" : "defeat") : "";
+  $("#gameEndKicker").textContent = summary
+    ? rulesText("gameEndKicker", { turns: summary.turns, minutes: Math.max(1, Math.round(summary.durationSeconds / 60)) })
+    : t("rulesGameEnded");
+  $("#gameEndResult").textContent = !outcome ? ""
+    : !scores ? rulesOutcomeText(outcome)
+    : playing && !draw ? `${winnerNames[0] || "—"} ${t("rulesResultWins")}` : "";
+  const lastPoints = summary?.scoreHistory?.[summary.scoreHistory.length - 1]?.scores || {};
+  const playerIds = scores ? Object.keys(scores) : Object.keys(latestState.players || {});
+  $("#gameEndPlayers").innerHTML = playerIds.map((playerId) => {
+    const score = scores?.[playerId];
+    const stats = summary?.players?.[playerId];
+    const total = score ? score.total : (lastPoints[playerId] ?? 0);
+    const breakdown = score ? `
       <ul class="game-end-breakdown">
         <li><span>${esc(t("rulesVessel"))}</span><b>${score.vesselPoints}</b></li>
         <li><span>${esc(t("rulesEffects"))}</span><b>${score.effectPoints}</b></li>
         <li><span>${esc(t("rulesDeckBonus"))}</span><b>${score.deckBonus}</b></li>
-      </ul>
-    </div>`).join("") : "";
+        ${score.endGamePoints ? `<li><span>${esc(t("gameEndEndGame"))}</span><b>${score.endGamePoints}</b></li>` : ""}
+      </ul>` : "";
+    const statsHtml = stats ? `
+      <dl class="game-end-stats">
+        <div><dt>${esc(t("gameEndConfrontations"))}</dt><dd>${stats.confrontationsWon}</dd></div>
+        <div><dt>${esc(t("gameEndActions"))}</dt><dd>${stats.actions}</dd></div>
+      </dl>` : "";
+    const keyCard = stats?.keyCardId && cardsById.has(stats.keyCardId) ? `
+      <button type="button" class="game-end-key" data-game-end-card="${esc(stats.keyCardId)}">
+        <img src="${esc(cardImage(stats.keyCardId))}" alt="">
+        <span><small>${esc(t("gameEndKeyCard"))}</small><b>${esc(cardName(stats.keyCardId))}</b>${stats.keyCardWins ? `<em>${esc(rulesText("gameEndKeyWins", { n: stats.keyCardWins }))}</em>` : ""}</span>
+      </button>` : "";
+    return `
+    <div class="game-end-player${winners.has(playerId) && !draw ? " is-winner" : ""}" style="--owner-color:${playerColor(playerId)}">
+      <strong class="game-end-name">${esc(latestState.players?.[playerId]?.name || playerId)}</strong>
+      <span class="game-end-total" data-count-to="${total}">0</span>
+      <span class="game-end-unit">${esc(t("vesselPoints"))}</span>
+      ${breakdown}${statsHtml}${keyCard}
+    </div>`;
+  }).join("");
+  $$("#gameEndPlayers [data-game-end-card]").forEach((button) => {
+    const cardId = button.dataset.gameEndCard;
+    button.onmouseenter = () => showCardPreview(cardId, button);
+    button.onmouseleave = hideCardPreview;
+    button.onclick = () => showInspect(cardId);
+  });
+  renderGameEndChart(summary, playerIds);
   const canReplay = latestState.mode !== "tournament" && !isObserver && mySeat() === 0;
   const replay = $("#gameEndReplayBtn");
   replay.textContent = t("rulesEndReplay");
@@ -838,21 +877,105 @@ function renderGameEndOverlay() {
   replay.disabled = !canReplay;
   $("#gameEndHint").textContent = t("rulesEndReplayHint");
   $("#gameEndHint").classList.toggle("hidden", canReplay || latestState.mode === "tournament" || isObserver);
+  $("#gameEndExportBtn").textContent = t("gameEndExport");
+  $("#gameEndExportBtn").classList.toggle("hidden", $("#downloadLogBtn").classList.contains("hidden"));
   $("#gameEndQuitBtn").textContent = t("rulesEndQuit");
   $("#gameEndCloseBtn").title = t("rulesEndClose");
+  $("#gameEndCloseBtn").setAttribute("aria-label", t("rulesEndClose"));
   overlay.classList.remove("hidden");
-  if (overlay.dataset.countedFor !== JSON.stringify(scores || {})) {
-    overlay.dataset.countedFor = JSON.stringify(scores || {});
+  const countKey = JSON.stringify(playerIds.map((id) => [id, scores?.[id]?.total ?? lastPoints[id] ?? 0]));
+  if (overlay.dataset.countedFor !== countKey) {
+    overlay.dataset.countedFor = countKey;
     $$("#gameEndPlayers [data-count-to]").forEach((counter) => countUpNumber(counter, Number(counter.dataset.countTo), 1400, 350));
   } else {
     $$("#gameEndPlayers [data-count-to]").forEach((counter) => { counter.textContent = counter.dataset.countTo; });
   }
+}
+// Points per turn: one line per player in their colour, labelled at its end,
+// a crosshair with the turn's values on hover, and the same numbers as a table.
+function renderGameEndChart(summary, playerIds) {
+  const figure = $("#gameEndChart");
+  const history = summary?.scoreHistory || [];
+  figure.classList.toggle("hidden", history.length < 2);
+  if (history.length < 2) {
+    figure.innerHTML = "";
+    return;
+  }
+  const W = 560, H = 190, left = 34, right = 96, top = 12, bottom = 26;
+  const values = history.flatMap((entry) => playerIds.map((id) => Number(entry.scores[id] || 0)));
+  let min = Math.min(0, ...values), max = Math.max(10, ...values);
+  const step = Math.pow(10, Math.floor(Math.log10(Math.max(1, max - min)))) * ((max - min) / Math.pow(10, Math.floor(Math.log10(Math.max(1, max - min)))) > 5 ? 2 : 1);
+  min = Math.floor(min / step) * step;
+  max = Math.ceil(max / step) * step;
+  const x = (index) => left + (W - left - right) * (index / (history.length - 1));
+  const y = (value) => top + (H - top - bottom) * (1 - (value - min) / (max - min || 1));
+  const grid = [];
+  for (let value = min; value <= max + 1e-9; value += step) {
+    grid.push(`<line class="game-end-grid" x1="${left}" x2="${W - right}" y1="${y(value)}" y2="${y(value)}"></line><text class="game-end-axis" x="${left - 6}" y="${y(value) + 4}" text-anchor="end">${value}</text>`);
+  }
+  const turns = history.map((entry, index) => `<text class="game-end-axis" x="${x(index)}" y="${H - 6}" text-anchor="middle">${entry.turn}</text>`);
+  const lines = playerIds.map((id) => {
+    const color = playerColor(id);
+    const points = history.map((entry, index) => `${x(index)},${y(Number(entry.scores[id] || 0))}`).join(" ");
+    const dots = history.map((entry, index) => `<circle class="game-end-dot" cx="${x(index)}" cy="${y(Number(entry.scores[id] || 0))}" r="4" fill="${color}"></circle>`).join("");
+    return `<polyline class="game-end-line" points="${points}" stroke="${color}"></polyline>${dots}`;
+  });
+  // direct labels at the end of each line, nudged apart when they collide
+  const ends = playerIds.map((id) => ({ id, value: Number(history[history.length - 1].scores[id] || 0), y: y(Number(history[history.length - 1].scores[id] || 0)) }))
+    .sort((a, b) => a.y - b.y);
+  ends.forEach((end, index) => { if (index && end.y - ends[index - 1].y < 15) end.y = ends[index - 1].y + 15; });
+  const labels = ends.map((end) => `<circle cx="${W - right + 12}" cy="${end.y}" r="4" fill="${playerColor(end.id)}"></circle><text class="game-end-label" x="${W - right + 21}" y="${end.y + 4}">${esc(latestState.players?.[end.id]?.name || end.id)} ${end.value}</text>`);
+  const hits = history.map((entry, index) => {
+    const half = (W - left - right) / (history.length - 1) / 2;
+    return `<rect class="game-end-hit" data-index="${index}" x="${x(index) - half}" y="${top}" width="${half * 2}" height="${H - top - bottom}"></rect>`;
+  });
+  const name = (id) => esc(latestState.players?.[id]?.name || id);
+  const rows = history.map((entry) => `<tr><th scope="row">${esc(rulesText("gameEndTurn", { n: entry.turn }))}</th>${playerIds.map((id) => `<td>${Number(entry.scores[id] || 0)}</td>`).join("")}</tr>`).join("");
+  figure.innerHTML = `
+    <figcaption>${esc(t("gameEndChartTitle"))}</figcaption>
+    <div class="game-end-legend">${playerIds.map((id) => `<span><i style="background:${playerColor(id)}"></i>${name(id)}</span>`).join("")}</div>
+    <div class="game-end-plot">
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(t("gameEndChartTitle"))}">
+        ${grid.join("")}${turns.join("")}
+        <line class="game-end-cross hidden" y1="${top}" y2="${H - bottom}"></line>
+        ${lines.join("")}${labels.join("")}${hits.join("")}
+      </svg>
+      <div class="game-end-tip hidden" role="status"></div>
+    </div>
+    <details class="game-end-table"><summary>${esc(t("gameEndChartTable"))}</summary>
+      <table><thead><tr><th></th>${playerIds.map((id) => `<th scope="col">${name(id)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table>
+    </details>`;
+  const svg = figure.querySelector("svg");
+  const cross = figure.querySelector(".game-end-cross");
+  const tip = figure.querySelector(".game-end-tip");
+  figure.querySelectorAll(".game-end-hit").forEach((hit) => {
+    hit.addEventListener("pointerenter", () => {
+      const index = Number(hit.dataset.index);
+      const entry = history[index];
+      cross.setAttribute("x1", x(index));
+      cross.setAttribute("x2", x(index));
+      cross.classList.remove("hidden");
+      tip.innerHTML = `<b>${esc(rulesText("gameEndTurn", { n: entry.turn }))}</b>${playerIds.map((id) => `<span><i style="background:${playerColor(id)}"></i>${name(id)} <b>${Number(entry.scores[id] || 0)}</b></span>`).join("")}`;
+      const box = svg.getBoundingClientRect();
+      tip.style.left = `${(x(index) / W) * box.width}px`;
+      tip.classList.toggle("is-left", index > history.length / 2);
+      tip.classList.remove("hidden");
+    });
+  });
+  svg.addEventListener("pointerleave", () => {
+    cross.classList.add("hidden");
+    tip.classList.add("hidden");
+  });
 }
 
 function initGameEndOverlay() {
   $("#gameEndReplayBtn").onclick = () => {
     gameEndDismissed = false;
     send({ type: "reset_board" });
+  };
+  $("#gameEndExportBtn").onclick = () => {
+    pendingTournamentLogDownload = true;
+    send({ type: "request_log" });
   };
   $("#gameEndQuitBtn").onclick = () => {
     if (!isObserver && mySeat() !== 0) send({ type: "leave_session" });
