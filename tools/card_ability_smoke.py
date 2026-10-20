@@ -222,7 +222,10 @@ def smoke_ability(card_id, ability):
         if passive:
             carriers += 1
             kind = str(passive.get("kind") or "")
-            session_source = (ROOT / "server" / "session.py").read_text(encoding="utf-8")
+            session_source = "\n".join(
+                path.read_text(encoding="utf-8")
+                for path in [ROOT / "server" / "session.py", *sorted((ROOT / "server" / "game").rglob("*.py"))]
+            )
             compiled_passives = {
                 "construction_limit_bonus": (
                     session.card_rules[card_id].get("constructionLimitBonus")

@@ -1,0 +1,340 @@
+"""Resolving the top of the Stack and passing priority."""
+
+from .common import ADVANCED_PHASES
+
+
+class ResolutionMixin:
+    def resolve_rules_top_action(self):
+        action_stack = self.rules_engine["actionStack"]
+        if not action_stack:
+            return None
+        resolved = action_stack.pop()
+        power_before_resolution = {
+            item.get("id"): self.rules_manifestation_characteristics(item)["power"]
+            for item in self.battlefield
+            if item.get("faceUp")
+            and (
+                self.rules_item_card_rules(item).get("type") == "manifestation"
+                or item.get("isTokenCard")
+            )
+        }
+        source_resolution = self.resolve_rules_action_source(resolved)
+        if source_resolution:
+            resolved["sourceResolution"] = source_resolution
+        triggered_actions = []
+        if (
+            source_resolution and source_resolution.get("destination") == "battlefield"
+            and source_resolution.get("status") == "moved"
+            and source_resolution.get("enteredBattlefield", True)
+        ):
+            triggered_actions = self.queue_rules_battlefield_entry_triggers(
+                source_resolution.get("cardId"), resolved.get("controllerId"),
+                source_resolution.get("itemId"), True,
+                event_targets=resolved.get("targets"),
+                defer=True,
+            )
+            entered_item = self.find_battlefield_item(
+                source_resolution.get("itemId")
+            )
+            triggered_actions.extend(
+                self.queue_rules_manifestation_entry_watchers(
+                    entered_item, defer=True
+                )
+            )
+            triggered_actions.extend(
+                self.queue_rules_persistent_will_entry_watchers(
+                    entered_item, defer=True
+                )
+            )
+        if (
+            source_resolution and source_resolution.get("fieldZone") == "interzone"
+            and source_resolution.get("status") == "moved"
+        ):
+            interzone_item = self.find_battlefield_item(source_resolution.get("itemId"))
+            if interzone_item and self.rules_field_zone(interzone_item) == "interzone":
+                triggered_actions.extend(
+                    self.queue_rules_field_zone_entry_triggers(
+                        interzone_item, "interzone",
+                        event_targets=resolved.get("targets"), defer=True,
+                    )
+                )
+        if source_resolution and source_resolution.get("asSupport"):
+            support_item = self.find_battlefield_item(source_resolution.get("itemId"))
+            triggered_actions.extend(self.queue_rules_support_entry_triggers(
+                support_item, played=True, from_zone=source_resolution.get("fromZone"),
+                event_targets=resolved.get("targets"), defer=True,
+            ))
+            triggered_actions.extend(
+                self.queue_rules_field_zone_entry_triggers(
+                    support_item, "confrontation",
+                    event_targets=resolved.get("targets"), defer=True
+                )
+            )
+        target_rules = self.rules_action_target_rules(resolved)
+        target_error = self.rules_ability_targets_error(
+            target_rules,
+            resolved.get("targets") or [],
+            resolved.get("controllerId"),
+            event_item_id=(
+                (resolved.get("ability") or {}).get("trigger") or {}
+            ).get("eventItemId"),
+            source_item_id=(resolved.get("source") or {}).get("itemId"),
+        ) if target_rules is not None else None
+        if target_error:
+            resolved["targetValidationError"] = target_error
+            resolved["effectResult"] = {
+                "kind": "invalid_targets",
+                "status": "no_effect",
+                "error": target_error,
+            }
+        else:
+            effect_result = self.apply_rules_action_result(resolved)
+            if effect_result:
+                resolved["effectResult"] = effect_result
+                if isinstance(effect_result, dict):
+                    triggered_actions.extend(
+                        effect_result.pop("resolutionTriggers", None) or []
+                    )
+            ongoing_effects = self.create_rules_ongoing_effects(resolved)
+            if ongoing_effects:
+                resolved["ongoingEffects"] = ongoing_effects
+                for effect in ongoing_effects:
+                    if effect.get("kind") == "copy_power_effects":
+                        triggered_actions.extend(
+                            self.queue_rules_copied_entry_triggers(effect)
+                        )
+        state_actions = self.resolve_rules_state_actions(power_before_resolution)
+        if state_actions["destroyed"]:
+            resolved["stateActions"] = {
+                "destroyed": state_actions["destroyed"],
+            }
+        if state_actions["replacements"]:
+            resolved.setdefault("stateActions", {})["replacements"] = (
+                state_actions["replacements"]
+            )
+        if state_actions["thresholdExiled"]:
+            resolved.setdefault("stateActions", {})["thresholdExiled"] = (
+                state_actions["thresholdExiled"]
+            )
+        triggered_actions.extend(state_actions["triggeredActions"])
+        triggered_actions.extend(
+            self.queue_rules_observed_event_triggers(defer=True)
+        )
+        if triggered_actions:
+            self.queue_or_defer_rules_simultaneous_actions(triggered_actions)
+        self.rules_engine["lastResolvedAction"] = resolved
+        if action_stack:
+            next_controller = action_stack[-1]["controllerId"]
+            next_priority = self.other_rules_player_id(next_controller)
+        else:
+            normal_priority = (
+                self.rules_lowest_confrontation_power_player()
+                if self.current_phase_group() == "confrontation"
+                else self.rules_engine.get("lastConfrontationWinnerId")
+            )
+            next_priority = (
+                normal_priority if normal_priority in self.players
+                else self.other_rules_player_id(resolved["controllerId"])
+            )
+        if (
+            resolved.get("immediate") and not action_stack
+            and ((resolved.get("ability") or {}).get("result") or {}).get("kind") == "grant_source_support_until_end_turn"
+        ):
+            # paying the cost is immediate: the player keeps priority to play the card in Support right away
+            next_priority = resolved.get("controllerId")
+        self.rules_engine["priorityPlayerId"] = next_priority
+        return {
+            "status": "resolved",
+            "action": resolved,
+            "triggeredActions": triggered_actions,
+            "stackDepth": len(action_stack),
+        }
+
+    def resolve_rules_immediate_actions(self):
+        resolved = []
+        while (
+            self.rules_engine["actionStack"]
+            and self.rules_engine["actionStack"][-1].get("immediate")
+            and not self.rules_engine.get("pendingChoice")
+        ):
+            result = self.resolve_rules_top_action()
+            if result:
+                resolved.append(result)
+        return resolved
+
+    def pass_rules_priority(self, player_id, passed=None):
+        if not self.rules_engine["enabled"]:
+            return "Assisted rules are not active.", None
+        if self.ended or player_id not in self.players:
+            return "Unable to pass priority.", None
+        if len(self.players) < 2:
+            return "Both players must join before using priority.", None
+        if self.rules_engine.get("pendingChoice"):
+            return "A required card choice must be completed first.", None
+        if self.rules_recovery_mulligan_active():
+            return "Complete the required Recovery Mulligan before playing.", None
+        if passed is False:
+            if self.rules_engine["priorityPasses"] == [player_id]:
+                self.rules_engine["priorityPasses"] = []
+                self.rules_engine["priorityPlayerId"] = player_id
+                return None, {
+                    "status": "cancelled",
+                    "stackDepth": len(self.rules_engine["actionStack"]),
+                }
+            return "You have not passed priority.", None
+        if self.rules_engine["priorityPlayerId"] != player_id:
+            return "You do not have priority.", None
+        # Freenya: the free Limbo play is offered once, when its effect resolves.
+        self.rules_engine["playPermissions"] = [
+            entry for entry in self.rules_engine.get("playPermissions") or []
+            if not (
+                entry.get("playerId") == player_id
+                and entry.get("fromZone") == "graveyard"
+                and entry.get("exileOnLeave")
+            )
+        ]
+
+        previous_passes = self.rules_engine["priorityPasses"]
+        if not previous_passes:
+            self.rules_engine["priorityPasses"] = [player_id]
+            self.rules_engine["priorityPlayerId"] = self.other_rules_player_id(player_id)
+            return None, {
+                "status": "passed",
+                "stackDepth": len(self.rules_engine["actionStack"]),
+            }
+
+        self.rules_engine["priorityPasses"] = []
+        action_stack = self.rules_engine["actionStack"]
+        if action_stack:
+            return None, self.resolve_rules_top_action()
+
+        previous_phase_id = self.current_phase_id()
+        sequence = self.phase_sequence()
+        next_index = self.phase_tracker["index"] + 1
+        started_new_turn = False
+        rematch_started = False
+        expired_essence_tokens = []
+        rematch = self.rules_engine.get("rematchPending") or {}
+        if (
+            previous_phase_id == "resolution_move"
+            and int(rematch.get("turn") or 0) == self.phase_tracker["turn"]
+        ):
+            next_index = ADVANCED_PHASES.index("confrontation_reaction")
+            rematch_started = True
+        if (
+            previous_phase_id == "resolution_move"
+            and self.rules_engine.get("skipEndPhaseTurn") == self.phase_tracker["turn"]
+        ):
+            next_index = len(sequence)
+        if next_index >= len(sequence):
+            next_index = 0
+            expired_essence_tokens = self.expire_rules_excess_essence(
+                self.phase_tracker["turn"]
+            )
+            self.phase_tracker["turn"] += 1
+            started_new_turn = True
+        self.phase_tracker["index"] = next_index
+        expired_effects = self.prune_rules_ongoing_effects()
+        self.prune_rules_play_restrictions()
+        self.phase_passes.clear()
+        self.rules_engine["priorityPlayerId"] = self.other_rules_player_id(player_id)
+        if rematch_started:
+            first_ids = {}
+            for item_id in rematch.get("protectedItemIds") or []:
+                item = self.find_battlefield_item(item_id)
+                if item:
+                    controller_id = item.get("controllerId") or item.get("ownerId")
+                    first_ids[controller_id] = item_id
+            self.rules_engine["firstManifestationItemIds"] = first_ids
+            self.rules_engine["firstManifestationValidatedPlayerIds"] = list(first_ids)
+            self.rules_engine["firstManifestationComplete"] = True
+            self.rules_engine["firstManifestationTriggersQueued"] = True
+            self.rules_engine["confrontationResult"] = None
+            self.rules_engine["rematchPending"] = None
+        revealed_item_ids = []
+        if (
+            previous_phase_id == "confrontation_before_revelation"
+            and self.current_phase_id() == "confrontation_reveal"
+        ):
+            for selected_id in self.rules_engine["firstManifestationItemIds"].values():
+                item = self.find_battlefield_item(selected_id)
+                if item:
+                    item["faceUp"] = True
+                    revealed_item_ids.append(selected_id)
+        automatic_recovery = None
+        beginning_triggered_actions = []
+        end_triggered_actions = []
+        resolution_triggered_actions = []
+        readied_item_ids = []
+        if started_new_turn:
+            self.expire_rules_temporary_suspensions(
+                self.phase_tracker["turn"] - 1
+            )
+            self.rules_engine["handLimitEffects"] = [
+                effect for effect in self.rules_engine.get(
+                    "handLimitEffects"
+                ) or []
+                if int(effect.get("turn") or 0) >= self.phase_tracker["turn"]
+            ]
+            readied_item_ids = self.ready_rules_exhausted_cards()
+            self.reset_rules_confrontation_turn()
+            self.grant_rules_beginning_turn_permissions()
+            beginning_triggered_actions = self.queue_rules_beginning_turn_triggers()
+        if started_new_turn and not beginning_triggered_actions:
+            self.phase_tracker["index"] = ADVANCED_PHASES.index("recovery_draw")
+        if (
+            self.current_phase_id() == "recovery_draw"
+            and self.rules_engine["recoveryDrawTurn"] != self.phase_tracker["turn"]
+        ):
+            recovery_error, automatic_recovery = self.resolve_recovery_draw()
+            if recovery_error:
+                return recovery_error, None
+        if self.current_phase_group() == "confrontation":
+            lower_power_player = self.rules_lowest_confrontation_power_player()
+            if lower_power_player:
+                self.rules_engine["priorityPlayerId"] = lower_power_player
+        if self.current_phase_id() == "end_triggers":
+            end_triggered_actions = self.build_rules_end_turn_field_triggers()
+            end_triggered_actions.extend(
+                self.queue_rules_end_turn_memory_triggers(defer=True)
+            )
+            if end_triggered_actions:
+                self.queue_rules_simultaneous_actions(end_triggered_actions)
+        if self.current_phase_id() == "resolution_effects":
+            resolution_triggered_actions = (
+                self.queue_rules_resolution_memory_triggers()
+            )
+            resolution_triggered_actions.extend(
+                self.queue_rules_confrontation_win_triggers()
+            )
+            resolution_triggered_actions.extend(
+                self.queue_rules_resolution_field_triggers()
+            )
+        confrontation_result = None
+        if self.current_phase_id() == "resolution_compare":
+            confrontation_result = self.prepare_rules_confrontation_result()
+        elif self.current_phase_id() == "resolution_move":
+            confrontation_result = self.begin_rules_confrontation_cleanup()
+            if isinstance(confrontation_result, dict):
+                resolution_triggered_actions.extend(
+                    confrontation_result.pop("triggeredActions", None) or []
+                )
+        return None, {
+            "status": "advanced",
+            "previousPhaseId": previous_phase_id,
+            "phaseId": self.current_phase_id(),
+            "turn": self.phase_tracker["turn"],
+            "stackDepth": 0,
+            "expiredEffectIds": [effect["id"] for effect in expired_effects],
+            "confrontationResult": confrontation_result,
+            "automaticRecovery": automatic_recovery,
+            "beginningTriggeredActions": beginning_triggered_actions,
+            "endTriggeredActions": end_triggered_actions,
+            "resolutionTriggeredActions": resolution_triggered_actions,
+            "readiedItemIds": readied_item_ids,
+            "revealedItemIds": revealed_item_ids,
+            "expiredEssenceTokenIds": [
+                token["id"] for token in expired_essence_tokens
+            ],
+            "rematchStarted": rematch_started,
+        }
