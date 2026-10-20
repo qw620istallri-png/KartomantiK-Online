@@ -1241,3 +1241,19 @@ Travail fait sur le PC après la beta 139, jamais publié, récupéré via la br
   (`sessionStorage`, effacé en quittant la session ou si elle n'existe plus).
 - **Portrait** : l'écran « Tournez votre appareil » de la nouvelle table couvre la
   partie sur un téléphone tenu droit.
+
+## Retours mobile (beta 139.12)
+
+- **Menus des colonnes** : sur téléphone les colonnes coupent ce qui dépasse ; les
+  menus ouverts depuis une colonne (Dessin, Créer, points du Réceptacle) flottent
+  au-dessus de la page, placés près de leur bouton (`floatOver` dans `ui-beta.js`).
+- **Points du Réceptacle (mode manuel)** : un bouton « ± » sur la tuile du Réceptacle
+  ouvre −10 … +10 ; le menu reste ouvert pendant les clics et se ferme en touchant
+  ailleurs (remplace l'apparition au survol, impossible au doigt).
+- **En-tête au toucher** : une poignée visible en haut au centre fait sortir la barre
+  (codes, menu « Plus ») ; un toucher ailleurs sur la table la range.
+- **Appui long** : pendant une partie sur écran tactile, ni sélection de texte, ni menu
+  du navigateur (image, Lens, « Rechercher ») : seul le menu du jeu s'ouvre.
+- **Zone de Confrontation sur téléphone** : plusieurs Manifestations séparées se placent
+  en cascade, l'une sous l'autre (chacune laisse voir le haut de la précédente, la
+  première reste entière) au lieu d'être côte à côte et minuscules.

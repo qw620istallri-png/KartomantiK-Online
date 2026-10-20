@@ -174,6 +174,20 @@ function initCombatChrome() {
     }, 520);
   };
   hotZone.addEventListener("mouseenter", show);
+  // a finger cannot hover: a tap at the top of the screen brings the bar out,
+  // a tap anywhere else on the table puts it away
+  hotZone.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "mouse") return;
+    event.preventDefault();
+    if (screen.classList.contains("header-peek")) screen.classList.remove("header-peek");
+    else show();
+  });
+  document.addEventListener("pointerdown", (event) => {
+    if (event.pointerType === "mouse" || !screen.classList.contains("header-peek")) return;
+    if (header.contains(event.target) || hotZone.contains(event.target) || event.target.closest?.(".game-more-popover")) return;
+    $("#gameMoreMenu").open = false;
+    screen.classList.remove("header-peek");
+  }, true);
   header.addEventListener("mouseenter", show);
   header.addEventListener("mouseleave", scheduleHide);
   document.addEventListener("pointermove", (event) => {

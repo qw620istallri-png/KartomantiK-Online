@@ -2,7 +2,7 @@
 // (see index.html); this file keeps every statement that runs at load, in order.
 
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261020-rules-beta-139-11";
+const STATIC_ASSET_VERSION = "20261020-rules-beta-139-12";
 
 {
   const versionEl = document.getElementById("appVersion");
@@ -106,6 +106,17 @@ new MutationObserver((records) => {
     }
   }
 }).observe(document.body, { childList: true, subtree: true });
+
+// during a game, a long press opens the game's own menu, never the browser's
+// (image menu, Lens, "Search"); text fields keep theirs
+const inTextField = (target) => Boolean(target?.closest?.("input, textarea, [contenteditable='true']"));
+document.addEventListener("contextmenu", (event) => {
+  if (!event.isTrusted || lastPointerType === "mouse" || $("#gameScreen").classList.contains("hidden") || inTextField(event.target)) return;
+  event.preventDefault();
+});
+document.addEventListener("selectstart", (event) => {
+  if (lastPointerType !== "mouse" && !$("#gameScreen").classList.contains("hidden") && !inTextField(event.target)) event.preventDefault();
+});
 
 // back online, or back on the tab after the phone slept: retry at once
 window.addEventListener("online", () => reconnectNow());

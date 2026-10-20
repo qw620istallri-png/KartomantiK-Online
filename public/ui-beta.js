@@ -73,6 +73,7 @@
     ubFold: "Replier",
     ubUnfold: "Déplier",
     ubPilesOf: "Decks de",
+    ubScoreAdjust: "Ajuster les points",
     ubReceptacleShort: "Réceptacle",
     ubLastOppAction: "Dernière action de {player} :",
     ubInterzoneShort: "Inter.",
@@ -143,6 +144,7 @@
     ubFold: "Fold",
     ubUnfold: "Unfold",
     ubPilesOf: "Piles of",
+    ubScoreAdjust: "Adjust the points",
     ubReceptacleShort: "Vessel",
     ubLastOppAction: "Last action by {player}:",
     ubInterzoneShort: "Inter.",
@@ -213,6 +215,7 @@
     ubFold: "Chiudi",
     ubUnfold: "Apri",
     ubPilesOf: "Pile di",
+    ubScoreAdjust: "Regola i punti",
     ubReceptacleShort: "Bacino",
     ubLastOppAction: "Ultima azione di {player}:",
     ubInterzoneShort: "Inter.",
@@ -560,6 +563,43 @@
     }
   }
 
+  // ------------------------------------------------------------ Vessel points (manual play)
+
+  // The -10..+10 buttons of a Vessel open from a "±" button on its tile (a finger
+  // cannot hover), float over the page, and stay open while points are added.
+  const scoreOwner = (adjust) => adjust.querySelector("[data-score-delta]")?.dataset.scoreDelta.split(":")[0];
+  function decorateScoreAdjust() {
+    document.querySelectorAll(".ub-piles .field-pile").forEach((pile) => {
+      const adjust = pile.querySelector(":scope > .pile-score-adjust");
+      if (!adjust) return;
+      const owner = scoreOwner(adjust);
+      let toggle = pile.querySelector(":scope > .ub-score-toggle");
+      if (!toggle) {
+        toggle = el("button", "ub-score-toggle", "±");
+        toggle.type = "button";
+        toggle.addEventListener("click", (event) => {
+          event.stopPropagation();
+          local.scoreOpen = local.scoreOpen === owner ? null : owner;
+          syncScoreAdjust();
+        });
+        pile.appendChild(toggle);
+      }
+      toggle.title = t("ubScoreAdjust");
+      toggle.setAttribute("aria-label", t("ubScoreAdjust"));
+    });
+    syncScoreAdjust();
+  }
+  function syncScoreAdjust() {
+    document.querySelectorAll(".ub-piles .field-pile > .pile-score-adjust").forEach((adjust) => {
+      const open = Boolean(local.scoreOpen) && local.scoreOpen === scoreOwner(adjust);
+      const toggle = adjust.parentElement.querySelector(":scope > .ub-score-toggle");
+      adjust.classList.toggle("ub-open", open);
+      toggle?.setAttribute("aria-expanded", String(open));
+      if (open) floatOver(adjust, toggle || adjust.parentElement, { above: false });
+      else unfloat(adjust);
+    });
+  }
+
   // ------------------------------------------------------------ players
 
   // the left half belongs to me; an observer gets the first seat on the left
@@ -815,6 +855,20 @@
     };
   }
 
+  // cards overlapping down the zone: every card shows its top (name and art) above the
+  // next one; the first card of the group (the First Manifestation) is the one in full view
+  const CASCADE_STEP = 0.24;
+  function cascadePositions(area, count, maxW) {
+    const h = Math.min((area.b - area.t) / (1 + CASCADE_STEP * (count - 1)), maxW * RATIO, (area.r - area.l - 12) * RATIO);
+    const w = Math.max(24, Math.floor(h / RATIO));
+    const height = w * RATIO * (1 + CASCADE_STEP * (count - 1));
+    const top = area.t + Math.max(0, (area.b - area.t - height) / 2);
+    const left = area.l + (area.r - area.l - w) / 2;
+    return Array.from({ length: count }, (_value, index) => {
+      const level = count - 1 - index;
+      return { x: left, y: top + level * CASCADE_STEP * w * RATIO, w, cascade: true, layer: 2 + level };
+    });
+  }
   function gridPositions(area, count, cardFit, { fromRight = false, gap = 10, centerY = true } = {}) {
     const cols = Math.min(cardFit.cols, Math.max(count, 1));
     const rows = Math.ceil(Math.max(count, 1) / cols);
@@ -851,14 +905,21 @@
       const trap = players[side] ? traps[players[side].id] : null;
       const count = groups[side].confrontation.length + (trap ? 1 : 0);
       const width = area.r - area.l;
-      const cardFit = fit(width - 12, area.b - area.t - 30, count, { maxW: Math.min(230, width * (G.phone ? 0.85 : 0.62)) });
+      const maxW = Math.min(230, width * (G.phone ? 0.85 : 0.62));
+      const cardFit = fit(width - 12, area.b - area.t - 30, count, { maxW });
       zc[side] = { area, fit: cardFit, trap: null };
-      gridPositions({ l: area.l, r: area.r, t: area.t + 22, b: area.b - 8 }, count, cardFit, { fromRight: side === "me" })
-        .forEach((rect, index) => {
-          const entry = groups[side].confrontation[index];
-          if (entry) slots.set(entry.item.id, { ...rect, zone: "confrontation", side });
-          else zc[side].trap = { ...rect, ...trap };
-        });
+      const inner = { l: area.l, r: area.r, t: area.t + 22, b: area.b - 8 };
+      // phone: a short zone would put the cards side by side and tiny; they go one
+      // under the other instead, each showing the top of the one before
+      const cascade = G.phone && count > 1 ? cascadePositions(inner, count, maxW) : null;
+      const rects = cascade && cascade[0].w > cardFit.w * 1.15
+        ? cascade
+        : gridPositions(inner, count, cardFit, { fromRight: side === "me" });
+      rects.forEach((rect, index) => {
+        const entry = groups[side].confrontation[index];
+        if (entry) slots.set(entry.item.id, { ...rect, zone: "confrontation", side });
+        else zc[side].trap = { ...rect, ...trap };
+      });
     }
     const columns = {};
     for (const side of ["me", "opp"]) {
@@ -979,6 +1040,7 @@
       el.classList.add("ub-floating");
       el.style.zIndex = String(meta.layer || 5);
     }
+    if (meta.cascade) el.style.zIndex = String(meta.layer);
     if (meta.open) el.classList.add("ub-stale-open");
     if (meta.strip) el.classList.add("ub-stale-strip-card");
     if (meta.hiddenExtra) el.classList.add("ub-hidden-extra");
@@ -1179,6 +1241,7 @@
         const open = !menu.classList.contains("open");
         closeToolMenus();
         menu.classList.toggle("open", open);
+        if (open) floatOver(menu.querySelector(".ub-toolpop"), trigger);
         return;
       }
       if (event.target.closest(".ub-toolpop button")) {
@@ -1188,6 +1251,10 @@
     });
     document.addEventListener("pointerdown", (event) => {
       if (!event.target.closest?.(".ub-toolmenu")) closeToolMenus();
+      if (local.scoreOpen && !event.target.closest?.(".pile-score-adjust, .ub-score-toggle")) {
+        local.scoreOpen = null;
+        syncScoreAdjust();
+      }
     }, true);
     document.addEventListener("pointerdown", onChoicePointerDown, true);
     document.getElementById("ubChatForm").addEventListener("submit", (event) => {
@@ -2358,7 +2425,26 @@
 
   // ------------------------------------------------------------ tools row
 
+  // A menu opened from a side column floats over the page: the columns clip
+  // whatever overflows them (they scroll on short screens, phones hide it).
+  function floatOver(pop, anchor, { above = true } = {}) {
+    Object.assign(pop.style, { position: "fixed", left: "0px", top: "0px", right: "auto", bottom: "auto", transform: "none", zIndex: "700" });
+    const box = anchor.getBoundingClientRect();
+    const size = pop.getBoundingClientRect();
+    const margin = 8;
+    let top = above ? box.top - size.height - 6 : box.bottom + 6;
+    if (above && top < margin) top = box.bottom + 6;
+    if (!above && top + size.height > window.innerHeight - margin) top = box.top - size.height - 6;
+    const left = Math.min(Math.max(margin, box.left), window.innerWidth - size.width - margin);
+    pop.style.left = `${Math.round(left)}px`;
+    pop.style.top = `${Math.round(Math.max(margin, top))}px`;
+  }
+  function unfloat(pop) {
+    ["position", "left", "top", "right", "bottom", "transform", "zIndex"].forEach((key) => { pop.style[key] = ""; });
+  }
+
   function closeToolMenus() {
+    document.querySelectorAll(".ub-toolmenu .ub-toolpop").forEach(unfloat);
     document.querySelectorAll(".ub-toolmenu.open").forEach((menu) => menu.classList.remove("open"));
   }
 
@@ -2820,6 +2906,7 @@
     const result = original.apply(this, args);
     if (active()) {
       movePiles();
+      decorateScoreAdjust();
       repositionOpenPopovers();
     }
     return result;

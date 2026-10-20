@@ -3985,3 +3985,21 @@ img.ko-img-in { animation: ko-img-in .3s ease-out; }
 .app-update-banner.hidden { display: none; }
 .app-update-banner button { flex: none; min-height: 32px; padding: 6px 12px; font-size: 13px; }
 .app-update-banner button:not(.primary) { background: transparent; border-color: transparent; color: #cdbb85; box-shadow: none; }
+
+/* touch screens: the top bar comes out with a tap on a visible handle at the top centre
+   (the side columns stay free to tap) */
+@media (pointer: coarse) {
+  #gameScreen .game-header-hot-zone { left: 30%; right: 30%; height: 26px; }
+  #gameScreen .game-header-hot-zone::after {
+    content: ""; position: absolute; left: 50%; top: 5px; width: 46px; height: 5px; border-radius: 99px; transform: translateX(-50%);
+    background: rgba(240, 217, 143, .55); box-shadow: 0 1px 4px #000a;
+  }
+}
+
+/* during a game on a touch screen, a long press never selects text nor opens the
+   browser's own callouts (image menu, Lens, "Search"): the game has its own menus */
+@media (pointer: coarse) {
+  body:has(#gameScreen:not(.hidden)) { -webkit-touch-callout: none; -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+  body:has(#gameScreen:not(.hidden)) :is(input, textarea, [contenteditable="true"]) { -webkit-touch-callout: default; -webkit-user-select: text; user-select: text; }
+  body:has(#gameScreen:not(.hidden)) img { -webkit-user-drag: none; }
+}
