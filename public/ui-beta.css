@@ -1100,3 +1100,9 @@ body.flow-uses-hand #gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .
 #gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .number-stepper :is(button, input) { flex: none; width: 40px; height: 32px; min-height: 0; padding: 0; font-size: 16px; }
 #gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .number-stepper input { width: 64px; text-align: center; }
 #gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .rules-extra-essence-confirm { display: block; width: auto; margin: 8px auto 0; }
+
+/* touch phones: the hand is lifted off the bottom edge (system swipe zone) and
+   its cards never pan or pull the page */
+#gameScreen.ui-beta.ub-phone .hand-tray { margin-bottom: calc(var(--hand-card-h, 170px) * -.38 + var(--ub-hand-lift, 0px)); }
+#gameScreen.ui-beta.ub-phone .hand-tray .hand-card { touch-action: none; }
+#gameScreen.ui-beta.ub-phone .hand-area { overscroll-behavior: none; }

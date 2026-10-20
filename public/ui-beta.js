@@ -786,7 +786,10 @@
     const gutW = Math.round(phone ? clamp(W * 0.05, 34, 56) : clamp(W * 0.062, 56, 116));
     const handH = typeof handCardHeight === "number" ? handCardHeight : 170;
     const handCollapsed = document.getElementById("handArea")?.classList.contains("hand-collapsed");
-    const handPeek = handCollapsed ? 48 : Math.round(handH * 0.62 + 18);
+    // touch phones: the hand sits above the screen's bottom edge, where an upward
+    // drag of a card would otherwise be taken for the system "home" swipe
+    const handLift = phone && window.matchMedia?.("(pointer: coarse)").matches ? 22 : 0;
+    const handPeek = (handCollapsed ? 48 : Math.round(handH * 0.62 + 18)) + handLift;
     const oppHandH = Math.round(phone ? clamp(H * 0.09, 30, 40) : clamp(H * 0.085, 46, 86));
     const totalsH = phone ? 34 : compact ? 44 : 54;
     const stale = groups.stalemate.length > 0;
@@ -796,7 +799,7 @@
     const zcTop = bandTop + bandH;
     const zcBottom = Math.max(zcTop + 120, H - handPeek);
     return {
-      W, H, compact, phone, colW, fieldL, fieldR, cx, izW, gutW, handPeek, oppHandH, totalsH, staleH, bandH,
+      W, H, compact, phone, colW, fieldL, fieldR, cx, izW, gutW, handPeek, handLift, oppHandH, totalsH, staleH, bandH,
       zcTop, zcBottom, wrapLeft: rect.left, wrapTop: rect.top,
       izMe: { l: fieldL, r: fieldL + izW },
       izOpp: { l: fieldR - izW, r: fieldR },
@@ -2197,6 +2200,7 @@
     screen.style.setProperty("--ub-oppHandH", `${G.oppHandH}px`);
     screen.style.setProperty("--ub-bandH", `${G.bandH}px`);
     screen.style.setProperty("--ub-handPeek", `${G.handPeek}px`);
+    screen.style.setProperty("--ub-hand-lift", `${G.handLift}px`);
     screen.style.setProperty("--ub-fieldW", `${G.fieldR - G.fieldL}px`);
     screen.style.setProperty("--me", players.me ? playerColor(players.me.id) : "#3fc9a8");
     screen.style.setProperty("--opp", players.opp ? playerColor(players.opp.id) : "#d3654a");
