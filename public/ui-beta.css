@@ -1069,3 +1069,34 @@ body.ub-hand-drawing #gameScreen.ui-beta #myHandTray { pointer-events: none; }
 .ub-choice-banner.ub-choice-side span { font-size: 11px; }
 .ub-choice-banner.ub-choice-side .ub-choice-actions { flex-wrap: wrap; justify-content: center; }
 .ub-choice-banner.ub-choice-side .ub-choice-actions:empty { display: none; }
+
+/* ---------- phone: effect screens and pre-play steps read side by side ----------
+   the card on the left at the height of the screen, the effect text smaller on
+   its right, so nothing scrolls past the screen (Rally's extra Essence included) */
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen { padding: 8px 12px; align-items: center; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .box { width: min(820px, 100%); max-height: calc(100vh - 16px); overflow-y: auto; overscroll-behavior: contain; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .box.has-source { grid-template-columns: min(30vw, calc((100vh - 32px) * 5 / 7)) minmax(0, 1fr); column-gap: 16px; align-items: center; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .box.has-source > .rules-choice-source { grid-column: 1; grid-row: 1 / span 4; width: 100%; margin: 0; position: sticky; top: 0; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .box.has-source > :not(.rules-choice-source) { grid-column: 2; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-effect { margin: 0 0 8px; padding: 8px 12px; font-size: 13px; line-height: 1.35; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen :is(.rules-choice-effect ~ p, #rulesChoiceText) { margin: 0 0 8px; font-size: 13px; line-height: 1.35; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > :is(.rules-choice-destination, .rules-choice-player) { min-width: 0; padding: 6px 14px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-destination strong,
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-player { font-size: 15px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options > .rules-choice-destination span { font-size: 12px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ :is(#rulesChoicePanel, .rules-player-target-panel, .rules-zone-target-panel).effect-screen .rules-choice-options.has-card-picker { grid-template-columns: repeat(auto-fit, 84px); gap: 10px; }
+
+#gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .rules-floating-card { top: 50%; width: min(600px, 96%); max-height: calc(100vh - 16px); overflow-y: auto; grid-template-columns: min(30%, calc((100vh - 40px) * 5 / 7 * .8)) minmax(0, 1fr); justify-items: stretch; align-items: center; gap: 14px; }
+body.flow-uses-hand #gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .rules-floating-card { top: 42%; max-height: calc(84vh - 16px); }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .rules-floating-card > img { width: 100%; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .rules-floating-copy { padding: 8px 12px; font-size: 13px; line-height: 1.35; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .rules-floating-copy strong { font-size: 15px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .rules-flow-cost-row { gap: 8px; flex-wrap: wrap; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .rules-cost-card-row .rules-choice-card,
+#gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .rules-extra-tribute-cards .rules-choice-card { width: 56px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered :is(#rulesFlowChoiceActions button, .rules-extra-essence-confirm) { min-width: 0; padding: 6px 16px; font-size: 14px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered #rulesFlowChoiceActions { margin-top: 8px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .number-stepper { display: flex; justify-content: center; gap: 8px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .number-stepper :is(button, input) { flex: none; width: 40px; height: 32px; min-height: 0; padding: 0; font-size: 16px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .number-stepper input { width: 64px; text-align: center; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .rules-extra-essence-confirm { display: block; width: auto; margin: 8px auto 0; }
