@@ -2792,12 +2792,13 @@
     banner.innerHTML = `${cardId ? `<button type="button" class="ub-choice-source" data-log-card="${esc(cardId)}" title="${esc(cardName(cardId))}"><img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"></button>` : ""}
       <div class="ub-choice-copy"><strong>${esc(heading)}</strong><span>${esc(hint)}</span></div>
       <div class="ub-choice-actions">${choice.extras.map((button, index) => `<button type="button" data-ub-extra="${index}">${esc(button.querySelector("strong")?.textContent || button.textContent.trim())}</button>`).join("")}
-      <button type="button" class="ub-choice-panel-btn">${esc(t(panelShown ? "ubHideChoicePanel" : "ubShowChoicePanel"))}</button></div>`;
+      ${choice.drag ? "" : `<button type="button" class="ub-choice-panel-btn">${esc(t(panelShown ? "ubHideChoicePanel" : "ubShowChoicePanel"))}</button>`}</div>`;
     wireLogCardNames(banner);
     banner.querySelectorAll("[data-ub-extra]").forEach((button) => {
       button.onclick = () => choice.extras[Number(button.dataset.ubExtra)]?.click();
     });
-    banner.querySelector(".ub-choice-panel-btn").onclick = () => {
+    const panelButton = banner.querySelector(".ub-choice-panel-btn");
+    if (panelButton) panelButton.onclick = () => {
       local.choicePanelShown = panelShown ? "" : choice.key;
       syncBoardChoice();
     };
@@ -2810,6 +2811,16 @@
   function placeChoiceBanner(banner, choice) {
     const geometry = local.geometry?.G;
     if (!geometry) return;
+    // phone, moving cards: the prompt stands over the left column, clear of
+    // the Confrontation Zone (the column still takes a card under the deck)
+    const side = Boolean(geometry.phone && choice.drag);
+    banner.classList.toggle("ub-choice-side", side);
+    if (side) {
+      banner.style.maxWidth = `${Math.round(geometry.colW - 8)}px`;
+      banner.style.left = `${Math.round(4 + banner.offsetWidth / 2)}px`;
+      banner.style.top = `${Math.round(geometry.H / 2)}px`;
+      return;
+    }
     const ids = choice.drag ? [...choice.drag.itemIds] : [...choice.items.keys()];
     const rects = ids.map(boardCardEl).filter(Boolean).map((node) => node.getBoundingClientRect()).filter((rect) => rect.width > 0);
     const half = banner.offsetHeight / 2;
@@ -2940,7 +2951,19 @@
     const choice = local.choice;
     if (!choice || !active() || event.button !== 0 || local.choicePanelShown === choice.key) return;
     if (event.target.closest?.(".ub-choice-banner")) return;
-    const card = event.target.closest?.("#battlefield .bf-card[data-item-id]");
+    let card = event.target.closest?.("#battlefield .bf-card[data-item-id]");
+    if (choice.drag && card && !choice.drag.itemIds.has(card.dataset.itemId)) {
+      // overlapping cards: take the one the choice is about under the finger,
+      // and never start a board drag of the others meanwhile
+      card = document.elementsFromPoint(event.clientX, event.clientY)
+        .map((node) => node.closest?.("#battlefield .bf-card[data-item-id]"))
+        .find((node) => node && choice.drag.itemIds.has(node.dataset.itemId)) || null;
+      if (!card) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
+    }
     const itemId = card?.dataset.itemId;
     if (card && choice.drag?.itemIds.has(itemId)) {
       event.preventDefault();

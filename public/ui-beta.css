@@ -1061,3 +1061,11 @@ body.ub-hand-drawing #gameScreen.ui-beta #myHandTray { pointer-events: none; }
 #gameScreen.ui-beta .ub-col:has(> .ub-stack.ub-expanded) { z-index: 650; }
 #gameScreen.ui-beta .ub-stack.ub-expanded .ub-mstack .bf-card.ub-mstack-card { zoom: .9; }
 #gameScreen.ui-beta.ub-phone .ub-stack.ub-expanded .ub-mstack .bf-card.ub-mstack-card { zoom: .7; }
+
+/* phone, moving cards: the prompt stands in the left column, in a column */
+.ub-choice-banner.ub-choice-side { flex-direction: column; align-items: center; gap: 6px; padding: 8px; text-align: center; box-sizing: border-box; }
+.ub-choice-banner.ub-choice-side .ub-choice-source { width: 54px; }
+.ub-choice-banner.ub-choice-side strong { font-size: 13px; }
+.ub-choice-banner.ub-choice-side span { font-size: 11px; }
+.ub-choice-banner.ub-choice-side .ub-choice-actions { flex-wrap: wrap; justify-content: center; }
+.ub-choice-banner.ub-choice-side .ub-choice-actions:empty { display: none; }
