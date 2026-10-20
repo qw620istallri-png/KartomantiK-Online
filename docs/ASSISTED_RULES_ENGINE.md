@@ -1084,3 +1084,9 @@ Les 150 cartes Inner Deserts. Les 450 cartes ont maintenant été relues.
 - Powerful Pidue : ⚡ Capricieux fait perdre ses effets et 💧 Vitreux fait piocher, comme le texte imprimé. Les deux étaient inversés (`pidue-capricious-silences`, `pidue-vitreous-draws`).
 - Horned Augustus : activable seulement pendant la Réaction (« pendant la confrontation »).
 - Tests : `FullAuditBatchFourToSixTests` dans `tests/test_reported_card_bugs.py`.
+
+## Errata Deviate (beta 139.5)
+
+- Règle confirmée le 2026-10-20 : les errata font toujours foi sur le texte des cartes.
+- Deviate : « Perdez 5 points » ajouté au texte (en, fr, it) et à l'effet. Le résultat `move_target` accepte `scoreCost`, appliqué à la résolution avec une cible valide.
+- Tests : `DeviateErrataTests` dans `tests/test_reported_card_bugs.py`.

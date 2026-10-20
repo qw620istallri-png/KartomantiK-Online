@@ -8240,7 +8240,7 @@
     "type": "ephemeral_will",
     "typeLabel": "Ephemeral Will",
     "subType": "",
-    "effect": "You can play this Will only during the Resolution.\r\nDestroy a target manifestation in the Confrontation Zone that lost the confrontation this turn.",
+    "effect": "Lose 5 points. You can play this Will only during the Resolution.\r\nDestroy a target manifestation in the Confrontation Zone that lost the confrontation this turn.",
     "originalEffect": "",
     "cost": 2,
     "power": null,
@@ -8262,7 +8262,7 @@
         "name": "Deviare",
         "typeLabel": "Volontà Effimera",
         "subType": "",
-        "effect": "Puoi giocare questa volontà solo durante la Risoluzione.\r\nDistruggi una manifestazione bersaglio nell’Area di Confronto che ha perso il confronto in questo turno.",
+        "effect": "Perdi 5 punti. Puoi giocare questa volontà solo durante la Risoluzione.\r\nDistruggi una manifestazione bersaglio nell’Area di Confronto che ha perso il confronto in questo turno.",
         "originalEffect": "",
         "color": "Capriccioso",
         "setName": "Beta",
@@ -8275,7 +8275,7 @@
         "setName": "Beta",
         "searchTerms": "Manifestation · Volonté · Volonté Éphémère · Zone de Confrontation · Confrontation · jouer / joué(e) · se résoudre / Résolution · détruire · Cible / cibler",
         "name": "Dévier",
-        "effect": "Vous ne pouvez jouer cette Volonté que pendant la Sous-phase de Résolution.\nDétruisez une Manifestation ciblée dans la Zone de Confrontation qui a perdu la confrontation ce tour-ci."
+        "effect": "Perdez 5 points. Vous ne pouvez jouer cette Volonté que pendant la Résolution.\nDétruisez une Manifestation ciblée dans la Zone de Confrontation qui a perdu la confrontation ce tour-ci."
       }
     }
   },

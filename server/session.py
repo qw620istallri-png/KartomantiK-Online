@@ -2165,6 +2165,8 @@ class Session:
             clean["reason"] = reason
         if result.get("restrictPlayUntilEndOfTurn"):
             clean["restrictPlayUntilEndOfTurn"] = True
+        if isinstance(result.get("scoreCost"), (int, float)) and result["scoreCost"] > 0:
+            clean["scoreCost"] = min(int(result["scoreCost"]), 999)
         return clean
 
     def rules_ability_targets_error(self, target_rules, targets, controller_id,
@@ -14695,9 +14697,16 @@ class Session:
             destination = result.get("zone")
             position = result.get("position")
             reason = result.get("reason")
+            # Deviate (errata): "Lose 5 points." is part of the resolved effect
+            score_paid = (
+                -self.adjust_rules_score(player_id, -int(result["scoreCost"]))
+                if result.get("scoreCost") and target else 0
+            )
             def movement(payload):
                 if reason:
                     payload["reason"] = reason
+                if score_paid:
+                    payload["scoreLost"] = score_paid
                 return payload
             if target and target.get("kind") == "zone_card":
                 container_id = target.get("containerId")

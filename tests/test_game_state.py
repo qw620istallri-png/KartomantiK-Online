@@ -9721,8 +9721,9 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertIn("lost", winner_error)
         self.run_ability(session, deviate, target("theirs", "m-2"))
         self.assertEqual(p2["zones"]["graveyard"], ["m-2"])
+        self.assertEqual(p1["score"], -5)  # errata: Deviate makes you lose 5 points
         self.run_ability(session, repress, target("mine", "m-1"))
-        self.assertEqual((p1["zones"]["graveyard"], p1["score"]), (["m-1"], 25))
+        self.assertEqual((p1["zones"]["graveyard"], p1["score"]), (["m-1"], 20))
 
     def test_incite_to_sacrifice_adds_power_and_exiles_the_winner(self):
         incite = "bc3esblt60j7at5_en"

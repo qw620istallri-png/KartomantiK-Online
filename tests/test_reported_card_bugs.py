@@ -1092,3 +1092,27 @@ class FullAuditBatchFourToSixTests(ReportedCardRulesCase):
 
     def test_horned_augustus_acts_only_during_the_confrontation(self):
         self.assertEqual(self.ABILITIES[self.AUGUSTUS][0]["phaseIds"], ["confrontation_reaction"])
+
+
+class DeviateErrataTests(ReportedCardRulesCase):
+    """Errata always prevail: Deviate makes its controller lose 5 points."""
+
+    DEVIATE = "ynp0apjx1risrpt_en"
+    ALL = ReportedCardRulesCase.ALL + (DEVIATE,)
+
+    def test_deviate_costs_five_points_when_it_destroys(self):
+        session, p1, _p2 = self.started_session()
+        session.battlefield = [self.field_item("loser", "p2", "m-1")]
+        ability = self.ABILITIES[self.DEVIATE][0]
+        result = session.apply_rules_action_result({
+            "id": "dv", "kind": "play_card", "controllerId": "p1",
+            "source": {"cardId": self.DEVIATE, "ownerId": "p1"},
+            "ability": ability, "targets": [{"kind": "card", "itemId": "loser", "cardId": "m-1"}],
+        })
+        self.assertEqual(p1["score"], -5)
+        self.assertEqual(result["scoreLost"], 5)
+        self.assertIsNone(session.find_battlefield_item("loser"))
+        self.assertEqual(
+            self.real_rules()[self.DEVIATE]["playPhases"],
+            ["resolution_compare", "resolution_effects", "resolution_move"],
+        )
