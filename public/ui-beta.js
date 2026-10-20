@@ -1517,7 +1517,7 @@
     const box = document.getElementById("rulesAutoSkip");
     const button = document.getElementById("ubAutoSkipBtn");
     if (!wrap || !box || !button) return;
-    button.hidden = !phone || wrap.classList.contains("hidden");
+    button.hidden = !phone || !rulesOn() || wrap.classList.contains("hidden");
     button.classList.toggle("on", box.checked);
     button.setAttribute("aria-pressed", String(box.checked));
     const label = `${t("rulesAutoSkipLabel")} · ${t(box.checked ? "ubOn" : "ubOff")}`;

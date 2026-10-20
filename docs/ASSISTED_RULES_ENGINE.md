@@ -1282,3 +1282,31 @@ Travail fait sur le PC après la beta 139, jamais publié, récupéré via la br
   défaussée ou montrée (ou la demande échoue si elle n'y est plus).
 - **Menu des piles** (deck…) dans la nouvelle table : il flotte au-dessus de la page
   (plus coupé par la colonne sur téléphone) et prend les couleurs de la table.
+
+## Téléphone, Pile et fin de partie (beta 139.15)
+
+- **Menus des colonnes** : tous les menus ouverts depuis une colonne (outils, main,
+  piles, ± du Réceptacle) flottent au-dessus de la page (`COLUMN_MENUS` dans
+  `ui-beta.js`) ; trop haut pour l'écran, un menu prend le côté le plus grand et défile.
+- **Cartes du terrain au toucher** : un tap montre la carte en grand à côté (comme le
+  survol), un second tap la referme ; l'appui long n'affiche plus les étiquettes
+  nom/propriétaire.
+- **Disposition téléphone** : Zone de Confrontation en une colonne, puis deux, puis en
+  cascade sous un seuil (`stackedFit`) ; l'Interzone ne réserve plus de place libre,
+  les Volontés s'empilent plus grandes. Les cartes de la nouvelle table ne sont plus
+  réduites par l'ancienne règle `max-width: 900px` de `style.css`.
+- **Points** : sur téléphone, plus de pions joueurs ; le total de points reste sous
+  la main adverse, aux deux bouts de la rangée des totaux.
+- **« Passer auto »** : sur téléphone, une icône de la rangée d'outils (dorée quand
+  actif) ; un tap demande confirmation.
+- **La Pile** : un clic l'ouvre en grande fenêtre (PC et téléphone) ; l'en-tête, le
+  fond ou Échap la referment.
+- **Fin de Confrontation** : plus de bouton « Voir les options » pour déplacer ses
+  Manifestations ; sur téléphone, la demande se place à gauche ; sur des cartes qui se
+  chevauchent, seule la carte demandée est prise, sans glisser les autres.
+- **Écrans d'effet sur téléphone** : carte à gauche, texte plus petit à droite ;
+  l'étape « Essences supplémentaires » (Ralliement) tient dans l'écran.
+- **Main sur téléphone tactile** : relevée de 22 px au-dessus du bord bas, pour que
+  glisser une carte ne déclenche pas le geste système.
+- **Écran de victoire** : quand un joueur quitte une partie terminée, le résumé est
+  figé (`freeze_end_summary`) et garde ses noms, points et faits marquants.
