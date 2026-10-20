@@ -1063,3 +1063,32 @@ class FullAuditBatchOneToThreeTests(ReportedCardRulesCase):
     def test_bratto_acts_only_during_the_confrontation(self):
         ability = next(a for a in self.ABILITIES[self.BRATTO] if a.get("tribute"))
         self.assertEqual(ability["phaseIds"], ["confrontation_reaction"])
+
+
+class FullAuditBatchFourToSixTests(ReportedCardRulesCase):
+    """Card text versus code audit, Inner Deserts (lots 4 to 6)."""
+
+    DISSOLVE = "inner-deserts-019"
+    AUGUSTUS = "inner-deserts-108"
+    ALL = ReportedCardRulesCase.ALL + (DISSOLVE, AUGUSTUS)
+
+    def test_dissolve_and_coagulate_targets_your_own_vessel(self):
+        session, p1, p2 = self.started_session()
+        self.put(p1, "receptacle", {"m-1": "p2"})
+        target = {
+            "kind": "zone_card", "zone": "receptacle", "containerId": "p1",
+            "cardId": "m-1", "ownerId": "p2",
+        }
+        ability = self.ABILITIES[self.DISSOLVE][0]
+        self.assertIsNone(session.rules_ability_targets_error(ability["targets"], [target], "p1"))
+        result = session.apply_rules_action_result({
+            "id": "d", "kind": "play_card", "controllerId": "p1",
+            "source": {"cardId": self.DISSOLVE, "ownerId": "p1"},
+            "ability": ability, "targets": [target],
+        })
+        self.assertEqual(result["cardIds"], ["m-1"])
+        self.assertEqual(p1["score"], 30)
+        self.assertIn("m-1", p2["zones"]["deck"])
+
+    def test_horned_augustus_acts_only_during_the_confrontation(self):
+        self.assertEqual(self.ABILITIES[self.AUGUSTUS][0]["phaseIds"], ["confrontation_reaction"])

@@ -2622,7 +2622,7 @@
       "action": "play_card",
       "targets": {
         "kind": "zone_card", "min": 0, "max": 2, "cardType": "manifestation",
-        "zones": ["receptacle"], "owner": "self"
+        "zones": ["receptacle"], "container": "self"
       },
       "result": { "kind": "dissolve_vessel_targets", "value": 30 }
     }
@@ -3093,7 +3093,7 @@
   ],
   "inner-deserts-108": [
     {
-      "id": "horned-augustus-exiles-limbo-for-tokens",
+      "id": "horned-augustus-exiles-limbo-for-tokens", "phaseIds": ["confrontation_reaction"],
       "exhaustSource": true,
       "targets": {
         "kind": "zone_card", "min": 0, "max": 3, "zones": ["graveyard"], "owner": "self"
@@ -3820,12 +3820,12 @@
       }
     },
     {
-      "id": "pidue-vitreous-silences",
+      "id": "pidue-capricious-silences",
       "trigger": {
         "event": "card_played",
         "eventController": "opponent",
         "playedAs": "support_or_hand_will",
-        "cardTemperament": "vitreous",
+        "cardTemperament": "capricious",
         "phaseIds": [
           "confrontation_before_revelation",
           "confrontation_reaction"
@@ -3863,12 +3863,12 @@
       }
     },
     {
-      "id": "pidue-capricious-draws",
+      "id": "pidue-vitreous-draws",
       "trigger": {
         "event": "card_played",
         "eventController": "opponent",
         "playedAs": "support_or_hand_will",
-        "cardTemperament": "capricious",
+        "cardTemperament": "vitreous",
         "phaseIds": [
           "confrontation_before_revelation",
           "confrontation_reaction"

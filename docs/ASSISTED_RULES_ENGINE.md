@@ -1075,3 +1075,12 @@ Cartes hors decks de départ, 150 premières (jeu de base 5 à 299).
 - Bratto : activable seulement pendant la Réaction (« pendant une confrontation »).
 - Question ouverte : l'errata du livret ajoute « Perdez 5 points » à Deviate, absent du texte de la carte dans `cards-data.json`.
 - Tests : `FullAuditBatchOneToThreeTests` dans `tests/test_reported_card_bugs.py`.
+
+## Audit texte/code, lots 4 à 6 (beta 139.4)
+
+Les 150 cartes Inner Deserts. Les 450 cartes ont maintenant été relues.
+
+- Dissolve and Coagulate vise les Manifestations de ton Réceptacle (`container: self`). Avec `owner: self`, elle ne pouvait viser que tes cartes dans le Réceptacle adverse et ne faisait jamais rien.
+- Powerful Pidue : ⚡ Capricieux fait perdre ses effets et 💧 Vitreux fait piocher, comme le texte imprimé. Les deux étaient inversés (`pidue-capricious-silences`, `pidue-vitreous-draws`).
+- Horned Augustus : activable seulement pendant la Réaction (« pendant la confrontation »).
+- Tests : `FullAuditBatchFourToSixTests` dans `tests/test_reported_card_bugs.py`.

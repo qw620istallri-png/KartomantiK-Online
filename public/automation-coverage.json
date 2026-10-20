@@ -7033,6 +7033,7 @@
       ],
       "mechanics": [
         "cost:exhaustSource",
+        "phase-window",
         "result:exile_limbo_targets_create_tokens",
         "target:zone_card"
       ],
@@ -7432,9 +7433,9 @@
       "status": "automated",
       "abilityIds": [
         "pidue-choleric-weakens",
-        "pidue-vitreous-silences",
+        "pidue-capricious-silences",
         "pidue-phlegmatic-token",
-        "pidue-capricious-draws",
+        "pidue-vitreous-draws",
         "pidue-melancholic-discards"
       ],
       "mechanics": [

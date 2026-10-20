@@ -12971,9 +12971,10 @@ class LotSixteenTests(RealCardRulesCase):
                 related_action=hand_will,
             )
             seen[temperament] = self.trigger_ids(session, actions)
+        # printed: capricious (yellow) silences, vitreous (blue) draws
         self.assertEqual(seen, {
-            "choleric": ["pidue-choleric-weakens"], "vitreous": ["pidue-vitreous-silences"],
-            "phlegmatic": ["pidue-phlegmatic-token"], "capricious": ["pidue-capricious-draws"],
+            "choleric": ["pidue-choleric-weakens"], "vitreous": ["pidue-vitreous-draws"],
+            "phlegmatic": ["pidue-phlegmatic-token"], "capricious": ["pidue-capricious-silences"],
             "melancholic": ["pidue-melancholic-discards"],
         })
         session.card_rules["played"]["temperaments"] = ["choleric"]
