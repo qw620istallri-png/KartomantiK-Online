@@ -34,11 +34,21 @@ function startServer() {
   const port = server.address().port;
   const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || "chrome", headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, locale: "fr-FR" });
+  await page.addInitScript(() => localStorage.setItem("ko_ui_beta", "0"));
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   try {
     await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "networkidle" });
     await page.waitForFunction(() => typeof copyCardMenuItem === "function" && cardsById.size === 450);
+    const newUiDefaultsOn = await page.evaluate(() => {
+      const saved = localStorage.getItem("ko_ui_beta");
+      localStorage.removeItem("ko_ui_beta");
+      const value = window.uiBeta.enabled();
+      if (saved === null) localStorage.removeItem("ko_ui_beta");
+      else localStorage.setItem("ko_ui_beta", saved);
+      return value;
+    });
+    assert.equal(newUiDefaultsOn, true);
 
     const innerDesertImport = await page.evaluate(async () => {
       const collectionNumbers = [
@@ -185,7 +195,7 @@ function startServer() {
     });
     assert.deepEqual(passAll, { locked: [true], all: [true, false], filling: false });
 
-    const result = await page.evaluate(() => {
+    const result = await page.evaluate(async () => {
       let rulesBetaPayload = null;
       const originalConnectAndJoin = connectAndJoin;
       connectAndJoin = (payload) => { rulesBetaPayload = payload; };
@@ -307,10 +317,129 @@ function startServer() {
         .filter((item) => item.label).map((item) => item.label);
 
       document.querySelector("#createEssenceBtn").click();
-      document.querySelector('[data-temperament="neutral"]').click();
+      const toolbarEssenceChoicesRemoved = !document.querySelector('#essenceTemperamentGrid [data-temperament]:not([data-temperament="neutral"])');
       document.querySelector("#neutralTokenNameInput").value = "Doom";
       document.querySelector("#essenceCountInput").value = "4";
       document.querySelector("#essenceCreateBtn").click();
+      renderMyInfoStrip();
+      const quickEssenceAdd = document.querySelector("#myInfoStrip [data-essence-quick-add]");
+      const normalEssencePlusOutsideTotal = quickEssenceAdd.closest(".cz-essence-control")?.firstElementChild?.contains(quickEssenceAdd)
+        && !quickEssenceAdd.closest(".opp-power-badge") && getComputedStyle(quickEssenceAdd).pointerEvents !== "none";
+      quickEssenceAdd.click();
+      const quickEssenceMenuVisible = quickEssenceAdd.getAttribute("aria-expanded") === "true";
+      document.querySelector('#myInfoStrip [data-create-essence="choleric"]').click();
+      const quickEssencePayload = window.__sent.find((payload) => payload.type === "create_essence_token" && payload.temperament === "choleric");
+      const soundToggle = document.querySelector("#soundToggleBtn");
+      const soundInitiallyOn = soundToggle.getAttribute("aria-pressed") === "true";
+      soundToggle.click();
+      const soundMuted = soundToggle.getAttribute("aria-pressed") === "false" && localStorage.getItem("kko_audio_enabled") === "off";
+      soundToggle.click();
+      document.querySelector("#gameMoreMenu").open = true;
+      const soundVolumeSlider = document.querySelector("#soundVolumeSlider");
+      soundVolumeSlider.value = "35";
+      soundVolumeSlider.dispatchEvent(new Event("input", { bubbles: true }));
+      const soundVolume = {
+        visible: soundVolumeSlider.type === "range" && Boolean(soundVolumeSlider.closest("#gameMoreMenu .game-more-popover")),
+        value: soundVolumeSlider.value,
+        output: document.querySelector("#soundVolumeValue").value,
+        stored: localStorage.getItem("kko_audio_volume"),
+        enabled: window.KKOAudio.isEnabled(),
+      };
+      const playedAudio = [];
+      const playedVolumes = [];
+      const originalMediaPlay = HTMLMediaElement.prototype.play;
+      HTMLMediaElement.prototype.play = function () {
+        playedAudio.push(new URL(this.src).pathname.split("/").at(-1));
+        playedVolumes.push(this.volume);
+        return Promise.resolve();
+      };
+      window.KKOAudio.unlock();
+      window.KKOAudio.play("menuClick", { cooldown: 0, volume: 0.4 });
+      soundVolume.scaledCue = Number(playedVolumes.at(-1).toFixed(3));
+      const hoverCount = playedAudio.length;
+      quickEssenceAdd.dispatchEvent(new PointerEvent("pointerover", { bubbles: true }));
+      const hoverSilent = playedAudio.length === hoverCount;
+      const audioBefore = {
+        players: { p1: { zones: { hand: { count: 1 } } } },
+        tokens: [], recentLog: [],
+        battlefield: [{ id: "flip-sound", faceUp: false, cardId: cardId }],
+        phaseTracker: { turn: 1 },
+        rulesEngine: { priorityPlayerId: "p2", actionStack: [], firstManifestationComplete: false },
+      };
+      let audioAfter = {
+        players: { p1: { zones: { hand: { count: 2 } } } },
+        tokens: [{ ownerId: "p1", isEssence: true, isNeutralCounter: false, counters: { essence: 1 } }],
+        recentLog: [],
+        battlefield: [
+          { id: "flip-sound", faceUp: true, cardId: cardId },
+          { id: "summon-sound", faceUp: true, isTokenCard: true },
+        ],
+        phaseTracker: { turn: 2 },
+        rulesEngine: {
+          priorityPlayerId: "p1",
+          actionStack: [{ id: "sound-action", kind: "play_card", sourceOnStack: true }],
+          firstManifestationComplete: true,
+        },
+      };
+      window.KKOAudio.observeState(audioBefore, audioAfter, "p1");
+      const addAudioLog = (sequence, type, details) => {
+        const next = structuredClone(audioAfter);
+        next.recentLog.push({ sequence, type, details });
+        window.KKOAudio.observeState(audioAfter, next, "p1");
+        audioAfter = next;
+      };
+      addAudioLog(1, "rules_action_triggered", {});
+      addAudioLog(2, "rules_action_resolved", { effectResult: { kind: "discard_deck", cardIds: [cardId] } });
+      addAudioLog(3, "rules_action_resolved", { effectResult: { kind: "power_modifier", value: -2 } });
+      addAudioLog(4, "rules_action_resolved", { effectResult: { kind: "score", delta: 2 } });
+      addAudioLog(5, "rules_action_resolved", { effectResult: { kind: "move_card", status: "moved" } });
+      addAudioLog(6, "rules_confrontation_cleanup", { captured: [{ cardId }] });
+      addAudioLog(7, "rules_confrontation_compared", { winnerId: "p1", loserId: "p2" });
+      addAudioLog(8, "rules_confrontation_compared", { winnerId: "p2", loserId: "p1" });
+      addAudioLog(9, "rules_game_end", { winnerIds: ["p1"], loserIds: ["p2"] });
+      window.KKOAudio.play("cardFlip", { cooldown: 0 });
+      window.KKOAudio.play("cardFlip", { cooldown: 0 });
+      window.KKOAudio.play("cardFlip", { cooldown: 0 });
+      window.KKOAudio.play("effectDraw", { cooldown: 0 });
+      window.KKOAudio.play("drawIntoPlay", { cooldown: 0 });
+      window.KKOAudio.play("cardMove", { cooldown: 0 });
+      window.KKOAudio.play("menuClick", { cooldown: 0 });
+      window.KKOAudio.play("effectDraw", { cooldown: 0 });
+      window.KKOAudio.play("drawIntoPlay", { cooldown: 0 });
+      window.KKOAudio.play("cardMove", { cooldown: 0 });
+      window.KKOAudio.play("menuClick", { cooldown: 0 });
+      await new Promise((resolve) => setTimeout(resolve, 60));
+      const deckClickStart = playedAudio.length;
+      document.querySelector("#importConfirmBtn").click();
+      const deckClickFiles = playedAudio.slice(deckClickStart);
+      HTMLMediaElement.prototype.play = originalMediaPlay;
+      const audioFeedback = {
+        draw: playedAudio.some((file) => /^draw_card_[123]\.ogg$/.test(file)),
+        effectDraw: playedAudio.some((file) => file.startsWith("draw_card_and_add_to_hand_")),
+        drawIntoPlay: playedAudio.includes("draw_card_into_play.ogg"),
+        cardMove: playedAudio.includes("collection_manager_place_card_in_deck.ogg"),
+        click: playedAudio.includes("UI_MouseClick_01.ogg"),
+        cardPlay: playedAudio.some((file) => file.startsWith("play_card_from_hand_")),
+        flip: playedAudio.some((file) => file.startsWith("card_turn_over_")),
+        revealVariants: new Set(playedAudio.filter((file) => file.startsWith("card_turn_over_"))).size >= 2,
+        summon: playedAudio.includes("FX_MinionSummon03_CardActivated_05.ogg"),
+        essence: playedAudio.includes("mana_crystal_add.ogg"),
+        priority: playedAudio.includes("UI_BnetToast.ogg"),
+        turn: playedAudio.includes("FX_EndTurnFlip.ogg"),
+        match: playedAudio.includes("FX_GameStart09_CardsOntoTable.ogg"),
+        effectTrigger: playedAudio.some((file) => file.startsWith("Trigger_Effect_Cast_")),
+        discard: playedAudio.some((file) => file.startsWith("Fatigue_DismissPoof_")),
+        negative: playedAudio.includes("Priest_ShadowWordPain_Impact_1.ogg"),
+        bonus: playedAudio.some((file) => file.startsWith("Holy_Heal_Cast_")),
+        resolved: playedAudio.includes("Generic_Untargeted_Cast_01.ogg"),
+        capture: playedAudio.includes("arena_key_transition.ogg"),
+        confrontationWin: playedAudio.includes("arena_reward_open_normal.ogg"),
+        confrontationLose: playedAudio.includes("defeat_screen_start.ogg"),
+        gameEnd: playedAudio.includes("victory_jingle.ogg"),
+        deckImportNormalClick: deckClickFiles.includes("UI_MouseClick_01.ogg")
+          && !deckClickFiles.includes("floating_button_press.ogg"),
+        hoverSilent,
+      };
 
       openCurrentSideboard();
       const sideboard = {
@@ -391,6 +520,7 @@ function startServer() {
       };
       return {
         cardId, handLabels, requestedZoneMenus, sent: window.__sent, essenceLabels, neutralLabels, sideboard, desert, zen, silver, rulesBetaCreate,
+        toolbarEssenceChoicesRemoved, normalEssencePlusOutsideTotal, quickEssenceMenuVisible, quickEssencePayload, soundInitiallyOn, soundMuted, soundVolume, audioFeedback,
         copyCounterAvailable, chatHasOnlyClose, playerLogCloseInToolbar, playerLogClosed, board, piles: PILE_SCREEN_POS,
         copyText: t("copyCard"), removeText: t("remove"), renameText: t("renameToken"),
         resetConfirmText: t("confirmResetBoard"),
@@ -451,13 +581,15 @@ function startServer() {
         }],
       };
       renderPiles();
-      const playable = document.querySelector('[data-rules-zone-play-card]');
+      renderHandTray();
+      // while playable, the Veteran sits in the hand as a ghost labelled with its zone, not on the pile
+      const playable = document.querySelector('[data-ghost-permission="true"]');
       const initial = {
         exists: Boolean(playable),
         playable: playable?.classList.contains("is-playable") || false,
-        enabled: playable?.dataset.rulesZonePlayEnabled,
-        badge: playable?.querySelector("span")?.textContent || "",
-        badgeFont: parseFloat(getComputedStyle(playable?.querySelector("span")).fontSize),
+        pileIndicator: Boolean(document.querySelector('[data-rules-zone-play-card]')),
+        badge: playable?.querySelector(".hand-ghost-label")?.textContent || "",
+        expectedBadge: t("graveyard"),
       };
       const contexts = [];
       const originalResolveDrop = resolveDrop;
@@ -469,11 +601,14 @@ function startServer() {
 
       latestState.rulesEngine.priorityPlayerId = "p2";
       renderPiles();
+      renderHandTray();
+      const waitingGhost = Boolean(document.querySelector('[data-ghost-permission="true"]'));
       const waiting = document.querySelector('[data-rules-zone-play-card]');
       const waitingState = {
         exists: Boolean(waiting),
         playable: waiting?.classList.contains("is-playable") || false,
         enabled: waiting?.dataset.rulesZonePlayEnabled,
+        ghost: waitingGhost,
       };
 
       latestState.battlefield.push({
@@ -1161,6 +1296,30 @@ function startServer() {
         handVisible: !document.querySelector("#myHandTray").classList.contains("hidden"),
         handCards: document.querySelectorAll("#myHandTray [data-hand-card]").length,
       };
+      const occupiedIds = new Set((latestState.battlefield || []).map((item) => item.cardId));
+      const rememberedIds = [...cardsById.keys()].filter((cardId) => !occupiedIds.has(cardId)).slice(0, 2);
+      revealedHandCards.set("p2", new Set(rememberedIds));
+      const playedState = structuredClone(latestState);
+      playedState.players.p2.zones.hand = { count: 1 };
+      playedState.rulesEngine.actionStack = [{
+        id: "revealed-play-test",
+        kind: "play_card",
+        controllerId: "p2",
+        sourceOnStack: true,
+        source: { zone: "hand", cardId: rememberedIds[0] },
+        cost: { tributeMovements: [] },
+      }];
+      reconcileRevealedHandCards(playedState);
+      latestState = playedState;
+      renderOpponentHandFan();
+      initial.revealedPlayedCardRemoved = !revealedHandCards.get("p2").has(rememberedIds[0])
+        && !document.querySelector(`[data-opponent-hand-card="${rememberedIds[0]}"]`);
+      initial.otherRevealedCardKept = revealedHandCards.get("p2").has(rememberedIds[1])
+        && Boolean(document.querySelector(`[data-opponent-hand-card="${rememberedIds[1]}"]`));
+      latestState.players.p2.zones.hand = { count: 3 };
+      latestState.rulesEngine.actionStack = [];
+      revealedHandCards.delete("p2");
+      renderOpponentHandFan();
       latestState.rulesEngine.openingMulliganRequiredPlayerIds = [];
       latestState.rulesEngine.readyPlayerIds = ["p2"];
       renderAll();
@@ -1290,6 +1449,15 @@ function startServer() {
       requestedUx.confirmPayload = window.__sent.find((payload) => payload.confirmDeck === true);
       requestedUx.importPanelClosedAfterConfirm = document.querySelector("#importPanel").classList.contains("hidden");
 
+      const trapId = [...cardsById.keys()].find((id) => isTrapCardClient(id));
+      latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "confrontation_choose");
+      latestState.rulesEngine.priorityPlayerId = "p1";
+      latestState.players.p1.zones.hand = { cards: [trapId], count: 1, owners: { [trapId]: "p1" } };
+      requestedUx.trapPlayableInWindow = handCardIsPlayable(trapId);
+      latestState.rulesEngine.firstManifestationComplete = true;
+      latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "confrontation_reaction");
+      requestedUx.trapPlayableOutsideWindow = handCardIsPlayable(trapId);
+      latestState.rulesEngine.firstManifestationComplete = false;
       latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "confrontation_choose");
       latestState.rulesEngine.firstManifestationItemIds = { p1: "first-p1" };
       latestState.rulesEngine.firstManifestationValidatedPlayerIds = [];
@@ -1348,10 +1516,71 @@ function startServer() {
       renderAll();
       handCard = document.querySelector(`[data-hand-card="${sourceCard.id}"]`);
       const playableAura = handCard.classList.contains("is-playable");
+      latestState.rulesEngine.enabled = false;
+      renderAll();
       const essenceStrip = document.querySelector("#handEssenceStrip");
       const essenceStripShown = !essenceStrip.classList.contains("hidden");
       const essenceStripText = essenceStrip.textContent.trim();
       const essenceStripBesideToggle = essenceStrip.previousElementSibling?.id === "handVisibilityBtn";
+      window.__sent = [];
+      essenceStrip.querySelector('[data-remove-essence="transcendent"]').click();
+      const essenceStripRemovePayload = window.__sent.at(-1);
+      latestState.tokens = [{ id: "last-essence", ownerId: "p1", isEssence: true, isNeutralCounter: false, temperament: "transcendent", counters: { essence: 1 }, x: 700, y: 700 }];
+      renderAll();
+      window.__sent = [];
+      document.querySelector('#handEssenceStrip [data-remove-essence="transcendent"]').click();
+      const finalEssenceRemovePayload = window.__sent.at(-1);
+      latestState.rulesEngine.enabled = false;
+      window.uiBeta.setEnabled(true);
+      renderAll();
+      await new Promise((resolve) => setTimeout(resolve, 0));
+      const pointerTarget = (element) => {
+        const rect = element.getBoundingClientRect();
+        return document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
+      };
+      const betaQuickAdd = document.querySelector("#ubTotals [data-essence-quick-add]");
+      const betaPicker = betaQuickAdd.closest("[data-essence-quick]");
+      betaPicker.dispatchEvent(new PointerEvent("pointerleave"));
+      window.__sent = [];
+      const betaQuickAddHit = pointerTarget(betaQuickAdd);
+      const quickAddReceivesPointer = Boolean(betaQuickAddHit && betaQuickAdd.contains(betaQuickAddHit));
+      if (quickAddReceivesPointer) betaQuickAdd.click();
+      const betaCreate = betaPicker.querySelector('[data-create-essence="choleric"]');
+      const betaCreateHit = pointerTarget(betaCreate);
+      const createReceivesPointer = Boolean(betaCreateHit && betaCreate.contains(betaCreateHit));
+      if (createReceivesPointer) betaCreate.click();
+      if (createReceivesPointer) betaCreate.click();
+      const createCount = window.__sent.filter((payload) => payload.type === "create_essence_token").length;
+      const stayedOpenForRepeat = betaPicker.classList.contains("is-open") && betaQuickAdd.getAttribute("aria-expanded") === "true";
+      betaPicker.dispatchEvent(new PointerEvent("pointerleave"));
+      const closedOnLeave = !betaPicker.classList.contains("is-open") && betaQuickAdd.getAttribute("aria-expanded") === "false";
+      const betaRemove = document.querySelector('#ubTotals [data-remove-essence="transcendent"]');
+      const betaRemoveHit = pointerTarget(betaRemove);
+      const removeReceivesPointer = Boolean(betaRemoveHit && betaRemove.contains(betaRemoveHit));
+      window.__sent = [];
+      if (removeReceivesPointer) betaRemove.click();
+      const spendPayload = window.__sent.at(-1);
+      const betaEssence = {
+        quickAdd: Boolean(betaQuickAdd),
+        quickAddOutsideTotal: Boolean(betaQuickAdd && !betaQuickAdd.closest(".ub-total") && betaQuickAdd.closest(".ub-tside")),
+        quickAddClickable: Boolean(betaQuickAdd && getComputedStyle(betaQuickAdd).pointerEvents !== "none"),
+        quickAddReceivesPointer,
+        createReceivesPointer,
+        removeReceivesPointer,
+        totalLayer: Number(getComputedStyle(document.querySelector("#ubTotals")).zIndex),
+        removableTotal: Boolean(betaRemove),
+        createCount,
+        spendPayload,
+        stayedOpenForRepeat,
+        closedOnLeave,
+        boardHidden: getComputedStyle(document.querySelector('[data-token-id="last-essence"]')).display === "none",
+      };
+      latestState.rulesEngine.enabled = true;
+      renderAll();
+      betaEssence.assistedQuickAddHidden = !document.querySelector("#ubTotals [data-essence-quick-add]");
+      betaEssence.assistedPoolReadOnly = !document.querySelector('#ubTotals [data-remove-essence="transcendent"]');
+      window.uiBeta.setEnabled(false);
+      renderAll();
       latestState.tokens = [];
       renderAll();
       const essenceStripHiddenWhenEmpty = document.querySelector("#handEssenceStrip").classList.contains("hidden");
@@ -1391,9 +1620,45 @@ function startServer() {
       const supportKeywordPlayableFromHand = document
         .querySelector(`[data-hand-card="${supportKeywordCard.id}"]`)
         .classList.contains("is-playable");
+      latestState.rulesEngine.supportEntryLockedPlayerIds = ["p1"];
+      renderAll();
+      const gorbBlocksController = !document
+        .querySelector(`[data-hand-card="${supportKeywordCard.id}"]`)
+        .classList.contains("is-playable");
+      latestState.rulesEngine.supportEntryLockedPlayerIds = ["p2"];
+      renderAll();
+      const gorbLeavesOpponentFree = document
+        .querySelector(`[data-hand-card="${supportKeywordCard.id}"]`)
+        .classList.contains("is-playable");
+
+      latestState.rulesEngine.supportEntryLockedPlayerIds = [];
+      latestState.rulesEngine.uncoveredTops = { p1: supportKeywordCard.id };
+      latestState.players.p1.zones.hand = { cards: [], count: 0, owners: {} };
+      latestState.players.p1.zones.deck = {
+        cards: [supportKeywordCard.id], count: 1, owners: { [supportKeywordCard.id]: "p1" },
+      };
+      renderAll();
+      const deckGhost = document.querySelector('#myHandTray [data-ghost-zone="deck"]');
+      const peroperoDeckHand = {
+        shown: deckGhost?.dataset.ghostCard === supportKeywordCard.id,
+        label: deckGhost?.querySelector(".hand-ghost-label")?.textContent.trim(),
+        playable: deckGhost?.classList.contains("is-playable"),
+        realHandCount: latestState.players.p1.zones.hand.count,
+      };
+      latestState.rulesEngine.pendingChoice = { id: "test-choice", kind: "test", playerId: "p1" };
+      const choiceDeckGhost = rulesGhostHandCards().find((ghost) => ghost.zone === "deck");
+      peroperoDeckHand.shownDuringChoice = choiceDeckGhost?.cardId === supportKeywordCard.id;
+      peroperoDeckHand.playableDuringChoice = choiceDeckGhost?.playable;
+      latestState.rulesEngine.pendingChoice = null;
+      latestState.rulesEngine.uncoveredTops = { p1: sourceCard.id };
+      latestState.players.p1.zones.deck = {
+        cards: [sourceCard.id], count: 1, owners: { [sourceCard.id]: "p1" },
+      };
+      renderAll();
+      peroperoDeckHand.willHidden = !document.querySelector('#myHandTray [data-ghost-zone="deck"]');
       return {
-        initial, voluntaryMulligan, recoveryMulligan, requestedUx, deckEditSummary, unaffordableAura, playableAura, essenceStripShown, essenceStripText, essenceStripBesideToggle, essenceStripHiddenWhenEmpty,
-        hoverFullyVisible, supportKeywordPlayableFromHand,
+        initial, voluntaryMulligan, recoveryMulligan, requestedUx, deckEditSummary, unaffordableAura, playableAura, essenceStripShown, essenceStripText, essenceStripBesideToggle, essenceStripRemovePayload, finalEssenceRemovePayload, betaEssence, essenceStripHiddenWhenEmpty,
+        hoverFullyVisible, supportKeywordPlayableFromHand, gorbBlocksController, gorbLeavesOpponentFree, peroperoDeckHand,
       };
     });
     const newChoiceScreens = await page.evaluate(() => {
@@ -1455,6 +1720,36 @@ function startServer() {
     assert.equal(newChoiceScreens.reveal.buttons, 3);
     assert.equal(newChoiceScreens.reveal.payload.option, "0");
     assert.equal(newChoiceScreens.notMine.visible, false);
+    const betaPlayerTarget = await page.evaluate(() => {
+      const savedChoice = latestState.rulesEngine.pendingChoice;
+      const popup = document.createElement("div");
+      popup.className = "rules-player-target-panel";
+      popup.style.display = "none";
+      popup.innerHTML = '<button data-player-target="player:p1">P1</button><button data-player-target="player:p2">P2</button>';
+      document.body.appendChild(popup);
+      latestState.rulesEngine.pendingChoice = {
+        id: "beta-player-target-test", kind: "discard_from_hand", playerId: "p1", count: 1,
+        sourceCardId: [...cardsById.keys()][0],
+      };
+      window.uiBeta.setEnabled(true);
+      renderAll();
+      const me = document.querySelector("#ubField .ub-side.me");
+      const opp = document.querySelector("#ubField .ub-side.opp");
+      const eagerGlows = document.querySelectorAll(".ub-target-over").length;
+      const rect = opp.getBoundingClientRect();
+      opp.dispatchEvent(new PointerEvent("pointermove", {
+        bubbles: true, clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2,
+      }));
+      const hoveredOnlyOpp = opp.classList.contains("ub-target-over") && !me.classList.contains("ub-target-over");
+      popup.remove();
+      latestState.rulesEngine.pendingChoice = savedChoice;
+      renderAll();
+      const cleared = document.querySelectorAll(".ub-target-over").length === 0;
+      window.uiBeta.setEnabled(false);
+      renderAll();
+      return { eagerGlows, hoveredOnlyOpp, cleared };
+    });
+    assert.deepEqual(betaPlayerTarget, { eagerGlows: 0, hoveredOnlyOpp: true, cleared: true });
     const betaMenu = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
       const saved = latestState.battlefield;
@@ -1867,17 +2162,56 @@ function startServer() {
       latestState.battlefield = [mk("o-conf", other.id, "confrontation")];
       const without = count();
       latestState.battlefield = [mk("o-conf", other.id, "confrontation"), mk("o-orator", orator, "interzone")];
+      const interzoneDraft = rulesActionPaymentDraft({ cardId: will.id, zone: "hand", handIndex: 0 }, will, null);
+      pendingRulesBoardFlow = { stage: "payment", draft: interzoneDraft };
+      const interzoneGhost = rulesGhostHandCards().find((ghost) => ghost.selectionKey === "battlefield:o-orator");
+      pendingRulesBoardFlow = null;
       const withOrator = count();
       latestState.battlefield = [];
       latestState.players.p1.zones.graveyard = { cards: [pile], count: 1, owners: { [pile]: "p1" } };
       const withPile = count();
       latestState.battlefield = saved.battlefield;
       latestState.players.p1.zones.graveyard = saved.limbo;
-      return { without, withOrator, withPile };
+      return { without, withOrator, withPile, interzoneGhost, expectedInterzoneLabel: t("interzone") };
     });
     assert.equal(fieldTributeUi.without, 0);
     assert(fieldTributeUi.withOrator >= 2);
     assert.equal(fieldTributeUi.withPile, 1);
+    assert.equal(fieldTributeUi.interzoneGhost?.zone, "payment");
+    assert.equal(fieldTributeUi.interzoneGhost?.label, fieldTributeUi.expectedInterzoneLabel);
+    const optionalZoneTargetsUi = await page.evaluate(async () => {
+      const cardId = "inner-deserts-019";
+      const targets = [...cardsById.values()].filter((card) => card.type === "manifestation").slice(0, 2).map((card) => card.id);
+      const saved = structuredClone(latestState);
+      latestState.phaseTracker = { enabled: true, advanced: true, index: ADVANCED_PHASES.findIndex((phase) => phase.id === "confrontation_reaction"), turn: 2, passedPlayerIds: [] };
+      latestState.rulesEngine = { enabled: true, priorityPlayerId: "p1", pendingChoice: null, actionStack: [], firstManifestationComplete: true };
+      latestState.players.p1.zones.hand = { cards: [cardId], count: 1, owners: { [cardId]: "p1" } };
+      latestState.players.p1.zones.receptacle = { cards: targets, count: 2, owners: Object.fromEntries(targets.map((id) => [id, "p1"])) };
+      latestState.tokens = [{ id: "pay", ownerId: "p1", isEssence: true, isNeutralCounter: false, temperament: "phlegmatic", counters: { essence: 2 } }];
+      window.__sent = [];
+      renderAll();
+      const started = beginRulesBoardAction({ cardId, zone: "hand", handIndex: 0 });
+      const confirm = document.querySelector("[data-zone-pick-confirm]");
+      const waited = pendingRulesBoardFlow?.stage === "target" && window.__sent.length === 0;
+      const zeroEnabled = Boolean(confirm && !confirm.disabled);
+      confirm.click();
+      await new Promise((resolve) => setTimeout(resolve, 220));
+      const zeroPayload = window.__sent.find((payload) => payload.source?.cardId === cardId);
+      window.__sent = [];
+      beginRulesBoardAction({ cardId, zone: "hand", handIndex: 0 });
+      const buttons = [...document.querySelectorAll("[data-zone-pick]")];
+      buttons[0].click();
+      document.querySelector("[data-zone-pick]").click();
+      await new Promise((resolve) => setTimeout(resolve, 220));
+      const twoPayload = window.__sent.find((payload) => payload.source?.cardId === cardId);
+      closeRulesActionPanel();
+      pendingRulesBoardFlow = null;
+      latestState = saved;
+      renderAll();
+      return { started, waited, zeroEnabled, zeroCount: zeroPayload?.targets?.length, twoCount: twoPayload?.targets?.length };
+    });
+    assert.deepEqual(optionalZoneTargetsUi, { started: true, waited: true, zeroEnabled: true, zeroCount: 0, twoCount: 2 });
+
     const vesselAndWillCostUi = await page.evaluate(() => {
       const braba = "zhzp6kenpqrym9h_en", timid = "5zgq2zcogt4g4d0_en";
       const will = [...cardsById.values()].find((card) => card.type === "ephemeral_will" && /^\{[A-Z]\}$/.test(String(card.powerCost || "")));
@@ -2054,10 +2388,31 @@ function startServer() {
         expectedItemId: replacementCard.id,
         payload: window.__sent.find((payload) => payload.type === "resolve_rules_choice"),
       };
+      latestState.rulesEngine.pendingChoice = {
+        id: "choice-beta-dark-apparition", kind: "discard_from_hand", playerId: "p1", count: 1,
+        sourceCardId: darkApparitionId,
+      };
+      window.uiBeta.setEnabled(true);
+      renderAll();
+      const betaPanel = document.querySelector("#rulesChoicePanel");
+      const betaPanelStyle = getComputedStyle(betaPanel);
+      const betaPanelRect = betaPanel.getBoundingClientRect();
+      const betaHand = document.querySelector("#gameScreen.ui-beta .hand-area");
+      const betaHandStyle = getComputedStyle(betaHand);
+      const betaDiscardBackdrop = {
+        fullViewport: Math.abs(betaPanelRect.left) < 1 && Math.abs(betaPanelRect.top) < 1
+          && Math.abs(betaPanelRect.width - innerWidth) < 1 && Math.abs(betaPanelRect.height - innerHeight) < 1,
+        solidBackdrop: betaPanelStyle.backgroundImage === "none"
+          && betaPanelStyle.backgroundColor !== "rgba(0, 0, 0, 0)",
+        handAboveBackdrop: Number(betaHandStyle.zIndex) > Number(betaPanelStyle.zIndex),
+        selectableCards: document.querySelectorAll("#gameScreen.ui-beta [data-hand-card]").length,
+      };
+      window.uiBeta.setEnabled(false);
       latestState.rulesEngine.pendingChoice = null;
       latestState.rulesEngine.confrontationResult = null;
       closeRulesChoicePanel(true);
-      return { darkApparitionId, discardCardId, targetStep, discardStep, conditionalStep, multiDiscardStep, recoveryStep, comparison, destinationStep, replacementStep };
+      renderAll();
+      return { darkApparitionId, discardCardId, targetStep, discardStep, conditionalStep, multiDiscardStep, recoveryStep, comparison, destinationStep, replacementStep, betaDiscardBackdrop };
     });
     const rulesVfx = await page.evaluate(async ({ tributeCardId, encodedCardId, sacrificeCardId, gracefulCardId, moveTargetCardId, exileTargetCardId, destroyTargetCardId }) => {
       renderAll();
@@ -2747,6 +3102,11 @@ function startServer() {
     if (process.env.RULES_LAYOUT_SCREENSHOT_PATH) {
       await page.screenshot({ path: process.env.RULES_LAYOUT_SCREENSHOT_PATH, animations: "disabled" });
     }
+    if (process.env.BETA_LAYOUT_SCREENSHOT_PATH) {
+      await page.evaluate(() => { window.uiBeta.setEnabled(true); renderAll(); });
+      await page.screenshot({ path: process.env.BETA_LAYOUT_SCREENSHOT_PATH, animations: "disabled" });
+      await page.evaluate(() => { window.uiBeta.setEnabled(false); renderAll(); });
+    }
     await page.setViewportSize({ width: 1440, height: 1000 });
     if (process.env.RULES_VFX_SCREENSHOT_PATH) {
       await page.evaluate(({ tributeCardId, encodedCardId }) => {
@@ -3341,6 +3701,26 @@ function startServer() {
     for (const [zoneName, labels] of Object.entries(result.requestedZoneMenus)) {
       assert(labels.includes(result.copyText), `Copy action missing from ${zoneName}`);
     }
+    assert.equal(result.toolbarEssenceChoicesRemoved, true);
+    assert.equal(result.normalEssencePlusOutsideTotal, true);
+    assert.equal(result.quickEssenceMenuVisible, true);
+    assert.equal(result.quickEssencePayload.count, 1);
+    assert.equal(result.quickEssencePayload.neutral, false);
+    assert.equal(Number.isFinite(result.quickEssencePayload.x), true);
+    assert.equal(Number.isFinite(result.quickEssencePayload.y), true);
+    assert.equal(result.soundInitiallyOn, true);
+    assert.equal(result.soundMuted, true);
+    assert.deepEqual(result.soundVolume, {
+      visible: true, value: "35", output: "35%", stored: "0.35", enabled: true, scaledCue: 0.14,
+    });
+    assert.deepEqual(result.audioFeedback, {
+      draw: true, effectDraw: true, drawIntoPlay: true, cardMove: true, click: true,
+      cardPlay: true, flip: true, revealVariants: true, summon: true,
+      essence: true, priority: true, turn: true, match: true,
+      effectTrigger: true, discard: true, negative: true, bonus: true, resolved: true,
+      capture: true, confrontationWin: true, confrontationLose: true, gameEnd: true,
+      deckImportNormalClick: true, hoverSilent: true,
+    });
     assert.equal(result.copyCounterAvailable, true);
     assert(result.sent.some((payload) => payload.type === "add_counter" && payload.itemId === "copy-1" && payload.counterKey === "power" && payload.delta === 1));
     assert.equal(result.chatHasOnlyClose, true);
@@ -3354,9 +3734,8 @@ function startServer() {
     assert.equal(pileDrag.opponentDraggable, false);
     assert.equal(wanderingVeteranUi.initial.exists, true);
     assert.equal(wanderingVeteranUi.initial.playable, true);
-    assert.equal(wanderingVeteranUi.initial.enabled, "true");
-    assert(wanderingVeteranUi.initial.badge.length > 0);
-    assert(wanderingVeteranUi.initial.badgeFont >= 14);
+    assert.equal(wanderingVeteranUi.initial.pileIndicator, false);
+    assert.equal(wanderingVeteranUi.initial.badge, wanderingVeteranUi.initial.expectedBadge);
     assert.deepEqual(wanderingVeteranUi.dragContext, {
       kind: "card", cardId: wanderingVeteranUi.veteranId, cardOwnerId: "p1",
       fromOwnerId: "p1", fromZone: "graveyard",
@@ -3364,6 +3743,7 @@ function startServer() {
     assert.equal(wanderingVeteranUi.waitingState.exists, true);
     assert.equal(wanderingVeteranUi.waitingState.playable, false);
     assert.equal(wanderingVeteranUi.waitingState.enabled, "false");
+    assert.equal(wanderingVeteranUi.waitingState.ghost, false);
     assert(wanderingVeteranUi.supportMarker.length > 0);
     assert(wanderingVeteranUi.supportMarkerFont >= 14);
     assert.equal(supportUi.firstStep.forbidden, false);
@@ -3804,6 +4184,8 @@ function startServer() {
     assert.equal(pregameUi.initial.toolsOpen, true);
     assert.equal(pregameUi.initial.handVisible, true);
     assert.equal(pregameUi.initial.handCards, 1);
+    assert.equal(pregameUi.initial.revealedPlayedCardRemoved, true);
+    assert.equal(pregameUi.initial.otherRevealedCardKept, true);
     assert.equal(pregameUi.initial.waitingButton.visible, false);
     assert.equal(pregameUi.initial.waitingButton.disabled, true);
     assert.deepEqual(pregameUi.initial.mulliganPayload, { type: "mulligan" });
@@ -3848,6 +4230,8 @@ function startServer() {
     assert.equal(pregameUi.requestedUx.confirmPayload.type, "import_deck");
     assert.equal(pregameUi.requestedUx.confirmPayload.confirmDeck, true);
     assert.equal(pregameUi.requestedUx.importPanelClosedAfterConfirm, true);
+    assert.equal(pregameUi.requestedUx.trapPlayableInWindow, true);
+    assert.equal(pregameUi.requestedUx.trapPlayableOutsideWindow, false);
     assert.deepEqual(pregameUi.requestedUx.firstValidatePayload, { type: "validate_first_manifestation", validated: true });
     assert.equal(pregameUi.requestedUx.firstCancelPayload, undefined);
     assert.equal(pregameUi.requestedUx.firstOpponentGlow, true);
@@ -3866,9 +4250,25 @@ function startServer() {
     assert.equal(pregameUi.essenceStripShown, true);
     assert.equal(pregameUi.essenceStripText, "20");
     assert.equal(pregameUi.essenceStripBesideToggle, true);
+    assert.deepEqual(pregameUi.essenceStripRemovePayload, { type: "add_counter", tokenId: "test-essence", counterKey: "essence", delta: -1 });
+    assert.deepEqual(pregameUi.finalEssenceRemovePayload, { type: "remove_token", tokenId: "last-essence" });
+    assert.deepEqual(pregameUi.betaEssence, {
+      quickAdd: true, quickAddOutsideTotal: true, quickAddClickable: true,
+      quickAddReceivesPointer: true, createReceivesPointer: true, removeReceivesPointer: true,
+      totalLayer: 20, removableTotal: true, createCount: 2,
+      spendPayload: { type: "remove_token", tokenId: "last-essence" },
+      stayedOpenForRepeat: true, closedOnLeave: true,
+      boardHidden: true, assistedQuickAddHidden: true, assistedPoolReadOnly: true,
+    });
     assert.equal(pregameUi.essenceStripHiddenWhenEmpty, true);
     assert.equal(pregameUi.hoverFullyVisible, true);
     assert.equal(pregameUi.supportKeywordPlayableFromHand, true);
+    assert.equal(pregameUi.gorbBlocksController, true);
+    assert.equal(pregameUi.gorbLeavesOpponentFree, true);
+    assert.deepEqual(pregameUi.peroperoDeckHand, {
+      shown: true, label: "Deck", playable: true, realHandCount: 0,
+      shownDuringChoice: true, playableDuringChoice: false, willHidden: true,
+    });
     assert.equal(rulesChoice.targetStep.visible, true);
     assert.equal(rulesChoice.targetStep.playerChoices, 2);
     assert.equal(rulesChoice.targetStep.placementSentBeforeChoice, false);
@@ -3913,6 +4313,10 @@ function startServer() {
     assert.deepEqual(rulesChoice.replacementStep.payload, {
       type: "resolve_rules_choice", choiceId: "choice-replace", itemId: rulesChoice.replacementStep.expectedItemId,
     });
+    assert.equal(rulesChoice.betaDiscardBackdrop.fullViewport, true);
+    assert.equal(rulesChoice.betaDiscardBackdrop.solidBackdrop, true);
+    assert.equal(rulesChoice.betaDiscardBackdrop.handAboveBackdrop, true);
+    assert.equal(rulesChoice.betaDiscardBackdrop.selectableCards, 2);
     assert.equal(rulesVfx.initialReplayCount, 0);
     assert.equal(rulesVfx.pluffEncoded, true);
     assert(rulesVfx.declared.essence >= 2, JSON.stringify(rulesVfx));
@@ -3991,7 +4395,7 @@ function startServer() {
     });
     assert.deepEqual(result.essenceLabels, ["+1", "−1", result.removeText]);
     assert(result.neutralLabels.includes(result.renameText));
-    const neutralCreate = result.sent.find((payload) => payload.type === "create_essence_token");
+    const neutralCreate = result.sent.find((payload) => payload.type === "create_essence_token" && payload.neutral);
     assert.equal(neutralCreate.neutral, true);
     assert.equal(neutralCreate.label, "Doom");
     assert.equal(neutralCreate.count, 4);

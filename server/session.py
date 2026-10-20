@@ -67,6 +67,14 @@ TRIBUTE_SYMBOL_TEMPERAMENT = {
     "T": "transcendent",
 }
 RULES_WILL_TYPES = {"ephemeral_will", "persistent_will"}
+# passives that only work from the Stalemate Zone (Fee-fee)
+RULES_STALEMATE_PASSIVE_KINDS = {"stalemate_win_blocked", "stalemate_ignores_low_power"}
+# activated results whose purpose is to put a Manifestation into Support
+RULES_SUPPORT_ENTRY_RESULTS = {
+    "grant_source_support_until_end_turn", "stalemate_target_grant_source_support",
+    "play_limbo_target_as_support", "play_vessel_target_as_support", "chabak_support",
+    "will_becomes_support_manifestation", "grant_friendly_interzone_support_until_end_turn",
+}
 # Entering a zone with a required target and nothing to target: the card still enters.
 RULES_ENTRY_EVENTS = {"enters_field", "enters_support", "enters_field_zone"}
 RULES_DESTROY_MATCHES = {
@@ -1342,6 +1350,11 @@ class Session:
             clean_source["containerId"] = container_id
         if zone == "hand" and kind == "activated_effect":
             clean_source["activatedFromZone"] = "hand"
+        if (
+            zone == "hand" and kind == "play_card" and not as_support
+            and metadata.get("playAsPersistentWill")
+        ):
+            clean_source["noTribute"] = True
         if zone == "hand" and permission:
             clean_source.update({
                 "permissionId": permission.get("id"),
@@ -2067,6 +2080,14 @@ class Session:
             } if table in {"greed", "mutation"} else None
         if kind == "roll_d6_conditional_source":
             return {"kind": kind}
+        if kind == "roll_d6_each_target":
+            # Kaos Bro (destroy) and Karma Bro (points): one die per target, a 1 or a 6 hits
+            on_hit = str(result.get("onHit") or "")
+            if on_hit == "destroy":
+                return {"kind": kind, "onHit": on_hit}
+            if on_hit == "points" and isinstance(result.get("points"), (int, float)):
+                return {"kind": kind, "onHit": on_hit, "points": max(-99, min(int(result["points"]), 99))}
+            return None
         if kind == "roll_multiple_even_power_odd_discard":
             rolls = result.get("rolls")
             if not isinstance(rolls, (int, float)):
@@ -2446,11 +2467,7 @@ class Session:
 
         condition = str(ability.get("condition") or "")
         if condition == "controller_lost_confrontation":
-            confrontation = self.rules_engine.get("confrontationResult") or {}
-            if (
-                confrontation.get("turn") != self.phase_tracker["turn"]
-                or confrontation.get("loserId") != player_id
-            ):
+            if not self.rules_player_lost_confrontation_this_turn(player_id):
                 return "This ability requires you to have lost the current confrontation.", None
 
         if condition == "last_opponent_support_low_power":
@@ -4642,8 +4659,31 @@ class Session:
             result["willManifestations"] = settled
         return settled
 
+    def rules_item_functions_in_stalemate(self, item):
+        """Cards keep their effects in the Stalemate Zone only when their text
+        says so (Fee-fee's "As long as it is in the Stalemate Zone", Nubilung's
+        Support from the Stalemate Zone)."""
+        metadata = self.rules_item_card_rules(item)
+        if metadata.get("supportFromStalemate"):
+            return True
+        if any(
+            (ability.get("trigger") or {}).get("zone") == "stalemate"
+            for ability in metadata.get("triggeredAbilities") or []
+        ):
+            return True
+        return any(
+            passive.get("kind") in RULES_STALEMATE_PASSIVE_KINDS
+            for passive in metadata.get("passiveEffects") or []
+        )
+
     def rules_item_effects_active(self, item):
         if not item or item not in self.battlefield or not item.get("faceUp"):
+            return False
+        # the Stalemate Zone is not part of the field: its cards lose their effects
+        if (
+            self.rules_field_zone(item) == "stalemate"
+            and not self.rules_item_functions_in_stalemate(item)
+        ):
             return False
         if item.get("effectsDisabled"):
             return False
@@ -4858,6 +4898,15 @@ class Session:
                     "kind": "power_modifier", "value": int(bonus.get("value") or 1),
                     "duration": "until_end_of_turn", "startedTurn": turn,
                 })
+
+    def rules_player_lost_confrontation_this_turn(self, player_id):
+        """Loop and "if you lost the confrontation" effects: a confrontation lost this turn, even once its
+        result has been cleared (a rematch, The Stomper ending the confrontation)."""
+        turn = self.phase_tracker["turn"]
+        if (self.rules_engine.get("confrontationLosses") or {}).get(str(turn)) == player_id:
+            return True
+        outcome = self.rules_engine.get("confrontationResult") or {}
+        return outcome.get("turn") == turn and outcome.get("loserId") == player_id
 
     def rules_support_condition_met(self, item, condition):
         if not condition:
@@ -6630,6 +6679,12 @@ class Session:
         phase_ids = ability.get("phaseIds")
         if phase_ids and phase_id not in phase_ids:
             return False
+        if ability.get("exhaustSource") and int(round(float(item.get("rotation") or 0))) % 180:
+            return False  # already exhausted
+        if self.rules_ability_clearly_unusable(
+            self.rules_item_controller_id(item), ability, phase_id, item.get("cardId"),
+        ):
+            return False
         turn = self.phase_tracker["turn"]
         if ability.get("oncePerTurnSupport") and turn in (item.get("supportUsedTurn"), item.get("supportUntilTurn")):
             return False
@@ -6650,39 +6705,50 @@ class Session:
         Generous whenever an unusual payment source exists, so a phase is never
         skipped by mistake.
         """
-        player = self.players[player_id]
         metadata = self.card_rules.get(card_id, {})
-        exotic = any(
-            self.rules_active_passive_sources(kind)
-            for kind in (
-                "allow_limbo_tribute_with_counter", "vessel_manifestations_as_tribute",
-                "field_manifestations_as_tribute",
-            )
-        )
-        if exotic or any(
+        if self.rules_exotic_tribute_available(player_id) or any(
             entry.get("playerId") == player_id and (entry.get("noTribute") or entry.get("anyWill"))
             for entry in self.rules_engine.get("playPermissions") or []
-        ):
-            return True
-        if any(
-            self.card_rules.get(other, {}).get("canPayTributeFromLimbo")
-            for other in player["zones"]["graveyard"]
-        ) or any(
-            self.rules_item_controller_id(item) == player_id
-            and self.card_rules.get(item.get("cardId"), {}).get("canPayTributeFromInterzone")
-            for item in self.battlefield
         ):
             return True
         try:
             requirements, _enforced = self.rules_tribute_requirements(
                 "play_card", {"cardId": card_id, "cardType": metadata.get("type")}, None, player_id,
             )
+        except Exception:  # never skip a phase because of a computation problem
+            return True
+        return self.rules_requirements_affordable(player_id, requirements, card_id)
+
+    def rules_exotic_tribute_available(self, player_id):
+        """An unusual Tribute source (Limbo, Vessel, field): affordability is not computed."""
+        player = self.players[player_id]
+        if any(
+            self.rules_active_passive_sources(kind)
+            for kind in (
+                "allow_limbo_tribute_with_counter", "vessel_manifestations_as_tribute",
+                "field_manifestations_as_tribute",
+            )
+        ):
+            return True
+        return any(
+            self.card_rules.get(other, {}).get("canPayTributeFromLimbo")
+            for other in player["zones"]["graveyard"]
+        ) or any(
+            self.rules_item_controller_id(item) == player_id
+            and self.card_rules.get(item.get("cardId"), {}).get("canPayTributeFromInterzone")
+            for item in self.battlefield
+        )
+
+    def rules_requirements_affordable(self, player_id, requirements, exclude_card_id=None):
+        """Whether Essences plus hand Manifestations can pay these Tribute requirements."""
+        player = self.players[player_id]
+        try:
             remaining, _spent = self.rules_essence_payment_plan(player_id, requirements)
             if all(amount <= 0 for amount in remaining.values()):
                 return True
             candidates = [
                 other for other in player["zones"]["hand"]
-                if other != card_id and self.card_rules.get(other, {}).get("type") == "manifestation"
+                if other != exclude_card_id and self.card_rules.get(other, {}).get("type") == "manifestation"
                 and self.card_rules.get(other, {}).get("canPayTribute", True)
             ][:12]
             for mask in range(1, 1 << len(candidates)):
@@ -6718,6 +6784,25 @@ class Session:
         target_rules = (ability or {}).get("targets") or {}
         if int(target_rules.get("min") or 0) < 1 or target_rules.get("groups"):
             return True
+        if target_rules.get("kind") == "zone_card" and set(target_rules.get("zones") or []) <= {"graveyard", "receptacle"}:
+            # Revive, Claim the Forsaken: a card must wait in a Limbo or a Vessel
+            try:
+                return any(
+                    self.rules_ability_targets_error(
+                        target_rules,
+                        [{
+                            "kind": "zone_card", "containerId": container_id, "zone": zone,
+                            "cardId": card_id,
+                            "ownerId": self.card_owner_in_zone(container_id, zone, card_id),
+                        }],
+                        player_id,
+                    ) is None
+                    for container_id, container in self.players.items()
+                    for zone in target_rules.get("zones") or []
+                    for card_id in dict.fromkeys(container["zones"].get(zone) or [])
+                )
+            except Exception:  # never skip a phase because of a computation problem
+                return True
         if target_rules.get("kind") not in {None, "card"} or (target_rules.get("zones") or ["battlefield"]) != ["battlefield"]:
             return True
         return any(
@@ -6736,11 +6821,7 @@ class Session:
         ability = ability or {}
         condition = str(ability.get("condition") or "")
         if condition == "controller_lost_confrontation":
-            confrontation = self.rules_engine.get("confrontationResult") or {}
-            if (
-                confrontation.get("turn") != self.phase_tracker["turn"]
-                or confrontation.get("loserId") != player_id
-            ):
+            if not self.rules_player_lost_confrontation_this_turn(player_id):
                 return True
         if condition == "last_opponent_support_low_power" and self.rules_last_opponent_support(player_id, 2) is None:
             return True
@@ -6751,6 +6832,9 @@ class Session:
         if result_kind in {"grant_source_support_until_end_turn", "stalemate_target_grant_source_support"} and phase_id != "confrontation_reaction":
             # Support only matters while Supports can still be played
             return True
+        if result_kind in RULES_SUPPORT_ENTRY_RESULTS and player_id in self.players and self.rules_support_entry_locked(player_id):
+            # Pin Down: nothing can be put into the Confrontation Zone this turn
+            return True
         if result_kind == "first_manifestation_trap" and phase_id != "confrontation_choose":
             return True
         if result_kind == "chain_from_zone" and (ability.get("result") or {}).get("zone") == "hand":
@@ -6758,6 +6842,16 @@ class Session:
             if source_card_id in hand:
                 hand.remove(source_card_id)
             if not any(self.card_rules.get(card, {}).get("type") == "manifestation" for card in hand):
+                return True
+        tribute = str(ability.get("tribute") or "")
+        if tribute and player_id in self.players and not self.rules_exotic_tribute_available(player_id):
+            try:
+                requirements = self.rules_requirements_from_symbols(tribute)
+            except Exception:  # never skip a phase because of a computation problem
+                requirements = None
+            if requirements and not self.rules_requirements_affordable(
+                player_id, requirements, source_card_id,
+            ):
                 return True
         essence_cost = str(ability.get("essenceCost") or "")
         if essence_cost:
@@ -6873,9 +6967,7 @@ class Session:
                 ):
                     return True
             if any(
-                entry.get("playerId") == player_id
-                and int(entry.get("turn") or self.phase_tracker["turn"]) == self.phase_tracker["turn"]
-                and (not entry.get("phaseIds") or phase_id in entry["phaseIds"])
+                self.rules_play_permission_usable(player_id, entry, phase_id)
                 for entry in self.rules_engine.get("playPermissions") or []
             ):
                 return True
@@ -6894,6 +6986,18 @@ class Session:
                 and can_play(item.get("cardId"), card_type)
             ):
                 return True
+            # Grimoire: the Wills placed on it are played as if they were in the hand
+            if item.get("attachedCards") and self.rules_item_effects_active(item) and any(
+                passive.get("kind") == "play_attached_wills"
+                for passive in metadata.get("passiveEffects") or []
+            ) and any(
+                entry.get("ownerId") == player_id
+                and self.card_rules.get(entry.get("cardId"), {}).get("type") in RULES_WILL_TYPES
+                and can_play(entry.get("cardId"), self.card_rules[entry["cardId"]]["type"])
+                and self.rules_will_affordable(player_id, entry.get("cardId"))
+                for entry in item["attachedCards"]
+            ):
+                return True
             if (
                 card_type == "manifestation" and item.get("tebebeConcealed")
                 and self.rules_action_timing_error(
@@ -6906,6 +7010,8 @@ class Session:
             if (
                 card_type == "manifestation" and zone in {"interzone", "stalemate"}
                 and can_support(item.get("cardId"))
+                and self.rules_card_can_enter_support(item, from_zone=zone)
+                and not self.rules_item_zone_locked(item)
             ):
                 return True
             if (
@@ -6916,6 +7022,50 @@ class Session:
                     for ability in metadata.get("activatedAbilities") or []
                 )
             ):
+                return True
+        return False
+
+    def rules_play_permission_usable(self, player_id, entry, phase_id):
+        """A play permission counts as an action only while its card can be played now
+        (Wandering Veteran's Support from the Limbo is no action in End actions)."""
+        if entry.get("playerId") != player_id:
+            return False
+        if int(entry.get("turn") or self.phase_tracker["turn"]) != self.phase_tracker["turn"]:
+            return False
+        if entry.get("phaseIds") and phase_id not in entry["phaseIds"]:
+            return False
+        zone_cards = self.players[player_id]["zones"].get(entry.get("fromZone") or "hand") or []
+        if entry.get("cardId"):
+            card_ids = [entry["cardId"]] if entry["cardId"] in zone_cards else []
+        elif entry.get("anyWill"):
+            card_ids = [
+                card_id for card_id in zone_cards
+                if self.card_rules.get(card_id, {}).get("type") in (
+                    {"ephemeral_will"} if entry.get("ephemeralOnly") else RULES_WILL_TYPES
+                )
+                and (
+                    entry.get("maxCost") is None
+                    or int(self.card_rules.get(card_id, {}).get("cost") or 0) <= int(entry["maxCost"])
+                )
+            ]
+        else:
+            return True  # unknown shape: stay generous
+        for card_id in dict.fromkeys(card_ids):
+            card_type = self.card_rules.get(card_id, {}).get("type")
+            if entry.get("asSupport"):
+                if (
+                    not self.rules_support_entry_locked(player_id)
+                    and not self.rules_confrontation_entry_blocked(player_id, self.card_rules.get(card_id, {}))
+                    and self.rules_action_timing_error(
+                        "play_card", {"cardId": card_id, "cardType": "manifestation"},
+                        as_support=True, player_id=player_id,
+                    ) is None
+                ):
+                    return True
+                continue
+            if self.rules_action_timing_error(
+                "play_card", {"cardId": card_id, "cardType": card_type}, player_id=player_id,
+            ) is None:
                 return True
         return False
 
@@ -6971,12 +7121,13 @@ class Session:
         return None, {"playerId": player_id, "enabled": bool(enabled)}
 
     def rules_auto_pass_player(self):
-        """The priority holder who has nothing to do, if the engine may pass for them."""
+        """The priority holder when no legal response or auto-skippable action exists."""
         engine = self.rules_engine
         pass_all = engine.get("priorityPlayerId") in (engine.get("passAllPlayerIds") or [])
+        stack_waiting = bool(engine.get("actionStack"))
         if (
             not engine.get("enabled")
-            or not (self.rules_auto_skip_enabled(engine.get("priorityPlayerId")) or pass_all)
+            or not (stack_waiting or self.rules_auto_skip_enabled(engine.get("priorityPlayerId")) or pass_all)
             or not self.phase_tracker.get("enabled") or self.ended
             or len(self.players) < NUM_SEATS or engine.get("pendingChoice")
             or not self.rules_match_started()
@@ -8277,7 +8428,8 @@ class Session:
 
     def queue_rules_tribute_triggers(self, card_ids, owner_id,
                                      simultaneous_action_id=None,
-                                     tribute_movements=None):
+                                     tribute_movements=None,
+                                     defer_if_choice=False):
         queued = []
         movements_by_card = {
             movement.get("cardId"): movement
@@ -8367,7 +8519,11 @@ class Session:
                 )
                 return queued
         if queued:
-            self.queue_rules_simultaneous_actions(queued)
+            if defer_if_choice:
+                # a Tribute paid inside a choice: its triggers wait for any choice still open
+                self.queue_or_defer_rules_simultaneous_actions(queued)
+            else:
+                self.queue_rules_simultaneous_actions(queued)
         return queued
 
     def queue_rules_effect_support_entry(self, item, from_zone=None):
@@ -9311,8 +9467,8 @@ class Session:
             and int(effect.get("turn") or 0) == self.phase_tracker["turn"]
         ]
         return (
-            matching[-1].get("overflowDestination", "graveyard")
-            if matching else "graveyard"
+            matching[-1].get("overflowDestination", "deck_bottom")
+            if matching else "deck_bottom"
         )
 
     def set_rules_hand_overflow_choice(self, player_ids):
@@ -9381,15 +9537,11 @@ class Session:
                     "count": discard_count,
                 }
         drawn = self.draw_rules_cards(player_id, requested)
-        overflow = self.set_rules_hand_overflow_choice([player_id])
-        payload = {
+        return {
             "kind": "draw",
             "playerId": player_id,
             "count": len(drawn),
         }
-        if overflow:
-            payload["overflowChoiceId"] = overflow["id"]
-        return payload
 
     def create_rules_token_copy(self, card_id, controller_id, *,
                                 source_item_id=None, hollow=False,
@@ -13577,6 +13729,38 @@ class Session:
                 "status": "resolved", "table": table,
                 "roll": roll, "outcome": effect_result,
             }
+        if result.get("kind") == "roll_d6_each_target":
+            rolls = []
+            hits = []
+            for target in action.get("targets") or []:
+                if target.get("kind") != "card":
+                    continue
+                roll = random.randint(1, 6)
+                hit = roll in {1, 6}
+                entry = {"cardId": target.get("cardId"), "itemId": target.get("itemId"), "roll": roll, "hit": hit}
+                rolls.append(roll)
+                if hit and result.get("onHit") == "destroy":
+                    if self.find_battlefield_item(target.get("itemId")) is None:
+                        entry["status"] = "target_missing"
+                    else:
+                        entry["movement"] = self.apply_rules_action_result({
+                            **action,
+                            "targets": [dict(target)],
+                            "ability": {
+                                **(action.get("ability") or {}),
+                                "result": {"kind": "move_target", "zone": "graveyard", "position": "top", "reason": "destroy"},
+                            },
+                        })
+                hits.append(entry)
+            payload = {
+                "kind": "roll_d6_each_target", "status": "resolved", "onHit": result.get("onHit"),
+                "rolls": rolls, "results": hits, "hitCount": sum(entry["hit"] for entry in hits),
+            }
+            if result.get("onHit") == "points":
+                payload["playerId"] = player_id
+                payload["delta"] = self.adjust_rules_score(player_id, int(result.get("points") or 0) * payload["hitCount"])
+                payload["score"] = self.players.get(player_id, {}).get("score")
+            return payload
         if result.get("kind") == "roll_d6_conditional_source":
             roll = random.randint(1, 6)
             source_item = self.find_battlefield_item(
@@ -14084,11 +14268,7 @@ class Session:
                 }
             data = memory.get("data") or {}
             if data.get("requireLostConfrontation"):
-                outcome = self.rules_engine.get("confrontationResult") or {}
-                if (
-                    outcome.get("turn") != self.phase_tracker["turn"]
-                    or outcome.get("loserId") != memory.get("controllerId")
-                ):
+                if not self.rules_player_lost_confrontation_this_turn(memory.get("controllerId")):
                     self.remove_rules_effect_memory(memory["id"])
                     return {
                         "kind": "resolve_effect_memory",
@@ -16426,7 +16606,7 @@ class Session:
                 for card_id in card_ids
             )
             self.rules_engine["pendingChoice"] = None
-            follow_up = self.set_rules_hand_overflow_choice([player_id])
+            follow_up = None
             if will_count:
                 source_controller_id = choice.get("sourceControllerId")
                 candidates = [
@@ -16496,19 +16676,12 @@ class Session:
                 self.rules_engine["ongoingEffects"].append(effect)
                 applied.append(effect["id"])
             self.rules_engine["pendingChoice"] = None
-            overflow = (
-                self.set_rules_hand_overflow_choice(
-                    [choice.get("_overflowPlayerId")]
-                )
-                if choice.get("_overflowPlayerId") else None
-            )
             return None, {
                 "kind": "power_loss_distribution",
                 "playerId": player_id,
                 "itemIds": list(item_ids),
                 "effectIds": applied,
                 "sourceCardId": choice.get("sourceCardId"),
-                "overflowChoiceId": overflow.get("id") if overflow else None,
             }
 
         if choice.get("kind") == "random_target_effect":
@@ -16684,6 +16857,7 @@ class Session:
                 if payment_error:
                     return payment_error, None
                 self.pay_rules_tribute(player_id, payment)
+                paid_card_ids = list(payment.get("cardIds") or [])
                 status = "paid"
             else:
                 owner_id = memory.get("ownerId")
@@ -16705,6 +16879,10 @@ class Session:
                 "cardId": memory.get("cardId"),
                 "memoryId": memory["id"],
                 "payment": choice.get("payment"),
+                # Melancholic Mirror and the other "used as tribute" triggers
+                "triggeredActions": self.queue_rules_tribute_triggers(
+                    paid_card_ids if status == "paid" else [], player_id, defer_if_choice=True,
+                ),
             }
 
         if choice.get("kind") == "immediate_effect_payment" and choice.get("purpose") == "bullyboo":
@@ -16742,6 +16920,9 @@ class Session:
                 "playerId": player_id, "sourceCardId": choice.get("sourceCardId"),
                 "willCardId": will_id, "freePlayGrantedTo": controller_id,
                 "autoPlayed": bool(played),
+                "triggeredActions": self.queue_rules_tribute_triggers(
+                    list(payment.get("cardIds") or []), player_id, defer_if_choice=True,
+                ),
             }
 
         if choice.get("kind") == "immediate_effect_payment":
@@ -16755,6 +16936,7 @@ class Session:
                 if payment_error:
                     return payment_error, None
                 self.pay_rules_tribute(player_id, payment)
+                paid_card_ids = list(payment.get("cardIds") or [])
                 status = "paid"
                 confrontation = None
             else:
@@ -16887,6 +17069,10 @@ class Session:
                 payload["followupChoiceId"] = followup_choice["id"]
                 payload["powerLoss"] = int(
                     choice.get("controllerBasePower") or 0
+                )
+            if status == "paid":
+                payload["triggeredActions"] = self.queue_rules_tribute_triggers(
+                    paid_card_ids, player_id, defer_if_choice=True,
                 )
             return None, payload
 
@@ -18019,6 +18205,15 @@ class Session:
             return None, self.resolve_rules_top_action()
 
         previous_phase_id = self.current_phase_id()
+        if previous_phase_id == "end_expire":
+            overflow = self.set_rules_hand_overflow_choice(list(self.players))
+            if overflow:
+                return None, {
+                    "status": "choice_required",
+                    "choiceKind": "hand_overflow",
+                    "playerId": overflow["playerId"],
+                    "stackDepth": 0,
+                }
         sequence = self.phase_sequence()
         next_index = self.phase_tracker["index"] + 1
         started_new_turn = False
@@ -18431,16 +18626,17 @@ class Session:
                 entry["chosenTemperament"] = item["chosenTemperament"]
             if item.get("supportUntilTurn"):
                 entry["supportUntilTurn"] = item["supportUntilTurn"]
+            controller_id = self.rules_item_controller_id(item)
             if (
                 self.rules_engine["enabled"] and item.get("faceUp")
                 and item.get("fieldZone") == "interzone"
                 and self.rules_item_card_rules(item).get("type") == "manifestation"
+                and not self.rules_support_entry_locked(controller_id)
                 and self.rules_card_can_enter_support(item)
             ):
                 entry["canEnterSupport"] = True
             if item.get("isChained"):
                 entry["isChained"] = True
-            controller_id = self.rules_item_controller_id(item)
             if controller_id and controller_id != item.get("ownerId"):
                 entry["controllerId"] = controller_id
             if item.get("temperamentOverride") in RULES_TEMPERAMENTS:
@@ -18449,8 +18645,17 @@ class Session:
                 entry["confrontationOrder"] = item["confrontationOrder"]
             if item.get("effectsDisabled"):
                 entry["effectsDisabled"] = True
+            elif (
+                self.rules_engine["enabled"] and item.get("faceUp")
+                and not self.rules_item_effects_active(item)
+            ):
+                # lost effects (Stalemate Zone, Discombobulator, lose_effects...): no action offered
+                entry["effectsInactive"] = True
             if item.get("playableFree"):
                 entry["playableFree"] = item["playableFree"]
+            if item.get("willManifestation"):
+                # Rinq / Ju Lien: a Will that counts as a Manifestation until the Resolution
+                entry["willManifestation"] = True
             if item.get("attachedCards"):
                 entry["attachedCards"] = [dict(card) for card in item["attachedCards"]]
             for option_key in ("outcastOff", "karmapultAuto", "gummoCopy", "persuaded"):
@@ -18522,6 +18727,9 @@ class Session:
                 "beginningPermissionsTurn": self.rules_engine["beginningPermissionsTurn"],
                 "playPermissions": play_permissions_view,
                 "supportEntries": [dict(entry) for entry in self.rules_engine["supportEntries"]],
+                "supportEntryLockedPlayerIds": [
+                    pid for pid in self.players if self.rules_support_entry_locked(pid)
+                ],
                 "playRestrictions": [dict(entry) for entry in self.rules_engine["playRestrictions"]],
                 "zoneEntryTurns": zone_entry_turns_view,
                 "recentLimboEntries": [
@@ -18539,6 +18747,10 @@ class Session:
                 "outcome": self.rules_engine["outcome"],
                 "priorityPlayerId": self.rules_engine["priorityPlayerId"],
                 "resolvePrompt": self.rules_confrontation_resolve_prompt(),
+                # Pin Down and similar locks: no Manifestation may enter the Confrontation Zone
+                "supportEntryLocked": bool(
+                    viewer_id in self.players and self.rules_support_entry_locked(viewer_id)
+                ),
                 "conditionalSupportHandCardIds": conditional_support_hand_card_ids,
                 "priorityPasses": list(self.rules_engine["priorityPasses"]),
                 "actionStack": list(self.rules_engine["actionStack"]),
@@ -19419,7 +19631,6 @@ class Session:
             draws[player_id] = draw_result["count"]
             hand_limits[player_id] = draw_result["handLimit"]
         self.rules_engine["limboRecoveryPlayerIds"] = []
-        overflow = self.set_rules_hand_overflow_choice(list(self.players))
 
         self.rules_engine["recoveryDrawTurn"] = turn
         self.rules_engine["recoveryMulliganTurn"] = turn
@@ -19448,7 +19659,6 @@ class Session:
         return None, {
             "draws": draws,
             "handLimits": hand_limits,
-            "overflowChoiceId": overflow.get("id") if overflow else None,
             "incompletePlayerIds": incomplete_player_ids,
             "mulliganRequiredPlayerIds": list(self.rules_engine["recoveryMulliganRequiredPlayerIds"]),
             "advanced": not self.ended and self.current_phase_id() == "recovery_end",

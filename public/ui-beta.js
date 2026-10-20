@@ -38,9 +38,9 @@
     ubDragToDeck: "Glisse une carte en surbrillance sur ton deck (ou clique dessus).",
     ubShowChoicePanel: "Voir les options",
     ubHideChoicePanel: "Choisir sur le terrain",
-    ubOption: "UI beta (nouvelle table)",
+    ubOption: "Nouvelle interface (par défaut)",
     ubOptionHint: "Moi à gauche, l’adversaire à droite, colonnes latérales. Réversible à tout moment depuis le menu de la partie.",
-    ubMenuToggle: "UI beta",
+    ubMenuToggle: "Nouvelle interface",
     ubTheme: "Thème",
     ubThemeCurrent: "Actuel",
     ubThemeSand: "Crème / sable",
@@ -100,9 +100,9 @@
     ubDragToDeck: "Drag a highlighted card onto your deck (or click it).",
     ubShowChoicePanel: "See the options",
     ubHideChoicePanel: "Choose on the field",
-    ubOption: "UI beta (new table)",
+    ubOption: "New interface (default)",
     ubOptionHint: "Me on the left, the opponent on the right, side columns. Switch back any time from the game menu.",
-    ubMenuToggle: "UI beta",
+    ubMenuToggle: "New interface",
     ubTheme: "Theme",
     ubThemeCurrent: "Current",
     ubThemeSand: "Cream / sand",
@@ -162,9 +162,9 @@
     ubDragToDeck: "Trascina una carta evidenziata sul tuo mazzo (o cliccala).",
     ubShowChoicePanel: "Vedi le opzioni",
     ubHideChoicePanel: "Scegli sul campo",
-    ubOption: "UI beta (nuovo tavolo)",
+    ubOption: "Nuova interfaccia (predefinita)",
     ubOptionHint: "Io a sinistra, l’avversario a destra, colonne laterali. Reversibile in ogni momento dal menu della partita.",
-    ubMenuToggle: "UI beta",
+    ubMenuToggle: "Nuova interfaccia",
     ubTheme: "Tema",
     ubThemeCurrent: "Attuale",
     ubThemeSand: "Crema / sabbia",
@@ -266,7 +266,10 @@
   const qs = (selector, root = document) => root.querySelector(selector);
 
   function enabled() {
-    try { return localStorage.getItem(ENABLED_KEY) === "1"; } catch (error) { return false; }
+    try {
+      const stored = localStorage.getItem(ENABLED_KEY);
+      return stored === null ? true : stored !== "0";
+    } catch (error) { return true; }
   }
   function setEnabled(on) {
     try { localStorage.setItem(ENABLED_KEY, on ? "1" : "0"); } catch (error) { /* private mode: session only */ }
@@ -633,9 +636,16 @@
       const destEntry = pendingDest?.kind === "confrontation_destination"
         && groups.stalemate.find((entry) => entry.item.id === pendingDest.itemId);
       if (destEntry) {
+        // in my Confrontation Zone (my own cards there have already left), under the
+        // choice banner (top: a third of the screen) so nothing covers it
         const w = Math.round(clamp(G.W * 0.09, 90, 150));
-        const y = Math.max(G.zcTop + 8, (G.zcTop + G.zcBottom) / 2 - (w * RATIO) / 2);
-        slots.set(destEntry.item.id, { x: G.cx - w / 2, y, w, zone: "stalemate", side: destEntry.side, focus: true });
+        const bannerBottom = G.H / 3 + 90 - (G.wrapTop || 0);
+        const y = Math.min(
+          Math.max(G.zcTop + 8, bannerBottom + 12, (G.zcTop + G.zcBottom) / 2 - (w * RATIO) / 2),
+          Math.max(G.zcTop + 8, G.zcBottom - w * RATIO - 8),
+        );
+        const x = (G.zcMe.l + G.zcMe.r) / 2 - w / 2;
+        slots.set(destEntry.item.id, { x, y, w, zone: "stalemate", side: destEntry.side, focus: true });
       }
     }
     // Float and other stacked cards: on top of their anchor, offset, floating
@@ -810,7 +820,12 @@
       <button type="button" class="ub-stale-strip hidden" id="ubStaleStrip"></button>
       <div class="ub-stale-drop hidden" id="ubStaleDrop"></div>
       <div class="ub-stale-panel hidden" id="ubStalePanel"></div>`;
-    wrap.insertBefore(field, document.getElementById("battlefield"));
+    const battlefield = document.getElementById("battlefield");
+    const controls = el("div", "ub-field-controls");
+    controls.id = "ubFieldControls";
+    controls.appendChild(field.querySelector("#ubTotals"));
+    wrap.insertBefore(field, battlefield);
+    wrap.insertBefore(controls, battlefield);
 
     const left = el("aside", "ub-col left");
     left.id = "ubLeft";
@@ -1140,7 +1155,7 @@
     (latestState?.battlefield || []).forEach((item, index) => {
       if (!item.faceUp || item.fieldZone !== "confrontation") return;
       if (battlefieldItemControllerId(item) !== playerId) return;
-      if (cardsById.get(item.cardId)?.type !== "manifestation" && !item.isTokenCard) return;
+      if (!fieldItemIsManifestation(item)) return;
       const order = Number(item.confrontationOrder || 0);
       if (!best || order > best.order || (order === best.order && index > best.index)) best = { item, order, index };
     });
@@ -1151,7 +1166,7 @@
   function sideHasConfrontation(playerId) {
     return (latestState?.battlefield || []).some((item) => (
       item.faceUp && item.fieldZone === "confrontation" && battlefieldItemControllerId(item) === playerId
-      && (cardsById.get(item.cardId)?.type === "manifestation" || item.isTokenCard)
+      && fieldItemIsManifestation(item)
     ));
   }
 
@@ -1200,19 +1215,23 @@
       const key = activeTemperamentKey(player.id);
       const ink = key ? temperamentInk(key) : "#7d7d7d";
       const pool = essencePool(player.id);
+      const ownPool = !isObserver && player.id === myPlayerId && !rulesOn();
       const essence = pool.size
-        ? `<div class="ub-ess" aria-label="${esc(t("essence"))}">${[...pool].map(([temperament, amount]) => `<span style="--ink:${esc(temperamentInk(temperament))}" title="${esc(t("essence"))} · ${esc(temperamentLabel(temperament))} ×${amount}"><img src="${esc(temperamentSymbol(temperament))}" alt="">${amount}</span>`).join("")}</div>`
+        ? `<div class="ub-ess" aria-label="${esc(t("essence"))}">${[...pool].map(([temperament, amount]) => ownPool
+          ? `<button type="button" data-remove-essence="${esc(temperament)}" style="--ink:${esc(temperamentInk(temperament))}" title="${esc(t("essenceRemoveOne"))}: ${esc(temperamentLabel(temperament))}"><img src="${esc(temperamentSymbol(temperament))}" alt="">${amount}</button>`
+          : `<span style="--ink:${esc(temperamentInk(temperament))}" title="${esc(t("essence"))} · ${esc(temperamentLabel(temperament))} ×${amount}"><img src="${esc(temperamentSymbol(temperament))}" alt="">${amount}</span>`).join("")}</div>`
         : "";
       return `<div class="ub-tside ${side}" style="--pc:${esc(playerColor(player.id))}">
         <div class="ub-total ${side}${lead === side ? " win" : ""}${lead === "tie" ? " tie" : ""}" style="--tc:${esc(ink)}" title="${esc(t("rulesPowerTotal"))}">
           <span class="ub-who2">${esc(player.name)}</span>
           <span class="ub-pw">${power}</span>
           <span class="ub-tmp">${key ? `<img src="${esc(temperamentSymbol(key))}" alt="${esc(temperamentLabel(key))}" title="${esc(t("rulesActiveTemperament"))}: ${esc(temperamentLabel(key))}">` : ""}</span>
-        </div>${essence}
+        </div>${essenceQuickPickerMarkup(player.id)}${essence}
       </div>`;
     };
     const turn = Number(latestState.phaseTracker?.turn || 1);
     totals.innerHTML = `${block("me", me)}<span class="ub-vs ub-turn" title="${esc(t("ubTurn"))} ${turn}"><small>${esc(t("ubTurn"))}</small><b>${turn}</b></span>${block("opp", opp)}`;
+    bindEssenceQuickControls(totals);
   }
 
   function renderWheel(G, players) {
@@ -2103,8 +2122,8 @@
 
   function syncBoardChoice() {
     const choice = readBoardChoice();
-    document.querySelectorAll(".ub-choice-pick, .ub-choice-drag, .ub-choice-target, .ub-drop-ok").forEach((node) => {
-      node.classList.remove("ub-choice-pick", "ub-choice-drag", "ub-choice-target", "ub-drop-ok");
+    document.querySelectorAll(".ub-choice-pick, .ub-choice-drag, .ub-choice-target, .ub-target-over, .ub-drop-ok").forEach((node) => {
+      node.classList.remove("ub-choice-pick", "ub-choice-drag", "ub-choice-target", "ub-target-over", "ub-drop-ok");
     });
     document.querySelectorAll(".ub-proxied").forEach((node) => node.classList.remove("ub-proxied"));
     const banner = document.getElementById("ubChoiceBanner");
@@ -2233,10 +2252,14 @@
   // a dark layer with holes over what can be used
   function setSpotlight(nodes) {
     let layer = document.getElementById("ubSpotlight");
+    local.spotNodes = nodes && nodes.length ? nodes : null;
     if (!nodes || !nodes.length) {
       layer?.remove();
       return;
     }
+    // a card still sliding to its place (board FLIP): the holes follow it until they settle
+    if (!local.spotFollowing) local.spotStill = 0;
+    if (!local.spotFrame) local.spotFrame = requestAnimationFrame(followSpotlight);
     if (!layer) {
       layer = document.createElementNS("http://www.w3.org/2000/svg", "svg");
       layer.id = "ubSpotlight";
@@ -2253,7 +2276,25 @@
       return `M${x + k} ${y}h${w - 2 * k}a${k} ${k} 0 0 1 ${k} ${k}v${h - 2 * k}a${k} ${k} 0 0 1 -${k} ${k}h-${w - 2 * k}a${k} ${k} 0 0 1 -${k} -${k}v-${h - 2 * k}a${k} ${k} 0 0 1 ${k} -${k}Z`;
     }).join("");
     layer.setAttribute("viewBox", `0 0 ${W} ${H}`);
-    layer.innerHTML = `<path fill-rule="evenodd" d="M0 0H${W}V${H}H0Z${holes}"/>`;
+    const path = `M0 0H${W}V${H}H0Z${holes}`;
+    if (layer.dataset.path !== path) {
+      layer.dataset.path = path;
+      layer.innerHTML = `<path fill-rule="evenodd" d="${path}"/>`;
+      local.spotStill = 0;
+    } else {
+      local.spotStill = (local.spotStill || 0) + 1;
+    }
+  }
+
+  function followSpotlight() {
+    local.spotFrame = null;
+    const nodes = local.spotNodes;
+    if (!nodes || !document.getElementById("ubSpotlight")) return;
+    const live = nodes.filter((node) => node.isConnected);
+    if (!live.length || local.spotStill > 45) return;
+    local.spotFollowing = true;
+    setSpotlight(live);
+    local.spotFollowing = false;
   }
 
   // player choice: an arrow from the card to the pointer

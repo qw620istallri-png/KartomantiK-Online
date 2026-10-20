@@ -737,5 +737,61 @@ class WebSocketRulesIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn(kiss, p1["zones"]["exile"])
 
 
+    async def test_essence_pool_create_decrement_and_remove_round_trip(self):
+        self.prepare_active_rules("end_actions")
+        await self.send(self.ws1, {
+            "type": "create_essence_token",
+            "temperament": "choleric",
+            "neutral": False,
+            "label": "",
+            "color": "#d3654a",
+            "count": 2,
+            "x": 640,
+            "y": 720,
+        })
+        created = await self.receive_until(
+            self.ws1,
+            lambda message: message.get("type") == "state"
+            and any(
+                token.get("ownerId") == "p1"
+                and token.get("temperament") == "choleric"
+                and token.get("counters", {}).get("essence") == 2
+                for token in message.get("tokens", [])
+            ),
+        )
+        token = next(
+            token for token in created["tokens"]
+            if token.get("ownerId") == "p1" and token.get("temperament") == "choleric"
+        )
+
+        await self.send(self.ws1, {
+            "type": "add_counter",
+            "tokenId": token["id"],
+            "counterKey": "essence",
+            "delta": -1,
+        })
+        decremented = await self.receive_until(
+            self.ws1,
+            lambda message: message.get("type") == "state"
+            and any(
+                entry.get("id") == token["id"]
+                and entry.get("counters", {}).get("essence") == 1
+                for entry in message.get("tokens", [])
+            ),
+        )
+        self.assertEqual(
+            next(entry for entry in decremented["tokens"] if entry["id"] == token["id"])["counters"]["essence"],
+            1,
+        )
+
+        await self.send(self.ws1, {"type": "remove_token", "tokenId": token["id"]})
+        removed = await self.receive_until(
+            self.ws1,
+            lambda message: message.get("type") == "state"
+            and not any(entry.get("id") == token["id"] for entry in message.get("tokens", [])),
+        )
+        self.assertFalse(any(entry.get("id") == token["id"] for entry in removed["tokens"]))
+
+
 if __name__ == "__main__":
     unittest.main()

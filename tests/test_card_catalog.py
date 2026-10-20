@@ -396,6 +396,7 @@ class CardCatalogTests(unittest.TestCase):
         for name in ("Kelona, the Anchorite", "Gigabonblade", "Donmo, the Truth-Bender", "The Slumberer"):
             with self.subTest(card=name):
                 self.assertFalse(rules[by_name[name]]["canPayTribute"])
+        self.assertFalse(rules[by_name["The Slumberer"]]["canBeFirstManifestation"])
         self.assertTrue(rules[by_name["Wind Sprout"]]["canPayTribute"])
 
     def test_vanilla_manifestations_have_no_printed_effect_to_automate(self):

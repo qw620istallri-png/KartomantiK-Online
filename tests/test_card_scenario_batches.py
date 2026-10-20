@@ -39,7 +39,7 @@ class CardScenarioBatchTests(unittest.TestCase):
             cards.extend(batch["cards"])
         self.assertEqual(len(cards), 450)
         manual = {entry["name"] for entry in cards if entry["manualReview"]}
-        self.assertEqual(manual, {"Karma Bro", "Kaos Bro"})
+        self.assertEqual(manual, set())  # the Bros are automated since their errata
 
     def test_phase_specific_activated_actions_reach_the_server(self):
         wanted = {

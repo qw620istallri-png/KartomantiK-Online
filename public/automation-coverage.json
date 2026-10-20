@@ -2,12 +2,12 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 377,
-    "explicitAbilities": 493,
+    "explicitCards": 379,
+    "explicitAbilities": 495,
     "statuses": {
-      "automated": 448,
+      "automated": 450,
       "generic": 0,
-      "manual": 2,
+      "manual": 0,
       "partial": 0
     }
   },
@@ -1366,6 +1366,7 @@
       ],
       "mechanics": [
         "cost:exhaustSource",
+        "cost:tribute",
         "result:copy_stack_action",
         "result:move_hand_source_to_interzone",
         "target:stack_action"
@@ -4221,14 +4222,20 @@
       "collectionNumber": 249,
       "name": "Karma Bro",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
+      "status": "automated",
+      "abilityIds": [
+        "karma-bro-roll-points-one-card-per-player"
+      ],
       "mechanics": [
         "first-restriction",
-        "support-from-hand"
+        "result:roll_d6_each_target",
+        "support-from-hand",
+        "trigger:enters_field_zone"
       ],
-      "testRefs": [],
-      "notes": "Physical throw, rotation, and touched-card detection remain player-applied."
+      "testRefs": [
+        "tests/test_reported_card_bugs.py"
+      ],
+      "notes": "Errata (2026-10): one card per player is chosen as it enters, one D6 each, a 1 or a 6 hits."
     },
     "rf5srmnqyh235tm_en": {
       "collectionNumber": 250,
@@ -4393,14 +4400,20 @@
       "collectionNumber": 259,
       "name": "Kaos Bro",
       "setName": "Beta",
-      "status": "manual",
-      "abilityIds": [],
+      "status": "automated",
+      "abilityIds": [
+        "kaos-bro-roll-destroy-one-card-per-player"
+      ],
       "mechanics": [
         "first-restriction",
-        "support-from-hand"
+        "result:roll_d6_each_target",
+        "support-from-hand",
+        "trigger:enters_field_zone"
       ],
-      "testRefs": [],
-      "notes": "Physical throw, rotation, and touched-card detection remain player-applied."
+      "testRefs": [
+        "tests/test_reported_card_bugs.py"
+      ],
+      "notes": "Errata (2026-10): one card per player is chosen as it enters, one D6 each, a 1 or a 6 hits."
     },
     "chj7vmavn3d5c4s_en": {
       "collectionNumber": 260,

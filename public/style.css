@@ -245,7 +245,23 @@ input, textarea, select {
 .game-more-popover > button,
 .game-more-popover .phase-header-control > button { text-align: left; }
 .game-more-popover .phase-header-control { display: grid; gap: 6px; }
+.game-more-popover .sound-volume-control {
+  display: grid; grid-template-columns: auto 1fr 3.6em; align-items: center; gap: 8px;
+  min-height: 34px; padding: 4px 9px; box-sizing: border-box; font-size: 14px; font-weight: 700;
+  color: var(--gold-pale); background: var(--carbon); border: 1px solid var(--gold-deep); border-radius: 5px;
+}
+.game-more-popover .sound-volume-control input { width: 100%; min-width: 0; margin: 0; accent-color: var(--gold); cursor: pointer; }
+.game-more-popover .sound-volume-control output { text-align: right; font-variant-numeric: tabular-nums; color: var(--gold); }
+/* Recovery: the drawn hand waits for its cards to land before it can be played */
+body.hand-drawing #myHandTray .hand-card { cursor: progress; }
 .game-more-popover #phaseAdvancedBtn { max-width: none; margin-left: 0; padding-inline: 9px; opacity: 1; pointer-events: auto; }
+.game-volume-control {
+  display: grid; grid-template-columns: minmax(108px, auto) minmax(78px, 1fr) 38px;
+  align-items: center; gap: 8px; min-width: 0;
+}
+.game-volume-control #soundToggleBtn { width: 100%; min-width: 0; text-align: left; }
+.game-volume-control input[type="range"] { width: 100%; min-width: 0; margin: 0; accent-color: var(--gold); cursor: pointer; }
+.game-volume-control output { color: #cfc7a8; font-size: 12px; font-variant-numeric: tabular-nums; text-align: right; }
 .game-header .codes { font-size: 14px; color: #cfc7a8; display: flex; align-items: flex-end; gap: 14px; }
 .game-header .codes .code-item { display: grid; gap: 2px; text-align: center; }
 .game-header .codes .code-item-label { font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: #8f8a6c; }
@@ -3769,3 +3785,31 @@ body.flow-uses-hand .rules-board-flow.is-centered .rules-floating-card { top: 36
   box-shadow: 0 2px 0 #4f9cc0, 0 0 12px #35b7ff55; cursor: pointer;
 }
 .rules-activate-actions button:hover { background: linear-gradient(180deg, #fffbe0, #ffe98a); border-color: #fff1a3; box-shadow: 0 2px 0 #b8952f, 0 0 14px #ffe58a88; }
+
+/* Quick Essence control: anchored to the local Confrontation total. */
+.cz-essence-control { display: inline-flex; align-items: center; gap: 5px; }
+.essence-quick { position: relative; display: inline-flex; align-items: center; z-index: 28; pointer-events: auto; }
+.essence-quick-add {
+  width: 26px; height: 26px; min-height: 0; padding: 0; border-radius: 50%;
+  display: grid; place-items: center; color: #f4dfa5; border: 1px solid #8c7234;
+  background: #171714ed; box-shadow: 0 4px 12px #0007;
+}
+.essence-quick-add svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; }
+.essence-quick-add:hover, .essence-quick-add:focus-visible, .essence-quick.is-open .essence-quick-add { color: #17120a; background: var(--gold); border-color: var(--gold-pale); }
+.essence-quick-popover {
+  position: absolute; left: 50%; bottom: calc(100% + 7px); transform: translate(-50%, 5px);
+  display: flex; gap: 5px; padding: 6px; border: 1px solid #79652f; border-radius: 10px;
+  background: #171714f7; box-shadow: 0 8px 14px #000b; opacity: 0; visibility: hidden;
+  z-index: 4; pointer-events: none; transition: opacity .14s ease, transform .18s cubic-bezier(.2,.75,.2,1), visibility 0s linear .18s;
+}
+.essence-quick:hover .essence-quick-popover,
+.essence-quick:focus-within .essence-quick-popover,
+.essence-quick.is-open .essence-quick-popover { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, 0); transition-delay: 0s; }
+.essence-quick-popover button {
+  width: 34px; height: 34px; min-height: 0; padding: 4px; display: grid; place-items: center;
+  border-radius: 8px; border: 1px solid transparent; background: #282316; box-shadow: none;
+}
+.essence-quick-popover button:hover, .essence-quick-popover button:focus-visible { border-color: var(--gold); background: #3a301a; transform: translateY(-2px); }
+.essence-quick-popover img { width: 24px; height: 24px; }
+.hand-essence-chip { min-height: 0; padding: 2px 4px; border: 0; border-radius: 7px; background: transparent; box-shadow: none; cursor: pointer; }
+.hand-essence-chip:hover, .hand-essence-chip:focus-visible { background: #d7ba6824; box-shadow: inset 0 0 0 1px #d7ba6866; }

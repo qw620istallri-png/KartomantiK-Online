@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261018-rules-beta-138-8";
+const STATIC_ASSET_VERSION = "20261019-rules-beta-139";
 {
   const versionEl = document.getElementById("appVersion");
   // "...-beta-138-1" reads "beta 138.1" (a release without a fix number reads "138.0")
@@ -275,6 +275,40 @@ let joinedName = null;
 let latestState = null;
 let colorByPlayer = new Map();
 const revealedHandCards = new Map(); // playerId -> Set(cardId) ever revealed from their hand, for the hand-view popup
+
+function reconcileRevealedHandCards(nextState) {
+  const players = nextState?.players || {};
+  for (const [playerId, player] of Object.entries(players)) {
+    const visibleCards = player.zones?.hand?.cards;
+    // A currently visible opponent hand is authoritative. Keeping this exact
+    // snapshot also makes the remembered view correct when the reveal ends.
+    if (playerId !== myPlayerId && Array.isArray(visibleCards)) {
+      revealedHandCards.set(playerId, new Set(visibleCards));
+    }
+  }
+
+  const forget = (playerId, cardId) => {
+    if (!playerId || !cardId) return;
+    revealedHandCards.get(playerId)?.delete(cardId);
+  };
+  for (const action of nextState?.rulesEngine?.actionStack || []) {
+    if (action.kind !== "play_card" || !action.sourceOnStack) continue;
+    if (action.source?.zone === "hand") {
+      forget(action.controllerId, action.source.cardId);
+    }
+    for (const movement of action.cost?.tributeMovements || []) {
+      forget(action.controllerId, movement.cardId);
+    }
+    for (const key of ["discardedCard", "revealedCard", "stalematedSource"]) {
+      forget(action.controllerId, action.cost?.[key]?.cardId);
+    }
+  }
+  // Manual placements do not pass through the rules stack. A face-up card on
+  // the field is public proof that this identity is no longer in that hand.
+  for (const item of nextState?.battlefield || []) {
+    if (item.faceUp && item.cardId) forget(item.ownerId, item.cardId);
+  }
+}
 let pendingIncomingRequest = null; // the hand_action_request currently shown in #handRequestPanel
 let pendingTournamentLogDownload = false;
 let tournamentAlertTimer = null;
@@ -1664,14 +1698,17 @@ function collectRulesVfxCleanupMoves(details, fallback) {
   const moves = [];
   movements.forEach((movement) => {
     if (!movement?.itemId || !["moved", "removed_copy"].includes(movement.status)) return;
-    const origin = rulesVfxCenter(rulesVfxFindBattlefieldItem(movement.itemId));
+    const originElement = rulesVfxFindBattlefieldItem(movement.itemId);
+    const origin = rulesVfxCenter(originElement);
     if (!origin) return;
+    const originRect = originElement.getBoundingClientRect();
     const zone = movement.zone || (movement.status === "removed_copy" ? "exile" : "");
     const containerId = movement.containerId || movement.ownerId;
     const pile = $$("[data-field-pile]").find((element) => element.dataset.fieldPile === `${containerId}:${zone}`);
     const cardId = movement.cardId || (latestState?.battlefield || []).find((item) => item.id === movement.itemId)?.cardId;
     moves.push({
       cardId, zone, removedCopy: movement.status === "removed_copy", origin,
+      originSize: originRect.width ? { width: originRect.width, height: originRect.height } : null,
       target: rulesVfxCenter(pile) || (zone === "hand" ? rulesVfxPlayerOrigin(containerId) : fallback),
     });
   });
@@ -1681,7 +1718,7 @@ function collectRulesVfxCleanupMoves(details, fallback) {
 function captureRulesVfxEvent(entry) {
   const event = captureRulesVfxEventInner(entry);
   if (entry.type === "rules_confrontation_cleanup") {
-    (event.cleanupMoves || []).slice(0, 12).filter((move) => !move.removedCopy).forEach((move) => rulesVfxHoldCard(move.cardId, move.origin));
+    (event.cleanupMoves || []).slice(0, 12).filter((move) => !move.removedCopy).forEach((move) => rulesVfxHoldCard(move.cardId, move.origin, move.originSize));
     if (event.supportWin) rulesVfxHoldCard(event.supportWin.cardId, event.supportWin.origin);
   }
   return event;
@@ -1945,6 +1982,49 @@ function applyVfxSpeedPreference() {
   document.documentElement.style.setProperty("--vfx-scale", String(VFX_SPEED_SCALE[vfxSpeed] || 1.4));
   const button = $("#vfxSpeedBtn");
   if (button) button.textContent = vfxSpeedLabel();
+}
+
+function applySoundPreference() {
+  const button = $("#soundToggleBtn");
+  const slider = $("#soundVolumeSlider");
+  const output = $("#soundVolumeValue");
+  const on = window.KKOAudio?.isEnabled() !== false;
+  const volume = Math.round((window.KKOAudio?.getVolume?.() ?? 1) * 100);
+  const displayedVolume = on ? volume : 0;
+  if (button) {
+    button.textContent = t(on ? "soundOn" : "soundOff");
+    button.setAttribute("aria-pressed", String(on));
+  }
+  if (slider) {
+    slider.value = String(displayedVolume);
+    slider.setAttribute("aria-label", t("soundVolume"));
+    slider.setAttribute("aria-valuetext", `${displayedVolume}%`);
+  }
+  if (output) output.value = `${displayedVolume}%`;
+}
+
+function initSoundToggle() {
+  const button = $("#soundToggleBtn");
+  const slider = $("#soundVolumeSlider");
+  applySoundPreference();
+  if (button) {
+    button.onclick = () => {
+      window.KKOAudio?.toggle();
+      applySoundPreference();
+    };
+  }
+  if (slider) {
+    slider.oninput = () => {
+      const volume = Math.max(0, Math.min(100, Number(slider.value))) / 100;
+      if (volume > 0) {
+        window.KKOAudio?.setVolume(volume);
+        window.KKOAudio?.setEnabled(true);
+      } else {
+        window.KKOAudio?.setEnabled(false);
+      }
+      applySoundPreference();
+    };
+  }
 }
 
 function initVfxSpeedToggle() {
@@ -2308,15 +2388,20 @@ function playRulesVfxDice(roll, anchor) {
 
 // A card that is about to fly away stays visible at its place until its flight starts, so it never vanishes first
 const rulesVfxHolds = new Map();
-function rulesVfxHoldCard(cardId, origin) {
+function rulesVfxHoldCard(cardId, origin, size = null) {
   if (!cardId || !origin || rulesVfxReducedMotion()) return;
   rulesVfxReleaseHold(cardId);
   const hold = document.createElement("div");
   hold.className = "rules-vfx-hold";
   hold.setAttribute("aria-hidden", "true");
   hold.innerHTML = `<img src="${esc(cardImage(cardId))}" alt="">`;
-  hold.style.left = `${origin.x - 52}px`;
-  hold.style.top = `${origin.y - 73}px`;
+  // the size of the card it stands for (a small Stalemate strip card stays small)
+  const width = size?.width || 104;
+  const height = size?.height || 146;
+  hold.style.width = `${width}px`;
+  hold.style.height = `${height}px`;
+  hold.style.left = `${origin.x - width / 2}px`;
+  hold.style.top = `${origin.y - height / 2}px`;
   document.body.appendChild(hold);
   rulesVfxHolds.set(cardId, { hold, timer: window.setTimeout(() => rulesVfxReleaseHold(cardId), 45000) });
 }
@@ -2759,7 +2844,37 @@ function playRulesVfxBatch(batch) {
       if (played === false) return 0;
       return typeof played === "number" ? played : base;
     }, estimate);
+    if (event.entry.type === "recovery_draw" && rulesVfxDrawCount(event.entry, myPlayerId)) {
+      // the drawn hand cannot be played before its cards have landed
+      lockHandUntilDrawn(rulesVfxQueueRemaining());
+    }
   });
+}
+
+function rulesVfxDrawCount(entry, playerId) {
+  const drawn = (entry?.details?.draws || {})[playerId];
+  return Number(Array.isArray(drawn) ? drawn.length : drawn?.count ?? drawn) || 0;
+}
+
+// Recovery: the hand stays inert while its draw animation plays
+let handDrawLockUntil = 0;
+let handDrawLockTimer = null;
+
+function handDrawLocked() {
+  return handDrawLockUntil > performance.now();
+}
+
+function lockHandUntilDrawn(duration) {
+  if (rulesVfxReducedMotion() || !(duration > 0)) return;
+  handDrawLockUntil = Math.max(handDrawLockUntil, performance.now() + duration);
+  if (handDrawLockTimer) window.clearTimeout(handDrawLockTimer);
+  document.body.classList.add("hand-drawing");
+  handDrawLockTimer = window.setTimeout(() => {
+    handDrawLockTimer = null;
+    handDrawLockUntil = 0;
+    document.body.classList.remove("hand-drawing");
+    if (latestState) renderAll();
+  }, Math.ceil(handDrawLockUntil - performance.now()) + 50);
 }
 
 let lastRulesVfxBannerKey = "";
@@ -2841,6 +2956,19 @@ function playRulesVfxResolutionBanner(entry) {
 }
 
 // "Uncover the top card of your deck" (Skysailing Triad...): show the card, then what became of it
+function rulesTopRevealOutcomeKey(result) {
+  if (result?.status === "drawn") return "rulesVfxTopDrawn";
+  if (result?.cardType === "manifestation" && !["failed", "revealed_no_effect"].includes(result.status)) return "rulesVfxTopChained";
+  return "";
+}
+
+// the card Skysailing Triad uncovered, in the short log line seen by both players
+function rulesTopRevealLogHtml(result) {
+  if (result?.kind !== "resolve_top_deck_by_type" || !result.cardId) return "";
+  const outcome = rulesTopRevealOutcomeKey(result);
+  return ` — ${esc(t("rulesVfxTopRevealed"))} : ${namedOrUnknownCard(result.cardId)}${outcome ? ` (${esc(t(outcome))})` : ""}`;
+}
+
 function playRulesVfxTopReveal(entry) {
   const result = entry.details?.effectResult || {};
   if (!result.cardId) return 0;
@@ -3058,6 +3186,12 @@ function playRulesVfxEventInner(event) {
       playRulesVfxStackPulse("resolved");
       playRulesVfxImpact(target, t("rulesVfxResolved"), "resolved");
       if (entry.details?.effectResult?.kind === "resolve_top_deck_by_type" && entry.details.effectResult.cardId) {
+        // an uncovered Will that is drawn stays known in its owner's hand for the opponent
+        const ownerId = entry.details.controllerId || entry.actorId;
+        if (entry.details.effectResult.status === "drawn" && ownerId && ownerId !== myPlayerId) {
+          if (!revealedHandCards.has(ownerId)) revealedHandCards.set(ownerId, new Set());
+          revealedHandCards.get(ownerId).add(entry.details.effectResult.cardId);
+        }
         return playRulesVfxTopReveal(entry);
       }
       playRulesVfxCardScene(entry, target);
@@ -3073,6 +3207,15 @@ function playRulesVfxEventInner(event) {
       });
       const diceRoll = Number(entry.details?.effectResult?.roll);
       if (Number.isInteger(diceRoll) && diceRoll >= 1 && diceRoll <= 6) playRulesVfxDice(diceRoll, target);
+      // one die on each card the Bros chose
+      if (entry.details?.effectResult?.kind === "roll_d6_each_target") {
+        (entry.details.effectResult.results || []).forEach((rolled, index) => {
+          const card = rolled.itemId ? document.querySelector(`#battlefield [data-item-id="${CSS.escape(rolled.itemId)}"]`) : null;
+          const rect = card?.getBoundingClientRect();
+          const anchor = rect?.width ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 } : target;
+          window.setTimeout(() => playRulesVfxDice(Number(rolled.roll), anchor), vfxMs(index * 320));
+        });
+      }
       if (entry.details?.effectResult?.kind === "neutralize_stack_action") {
         if (entry.details.effectResult.status === "neutralized") {
           // the countered effect shatters against a glass shield
@@ -3250,6 +3393,8 @@ let pendingRulesActionSource = null;
 let pendingRulesBoardFlow = null;
 let pendingSupportDrop = null;
 let rulesBoardTargetCleanup = [];
+// the field cards a target choice is armed on: a board rebuild (resize, full screen) replaces them
+let rulesBoardArmedElements = [];
 let rulesBoardPointerMove = null;
 
 function closeRulesActionPanel() {
@@ -3293,6 +3438,7 @@ function rulesTargetElement(target) {
 function clearRulesBoardTargets() {
   rulesBoardTargetCleanup.forEach((cleanup) => cleanup());
   rulesBoardTargetCleanup = [];
+  rulesBoardArmedElements = [];
   if (rulesBoardPointerMove) document.removeEventListener("pointermove", rulesBoardPointerMove);
   rulesBoardPointerMove = null;
   const path = $("#rulesTargetArrow .rules-target-arrow-line");
@@ -3318,6 +3464,8 @@ function cancelRulesBoardFlow() {
     send({ type: "resolve_rules_choice", choiceId: flow.choiceId, option: "decline" });
   }
   closeRulesBoardFlow();
+  // a choice the server still waits for cannot be dismissed (Escape when leaving full screen): it comes back
+  if (flow?.choiceId && flow.mode !== "chain") renderRulesBoardFlow();
 }
 
 function rulesChainChoice() {
@@ -3607,9 +3755,10 @@ function submitRulesBoardFlow(target = null) {
     return;
   }
   if (flow.mode === "placement") {
-    if (!target) return;
-    const targetPayload = rulesTargetPayload(target);
-    sendCardPlacement(flow.placement, flow.source, [targetPayload]);
+    // target groups (Kaos Bro, Karma Bro: one card per player) arrive as selectedTargets
+    const chosen = [...(flow.selectedTargets || []), ...(target ? [target] : [])];
+    if (!chosen.length) return;
+    sendCardPlacement(flow.placement, flow.source, chosen.map(rulesTargetPayload));
     closeRulesBoardFlow();
     return;
   }
@@ -3653,6 +3802,12 @@ function releaseRulesBoardFlowAfterError() {
   flow.stage = flow.previousStage && flow.previousStage !== "committing" ? flow.previousStage : "payment";
   if (flow.stage === "payment") flow.selectedPaymentIndexes = new Set();
   renderRulesBoardFlow();
+}
+
+function rulesDraftOffersOptionalTargets(draft) {
+  return Number(draft?.targetRules?.min || 0) === 0
+    && Number(draft?.targetRules?.max || 0) > 0
+    && (draft?.structuredTargets || []).length > 0;
 }
 
 function scheduleRulesBoardSubmit() {
@@ -3751,7 +3906,7 @@ function armRulesBoardTargets(flow) {
         </button>`;
         }).join("")}
       </div>
-      ${multiPick ? `<div class="rules-zone-pick-actions"><button type="button" class="primary" data-zone-pick-confirm ${(flow.selectedTargets || []).length >= Math.max(1, minTargets) ? "" : "disabled"}>${esc(t("confirm"))} (${(flow.selectedTargets || []).length}/${maxTargets})</button></div>` : ""}
+      ${multiPick ? `<div class="rules-zone-pick-actions"><button type="button" class="primary" data-zone-pick-confirm ${(flow.selectedTargets || []).length >= minTargets ? "" : "disabled"}>${esc(t("confirm"))} (${(flow.selectedTargets || []).length}/${maxTargets})</button></div>` : ""}
     </div>`;
     document.body.appendChild(popup);
     popup.querySelectorAll("[data-zone-pick]").forEach((button) => {
@@ -3791,6 +3946,7 @@ function armRulesBoardTargets(flow) {
     }
     if (!element) return;
     visibleTargets.push(target);
+    rulesBoardArmedElements.push(element);
     element.classList.add("rules-valid-target");
     const reticle = document.createElement("span");
     reticle.className = "rules-target-reticle";
@@ -3836,7 +3992,8 @@ function advanceRulesBoardFlow() {
     renderRulesBoardFlow();
     return;
   }
-  const needsTarget = Number(flow.draft.targetRules?.min || 0) > 0;
+  const needsTarget = Number(flow.draft.targetRules?.min || 0) > 0
+    || rulesDraftOffersOptionalTargets(flow.draft);
   if (needsTarget) {
     flow.stage = "target";
     renderRulesBoardFlow();
@@ -3917,9 +4074,18 @@ function renderRulesBoardFlow() {
     // a Concealed card (Jigon, Tebebe) is played from the field face down
     && (battlefieldSource.faceUp || (flow.source.playFromField && battlefieldSource.concealedWill))
   );
+  // Grimoire: a Will placed on its host is played as if it were in the hand
+  const attachedHost = flow.source.zone === "attached"
+    ? latestState?.battlefield?.find((item) => item.id === flow.source.itemId)
+    : null;
+  const attachedSourceStillValid = Boolean(
+    attachedHost
+    && battlefieldItemControllerId(attachedHost) === myPlayerId
+    && (attachedHost.attachedCards || []).some((entry) => entry.cardId === flow.source.cardId)
+  );
   if (flow.mode === "action" && (
     latestState?.rulesEngine?.priorityPlayerId !== myPlayerId
-    || (!handSourceStillValid && !battlefieldSourceStillValid)
+    || (!handSourceStillValid && !battlefieldSourceStillValid && !attachedSourceStillValid)
   )) {
     closeRulesBoardFlow();
     return;
@@ -4270,6 +4436,9 @@ function rulesActivatedActionDraft(item, abilityOverride = null) {
   if (
     isObserver
     || !item?.faceUp
+    // a card without its effects (Stalemate Zone, lost effects) has nothing to activate
+    || item.effectsInactive
+    || item.effectsDisabled
     || (
       battlefieldItemControllerId(item) !== myPlayerId
       && !ability?.anyPlayer
@@ -4348,9 +4517,11 @@ function beginRulesBoardAction(source) {
     stage: rulesInitialActionStage(draft),
   };
   renderRulesBoardFlow();
-  if (pendingRulesBoardFlow && pendingRulesBoardFlow.stage === "target" && Number(draft.targetRules?.min || 0) === 0) {
-    scheduleRulesBoardSubmit();
-  }
+  if (
+    pendingRulesBoardFlow && pendingRulesBoardFlow.stage === "target"
+    && Number(draft.targetRules?.min || 0) === 0
+    && !rulesDraftOffersOptionalTargets(draft)
+  ) scheduleRulesBoardSubmit();
   return true;
 }
 
@@ -4383,6 +4554,7 @@ function beginRulesHandActivatedAction(cardId, handIndex, zone = "hand", contain
     pendingRulesBoardFlow
     && pendingRulesBoardFlow.stage === "target"
     && Number(draft.targetRules?.min || 0) === 0
+    && !rulesDraftOffersOptionalTargets(draft)
   ) scheduleRulesBoardSubmit();
   return true;
 }
@@ -4409,9 +4581,11 @@ function beginRulesBoardActivatedAction(item, abilityId = null) {
     stage: rulesInitialActionStage(available.draft),
   };
   renderRulesBoardFlow();
-  if (pendingRulesBoardFlow && pendingRulesBoardFlow.stage === "target" && Number(available.draft.targetRules?.min || 0) === 0) {
-    scheduleRulesBoardSubmit();
-  }
+  if (
+    pendingRulesBoardFlow && pendingRulesBoardFlow.stage === "target"
+    && Number(available.draft.targetRules?.min || 0) === 0
+    && !rulesDraftOffersOptionalTargets(available.draft)
+  ) scheduleRulesBoardSubmit();
   return true;
 }
 
@@ -4660,21 +4834,48 @@ function rulesLimboPlayMode() {
   return hollow ? "hollow" : null;
 }
 
+const JU_LIEN_CARD_ID = "qapv47r7rz6gqah_en";
+
 // Cards that can be played from another zone right now (Limbo, Wills placed on a Grimoire) show up as faded cards at the end of the hand
 function rulesGhostHandCards() {
   const rules = latestState?.rulesEngine;
-  if (!rules?.enabled || isObserver || rules.pendingChoice || !latestState?.players?.[myPlayerId]) return [];
+  if (!rules?.enabled || isObserver || !latestState?.players?.[myPlayerId]) return [];
   const ghosts = [];
+  const uncoveredTop = rules.uncoveredTops?.[myPlayerId];
+  if (uncoveredTop && cardsById.get(uncoveredTop)?.type === "manifestation") {
+    ghosts.push({
+      cardId: uncoveredTop,
+      zone: "deck",
+      label: t("deck"),
+      playable: handCardIsPlayable(uncoveredTop),
+    });
+  }
+  if (rules.pendingChoice) return ghosts;
   const paying = pendingRulesBoardFlow?.stage === "payment" ? pendingRulesBoardFlow : null;
   if (paying) {
-    // Tribute: Limbo cards that may pay it (Forgotten Pile...) appear in the hand like the others
+    // Tribute cards outside the Hand appear beside it and retain their source-zone label.
     for (const candidate of paying.draft?.manifestations || []) {
-      if (candidate.zone === "graveyard") ghosts.push({ cardId: candidate.cardId, zone: "payment", selectionKey: candidate.selectionKey, label: t("graveyard") });
+      if (candidate.zone !== "hand") ghosts.push({
+        cardId: candidate.cardId,
+        zone: "payment",
+        selectionKey: candidate.selectionKey,
+        label: t(candidate.zone),
+      });
     }
     return ghosts;
   }
   for (const cardId of new Set(latestState.players[myPlayerId].zones?.graveyard?.cards || [])) {
     if (limboWillIsPlayable(cardId)) ghosts.push({ cardId, zone: "graveyard", label: t("graveyard") });
+    // Wandering Veteran: playable in Support from the Limbo, shown in the hand while it can be played
+    else if (rulesLimboPermissionPlayable(cardId)) ghosts.push({ cardId, zone: "graveyard", label: t("graveyard"), permission: true });
+  }
+  // Ju Lien: the Will that won is played "as if it were in your hand", without tribute
+  for (const item of latestState.battlefield || []) {
+    if (
+      (item.controllerId || item.ownerId) === myPlayerId && item.faceUp
+      && Number(item.playableFree) === Number(latestState.phaseTracker?.turn)
+      && limboWillIsPlayable(item.cardId, true)
+    ) ghosts.push({ cardId: item.cardId, zone: "field_free", itemId: item.id, label: cardName(JU_LIEN_CARD_ID).split(",")[0] });
   }
   for (const host of latestState.battlefield || []) {
     if (host.ownerId !== myPlayerId || !(host.attachedCards || []).length) continue;
@@ -4695,6 +4896,26 @@ function tebebeManifestationIsPlayable(item) {
   if (!rules?.enabled || !item?.tebebeConcealed || card?.type !== "manifestation" || isObserver || rules.pendingChoice) return false;
   if (rules.priorityPlayerId !== myPlayerId || rulesCardPlayRestrictedClient(item.cardId)) return false;
   return ["confrontation_reaction", "end_actions"].includes(currentPhaseUi().phase?.id);
+}
+
+// a Limbo card with a play permission (Wandering Veteran) that can be played right now
+function rulesLimboPermission(cardId) {
+  return (latestState?.rulesEngine?.playPermissions || []).find((permission) => (
+    permission.playerId === myPlayerId
+    && permission.fromZone === "graveyard"
+    && permission.cardId === cardId
+    && Number(permission.turn || 0) === Number(latestState?.phaseTracker?.turn || 0)
+  )) || null;
+}
+
+function rulesLimboPermissionPlayable(cardId) {
+  const rules = latestState?.rulesEngine;
+  const permission = rulesLimboPermission(cardId);
+  if (!permission || !rules?.enabled || isObserver || rules.pendingChoice) return false;
+  if (rules.priorityPlayerId !== myPlayerId) return false;
+  if (!(latestState?.players?.[myPlayerId]?.zones?.graveyard?.cards || []).includes(cardId)) return false;
+  if (permission.phaseIds?.length && !permission.phaseIds.includes(currentPhaseUi().phase?.id)) return false;
+  return !(permission.asSupport && rulesSupportEntryLockedClient());
 }
 
 function limboWillIsPlayable(cardId, fromField = false) {
@@ -5053,9 +5274,11 @@ function buildRulesActionDraft(source, abilityOverride = undefined) {
   let encodedAbility = abilityOverride !== undefined
     ? abilityOverride
     : source?.actionKind === "activated_effect"
+      // an ability naming the zone wins over a field ability (Malaleuco: Interzone copy, then from Hand)
       ? (activatedAbilitiesByCard.get(source.cardId) || []).find((ability) => (
+          Array.isArray(ability.sourceZones) && ability.sourceZones.includes(source.zone)
+        )) || (activatedAbilitiesByCard.get(source.cardId) || []).find((ability) => (
           !Array.isArray(ability.sourceZones)
-          || ability.sourceZones.includes(source.zone)
         )) || null
     : source?.playFromField
       ? (playedAbilitiesByCard.get(source.cardId) || [])[0] || null
@@ -5297,6 +5520,7 @@ function setInterfaceLanguage(nextLanguage) {
   document.documentElement.lang = currentLanguage;
   paintStaticText();
   updateLanguageButtons();
+  applySoundPreference();
   const selectedEssence = selectedEssenceTemperament;
   initEssenceToolbar();
   if (selectedEssence) {
@@ -5409,7 +5633,7 @@ function paintStaticText() {
   $("#tokenPowerLabel").textContent = t("tokenPower");
   $("#tokenCancelBtn").textContent = t("close");
   $("#tokenCreateBtn").textContent = t("create");
-  $("#createEssenceBtn").title = t("createEssence");
+  $("#createEssenceBtn").title = t("neutralToken");
   $("#pileCalibrateBtn").title = t(pilesLocked ? "unlockPiles" : "lockPiles");
   $("#essencePanelHeading").textContent = t("essencePanelHeading");
   $("#essencePanelHint").textContent = t("essencePanelHint");
@@ -5711,6 +5935,8 @@ function handleServerMessage(msg) {
   } else if (msg.type === "state") {
     const rulesEffectVfxChanges = prepareRulesEffectVfxChanges(msg);
     const rulesVfxBatch = prepareRulesVfxBatch(msg);
+    window.KKOAudio?.observeState(latestState, msg, myPlayerId);
+    reconcileRevealedHandCards(msg);
     latestState = msg;
     if (connectionMode === "tournament" && connectionRole === "player") {
       const status = msg.tournament?.status;
@@ -5748,6 +5974,7 @@ function handleServerMessage(msg) {
       }
     }
   } else if (msg.type === "reveal") {
+    window.KKOAudio?.play("cardFlip");
     if (msg.zone === "hand") {
       if (!revealedHandCards.has(msg.ownerId)) revealedHandCards.set(msg.ownerId, new Set());
       const set = revealedHandCards.get(msg.ownerId);
@@ -5759,6 +5986,7 @@ function handleServerMessage(msg) {
   } else if (msg.type === "dice_result") {
     handleDiceResult(msg);
   } else if (msg.type === "error") {
+    window.KKOAudio?.play(/essence|tribute|cost|afford|payer|coût/i.test(String(msg.message || "")) ? "notEnough" : "error");
     if (msg.code === "session_not_found" && !$("#gameScreen").classList.contains("hidden")) {
       // this was a reconnect attempt (gameScreen already visible) hitting a
       // session that's genuinely gone (e.g. the server process restarted) —
@@ -6610,7 +6838,7 @@ function formatPlayerLogEntry(e) {
     case "rules_action_resolved":
       return d.effectResult?.kind === "neutralize_stack_action" && d.effectResult.status === "neutralized"
         ? `${who} ${esc(t("plNeutralizedStackCard"))} ${namedOrUnknownCard(d.effectResult.cardId)}`
-        : `${who} ${esc(t("plResolvedStackAction"))} ${d.source?.cardId ? namedOrUnknownCard(d.source.cardId) : esc(d.label || "")}${rulesRollLogText(d.effectResult) ? ` — ${esc(rulesRollLogText(d.effectResult))}` : ""}`;
+        : `${who} ${esc(t("plResolvedStackAction"))} ${d.source?.cardId ? namedOrUnknownCard(d.source.cardId) : esc(d.label || "")}${rulesRollLogText(d.effectResult) ? ` — ${esc(rulesRollLogText(d.effectResult))}` : ""}${rulesTopRevealLogHtml(d.effectResult)}`;
     case "rules_choice_resolved":
       if (d.kind === "stack_copy_targets") {
         return `${who} ${esc(t("plCopiedStackWill"))} ${namedOrUnknownCard(d.targetCardId)}`;
@@ -6687,12 +6915,17 @@ function renderPlayerLog(entries, playerId) {
 const recentLogCollapsed = new Set();
 let opponentHandHiddenByUser = false;
 
+// a field card that counts as a Manifestation: tokens, and Wills turned into one (Rinq, Ju Lien)
+function fieldItemIsManifestation(item) {
+  return Boolean(item?.isTokenCard || item?.willManifestation || cardsById.get(item?.cardId)?.type === "manifestation");
+}
+
 // Total Power of a player's face-up Manifestations in the Confrontation Zone
 function confrontationPowerOf(playerId) {
   return (latestState?.battlefield || []).reduce((total, item) => {
     if (!item.faceUp || item.fieldZone !== "confrontation") return total;
     if ((item.controllerId || item.ownerId) !== playerId) return total;
-    if (cardsById.get(item.cardId)?.type !== "manifestation" && !item.isTokenCard) return total;
+    if (!fieldItemIsManifestation(item)) return total;
     // the server's own count when it sends one (never below 0, ignored Power = 0)
     const power = Number(item.confrontationPower ?? Math.max(0, Number(item.effectivePower ?? cardsById.get(item.cardId)?.power ?? item.power)));
     return total + (Number.isFinite(power) ? power : 0);
@@ -6707,7 +6940,7 @@ function activeTemperamentOf(playerId) {
   battlefield.forEach((item, index) => {
     if (!item.faceUp || item.fieldZone !== "confrontation") return;
     if ((item.controllerId || item.ownerId) !== playerId) return;
-    if (cardsById.get(item.cardId)?.type !== "manifestation" && !item.isTokenCard) return;
+    if (!fieldItemIsManifestation(item)) return;
     const order = Number(item.confrontationOrder || 0);
     if (!best || order > best.order || (order === best.order && index > best.index)) {
       best = { item, order, index };
@@ -6716,6 +6949,85 @@ function activeTemperamentOf(playerId) {
   if (!best) return "";
   const temperament = best.item.effectiveTemperament || best.item.temperament || cardsById.get(best.item.cardId)?.temperaments?.[0];
   return temperament ? `<img class="active-temperament-badge" src="${esc(temperamentSymbol(temperament))}" alt="${esc(temperament)}" title="${esc(t("rulesActiveTemperament"))}">` : "";
+}
+
+function essencePoolForPlayer(playerId) {
+  const pool = new Map();
+  (latestState?.tokens || []).forEach((token) => {
+    const amount = Number(token.counters?.essence || 0);
+    if (token.ownerId !== playerId || !token.isEssence || token.isNeutralCounter || !token.temperament || amount <= 0) return;
+    pool.set(token.temperament, (pool.get(token.temperament) || 0) + amount);
+  });
+  return pool;
+}
+
+let essenceQuickHeldOpen = false;
+
+function essenceQuickPickerMarkup(playerId) {
+  if (isObserver || playerId !== myPlayerId || latestState?.rulesEngine?.enabled) return "";
+  return `<span class="essence-quick${essenceQuickHeldOpen ? " is-open" : ""}" data-essence-quick>
+    <button type="button" class="essence-quick-add" data-essence-quick-add aria-label="${esc(t("essenceAddOne"))}" title="${esc(t("essenceAddOne"))}" aria-expanded="${String(essenceQuickHeldOpen)}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+    <span class="essence-quick-popover" role="menu" aria-label="${esc(t("essenceAddOne"))}">
+      ${TEMPERAMENTS.map((temperament) => `<button type="button" role="menuitem" data-create-essence="${esc(temperament.key)}" title="${esc(t(`temperament${temperament.key[0].toUpperCase()}${temperament.key.slice(1)}`))}"><img src="${esc(temperamentSymbol(temperament.key))}" alt=""></button>`).join("")}
+    </span>
+  </span>`;
+}
+
+function createQuickEssence(temperament) {
+  if (isObserver || !myPlayerId || latestState?.rulesEngine?.enabled || !TEMPERAMENTS.some((entry) => entry.key === temperament)) return;
+  const view = fieldCenterLogical();
+  const center = rotateForSeat(view.x, view.y);
+  send({
+    type: "create_essence_token", temperament, neutral: false, label: "",
+    color: playerColor(myPlayerId), count: 1,
+    x: center.x - 26 + Math.random() * 60 - 30,
+    y: center.y - 26 + Math.random() * 60 - 30,
+  });
+}
+
+function removeQuickEssence(temperament) {
+  if (isObserver || !myPlayerId || latestState?.rulesEngine?.enabled) return;
+  const token = (latestState?.tokens || []).find((entry) => (
+    entry.ownerId === myPlayerId && entry.isEssence && !entry.isNeutralCounter
+    && entry.temperament === temperament && Number(entry.counters?.essence || 0) > 0
+  ));
+  if (!token) return;
+  if (Number(token.counters?.essence || 0) <= 1) send({ type: "remove_token", tokenId: token.id });
+  else send({ type: "add_counter", tokenId: token.id, counterKey: "essence", delta: -1 });
+}
+
+function bindEssenceQuickControls(root = document) {
+  root.querySelectorAll?.("[data-essence-quick]").forEach((picker) => {
+    const add = picker.querySelector("[data-essence-quick-add]");
+    add?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      essenceQuickHeldOpen = !picker.classList.contains("is-open");
+      picker.classList.toggle("is-open", essenceQuickHeldOpen);
+      add.setAttribute("aria-expanded", String(essenceQuickHeldOpen));
+    });
+    picker.addEventListener("pointerleave", () => {
+      essenceQuickHeldOpen = false;
+      picker.classList.remove("is-open");
+      add?.setAttribute("aria-expanded", "false");
+    });
+    picker.querySelectorAll("[data-create-essence]").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        createQuickEssence(button.dataset.createEssence);
+        essenceQuickHeldOpen = true;
+        picker.classList.add("is-open");
+        add?.setAttribute("aria-expanded", "true");
+      });
+    });
+  });
+  root.querySelectorAll?.("[data-remove-essence]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      removeQuickEssence(button.dataset.removeEssence);
+    });
+  });
 }
 
 function renderMyInfoStrip() {
@@ -6729,7 +7041,8 @@ function renderMyInfoStrip() {
   strip.innerHTML = `
     <span class="my-info-badge" title="${esc(t("hand"))}"><span class="hand-stack-icon" style="--owner-color:${playerColor(me.id)}"><span class="hand-stack-card"></span><span class="hand-stack-card"></span><span class="hand-stack-card"></span></span><b>${handCount}</b></span>
     <span class="opp-vessel-badge" data-vessel-badge="${esc(me.id)}" title="${esc(t("receptacle"))}">${receptaclePoints(me.zones.receptacle, me.score)} ${esc(t("vesselPoints"))}</span>
-    <span class="opp-power-badge" title="${esc(t("rulesPowerTotal"))}">⚔ ${confrontationPowerOf(me.id)}${activeTemperamentOf(me.id)}</span>`;
+    <span class="cz-essence-control">${essenceQuickPickerMarkup(me.id)}<span class="opp-power-badge" title="${esc(t("rulesPowerTotal"))}">⚔ ${confrontationPowerOf(me.id)}${activeTemperamentOf(me.id)}</span></span>`;
+  bindEssenceQuickControls(strip);
 }
 
 function renderOppRows() {
@@ -7297,6 +7610,7 @@ function initViewToggles() {
   $("#hideInterfaceBtn").title = t("hideInterface");
   $("#rarityEffectsToggleBtn").innerHTML = rarityEffectsIconSvg();
   applyVfxSpeedPreference();
+  applySoundVolume();
 }
 
 function updateHeaderCounts() {
@@ -7442,7 +7756,8 @@ function pileFieldHtml(ownerId, zone, zoneData, canView, canAct, pos, score, ove
     && zonePermission.phaseIds?.includes(currentPhaseUi().phase?.id)
     && latestState?.rulesEngine?.priorityPlayerId === myPlayerId
   );
-  const conditionalCard = zonePermission ? `<div role="button" tabindex="0"
+  // while it can be played, the card waits in the hand (rulesGhostHandCards), not beside the pile
+  const conditionalCard = zonePermission && !rulesLimboPermissionPlayable(zonePermission.cardId) ? `<div role="button" tabindex="0"
       class="rules-zone-play-card${permissionPlayable ? " is-playable" : ""}"
       data-rules-zone-play-card="${esc(zonePermission.cardId)}"
       data-rules-zone-play-owner="${esc(ownerId)}"
@@ -7704,17 +8019,20 @@ function renderHandEssenceStrip() {
     pool.set(token.temperament, (pool.get(token.temperament) || 0) + amount);
   });
   strip.classList.toggle("hidden", !myPlayerId || pool.size === 0);
-  strip.innerHTML = [...pool].map(([temperament, amount]) => (
-    `<span class="hand-essence-chip" title="${esc(t("essence"))} ×${amount}"><img src="${esc(temperamentSymbol(temperament))}" alt="${esc(temperament)}"><b>${amount}</b></span>`
-  )).join("");
+  const manual = !latestState?.rulesEngine?.enabled;
+  strip.innerHTML = [...pool].map(([temperament, amount]) => manual
+    ? `<button type="button" class="hand-essence-chip" data-remove-essence="${esc(temperament)}" title="${esc(t("essenceRemoveOne"))}: ${esc(t(`temperament${temperament[0].toUpperCase()}${temperament.slice(1)}`))}"><img src="${esc(temperamentSymbol(temperament))}" alt=""><b>${amount}</b></button>`
+    : `<span class="hand-essence-chip" title="${esc(t(`temperament${temperament[0].toUpperCase()}${temperament.slice(1)}`))}"><img src="${esc(temperamentSymbol(temperament))}" alt=""><b>${amount}</b></span>`
+  ).join("");
   strip.setAttribute("aria-label", t("essence"));
+  bindEssenceQuickControls(strip);
 }
 
 // Manifestations with an ability usable from the Hand (e.g. Ranba) stay actionable
 function handCardHasHandAction(cardId) {
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
-  if (!rules?.enabled || !card || isObserver || rules.pendingChoice || card.type !== "manifestation") return false;
+  if (!rules?.enabled || !card || isObserver || rules.pendingChoice || handDrawLocked() || card.type !== "manifestation") return false;
   // while the first Manifestation (or a mulligan) is being chosen, hand effects are not usable
   if (rules_pregame_active_client() || rules_recovery_mulligan_active_client() || rulesFirstManifestationActive()) return false;
   if (rules.priorityPlayerId !== myPlayerId) return false;
@@ -7755,11 +8073,12 @@ function rulesPlayedAbilityTargetsAvailableClient(cardId) {
 function handCardIsPlayable(cardId) {
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
-  if (!rules?.enabled || !card || isObserver || rules.pendingChoice) return false;
+  if (!rules?.enabled || !card || isObserver || rules.pendingChoice || handDrawLocked()) return false;
   if (rules_pregame_active_client() || rules_recovery_mulligan_active_client()) return false;
+  if (isTrapCardClient(cardId)) return trapPlayableClient(cardId);
   if (rulesFirstManifestationActive()) {
     if (trapPlayableClient(cardId)) return true;
-    return (card.type === "manifestation" || card.placeholder)
+    return ((card.type === "manifestation" && rulesPlayType(card) === "manifestation") || card.placeholder)
       && !String(card.effect || "").includes("Cannot be played as First Manifestation")
       && !(rules.firstManifestationItemIds || {})[myPlayerId];
   }
@@ -7794,14 +8113,22 @@ function handCardIsPlayable(cardId) {
     return timingOk && rulesCanAffordCard(cardId)
       && rulesPlayedAbilityTargetsAvailableClient(cardId);
   }
+  const supportLocked = (rules.supportEntryLockedPlayerIds || []).includes(myPlayerId);
   if (card.type === "manifestation" && rulesEndPhaseInterzonePlayClient(card)) {
     if (phaseId === "end_actions") return !stackHasActions && rulesInterzoneHasRoomClient();
-    if (phaseId !== "confrontation_reaction") return false;
+    if (phaseId !== "confrontation_reaction" || supportLocked) return false;
   }
-  if (card.type === "manifestation" && rulesTopOfStackIsWillClient(card)) return true;
+  // Pin Down: no Manifestation may enter the Confrontation Zone this turn
+  if (card.type === "manifestation" && rulesSupportEntryLockedClient()) return false;
+  if (card.type === "manifestation" && rulesTopOfStackIsWillClient(card)) return !supportLocked;
   return card.type === "manifestation"
+    && !supportLocked
     && phaseId === "confrontation_reaction"
     && rulesSupportFromHandAvailableClient(cardId);
+}
+
+function rulesSupportEntryLockedClient() {
+  return Boolean(latestState?.rulesEngine?.supportEntryLocked);
 }
 
 function rulesTopOfStackIsWillClient(card) {
@@ -7893,6 +8220,7 @@ function rulesSupportFromHandAvailableClient(cardId) {
 }
 
 function rulesBattlefieldSupportAvailableClient(item) {
+  if (rulesSupportEntryLockedClient() || item?.effectsInactive || item?.effectsDisabled) return false;
   const effect = String(cardsById.get(item?.cardId)?.effect || "");
   if (item?.fieldZone === "stalemate") {
     return /can enter in Support from the Stalemate Zone/i.test(effect);
@@ -8053,7 +8381,7 @@ function renderHandTray() {
         ${automationCoverageBadgeHtml(cardId)}
         <span class="hand-card-revealed-icon" title="${esc(t("rulesSuspended"))}">S</span>
       </div>`;
-    }).join("") + ghostCards.map((ghost, index) => `<div class="hand-card is-playable is-ghost" data-ghost-card="${esc(ghost.cardId)}" data-ghost-zone="${esc(ghost.zone)}" data-ghost-host="${esc(ghost.itemId || "")}" data-ghost-key="${esc(String(ghost.selectionKey ?? ""))}" role="button" tabindex="0" aria-label="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" title="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" style="${handCurveStyle(cards.length + suspendedCards.length + index, cards.length + suspendedCards.length + ghostCards.length)}--hand-z:${cards.length + suspendedCards.length + index};${rarityCosmosStyle(ghost.cardId)}">
+    }).join("") + ghostCards.map((ghost, index) => `<div class="hand-card ${ghost.playable === false ? "" : "is-playable "}is-ghost" data-ghost-card="${esc(ghost.cardId)}" data-ghost-zone="${esc(ghost.zone)}" data-ghost-host="${esc(ghost.itemId || "")}" data-ghost-key="${esc(String(ghost.selectionKey ?? ""))}" data-ghost-playable="${ghost.playable === false ? "false" : "true"}"${ghost.permission ? ` data-ghost-permission="true"` : ""} role="button" tabindex="0" aria-label="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" title="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" style="${handCurveStyle(cards.length + suspendedCards.length + index, cards.length + suspendedCards.length + ghostCards.length)}--hand-z:${cards.length + suspendedCards.length + index};${rarityCosmosStyle(ghost.cardId)}">
         ${raritySurfaceMarkup(null, `<img src="${esc(cardImage(ghost.cardId))}" alt="${esc(cardName(ghost.cardId))}">`)}
         <span class="hand-ghost-label">${esc(ghost.label)}</span>
       </div>`).join("");
@@ -8116,6 +8444,11 @@ function renderHandTray() {
     const cardId = el.dataset.ghostCard;
     const zone = el.dataset.ghostZone;
     const itemId = el.dataset.ghostHost || null;
+    if (el.dataset.ghostPlayable === "false") {
+      el.onclick = () => showInspect(cardId);
+      wireCardHoverZoom(el, "hand-card-hover-clone");
+      return;
+    }
     if (zone === "payment") {
       const candidate = pendingRulesBoardFlow?.draft?.manifestations?.find((entry) => String(entry.selectionKey) === el.dataset.ghostKey);
       el.onclick = () => { if (candidate) toggleRulesBoardPayment(candidate.selectionKey); };
@@ -8125,8 +8458,11 @@ function renderHandTray() {
     }
     const startPlay = (placement) => beginRulesBoardAction(zone === "attached"
       ? { cardId, zone, itemId, placement }
-      : { cardId, zone, placement });
-    el.onclick = () => startPlay({ x: 700, y: 300 });
+      : zone === "field_free"
+        ? { cardId, zone: "battlefield", itemId, playFromField: true, fieldFree: true, placement }
+        : { cardId, zone, placement });
+    // a Limbo permission (Wandering Veteran) is played by dragging it like a hand card
+    el.onclick = el.dataset.ghostPermission === "true" ? () => showInspect(cardId) : () => startPlay({ x: 700, y: 300 });
     bindCardDragSource(el, { kind: "card", cardId, handIndex: null, cardOwnerId: meId, fromOwnerId: meId, fromZone: zone, ghostHostId: itemId });
     wireCardHoverZoom(el, "hand-card-hover-clone");
     el.addEventListener("contextmenu", (event) => {
@@ -10275,6 +10611,13 @@ function resolveDrop(ctx, clientX, clientY) {
     const logical = boardDropLogical(fieldEl, clientX, clientY, ctx);
     const anchor = stackAnchorAt(clientX, clientY, null);
     const card = cardsById.get(ctx.cardId);
+    if (latestState?.rulesEngine?.enabled && ctx.fromZone === "field_free" && ctx.ghostHostId) {
+      beginRulesBoardAction({
+        cardId: ctx.cardId, zone: "battlefield", itemId: ctx.ghostHostId, playFromField: true, fieldFree: true,
+        placement: { x: logical.x, y: logical.y },
+      });
+      return;
+    }
     if (latestState?.rulesEngine?.enabled && ctx.fromZone === "attached" && ctx.ghostHostId) {
       beginRulesBoardAction({
         cardId: ctx.cardId, zone: "attached", itemId: ctx.ghostHostId,
@@ -10372,6 +10715,8 @@ function reorderHandDrop(cardId, clientX) {
 function bindCardDragSource(el, ctx) {
   el.addEventListener("pointerdown", (event) => {
     if (event.target.closest("button, select")) return;
+    // the freshly drawn Recovery hand is not playable before it has landed
+    if (ctx.fromZone === "hand" && handDrawLocked() && latestState?.rulesEngine?.enabled) return;
     event.preventDefault();
     const startX = event.clientX, startY = event.clientY;
     let moved = false;
@@ -10830,27 +11175,22 @@ function initTokenToolbar() {
 let selectedEssenceTemperament = null;
 
 function initEssenceToolbar() {
-  $("#createEssenceBtn").textContent = "✨";
-  $("#essenceTemperamentGrid").innerHTML = TEMPERAMENTS.map(
-    (temp) => `<button data-temperament="${esc(temp.key)}"><img src="${esc(temperamentSymbol(temp.key))}" alt="">${esc(t("temperament" + temp.key[0].toUpperCase() + temp.key.slice(1)))}</button>`
-  ).join("") + `<button data-temperament="neutral" class="neutral-token-choice"><span></span>${esc(t("neutralToken"))}</button>`;
-  $$("#essenceTemperamentGrid button").forEach((btn) => {
-    btn.onclick = () => {
-      selectedEssenceTemperament = btn.dataset.temperament;
-      $$("#essenceTemperamentGrid button").forEach((b) => b.classList.toggle("active", b === btn));
-      $("#neutralTokenNameField").classList.toggle("hidden", selectedEssenceTemperament !== "neutral");
-      if (selectedEssenceTemperament === "neutral") $("#neutralTokenNameInput").focus();
-    };
-  });
+  const button = $("#createEssenceBtn");
+  button.textContent = "⊕";
+  button.title = t("neutralToken");
+  $("#essenceTemperamentGrid").innerHTML = `<button data-temperament="neutral" class="neutral-token-choice active"><span></span>${esc(t("neutralToken"))}</button>`;
 
-  $("#createEssenceBtn").onclick = () => {
-    selectedEssenceTemperament = null;
-    $$("#essenceTemperamentGrid button").forEach((b) => b.classList.remove("active"));
-    $("#essenceTemperamentGrid .neutral-token-choice span").style.setProperty("--neutral-color", playerColor(myPlayerId));
+  button.onclick = () => {
+    selectedEssenceTemperament = "neutral";
+    const choice = $("#essenceTemperamentGrid .neutral-token-choice");
+    choice.classList.add("active");
+    choice.querySelector("span").style.setProperty("--neutral-color", playerColor(myPlayerId));
     $("#essenceCountInput").value = 1;
     $("#neutralTokenNameInput").value = t("neutralToken");
-    $("#neutralTokenNameField").classList.add("hidden");
+    $("#neutralTokenNameField").classList.remove("hidden");
+    $("#essencePanelHeading").textContent = t("neutralToken");
     $("#essencePanel").classList.remove("hidden");
+    $("#neutralTokenNameInput").focus();
     setMyActivity("essence");
   };
   $("#essenceCancelBtn").onclick = () => {
@@ -11720,9 +12060,10 @@ function renderBattlefield() {
       el.classList.add("has-ongoing-effect");
       el.style.setProperty("--effect-tone", rulesEffectTone(ongoingEffects[ongoingEffects.length - 1]));
     }
+    // a Will turned into a Manifestation has no printed Power: all of it shows as a badge
     const printedPower = item.isTokenCard
       ? item.power
-      : cardsById.get(item.cardId)?.power;
+      : item.willManifestation ? 0 : cardsById.get(item.cardId)?.power;
     el.innerHTML = `<div class="bf-card-inner" style="transform:rotate(${item.rotation || 0}deg)">${inner}${item.faceUp && item.cardId ? automationCoverageBadgeHtml(item.cardId) : ""}${item.effectsDisabled ? `<span class="rules-effects-disabled-badge" title="${esc(t("rulesEffectsDisabled"))}" aria-label="${esc(t("rulesEffectsDisabled"))}">Ø</span>` : ""}${item.isCopy ? `<span class="copy-card-stamp">${esc(t("copyStamp"))}</span>` : ""}</div><div class="counters">${counterCircles(item.counters, ongoingEffects, item.effectivePower, printedPower)}</div>${rulesFieldZoneMarkerMarkup(item.fieldZone)}${rulesControllerMarkerMarkup(item)}${item.isSupport ? `<span class="rules-support-badge" title="${esc(t("playInSupport"))}" aria-label="${esc(t("playInSupport"))}">S</span>` : ""}${rulesEffectMarkerMarkup(ongoingEffects)}${rulesActivateMarkerMarkup(item)}`;
     el.addEventListener("click", (event) => {
       if (toggleRulesBoardPayment(`battlefield:${item.id}`)) {
@@ -11935,6 +12276,13 @@ function renderBattlefield() {
     bf.appendChild(el);
   });
   renderRulesEffectLinks();
+  rearmRulesBoardTargetsIfDetached();
+}
+
+// a rebuilt field (full screen, resize) loses the targets of an open choice: arm them again on the new cards
+function rearmRulesBoardTargetsIfDetached() {
+  if (!pendingRulesBoardFlow || !rulesBoardArmedElements.some((element) => !element.isConnected)) return;
+  renderRulesBoardFlow();
 }
 
 function bindDrag(el, onDrop) {
@@ -12522,6 +12870,14 @@ function rulesRollLogText(result, language = currentLanguage) {
   const tr = (key, values = {}) => logTemplate(key, values, language);
   const signed = (value) => `${Number(value) >= 0 ? "+" : ""}${Number(value)}`;
   const parity = (roll) => tr(Number(roll) % 2 === 0 ? "rulesLogDiceEven" : "rulesLogDiceOdd");
+  if (result.kind === "roll_d6_each_target" && Array.isArray(result.rolls)) {
+    // Kaos Bro / Karma Bro: one die per chosen card, a 1 or a 6 hits
+    const hits = Number(result.hitCount || 0);
+    const outcome = !hits ? tr("rulesLogDiceNoEffect")
+      : result.onHit === "points" ? tr("rulesLogDicePoints", { value: signed(result.delta || 0) })
+      : `${tr("rulesLogDiceDestroyed")}${hits > 1 ? ` ×${hits}` : ""}`;
+    return `${tr("rulesLogDiceMany", { rolls: result.rolls.join(", ") })} → ${outcome}`;
+  }
   if (Array.isArray(result.rolls) && result.rolls.length) {
     const even = Number(result.evenCount || 0);
     const odd = Number(result.oddCount || 0);
@@ -12749,6 +13105,10 @@ function formatLogEntry(e, options = {}) {
       }
       if (d.effectResult?.kind === "chain_manifestation" && d.effectResult.status === "no_eligible_card") {
         applied = f("logRulesChainEmpty", { zone: z(d.effectResult.fromZone) });
+      }
+      // Skysailing Triad: the uncovered card is public, both players read it
+      if (d.effectResult?.kind === "resolve_top_deck_by_type" && d.effectResult.cardId) {
+        applied = `${applied ? `${applied} ` : ""}${logTemplate("rulesVfxTopRevealed", {}, language)} : ${card(d.effectResult.cardId)}${rulesTopRevealOutcomeKey(d.effectResult) ? ` (${logTemplate(rulesTopRevealOutcomeKey(d.effectResult), {}, language)})` : ""}.`;
       }
       const rollText = rulesRollLogText(d.effectResult, language);
       const dice = rollText ? `${html ? esc(rollText) : rollText}.` : "";
@@ -13139,6 +13499,7 @@ async function boot() {
   initInspectToolbar();
   initRarityEffectsToggle();
   initVfxSpeedToggle();
+  initSoundToggle();
   initChat();
   initViewToggles();
   $("#playerLogCloseBtn").onclick = () => $("#playerLogPanel").classList.add("hidden");

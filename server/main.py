@@ -224,6 +224,10 @@ def build_card_rules(cards, abilities_by_card):
             "canBeFirstManifestation": (
                 "Cannot be played as First Manifestation" not in (card.get("effect") or "")
                 and not re.search(r"\bcannot enter the Confrontation Zone\s*\.", card.get("effect") or "", re.IGNORECASE)
+                and not re.search(
+                    r"\bCan only be played as if it were a persistent Will\b",
+                    card.get("effect") or "", re.IGNORECASE,
+                )
             ),
             "cannotEnterConfrontation": bool(re.search(
                 r"\bcannot enter the Confrontation Zone\s*\.", card.get("effect") or "", re.IGNORECASE
@@ -902,6 +906,8 @@ async def apply_rules_pass(session, actor_id, passed=None):
         })
     elif result["status"] == "resolved":
         await record_rules_resolution(session, result, actor_id)
+    elif result["status"] == "choice_required":
+        pass
     else:
         if result.get("revealedItemIds"):
             session.add_log(actor_id, "rules_first_manifestations_revealed", {

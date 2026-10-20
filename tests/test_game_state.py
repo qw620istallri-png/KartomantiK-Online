@@ -1,4 +1,4 @@
-﻿import os
+import os
 import json
 import sys
 from pathlib import Path
@@ -6561,6 +6561,29 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertIsNone(error)
         self.assertEqual(result["handLimit"], 9)
         self.assertEqual(result["count"], 9)
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+
+    def test_hand_overflow_waits_for_final_end_cleanup_and_goes_under_deck(self):
+        session, p1, _p2 = self.make_session()
+        p1["zones"]["hand"] = [f"m-{index}" for index in range(7)]
+        p1["zoneOwners"]["hand"] = {card_id: "p1" for card_id in p1["zones"]["hand"]}
+        self.fill_deck(p1, ["m-8"])
+        result = session.request_rules_draw("p1", 1)
+        self.assertEqual(result["count"], 1)
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_expire")
+        session.rules_engine["priorityPlayerId"] = "p1"
+        self.assertEqual(session.pass_rules_priority("p1")[1]["status"], "passed")
+        error, required = session.pass_rules_priority("p2")
+        self.assertIsNone(error)
+        self.assertEqual(required["status"], "choice_required")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["destination"], "deck_bottom")
+        excess = p1["zones"]["hand"][-1]
+        error, resolved = session.resolve_rules_choice("p1", choice["id"], card_ids=[excess])
+        self.assertIsNone(error)
+        self.assertEqual(resolved["destination"], "deck_bottom")
+        self.assertEqual(p1["zones"]["deck"][-1], excess)
 
     def test_kanon_replaces_nonrecovery_draw_and_assigns_will_power_loss(self):
         session, p1, p2 = self.make_session()
@@ -12659,6 +12682,29 @@ class LotSixteenTests(RealCardRulesCase):
         view = session.serialize_for("p1", "player")
         self.assertEqual(view["players"]["p2"]["zones"]["hand"]["cards"], ["m-1", "m-2"])
         self.assertNotIn("cards", session.serialize_for("p2", "player")["players"]["p1"]["zones"]["hand"])
+
+        # The revealed view follows the authoritative hand as soon as a known
+        # card is played. Its tribute also disappears from that same view.
+        self.put(p2, "hand", ["will-x", "m-1", "m-2"])
+        session.rules_engine["priorityPlayerId"] = "p2"
+        before_play = session.serialize_for("p1", "player")["players"]["p2"]["zones"]["hand"]
+        self.assertEqual(before_play["cards"], ["will-x", "m-1", "m-2"])
+        error, action = session.declare_rules_action(
+            "p2", "Play a revealed Will", kind="play_card",
+            source={"cardId": "will-x", "zone": "hand"},
+            payment_card_ids=["m-1"],
+        )
+        self.assertIsNone(error)
+        self.assertTrue(action["sourceOnStack"])
+        after_declaration = session.serialize_for("p1", "player")
+        self.assertEqual(
+            after_declaration["players"]["p2"]["zones"]["hand"]["cards"],
+            ["m-2"],
+        )
+        self.assertEqual(
+            after_declaration["rulesEngine"]["actionStack"][-1]["source"]["cardId"],
+            "will-x",
+        )
         # Only an opponent of Gorte's controller may pay to silence it.
         source = {"cardId": self.GORTE, "zone": "battlefield", "itemId": "gorte"}
         error, _ = session.rules_action_source(
@@ -14671,6 +14717,43 @@ class LotTwentyFourTests(RealCardRulesCase):
         self.assertIsNone(error, error)
         self.assertEqual(p1["zones"]["deck"], ["m-1"])
 
+    def test_gorb_blocks_only_its_controller_support_entries(self):
+        session, p1, p2 = self.setup_game()
+        gorb = "o4p1r7347u6sff2_en"
+        support = "m-1"
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        session.card_rules[support] = {
+            "type": "manifestation", "power": 1, "powerCost": "{H}",
+            "temperaments": ["phlegmatic"], "supportFromHand": True,
+        }
+        session.manifestation_ids.add(support)
+        self.put(p1, "hand", [support])
+        self.put(p2, "hand", [support])
+        result = session.apply_rules_action_result({
+            "id": "gorb-lock", "controllerId": "p1",
+            "source": {"cardId": gorb, "ownerId": "p1"}, "targets": [],
+            "ability": self.ABILITIES[gorb][0],
+        })
+        self.assertEqual((result["status"], result["scope"]), ("locked", "controller"))
+        state = session.serialize_for("p1", "player")
+        self.assertEqual(state["rulesEngine"]["supportEntryLockedPlayerIds"], ["p1"])
+
+        session.rules_engine["priorityPlayerId"] = "p2"
+        error, action = session.declare_rules_action(
+            "p2", "Opponent Support", kind="play_card",
+            source={"cardId": support, "zone": "hand"}, as_support=True,
+        )
+        self.assertIsNone(error, error)
+        self.assertIsNotNone(action)
+
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, action = session.declare_rules_action(
+            "p1", "Controller Support", kind="play_card",
+            source={"cardId": support, "zone": "hand"}, as_support=True,
+        )
+        self.assertIn("cannot be put in Support", error)
+        self.assertIsNone(action)
+
     GUMMO = "hcgvp7lbadlng1h_en"
 
     def test_gummo_copies_a_vessel_manifestation_and_can_become_the_first_manifestation(self):
@@ -14763,20 +14846,19 @@ class LotTwentyFourTests(RealCardRulesCase):
         session, p1, p2 = self.setup_game()
         self.assertTrue(session.card_rules[self.SLUMBER]["playAsPersistentWill"])
         self.assertFalse(session.card_rules[self.SLUMBER]["canPayTribute"])
+        self.assertFalse(session.card_rules[self.SLUMBER]["canBeFirstManifestation"])
         self.put(p1, "hand", [self.SLUMBER])
-        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
         session.rules_engine["priorityPlayerId"] = "p1"
+        session.rules_engine["firstManifestationComplete"] = True
         source = {"cardId": self.SLUMBER, "zone": "hand"}
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
         error, _ = session.declare_rules_action("p1", "Play", kind="play_card", source=source)
-        self.assertTrue(error, "7 tribute is due")
-        session.rules_engine["playPermissions"].append({
-            "id": "free", "playerId": "p1", "cardId": self.SLUMBER, "fromZone": "hand",
-            "phaseIds": list(ADVANCED_PHASES), "asSupport": False, "noTribute": True,
-            "turn": session.phase_tracker["turn"],
-        })
+        self.assertIn("Persistent Will", error)
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
         error, action = session.declare_rules_action("p1", "Play", kind="play_card", source=source)
         self.assertIsNone(error, error)
         self.assertEqual(action["source"]["cardType"], "persistent_will")
+        self.assertTrue(action["source"]["noTribute"])
         session.pass_rules_priority("p2")
         session.pass_rules_priority("p1")
         for _ in range(4):

@@ -1010,7 +1010,8 @@
       "id": "exhaust-to-copy-tribute-manifestation",
       "optional": true,
       "trigger": {
-        "event": "manifestation_used_as_tribute"
+        "event": "manifestation_used_as_tribute",
+        "eventController": "owner"
       },
       "result": {
         "kind": "copy_related_tribute_if_exhaust"
@@ -4006,7 +4007,7 @@
       "sourceZones": [
         "hand"
       ],
-      "essenceCost": "{B}{B}{B}",
+      "tribute": "{B}{B}{B}",
       "targets": {
         "min": 0,
         "max": 0
@@ -5483,6 +5484,34 @@
       "result": {
         "kind": "tebebe_unearth"
       }
+    }
+  ],
+  "b0amfkmb3xewx7x_en": [
+    {
+      "id": "kaos-bro-roll-destroy-one-card-per-player",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "targets": {
+        "groups": [
+          { "kind": "card", "min": 1, "max": 1, "zones": ["battlefield"], "controller": "self", "excludeEventSource": true, "excludeSource": true },
+          { "kind": "card", "min": 1, "max": 1, "zones": ["battlefield"], "controller": "opponent" }
+        ],
+        "min": 2, "max": 2
+      },
+      "result": { "kind": "roll_d6_each_target", "onHit": "destroy" }
+    }
+  ],
+  "9d2y8uy9ut7omyo_en": [
+    {
+      "id": "karma-bro-roll-points-one-card-per-player",
+      "trigger": { "event": "enters_field_zone", "zone": "confrontation" },
+      "targets": {
+        "groups": [
+          { "kind": "card", "min": 1, "max": 1, "zones": ["battlefield"], "controller": "self", "excludeEventSource": true, "excludeSource": true },
+          { "kind": "card", "min": 1, "max": 1, "zones": ["battlefield"], "controller": "opponent" }
+        ],
+        "min": 2, "max": 2
+      },
+      "result": { "kind": "roll_d6_each_target", "onHit": "points", "points": 10 }
     }
   ]
 }

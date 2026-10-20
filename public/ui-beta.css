@@ -102,19 +102,17 @@
 #gameScreen.ui-beta .board-tools-topright { display: none !important; }
 #gameScreen.ui-beta > .status-line { left: calc(var(--ub-colW) + 12px); }
 /* floating Essence is shown as chips beside the totals in rules mode */
-#gameScreen.ui-beta.ub-rules .bf-token.bf-essence:not(:has(.bf-neutral-label)) { display: none; }
+#gameScreen.ui-beta .bf-token.bf-essence:not(:has(.bf-neutral-label)) { display: none; }
 
 /* ---------- field chrome ---------- */
-.ub-field { display: none; }
+.ub-field, .ub-field-controls { display: none; }
 #gameScreen.ui-beta .ub-field { display: block; position: absolute; inset: 0; z-index: 1; pointer-events: none; isolation: isolate; }
 #gameScreen.ui-beta .ub-field > * { position: absolute; }
+#gameScreen.ui-beta .ub-field-controls { display: block; position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+#gameScreen.ui-beta .ub-field-controls > * { position: absolute; }
 .ub-side { top: 0; bottom: 0; z-index: -1; }
-.ub-side.me { background:
-  linear-gradient(90deg, color-mix(in srgb, var(--me) 15%, transparent), color-mix(in srgb, var(--me) 5%, transparent) 70%, transparent),
-  repeating-linear-gradient(135deg, rgba(var(--ub-hi), .012) 0 2px, transparent 2px 12px); }
-.ub-side.opp { background:
-  linear-gradient(270deg, color-mix(in srgb, var(--opp) 15%, transparent), color-mix(in srgb, var(--opp) 5%, transparent) 70%, transparent),
-  repeating-linear-gradient(45deg, rgba(var(--ub-hi), .012) 0 2px, transparent 2px 12px); }
+.ub-side.me { background: linear-gradient(90deg, color-mix(in srgb, var(--me) 15%, transparent), color-mix(in srgb, var(--me) 5%, transparent) 70%, transparent); }
+.ub-side.opp { background: linear-gradient(270deg, color-mix(in srgb, var(--opp) 15%, transparent), color-mix(in srgb, var(--opp) 5%, transparent) 70%, transparent); }
 /* priority: a soft glowing rim around the half of whoever holds it, same for both */
 .ub-side::after { content: ""; position: absolute; inset: 0; opacity: 0; transition: opacity 500ms var(--ub-ease); }
 .ub-side.me::after { box-shadow: inset 4px 0 0 var(--me), inset 0 3px 0 color-mix(in srgb, var(--me) 60%, transparent), inset 0 -3px 0 color-mix(in srgb, var(--me) 60%, transparent), inset 80px 0 90px -70px color-mix(in srgb, var(--me) 60%, transparent); }
@@ -128,9 +126,9 @@
 @keyframes ub-prio-pulse { 0% { opacity: 0; } 35% { opacity: 1; filter: brightness(1.8); } 100% { opacity: 1; } }
 .ub-midline { top: 0; bottom: 0; width: 0; border-left: 1.5px dashed rgba(var(--ub-gl), .3); z-index: -1; }
 
-.ub-izcol { background: rgba(var(--ub-lo), .08); }
-.ub-izcol.me { border-right: 1px solid var(--ub-line-soft); }
-.ub-izcol.opp { border-left: 1px solid var(--ub-line-soft); }
+.ub-izcol { background-color: rgba(var(--ub-lo), .08); }
+.ub-izcol.me { border-right: 1px solid var(--ub-line-soft); background-image: repeating-linear-gradient(135deg, rgba(var(--ub-hi), .025) 0 2px, transparent 2px 12px); }
+.ub-izcol.opp { border-left: 1px solid var(--ub-line-soft); background-image: repeating-linear-gradient(45deg, rgba(var(--ub-hi), .025) 0 2px, transparent 2px 12px); }
 .ub-zlab { position: absolute; left: 10px; right: 10px; display: flex; justify-content: space-between; align-items: center; gap: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--ub-muted); white-space: nowrap; overflow: hidden; }
 .ub-zlab b { color: var(--ub-ink); font-variant-numeric: tabular-nums; font-weight: 600; }
 .ub-divider { position: absolute; left: 8px; right: 8px; border-top: 1px dashed rgba(var(--ub-gl), .2); }
@@ -141,7 +139,7 @@
 .ub-zc .ub-empty { position: absolute; inset: 0; margin: auto; height: fit-content; max-width: 22ch; text-align: center; color: rgba(169, 178, 198, .5); font-size: 13px; line-height: 1.45; }
 
 /* totals band */
-.ub-totals { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px; pointer-events: auto; }
+.ub-totals { z-index: 20; display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 18px; pointer-events: auto; }
 .ub-tside { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .ub-tside.me { flex-direction: row-reverse; }
 .ub-total { --tc: #8b8b8b; flex: none; min-width: 0; max-width: 100%; justify-content: center !important; display: flex; align-items: center; gap: 10px; padding: 5px 14px; border-radius: 12px; background: rgba(var(--ub-lo), .35); border: 2px solid rgba(var(--ub-hi), .08); transition: border-color 320ms, box-shadow 320ms, transform 320ms var(--ub-spring); }
@@ -159,12 +157,14 @@
 .ub-turn small { font-family: inherit; font-size: clamp(12px, .95vw, 18px); letter-spacing: .1em; text-transform: uppercase; color: var(--ub-muted); }
 .ub-turn b { font-weight: 400; font-size: clamp(22px, 1.8vw, 34px); color: var(--ub-gold-pale); font-variant-numeric: tabular-nums; }
 .ub-ess { display: flex; gap: 4px; flex-wrap: nowrap; flex: none; white-space: nowrap; }
-.ub-ess span { display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px 2px 3px; border-radius: 99px; background: color-mix(in srgb, var(--ink) 28%, rgba(0, 0, 0, .35)); border: 1px solid color-mix(in srgb, var(--ink) 75%, transparent); font-weight: 700; font-variant-numeric: tabular-nums; color: #f0d98f; animation: ub-pop 220ms var(--ub-ease); }
+.ub-ess :is(span, button) { min-height: 0; display: inline-flex; align-items: center; gap: 3px; padding: 2px 8px 2px 3px; border-radius: 99px; background: color-mix(in srgb, var(--ink) 28%, rgba(0, 0, 0, .35)); border: 1px solid color-mix(in srgb, var(--ink) 75%, transparent); box-shadow: none; font: inherit; font-weight: 700; font-variant-numeric: tabular-nums; color: #f0d98f; animation: ub-pop 220ms var(--ub-ease); }
+.ub-ess button { cursor: pointer; }
+.ub-ess button:hover, .ub-ess button:focus-visible { background: color-mix(in srgb, var(--ink) 44%, rgba(0, 0, 0, .35)); transform: translateY(-1px); }
 .ub-ess img { width: 20px; height: 20px; }
 @media (max-width: 1500px) {
   /* narrow screens: the pool stays on the totals' line and may run over the Interzone */
   .ub-tside { gap: 5px; }
-  .ub-ess span { padding: 1px 6px 1px 2px; font-size: 12px; }
+  .ub-ess :is(span, button) { padding: 1px 6px 1px 2px; font-size: 12px; }
   .ub-ess img { width: 16px; height: 16px; }
 }
 @keyframes ub-pop { from { opacity: 0; transform: scale(.96); } }
@@ -565,7 +565,7 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 .ub-choice-ghost { box-shadow: 0 20px 40px rgba(0, 0, 0, .6); border-radius: 10px; transition: none !important; animation: none !important; }
 @keyframes ub-choice-glow { 50% { outline-color: rgba(240, 217, 143, .35); } }
 #gameScreen.ui-beta .ub-side.ub-choice-target { box-shadow: inset 0 0 0 3px var(--ub-gold), inset 0 0 60px rgba(var(--ub-gd), .25); cursor: pointer; }
-#gameScreen.ui-beta .ub-who.ub-choice-target { outline: 2px solid var(--ub-gold); cursor: pointer; }
+#gameScreen.ui-beta .ub-choice-target { cursor: pointer; }
 #gameScreen.ui-beta .ub-izcol.ub-drop-ok, #gameScreen.ui-beta .field-pile.ub-drop-ok { box-shadow: inset 0 0 0 2px rgba(240, 217, 143, .55); border-radius: 10px; }
 #gameScreen.ui-beta .ub-izcol.ub-drop-over, #gameScreen.ui-beta .field-pile.ub-drop-over { box-shadow: inset 0 0 0 3px var(--ub-gold), 0 0 24px rgba(240, 217, 143, .45); background-color: rgba(var(--ub-gd), .14); }
 
@@ -609,12 +609,7 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 #gameScreen.ui-beta .ub-piles .field-pile .pile-label { white-space: normal; overflow: hidden; text-overflow: clip; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.15; }
 
 /* ---------- player targets, arrow, spotlight ---------- */
-#gameScreen.ui-beta .ub-tside.ub-choice-target .ub-total,
-#gameScreen.ui-beta .ub-avatar.ub-choice-target .ub-av-circle { outline: 2px dashed var(--ub-gold); outline-offset: 4px; cursor: pointer; }
 #gameScreen.ui-beta .ub-target-over.ub-side { box-shadow: inset 0 0 0 4px var(--ub-gold), inset 0 0 90px rgba(var(--ub-gd), .35) !important; }
-#gameScreen.ui-beta .ub-target-over .ub-total,
-#gameScreen.ui-beta .ub-target-over .ub-av-circle { outline-style: solid; outline-width: 3px; }
-#gameScreen.ui-beta .ub-who.ub-target-over { background: rgba(var(--ub-gd), .2); }
 .ub-choice-arrow { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 295; pointer-events: none; overflow: visible; }
 .ub-choice-arrow .ub-arrow-line { fill: none; stroke: #f0d98f; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 10 8; filter: drop-shadow(0 0 6px rgba(240, 217, 143, .7)); animation: ub-arrow-flow 700ms linear infinite; }
 .ub-choice-arrow marker path { fill: #f0d98f; }
@@ -801,23 +796,28 @@ body.hand-drop-choice #gameScreen.ui-beta .hand-area { z-index: 90; }
 @keyframes ub-draw-pop { 0% { opacity: 0; transform: translate(-50%, -20%) scale(.6); } 15% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); } 25% { transform: translate(-50%, -50%) scale(1); } 75% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -110%); } }
 @keyframes ub-draw-pop-down { 0% { opacity: 0; transform: translate(-50%, -80%) scale(.6); } 15% { opacity: 1; transform: translate(-50%, -50%) scale(1.08); } 25% { transform: translate(-50%, -50%) scale(1); } 75% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, 10%); } }
 
-/* choosing cards in hand: the dark backdrop stops above the hand (--ub-hand-top, ui-beta.js) */
-body.hand-drop-choice #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.hand-drop { background: linear-gradient(to bottom, #050402b8 calc(var(--ub-hand-top, 100vh) - 28px), transparent var(--ub-hand-top, 100vh)); }
+/* required hand choice: dim the entire screen while the interactive hand stays above it */
+body.hand-drop-choice #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.hand-drop { background: #050402b8; }
 
 /* look at the top of the deck (Shababba...): the cards in a row, the top and bottom of the deck as two
    lanes marked with a card back underneath, an explicit Confirm */
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-choice-options:has(.rules-reorder-group) { display: flex; flex-direction: column; align-items: center; gap: 14px; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-group { display: flex !important; flex-direction: column; align-items: center; gap: 16px; margin: 0; width: 100%; }
-#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-pool { min-height: 0 !important; padding: 0 !important; gap: 12px !important; flex-wrap: nowrap !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-pool { min-height: 0 !important; padding: 0 !important; gap: 12px !important; flex-wrap: wrap !important; justify-content: center; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-pool:empty { display: none !important; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-lanes { display: flex !important; flex-wrap: nowrap; justify-content: center; gap: 18px !important; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-lane { display: flex; flex-direction: column; align-items: center; gap: 8px; }
-#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-lane > small { display: flex !important; align-items: center; gap: 8px; font: 700 13px/1.2 var(--display-font, Georgia, serif) !important; letter-spacing: .08em; text-transform: uppercase; color: var(--ub-gold-pale, #f0d98f) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-lane > small { display: flex !important; align-items: center; gap: 8px; font: 700 13px/1.2 var(--display-font, Georgia, serif) !important; letter-spacing: .08em; text-transform: uppercase; color: var(--ub-gold-pale, #f0d98f) !important; min-height: 31px; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-back { width: 22px; aspect-ratio: 5 / 7; border-radius: 3px; box-shadow: 0 2px 6px #0008; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-lane .rules-reorder-strip { min-width: min(330px, 26vw) !important; min-height: 122px !important; flex-wrap: nowrap !important; border: 2px dashed rgba(var(--ub-gd, 211, 169, 66), .45) !important; border-radius: 12px !important; background: rgba(0, 0, 0, .22) !important; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-card { width: clamp(64px, 5.6vw, 80px) !important; }
+/* only the card itself: no light frame behind it */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-card { padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-pool .rules-reorder-card { width: clamp(88px, 8vw, 116px) !important; }
-#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box:has(.rules-reorder-group) > :not(.rules-choice-source) { max-width: 820px !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box:has(.rules-reorder-group) > :not(.rules-choice-source):not(.rules-choice-options) { max-width: 820px !important; }
+/* the cards and their lanes use the whole screen width: no scroll bar under Expansive Ponderer's seven cards */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box:has(.rules-reorder-group) { max-width: min(1280px, 96vw) !important; width: auto !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box:has(.rules-reorder-group) > .rules-choice-options { width: 100%; max-width: min(1240px, 94vw) !important; overflow: visible !important; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-card:hover:not(.is-dragging) { transform: translateY(-6px) scale(1.06) !important; z-index: 30; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-card b { font-family: var(--display-font, Georgia, serif); }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-confirm { min-width: 200px; margin-top: 4px; }
@@ -888,3 +888,12 @@ body.ub-hand-drawing #gameScreen.ui-beta #myHandTray { pointer-events: none; }
 
 /* manual phases: who passed reads as plain text, not as a gold pill */
 #gameScreen.ui-beta .ub-phase.manual .rules-priority { background: none; border: 0; box-shadow: none; padding: 0; color: var(--ub-muted); }
+
+
+/* The local player's Essence picker opens below the compact top totals. */
+#gameScreen.ui-beta .ub-tside > .essence-quick { flex: none; z-index: 60; }
+#gameScreen.ui-beta .ub-tside > .essence-quick .essence-quick-add { width: 24px; height: 24px; color: var(--ub-gold-pale); border-color: var(--ub-line); background: rgba(var(--ub-lo), .58); box-shadow: 0 3px 10px rgba(0, 0, 0, .35); }
+#gameScreen.ui-beta .ub-tside > .essence-quick .essence-quick-popover { top: calc(100% + 7px); bottom: auto; background: rgba(var(--ub-lo), .96); border-color: var(--ub-line); }
+#gameScreen.ui-beta .ub-tside > .essence-quick .essence-quick-popover button { background: rgba(var(--ub-hi), .07); }
+#gameScreen.ui-beta .ub-tside > .essence-quick .essence-quick-popover button:hover,
+#gameScreen.ui-beta .ub-tside > .essence-quick .essence-quick-popover button:focus-visible { background: rgba(var(--ub-gd), .2); border-color: var(--ub-gold); }
