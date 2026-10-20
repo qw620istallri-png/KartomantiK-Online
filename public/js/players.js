@@ -36,6 +36,79 @@ function activeTemperamentOf(playerId) {
   const temperament = best.item.effectiveTemperament || best.item.temperament || cardsById.get(best.item.cardId)?.temperaments?.[0];
   return temperament ? `<img class="active-temperament-badge" src="${esc(temperamentSymbol(temperament))}" alt="${esc(temperament)}" title="${esc(t("rulesActiveTemperament"))}">` : "";
 }
+function essencePoolForPlayer(playerId) {
+  const pool = new Map();
+  (latestState?.tokens || []).forEach((token) => {
+    const amount = Number(token.counters?.essence || 0);
+    if (token.ownerId !== playerId || !token.isEssence || token.isNeutralCounter || !token.temperament || amount <= 0) return;
+    pool.set(token.temperament, (pool.get(token.temperament) || 0) + amount);
+  });
+  return pool;
+}
+let essenceQuickHeldOpen = false;
+function essenceQuickPickerMarkup(playerId) {
+  if (isObserver || playerId !== myPlayerId || latestState?.rulesEngine?.enabled) return "";
+  return `<span class="essence-quick${essenceQuickHeldOpen ? " is-open" : ""}" data-essence-quick>
+    <button type="button" class="essence-quick-add" data-essence-quick-add aria-label="${esc(t("essenceAddOne"))}" title="${esc(t("essenceAddOne"))}" aria-expanded="${String(essenceQuickHeldOpen)}">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+    </button>
+    <span class="essence-quick-popover" role="menu" aria-label="${esc(t("essenceAddOne"))}">
+      ${TEMPERAMENTS.map((temperament) => `<button type="button" role="menuitem" data-create-essence="${esc(temperament.key)}" title="${esc(t(`temperament${temperament.key[0].toUpperCase()}${temperament.key.slice(1)}`))}"><img src="${esc(temperamentSymbol(temperament.key))}" alt=""></button>`).join("")}
+    </span>
+  </span>`;
+}
+function createQuickEssence(temperament) {
+  if (isObserver || !myPlayerId || latestState?.rulesEngine?.enabled || !TEMPERAMENTS.some((entry) => entry.key === temperament)) return;
+  const view = fieldCenterLogical();
+  const center = rotateForSeat(view.x, view.y);
+  send({
+    type: "create_essence_token", temperament, neutral: false, label: "",
+    color: playerColor(myPlayerId), count: 1,
+    x: center.x - 26 + Math.random() * 60 - 30,
+    y: center.y - 26 + Math.random() * 60 - 30,
+  });
+}
+function removeQuickEssence(temperament) {
+  if (isObserver || !myPlayerId || latestState?.rulesEngine?.enabled) return;
+  const token = (latestState?.tokens || []).find((entry) => (
+    entry.ownerId === myPlayerId && entry.isEssence && !entry.isNeutralCounter
+    && entry.temperament === temperament && Number(entry.counters?.essence || 0) > 0
+  ));
+  if (!token) return;
+  if (Number(token.counters?.essence || 0) <= 1) send({ type: "remove_token", tokenId: token.id });
+  else send({ type: "add_counter", tokenId: token.id, counterKey: "essence", delta: -1 });
+}
+function bindEssenceQuickControls(root = document) {
+  root.querySelectorAll?.("[data-essence-quick]").forEach((picker) => {
+    const add = picker.querySelector("[data-essence-quick-add]");
+    add?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      essenceQuickHeldOpen = !picker.classList.contains("is-open");
+      picker.classList.toggle("is-open", essenceQuickHeldOpen);
+      add.setAttribute("aria-expanded", String(essenceQuickHeldOpen));
+    });
+    picker.addEventListener("pointerleave", () => {
+      essenceQuickHeldOpen = false;
+      picker.classList.remove("is-open");
+      add?.setAttribute("aria-expanded", "false");
+    });
+    picker.querySelectorAll("[data-create-essence]").forEach((button) => {
+      button.addEventListener("click", (event) => {
+        event.stopPropagation();
+        createQuickEssence(button.dataset.createEssence);
+        essenceQuickHeldOpen = true;
+        picker.classList.add("is-open");
+        add?.setAttribute("aria-expanded", "true");
+      });
+    });
+  });
+  root.querySelectorAll?.("[data-remove-essence]").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      removeQuickEssence(button.dataset.removeEssence);
+    });
+  });
+}
 
 function renderMyInfoStrip() {
   const strip = $("#myInfoStrip");
@@ -48,7 +121,8 @@ function renderMyInfoStrip() {
   strip.innerHTML = `
     <span class="my-info-badge" title="${esc(t("hand"))}"><span class="hand-stack-icon" style="--owner-color:${playerColor(me.id)}"><span class="hand-stack-card"></span><span class="hand-stack-card"></span><span class="hand-stack-card"></span></span><b>${handCount}</b></span>
     <span class="opp-vessel-badge" data-vessel-badge="${esc(me.id)}" title="${esc(t("receptacle"))}">${receptaclePoints(me.zones.receptacle, me.score)} ${esc(t("vesselPoints"))}</span>
-    <span class="opp-power-badge" title="${esc(t("rulesPowerTotal"))}">⚔ ${confrontationPowerOf(me.id)}${activeTemperamentOf(me.id)}</span>`;
+    <span class="cz-essence-control">${essenceQuickPickerMarkup(me.id)}<span class="opp-power-badge" title="${esc(t("rulesPowerTotal"))}">⚔ ${confrontationPowerOf(me.id)}${activeTemperamentOf(me.id)}</span></span>`;
+  bindEssenceQuickControls(strip);
 }
 
 function renderOppRows() {

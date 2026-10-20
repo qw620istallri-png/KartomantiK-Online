@@ -1192,3 +1192,28 @@ Partie réelle pilotée dans Chromium (serveur Python, deux joueurs, UI bêta), 
   au survol, dans le message quand la carte est lâchée ou touchée, et la carte
   tremble (`refuseHandCard`). Toute nouvelle condition de `handCardIsPlayable`
   doit avoir sa raison ici.
+
+## Intégration du travail local du PC (beta 139.10)
+
+Travail fait sur le PC après la beta 139, jamais publié, récupéré via la branche
+`sauvegarde-pc` et porté sur la structure découpée (`server/game/`, `public/js/`) :
+
+- **Limite de main** : une pioche (normale ou par effet) ne déclenche plus le choix
+  d'excédent. Le contrôle a lieu à la sortie de `end_expire` (`pass_rules_priority`,
+  statut `choice_required`) et l'excédent va par défaut sous le Deck.
+- **Passe automatique** : quand la Pile attend, le joueur prioritaire sans réponse
+  légale passe automatiquement (`rules_auto_pass_player`).
+- **« Jouable comme une Volonté persistante »** (The Slumberer) : jamais Première
+  Manifestation, pas de Tribut (`noTribute`), fenêtre `end_actions`.
+- **Soutien bloqué** : `supportEntryLockedPlayerIds` dans l'état ; le client n'offre
+  plus d'entrée en Soutien (main ou Interzone) à un joueur bloqué.
+- **Pièges** : la fenêtre propre au Piège passe avant les règles des Volontés éphémères.
+- **Cibles optionnelles 0–N** : plus de validation automatique quand des cibles existent.
+- **Essence rapide** (mode manuel) : `+` à côté du total, un clic par tempérament crée
+  une essence, un clic sur le pool en retire une.
+- **Son** : `public/audio-manager.js` (`window.KKOAudio`) joue les sons d'interface et
+  de règles à partir de `recentLog` (sans rejouer l'historique), bouton activé/coupé et
+  volume dans le menu « Plus ». Les sons de `public/audio/ui/` sont des **références
+  temporaires issues d'une banque Hearthstone** (droits Blizzard) : à remplacer par des
+  sons originaux ou libres avant toute diffusion publique. Détails :
+  `reports/KKO_UI_AUDIO_IMPLEMENTATION_2026-10-19.md`.

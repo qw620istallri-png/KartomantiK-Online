@@ -539,12 +539,13 @@ class PriorityMixin:
         return None, {"playerId": player_id, "enabled": bool(enabled)}
 
     def rules_auto_pass_player(self):
-        """The priority holder who has nothing to do, if the engine may pass for them."""
+        """The priority holder when no legal response or auto-skippable action exists."""
         engine = self.rules_engine
         pass_all = engine.get("priorityPlayerId") in (engine.get("passAllPlayerIds") or [])
+        stack_waiting = bool(engine.get("actionStack"))
         if (
             not engine.get("enabled")
-            or not (self.rules_auto_skip_enabled(engine.get("priorityPlayerId")) or pass_all)
+            or not (stack_waiting or self.rules_auto_skip_enabled(engine.get("priorityPlayerId")) or pass_all)
             or not self.phase_tracker.get("enabled") or self.ended
             or len(self.players) < NUM_SEATS or engine.get("pendingChoice")
             or not self.rules_match_started()

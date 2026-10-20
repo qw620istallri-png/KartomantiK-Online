@@ -136,9 +136,11 @@ function beginRulesBoardAction(source) {
     stage: rulesInitialActionStage(draft),
   };
   renderRulesBoardFlow();
-  if (pendingRulesBoardFlow && pendingRulesBoardFlow.stage === "target" && Number(draft.targetRules?.min || 0) === 0) {
-    scheduleRulesBoardSubmit();
-  }
+  if (
+    pendingRulesBoardFlow && pendingRulesBoardFlow.stage === "target"
+    && Number(draft.targetRules?.min || 0) === 0
+    && !rulesDraftOffersOptionalTargets(draft)
+  ) scheduleRulesBoardSubmit();
   return true;
 }
 
@@ -171,6 +173,7 @@ function beginRulesHandActivatedAction(cardId, handIndex, zone = "hand", contain
     pendingRulesBoardFlow
     && pendingRulesBoardFlow.stage === "target"
     && Number(draft.targetRules?.min || 0) === 0
+    && !rulesDraftOffersOptionalTargets(draft)
   ) scheduleRulesBoardSubmit();
   return true;
 }
@@ -197,9 +200,11 @@ function beginRulesBoardActivatedAction(item, abilityId = null) {
     stage: rulesInitialActionStage(available.draft),
   };
   renderRulesBoardFlow();
-  if (pendingRulesBoardFlow && pendingRulesBoardFlow.stage === "target" && Number(available.draft.targetRules?.min || 0) === 0) {
-    scheduleRulesBoardSubmit();
-  }
+  if (
+    pendingRulesBoardFlow && pendingRulesBoardFlow.stage === "target"
+    && Number(available.draft.targetRules?.min || 0) === 0
+    && !rulesDraftOffersOptionalTargets(available.draft)
+  ) scheduleRulesBoardSubmit();
   return true;
 }
 
@@ -453,13 +458,28 @@ const JU_LIEN_CARD_ID = "qapv47r7rz6gqah_en";
 // Cards that can be played from another zone right now (Limbo, Wills placed on a Grimoire) show up as faded cards at the end of the hand
 function rulesGhostHandCards() {
   const rules = latestState?.rulesEngine;
-  if (!rules?.enabled || isObserver || rules.pendingChoice || !latestState?.players?.[myPlayerId]) return [];
+  if (!rules?.enabled || isObserver || !latestState?.players?.[myPlayerId]) return [];
   const ghosts = [];
+  const uncoveredTop = rules.uncoveredTops?.[myPlayerId];
+  if (uncoveredTop && cardsById.get(uncoveredTop)?.type === "manifestation") {
+    ghosts.push({
+      cardId: uncoveredTop,
+      zone: "deck",
+      label: t("deck"),
+      playable: handCardIsPlayable(uncoveredTop),
+    });
+  }
+  if (rules.pendingChoice) return ghosts;
   const paying = pendingRulesBoardFlow?.stage === "payment" ? pendingRulesBoardFlow : null;
   if (paying) {
-    // Tribute: Limbo cards that may pay it (Forgotten Pile...) appear in the hand like the others
+    // Tribute cards outside the Hand appear beside it and retain their source-zone label.
     for (const candidate of paying.draft?.manifestations || []) {
-      if (candidate.zone === "graveyard") ghosts.push({ cardId: candidate.cardId, zone: "payment", selectionKey: candidate.selectionKey, label: t("graveyard") });
+      if (candidate.zone !== "hand") ghosts.push({
+        cardId: candidate.cardId,
+        zone: "payment",
+        selectionKey: candidate.selectionKey,
+        label: t(candidate.zone),
+      });
     }
     return ghosts;
   }

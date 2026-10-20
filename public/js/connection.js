@@ -17,6 +17,7 @@ function setInterfaceLanguage(nextLanguage) {
   document.documentElement.lang = currentLanguage;
   paintStaticText();
   updateLanguageButtons();
+  applySoundPreference();
   const selectedEssence = selectedEssenceTemperament;
   initEssenceToolbar();
   if (selectedEssence) {
@@ -129,7 +130,7 @@ function paintStaticText() {
   $("#tokenPowerLabel").textContent = t("tokenPower");
   $("#tokenCancelBtn").textContent = t("close");
   $("#tokenCreateBtn").textContent = t("create");
-  $("#createEssenceBtn").title = t("createEssence");
+  $("#createEssenceBtn").title = t("neutralToken");
   $("#pileCalibrateBtn").title = t(pilesLocked ? "unlockPiles" : "lockPiles");
   $("#essencePanelHeading").textContent = t("essencePanelHeading");
   $("#essencePanelHint").textContent = t("essencePanelHint");
@@ -476,6 +477,8 @@ function handleServerMessage(msg) {
   } else if (msg.type === "state") {
     const rulesEffectVfxChanges = prepareRulesEffectVfxChanges(msg);
     const rulesVfxBatch = prepareRulesVfxBatch(msg);
+    window.KKOAudio?.observeState(latestState, msg, myPlayerId);
+    reconcileRevealedHandCards(msg);
     latestState = msg;
     preloadCardImages(stateCardIds(msg));
     if (connectionMode === "tournament" && connectionRole === "player") {
@@ -514,6 +517,7 @@ function handleServerMessage(msg) {
       }
     }
   } else if (msg.type === "reveal") {
+    window.KKOAudio?.play("cardFlip");
     if (msg.zone === "hand") {
       if (!revealedHandCards.has(msg.ownerId)) revealedHandCards.set(msg.ownerId, new Set());
       const set = revealedHandCards.get(msg.ownerId);
@@ -525,6 +529,7 @@ function handleServerMessage(msg) {
   } else if (msg.type === "dice_result") {
     handleDiceResult(msg);
   } else if (msg.type === "error") {
+    window.KKOAudio?.play(/essence|tribute|cost|afford|payer|coût/i.test(String(msg.message || "")) ? "notEnough" : "error");
     if (msg.code === "session_not_found" && !$("#gameScreen").classList.contains("hidden")) {
       // this was a reconnect attempt (gameScreen already visible) hitting a
       // session that's genuinely gone (e.g. the server process restarted) —

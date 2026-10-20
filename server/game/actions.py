@@ -238,6 +238,11 @@ class ActionsMixin:
             clean_source["containerId"] = container_id
         if zone == "hand" and kind == "activated_effect":
             clean_source["activatedFromZone"] = "hand"
+        if (
+            zone == "hand" and kind == "play_card" and not as_support
+            and metadata.get("playAsPersistentWill")
+        ):
+            clean_source["noTribute"] = True
         if zone == "hand" and permission:
             clean_source.update({
                 "permissionId": permission.get("id"),

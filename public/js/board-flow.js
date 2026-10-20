@@ -407,6 +407,11 @@ function releaseRulesBoardFlowAfterError() {
   if (flow.stage === "payment") flow.selectedPaymentIndexes = new Set();
   renderRulesBoardFlow();
 }
+function rulesDraftOffersOptionalTargets(draft) {
+  return Number(draft?.targetRules?.min || 0) === 0
+    && Number(draft?.targetRules?.max || 0) > 0
+    && (draft?.structuredTargets || []).length > 0;
+}
 
 function scheduleRulesBoardSubmit() {
   const flow = pendingRulesBoardFlow;
@@ -504,7 +509,7 @@ function armRulesBoardTargets(flow) {
         </button>`;
         }).join("")}
       </div>
-      ${multiPick ? `<div class="rules-zone-pick-actions"><button type="button" class="primary" data-zone-pick-confirm ${(flow.selectedTargets || []).length >= Math.max(1, minTargets) ? "" : "disabled"}>${esc(t("confirm"))} (${(flow.selectedTargets || []).length}/${maxTargets})</button></div>` : ""}
+      ${multiPick ? `<div class="rules-zone-pick-actions"><button type="button" class="primary" data-zone-pick-confirm ${(flow.selectedTargets || []).length >= minTargets ? "" : "disabled"}>${esc(t("confirm"))} (${(flow.selectedTargets || []).length}/${maxTargets})</button></div>` : ""}
     </div>`;
     document.body.appendChild(popup);
     popup.querySelectorAll("[data-zone-pick]").forEach((button) => {
@@ -590,7 +595,8 @@ function advanceRulesBoardFlow() {
     renderRulesBoardFlow();
     return;
   }
-  const needsTarget = Number(flow.draft.targetRules?.min || 0) > 0;
+  const needsTarget = Number(flow.draft.targetRules?.min || 0) > 0
+    || rulesDraftOffersOptionalTargets(flow.draft);
   if (needsTarget) {
     flow.stage = "target";
     renderRulesBoardFlow();

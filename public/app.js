@@ -2,7 +2,7 @@
 // (see index.html); this file keeps every statement that runs at load, in order.
 
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261020-rules-beta-139-9";
+const STATIC_ASSET_VERSION = "20261020-rules-beta-139-10";
 
 {
   const versionEl = document.getElementById("appVersion");
@@ -51,36 +51,7 @@ let vfxSpeed = (() => {
   }
 })();
 
-let soundVolume = (() => {
-  try {
-    const stored = localStorage.getItem(SOUND_VOLUME_KEY);
-    const value = Number(stored);
-    return stored !== null && Number.isFinite(value) ? Math.min(1, Math.max(0, value)) : 0.8;
-  } catch {
-    return 0.8;
-  }
-})();
 
-(function installSoundVolumeHooks() {
-  if (window.HTMLMediaElement?.prototype?.play) {
-    const play = HTMLMediaElement.prototype.play;
-    HTMLMediaElement.prototype.play = function playAtTableVolume(...args) {
-      soundMediaElements.add(this);
-      this.volume = soundVolume;
-      return play.apply(this, args);
-    };
-  }
-  if (window.AudioNode?.prototype?.connect) {
-    soundMasterNodeConnect = AudioNode.prototype.connect;
-    AudioNode.prototype.connect = function connectAtTableVolume(destination, ...rest) {
-      if (!this.koSoundMaster && destination && this.context && destination === this.context.destination) {
-        soundMasterNodeConnect.call(this, soundMasterGain(this.context), ...rest);
-        return destination;
-      }
-      return soundMasterNodeConnect.call(this, destination, ...rest);
-    };
-  }
-})();
 
 $("#limboPlayCloseBtn").onclick = () => closeLimboPlayPanel();
 
@@ -249,7 +220,7 @@ async function boot() {
   initInspectToolbar();
   initRarityEffectsToggle();
   initVfxSpeedToggle();
-  initSoundVolumeControl();
+  initSoundToggle();
   initChat();
   initViewToggles();
   $("#playerLogCloseBtn").onclick = () => $("#playerLogPanel").classList.add("hidden");

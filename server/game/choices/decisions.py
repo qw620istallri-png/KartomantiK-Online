@@ -324,19 +324,12 @@ class DecisionsChoicesMixin:
             self.rules_engine["ongoingEffects"].append(effect)
             applied.append(effect["id"])
         self.rules_engine["pendingChoice"] = None
-        overflow = (
-            self.set_rules_hand_overflow_choice(
-                [choice.get("_overflowPlayerId")]
-            )
-            if choice.get("_overflowPlayerId") else None
-        )
         return None, {
             "kind": "power_loss_distribution",
             "playerId": player_id,
             "itemIds": list(item_ids),
             "effectIds": applied,
             "sourceCardId": choice.get("sourceCardId"),
-            "overflowChoiceId": overflow.get("id") if overflow else None,
         }
 
     def _rules_choice_random_target_effect(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets):

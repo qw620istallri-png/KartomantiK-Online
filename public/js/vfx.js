@@ -335,64 +335,55 @@ function applyVfxSpeedPreference() {
   const button = $("#vfxSpeedBtn");
   if (button) button.textContent = vfxSpeedLabel();
 }
-
-// ---------------------------------------------------------------- sound volume
-// One per-viewer volume for every sound of the table: media elements and Web
-// Audio graphs are routed through it, whichever code plays them.
-const SOUND_VOLUME_KEY = "ko_sound_volume";
-
-const soundMediaElements = new Set();
-
-const soundMasterGains = new WeakMap();
-
-const soundContexts = new Set();
-
-function soundMasterGain(context) {
-  let gain = soundMasterGains.get(context);
-  if (!gain) {
-    gain = context.createGain();
-    gain.koSoundMaster = true;
-    gain.gain.value = soundVolume;
-    soundMasterNodeConnect.call(gain, context.destination);
-    soundMasterGains.set(context, gain);
-    soundContexts.add(context);
-  }
-  return gain;
-}
-
-let soundMasterNodeConnect = null;
-
-function applySoundVolume() {
-  for (const element of soundMediaElements) {
-    if (!element.isConnected && element.paused) soundMediaElements.delete(element);
-    else element.volume = soundVolume;
-  }
-  document.querySelectorAll("audio, video").forEach((element) => { element.volume = soundVolume; });
-  for (const context of soundContexts) {
-    const gain = soundMasterGains.get(context);
-    if (context.state === "closed" || !gain) soundContexts.delete(context);
-    else gain.gain.setValueAtTime(soundVolume, context.currentTime);
-  }
-  const input = $("#soundVolumeInput");
-  const percent = Math.round(soundVolume * 100);
-  if (input && Number(input.value) !== percent) input.value = String(percent);
+function applySoundPreference() {
+  const button = $("#soundToggleBtn");
+  const slider = $("#soundVolumeSlider");
   const output = $("#soundVolumeValue");
-  if (output) output.textContent = percent ? `${percent} %` : t("soundVolumeMuted");
-  const label = $("#soundVolumeLabel");
-  if (label) label.textContent = t("soundVolumeLabel");
+  const on = window.KKOAudio?.isEnabled() !== false;
+  const volume = Math.round((window.KKOAudio?.getVolume?.() ?? 1) * 100);
+  const displayedVolume = on ? volume : 0;
+  if (button) {
+    button.textContent = t(on ? "soundOn" : "soundOff");
+    button.setAttribute("aria-pressed", String(on));
+  }
+  if (slider) {
+    slider.value = String(displayedVolume);
+    slider.setAttribute("aria-label", t("soundVolume"));
+    slider.setAttribute("aria-valuetext", `${displayedVolume}%`);
+  }
+  if (output) output.value = `${displayedVolume}%`;
+}
+function initSoundToggle() {
+  const button = $("#soundToggleBtn");
+  const slider = $("#soundVolumeSlider");
+  applySoundPreference();
+  if (button) {
+    button.onclick = () => {
+      window.KKOAudio?.toggle();
+      applySoundPreference();
+    };
+  }
+  if (slider) {
+    slider.oninput = () => {
+      const volume = Math.max(0, Math.min(100, Number(slider.value))) / 100;
+      if (volume > 0) {
+        window.KKOAudio?.setVolume(volume);
+        window.KKOAudio?.setEnabled(true);
+      } else {
+        window.KKOAudio?.setEnabled(false);
+      }
+      applySoundPreference();
+    };
+  }
 }
 
-function initSoundVolumeControl() {
-  const input = $("#soundVolumeInput");
-  applySoundVolume();
-  if (!input) return;
-  input.setAttribute("aria-label", t("soundVolumeLabel"));
-  input.oninput = () => {
-    soundVolume = Math.min(1, Math.max(0, Number(input.value) / 100));
-    try { localStorage.setItem(SOUND_VOLUME_KEY, String(soundVolume)); } catch {}
-    applySoundVolume();
-  };
-}
+
+
+
+
+
+
+
 
 function initVfxSpeedToggle() {
   const button = $("#vfxSpeedBtn");

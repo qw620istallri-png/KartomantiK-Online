@@ -327,8 +327,8 @@ class ChainMixin:
             and int(effect.get("turn") or 0) == self.phase_tracker["turn"]
         ]
         return (
-            matching[-1].get("overflowDestination", "graveyard")
-            if matching else "graveyard"
+            matching[-1].get("overflowDestination", "deck_bottom")
+            if matching else "deck_bottom"
         )
 
     def set_rules_hand_overflow_choice(self, player_ids):
@@ -397,15 +397,11 @@ class ChainMixin:
                     "count": discard_count,
                 }
         drawn = self.draw_rules_cards(player_id, requested)
-        overflow = self.set_rules_hand_overflow_choice([player_id])
-        payload = {
+        return {
             "kind": "draw",
             "playerId": player_id,
             "count": len(drawn),
         }
-        if overflow:
-            payload["overflowChoiceId"] = overflow["id"]
-        return payload
 
     def create_rules_token_copy(self, card_id, controller_id, *,
                                 source_item_id=None, hollow=False,

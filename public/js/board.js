@@ -284,27 +284,22 @@ function initTokenToolbar() {
 let selectedEssenceTemperament = null;
 
 function initEssenceToolbar() {
-  $("#createEssenceBtn").textContent = "✨";
-  $("#essenceTemperamentGrid").innerHTML = TEMPERAMENTS.map(
-    (temp) => `<button data-temperament="${esc(temp.key)}"><img src="${esc(temperamentSymbol(temp.key))}" alt="">${esc(t("temperament" + temp.key[0].toUpperCase() + temp.key.slice(1)))}</button>`
-  ).join("") + `<button data-temperament="neutral" class="neutral-token-choice"><span></span>${esc(t("neutralToken"))}</button>`;
-  $$("#essenceTemperamentGrid button").forEach((btn) => {
-    btn.onclick = () => {
-      selectedEssenceTemperament = btn.dataset.temperament;
-      $$("#essenceTemperamentGrid button").forEach((b) => b.classList.toggle("active", b === btn));
-      $("#neutralTokenNameField").classList.toggle("hidden", selectedEssenceTemperament !== "neutral");
-      if (selectedEssenceTemperament === "neutral") $("#neutralTokenNameInput").focus();
-    };
-  });
+  const button = $("#createEssenceBtn");
+  button.textContent = "⊕";
+  button.title = t("neutralToken");
+  $("#essenceTemperamentGrid").innerHTML = `<button data-temperament="neutral" class="neutral-token-choice active"><span></span>${esc(t("neutralToken"))}</button>`;
 
-  $("#createEssenceBtn").onclick = () => {
-    selectedEssenceTemperament = null;
-    $$("#essenceTemperamentGrid button").forEach((b) => b.classList.remove("active"));
-    $("#essenceTemperamentGrid .neutral-token-choice span").style.setProperty("--neutral-color", playerColor(myPlayerId));
+  button.onclick = () => {
+    selectedEssenceTemperament = "neutral";
+    const choice = $("#essenceTemperamentGrid .neutral-token-choice");
+    choice.classList.add("active");
+    choice.querySelector("span").style.setProperty("--neutral-color", playerColor(myPlayerId));
     $("#essenceCountInput").value = 1;
     $("#neutralTokenNameInput").value = t("neutralToken");
-    $("#neutralTokenNameField").classList.add("hidden");
+    $("#neutralTokenNameField").classList.remove("hidden");
+    $("#essencePanelHeading").textContent = t("neutralToken");
     $("#essencePanel").classList.remove("hidden");
+    $("#neutralTokenNameInput").focus();
     setMyActivity("essence");
   };
   $("#essenceCancelBtn").onclick = () => {

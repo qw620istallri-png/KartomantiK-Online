@@ -197,6 +197,88 @@ class AutoPassTests(unittest.TestCase):
         session.rules_engine["priorityPlayerId"] = "p1"
         self.assertEqual(session.rules_auto_pass_player(), "p1")
 
+    def test_a_stack_resolves_item_by_item_even_when_phase_skipping_is_off(self):
+        session, _p1, _p2 = self.make_session()
+        self.goto(session, "resolution_effects")
+        session.set_rules_auto_skip("p1", False)
+        session.set_rules_auto_skip("p2", False)
+        session.rules_engine["actionStack"] = [
+            {
+                "id": "bottom-effect", "label": "Bottom effect", "kind": "triggered_effect", "controllerId": "p1",
+                "source": {"cardId": "m-1", "ownerId": "p1"}, "targets": [],
+                "ability": {"id": "bottom", "result": {"kind": "score_owner", "value": 1}},
+            },
+            {
+                "id": "top-effect", "label": "Top effect", "kind": "triggered_effect", "controllerId": "p2",
+                "source": {"cardId": "m-2", "ownerId": "p2"}, "targets": [],
+                "ability": {"id": "top", "result": {"kind": "score_owner", "value": 1}},
+            },
+        ]
+
+        steps = asyncio.run(server_main.auto_advance_rules_phases(session, "p1"))
+
+        self.assertEqual(steps, 4)
+        self.assertEqual(session.rules_engine["actionStack"], [])
+        self.assertEqual(session.rules_engine["lastResolvedAction"]["id"], "bottom-effect")
+        self.assertEqual(session.current_phase_id(), "resolution_effects")
+
+    def test_a_required_discard_pauses_the_stack_then_auto_resolution_resumes(self):
+        session, _p1, p2 = self.make_session()
+        p2["zones"]["hand"] = ["m-2"]
+        p2["zoneOwners"]["hand"] = {"m-2": "p2"}
+        self.goto(session, "resolution_effects")
+        session.set_rules_auto_skip("p1", False)
+        session.set_rules_auto_skip("p2", False)
+        session.rules_engine["actionStack"] = [
+            {
+                "id": "bottom-effect", "label": "Bottom effect", "kind": "triggered_effect", "controllerId": "p1",
+                "source": {"cardId": "m-1", "ownerId": "p1"}, "targets": [],
+                "ability": {"id": "bottom", "result": {"kind": "score_owner", "value": 1}},
+            },
+            {
+                "id": "dark-apparition-effect", "label": "Sombre Apparition",
+                "kind": "triggered_effect", "controllerId": "p1",
+                "source": {"cardId": "7e2ppf4rfgkdfms_en", "ownerId": "p1"},
+                "targets": [{"kind": "player", "playerId": "p2"}],
+                "ability": {
+                    "id": "target-player-discards-on-enter-field",
+                    "result": {"kind": "discard_hand_target", "value": 1},
+                },
+            },
+        ]
+
+        first_steps = asyncio.run(server_main.auto_advance_rules_phases(session, "p1"))
+
+        self.assertEqual(first_steps, 2)
+        self.assertEqual([entry["id"] for entry in session.rules_engine["actionStack"]], ["bottom-effect"])
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual((choice["kind"], choice["playerId"]), ("discard_from_hand", "p2"))
+        self.assertIsNone(session.resolve_rules_choice("p2", choice["id"], ["m-2"])[0])
+
+        resumed_steps = asyncio.run(server_main.auto_advance_rules_phases(session, "p2"))
+
+        self.assertEqual(resumed_steps, 2)
+        self.assertEqual(session.rules_engine["actionStack"], [])
+        self.assertEqual(session.rules_engine["lastResolvedAction"]["id"], "bottom-effect")
+
+    def test_a_stack_waits_when_the_priority_holder_has_a_legal_response(self):
+        session, p1, _p2 = self.make_session()
+        p1["zones"]["hand"] = ["will-ephemeral", "m-5"]
+        self.goto(session, "resolution_effects")
+        session.set_rules_auto_skip("p1", False)
+        session.set_rules_auto_skip("p2", False)
+        session.rules_engine["actionStack"] = [{
+            "id": "pending-effect", "label": "Pending effect", "kind": "triggered_effect", "controllerId": "p2",
+            "source": {"cardId": "m-2", "ownerId": "p2"}, "targets": [],
+            "ability": {"id": "pending", "result": {"kind": "score_owner", "value": 1}},
+        }]
+
+        steps = asyncio.run(server_main.auto_advance_rules_phases(session, "p1"))
+
+        self.assertEqual(steps, 0)
+        self.assertEqual([entry["id"] for entry in session.rules_engine["actionStack"]], ["pending-effect"])
+        self.assertEqual(session.rules_engine["priorityPlayerId"], "p1")
+
     def test_the_option_a_pending_choice_and_an_unstarted_match_disable_it(self):
         session, p1, p2 = self.make_session()
         self.goto(session, "end_actions")

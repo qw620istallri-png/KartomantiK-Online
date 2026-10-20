@@ -636,7 +636,7 @@ class CardsChoicesMixin:
             for card_id in card_ids
         )
         self.rules_engine["pendingChoice"] = None
-        follow_up = self.set_rules_hand_overflow_choice([player_id])
+        follow_up = None
         if will_count:
             source_controller_id = choice.get("sourceControllerId")
             candidates = [

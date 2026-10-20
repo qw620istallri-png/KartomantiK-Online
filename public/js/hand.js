@@ -54,10 +54,13 @@ function renderHandEssenceStrip() {
     pool.set(token.temperament, (pool.get(token.temperament) || 0) + amount);
   });
   strip.classList.toggle("hidden", !myPlayerId || pool.size === 0);
-  strip.innerHTML = [...pool].map(([temperament, amount]) => (
-    `<span class="hand-essence-chip" title="${esc(t("essence"))} ×${amount}"><img src="${esc(temperamentSymbol(temperament))}" alt="${esc(temperament)}"><b>${amount}</b></span>`
-  )).join("");
+  const manual = !latestState?.rulesEngine?.enabled;
+  strip.innerHTML = [...pool].map(([temperament, amount]) => manual
+    ? `<button type="button" class="hand-essence-chip" data-remove-essence="${esc(temperament)}" title="${esc(t("essenceRemoveOne"))}: ${esc(t(`temperament${temperament[0].toUpperCase()}${temperament.slice(1)}`))}"><img src="${esc(temperamentSymbol(temperament))}" alt=""><b>${amount}</b></button>`
+    : `<span class="hand-essence-chip" title="${esc(t(`temperament${temperament[0].toUpperCase()}${temperament.slice(1)}`))}"><img src="${esc(temperamentSymbol(temperament))}" alt=""><b>${amount}</b></span>`
+  ).join("");
   strip.setAttribute("aria-label", t("essence"));
+  bindEssenceQuickControls(strip);
 }
 
 // Manifestations with an ability usable from the Hand (e.g. Ranba) stay actionable
@@ -70,6 +73,8 @@ function handCardUnplayableReason(cardId) {
   if (rules.pendingChoice) return t("unplayablePending");
   if (handDrawLocked()) return t("unplayableDrawing");
   if (rules_pregame_active_client() || rules_recovery_mulligan_active_client()) return t("unplayablePregame");
+  // a Trap only goes face down while the First Manifestations are being chosen
+  if (isTrapCardClient(cardId)) return rulesFirstManifestationActive() ? t("unplayableTrapUsed") : t("unplayableTrapWindow");
   if (rulesFirstManifestationActive()) {
     if ((rules.firstManifestationItemIds || {})[myPlayerId]) return t("unplayableFirstDone");
     if (card.type !== "manifestation" && !card.placeholder) return t("unplayableFirstType");
@@ -118,7 +123,7 @@ function handCardUnplayableReason(cardId) {
       return wrongPhase(["confrontation_reaction", "end_actions"]);
     }
   }
-  if (rulesSupportEntryLockedClient()) return t("unplayableSupportLocked");
+  if (rulesSupportEntryLockedClient() || (rules.supportEntryLockedPlayerIds || []).includes(myPlayerId)) return t("unplayableSupportLocked");
   if (!rulesSupportFromHandAvailableClient(cardId)) return t("unplayableNoSupport");
   if (phaseId !== "confrontation_reaction") return wrongPhase(["confrontation_reaction"]);
   return t("rulesBoardCardNotPlayable");
@@ -180,9 +185,10 @@ function handCardIsPlayable(cardId) {
   const card = cardsById.get(cardId);
   if (!rules?.enabled || !card || isObserver || rules.pendingChoice || handDrawLocked()) return false;
   if (rules_pregame_active_client() || rules_recovery_mulligan_active_client()) return false;
+  if (isTrapCardClient(cardId)) return trapPlayableClient(cardId);
   if (rulesFirstManifestationActive()) {
     if (trapPlayableClient(cardId)) return true;
-    return (card.type === "manifestation" || card.placeholder)
+    return ((card.type === "manifestation" && rulesPlayType(card) === "manifestation") || card.placeholder)
       && !String(card.effect || "").includes("Cannot be played as First Manifestation")
       && !(rules.firstManifestationItemIds || {})[myPlayerId];
   }
@@ -217,14 +223,16 @@ function handCardIsPlayable(cardId) {
     return timingOk && rulesCanAffordCard(cardId)
       && rulesPlayedAbilityTargetsAvailableClient(cardId);
   }
+  const supportLocked = (rules.supportEntryLockedPlayerIds || []).includes(myPlayerId);
   if (card.type === "manifestation" && rulesEndPhaseInterzonePlayClient(card)) {
     if (phaseId === "end_actions") return !stackHasActions && rulesInterzoneHasRoomClient();
-    if (phaseId !== "confrontation_reaction") return false;
+    if (phaseId !== "confrontation_reaction" || supportLocked) return false;
   }
   // Pin Down: no Manifestation may enter the Confrontation Zone this turn
   if (card.type === "manifestation" && rulesSupportEntryLockedClient()) return false;
-  if (card.type === "manifestation" && rulesTopOfStackIsWillClient(card)) return true;
+  if (card.type === "manifestation" && rulesTopOfStackIsWillClient(card)) return !supportLocked;
   return card.type === "manifestation"
+    && !supportLocked
     && phaseId === "confrontation_reaction"
     && rulesSupportFromHandAvailableClient(cardId);
 }
@@ -484,7 +492,7 @@ function renderHandTray() {
         ${automationCoverageBadgeHtml(cardId)}
         <span class="hand-card-revealed-icon" title="${esc(t("rulesSuspended"))}">S</span>
       </div>`;
-    }).join("") + ghostCards.map((ghost, index) => `<div class="hand-card is-playable is-ghost" data-ghost-card="${esc(ghost.cardId)}" data-ghost-zone="${esc(ghost.zone)}" data-ghost-host="${esc(ghost.itemId || "")}" data-ghost-key="${esc(String(ghost.selectionKey ?? ""))}"${ghost.permission ? ` data-ghost-permission="true"` : ""} role="button" tabindex="0" aria-label="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" title="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" style="${handCurveStyle(cards.length + suspendedCards.length + index, cards.length + suspendedCards.length + ghostCards.length)}--hand-z:${cards.length + suspendedCards.length + index};${rarityCosmosStyle(ghost.cardId)}">
+    }).join("") + ghostCards.map((ghost, index) => `<div class="hand-card ${ghost.playable === false ? "" : "is-playable "}is-ghost" data-ghost-card="${esc(ghost.cardId)}" data-ghost-zone="${esc(ghost.zone)}" data-ghost-host="${esc(ghost.itemId || "")}" data-ghost-key="${esc(String(ghost.selectionKey ?? ""))}" data-ghost-playable="${ghost.playable === false ? "false" : "true"}"${ghost.permission ? ` data-ghost-permission="true"` : ""} role="button" tabindex="0" aria-label="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" title="${esc(`${cardName(ghost.cardId)} · ${ghost.label}`)}" style="${handCurveStyle(cards.length + suspendedCards.length + index, cards.length + suspendedCards.length + ghostCards.length)}--hand-z:${cards.length + suspendedCards.length + index};${rarityCosmosStyle(ghost.cardId)}">
         ${raritySurfaceMarkup(null, `<img src="${esc(cardImage(ghost.cardId))}" alt="${esc(cardName(ghost.cardId))}">`)}
         <span class="hand-ghost-label">${esc(ghost.label)}</span>
       </div>`).join("");
@@ -549,6 +557,11 @@ function renderHandTray() {
     const cardId = el.dataset.ghostCard;
     const zone = el.dataset.ghostZone;
     const itemId = el.dataset.ghostHost || null;
+    if (el.dataset.ghostPlayable === "false") {
+      el.onclick = () => showInspect(cardId);
+      wireCardHoverZoom(el, "hand-card-hover-clone");
+      return;
+    }
     if (zone === "payment") {
       const candidate = pendingRulesBoardFlow?.draft?.manifestations?.find((entry) => String(entry.selectionKey) === el.dataset.ghostKey);
       el.onclick = () => { if (candidate) toggleRulesBoardPayment(candidate.selectionKey); };

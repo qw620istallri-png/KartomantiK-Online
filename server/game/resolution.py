@@ -209,6 +209,15 @@ class ResolutionMixin:
             return None, self.resolve_rules_top_action()
 
         previous_phase_id = self.current_phase_id()
+        if previous_phase_id == "end_expire":
+            overflow = self.set_rules_hand_overflow_choice(list(self.players))
+            if overflow:
+                return None, {
+                    "status": "choice_required",
+                    "choiceKind": "hand_overflow",
+                    "playerId": overflow["playerId"],
+                    "stackDepth": 0,
+                }
         sequence = self.phase_sequence()
         next_index = self.phase_tracker["index"] + 1
         started_new_turn = False

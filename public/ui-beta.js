@@ -1101,7 +1101,12 @@
       <button type="button" class="ub-stale-strip hidden" id="ubStaleStrip"></button>
       <div class="ub-stale-drop hidden" id="ubStaleDrop"></div>
       <div class="ub-stale-panel hidden" id="ubStalePanel"></div>`;
-    wrap.insertBefore(field, document.getElementById("battlefield"));
+    const battlefield = document.getElementById("battlefield");
+    const controls = el("div", "ub-field-controls");
+    controls.id = "ubFieldControls";
+    controls.appendChild(field.querySelector("#ubTotals"));
+    wrap.insertBefore(field, battlefield);
+    wrap.insertBefore(controls, battlefield);
 
     const left = el("aside", "ub-col left");
     left.id = "ubLeft";
@@ -1498,19 +1503,23 @@
       const key = activeTemperamentKey(player.id);
       const ink = key ? temperamentInk(key) : "#7d7d7d";
       const pool = essencePool(player.id);
+      const ownPool = !isObserver && player.id === myPlayerId && !rulesOn();
       const essence = pool.size
-        ? `<div class="ub-ess" aria-label="${esc(t("essence"))}">${[...pool].map(([temperament, amount]) => `<span style="--ink:${esc(temperamentInk(temperament))}" title="${esc(t("essence"))} · ${esc(temperamentLabel(temperament))} ×${amount}"><img src="${esc(temperamentSymbol(temperament))}" alt="">${amount}</span>`).join("")}</div>`
+        ? `<div class="ub-ess" aria-label="${esc(t("essence"))}">${[...pool].map(([temperament, amount]) => ownPool
+          ? `<button type="button" data-remove-essence="${esc(temperament)}" style="--ink:${esc(temperamentInk(temperament))}" title="${esc(t("essenceRemoveOne"))}: ${esc(temperamentLabel(temperament))}"><img src="${esc(temperamentSymbol(temperament))}" alt="">${amount}</button>`
+          : `<span style="--ink:${esc(temperamentInk(temperament))}" title="${esc(t("essence"))} · ${esc(temperamentLabel(temperament))} ×${amount}"><img src="${esc(temperamentSymbol(temperament))}" alt="">${amount}</span>`).join("")}</div>`
         : "";
       return `<div class="ub-tside ${side}" style="--pc:${esc(playerColor(player.id))}">
         <div class="ub-total ${side}${lead === side ? " win" : ""}${lead === "tie" ? " tie" : ""}" style="--tc:${esc(ink)}" title="${esc(t("rulesPowerTotal"))}">
           <span class="ub-who2">${esc(player.name)}</span>
           <span class="ub-pw">${power}</span>
           <span class="ub-tmp">${key ? `<img src="${esc(temperamentSymbol(key))}" alt="${esc(temperamentLabel(key))}" title="${esc(t("rulesActiveTemperament"))}: ${esc(temperamentLabel(key))}">` : ""}</span>
-        </div>${essence}
+        </div>${essenceQuickPickerMarkup(player.id)}${essence}
       </div>`;
     };
     const turn = Number(latestState.phaseTracker?.turn || 1);
     totals.innerHTML = `${block("me", me)}<span class="ub-vs ub-turn" title="${esc(t("ubTurn"))} ${turn}"><small>${esc(t("ubTurn"))}</small><b>${turn}</b></span>${block("opp", opp)}`;
+    bindEssenceQuickControls(totals);
   }
 
   function renderWheel(G, players) {
@@ -2418,8 +2427,8 @@
 
   function syncBoardChoice() {
     const choice = readBoardChoice();
-    document.querySelectorAll(".ub-choice-pick, .ub-choice-drag, .ub-choice-target, .ub-drop-ok").forEach((node) => {
-      node.classList.remove("ub-choice-pick", "ub-choice-drag", "ub-choice-target", "ub-drop-ok");
+    document.querySelectorAll(".ub-choice-pick, .ub-choice-drag, .ub-choice-target, .ub-target-over, .ub-drop-ok").forEach((node) => {
+      node.classList.remove("ub-choice-pick", "ub-choice-drag", "ub-choice-target", "ub-target-over", "ub-drop-ok");
     });
     document.querySelectorAll(".ub-proxied").forEach((node) => node.classList.remove("ub-proxied"));
     const banner = document.getElementById("ubChoiceBanner");

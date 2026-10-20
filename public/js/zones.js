@@ -69,7 +69,7 @@ function initViewToggles() {
   $("#hideInterfaceBtn").title = t("hideInterface");
   $("#rarityEffectsToggleBtn").innerHTML = rarityEffectsIconSvg();
   applyVfxSpeedPreference();
-  applySoundVolume();
+  applySoundPreference();
 }
 
 function updateHeaderCounts() {

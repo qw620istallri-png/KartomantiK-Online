@@ -139,6 +139,7 @@
         "slumberer-wakes-up"
       ],
       "mechanics": [
+        "first-restriction",
         "result:add_counter_source",
         "result:slumberer_wakes",
         "result:source_to_winner_vessel",
@@ -6889,6 +6890,7 @@
       ],
       "mechanics": [
         "cost:tribute",
+        "first-restriction",
         "phase-window",
         "result:add_counter_source",
         "result:field_becomes_first_manifestation",

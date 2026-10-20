@@ -838,7 +838,6 @@ class PregameMixin:
             draws[player_id] = draw_result["count"]
             hand_limits[player_id] = draw_result["handLimit"]
         self.rules_engine["limboRecoveryPlayerIds"] = []
-        overflow = self.set_rules_hand_overflow_choice(list(self.players))
 
         self.rules_engine["recoveryDrawTurn"] = turn
         self.rules_engine["recoveryMulliganTurn"] = turn
@@ -867,7 +866,6 @@ class PregameMixin:
         return None, {
             "draws": draws,
             "handLimits": hand_limits,
-            "overflowChoiceId": overflow.get("id") if overflow else None,
             "incompletePlayerIds": incomplete_player_ids,
             "mulliganRequiredPlayerIds": list(self.rules_engine["recoveryMulliganRequiredPlayerIds"]),
             "advanced": not self.ended and self.current_phase_id() == "recovery_end",

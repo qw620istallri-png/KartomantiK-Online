@@ -233,16 +233,17 @@ class ViewMixin:
                 entry["chosenTemperament"] = item["chosenTemperament"]
             if item.get("supportUntilTurn"):
                 entry["supportUntilTurn"] = item["supportUntilTurn"]
+            controller_id = self.rules_item_controller_id(item)
             if (
                 self.rules_engine["enabled"] and item.get("faceUp")
                 and item.get("fieldZone") == "interzone"
                 and self.rules_item_card_rules(item).get("type") == "manifestation"
+                and not self.rules_support_entry_locked(controller_id)
                 and self.rules_card_can_enter_support(item)
             ):
                 entry["canEnterSupport"] = True
             if item.get("isChained"):
                 entry["isChained"] = True
-            controller_id = self.rules_item_controller_id(item)
             if controller_id and controller_id != item.get("ownerId"):
                 entry["controllerId"] = controller_id
             if item.get("temperamentOverride") in RULES_TEMPERAMENTS:
@@ -334,6 +335,9 @@ class ViewMixin:
                 "beginningPermissionsTurn": self.rules_engine["beginningPermissionsTurn"],
                 "playPermissions": play_permissions_view,
                 "supportEntries": [dict(entry) for entry in self.rules_engine["supportEntries"]],
+                "supportEntryLockedPlayerIds": [
+                    pid for pid in self.players if self.rules_support_entry_locked(pid)
+                ],
                 "playRestrictions": [dict(entry) for entry in self.rules_engine["playRestrictions"]],
                 "zoneEntryTurns": zone_entry_turns_view,
                 "recentLimboEntries": [
