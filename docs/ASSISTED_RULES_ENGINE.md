@@ -1053,3 +1053,13 @@ Relecture des 150 cartes des cinq decks de départ, texte imprimé contre `card-
 - Ataviques : une Manifestation placée (et non jouée) ne compte pas. Malaleuco mis dans l'Interzone depuis la main appelle `queue_rules_manifestation_entry_watchers(..., played=False)`.
 - Karmapult : plus de restriction à la Réaction, sa capacité suit les fenêtres normales des effets activés.
 - Tests : `StarterDeckAuditTests` dans `tests/test_reported_card_bugs.py`.
+
+## Suites de l'audit des decks de départ (beta 139.2)
+
+- Duel Honorably : seul l'adversaire paie, au moment de la résolution (décision du 2026-10-20 : l'option « un joueur » vise le multijoueur).
+- Entrust double réellement la Puissance de base (`item["baseDoublings"]`, lu par `rules_manifestation_base_power` et `rules_manifestation_characteristics`). Deux Entrust donnent ×4. Jondo, The Stomper, Kiss of the Myrmillo, Ranba, Inflate the Ego et les destructions qui lisent la puissance de base utilisent cette valeur. Cleanse retire le doublement.
+- Stampeding Brood : « jusqu'à deux » ouvre le choix `token_count` (0 à N, limité aux places libres de l'Interzone). Résultat `create_support_tokens` avec `upTo`.
+- Déclencheur obligatoire sans cible légale : `rules_trigger_has_no_legal_target` vaut pour tous les événements et pour `min` > 1. L'effet n'est pas mis sur la Pile au lieu d'ouvrir un choix impossible. Echo of the Wilds redevient obligatoire.
+- Mimer : durée `while_source_on_field`. La copie survit au départ de sa cible grâce à la dernière valeur mémorisée (`snapshot` de l'effet).
+- Trim the Excess et Equalize n'affectent plus la Zone d'Impasse, qui ne fait pas partie du champ.
+- Tests : `StarterDeckFollowUpTests` dans `tests/test_reported_card_bugs.py`.

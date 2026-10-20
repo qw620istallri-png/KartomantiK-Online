@@ -786,6 +786,9 @@ class StarterDeckAuditTests(ReportedCardRulesCase):
             "id": "brood", "kind": "triggered_effect", "controllerId": "p1",
             "source": {"cardId": self.BROOD, "ownerId": "p1"}, "ability": ability, "targets": [],
         })
+        choice = session.rules_engine.get("pendingChoice")
+        if choice:
+            session.resolve_rules_choice("p1", choice["id"], option=choice["options"][-1])
         return session.rules_interzone_slot_count("p1")
 
     def test_stampeding_brood_never_overfills_the_interzone(self):
@@ -866,3 +869,126 @@ class StarterDeckAuditTests(ReportedCardRulesCase):
             payment_card_ids=["m-1"], ability_id="karmapult-sacrifices-for-power-loss",
         )
         self.assertIsNone(error)
+
+
+class StarterDeckFollowUpTests(ReportedCardRulesCase):
+    """Decisions taken after the starter deck audit (beta 140)."""
+
+    ENTRUST = "ud9clfoj2c6x96o_en"
+    JONDO = "dbevnzpvngas8pg_en"
+    BROOD = "je9rwgrjwk97oes_en"
+    ECHO = "6b4f3yh4tk4091p_en"
+    MIMER = "pwsjhnw4vpvqgkv_en"
+    TRIM = "t42gc95tma8uhzm_en"
+    ALL = ReportedCardRulesCase.ALL + (ENTRUST, JONDO, BROOD, ECHO, MIMER, TRIM)
+
+    def entrust(self, session, player, target):
+        session.card_rules["m-9"].update({"temperaments": ["phlegmatic"], "power": 3})
+        self.put(player, "hand", [self.ENTRUST, "m-9"])
+        session.rules_engine["priorityPlayerId"] = "p1"
+        error, _action = session.declare_rules_action(
+            "p1", "Entrust", kind="play_card", source={"cardId": self.ENTRUST, "zone": "hand"},
+            targets=[{"kind": "card", "itemId": target["id"], "cardId": target["cardId"]}],
+            payment_card_ids=["m-9"], ability_id="entrust-double-base-power",
+        )
+        self.assertIsNone(error)
+        self.resolve_top(session)
+
+    def test_entrust_doubles_the_base_power_itself(self):
+        session, p1, _p2 = self.started_session()
+        session.card_rules["m-3"]["power"] = 3
+        target = self.field_item("t", "p1", "m-3")
+        session.battlefield = [target, self.field_item("b", "p2", "m-2")]
+        self.entrust(session, p1, target)
+        self.assertEqual(session.rules_manifestation_base_power(target), 6)
+        self.entrust(session, p1, target)
+        self.assertEqual(session.rules_manifestation_base_power(target), 12)
+        self.assertEqual(session.rules_manifestation_characteristics(target)["power"], 12)
+
+    def test_jondo_compares_the_doubled_base_power(self):
+        session, _p1, _p2 = self.started_session(phase_id="confrontation_immediate")
+        session.card_rules["m-3"]["power"] = 3
+        first = self.field_item("first", "p1", "m-3")
+        first["baseDoublings"] = 1
+        jondo = self.field_item("jondo", "p1", self.JONDO, field_zone="interzone")
+        session.battlefield = [first, jondo]
+        session.rules_engine["firstManifestationItemIds"] = {"p1": "first"}
+        ability = self.ABILITIES[self.JONDO][0]
+        result = session.apply_rules_action_result({
+            "id": "j", "kind": "triggered_effect", "controllerId": "p1",
+            "source": {"cardId": self.JONDO, "ownerId": "p1", "itemId": "jondo"},
+            "ability": ability, "targets": [],
+        })
+        self.assertEqual(result["status"], "condition_failed")  # 4 is not higher than 6
+
+    def test_stampeding_brood_asks_how_many_tokens(self):
+        session, _p1, _p2 = self.started_session(phase_id="resolution_move")
+        session.battlefield = [self.field_item("iz", "p1", "m-1", field_zone="interzone")]
+        ability = self.ABILITIES[self.BROOD][0]
+        result = session.apply_rules_action_result({
+            "id": "brood", "kind": "triggered_effect", "controllerId": "p1",
+            "source": {"cardId": self.BROOD, "ownerId": "p1"}, "ability": ability, "targets": [],
+        })
+        self.assertEqual(result["choiceKind"], "token_count")
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["options"], ["0", "1", "2"])
+        error, _payload = session.resolve_rules_choice("p1", choice["id"], option="1")
+        self.assertIsNone(error)
+        self.assertEqual(session.rules_interzone_slot_count("p1"), 2)
+
+    def lose_with_echo(self, interzone):
+        session, _p1, _p2 = self.started_session()
+        session.card_rules["m-2"]["power"] = 9
+        session.battlefield = [self.field_item("echo", "p1", self.ECHO), self.field_item("big", "p2", "m-2")]
+        if interzone:
+            session.battlefield.append(self.field_item("iz", "p1", "m-3", field_zone="interzone"))
+        session.rules_engine["firstManifestationItemIds"] = {"p1": "echo", "p2": "big"}
+        for _ in range(12):
+            if session.rules_engine.get("pendingChoice"):
+                break
+            session.pass_rules_priority(session.rules_engine["priorityPlayerId"])
+        return session.rules_engine.get("pendingChoice") or {}
+
+    def test_echo_of_the_wilds_is_mandatory_and_never_blocks(self):
+        self.assertEqual(self.lose_with_echo(True).get("kind"), "trigger_targets")
+        # an empty Interzone: no target, the trigger is skipped instead of an impossible choice
+        self.assertNotEqual(self.lose_with_echo(False).get("kind"), "trigger_targets")
+
+    def test_mimer_keeps_the_copy_after_its_target_leaves(self):
+        session, p1, _p2 = self.started_session()
+        session.card_rules["m-2"].update({"power": 5, "temperaments": ["choleric"]})
+        mimer = self.field_item("mimer", "p1", self.MIMER)
+        foe = self.field_item("foe", "p2", "m-2")
+        session.battlefield = [mimer, foe]
+        session.rules_engine["firstManifestationItemIds"] = {"p1": "mimer", "p2": "foe"}
+        self.put(p1, "hand", ["m-1"])
+        error, _action = session.declare_rules_action(
+            "p1", "Mimer", kind="activated_effect",
+            source={"cardId": self.MIMER, "zone": "battlefield", "itemId": "mimer"},
+            targets=[{"kind": "card", "itemId": "foe", "cardId": "m-2"}],
+            payment_card_ids=["m-1"], ability_id="copy-first-manifestation",
+        )
+        self.assertIsNone(error)
+        self.resolve_top(session)
+        self.assertEqual(session.rules_manifestation_characteristics(mimer)["power"], 5)
+        session.battlefield.remove(foe)
+        session.prune_rules_ongoing_effects()
+        stats = session.rules_manifestation_characteristics(mimer)
+        self.assertEqual((stats["power"], stats["temperament"]), (5, "choleric"))
+
+    def test_trim_the_excess_ignores_the_stalemate_zone(self):
+        session, p1, _p2 = self.started_session()
+        stalemated = self.field_item("s", "p2", "m-4", field_zone="stalemate", counters={"power": 2})
+        session.battlefield = [self.field_item("a", "p1", "m-1"), self.field_item("b", "p2", "m-2"), stalemated]
+        session.card_rules["m-5"].update({"temperaments": ["capricious"], "power": 3})
+        self.put(p1, "hand", [self.TRIM, "m-5"])
+        error, _action = session.declare_rules_action(
+            "p1", "Trim", kind="play_card", source={"cardId": self.TRIM, "zone": "hand"},
+            payment_card_ids=["m-5"], ability_id="trim-field-to-base-power",
+        )
+        self.assertIsNone(error)
+        self.resolve_top(session)
+        self.assertFalse(any(
+            effect.get("target", {}).get("itemId") == "s"
+            for effect in session.rules_engine["ongoingEffects"]
+        ))

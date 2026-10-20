@@ -842,7 +842,7 @@
         "controller": "opponent",
         "firstManifestationOnly": true
       },
-      "ongoingEffect": { "kind": "copy_power_temperament", "duration": "while_source_and_target_on_field" }
+      "ongoingEffect": { "kind": "copy_power_temperament", "duration": "while_source_on_field" }
     }
   ],
   "pgvrly9397pua77_en": [
@@ -3172,7 +3172,7 @@
       "trigger": { "event": "enters_zone", "zone": "receptacle", "container": "opponent" },
       "result": {
         "kind": "create_support_tokens", "count": 2, "power": 1,
-        "temperament": "phlegmatic", "fieldZone": "interzone", "permanent": true
+        "temperament": "phlegmatic", "fieldZone": "interzone", "permanent": true, "upTo": true
       }
     }
   ],
@@ -3601,7 +3601,6 @@
   "6b4f3yh4tk4091p_en": [
     {
       "id": "echo-distribute-power-on-loss",
-      "optional": true,
       "trigger": { "event": "loses_confrontation" },
       "targets": { "min": 1, "max": 3, "cardType": "manifestation", "zones": ["battlefield"], "fieldZone": "interzone", "controller": "self" },
       "result": { "kind": "distribute_power", "total": 3, "sign": 1, "duration": "while_target_on_field" }

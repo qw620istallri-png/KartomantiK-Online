@@ -85,6 +85,7 @@ RULES_EFFECT_DURATIONS = {
     "until_end_of_next_turn",
     "while_source_and_target_on_field",
     "while_target_on_field",
+    "while_source_on_field",
     "until_resolution",
 }
 RULES_TEMPERAMENTS = {
@@ -2925,9 +2926,7 @@ class Session:
                     player_id
                 )
             )
-            base_power = int(self.card_rules.get(
-                (first_item or {}).get("cardId"), {}
-            ).get("power") or 0)
+            base_power = self.rules_manifestation_base_power(first_item)
             reduction += base_power // 2
         increase = sum(
             int(passive.get("value") or 0)
@@ -4181,7 +4180,7 @@ class Session:
         if duration not in RULES_EFFECT_DURATIONS:
             return []
         source_on_field = self.find_battlefield_item(source.get("itemId")) if source.get("itemId") else None
-        if duration == "while_source_and_target_on_field" and source_on_field is None:
+        if duration in {"while_source_and_target_on_field", "while_source_on_field"} and source_on_field is None:
             return []
         if definition.get("scope") == "all_manifestations_on_field":
             targets = [
@@ -4283,7 +4282,7 @@ class Session:
 
         # A source with a continuous copying-style ability can only maintain one
         # target for that ability. Re-resolving it replaces the previous link.
-        if duration == "while_source_and_target_on_field":
+        if duration in {"while_source_and_target_on_field", "while_source_on_field"}:
             self.rules_engine["ongoingEffects"] = [
                 effect for effect in self.rules_engine["ongoingEffects"]
                 if not (
@@ -4390,7 +4389,11 @@ class Session:
                     for action in self.rules_engine.get("actionStack") or []
                 )
             )
-            source_required = effect.get("duration") == "while_source_and_target_on_field"
+            source_required = effect.get("duration") in {
+                "while_source_and_target_on_field", "while_source_on_field",
+            }
+            if effect.get("duration") == "while_source_on_field":
+                target_present = True
             source_item = self.find_battlefield_item(
                 effect.get("source", {}).get("itemId")
             )
@@ -5095,8 +5098,8 @@ class Session:
             return None
         if self.rules_item_controller_id(item) == player_id:
             return None
-        power = self.card_rules.get(item.get("cardId"), {}).get("power")
-        if not isinstance(power, (int, float)) or power > max_base_power:
+        power = self.rules_manifestation_base_power(item)
+        if power > max_base_power:
             return None
         return item
 
@@ -5451,7 +5454,7 @@ class Session:
             power = item["willManifestation"].get("power")
         if item.get("gummoCopy"):
             power = self.card_rules.get(item["gummoCopy"], {}).get("power")
-        power = int(power or 0)
+        power = int(power or 0) * (2 ** int(item.get("baseDoublings") or 0))
         base_power = power
         temperaments = (
             [item.get("temperament")]
@@ -5468,9 +5471,16 @@ class Session:
             and effect.get("source", {}).get("itemId") == item.get("id")
         ), None)
         if copy_effect:
-            copied = self.rules_manifestation_characteristics(
-                self.find_battlefield_item(copy_effect.get("target", {}).get("itemId")), visiting
-            )
+            copied_item = self.find_battlefield_item(copy_effect.get("target", {}).get("itemId"))
+            if copied_item is not None:
+                copied = self.rules_manifestation_characteristics(copied_item, visiting)
+                # Mimer keeps the copied values once its target has left the field
+                copy_effect["snapshot"] = {
+                    "power": copied["power"], "temperament": copied["temperament"],
+                    "basePower": self.rules_manifestation_base_power(copied_item, visiting),
+                }
+            else:
+                copied = copy_effect.get("snapshot") or {"power": 0, "temperament": None}
             power = copied["power"]
             if copy_effect.get("kind") == "copy_power_temperament":
                 temperament = copied["temperament"]
@@ -5561,13 +5571,17 @@ class Session:
                 return self.rules_manifestation_base_power(
                     copied_item, visiting
                 )
+            if (copy_effect.get("snapshot") or {}).get("basePower") is not None:
+                return int(copy_effect["snapshot"]["basePower"])
+        # Entrust doubles the base power itself: a modifier kept while the card stays on the field
+        doubling = 2 ** int(item.get("baseDoublings") or 0)
         if item.get("isTokenCard"):
-            return int(item.get("power") or 0)
+            return int(item.get("power") or 0) * doubling
         if item.get("gummoCopy"):
-            return int(self.card_rules.get(item["gummoCopy"], {}).get("power") or 0)
+            return int(self.card_rules.get(item["gummoCopy"], {}).get("power") or 0) * doubling
         return int(
             self.card_rules.get(item.get("cardId"), {}).get("power") or 0
-        )
+        ) * doubling
 
     def rules_stalemate_win_blocked(self, item):
         return (
@@ -7575,18 +7589,19 @@ class Session:
         return clean
 
     def rules_trigger_has_no_legal_target(self, target_rules, controller_id, event_item_id=None):
-        """True when a required single card target cannot be met by anything on the field.
+        """True when the required card targets cannot be met by what is on the field.
 
-        The card still enters; its triggered effect is simply not put on the Stack.
+        The event still happens; its triggered effect is simply not put on the Stack.
         """
         target_rules = target_rules or {}
+        minimum = int(target_rules.get("min") or 0)
         if (
             target_rules.get("groups") or str(target_rules.get("kind") or "card") != "card"
-            or int(target_rules.get("min") or 0) < 1
-            or int(target_rules.get("min") or 0) > 1
+            or minimum < 1
             or set(target_rules.get("zones") or ["battlefield"]) - {"battlefield"}
         ):
             return False
+        legal = 0
         for item in self.battlefield:
             error, clean = self.rules_action_targets([{
                 "kind": "card", "itemId": item.get("id"), "cardId": item.get("cardId"),
@@ -7594,9 +7609,11 @@ class Session:
             if error:
                 continue
             if self.rules_ability_targets_error(
-                target_rules, clean, controller_id, event_item_id=event_item_id,
+                {**target_rules, "min": 1}, clean, controller_id, event_item_id=event_item_id,
             ) is None:
-                return False
+                legal += 1
+                if legal >= minimum:
+                    return False
         return True
 
     def rules_trigger_target_error(self, card_id, event, target_player_id=None, *,
@@ -7918,10 +7935,11 @@ class Session:
             )
             if target_validation_error and not needs_target_choice:
                 continue
-            if needs_target_choice and event in RULES_ENTRY_EVENTS and self.rules_trigger_has_no_legal_target(
+            if needs_target_choice and self.rules_trigger_has_no_legal_target(
                 # a card's own entry: it is the event source (Flower Tender
                 # cannot target itself)
-                target_rules, controller_id, event_item_id or item_id
+                target_rules, controller_id,
+                event_item_id or (item_id if event in RULES_ENTRY_EVENTS else None),
             ):
                 continue
             if clean_targets:
@@ -10202,10 +10220,7 @@ class Session:
             if item is None:
                 return {"kind": result.get("kind"), "status": "target_missing"}
             controller_id = self.rules_item_controller_id(item)
-            if item.get("isTokenCard"):
-                base = int(item.get("power") or 0)
-            else:
-                base = int(self.card_rules.get(item.get("cardId"), {}).get("power") or 0)
+            base = self.rules_manifestation_base_power(item)
             movement = self._rules_remove_field_item_by_effect(
                 item, item.get("ownerId"), "graveyard", "top", reason="destroy"
             )
@@ -11636,10 +11651,7 @@ class Session:
                 if item is not None:
                     firsts[pid] = item
             bases = {
-                pid: (
-                    int(item.get("power") or 0) if item.get("isTokenCard")
-                    else int(self.card_rules.get(item.get("cardId"), {}).get("power") or 0)
-                )
+                pid: self.rules_manifestation_base_power(item)
                 for pid, item in firsts.items()
             }
             highest = max(bases.values()) if bases else 0
@@ -11675,7 +11687,8 @@ class Session:
                     })
             return {"kind": result.get("kind"), "status": "armed"}
         if result.get("kind") == "set_field_power":
-            items = self.rules_confrontation_items(None, ("interzone", "confrontation", "stalemate"))
+            # "on the field": the Stalemate Zone is not part of the field
+            items = self.rules_confrontation_items(None, ("interzone", "confrontation"))
             bases = {item["id"]: self.rules_manifestation_base_power(item) for item in items}
             floor = min(bases.values()) if bases else 0
             effect_ids = []
@@ -11843,9 +11856,8 @@ class Session:
             item = self.find_battlefield_item((target or {}).get("itemId"))
             if item is None:
                 return {"kind": result.get("kind"), "status": "target_missing"}
-            base = int(self.card_rules.get(item.get("cardId"), {}).get("power") or 0)
-            counters = item.setdefault("counters", {})
-            counters["power"] = int(counters.get("power") or 0) + base
+            base = self.rules_manifestation_base_power(item)
+            item["baseDoublings"] = int(item.get("baseDoublings") or 0) + 1
             return {
                 "kind": result.get("kind"), "status": "doubled",
                 "itemId": item["id"], "value": base,
@@ -12221,6 +12233,7 @@ class Session:
             for key in {
                 "effectsDisabled", "zeroPowerSustained",
                 "temperamentOverride", "supportUntilTurn", "hasFloat",
+                "baseDoublings",
             }:
                 item.pop(key, None)
             if metadata.get("supportWinDestination"):
@@ -12430,12 +12443,8 @@ class Session:
                     controller_id
                 )
             )
-            source_base = int(self.card_rules.get(
-                source_item.get("cardId"), {}
-            ).get("power") or 0)
-            first_base = int(self.card_rules.get(
-                (first_item or {}).get("cardId"), {}
-            ).get("power") or 0)
+            source_base = self.rules_manifestation_base_power(source_item)
+            first_base = self.rules_manifestation_base_power(first_item)
             granted = first_item is not None and source_base > first_base
             if granted:
                 source_item["supportUntilTurn"] = self.phase_tracker["turn"]
@@ -13892,11 +13901,9 @@ class Session:
                 for item_id in first_ids.values()
             ]
             first_items = [item for item in first_items if item]
-            source_power = int(self.card_rules.get(
-                source_item.get("cardId"), {}
-            ).get("power") or 0)
+            source_power = self.rules_manifestation_base_power(source_item)
             highest = max((
-                int(self.card_rules.get(item.get("cardId"), {}).get("power") or 0)
+                self.rules_manifestation_base_power(item)
                 for item in first_items
             ), default=source_power)
             qualifies = (
@@ -13962,12 +13969,8 @@ class Session:
                     opponent_id
                 )
             )
-            own_power = int(self.card_rules.get(
-                (own_first or {}).get("cardId"), {}
-            ).get("power") or 0)
-            opponent_power = int(self.card_rules.get(
-                (opponent_first or {}).get("cardId"), {}
-            ).get("power") or 0)
+            own_power = self.rules_manifestation_base_power(own_first)
+            opponent_power = self.rules_manifestation_base_power(opponent_first)
             if own_power <= opponent_power:
                 return {
                     "kind": result.get("kind"),
@@ -14563,9 +14566,23 @@ class Session:
             )
             count = int(result.get("count") or 1)
             if result.get("fieldZone") == "interzone":
-                # Stampeding Brood: "up to" two tokens, never past the Interzone spaces
+                # Stampeding Brood: never past the Interzone spaces
                 count = max(0, min(count, self.rules_interzone_capacity(player_id)
                                    - self.rules_interzone_slot_count(player_id)))
+            if result.get("upTo") and count > 0 and action.get("_tokenCount") is None:
+                choice_id = new_id()
+                self.rules_engine["pendingChoice"] = {
+                    "id": choice_id, "kind": "token_count", "playerId": player_id,
+                    "max": count, "options": [str(value) for value in range(count + 1)],
+                    "sourceCardId": (action.get("source") or {}).get("cardId"),
+                    "_action": action,
+                }
+                return {
+                    "kind": "choice_required", "choiceId": choice_id,
+                    "choiceKind": "token_count", "playerId": player_id,
+                }
+            if action.get("_tokenCount") is not None:
+                count = max(0, min(count, int(action["_tokenCount"])))
             created = [
                 self.create_rules_token_copy(
                     None, player_id,
@@ -15706,6 +15723,15 @@ class Session:
                     movement.get("itemId") for movement in returned
                 ],
             }
+
+        if choice.get("kind") == "token_count":
+            if str(option) not in choice.get("options", []):
+                return "Choose how many tokens to create.", None
+            self.rules_engine["pendingChoice"] = None
+            payload = self.apply_rules_action_result({
+                **(choice.get("_action") or {}), "_tokenCount": int(option),
+            })
+            return None, {**payload, "playerId": player_id}
 
         if choice.get("kind") == "pick_distribution_extra":
             if item_id not in choice.get("candidateItemIds", []):

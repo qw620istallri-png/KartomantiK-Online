@@ -10327,6 +10327,7 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         session, p1, p2 = self.make_session(zombie, memento, tombloom, tenebro)
         session.rules_engine["observedEvents"] = []
         # A discard fires "discarded" and "enters_limbo" for the card itself.
+        session.battlefield = [self.field_item("weak", "p2", "m-1")]
         self.put(p1, "hand", [tombloom])
         session.move_zone_card("p1", "hand", "p1", "graveyard", tombloom, "top")
         queued = session.queue_rules_observed_event_triggers(defer=True)
@@ -10488,6 +10489,10 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         # Stampeding Brood leaves two 1-power tokens in the owner's Interzone.
         session.battlefield = []
         self.run_ability_at(session, brood, 0)
+        # "up to two": the owner picks the number
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["kind"], "token_count")
+        session.resolve_rules_choice(choice["playerId"], choice["id"], option="2")
         tokens = [i for i in session.battlefield if i.get("isTokenCard")]
         self.assertEqual([t["fieldZone"] for t in tokens], ["interzone", "interzone"])
 
@@ -10914,7 +10919,8 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertEqual(self.power_of(session, "ia"), 4)
         session.rules_engine["ongoingEffects"] = []
         self.run_ability(session, equalize)
-        self.assertEqual({self.power_of(session, i) for i in ("ia", "ib", "ic")}, {2})
+        # "on the field": the Stalemate Zone keeps its power
+        self.assertEqual([self.power_of(session, i) for i in ("ia", "ib", "ic")], [2, 2, 6])
         # Soup lets a Persistent Will be played at Ephemeral timing.
         session.rules_engine["ongoingEffects"] = []
         session.card_rules[soup]["passiveEffects"] = [self.ABILITIES[soup][0]["passiveEffect"]]

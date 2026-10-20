@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261019-rules-beta-139-1";
+const STATIC_ASSET_VERSION = "20261020-rules-beta-139-2";
 {
   const versionEl = document.getElementById("appVersion");
   // "...-beta-138-1" reads "beta 138.1" (a release without a fix number reads "138.0")
@@ -9135,6 +9135,26 @@ function renderRulesChoiceScreen() {
     panel.classList.remove("hidden");
     return;
   }
+  if (choice.kind === "token_count") {
+    $("#rulesChoiceHeading").textContent = t("rulesTokenCountHeading");
+    $("#rulesChoiceText").textContent = rulesText("rulesTokenCountText", { max: choice.max });
+    options.innerHTML = (choice.options || []).map((value) => `
+      <button type="button" class="rules-choice-destination" data-rules-token-count="${esc(value)}">
+        <strong>${esc(value)}</strong>
+      </button>`).join("");
+    $$("[data-rules-token-count]").forEach((button) => {
+      button.onclick = () => {
+        button.disabled = true;
+        send({
+          type: "resolve_rules_choice",
+          choiceId: choice.id,
+          option: button.dataset.rulesTokenCount,
+        });
+      };
+    });
+    panel.classList.remove("hidden");
+    return;
+  }
   if (choice.kind === "score_delta_choice") {
     $("#rulesChoiceHeading").textContent = t("rulesScoreChoiceHeading");
     $("#rulesChoiceText").textContent = rulesText("rulesScoreChoiceText", {
@@ -11256,7 +11276,7 @@ function renderRulesEffectLinks() {
     // A temporary modifier already has a visible stat marker on its target.
     // Keep connective lines for effects whose validity actually depends on
     // both cards remaining on the field (copy/link relationships).
-    if (effect.duration !== "while_source_and_target_on_field") continue;
+    if (!["while_source_and_target_on_field", "while_source_on_field"].includes(effect.duration)) continue;
     const source = latestState.battlefield.find((item) => item.id === effect.source?.itemId);
     const target = latestState.battlefield.find((item) => item.id === effect.target?.itemId);
     if (!source || !target) continue;
