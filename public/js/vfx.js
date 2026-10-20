@@ -1546,12 +1546,7 @@ function playRulesVfxEventInner(event) {
       playRulesVfxStackPulse("resolved");
       playRulesVfxImpact(target, t("rulesVfxResolved"), "resolved");
       if (entry.details?.effectResult?.kind === "resolve_top_deck_by_type" && entry.details.effectResult.cardId) {
-        // an uncovered Will that is drawn stays known in its owner's hand for the opponent
-        const ownerId = entry.details.controllerId || entry.actorId;
-        if (entry.details.effectResult.status === "drawn" && ownerId && ownerId !== myPlayerId) {
-          if (!revealedHandCards.has(ownerId)) revealedHandCards.set(ownerId, new Set());
-          revealedHandCards.get(ownerId).add(entry.details.effectResult.cardId);
-        }
+        // an uncovered Will drawn this way stays known in its owner's hand (server side)
         return playRulesVfxTopReveal(entry);
       }
       playRulesVfxCardScene(entry, target);

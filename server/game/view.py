@@ -149,14 +149,20 @@ class ViewMixin:
         players_view = {}
         for pid, player in self.players.items():
             zones_view = {}
+            revealed_indices = self.revealed_hand_indices(pid)
             for zone, cards in player["zones"].items():
                 if self.can_view_zone(viewer_id, role, pid, zone):
                     zones_view[zone] = {
                         "cards": list(cards),
                         "owners": {card_id: self.card_owner_in_zone(pid, zone, card_id) for card_id in cards},
                     }
+                    if zone == "hand" and revealed_indices:
+                        zones_view[zone]["revealedIndices"] = revealed_indices
                 else:
                     zones_view[zone] = {"count": len(cards)}
+                    if zone == "hand" and revealed_indices:
+                        # the cards shown to everyone, at their real place in the hand
+                        zones_view[zone]["revealed"] = [{"index": index, "cardId": cards[index]} for index in revealed_indices]
             players_view[pid] = {
                 "id": pid,
                 "name": player["name"],

@@ -1271,7 +1271,6 @@ function startServer() {
         cards: [sourceCard.id], count: 1, owners: { [sourceCard.id]: "p1" },
       };
       latestState.players.p2.zones.hand = { count: 3 };
-      revealedHandCards.delete("p2");
       handToolsOpen = false;
       handHiddenByUser = true;
       window.__sent = [];
@@ -1301,27 +1300,18 @@ function startServer() {
       };
       const occupiedIds = new Set((latestState.battlefield || []).map((item) => item.cardId));
       const rememberedIds = [...cardsById.keys()].filter((cardId) => !occupiedIds.has(cardId)).slice(0, 2);
-      revealedHandCards.set("p2", new Set(rememberedIds));
+      // the server says which hand cards are known, and where: the one just played
+      // left the hand (and the list), the other one is still shown at its place
+      latestState.players.p2.zones.hand = { count: 2, revealed: [{ index: 0, cardId: rememberedIds[0] }, { index: 1, cardId: rememberedIds[1] }] };
+      renderOpponentHandFan();
       const playedState = structuredClone(latestState);
-      playedState.players.p2.zones.hand = { count: 1 };
-      playedState.rulesEngine.actionStack = [{
-        id: "revealed-play-test",
-        kind: "play_card",
-        controllerId: "p2",
-        sourceOnStack: true,
-        source: { zone: "hand", cardId: rememberedIds[0] },
-        cost: { tributeMovements: [] },
-      }];
-      reconcileRevealedHandCards(playedState);
+      playedState.players.p2.zones.hand = { count: 1, revealed: [{ index: 0, cardId: rememberedIds[1] }] };
       latestState = playedState;
       renderOpponentHandFan();
-      initial.revealedPlayedCardRemoved = !revealedHandCards.get("p2").has(rememberedIds[0])
-        && !document.querySelector(`[data-opponent-hand-card="${rememberedIds[0]}"]`);
-      initial.otherRevealedCardKept = revealedHandCards.get("p2").has(rememberedIds[1])
-        && Boolean(document.querySelector(`[data-opponent-hand-card="${rememberedIds[1]}"]`));
+      initial.revealedPlayedCardRemoved = !document.querySelector(`[data-opponent-hand-card="${rememberedIds[0]}"]`);
+      initial.otherRevealedCardKept = Boolean(document.querySelector(`[data-opponent-hand-slot="0"][data-opponent-hand-card="${rememberedIds[1]}"]`));
       latestState.players.p2.zones.hand = { count: 3 };
       latestState.rulesEngine.actionStack = [];
-      revealedHandCards.delete("p2");
       renderOpponentHandFan();
       latestState.rulesEngine.openingMulliganRequiredPlayerIds = [];
       latestState.rulesEngine.readyPlayerIds = ["p2"];

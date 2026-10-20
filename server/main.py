@@ -547,6 +547,7 @@ async def record_rules_resolution(session, result, actor_id):
     for proof in proofs:
         proof_player_id = proof.get("playerId")
         proof_cards = list(proof.get("cardIds") or [])
+        session.mark_hand_revealed(proof_player_id, proof_cards)
         session.add_log(actor_id, "reveal", {
             "ownerId": proof_player_id,
             "zone": "hand",
@@ -1149,6 +1150,7 @@ async def handle_message(ws, info, data):
         card_rarities = extract_deck_card_rarities(deck_json, card_ids + sideboard_ids)
         reset_own_board = bool(data.get("resetOwnBoard"))
         random.shuffle(card_ids)
+        session.forget_revealed_hand(actor_id)
         if reset_own_board:
             session.replace_player_deck(
                 actor_id, card_ids, sideboard_ids, card_rarities, copy.deepcopy(deck_json)
@@ -1254,6 +1256,7 @@ async def handle_message(ws, info, data):
         player = session.players.get(actor_id)
         if player is None:
             return await send_error(ws, "Unknown player.")
+        session.forget_revealed_hand(actor_id)
         if session.rules_engine["enabled"]:
             recovery_mulligan = session.rules_recovery_mulligan_active()
             if recovery_mulligan:
@@ -1373,6 +1376,8 @@ async def handle_message(ws, info, data):
             else:
                 cards_to_reveal = list(zone_cards)
             session.add_log(actor_id, "reveal", {"ownerId": owner_id, "zone": zone, "count": len(cards_to_reveal)})
+            if zone == "hand":
+                session.mark_hand_revealed(owner_id, cards_to_reveal)
             session.touch()
             reveal_payload = {
                 "type": "reveal",
@@ -1383,6 +1388,8 @@ async def handle_message(ws, info, data):
             for other_ws, other_info in list(connections.items()):
                 if other_info["session"] is session:
                     await send_to(other_ws, reveal_payload)
+            if zone == "hand":
+                await broadcast_state(session)
             return
 
         if not session.can_act_on_zone(actor_id, is_observer, owner_id, zone):
@@ -1441,6 +1448,8 @@ async def handle_message(ws, info, data):
         request_id = new_id()
         session.pending_hand_requests[request_id] = {
             "requesterId": actor_id, "targetId": target_id, "index": index, "action": action,
+            # the card at that place now: the hand may change before the answer
+            "cardId": target_hand[index],
         }
         requester = session.players.get(actor_id)
         target_ws = find_player_ws(session, target_id)
@@ -1467,12 +1476,11 @@ async def handle_message(ws, info, data):
             return
         player = session.players.get(actor_id)
         hand = player["zones"]["hand"] if player else []
-        index = pending["index"]
-        if player is None or index >= len(hand):
+        card_id = pending.get("cardId")
+        if player is None or card_id not in hand:
             if requester_ws is not None:
                 await send_to(requester_ws, {"type": "hand_action_failed"})
             return
-        card_id = hand[index]
         requester_name = (session.players.get(pending["requesterId"]) or {}).get("name") or pending["requesterId"]
         if pending["action"] == "discard":
             error, _ = session.move_zone_card(actor_id, "hand", actor_id, "graveyard", card_id)
@@ -1486,11 +1494,13 @@ async def handle_message(ws, info, data):
             await broadcast_state(session)
         else:  # show
             session.add_log(actor_id, "reveal", {"ownerId": actor_id, "zone": "hand", "count": 1, "requestedBy": requester_name})
+            session.mark_hand_revealed(actor_id, [card_id])
             session.touch()
             reveal_payload = {"type": "reveal", "ownerId": actor_id, "zone": "hand", "cards": [card_id]}
             for other_ws, other_info in list(connections.items()):
                 if other_info["session"] is session:
                     await send_to(other_ws, reveal_payload)
+            await broadcast_state(session)
 
     elif msg_type == "resolve_rules_choice":
         if is_observer or actor_id not in session.players:

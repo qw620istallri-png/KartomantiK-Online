@@ -745,6 +745,9 @@ class CardsEffectsMixin:
             }
         if card_type in RULES_WILL_TYPES and result.get("will") == "draw":
             drawn = self.draw_rules_cards(player_id, 1)
+            # an uncovered Will drawn this way stays known in its owner's hand
+            if drawn:
+                self.mark_hand_revealed(player_id, [card_id])
             return {
                 "kind": "resolve_top_deck_by_type",
                 "status": "drawn" if drawn else "failed",

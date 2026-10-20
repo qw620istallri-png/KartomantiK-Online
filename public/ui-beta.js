@@ -2908,6 +2908,11 @@
       movePiles();
       decorateScoreAdjust();
       repositionOpenPopovers();
+      // a pile's menu (the deck's draw, shuffle, reveal...) floats over the page
+      document.querySelectorAll(".ub-piles .field-pile .zone-popover").forEach((pop) => {
+        pop.classList.remove("zone-popover-above");
+        floatOver(pop, pop.closest(".field-pile"), { above: false });
+      });
     }
     return result;
   });
@@ -2992,7 +2997,7 @@
   function observerFanHtml(player, bottom) {
     const hand = player?.zones?.hand || {};
     const count = hand.count !== undefined ? hand.count : (hand.cards || []).length;
-    const cards = hand.cards || [];
+    const cards = hand.cards || revealedHandSlots(hand, count);
     return Array.from({ length: count }, (_unused, index) => {
       const cardId = cards[index] || null;
       const center = index - (count - 1) / 2;

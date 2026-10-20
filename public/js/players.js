@@ -225,10 +225,7 @@ function renderOpponentHandFan() {
 
   const hand = opponent.zones?.hand || {};
   const count = hand.count !== undefined ? hand.count : (hand.cards || []).length;
-  const known = hand.cards !== undefined
-    ? [...hand.cards]
-    : [...(revealedHandCards.get(opponent.id) || [])].slice(0, count);
-  const slots = Array.from({ length: count }, (_unused, index) => known[index] || null);
+  const slots = hand.cards !== undefined ? [...hand.cards] : revealedHandSlots(hand, count);
   fan.classList.toggle("hidden", count === 0);
   fan.setAttribute("aria-label", `${t("opponentHand")} ${count}`);
   fan.title = `${opponent.name}: ${t("viewHand")} (${count})`;
@@ -269,9 +266,8 @@ function openHandView(playerId) {
     cardsHtml = handZone.cards.map((cid, i) => hvCardHtml(i, cid)).join("");
   } else {
     count = handZone.count || 0;
-    const revealedIds = [...(revealedHandCards.get(playerId) || [])].slice(0, count);
-    cardsHtml = Array.from({ length: count }, (_, i) =>
-      revealedIds[i] ? hvCardHtml(i, revealedIds[i]) : `<div class="hv-card" data-hv-index="${i}" style="--owner-color:${playerColor(playerId)}"></div>`
+    cardsHtml = revealedHandSlots(handZone, count).map((cid, i) =>
+      cid ? hvCardHtml(i, cid) : `<div class="hv-card" data-hv-index="${i}" style="--owner-color:${playerColor(playerId)}"></div>`
     ).join("");
   }
   $("#handViewTitle").textContent = `${player.name}${isMine ? ` (${t("you")})` : ""} — ${count} ${count === 1 ? t("card") : t("cards")}`;

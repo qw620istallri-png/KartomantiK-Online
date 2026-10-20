@@ -421,7 +421,6 @@ function leaveSession() {
   joinedCode = null;
   joinedName = null;
   sessionEndedNotified = false;
-  revealedHandCards.clear();
   pendingIncomingRequest = null;
   $("#handRequestPanel").classList.add("hidden");
   pendingTriggeredPlacement = null;
@@ -483,7 +482,6 @@ function handleServerMessage(msg) {
     const rulesEffectVfxChanges = prepareRulesEffectVfxChanges(msg);
     const rulesVfxBatch = prepareRulesVfxBatch(msg);
     window.KKOAudio?.observeState(latestState, msg, myPlayerId);
-    reconcileRevealedHandCards(msg);
     latestState = msg;
     preloadCardImages(stateCardIds(msg));
     if (connectionMode === "tournament" && connectionRole === "player") {
@@ -523,11 +521,6 @@ function handleServerMessage(msg) {
     }
   } else if (msg.type === "reveal") {
     window.KKOAudio?.play("cardFlip");
-    if (msg.zone === "hand") {
-      if (!revealedHandCards.has(msg.ownerId)) revealedHandCards.set(msg.ownerId, new Set());
-      const set = revealedHandCards.get(msg.ownerId);
-      msg.cards.forEach((cid) => set.add(cid));
-    }
     showRevealPopup(msg);
   } else if (msg.type === "scry_result") {
     showScryPopup(msg.cards);

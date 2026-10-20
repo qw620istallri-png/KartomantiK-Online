@@ -1,7 +1,7 @@
 """Players, logs, searches and moving cards between zones."""
-
 import random
 import time
+from collections import Counter
 
 from .common import (
     ALL_ZONES, SESSION_TTL_SECONDS, NUM_SEATS, new_id, validate_tournament_deck, normalize_role,
@@ -44,6 +44,49 @@ class ZonesMixin:
         if self.rules_engine["enabled"] and self.rules_engine["priorityPlayerId"] is None:
             self.rules_engine["priorityPlayerId"] = player_id
         return player
+
+    def mark_hand_revealed(self, player_id, card_ids):
+        """Hand cards shown to the other players stay face up for them, at their
+        real place in the hand, until they leave it."""
+        player = self.players.get(player_id)
+        if player is None:
+            return
+        self.prune_revealed_hand(player_id)
+        in_hand = Counter(player["zones"]["hand"])
+        revealed = self.revealed_hand.setdefault(player_id, Counter())
+        for card_id in card_ids:
+            if revealed[card_id] < in_hand[card_id]:
+                revealed[card_id] += 1
+
+    def prune_revealed_hand(self, player_id):
+        """A copy that left the hand is no longer known (the revealed ones go first)."""
+        in_hand = Counter(self.players[player_id]["zones"]["hand"])
+        seen = self.revealed_hand_seen.get(player_id, in_hand)
+        revealed = self.revealed_hand.get(player_id)
+        if revealed:
+            for card_id in list(revealed):
+                left = max(0, seen[card_id] - in_hand[card_id])
+                revealed[card_id] = max(0, min(revealed[card_id] - left, in_hand[card_id]))
+                if not revealed[card_id]:
+                    del revealed[card_id]
+        self.revealed_hand_seen[player_id] = in_hand
+
+    def forget_revealed_hand(self, player_id=None):
+        """A hand put back into the deck (mulligan, new deck, reset) is unknown again."""
+        for pid in [player_id] if player_id else list(self.revealed_hand):
+            self.revealed_hand.pop(pid, None)
+            self.revealed_hand_seen.pop(pid, None)
+
+    def revealed_hand_indices(self, player_id):
+        """Places in the hand of the revealed copies."""
+        self.prune_revealed_hand(player_id)
+        quota = Counter(self.revealed_hand.get(player_id) or {})
+        indices = []
+        for index, card_id in enumerate(self.players[player_id]["zones"]["hand"]):
+            if quota[card_id] > 0:
+                quota[card_id] -= 1
+                indices.append(index)
+        return indices
 
     def player_for_seat(self, seat):
         return next((player for player in self.players.values() if player.get("seat") == seat), None)
@@ -737,6 +780,7 @@ class ZonesMixin:
         return error, owner_id, None
 
     def reset_cards_to_owners(self):
+        self.forget_revealed_hand()
         cards_by_owner = {pid: [] for pid in self.players}
         for container_id, player in self.players.items():
             for zone, cards in player["zones"].items():
@@ -762,6 +806,7 @@ class ZonesMixin:
 
     def reset_cards_to_active_decks(self, decks_by_player):
         """Discard every live card location and rebuild from saved deck definitions."""
+        self.forget_revealed_hand()
         self.battlefield = []
         self.rules_engine["suspendedCards"] = []
         self.rules_engine["effectMemories"] = []
@@ -779,6 +824,7 @@ class ZonesMixin:
 
     def replace_player_deck(self, player_id, card_ids, sideboard_ids, card_rarities, deck_definition):
         """Reset one player's physical cards without disturbing the opponent's board."""
+        self.forget_revealed_hand(player_id)
         player = self.players[player_id]
         for container_id, container in self.players.items():
             for zone, cards in container["zones"].items():

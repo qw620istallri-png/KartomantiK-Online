@@ -461,7 +461,7 @@ function renderHandTray() {
     previousHandCardIds = currentIds;
     return;
   }
-  const myRevealed = revealedHandCards.get(meId);
+  const myRevealed = new Set(latestState.players[meId].zones.hand.revealedIndices || []);
   const sortRank = handSortRank(handSortMode);
   const displayOrder = cards
     .map((cid, index) => ({ cid, index }))
@@ -469,7 +469,7 @@ function renderHandTray() {
   tray.innerHTML = displayOrder
     .map(({ cid, index }, position) => {
       const isNew = !previousHandCardIds.has(cid);
-      const wasRevealed = myRevealed && myRevealed.has(cid);
+      const wasRevealed = myRevealed.has(index);
       const rarity = rarityForCard(meId, cid);
       const center = position - (cards.length + suspendedCards.length + ghostCards.length - 1) / 2;
       const rotate = Math.max(-16, Math.min(16, center * 3.25));

@@ -1267,3 +1267,18 @@ Travail fait sur le PC après la beta 139, jamais publié, récupéré via la br
   une reconnexion et toutes les 30 min. Plus ancienne : sur l'accueil, rechargement
   immédiat sur une adresse unique (`?fresh=…`, nettoyée ensuite) ; en partie, bannière.
 - Après ce rechargement, le nouveau service worker prend la main sans bannière.
+
+## Cartes révélées et menu des piles (beta 139.14)
+
+- **Cartes révélées suivies par le serveur** (`mark_hand_revealed`,
+  `revealed_hand_indices` dans `game/zones.py`) : une carte de main montrée aux autres
+  (révélation manuelle, « montrer » sur demande, preuve de main d'un effet, Volonté
+  piochée à découvert) est envoyée aux adversaires à sa **vraie place**
+  (`hand.revealed: [{ index, cardId }]`, et `revealedIndices` pour son propriétaire).
+  Elle est oubliée dès qu'elle quitte la main, ainsi qu'au Mulligan, au changement de
+  deck et à la remise à zéro. Le client n'a plus de mémoire propre des révélations.
+- **Demandes sur la main adverse** : la demande retient la carte visée au moment de la
+  demande ; si la main a changé avant la réponse, c'est bien cette carte qui est
+  défaussée ou montrée (ou la demande échoue si elle n'y est plus).
+- **Menu des piles** (deck…) dans la nouvelle table : il flotte au-dessus de la page
+  (plus coupé par la colonne sur téléphone) et prend les couleurs de la table.

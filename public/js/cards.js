@@ -297,40 +297,15 @@ let latestState = null;
 
 let colorByPlayer = new Map();
 
-const revealedHandCards = new Map();
-function reconcileRevealedHandCards(nextState) {
-  const players = nextState?.players || {};
-  for (const [playerId, player] of Object.entries(players)) {
-    const visibleCards = player.zones?.hand?.cards;
-    // A currently visible opponent hand is authoritative. Keeping this exact
-    // snapshot also makes the remembered view correct when the reveal ends.
-    if (playerId !== myPlayerId && Array.isArray(visibleCards)) {
-      revealedHandCards.set(playerId, new Set(visibleCards));
-    }
+// the revealed cards of a hand the viewer cannot see, at their real place
+// (sent by the server as hand.revealed: [{ index, cardId }])
+function revealedHandSlots(hand, count) {
+  const slots = Array.from({ length: count }, () => null);
+  for (const entry of hand?.revealed || []) {
+    if (entry.index >= 0 && entry.index < count) slots[entry.index] = entry.cardId;
   }
-
-  const forget = (playerId, cardId) => {
-    if (!playerId || !cardId) return;
-    revealedHandCards.get(playerId)?.delete(cardId);
-  };
-  for (const action of nextState?.rulesEngine?.actionStack || []) {
-    if (action.kind !== "play_card" || !action.sourceOnStack) continue;
-    if (action.source?.zone === "hand") {
-      forget(action.controllerId, action.source.cardId);
-    }
-    for (const movement of action.cost?.tributeMovements || []) {
-      forget(action.controllerId, movement.cardId);
-    }
-    for (const key of ["discardedCard", "revealedCard", "stalematedSource"]) {
-      forget(action.controllerId, action.cost?.[key]?.cardId);
-    }
-  }
-  // Manual placements do not pass through the rules stack. A face-up card on
-  // the field is public proof that this identity is no longer in that hand.
-  for (const item of nextState?.battlefield || []) {
-    if (item.faceUp && item.cardId) forget(item.ownerId, item.cardId);
-  }
-} // playerId -> Set(cardId) ever revealed from their hand, for the hand-view popup
+  return slots;
+}
 
 let pendingIncomingRequest = null; // the hand_action_request currently shown in #handRequestPanel
 
