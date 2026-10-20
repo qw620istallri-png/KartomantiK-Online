@@ -2409,8 +2409,11 @@ async def handle_message(ws, info, data):
             return await send_error(ws, "Both players must be connected before the match starts.")
         if not all(seat["deckReady"] for seat in seats):
             return await send_error(ws, "Both players must import a valid 30-card deck before the match starts.")
-        session.status = "active"
+        error, opening = session.start_tournament_match()
+        if error:
+            return await send_error(ws, error)
         session.add_log(actor_id, "start_tournament", {}, actor_name="Organizer")
+        log_rules_opening_sequence(session, {"opening": opening}, actor_id)
         session.touch()
         await broadcast_state(session)
 

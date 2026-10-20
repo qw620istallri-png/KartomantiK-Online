@@ -19038,6 +19038,9 @@ class Session:
         confirmed_ids = self.rules_engine["deckConfirmedPlayerIds"]
         if len(player_ids) < NUM_SEATS or not all(pid in confirmed_ids for pid in player_ids):
             return None, {"prepared": False, "draws": {}, "started": False}
+        if self.mode == "tournament" and self.status != "active":
+            # tournament: the opening hands wait for the organizer to start the match
+            return None, {"prepared": False, "draws": {}, "started": False, "waitingForStart": True}
 
         draws = {}
         required = self.rules_engine["openingMulliganRequiredPlayerIds"]
@@ -19064,6 +19067,30 @@ class Session:
             "mulliganRequiredPlayerIds": list(required),
             "started": started,
         }
+
+    def start_tournament_match(self, hand_limit=7):
+        """Organizer start: the game begins for both players at the same moment.
+
+        With assisted rules the opening sequence runs (opening hands, then keep or
+        Mulligan). A manual table gets shuffled decks and seven cards per player.
+        """
+        self.status = "active"
+        if self.rules_engine["enabled"]:
+            return self.prepare_rules_opening_hands(hand_limit)
+        draws = {}
+        for player_id, player in self.players.items():
+            if player["zones"]["hand"]:
+                continue
+            random.shuffle(player["zones"]["deck"])
+            count = 0
+            for _index in range(min(hand_limit, len(player["zones"]["deck"]))):
+                card_id = player["zones"]["deck"][0]
+                error, _owner = self.move_zone_card(player_id, "deck", player_id, "hand", card_id, "bottom")
+                if error:
+                    return error, None
+                count += 1
+            draws[player_id] = count
+        return None, {"prepared": True, "draws": draws, "started": True, "manual": True}
 
     def draw_opening_hand(self, player_id, hand_limit=7):
         """Draw one player's initial hand without invoking Recovery or game end."""

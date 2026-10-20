@@ -739,3 +739,73 @@ class WebSocketRulesIntegrationTests(unittest.IsolatedAsyncioTestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TournamentStartTests(unittest.IsolatedAsyncioTestCase):
+    """The organizer's start deals the opening hands; the lobby never does."""
+
+    DECKS = json.loads(open(os.path.join(SERVER_DIR, "..", "public", "starter-decks.json"), encoding="utf-8").read())
+
+    async def asyncSetUp(self):
+        server_main.sessions.clear()
+        server_main.connections.clear()
+        self.server = await serve(
+            server_main.handler, "127.0.0.1", 0,
+            process_request=server_main.process_request, compression=None,
+        )
+        self.uri = f"ws://127.0.0.1:{self.server.sockets[0].getsockname()[1]}/ws"
+        self.clients = []
+
+    async def asyncTearDown(self):
+        for websocket in self.clients:
+            await websocket.close()
+        self.server.close()
+        await self.server.wait_closed()
+        server_main.sessions.clear()
+        server_main.connections.clear()
+
+    async def connect_join(self, payload):
+        websocket = await connect(self.uri)
+        self.clients.append(websocket)
+        await websocket.send(json.dumps(payload))
+        for _index in range(40):
+            message = json.loads(await asyncio.wait_for(websocket.recv(), timeout=2))
+            if message.get("type") == "joined":
+                return websocket
+        self.fail("join failed")
+
+    async def settle(self):
+        await asyncio.sleep(0.3)
+
+    async def run_tournament(self, rules):
+        organizer = await self.connect_join({
+            "type": "join", "createTournament": True, "rulesBeta": rules, "name": "Org", "clientId": "org",
+        })
+        session = next(iter(server_main.sessions.values()))
+        codes = session.tournament_codes()
+        players = []
+        for index, key in enumerate(("player1", "player2")):
+            players.append(await self.connect_join({
+                "type": "join", "code": codes[key], "name": f"P{index + 1}", "clientId": f"p{index + 1}",
+            }))
+        for websocket, temperament in zip(players, ("phlegmatic", "choleric")):
+            deck = next(entry for entry in self.DECKS if temperament in entry["id"])
+            await websocket.send(json.dumps({"type": "import_deck", "deck": deck, "name": deck["name"], "confirmDeck": True}))
+        await self.settle()
+        hands = lambda: [len(session.players[pid]["zones"]["hand"]) for pid in ("p1", "p2")]
+        self.assertEqual(hands(), [0, 0])  # nothing is dealt before the start
+        await organizer.send(json.dumps({"type": "start_tournament"}))
+        await self.settle()
+        self.assertEqual(session.status, "active")
+        self.assertEqual(hands(), [7, 7])
+        return session, players
+
+    async def test_assisted_tournament_deals_opening_hands_at_start(self):
+        session, players = await self.run_tournament(True)
+        for websocket in players:
+            await websocket.send(json.dumps({"type": "set_rules_ready"}))
+        await self.settle()
+        self.assertEqual(session.current_phase_id(), "confrontation_choose")
+
+    async def test_manual_tournament_deals_seven_cards_at_start(self):
+        await self.run_tournament(False)

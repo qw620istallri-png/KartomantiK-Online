@@ -1550,14 +1550,20 @@ function renderRulesPregame() {
   const mineChoosingHand = decksReady && mineOpened && !mineNeedsMulligan && !mineReady;
   const openingPaused = decksReady && mulliganRequired.size > 0;
   panel.classList.toggle("mulligan-required", openingPaused);
-  $("#rulesPregameTitle").textContent = t(!decksReady
+  // tournament: decks locked, the opening hands wait for the organizer's start
+  const awaitingOrganizer = decksReady && latestState.mode === "tournament" && latestState.tournament?.status === "lobby";
+  $("#rulesPregameTitle").textContent = t(awaitingOrganizer
+    ? "rulesTournamentStartWaitingTitle"
+    : !decksReady
     ? "rulesDeckSetupTitle"
     : mineNeedsMulligan
       ? "rulesMulliganRequiredTitle"
       : mineChoosingHand
         ? "rulesOpeningChoiceTitle"
         : "rulesOpeningWaitingTitle");
-  $("#rulesPregameHint").textContent = t(!decksReady
+  $("#rulesPregameHint").textContent = t(awaitingOrganizer
+    ? "rulesTournamentStartWaitingHint"
+    : !decksReady
     ? "rulesDeckSetupHint"
     : mineNeedsMulligan
       ? "rulesMulliganRequiredHint"

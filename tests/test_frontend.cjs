@@ -34,6 +34,10 @@ function startServer() {
   const port = server.address().port;
   const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || "chrome", headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, locale: "fr-FR" });
+  // these regressions cover the classic table; the new table (now the default) is switched on where needed
+  await page.addInitScript(() => {
+    try { localStorage.setItem("ko_ui_default_v2", "1"); localStorage.setItem("ko_ui_beta", "0"); } catch (error) { /* ignore */ }
+  });
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   try {

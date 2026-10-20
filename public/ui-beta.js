@@ -38,9 +38,9 @@
     ubDragToDeck: "Glisse une carte en surbrillance sur ton deck (ou clique dessus).",
     ubShowChoicePanel: "Voir les options",
     ubHideChoicePanel: "Choisir sur le terrain",
-    ubOption: "UI beta (nouvelle table)",
-    ubOptionHint: "Moi à gauche, l’adversaire à droite, colonnes latérales. Réversible à tout moment depuis le menu de la partie.",
-    ubMenuToggle: "UI beta",
+    ubOption: "Nouvelle table",
+    ubOptionHint: "Table par défaut : moi à gauche, l’adversaire à droite. Décocher pour revenir à l’ancienne table (aussi depuis le menu de la partie).",
+    ubMenuToggle: "Nouvelle table",
     ubTheme: "Thème",
     ubThemeCurrent: "Actuel",
     ubThemeSand: "Crème / sable",
@@ -100,9 +100,9 @@
     ubDragToDeck: "Drag a highlighted card onto your deck (or click it).",
     ubShowChoicePanel: "See the options",
     ubHideChoicePanel: "Choose on the field",
-    ubOption: "UI beta (new table)",
-    ubOptionHint: "Me on the left, the opponent on the right, side columns. Switch back any time from the game menu.",
-    ubMenuToggle: "UI beta",
+    ubOption: "New table",
+    ubOptionHint: "Default table: me on the left, the opponent on the right. Untick to go back to the classic table (also from the game menu).",
+    ubMenuToggle: "New table",
     ubTheme: "Theme",
     ubThemeCurrent: "Current",
     ubThemeSand: "Cream / sand",
@@ -162,9 +162,9 @@
     ubDragToDeck: "Trascina una carta evidenziata sul tuo mazzo (o cliccala).",
     ubShowChoicePanel: "Vedi le opzioni",
     ubHideChoicePanel: "Scegli sul campo",
-    ubOption: "UI beta (nuovo tavolo)",
-    ubOptionHint: "Io a sinistra, l’avversario a destra, colonne laterali. Reversibile in ogni momento dal menu della partita.",
-    ubMenuToggle: "UI beta",
+    ubOption: "Nuovo tavolo",
+    ubOptionHint: "Tavolo predefinito: io a sinistra, l’avversario a destra. Togli la spunta per tornare al tavolo classico (anche dal menu della partita).",
+    ubMenuToggle: "Nuovo tavolo",
     ubTheme: "Tema",
     ubThemeCurrent: "Attuale",
     ubThemeSand: "Crema / sabbia",
@@ -265,8 +265,18 @@
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const qs = (selector, root = document) => root.querySelector(selector);
 
+  // the new table is the default UI (players, tournament players and spectators):
+  // only an explicit choice made since it became the default switches it off
+  const DEFAULT_KEY = "ko_ui_default_v2";
   function enabled() {
-    try { return localStorage.getItem(ENABLED_KEY) === "1"; } catch (error) { return false; }
+    try {
+      if (localStorage.getItem(DEFAULT_KEY) !== "1") {
+        // an opt-out from the beta era does not survive the switch
+        localStorage.removeItem(ENABLED_KEY);
+        localStorage.setItem(DEFAULT_KEY, "1");
+      }
+      return localStorage.getItem(ENABLED_KEY) !== "0";
+    } catch (error) { return true; }
   }
   function setEnabled(on) {
     try { localStorage.setItem(ENABLED_KEY, on ? "1" : "0"); } catch (error) { /* private mode: session only */ }
