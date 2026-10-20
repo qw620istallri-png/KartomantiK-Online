@@ -58,6 +58,7 @@
     ubEnlarge: "Agrandir",
     ubStack: "La Pile",
     ubStackEmpty: "La Pile est vide.",
+    ubStackOpen: "Agrandir la Pile",
     ubOn: "activé",
     ubOff: "désactivé",
     ubEnable: "Activer",
@@ -135,6 +136,7 @@
     ubEnlarge: "Enlarge",
     ubStack: "Stack",
     ubStackEmpty: "The Stack is empty.",
+    ubStackOpen: "Enlarge the Stack",
     ubOn: "on",
     ubOff: "off",
     ubEnable: "Turn on",
@@ -212,6 +214,7 @@
     ubEnlarge: "Ingrandisci",
     ubStack: "Stack",
     ubStackEmpty: "Lo Stack è vuoto.",
+    ubStackOpen: "Ingrandisci lo Stack",
     ubOn: "attivo",
     ubOff: "disattivo",
     ubEnable: "Attiva",
@@ -1418,6 +1421,7 @@
     document.fonts?.ready.then(() => { if (active() && latestState) fitLabels(); });
     observer.observe(document.getElementById("rulesStackPanel"), { attributes: true, attributeFilter: ["class"] });
     watchColumnMenus();
+    initStackExpand();
   }
 
   function boardPeekImage(card) {
@@ -1486,6 +1490,7 @@
     if (node.parentNode !== container || (before && node.nextSibling !== before)) container.insertBefore(node, before);
   }
   function restoreAll() {
+    setStackExpanded(false);
     local.homes.forEach((marker, node) => {
       if (marker.parentNode) marker.parentNode.insertBefore(node, marker);
       marker.remove();
@@ -2531,6 +2536,43 @@
   }
   function unfloat(pop) {
     ["position", "left", "top", "right", "bottom", "transform", "zIndex", "maxHeight", "overflowY"].forEach((key) => { pop.style[key] = ""; });
+  }
+
+  // A click on the Stack opens it in a large window over the table (its cards,
+  // buttons and links keep their own click); the header, the backdrop or
+  // Escape put it back in its column.
+  function setStackExpanded(open) {
+    const stack = document.getElementById("ubStack");
+    if (!stack) return;
+    stack.classList.toggle("ub-expanded", open);
+    document.getElementById("ubStackBackdrop")?.classList.toggle("hidden", !open);
+    stack.querySelector("header")?.setAttribute("aria-expanded", String(open));
+  }
+  function initStackExpand() {
+    const stack = document.getElementById("ubStack");
+    if (!stack || stack.dataset.expandBound) return;
+    stack.dataset.expandBound = "1";
+    const backdrop = el("div", "ub-stack-backdrop hidden");
+    backdrop.id = "ubStackBackdrop";
+    stack.parentNode.insertBefore(backdrop, stack);
+    backdrop.addEventListener("click", () => setStackExpanded(false));
+    const header = stack.querySelector("header");
+    header.setAttribute("role", "button");
+    header.tabIndex = 0;
+    header.title = t("ubStackOpen");
+    stack.addEventListener("click", (event) => {
+      if (!active()) return;
+      const open = stack.classList.contains("ub-expanded");
+      if (event.target.closest("header")) { setStackExpanded(!open); return; }
+      if (open || event.target.closest("button, a, input, select, label, [data-rules-card], .bf-card, .rules-stack-list li")) return;
+      setStackExpanded(true);
+    });
+    header.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" || event.key === " ") { event.preventDefault(); setStackExpanded(!stack.classList.contains("ub-expanded")); }
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && stack.classList.contains("ub-expanded")) setStackExpanded(false);
+    });
   }
 
   // Every menu opened from a side column floats: watched here, so a new one only

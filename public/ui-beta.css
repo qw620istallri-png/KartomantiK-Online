@@ -1048,3 +1048,16 @@ body.ub-hand-drawing #gameScreen.ui-beta #myHandTray { pointer-events: none; }
 #gameScreen.ui-beta.ub-phone .ub-phase .rules-auto-skip { display: none; }
 #gameScreen.ui-beta .ub-autoskip[hidden] { display: none; }
 #gameScreen.ui-beta .ub-autoskip.on { color: #17120a; background: var(--ub-gold); border-color: var(--ub-gold); }
+
+/* the Stack, enlarged on a click: a window over the table */
+#gameScreen.ui-beta .ub-stack header { cursor: pointer; }
+#gameScreen.ui-beta .ub-stack-backdrop { position: fixed; inset: 0; z-index: 630; background: rgba(0, 0, 0, .55); }
+#gameScreen.ui-beta .ub-stack-backdrop.hidden { display: none; }
+#gameScreen.ui-beta .ub-stack.ub-expanded { position: fixed; z-index: 640; left: 50%; top: 50%; transform: translate(-50%, -50%); width: min(720px, calc(100vw - 32px)); height: min(80vh, 640px); max-height: calc(100vh - 16px); min-height: 0; background: rgba(var(--ub-pn), .98); border-color: var(--ub-line); box-shadow: 0 24px 60px rgba(0, 0, 0, .6); }
+#gameScreen.ui-beta .ub-stack.ub-expanded header { padding: 12px 16px; }
+#gameScreen.ui-beta .ub-stack.ub-expanded header b { font-size: 20px; }
+#gameScreen.ui-beta .ub-stack.ub-expanded .ub-stack-body { padding: 8px 12px; font-size: 15px; }
+#gameScreen.ui-beta .ub-stack.ub-expanded .ub-stack-empty { font-size: 15px; }
+#gameScreen.ui-beta .ub-col:has(> .ub-stack.ub-expanded) { z-index: 650; }
+#gameScreen.ui-beta .ub-stack.ub-expanded .ub-mstack .bf-card.ub-mstack-card { zoom: .9; }
+#gameScreen.ui-beta.ub-phone .ub-stack.ub-expanded .ub-mstack .bf-card.ub-mstack-card { zoom: .7; }
