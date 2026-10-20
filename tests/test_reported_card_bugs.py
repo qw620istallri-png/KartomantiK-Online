@@ -992,3 +992,74 @@ class StarterDeckFollowUpTests(ReportedCardRulesCase):
             effect.get("target", {}).get("itemId") == "s"
             for effect in session.rules_engine["ongoingEffects"]
         ))
+
+
+class FullAuditBatchOneToThreeTests(ReportedCardRulesCase):
+    """Card text versus code audit, cards outside the starter decks (lots 1 to 3)."""
+
+    FREENYA = "b6ebpyb30urtas2_en"
+    ZUM = "282b0n6ldnzdp0p_en"
+    PLINIUS = "chj7vmavn3d5c4s_en"
+    NULLIFY = "fwh3yrkvg9n09vg_en"
+    BRATTO = "lk1xxhvwvrie2r2_en"
+    ALL = ReportedCardRulesCase.ALL + (FREENYA, ZUM, PLINIUS, NULLIFY, BRATTO)
+
+    def test_freenya_ignores_manifestations_entering_the_field(self):
+        session, _p1, _p2 = self.started_session()
+        session.battlefield = [
+            self.field_item("f", "p1", self.FREENYA, field_zone="interzone"),
+            self.field_item("new", "p1", "m-1"),
+        ]
+        queued = session.queue_rules_manifestation_entry_watchers(
+            session.find_battlefield_item("new"), defer=True,
+        )
+        self.assertEqual([a for a in queued if a["source"]["cardId"] == self.FREENYA], [])
+
+    def run_zum(self, ability_id):
+        session, _p1, p2 = self.started_session()
+        session.battlefield = [self.field_item("zum", "p1", self.ZUM, field_zone="interzone")]
+        self.put(p2, "deck", ["d-1", "d-2"])
+        ability = next(a for a in self.ABILITIES[self.ZUM] if a["id"] == ability_id)
+        session.apply_rules_action_result({
+            "id": "z", "kind": "activated_effect", "controllerId": "p1",
+            "source": {"cardId": self.ZUM, "ownerId": "p1", "itemId": "zum"},
+            "ability": ability, "targets": [{"kind": "player", "playerId": "p2"}],
+        })
+        return p2
+
+    def test_zum_blue_and_purple_effects_affect_the_target_player(self):
+        self.assertEqual(self.run_zum("zum-mill")["zones"]["graveyard"], ["d-1"])
+        drawn = self.run_zum("zum-draw")
+        self.assertEqual(drawn["zones"]["deck"], ["d-2"])
+        self.assertIn("d-1", drawn["zones"]["hand"])
+
+    def test_plinius_keeps_its_roll_next_turn(self):
+        session, _p1, _p2 = self.started_session()
+        plinius = self.field_item("pl", "p1", self.PLINIUS, field_zone="interzone")
+        session.battlefield = [plinius]
+        ability = self.ABILITIES[self.PLINIUS][0]
+        result = session.apply_rules_action_result({
+            "id": "r", "kind": "triggered_effect", "controllerId": "p1",
+            "source": {"cardId": self.PLINIUS, "ownerId": "p1", "itemId": "pl"},
+            "ability": ability, "targets": [],
+        })
+        expected = 6 + result["value"]
+        session.phase_tracker["turn"] += 1
+        session.prune_rules_ongoing_effects()
+        self.assertEqual(session.rules_manifestation_characteristics(plinius)["power"], expected)
+
+    def test_nullify_asks_the_owner_to_pay(self):
+        session, _p1, _p2 = self.started_session()
+        stolen = self.field_item("st", "p2", "m-1", field_zone="interzone", controllerId="p1")
+        session.battlefield = [stolen]
+        ability = self.ABILITIES[self.NULLIFY][0]
+        result = session.apply_rules_action_result({
+            "id": "n", "kind": "play_card", "controllerId": "p1",
+            "source": {"cardId": self.NULLIFY, "ownerId": "p1"},
+            "ability": ability, "targets": [{"kind": "card", "itemId": "st", "cardId": "m-1"}],
+        })
+        self.assertEqual(result["playerId"], "p2")
+
+    def test_bratto_acts_only_during_the_confrontation(self):
+        ability = next(a for a in self.ABILITIES[self.BRATTO] if a.get("tribute"))
+        self.assertEqual(ability["phaseIds"], ["confrontation_reaction"])

@@ -1535,8 +1535,11 @@ class Session:
             return {"kind": kind, "value": max(1, min(int(result["value"]), 99))}
         if kind == "clemency_choice" and isinstance(result.get("value"), (int, float)):
             return {"kind": kind, "value": max(1, min(int(result["value"]), 999))}
-        if kind == "draw_owner" and isinstance(result.get("value"), (int, float)):
-            return {"kind": kind, "value": max(0, min(int(result["value"]), 50))}
+        if kind in {"draw_owner", "discard_deck_owner"} and isinstance(result.get("value"), (int, float)):
+            clean = {"kind": kind, "value": max(0, min(int(result["value"]), 50))}
+            if result.get("targetPlayer"):
+                clean["targetPlayer"] = True
+            return clean
         if kind == "score_owner" and isinstance(result.get("value"), (int, float)):
             clean = {
                 "kind": kind,
@@ -7586,6 +7589,8 @@ class Session:
         clean = {"kind": kind, "value": clean_value}
         if kind == "score_owner" and result.get("perCount") in RULES_SCORE_COUNTS:
             clean["perCount"] = result["perCount"]
+        if kind in {"draw_owner", "discard_deck_owner"} and result.get("targetPlayer"):
+            clean["targetPlayer"] = True
         return clean
 
     def rules_trigger_has_no_legal_target(self, target_rules, controller_id, event_item_id=None):
@@ -7768,6 +7773,10 @@ class Session:
             ):
                 continue
             if trigger.get("firstWillOfTurn") and not first_will_of_turn:
+                continue
+            if trigger.get("eventCardTypes") and self.card_rules.get(
+                event_card_id, {}
+            ).get("type") not in trigger["eventCardTypes"]:
                 continue
             if trigger.get("cardTemperament") and trigger[
                 "cardTemperament"
@@ -10958,7 +10967,8 @@ class Session:
                 item = self.find_battlefield_item((target or {}).get("itemId"))
                 if item is None:
                     return {"kind": result.get("kind"), "status": "target_missing"}
-                payer_id = self.rules_item_controller_id(item)
+                # Nullify: "unless its owner pays"
+                payer_id = item.get("ownerId") or self.rules_item_controller_id(item)
                 on_decline = {"kind": "lose_effects", "itemId": item["id"]}
             if payer_id not in self.players:
                 return {"kind": result.get("kind"), "status": "payer_missing"}
@@ -13665,7 +13675,7 @@ class Session:
                     "ownerId": source_item.get("ownerId"),
                 },
                 "kind": "power_modifier",
-                "duration": "until_end_of_turn",
+                "duration": "while_target_on_field",  # Plinius keeps its roll
                 "startedTurn": self.phase_tracker["turn"],
                 "value": value,
             }
@@ -13701,7 +13711,7 @@ class Session:
                         "source": dict(action.get("source") or {}),
                         "target": dict(target),
                         "kind": "power_modifier",
-                        "duration": "until_end_of_turn",
+                        "duration": "while_target_on_field",  # no printed duration: a permanent modifier
                         "startedTurn": self.phase_tracker["turn"],
                         "value": value,
                     }
@@ -13737,7 +13747,7 @@ class Session:
                     "source": dict(action.get("source") or {}),
                     "target": dict(target),
                     "kind": "power_modifier",
-                    "duration": "until_end_of_turn",
+                    "duration": "while_target_on_field",  # no printed duration: a permanent modifier
                     "startedTurn": self.phase_tracker["turn"],
                     "value": value,
                 }
@@ -14790,6 +14800,18 @@ class Session:
                 "delta": delta,
                 "score": player["score"],
             }
+        if (
+            result.get("kind") in {"draw_owner", "discard_deck_owner"}
+            and result.get("targetPlayer")
+        ):
+            # Zum: "a target player draws / discards from the top of the deck"
+            target_id = next((
+                entry.get("playerId") for entry in action.get("targets") or []
+                if entry.get("kind") == "player"
+            ), None)
+            if target_id not in self.players:
+                return {"kind": result.get("kind"), "status": "target_missing"}
+            player_id, player = target_id, self.players[target_id]
         if result.get("kind") == "draw_owner":
             requested = max(0, min(int(result.get("value") or 0), 50))
             return self.request_rules_draw(

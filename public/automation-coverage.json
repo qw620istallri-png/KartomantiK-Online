@@ -3,7 +3,7 @@
   "summary": {
     "catalogCards": 450,
     "explicitCards": 379,
-    "explicitAbilities": 495,
+    "explicitAbilities": 497,
     "statuses": {
       "automated": 450,
       "generic": 0,
@@ -2984,6 +2984,7 @@
       ],
       "mechanics": [
         "cost:tribute",
+        "phase-window",
         "result:capture_stalemate_and_copy"
       ],
       "testRefs": [
@@ -4288,11 +4289,16 @@
       "abilityIds": [
         "zum-weaken",
         "zum-silence",
-        "zum-strengthen"
+        "zum-strengthen",
+        "zum-draw",
+        "zum-mill"
       ],
       "mechanics": [
         "ongoing:lose_effects",
-        "ongoing:power_modifier"
+        "ongoing:power_modifier",
+        "result:discard_deck_owner",
+        "result:draw_owner",
+        "target:player"
       ],
       "testRefs": [
         "tests/test_game_state.py",

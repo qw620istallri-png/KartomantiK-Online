@@ -1063,3 +1063,15 @@ Relecture des 150 cartes des cinq decks de départ, texte imprimé contre `card-
 - Mimer : durée `while_source_on_field`. La copie survit au départ de sa cible grâce à la dernière valeur mémorisée (`snapshot` de l'effet).
 - Trim the Excess et Equalize n'affectent plus la Zone d'Impasse, qui ne fait pas partie du champ.
 - Tests : `StarterDeckFollowUpTests` dans `tests/test_reported_card_bugs.py`.
+
+## Audit texte/code, lots 1 à 3 (beta 139.3)
+
+Cartes hors decks de départ, 150 premières (jeu de base 5 à 299).
+
+- Freenya : le déclencheur `card_played` filtre le type de la carte jouée (`eventCardTypes`). Une Manifestation qui entre en jeu ne propose plus de Volonté gratuite.
+- Zum : ajout des effets {B} (un joueur ciblé pioche 1 carte) et {P} (un joueur ciblé défausse la carte du dessus de son deck). Le Support exige les cinq effets. `draw_owner` et `discard_deck_owner` acceptent `targetPlayer`.
+- Greed Trap, Mutate Uncontrollably et Plinius : leurs gains ou pertes de puissance sans durée imprimée sont permanents (`while_target_on_field`).
+- Nullify : le propriétaire de la carte visée paie, même si un autre joueur la contrôle.
+- Bratto : activable seulement pendant la Réaction (« pendant une confrontation »).
+- Question ouverte : l'errata du livret ajoute « Perdez 5 points » à Deviate, absent du texte de la carte dans `cards-data.json`.
+- Tests : `FullAuditBatchOneToThreeTests` dans `tests/test_reported_card_bugs.py`.

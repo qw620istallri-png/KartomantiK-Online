@@ -11098,17 +11098,23 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         session.card_rules[zum]["activatedAbilities"] = list(self.ABILITIES[zum])
         source = {"cardId": zum, "itemId": "zum", "zone": "battlefield"}
         zum_item = session.find_battlefield_item("zum")
-        for index, ability_id in enumerate(("zum-weaken", "zum-silence", "zum-strengthen")):
+        # all five printed effects ({R}{Y}{G}{B}{P}) must be used before Zum gains Support
+        zum_effects = ("zum-weaken", "zum-silence", "zum-strengthen", "zum-draw", "zum-mill")
+        for index, ability_id in enumerate(zum_effects):
+            target = (
+                [{"kind": "player", "playerId": "p2"}] if ability_id in {"zum-draw", "zum-mill"}
+                else [self.card_target("t", "m-a")]
+            )
             error, ability = session.rules_action_ability(
-                "p1", "activated_effect", source, ability_id, [self.card_target("t", "m-a")]
+                "p1", "activated_effect", source, ability_id, target
             )
             self.assertIsNone(error)
             paid = session.pay_rules_activation_cost({"itemId": "zum", "controllerId": "p1"}, ability)
             error, _ = session.rules_action_ability(
-                "p1", "activated_effect", source, ability_id, [self.card_target("t", "m-a")]
+                "p1", "activated_effect", source, ability_id, target
             )
             self.assertIn("once per turn", error)
-            self.assertEqual(bool(paid.get("grantedSupport")), index == 2)
+            self.assertEqual(bool(paid.get("grantedSupport")), index == len(zum_effects) - 1)
         self.assertEqual(zum_item["supportUntilTurn"], turn)
         # Twist the Soul raises a vessel Manifestation into Support; it returns to the vessel on a win, else to its owner's hand.
         for outcome_winner, destination in (("p1", "receptacle"), ("p2", "hand")):

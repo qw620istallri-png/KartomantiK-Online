@@ -991,6 +991,7 @@
   "lk1xxhvwvrie2r2_en": [
     {
       "id": "capture-stalemate-and-create-support-copy",
+      "phaseIds": ["confrontation_reaction"],
       "tribute": "{H}{H}",
       "targets": {
         "min": 1,
@@ -3544,7 +3545,7 @@
       "id": "zum-weaken",
       "essenceCost": "{R}",
       "usePerTurn": true,
-      "supportWhenAllUsed": ["zum-weaken", "zum-silence", "zum-strengthen"],
+      "supportWhenAllUsed": ["zum-weaken", "zum-silence", "zum-strengthen", "zum-draw", "zum-mill"],
       "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"] },
       "ongoingEffect": { "kind": "power_modifier", "value": -1, "duration": "until_end_of_turn" }
     },
@@ -3552,7 +3553,7 @@
       "id": "zum-silence",
       "essenceCost": "{Y}",
       "usePerTurn": true,
-      "supportWhenAllUsed": ["zum-weaken", "zum-silence", "zum-strengthen"],
+      "supportWhenAllUsed": ["zum-weaken", "zum-silence", "zum-strengthen", "zum-draw", "zum-mill"],
       "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"] },
       "ongoingEffect": { "kind": "lose_effects", "duration": "until_end_of_turn" }
     },
@@ -3560,9 +3561,21 @@
       "id": "zum-strengthen",
       "essenceCost": "{G}",
       "usePerTurn": true,
-      "supportWhenAllUsed": ["zum-weaken", "zum-silence", "zum-strengthen"],
+      "supportWhenAllUsed": ["zum-weaken", "zum-silence", "zum-strengthen", "zum-draw", "zum-mill"],
       "targets": { "min": 1, "max": 1, "cardType": "manifestation", "zones": ["battlefield"] },
       "ongoingEffect": { "kind": "power_modifier", "value": 1, "duration": "until_end_of_turn" }
+    },
+    {
+      "id": "zum-draw", "essenceCost": "{B}", "usePerTurn": true,
+      "supportWhenAllUsed": ["zum-weaken", "zum-silence", "zum-strengthen", "zum-draw", "zum-mill"],
+      "targets": {"kind": "player", "min": 1, "max": 1},
+      "result": {"kind": "draw_owner", "value": 1, "targetPlayer": true}
+    },
+    {
+      "id": "zum-mill", "essenceCost": "{P}", "usePerTurn": true,
+      "supportWhenAllUsed": ["zum-weaken", "zum-silence", "zum-strengthen", "zum-draw", "zum-mill"],
+      "targets": {"kind": "player", "min": 1, "max": 1},
+      "result": {"kind": "discard_deck_owner", "value": 1, "targetPlayer": true}
     }
   ],
   "gu9rppos4r9ucsr_en": [
@@ -4531,7 +4544,7 @@
       "trigger": {
         "event": "card_played",
         "eventController": "owner",
-        "playedFromZone": "hand"
+        "playedFromZone": "hand", "eventCardTypes": ["ephemeral_will", "persistent_will"]
       },
       "result": {
         "kind": "grant_limbo_will_play"
