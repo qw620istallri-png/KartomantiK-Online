@@ -2372,6 +2372,7 @@ async def handle_message(ws, info, data):
             leaving_player = session.players[actor_id]
             seat = leaving_player.get("seat")
             leaving_name = leaving_player.get("name")
+            session.freeze_end_summary()
             if session.mode == "tournament" and session.status != "lobby":
                 session.players[actor_id]["connected"] = False
             else:

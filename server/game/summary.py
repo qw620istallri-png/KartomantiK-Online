@@ -19,6 +19,16 @@ class SummaryMixin:
             "scores": {player_id: self.rules_live_points(player_id) for player_id in self.players},
         })
 
+    def freeze_end_summary(self):
+        """Before a player leaves an ended game: keep the summary as it is."""
+        if self.ended and self.final_summary is None:
+            self.final_summary = self.game_summary()
+
+    def ended_summary(self):
+        """The summary shown on the end screen: frozen once a player leaves the
+        ended game, so their column, points and highlights stay."""
+        return self.final_summary or self.game_summary()
+
     def game_summary(self):
         players = {
             player_id: {"confrontationsWon": 0, "actions": 0, "keyCardId": None}
@@ -54,6 +64,9 @@ class SummaryMixin:
         })
         return {
             "turns": final_turn,
+            # kept with the summary: a player who leaves the ended game still
+            # shows under their name
+            "names": {player_id: player.get("name") for player_id, player in self.players.items()},
             "stalemates": stalemates,
             "players": players,
             "scoreHistory": history,

@@ -163,6 +163,7 @@ class Session(
         self.last_activity = time.time()
         self.ended = False
         self.score_history = []  # points of each player at the end of every turn
+        self.final_summary = None  # the end summary, frozen when a player leaves the ended game
         # hand cards shown to the other players: player id -> Counter(card id), and
         # the hand last seen, to forget a copy as soon as it leaves the hand
         self.revealed_hand = {}

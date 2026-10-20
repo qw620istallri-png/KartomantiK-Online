@@ -54,6 +54,19 @@ class GameSummaryTests(unittest.TestCase):
         self.session.concede("p2")
         self.assertEqual(self.session.serialize_for("p1", "player")["gameSummary"]["players"]["p1"]["confrontationsWon"], 0)
 
+    def test_summary_keeps_a_player_who_leaves_the_ended_game(self):
+        self.p2["zones"]["receptacle"] = ["won"]
+        self.session.concede("p1")
+        self.session.freeze_end_summary()
+        del self.session.players["p2"]
+        summary = self.session.serialize_for("p1", "player")["gameSummary"]
+        self.assertEqual(set(summary["players"]), {"p1", "p2"})
+        self.assertEqual(summary["names"], {"p1": "P1", "p2": "P2"})
+        self.assertEqual(summary["scoreHistory"][-1]["scores"], {"p1": 0, "p2": 20})
+        # a new game forgets it
+        self.session.reset_phase_tracker(return_stack_sources=False)
+        self.assertIsNone(self.session.final_summary)
+
 
 if __name__ == "__main__":
     unittest.main()

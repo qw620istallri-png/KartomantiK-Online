@@ -822,7 +822,9 @@ function renderGameEndOverlay() {
   const summary = latestState.gameSummary || null;
   const winners = new Set(outcome?.winnerIds || []);
   const draw = Boolean(outcome?.draw);
-  const winnerNames = [...winners].map((id) => latestState.players?.[id]?.name || id);
+  // a player who left the ended game is no longer in the state: the summary keeps their name
+  const nameOf = (id) => latestState.players?.[id]?.name || summary?.names?.[id] || id;
+  const winnerNames = [...winners].map(nameOf);
   const playing = !isObserver && latestState.players?.[myPlayerId];
   // a player reads their own result; an observer reads who won
   $("#gameEndTitle").textContent = !outcome
@@ -838,7 +840,7 @@ function renderGameEndOverlay() {
     : !scores ? rulesOutcomeText(outcome)
     : playing && !draw ? `${winnerNames[0] || "—"} ${t("rulesResultWins")}` : "";
   const lastPoints = summary?.scoreHistory?.[summary.scoreHistory.length - 1]?.scores || {};
-  const playerIds = scores ? Object.keys(scores) : Object.keys(latestState.players || {});
+  const playerIds = scores ? Object.keys(scores) : Object.keys(summary?.players || latestState.players || {});
   $("#gameEndPlayers").innerHTML = playerIds.map((playerId) => {
     const score = scores?.[playerId];
     const stats = summary?.players?.[playerId];
@@ -862,7 +864,7 @@ function renderGameEndOverlay() {
       </button>` : "";
     return `
     <div class="game-end-player${winners.has(playerId) && !draw ? " is-winner" : ""}" style="--owner-color:${playerColor(playerId)}">
-      <strong class="game-end-name">${esc(latestState.players?.[playerId]?.name || playerId)}</strong>
+      <strong class="game-end-name">${esc(nameOf(playerId))}</strong>
       <span class="game-end-total" data-count-to="${total}">0</span>
       <span class="game-end-unit">${esc(t("vesselPoints"))}</span>
       ${breakdown}${statsHtml}${keyCard}
@@ -929,12 +931,12 @@ function renderGameEndChart(summary, playerIds) {
   const ends = playerIds.map((id) => ({ id, value: Number(history[history.length - 1].scores[id] || 0), y: y(Number(history[history.length - 1].scores[id] || 0)) }))
     .sort((a, b) => a.y - b.y);
   ends.forEach((end, index) => { if (index && end.y - ends[index - 1].y < 15) end.y = ends[index - 1].y + 15; });
-  const labels = ends.map((end) => `<circle cx="${W - right + 12}" cy="${end.y}" r="4" fill="${playerColor(end.id)}"></circle><text class="game-end-label" x="${W - right + 21}" y="${end.y + 4}">${esc(latestState.players?.[end.id]?.name || end.id)} ${end.value}</text>`);
+  const labels = ends.map((end) => `<circle cx="${W - right + 12}" cy="${end.y}" r="4" fill="${playerColor(end.id)}"></circle><text class="game-end-label" x="${W - right + 21}" y="${end.y + 4}">${esc(latestState.players?.[end.id]?.name || summary?.names?.[end.id] || end.id)} ${end.value}</text>`);
   const hits = history.map((entry, index) => {
     const half = (W - left - right) / (history.length - 1) / 2;
     return `<rect class="game-end-hit" data-index="${index}" x="${x(index) - half}" y="${top}" width="${half * 2}" height="${H - top - bottom}"></rect>`;
   });
-  const name = (id) => esc(latestState.players?.[id]?.name || id);
+  const name = (id) => esc(latestState.players?.[id]?.name || summary?.names?.[id] || id);
   const rows = history.map((entry) => `<tr><th scope="row">${esc(rulesText("gameEndTurn", { n: entry.turn }))}</th>${playerIds.map((id) => `<td>${Number(entry.scores[id] || 0)}</td>`).join("")}</tr>`).join("");
   figure.innerHTML = `
     <figcaption>${esc(t("gameEndChartTitle"))}</figcaption>

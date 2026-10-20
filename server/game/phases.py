@@ -80,6 +80,7 @@ class PhasesMixin:
         self.phase_tracker["index"] = 0
         self.phase_tracker["turn"] = 1
         self.score_history = []
+        self.final_summary = None
         self.phase_passes.clear()
         self.rules_engine["recoveryDrawTurn"] = None
         self.rules_engine["recoveryMulliganTurn"] = None
