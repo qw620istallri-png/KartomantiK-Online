@@ -71,22 +71,70 @@ function initAppInstall() {
 // A new release installs a new service worker; the page offers a reload and
 // never forces one (a game in progress is never interrupted).
 function registerAppUpdates() {
-  if (!("serviceWorker" in navigator) || !/^https?:$/.test(location.protocol)) return;
+  if (!("serviceWorker" in navigator) || !/^https?:$/.test(location.protocol)) {
+    checkServedVersion();
+    return;
+  }
   navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (appUpdateRequested) location.reload();
+    if (appUpdateRequested) reloadFresh();
   });
   navigator.serviceWorker.register("sw.js").then((registration) => {
     appUpdateRegistration = registration;
     const watch = (worker) => worker?.addEventListener("statechange", () => {
-      if (worker.state === "installed" && navigator.serviceWorker.controller) showAppUpdateBanner();
+      if (worker.state === "installed" && navigator.serviceWorker.controller) onWorkerWaiting();
     });
-    if (registration.waiting && navigator.serviceWorker.controller) showAppUpdateBanner();
+    if (registration.waiting && navigator.serviceWorker.controller) onWorkerWaiting();
     registration.addEventListener("updatefound", () => watch(registration.installing));
-    window.setInterval(checkAppUpdate, 30 * 60 * 1000);
   }).catch(() => {});
+  if (new URLSearchParams(location.search).has("fresh")) history.replaceState(null, "", location.pathname);
+  checkServedVersion();
+  window.setInterval(checkAppUpdate, 30 * 60 * 1000);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") checkAppUpdate();
+  });
 }
 function checkAppUpdate() {
   appUpdateRegistration?.update().catch(() => {});
+  checkServedVersion();
+}
+// The release the server serves now, read from its service worker file with
+// every cache bypassed: whatever cache sits on the way (browser, proxy, host),
+// a page older than the server is noticed. On the home screen it reloads at
+// once; in a game it offers the reload.
+const RELOADED_FOR_KEY = "kko_reloaded_for";
+async function servedVersion() {
+  try {
+    const text = await (await fetch(`sw.js?check=${Date.now()}`, { cache: "no-store" })).text();
+    return text.match(/const VERSION = "([^"]+)"/)?.[1] || null;
+  } catch (error) { return null; }
+}
+async function checkServedVersion() {
+  if (!/^https?:$/.test(location.protocol)) return;
+  const served = await servedVersion();
+  if (!served || served === STATIC_ASSET_VERSION) return;
+  let alreadyTried = false;
+  try { alreadyTried = sessionStorage.getItem(RELOADED_FOR_KEY) === served; } catch (error) { /* private mode */ }
+  const inGame = !$("#gameScreen").classList.contains("hidden") && latestState && !latestState.ended;
+  if (!inGame && !alreadyTried) {
+    try { sessionStorage.setItem(RELOADED_FOR_KEY, served); } catch (error) { /* private mode */ }
+    reloadFresh();
+    return;
+  }
+  showAppUpdateBanner();
+}
+// a new service worker is waiting: if this page already is that release (it was
+// reloaded fresh), the worker takes over quietly; otherwise the reload is offered
+async function onWorkerWaiting() {
+  const served = await servedVersion();
+  if (served && served === STATIC_ASSET_VERSION) {
+    appUpdateRegistration?.waiting?.postMessage({ type: "skip-waiting" });
+    return;
+  }
+  showAppUpdateBanner();
+}
+// a one-off address no cache has ever seen; the address bar is cleaned up on load
+function reloadFresh() {
+  location.replace(`${location.pathname}?fresh=${Date.now()}`);
 }
 function showAppUpdateBanner() {
   let banner = $("#appUpdateBanner");
@@ -111,7 +159,7 @@ function applyAppUpdate() {
   appUpdateRequested = true;
   const waiting = appUpdateRegistration?.waiting;
   if (waiting) waiting.postMessage({ type: "skip-waiting" });
-  else location.reload();
+  else reloadFresh();
 }
 
 // a reload (update, or the phone dropping the tab) comes back to the same seat

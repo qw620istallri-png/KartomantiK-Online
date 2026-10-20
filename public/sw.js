@@ -4,7 +4,7 @@
 // fallback for a flaky connection. A new release changes VERSION, which makes
 // the browser install this worker again: the page then offers a reload
 // (never forced, and never in the middle of a game).
-const VERSION = "20261020-rules-beta-139-12";
+const VERSION = "20261020-rules-beta-139-13";
 const CACHE = `kko-${VERSION}`;
 const SHELL = ["./", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 
@@ -29,7 +29,8 @@ self.addEventListener("message", (event) => {
 async function networkFirst(request, fallbackUrl) {
   const cache = await caches.open(CACHE);
   try {
-    const response = await fetch(request);
+    // straight from the server: no HTTP cache on the way may hand back an old page
+    const response = await fetch(request, { cache: "no-store" });
     if (response.ok) cache.put(fallbackUrl || request, response.clone());
     return response;
   } catch (error) {
@@ -52,8 +53,9 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   if (request.method !== "GET") return;
   const url = new URL(request.url);
-  // card art and other hosts stay with the browser's own cache
-  if (url.origin !== self.location.origin) return;
+  // card art and other hosts stay with the browser's own cache; the version check
+  // (sw.js) always goes straight to the server
+  if (url.origin !== self.location.origin || url.pathname.endsWith("/sw.js")) return;
   if (request.mode === "navigate") {
     event.respondWith(networkFirst(request, "./"));
   } else if (url.searchParams.has("v")) {

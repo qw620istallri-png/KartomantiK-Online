@@ -1257,3 +1257,13 @@ Travail fait sur le PC après la beta 139, jamais publié, récupéré via la br
 - **Zone de Confrontation sur téléphone** : plusieurs Manifestations séparées se placent
   en cascade, l'une sous l'autre (chacune laisse voir le haut de la précédente, la
   première reste entière) au lieu d'être côte à côte et minuscules.
+
+## Mises à jour qui passent tous les caches (beta 139.13)
+
+- Le service worker demande la page avec `cache: "no-store"` : aucun cache HTTP
+  intermédiaire ne peut redonner une ancienne page.
+- La page compare sa version (`STATIC_ASSET_VERSION`) à celle que sert le serveur
+  (`VERSION` de `sw.js`, lu sans cache) au démarrage, au retour sur l'onglet, après
+  une reconnexion et toutes les 30 min. Plus ancienne : sur l'accueil, rechargement
+  immédiat sur une adresse unique (`?fresh=…`, nettoyée ensuite) ; en partie, bannière.
+- Après ce rechargement, le nouveau service worker prend la main sans bannière.
