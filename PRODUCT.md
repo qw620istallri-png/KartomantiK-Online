@@ -289,8 +289,8 @@ KKO combines a free-form tabletop with server-filtered hidden information and an
 
 ## Evidence on Hand
 
-- Existing implementation: `public/index.html`, `public/style.css`, `public/app.js`, `public/i18n.js`.
-- Server authority and role filtering: `server/main.py`, `server/session.py`.
+- Existing implementation: `public/index.html`, `public/style.css`, `public/app.js` with `public/js/*.js`, `public/i18n.js`.
+- Server authority and role filtering: `server/main.py`, `server/session.py` with `server/game/`.
 - Existing regression coverage: `tests/test_game_state.py`, `tests/test_frontend.cjs`.
 
 ## Product Principles

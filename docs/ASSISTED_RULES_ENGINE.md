@@ -33,12 +33,16 @@ Décisions déjà confirmées :
 |---|---|
 | `server/main.py` | HTTP statique, WebSocket, autorisations, dispatch des messages, chargement du catalogue et compilation des métadonnées statiques |
 | `server/session.py` | État de partie et moteur de règles autoritaire |
+| `server/game/` | Mixins de `Session` par domaine : `zones`, `phases`, `actions`, `payment`, `stack`, `board`, `power`, `confrontation`, `priority`, `triggers`, `chain`, `resolution`, `view`, `pregame` ; constantes dans `common.py` |
+| `server/game/effects/` | `apply_rules_action_result` : table `RULES_RESULT_HANDLERS` (type de résultat → méthode `_rules_result_<kind>`), handlers rangés par famille (score, cards, power, removal, board, stack, dice, signature) |
+| `server/game/choices/` | `resolve_rules_choice` : table `RULES_CHOICE_HANDLERS` (type de choix → `_rules_choice_<kind>`) et chemin générique de défausse |
 | `public/cards-data.json` | 300 cartes du jeu de base |
 | `public/extensions/inner-desert/cards.json` | 150 cartes Inner Deserts |
 | `public/card-abilities.json` | Capacités automatisées déclaratives |
 | `public/automation-coverage-overrides.json` | Statuts confirmés et références de tests maintenus manuellement |
 | `public/automation-coverage.json` | Registre généré pour les 450 cartes |
-| `public/app.js` | Rendu, interaction, prévisualisation des coûts/cibles et dialogues de choix |
+| `public/js/*.js` | Fonctions du client par domaine (cartes, decks, phases, vfx, board-flow, rules-actions, connection, tournament, players, zones, hand, choices, drag-drop, board, controls, log) : uniquement des déclarations, rien ne s'exécute au chargement |
+| `public/app.js` | État et branchements exécutés au chargement, dans leur ordre d'origine, puis `boot()` ; chargé après `js/*.js` |
 | `public/i18n.js` | Libellés d'interface et de journal |
 | `tests/test_game_state.py` | Tests unitaires du moteur |
 | `tests/test_card_catalog.py` | Tests du catalogue et de la compilation des capacités |
@@ -621,8 +625,14 @@ dépendances au projet sans déclarer explicitement un environnement JavaScript.
 - conserver `reset_board` hors de tous les verrouillages de partie : ce message
   doit annuler choix obligatoires, Mulligan, Pile et état de fin avant de
   reconstruire le plateau ;
-- augmenter la version statique dans `public/index.html`, `public/app.js` et
-  `README.md` après une modification d'asset client.
+- augmenter la version statique dans `public/index.html` (toutes les balises
+  `<script>`), `public/app.js` et `README.md` après une modification d'asset client ;
+- un nouveau type de résultat ou de choix s'ajoute comme méthode dans le module
+  de sa famille (`server/game/effects/` ou `server/game/choices/`) et dans la table
+  d'aiguillage de `__init__.py` ;
+- les fichiers `public/js/*.js` ne doivent contenir que des déclarations
+  (fonctions, constantes littérales) : tout code exécuté au chargement va dans
+  `public/app.js`.
 
 ## État actuel et prochaine extension
 
@@ -1117,3 +1127,14 @@ Partie réelle pilotée dans Chromium (serveur Python, deux joueurs, UI bêta), 
   Confrontation agrandies, aperçu au survol désactivé après un toucher.
 - Le panneau de phase indique « À vous de choisir une carte » au joueur qui doit
   choisir, au lieu de « En attente du choix de carte de <soi-même> ».
+
+## Découpage des gros fichiers (beta 139.7)
+
+- `server/session.py` ne contient plus que `Session.__init__` et l'assemblage des
+  mixins de `server/game/`. Les imports `from session import ...` restent valides.
+- `apply_rules_action_result` (5 500 lignes) et `resolve_rules_choice`
+  (2 500 lignes) sont devenus des aiguillages : un handler par type d'effet ou de
+  choix, déplacé sans réécriture (vérifié par comparaison d'AST).
+- `public/app.js` est réparti en 16 fichiers `public/js/*.js` chargés avant lui.
+  Comme toutes les fonctions étaient déjà « remontées » (hoisting) avant
+  l'exécution, l'ordre d'exécution reste identique.

@@ -25,7 +25,10 @@ from session import ADVANCED_PHASES  # noqa: E402
 from test_card_catalog import build_server_rules  # noqa: E402
 
 ROOT = Path(TESTS_DIR).parent
-APP_JS = (ROOT / "public" / "app.js").read_text(encoding="utf-8")
+APP_JS = "\n".join(
+    path.read_text(encoding="utf-8")
+    for path in [*sorted((ROOT / "public" / "js").glob("*.js")), ROOT / "public" / "app.js"]
+)
 ABILITIES = json.loads((ROOT / "public" / "card-abilities.json").read_text(encoding="utf-8"))
 
 WANDERING_VETERAN = "iwpmdq754ew0mw7_en"
