@@ -761,7 +761,7 @@
     const k = compact ? 1 + (kBase - 1) * 0.5 : kBase;
     const intW = clamp(W * 0.074, 78, 150);
     // phone: the Confrontation Zone gets the width, the Interzones and the centre stay slim
-    const izW = Math.round(Math.min(intW * k, fieldW * (phone ? 0.16 : 0.2)));
+    const izW = Math.round(Math.min(intW * k, fieldW * (phone ? 0.19 : 0.2)));
     const gutW = Math.round(phone ? clamp(W * 0.05, 34, 56) : clamp(W * 0.062, 56, 116));
     const handH = typeof handCardHeight === "number" ? handCardHeight : 170;
     const handCollapsed = document.getElementById("handArea")?.classList.contains("hand-collapsed");
@@ -825,7 +825,12 @@
     const available = bottom - top - labelH * 2 - 18;
     const wills = groups[side].will.length;
     const used = groups[side].interzone.length;
-    const capacity = Math.max(player ? interzoneCapacity(player.id) : 3, used);
+    const fullCapacity = Math.max(player ? interzoneCapacity(player.id) : 3, used);
+    // phone: the Interzone is sized for the cards it holds (one slot when empty),
+    // not for every free slot, so the Wills keep the height (the label still
+    // reads used/capacity)
+    const capacity = G.phone ? Math.max(1, used) : fullCapacity;
+    const columnFit = (width, height, count, opts) => (G.phone && count > 1 && stackedFit(width, height, count, opts)) || fit(width, height, count, opts);
     // share the height so both zones keep cards as large as possible: the Wills
     // stay in one column (and the Interzone shrinks) before either doubles up
     const izOpts = { maxW: Math.min(inner * 0.9, 170), gap: 8, maxCols: 2 };
@@ -834,8 +839,8 @@
     if (wills) {
       let bestScore = -1;
       for (let share = 0.3; share <= 0.821; share += 0.01) {
-        const a = fit(inner, Math.max(80, available * share), capacity, izOpts);
-        const b = fit(inner, Math.max(40, available * (1 - share)), wills, pzOpts);
+        const a = columnFit(inner, Math.max(80, available * share), capacity, izOpts);
+        const b = columnFit(inner, Math.max(40, available * (1 - share)), wills, pzOpts);
         // the smaller of the two decides; ties keep the larger Interzone
         const score = Math.min(a.w, b.w) * 1000 + a.w;
         if (score > bestScore) { bestScore = score; izShare = share; }
@@ -845,16 +850,26 @@
     const pzH = Math.max(40, available - izH);
     const izTop = top + labelH;
     const pzTop = izTop + izH + 18 + labelH;
-    const izFit = fit(inner, izH, capacity, izOpts);
-    const pzFit = fit(inner, pzH, Math.max(wills, 1), pzOpts);
+    const izFit = columnFit(inner, izH, capacity, izOpts);
+    const pzFit = columnFit(inner, pzH, Math.max(wills, 1), pzOpts);
     return {
-      column, capacity, used, wills,
+      column, capacity, fullCapacity, used, wills,
       iz: { t: izTop, h: izH, fit: izFit, labelY: top },
       pz: { t: pzTop, h: pzH, fit: pzFit, labelY: pzTop - labelH },
       divider: izTop + izH + 9,
     };
   }
 
+  // phone: one under the other (both whole) unless that is clearly smaller than
+  // two columns; returns null when the cards would be too small either way
+  // (under 40 % of a lone card): the caller then overlaps them in a cascade
+  function stackedFit(width, height, count, opts) {
+    const single = fit(width, height, 1, opts);
+    const oneColumn = fit(width, height, count, { ...opts, maxCols: 1 });
+    const twoColumns = fit(width, height, count, { ...opts, maxCols: 2 });
+    const chosen = oneColumn.w >= twoColumns.w * 0.85 ? oneColumn : twoColumns;
+    return chosen.w >= single.w * 0.4 ? chosen : null;
+  }
   // cards overlapping down the zone: every card shows its top (name and art) above the
   // next one; the first card of the group (the First Manifestation) is the one in full view
   const CASCADE_STEP = 0.24;
@@ -909,12 +924,17 @@
       const cardFit = fit(width - 12, area.b - area.t - 30, count, { maxW });
       zc[side] = { area, fit: cardFit, trap: null };
       const inner = { l: area.l, r: area.r, t: area.t + 22, b: area.b - 8 };
-      // phone: a short zone would put the cards side by side and tiny; they go one
-      // under the other instead, each showing the top of the one before
-      const cascade = G.phone && count > 1 ? cascadePositions(inner, count, maxW) : null;
-      const rects = cascade && cascade[0].w > cardFit.w * 1.15
-        ? cascade
-        : gridPositions(inner, count, cardFit, { fromRight: side === "me" });
+      // phone: one under the other, then two columns, and only when even that makes
+      // them too small, a cascade (each card showing the top of the one before)
+      let rects;
+      if (G.phone && count > 1) {
+        const stacked = stackedFit(width - 12, inner.b - inner.t, count, { maxW });
+        rects = stacked
+          ? gridPositions(inner, count, stacked, { fromRight: side === "me" })
+          : cascadePositions(inner, count, maxW);
+      } else {
+        rects = gridPositions(inner, count, cardFit, { fromRight: side === "me" });
+      }
       rects.forEach((rect, index) => {
         const entry = groups[side].confrontation[index];
         if (entry) slots.set(entry.item.id, { ...rect, zone: "confrontation", side });
@@ -1333,8 +1353,19 @@
     });
     document.addEventListener("pointerdown", (event) => {
       local.lastPointerType = event.pointerType;
+      local.peekWasFor = local.peekEl ? local.peekCard : null;
       hidePeek();
     }, true);
+    // a finger: a tap on a field card shows it in large beside it (a second tap, or
+    // a tap anywhere else, puts it away), unless the tap already does something
+    board.addEventListener("click", (event) => {
+      if (!active() || local.lastPointerType !== "touch") return;
+      const card = event.target.closest(".bf-card[data-item-id]");
+      if (!card || event.target.closest("button, .rules-activate-marker, .rules-effect-marker")) return;
+      if (card === local.peekWasFor || typeof pendingRulesBoardFlow !== "undefined" && pendingRulesBoardFlow) return;
+      if (local.choice || card.matches("[class*=\"target\"], .ub-choice-pick, .ub-choice-drag")) return;
+      schedulePeek(card, () => boardPeekImage(card), 0, { touch: true });
+    });
     // piles: the top card in large after a short rest
     [left, right].forEach((column) => {
       column.addEventListener("mouseover", (event) => {
@@ -1367,6 +1398,7 @@
     });
     document.fonts?.ready.then(() => { if (active() && latestState) fitLabels(); });
     observer.observe(document.getElementById("rulesStackPanel"), { attributes: true, attributeFilter: ["class"] });
+    watchColumnMenus();
   }
 
   function boardPeekImage(card) {
@@ -1376,11 +1408,11 @@
     return cardImage(item.cardId);
   }
 
-  function schedulePeek(anchor, getSrc, delay) {
+  function schedulePeek(anchor, getSrc, delay, { touch = false } = {}) {
     hidePeek();
     // a finger has no hover: the mouseover a tap emulates would leave the big card
-    // on screen until the next touch (holding a card inspects it instead)
-    if (local.lastPointerType === "touch") return;
+    // on screen until the next touch; a tap on a card shows it instead (touch: true)
+    if (local.lastPointerType === "touch" && !touch) return;
     local.peekCard = anchor;
     local.peekTimer = setTimeout(() => {
       const src = getSrc();
@@ -1662,7 +1694,7 @@
         `<span class="ub-slot" style="left:${rect.x - col.column.l}px;top:${rect.y}px;width:${rect.w}px;height:${rect.w * RATIO}px">${esc(t("ubFreeSlot"))}</span>`
       )).join("");
       node.innerHTML = `
-        <span class="ub-zlab" style="top:${col.iz.labelY}px"><span data-fit="interzone">${esc(t("ubInterzone"))}</span><b>${col.used}/${col.capacity}</b></span>
+        <span class="ub-zlab" style="top:${col.iz.labelY}px"><span data-fit="interzone">${esc(t("ubInterzone"))}</span><b>${col.used}/${col.fullCapacity}</b></span>
         ${free}
         <span class="ub-divider" style="top:${col.divider}px"></span>
         <span class="ub-zlab" style="top:${col.pz.labelY}px"><span data-fit="wills">${esc(t("ubWills"))}</span><b>${col.wills}</b></span>`;
@@ -2428,19 +2460,81 @@
   // A menu opened from a side column floats over the page: the columns clip
   // whatever overflows them (they scroll on short screens, phones hide it).
   function floatOver(pop, anchor, { above = true } = {}) {
-    Object.assign(pop.style, { position: "fixed", left: "0px", top: "0px", right: "auto", bottom: "auto", transform: "none", zIndex: "700" });
+    Object.assign(pop.style, { position: "fixed", left: "0px", top: "0px", right: "auto", bottom: "auto", transform: "none", zIndex: "700", maxHeight: "", overflowY: "" });
     const box = anchor.getBoundingClientRect();
-    const size = pop.getBoundingClientRect();
+    let size = pop.getBoundingClientRect();
     const margin = 8;
-    let top = above ? box.top - size.height - 6 : box.bottom + 6;
-    if (above && top < margin) top = box.bottom + 6;
-    if (!above && top + size.height > window.innerHeight - margin) top = box.top - size.height - 6;
+    const spaceAbove = box.top - 6 - margin;
+    const spaceBelow = window.innerHeight - margin - box.bottom - 6;
+    // taller than the room on its side: the roomier side, scrolling within it
+    if (size.height > (above ? spaceAbove : spaceBelow)) {
+      if (size.height > spaceAbove && size.height > spaceBelow) {
+        above = spaceAbove >= spaceBelow;
+        Object.assign(pop.style, { maxHeight: `${Math.max(120, above ? spaceAbove : spaceBelow)}px`, overflowY: "auto" });
+        size = pop.getBoundingClientRect();
+      } else above = !above;
+    }
+    const top = above ? box.top - size.height - 6 : box.bottom + 6;
     const left = Math.min(Math.max(margin, box.left), window.innerWidth - size.width - margin);
     pop.style.left = `${Math.round(left)}px`;
     pop.style.top = `${Math.round(Math.max(margin, top))}px`;
   }
   function unfloat(pop) {
-    ["position", "left", "top", "right", "bottom", "transform", "zIndex"].forEach((key) => { pop.style[key] = ""; });
+    ["position", "left", "top", "right", "bottom", "transform", "zIndex", "maxHeight", "overflowY"].forEach((key) => { pop.style[key] = ""; });
+  }
+
+  // Every menu opened from a side column floats: watched here, so a new one only
+  // needs a line (what it is, when it is open, what it opens from).
+  const COLUMN_MENUS = [
+    {
+      selector: ".ub-toolmenu .ub-toolpop",
+      open: (pop) => pop.closest(".ub-toolmenu").classList.contains("open"),
+      anchor: (pop) => pop.closest(".ub-toolmenu").querySelector("[data-ub-menu]"),
+      above: true,
+    },
+    {
+      selector: "#handToolbar",
+      open: (pop) => !pop.classList.contains("hidden"),
+      anchor: () => document.getElementById("handToolsToggleBtn"),
+      above: true,
+    },
+    {
+      selector: ".field-pile .zone-popover",
+      open: () => true,
+      anchor: (pop) => pop.closest(".field-pile"),
+      above: false,
+    },
+    {
+      selector: ".field-pile > .pile-score-adjust",
+      open: (pop) => pop.classList.contains("ub-open"),
+      anchor: (pop) => pop.parentElement.querySelector(":scope > .ub-score-toggle") || pop.parentElement,
+      above: false,
+    },
+  ];
+  function floatColumnMenus() {
+    if (!active()) return;
+    for (const menu of COLUMN_MENUS) {
+      document.querySelectorAll(menu.selector).forEach((pop) => {
+        if (!pop.closest(".ub-col")) return;
+        const anchor = menu.anchor(pop);
+        if (menu.open(pop) && anchor && anchor.getBoundingClientRect().width) {
+          if (pop.classList.contains("zone-popover")) pop.classList.remove("zone-popover-above");
+          floatOver(pop, anchor, { above: menu.above });
+        } else {
+          unfloat(pop);
+        }
+      });
+    }
+  }
+  function watchColumnMenus() {
+    const observer = new MutationObserver(() => {
+      cancelAnimationFrame(local.menuFrame);
+      local.menuFrame = requestAnimationFrame(floatColumnMenus);
+    });
+    document.querySelectorAll(".ub-col").forEach((column) => observer.observe(column, {
+      subtree: true, childList: true, attributes: true, attributeFilter: ["class", "hidden"],
+    }));
+    window.addEventListener("resize", () => requestAnimationFrame(floatColumnMenus));
   }
 
   function closeToolMenus() {

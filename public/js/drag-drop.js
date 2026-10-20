@@ -557,6 +557,8 @@ function closeContextMenu() {
 // viewer) and its owner's name below-right of it (always). Tied to the
 // context menu's lifecycle since they're only ever shown together.
 function showCardLabels(cardEl, nameText, ownerText) {
+  // a long press on a phone: the menu alone, the labels would sit under the finger
+  if (lastPointerType === "touch") return;
   const rect = cardEl.getBoundingClientRect();
   if (nameText) {
     const nameEl = document.createElement("div");

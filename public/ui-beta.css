@@ -1027,3 +1027,7 @@ body.ub-hand-drawing #gameScreen.ui-beta #myHandTray { pointer-events: none; }
 #gameScreen.ui-beta .ub-piles .zone-popover .reveal-n-group input { background: rgba(var(--ub-lo), .4); color: var(--ub-ink); }
 #gameScreen.ui-beta .ub-piles .zone-popover .reveal-n-group button { border: 0; border-left: 1px solid var(--ub-line-soft); border-radius: 0; }
 @media (pointer: coarse) { #gameScreen.ui-beta .ub-piles .zone-popover button { min-height: 36px; } }
+
+/* the classic table shrinks field cards under 900 px wide; this table sizes every
+   card itself from a 150 x 210 card, so it keeps that base size on phones too */
+#gameScreen.ui-beta .bf-card { width: 150px; height: 210px; }
