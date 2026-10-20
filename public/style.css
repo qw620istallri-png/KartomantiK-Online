@@ -3964,3 +3964,24 @@ img.ko-img-in { animation: ko-img-in .3s ease-out; }
 .essence-quick-popover img { width: 24px; height: 24px; }
 .hand-essence-chip { min-height: 0; padding: 2px 4px; border: 0; border-radius: 7px; background: transparent; box-shadow: none; cursor: pointer; }
 .hand-essence-chip:hover, .hand-essence-chip:focus-visible { background: #d7ba6824; box-shadow: inset 0 0 0 1px #d7ba6866; }
+
+/* ---------- installed app (js/pwa.js) */
+.social-links .install-app-btn { border-color: var(--gold); background: var(--gold); color: var(--carbon); }
+.social-links .install-app-btn:hover { background: #e3bc59; color: var(--carbon); }
+.install-guide { position: fixed; inset: 0; z-index: 4100; display: grid; place-items: center; padding: 16px; background: #050402c8; }
+.install-guide.hidden { display: none; }
+.install-guide-card { width: min(420px, 100%); max-height: calc(100dvh - 32px); overflow-y: auto; padding: 20px 24px; border-radius: 14px; border: 1px solid var(--gold-deep); background: linear-gradient(180deg, #2a2118, #14110a); color: #f6edcf; box-shadow: 0 20px 60px #000c; }
+.install-guide-card h2 { margin: 0 0 12px; font-family: var(--display-font); font-size: 20px; color: var(--gold); }
+.install-guide-card ol { margin: 0; padding-left: 20px; display: grid; gap: 10px; font-size: 15px; line-height: 1.4; }
+.install-guide-share { width: 20px; height: 20px; vertical-align: -4px; fill: none; stroke: #7fb6ff; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.install-guide-note { margin: 12px 0 0; font-size: 13px; color: #cdbb85; }
+.install-guide-note:empty { display: none; }
+.install-guide-card button { margin-top: 16px; width: 100%; }
+.app-update-banner {
+  position: fixed; left: 12px; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 3950; display: flex; align-items: center; gap: 8px;
+  max-width: calc(100vw - 24px); padding: 8px 10px 8px 14px; border-radius: 10px; border: 1px solid #c9a24a; background: #17140ef2; color: #f3e6c4;
+  box-shadow: 0 10px 30px #0008; font-size: 13px;
+}
+.app-update-banner.hidden { display: none; }
+.app-update-banner button { flex: none; min-height: 32px; padding: 6px 12px; font-size: 13px; }
+.app-update-banner button:not(.primary) { background: transparent; border-color: transparent; color: #cdbb85; box-shadow: none; }

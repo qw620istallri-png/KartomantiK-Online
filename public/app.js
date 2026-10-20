@@ -2,7 +2,7 @@
 // (see index.html); this file keeps every statement that runs at load, in order.
 
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261020-rules-beta-139-10";
+const STATIC_ASSET_VERSION = "20261020-rules-beta-139-11";
 
 {
   const versionEl = document.getElementById("appVersion");
@@ -198,6 +198,8 @@ async function boot() {
   initLanguageSwitch();
   initConfirmPanel();
   initSocialLinks();
+  initAppInstall();
+  registerAppUpdates();
   initPileBrowser();
   await loadCardDatabase();
   await loadStarterDecks();
@@ -249,6 +251,8 @@ async function boot() {
     $("#handRequestPanel").classList.add("hidden");
   };
   $("#rulesChoiceCloseBtn").onclick = () => closeRulesChoicePanel();
+  // reloaded in the middle of a session (an update, the phone dropping the tab): back to the same seat
+  resumeSession();
 }
 
 boot();

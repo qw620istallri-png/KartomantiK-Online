@@ -168,6 +168,7 @@ function paintStaticText() {
   $("#tournamentRulesSaveBtn").textContent = t("saveRules");
   $("#tournamentPlayerAlertTitle").textContent = t("tournamentAlert");
   renderTournamentConsole();
+  renderInstallButton();
 }
 
 function initSocialLinks() {
@@ -393,6 +394,7 @@ function showTournamentMatch() {
 // everyone else) and, after send()-ing end_session, for P1's own client —
 // in both cases *this* client is done and goes back to the home screen.
 function leaveSession() {
+  clearResumeSession();
   intentionalClose = true;
   wasDisconnected = false;
   reconnectAttempts = 0;
@@ -452,6 +454,9 @@ function handleServerMessage(msg) {
     joinedCode = joinedCode || codeOrganizer || codePlayer;
     reconnectAttempts = 0;
     showConnectionBanner(null);
+    saveResumeSession();
+    // back after a dropped connection: the server may have been updated meanwhile
+    if (wasDisconnected) checkAppUpdate();
     if (wasDisconnected) {
       wasDisconnected = false;
       if (!$("#tournamentScreen").classList.contains("hidden")) showToast(t("reconnected"));
@@ -539,8 +544,10 @@ function handleServerMessage(msg) {
       if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
       if (ws) ws.close();
       setStatus(t("sessionGone"), "error");
+      clearResumeSession();
       showConnectionBanner("gone");
     } else if ($("#gameScreen").classList.contains("hidden") && $("#tournamentScreen").classList.contains("hidden")) {
+      clearResumeSession();
       setStatus(msg.message, "error");
     } else if (connectionMode === "tournament" && connectionRole === "player") {
       showTournamentPlayerAlert(localizeServerError(msg.message), true);

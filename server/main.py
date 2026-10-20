@@ -762,7 +762,8 @@ async def serve_static(path):
     headers["Content-Type"] = content_type or "application/octet-stream"
     headers["Content-Length"] = str(len(body))
     extension = os.path.splitext(full_path)[1].lower()
-    if safe_rel == "index.html":
+    if safe_rel in ("index.html", "sw.js", "manifest.webmanifest"):
+        # the app shell and its service worker are always checked for a new release
         headers["Cache-Control"] = "no-cache"
     elif versioned:
         headers["Cache-Control"] = VERSIONED_CACHE

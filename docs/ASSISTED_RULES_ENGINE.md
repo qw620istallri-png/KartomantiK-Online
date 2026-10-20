@@ -626,7 +626,9 @@ dépendances au projet sans déclarer explicitement un environnement JavaScript.
   doit annuler choix obligatoires, Mulligan, Pile et état de fin avant de
   reconstruire le plateau ;
 - augmenter la version statique dans `public/index.html` (toutes les balises
-  `<script>`), `public/app.js` et `README.md` après une modification d'asset client ;
+  `<script>`), `public/app.js`, `public/sw.js` et `README.md` après une modification
+  d'asset client (la version de `sw.js` déclenche la bannière de mise à jour des
+  apps installées) ;
 - un nouveau type de résultat ou de choix s'ajoute comme méthode dans le module
   de sa famille (`server/game/effects/` ou `server/game/choices/`) et dans la table
   d'aiguillage de `__init__.py` ;
@@ -1217,3 +1219,25 @@ Travail fait sur le PC après la beta 139, jamais publié, récupéré via la br
   temporaires issues d'une banque Hearthstone** (droits Blizzard) : à remplacer par des
   sons originaux ou libres avant toute diffusion publique. Détails :
   `reports/KKO_UI_AUDIO_IMPLEMENTATION_2026-10-19.md`.
+
+## Application installable (PWA, beta 139.11)
+
+- **Installation** : `manifest.webmanifest` (plein écran, paysage, icônes PNG 192/512
+  et « maskable » dans `public/icons/`, `apple-touch-icon` pour iOS). Sur Android/Chrome,
+  le bouton « Installer l'app » de l'accueil apparaît dès que le navigateur le propose
+  (`beforeinstallprompt`) ; sur iPhone/iPad il ouvre un guide (Partager → Sur l'écran
+  d'accueil). Le bouton disparaît une fois l'app installée.
+- **Service worker** (`public/sw.js`) : la page vient toujours du réseau quand il est
+  disponible (le cache ne sert que de secours), les fichiers versionnés `?v=` sont
+  gardés en cache, les images de cartes restent au cache du navigateur. Le serveur
+  envoie `index.html`, `sw.js` et le manifest sans cache.
+- **Mises à jour** : chaque version change `VERSION` dans `sw.js` ; le navigateur
+  installe le nouveau service worker (vérification au chargement, toutes les 30 min
+  et après une reconnexion) et la page affiche « Nouvelle version disponible » avec
+  « Recharger » / « Plus tard ». Jamais de rechargement forcé ; en partie, le texte
+  invite à recharger entre deux parties.
+- **Retour à sa place** : après un rechargement (mise à jour, onglet tué par le
+  téléphone), le client rejoint automatiquement la même session et la même place
+  (`sessionStorage`, effacé en quittant la session ou si elle n'existe plus).
+- **Portrait** : l'écran « Tournez votre appareil » de la nouvelle table couvre la
+  partie sur un téléphone tenu droit.
