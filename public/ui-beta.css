@@ -132,7 +132,10 @@
 .ub-izcol.me { border-right: 1px solid var(--ub-line-soft); }
 .ub-izcol.opp { border-left: 1px solid var(--ub-line-soft); }
 .ub-zlab { position: absolute; left: 10px; right: 10px; display: flex; justify-content: space-between; align-items: center; gap: 4px; font-size: 11px; text-transform: uppercase; letter-spacing: .12em; color: var(--ub-muted); white-space: nowrap; overflow: hidden; }
-.ub-zlab b { color: var(--ub-ink); font-variant-numeric: tabular-nums; font-weight: 600; }
+.ub-zlab b { color: var(--ub-ink); font-variant-numeric: tabular-nums; font-weight: 600; flex: none; }
+/* a narrow column shortens the name, never the count */
+.ub-zlab > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+#gameScreen.ui-beta.ub-compact .ub-zlab { letter-spacing: .05em; }
 .ub-divider { position: absolute; left: 8px; right: 8px; border-top: 1px dashed rgba(var(--ub-gl), .2); }
 .ub-slot { position: absolute; margin-left: 0; box-sizing: border-box; border-radius: 6px; border: 1.5px dashed rgba(var(--ub-gl), .22); display: grid; place-items: center; color: rgba(var(--ub-gl), .3); font-size: 11px; }
 .ub-zc { border-radius: 14px; }
@@ -344,7 +347,7 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 .ub-chat.folded { height: 40px; }
 .ub-chat header { display: flex; align-items: center; gap: 2px; padding: 0 4px 0 6px; height: 38px; flex: none; border-bottom: 1px solid var(--ub-line-soft); }
 .ub-tabs { display: flex; gap: 2px; flex: 1; min-width: 0; }
-.ub-tabs button { border: 0; background: transparent; padding: 5px 8px; border-radius: 6px; font-size: 12px; color: var(--ub-muted); box-shadow: none; white-space: nowrap; cursor: pointer; }
+.ub-tabs button { border: 0; background: transparent; padding: 5px clamp(4px, .55vw, 8px); border-radius: 6px; font-size: 12px; color: var(--ub-muted); box-shadow: none; white-space: nowrap; cursor: pointer; flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .ub-tabs button[aria-selected="true"] { color: var(--ub-ink); background: rgba(var(--ub-gd), .16); box-shadow: inset 0 -2px 0 var(--ub-gold); }
 .ub-badge { display: inline-grid; vertical-align: 1px; margin-left: 5px; min-width: 14px; height: 14px; border-radius: 99px; background: var(--ub-gold); color: #1a1407; font-size: 9px; font-weight: 700; place-items: center; padding: 0 3px; }
 .ub-badge[hidden] { display: none; }
@@ -364,7 +367,7 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 
 /* tools: one row of same-looking buttons; the groups open as small menus above */
 .ub-tools { flex: none; position: relative; }
-.ub-toolrow { display: flex; align-items: center; gap: 4px; flex-wrap: nowrap; }
+.ub-toolrow { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
 .ub-toolslot, .ub-toolmenu { display: contents; }
 .ub-toolmenu { display: block; position: relative; }
 #gameScreen.ui-beta .ub-tools .hand-tools-dock,
@@ -416,13 +419,13 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 #gameScreen.ui-beta .ub-stack .rules-stack-list li { border-left: 3px solid var(--stack-player-color, var(--ub-gold)); }
 
 .ub-oppblock { flex: none; display: flex; flex-direction: column; gap: 8px; }
-.ub-oppbar { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: var(--ub-radius); text-align: left; font-variant-numeric: tabular-nums; width: 100%; color: var(--ub-ink);
+.ub-oppbar { display: flex; align-items: center; gap: clamp(4px, .65vw, 10px); padding: 8px clamp(6px, .65vw, 10px); overflow: hidden; border-radius: var(--ub-radius); text-align: left; font-variant-numeric: tabular-nums; width: 100%; color: var(--ub-ink);
   border: 1px solid color-mix(in srgb, var(--opp) 55%, transparent); background: color-mix(in srgb, var(--opp) 12%, transparent); cursor: pointer; box-shadow: none; }
 .ub-oppbar:hover { background: color-mix(in srgb, var(--opp) 22%, transparent); }
 .ub-oppbar .v { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ub-oppbar .mini { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--ub-muted); line-height: 1.1; }
+.ub-oppbar .mini { display: flex; flex-direction: column; align-items: center; font-size: 10px; color: var(--ub-muted); line-height: 1.1; min-width: 0; }
 .ub-oppbar .mini b { color: var(--ub-ink); font-size: 13px; }
-.ub-oppbar .pts { font-family: var(--display-font, Georgia, serif); color: var(--ub-gold-pale); font-size: 16px; padding-left: 8px; border-left: 1px solid var(--ub-line-soft); }
+.ub-oppbar .pts { font-family: var(--display-font, Georgia, serif); color: var(--ub-gold-pale); font-size: 16px; padding-left: clamp(4px, .5vw, 8px); border-left: 1px solid var(--ub-line-soft); }
 .ub-oppbar .chev { color: var(--ub-muted); display: grid; transition: transform 320ms var(--ub-ease); transform: rotate(180deg); }
 .ub-oppbar .chev svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; }
 .ub-oppblock.open .ub-oppbar .mini, .ub-oppblock.open .ub-oppbar .pts { display: none; }
@@ -537,7 +540,8 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 #gameScreen.ui-beta.ub-compact .opponent-hand-card:focus-visible { transform: translateX(calc(-50% + var(--fan-x) * .9)) translateY(10%) rotate(180deg) scale(1.4); }
 #gameScreen.ui-beta.ub-compact .ub-col.left { overflow-y: auto; overscroll-behavior: contain; }
 #gameScreen.ui-beta.ub-compact .ub-col.left > * { flex: none; }
-#gameScreen.ui-beta.ub-compact .ub-col.left .ub-chat-slot { height: 170px; }
+/* the chat takes the free height (never under 170px: below that, the column scrolls) */
+#gameScreen.ui-beta.ub-compact .ub-col.left .ub-chat-slot { flex: 1 0 170px; height: auto; }
 #gameScreen.ui-beta.ub-compact .ub-tools .ub-tool,
 #gameScreen.ui-beta.ub-compact .ub-tools .hand-tools-toggle,
 #gameScreen.ui-beta.ub-compact .ub-tools .hand-visibility-toggle,
@@ -546,7 +550,22 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 #gameScreen.ui-beta.ub-compact .ub-tabs button { padding: 4px 5px; font-size: 11px; }
 #gameScreen.ui-beta.ub-compact #ubZcMe .ub-zlab,
 #gameScreen.ui-beta.ub-compact #ubZcOpp .ub-zlab { display: none; }
-#gameScreen.ui-beta.ub-compact .ub-chat header .ub-tabs { overflow: hidden; }
+/* narrow column (compact, or a side column under ~260px): the tabs get their own row,
+   the two icon buttons sit under them on the right */
+@media (max-width: 1520px) {
+  #gameScreen.ui-beta .ub-chat header { flex-wrap: wrap; height: auto; padding-block: 3px; row-gap: 2px; }
+  #gameScreen.ui-beta .ub-chat header .ub-tabs { flex: 1 0 100%; overflow: hidden; }
+  #gameScreen.ui-beta .ub-chat header .ub-tabs button { flex: 0 0 auto; }
+  #gameScreen.ui-beta .ub-chat header .ub-tabs + .ub-iconbtn { margin-left: auto; }
+  #gameScreen.ui-beta .ub-chat.folded { height: 64px; }
+  /* "Réceptacle empathique" keeps its last letters */
+  #gameScreen.ui-beta .ub-piles .field-pile .pile-label { font-size: 11px; letter-spacing: .03em; }
+}
+#gameScreen.ui-beta.ub-compact .ub-chat header { flex-wrap: wrap; height: auto; padding-block: 3px; row-gap: 2px; }
+#gameScreen.ui-beta.ub-compact .ub-chat header .ub-tabs { flex: 1 0 100%; overflow: hidden; }
+#gameScreen.ui-beta.ub-compact .ub-chat header .ub-tabs button { flex: 0 0 auto; }
+#gameScreen.ui-beta.ub-compact .ub-chat header .ub-tabs + .ub-iconbtn { margin-left: auto; }
+#gameScreen.ui-beta.ub-compact .ub-chat.folded { height: 64px; }
 #gameScreen.ui-beta.ub-compact .ub-chat header .ub-iconbtn { width: 26px; height: 26px; flex: none; }
 
 /* choices answered on the board */
@@ -893,3 +912,9 @@ body.ub-hand-drawing #gameScreen.ui-beta #myHandTray { pointer-events: none; }
 
 /* manual phases: who passed reads as plain text, not as a gold pill */
 #gameScreen.ui-beta .ub-phase.manual .rules-priority { background: none; border: 0; box-shadow: none; padding: 0; color: var(--ub-muted); }
+
+/* opening sequence window: under the opponent hand and the totals, never over them */
+#gameScreen.ui-beta .rules-pregame-panel {
+  top: calc(var(--ub-bandH, 150px) + 12px); transform: translate(-50%, 0);
+  max-height: calc(100% - var(--ub-bandH, 150px) - 24px); overflow-y: auto;
+}

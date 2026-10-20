@@ -497,7 +497,13 @@
     const inner = column.r - column.l - 16;
     const labelH = 18;
     const top = 10;
-    const bottom = G.H - 12;
+    // stop above the hand when its fan reaches this column, like the Confrontation
+    // Zone does: the tray box ignores the hover transforms, so it does not jump
+    const tray = document.querySelector("#handArea .hand-tray");
+    const trayRect = tray && tray.childElementCount ? tray.getBoundingClientRect() : null;
+    const underHand = trayRect && trayRect.width > 0
+      && trayRect.right - G.wrapLeft > column.l && trayRect.left - G.wrapLeft < column.r;
+    const bottom = underHand ? G.H - G.handPeek - 6 : G.H - 12;
     const available = bottom - top - labelH * 2 - 18;
     const wills = groups[side].will.length;
     const used = groups[side].interzone.length;
@@ -1733,6 +1739,7 @@
     document.documentElement.style.setProperty("--ub-colW-root", `${G.colW}px`);
     screen.style.setProperty("--ub-izW", `${G.izW}px`);
     screen.style.setProperty("--ub-oppHandH", `${G.oppHandH}px`);
+    screen.style.setProperty("--ub-bandH", `${G.bandH}px`);
     screen.style.setProperty("--ub-fieldW", `${G.fieldR - G.fieldL}px`);
     screen.style.setProperty("--me", players.me ? playerColor(players.me.id) : "#3fc9a8");
     screen.style.setProperty("--opp", players.opp ? playerColor(players.opp.id) : "#d3654a");

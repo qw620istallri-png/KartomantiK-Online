@@ -2789,6 +2789,9 @@ body.hand-drawing #myHandTray .hand-card { cursor: progress; }
 .rules-pregame-actions.deck-stage { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .rules-pregame-actions.mulligan-stage { grid-template-columns: repeat(auto-fit, minmax(220px, 280px)); justify-content: center; }
 .rules-pregame-actions button { min-height: 44px; font-size: 14px; }
+/* the window is dark: its secondary buttons too (the primary one stays gold) */
+.rules-pregame-actions button:not(.primary) { border-color: #d7ba6866; background: #ffffff0d; color: #f6edcf; box-shadow: none; }
+.rules-pregame-actions button:not(.primary):hover:not(:disabled) { background: #ffffff1a; color: #ffe7a0; }
 .rules-pregame-panel.mulligan-required { width: min(680px, calc(100vw - 48px)); padding: 30px; border-color: #b78743; }
 .rules-pregame-panel.mulligan-required .rules-pregame-copy h2 { color: #ffd58a; font-size: clamp(28px, 3.5vw, 38px); }
 .rules-pregame-panel.mulligan-required .rules-pregame-copy p { margin-bottom: 22px; color: #e3d5b7; font-size: 16px; }
@@ -3631,6 +3634,25 @@ body.flow-uses-hand .hand-area { z-index: 90; }
 .deck-browser-cards .db-card img { border-radius: 8px; }
 .db-card-hover-clone { border: 0; }
 .deck-browser-panel .box > div:last-child { justify-content: center !important; margin-top: 16px !important; }
+/* forms and lists (logs, deck import and sideboard, token / essence / dice, legal notice,
+   Grimoire, action declaration): they keep a box for their fields, but a dark one in the
+   same palette as the inspect panel. The colour tokens are swapped so every child follows. */
+:is(#logPanel, #playerLogPanel, #importPanel, #sideboardPanel, #tokenPanel, #essencePanel, #dicePanel, #legalPanel, #limboPlayPanel, #rulesActionPanel) {
+  --ink: #f6edcf; --muted: #cfc19b; --field: #14110c; --cream: #1d1912; --cream-2: #2a2418; --line: #d7ba6855;
+  background: #050402b8; color: var(--ink);
+}
+:is(#logPanel, #playerLogPanel, #importPanel, #sideboardPanel, #tokenPanel, #essencePanel, #dicePanel, #legalPanel, #limboPlayPanel, #rulesActionPanel) .box {
+  background: #0b0906f2; border: 1px solid #d7ba6866; border-radius: 14px; box-shadow: 0 18px 50px #000c; color: var(--ink);
+}
+:is(#logPanel, #playerLogPanel, #importPanel, #sideboardPanel, #tokenPanel, #essencePanel, #dicePanel, #legalPanel, #limboPlayPanel, #rulesActionPanel) :is(h2, h3) { color: var(--ink); font-family: var(--display-font); }
+:is(#logPanel, #playerLogPanel, #importPanel, #sideboardPanel, #tokenPanel, #essencePanel, #dicePanel, #legalPanel, #limboPlayPanel, #rulesActionPanel) .box > h2:first-child { border-bottom: 1px solid #d7ba6855; }
+:is(#logPanel, #playerLogPanel, #importPanel, #sideboardPanel, #tokenPanel, #essencePanel, #dicePanel, #legalPanel, #limboPlayPanel, #rulesActionPanel) button:not(.primary) { box-shadow: none; }
+:is(#logPanel, #playerLogPanel, #importPanel, #sideboardPanel, #tokenPanel, #essencePanel, #dicePanel, #legalPanel, #limboPlayPanel, #rulesActionPanel) button:not(.primary):hover:not(:disabled) { background: #ffffff14; color: #ffe7a0; }
+:is(#logPanel, #playerLogPanel, #importPanel, #sideboardPanel, #tokenPanel, #essencePanel, #dicePanel, #legalPanel, #limboPlayPanel, #rulesActionPanel) button.primary,
+:is(#tokenPanel, #essencePanel, #dicePanel) :is(.token-temperament-grid, .dice-mode-grid) button.active,
+#importPanel .deckomantik-link { color: #171714; }
+:is(#logPanel, #playerLogPanel, #importPanel, #sideboardPanel, #tokenPanel, #essencePanel, #dicePanel, #legalPanel, #limboPlayPanel, #rulesActionPanel) :is(input, textarea, select)::placeholder { color: #f6edcf66; }
+:is(#logPanel, #playerLogPanel, #importPanel, #sideboardPanel, #tokenPanel, #essencePanel, #dicePanel, #legalPanel, #limboPlayPanel, #rulesActionPanel) a:not([class]) { color: #f0d98f; }
 /* inspect stays a non-blocking side panel, but dark and unframed */
 .inspect-main { background: #0b0906e6; border: 0; box-shadow: 0 14px 40px #000a; color: #f6edcf; }
 .inspect-panel .inspect-img { border: 0; box-shadow: none; filter: drop-shadow(0 10px 18px #000b); overflow: visible; }

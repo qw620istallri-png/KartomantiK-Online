@@ -1090,3 +1090,13 @@ Les 150 cartes Inner Deserts. Les 450 cartes ont maintenant été relues.
 - Règle confirmée le 2026-10-20 : les errata font toujours foi sur le texte des cartes.
 - Deviate : « Perdez 5 points » ajouté au texte (en, fr, it) et à l'effet. Le résultat `move_target` accepte `scoreCost`, appliqué à la résolution avec une cible valide.
 - Tests : `DeviateErrataTests` dans `tests/test_reported_card_bugs.py`.
+
+## Audit de l'interface (beta 139.6)
+
+Partie réelle pilotée dans Chromium (serveur Python, deux joueurs, UI bêta), captures et mesures automatiques à 1920×1080, 1600×900, 1366×768, 1280×720, 1024×768 et 844×390.
+
+- Colonnes Interzone / Volontés : quand l'éventail de la main les chevauche, elles s'arrêtent au-dessus de la main comme la Zone de Confrontation (`layoutInterzoneColumn`, mesure de `.hand-tray` sans les transformations de survol). Avant, la 3ᵉ Volonté Persistante passait presque entièrement sous la main.
+- Fenêtre d'avant-partie : accrochée sous le bandeau du haut (`--ub-bandH`) au lieu de couvrir la barre des totaux ; boutons secondaires sombres.
+- Colonnes étroites : le résumé adverse se resserre au lieu de sortir de l'écran (1024 px), les outils passent à la ligne, les onglets du journal ont leur propre ligne sous 1520 px, le journal occupe la hauteur libre en mode compact, « Interzone 0/3 » garde son compteur, « Réceptacle empathique » ne perd plus de lettres.
+- Fenêtres restées en crème (journaux, import de deck, réserve, jeton, essence, dés, mentions légales, Grimoire, déclaration d'action) : même palette sombre que l'inspecteur, encadrée car ce sont des formulaires. Les variables de couleur sont redéfinies dans ces fenêtres (`style.css`, après le bloc « dark style for the other windows »).
+- Restant : sur téléphone paysage, le libellé « Passer les phases sans action » déborde encore (le mobile reste en second plan).
