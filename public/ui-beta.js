@@ -453,8 +453,9 @@
     const kBase = zcCount <= 2 ? 1.7 : zcCount <= 4 ? 1.6 : 1.5;
     const k = compact ? 1 + (kBase - 1) * 0.5 : kBase;
     const intW = clamp(W * 0.074, 78, 150);
-    const izW = Math.round(Math.min(intW * k, fieldW * 0.2));
-    const gutW = Math.round(clamp(W * 0.062, 56, 116));
+    // phone: the Confrontation Zone gets the width, the Interzones and the centre stay slim
+    const izW = Math.round(Math.min(intW * k, fieldW * (phone ? 0.16 : 0.2)));
+    const gutW = Math.round(phone ? clamp(W * 0.05, 34, 56) : clamp(W * 0.062, 56, 116));
     const handH = typeof handCardHeight === "number" ? handCardHeight : 170;
     const handCollapsed = document.getElementById("handArea")?.classList.contains("hand-collapsed");
     const handPeek = handCollapsed ? 48 : Math.round(handH * 0.62 + 18);
@@ -583,7 +584,7 @@
       const trap = players[side] ? traps[players[side].id] : null;
       const count = groups[side].confrontation.length + (trap ? 1 : 0);
       const width = area.r - area.l;
-      const cardFit = fit(width - 12, area.b - area.t - 30, count, { maxW: Math.min(230, width * 0.62) });
+      const cardFit = fit(width - 12, area.b - area.t - 30, count, { maxW: Math.min(230, width * (G.phone ? 0.85 : 0.62)) });
       zc[side] = { area, fit: cardFit, trap: null };
       gridPositions({ l: area.l, r: area.r, t: area.t + 22, b: area.b - 8 }, count, cardFit, { fromRight: side === "me" })
         .forEach((rect, index) => {
@@ -991,7 +992,10 @@
       const card = event.target.closest(".bf-card[data-item-id]");
       if (card && !card.contains(event.relatedTarget)) hidePeek();
     });
-    document.addEventListener("pointerdown", hidePeek, true);
+    document.addEventListener("pointerdown", (event) => {
+      local.lastPointerType = event.pointerType;
+      hidePeek();
+    }, true);
     // piles: the top card in large after a short rest
     [left, right].forEach((column) => {
       column.addEventListener("mouseover", (event) => {
@@ -1034,6 +1038,9 @@
 
   function schedulePeek(anchor, getSrc, delay) {
     hidePeek();
+    // a finger has no hover: the mouseover a tap emulates would leave the big card
+    // on screen until the next touch (holding a card inspects it instead)
+    if (local.lastPointerType === "touch") return;
     local.peekCard = anchor;
     local.peekTimer = setTimeout(() => {
       const src = getSrc();
@@ -1750,6 +1757,7 @@
     screen.style.setProperty("--ub-izW", `${G.izW}px`);
     screen.style.setProperty("--ub-oppHandH", `${G.oppHandH}px`);
     screen.style.setProperty("--ub-bandH", `${G.bandH}px`);
+    screen.style.setProperty("--ub-handPeek", `${G.handPeek}px`);
     screen.style.setProperty("--ub-fieldW", `${G.fieldR - G.fieldL}px`);
     screen.style.setProperty("--me", players.me ? playerColor(players.me.id) : "#3fc9a8");
     screen.style.setProperty("--opp", players.opp ? playerColor(players.opp.id) : "#d3654a");

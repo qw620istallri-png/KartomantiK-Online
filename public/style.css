@@ -238,6 +238,8 @@ input, textarea, select {
   display: grid; gap: 6px; padding: 8px;
   color: var(--gold-pale); background: #171714; border: 1px solid #665a37; border-radius: 8px;
   box-shadow: 0 12px 28px #0009;
+  /* a short screen (phone in landscape) scrolls the menu instead of cutting its last entries */
+  max-height: calc(100vh - 90px); max-height: calc(100dvh - 90px); overflow-y: auto; overscroll-behavior: contain;
 }
 .game-more-popover > button,
 .game-more-popover .phase-header-control,

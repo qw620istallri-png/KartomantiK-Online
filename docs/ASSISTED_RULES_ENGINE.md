@@ -1100,3 +1100,20 @@ Partie réelle pilotée dans Chromium (serveur Python, deux joueurs, UI bêta), 
 - Colonnes étroites : le résumé adverse se resserre au lieu de sortir de l'écran (1024 px), les outils passent à la ligne, les onglets du journal ont leur propre ligne sous 1520 px, le journal occupe la hauteur libre en mode compact, « Interzone 0/3 » garde son compteur, « Réceptacle empathique » ne perd plus de lettres.
 - Fenêtres restées en crème (journaux, import de deck, réserve, jeton, essence, dés, mentions légales, Grimoire, déclaration d'action) : même palette sombre que l'inspecteur, encadrée car ce sont des formulaires. Les variables de couleur sont redéfinies dans ces fenêtres (`style.css`, après le bloc « dark style for the other windows »).
 - Restant : sur téléphone paysage, le libellé « Passer les phases sans action » déborde encore (le mobile reste en second plan).
+
+## Nouvelle table par défaut, tournois et passe mobile (beta 139.7)
+
+- La nouvelle table est l'interface par défaut pour tous (joueurs, spectateurs,
+  tournois). Une migration unique (`ko_ui_default_v2`) remet à zéro l'ancien
+  choix enregistré ; l'ancienne table reste accessible depuis le menu « Plus ».
+- Tournoi : les mains de départ ne sont plus préparées dans le lobby. Quand
+  l'organisateur lance le match (`start_tournament_match`), la séquence
+  d'ouverture démarre (règles assistées) ou, sans règles assistées, chaque deck
+  est mélangé et 7 cartes sont piochées. En attendant, le panneau d'avant-partie
+  affiche « En attente du lancement par l'organisateur ».
+- Mobile (paysage ≤ 520 px de haut) : panneau d'avant-partie et Mulligan placés
+  sous la barre des totaux et au-dessus de la main, écrans d'effet compacts avec
+  cartes en ligne défilante, menu « Plus » défilant, cartes de la Zone de
+  Confrontation agrandies, aperçu au survol désactivé après un toucher.
+- Le panneau de phase indique « À vous de choisir une carte » au joueur qui doit
+  choisir, au lieu de « En attente du choix de carte de <soi-même> ».

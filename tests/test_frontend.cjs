@@ -3887,7 +3887,7 @@ function startServer() {
     assert.equal(rulesChoice.discardStep.visible, true);
     assert.equal(rulesChoice.discardStep.closeHidden, true);
     assert.equal(rulesChoice.discardStep.cardChoices, 2);
-    assert.match(rulesChoice.discardStep.priorityText, /P1/);
+    assert.match(rulesChoice.discardStep.priorityText, /À vous de choisir/);
     assert.equal(rulesChoice.discardStep.passHidden, true);
     assert.deepEqual(rulesChoice.discardStep.payload, {
       type: "resolve_rules_choice", choiceId: "choice-1", cardIds: [rulesChoice.discardCardId],

@@ -7,7 +7,7 @@ const PRIVATE_ZONES = new Set(["deck", "hand", "exile"]);
 // picked to contrast against the board's dark navy background (#0b1e3a)
 const PLAYER_COLORS = ["#d3654a", "#3fc9a8", "#8bbf4f", "#b06fd6", "#d98a2b", "#4fa3d9"];
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261020-rules-beta-139-6";
+const STATIC_ASSET_VERSION = "20261020-rules-beta-139-7";
 {
   const versionEl = document.getElementById("appVersion");
   // "...-beta-138-1" reads "beta 138.1" (a release without a fix number reads "138.0")
@@ -1353,7 +1353,7 @@ function renderRulesStack() {
   priority.textContent = firstManifestation
     ? t(isObserver ? "rulesFirstManifestationObserver" : mineFirstValidated ? "rulesFirstManifestationWaiting" : "rulesFirstManifestationChoose")
     : pendingChoice
-    ? rulesText("rulesWaitingChoice", { player: rulesPlayerName(pendingChoice.playerId) })
+    ? (pendingChoice.playerId === myPlayerId ? t("rulesYourChoice") : rulesText("rulesWaitingChoice", { player: rulesPlayerName(pendingChoice.playerId) }))
     : !playersReady || !priorityPlayerId
     ? t("rulesWaitingPlayers")
     : canCancelPass
@@ -10296,8 +10296,13 @@ function wireZoneButtons() {
 let cardPreviewEl = null;
 let cardPreviewAnchor = null;
 
+// the last pointer kind: a tap emulates mouseenter, and a touch screen has no hover to end the preview
+let lastPointerType = "mouse";
+document.addEventListener("pointerdown", (event) => { lastPointerType = event.pointerType; }, true);
+
 function showCardPreview(cardId, anchorEl) {
   hideCardPreview();
+  if (lastPointerType === "touch") return;
   const img = cardImage(cardId);
   if (!img) return;
   const el = document.createElement("div");
