@@ -468,13 +468,13 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 #gameScreen.ui-beta .ub-phase .phase-pass-button.offers-response { color: #dff4ff; border-color: #5599ba; background: linear-gradient(180deg, #2e7ca2, #1d5874); }
 #gameScreen.ui-beta .ub-phase .phase-pass-button:disabled { background: rgba(var(--ub-hi), .06); color: var(--ub-muted); border-color: var(--ub-line-soft); box-shadow: none; }
 #gameScreen.ui-beta .ub-phase .ub-manual-pass.hidden { display: none; }
-#gameScreen.ui-beta :is(.ub-phase, .ub-tools) .rules-auto-skip { font-size: 12px; color: var(--ub-muted); }
+#gameScreen.ui-beta .ub-phase .rules-auto-skip { font-size: 12px; color: var(--ub-muted); }
 /* the "skip phases" box: a dark tick on gold, readable (the browser's white tick on gold was not) */
-#gameScreen.ui-beta :is(.ub-phase, .ub-tools) .rules-auto-skip input { appearance: none; -webkit-appearance: none; flex: none; width: 16px; height: 16px; margin: 0; border-radius: 4px; border: 1.5px solid var(--ub-gold); background: rgba(var(--ub-lo), .35); display: grid; place-items: center; cursor: pointer; }
-#gameScreen.ui-beta :is(.ub-phase, .ub-tools) .rules-auto-skip input:checked { background: var(--ub-gold); }
-#gameScreen.ui-beta :is(.ub-phase, .ub-tools) .rules-auto-skip input:checked::after { content: ""; width: 4px; height: 8px; margin-top: -2px; border: solid #17120a; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); }
-#gameScreen.ui-beta :is(.ub-phase, .ub-tools) .rules-auto-skip input:focus-visible { outline: 2px solid var(--ub-gold-pale); outline-offset: 2px; }
-#gameScreen.ui-beta :is(.ub-phase, .ub-tools) .rules-auto-skip:has(input:checked) { color: var(--ub-ink); }
+#gameScreen.ui-beta .ub-phase .rules-auto-skip input { appearance: none; -webkit-appearance: none; flex: none; width: 16px; height: 16px; margin: 0; border-radius: 4px; border: 1.5px solid var(--ub-gold); background: rgba(var(--ub-lo), .35); display: grid; place-items: center; cursor: pointer; }
+#gameScreen.ui-beta .ub-phase .rules-auto-skip input:checked { background: var(--ub-gold); }
+#gameScreen.ui-beta .ub-phase .rules-auto-skip input:checked::after { content: ""; width: 4px; height: 8px; margin-top: -2px; border: solid #17120a; border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); }
+#gameScreen.ui-beta .ub-phase .rules-auto-skip input:focus-visible { outline: 2px solid var(--ub-gold-pale); outline-offset: 2px; }
+#gameScreen.ui-beta .ub-phase .rules-auto-skip:has(input:checked) { color: var(--ub-ink); }
 /* manual mode: the phase panel is always shown in the column */
 #gameScreen.ui-beta:not(.ub-rules) .ub-phase.manual .phase-tracker.hidden { display: flex !important; }
 #gameScreen.ui-beta:not(.ub-rules) .ub-phase.manual .rules-priority.hidden { display: none !important; }
@@ -958,7 +958,7 @@ body.ub-hand-drawing #gameScreen.ui-beta #myHandTray { pointer-events: none; }
 #gameScreen.ui-beta [data-fit] { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: clip; }
 #gameScreen.ui-beta .ub-fit-icon { display: inline-grid; place-items: center; vertical-align: middle; overflow: visible; }
 #gameScreen.ui-beta .ub-fit-icon svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-#gameScreen.ui-beta :is(.ub-phase, .ub-tools) .rules-auto-skip { max-width: 100%; min-width: 0; }
+#gameScreen.ui-beta .ub-phase .rules-auto-skip { max-width: 100%; min-width: 0; }
 #gameScreen.ui-beta .ub-tabs button { display: inline-flex; align-items: center; gap: 4px; }
 #gameScreen.ui-beta .ub-tabs button > span { min-width: 0; }
 #gameScreen.ui-beta .game-header .brand > #brandText.ub-fit-icon { display: none; }
@@ -1044,5 +1044,7 @@ body.ub-hand-drawing #gameScreen.ui-beta #myHandTray { pointer-events: none; }
 #gameScreen.ui-beta.ub-phone .ub-av-pts small { display: none; }
 #gameScreen.ui-beta.ub-phone .ub-tmp:empty { display: none; }
 @media (max-width: 760px) { #gameScreen.ui-beta.ub-phone .ub-turn small { display: none; } }
-#gameScreen.ui-beta.ub-phone .ub-tools .rules-auto-skip { display: flex; align-items: center; gap: 4px; min-height: 24px; padding: 0 4px; font-size: 10px; white-space: nowrap; }
-#gameScreen.ui-beta.ub-phone .ub-tools .rules-auto-skip.hidden { display: none; }
+/* phone: Auto-skip is an icon of the tool row (the box stays in the phase block, hidden) */
+#gameScreen.ui-beta.ub-phone .ub-phase .rules-auto-skip { display: none; }
+#gameScreen.ui-beta .ub-autoskip[hidden] { display: none; }
+#gameScreen.ui-beta .ub-autoskip.on { color: #17120a; background: var(--ub-gold); border-color: var(--ub-gold); }

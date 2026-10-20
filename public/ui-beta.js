@@ -58,6 +58,12 @@
     ubEnlarge: "Agrandir",
     ubStack: "La Pile",
     ubStackEmpty: "La Pile est vide.",
+    ubOn: "activé",
+    ubOff: "désactivé",
+    ubEnable: "Activer",
+    ubDisable: "Désactiver",
+    ubAutoSkipOnAsk: "Activer le passage automatique des phases où vous n'avez rien à faire ?",
+    ubAutoSkipOffAsk: "Désactiver le passage automatique des phases ? Vous passerez chaque phase vous-même.",
     ubManualStackEmpty: "Glisse une carte ici pour la jouer dans la Pile, puis sors-la pour la résoudre.",
     ubPlayToStack: "Jouer dans la Pile",
     ubPutInStack: "Mettre dans la Pile",
@@ -129,6 +135,12 @@
     ubEnlarge: "Enlarge",
     ubStack: "Stack",
     ubStackEmpty: "The Stack is empty.",
+    ubOn: "on",
+    ubOff: "off",
+    ubEnable: "Turn on",
+    ubDisable: "Turn off",
+    ubAutoSkipOnAsk: "Automatically skip the phases where you have nothing to do?",
+    ubAutoSkipOffAsk: "Stop skipping phases automatically? You will pass each phase yourself.",
     ubManualStackEmpty: "Drop a card here to play it on the Stack, then drag it out to resolve it.",
     ubPlayToStack: "Play on the Stack",
     ubPutInStack: "Put on the Stack",
@@ -200,6 +212,12 @@
     ubEnlarge: "Ingrandisci",
     ubStack: "Stack",
     ubStackEmpty: "Lo Stack è vuoto.",
+    ubOn: "attivo",
+    ubOff: "disattivo",
+    ubEnable: "Attiva",
+    ubDisable: "Disattiva",
+    ubAutoSkipOnAsk: "Saltare automaticamente le fasi in cui non hai nulla da fare?",
+    ubAutoSkipOffAsk: "Smettere di saltare le fasi automaticamente? Passerai ogni fase da solo.",
     ubManualStackEmpty: "Trascina qui una carta per giocarla nello Stack, poi trascinala fuori per risolverla.",
     ubPlayToStack: "Gioca nello Stack",
     ubPutInStack: "Metti nello Stack",
@@ -1217,7 +1235,7 @@
           <div class="ub-toolmenu"><button type="button" class="ub-tool" data-ub-menu="draw">${ICONS.pen}</button><div class="ub-toolpop" id="ubDrawPop"></div></div>
           <div class="ub-toolmenu"><button type="button" class="ub-tool" data-ub-menu="create">${ICONS.plus}</button><div class="ub-toolpop" id="ubCreatePop"></div></div>
           <span class="ub-toolslot" id="ubToolView"></span>
-          <span class="ub-toolslot" id="ubToolSkip"></span>
+          <button type="button" class="ub-tool ub-autoskip" id="ubAutoSkipBtn" hidden>${ICONS.skip}</button>
         </div>
       </div>`;
     const right = el("aside", "ub-col right");
@@ -1468,9 +1486,6 @@
     if (node.parentNode !== container || (before && node.nextSibling !== before)) container.insertBefore(node, before);
   }
   function restoreAll() {
-    placeAutoSkip(false);
-    local.skipHome?.remove();
-    local.skipHome = null;
     local.homes.forEach((marker, node) => {
       if (marker.parentNode) marker.parentNode.insertBefore(node, marker);
       marker.remove();
@@ -1487,20 +1502,29 @@
     document.querySelectorAll("#ubMyPiles .field-pile, #ubOppPiles .field-pile").forEach((pile) => board.appendChild(pile));
   }
 
-  // phone: "Auto-skip" joins the tool row at the bottom left, out of the
-  // crowded phase block; it goes back there on a larger screen
-  function placeAutoSkip(phone) {
+  // phone: "Auto-skip" is one icon of the tool row (bottom left), sized like
+  // the others; a tap asks to confirm, then flips the phase-block box
+  function syncAutoSkipButton(phone) {
     const wrap = document.getElementById("rulesAutoSkipWrap");
-    const slot = document.getElementById("ubToolSkip");
-    if (!wrap || !slot) return;
-    if (phone) {
-      if (!local.skipHome) {
-        local.skipHome = document.createComment("ub-skip-home");
-        wrap.parentNode.insertBefore(local.skipHome, wrap);
-      }
-      if (wrap.parentNode !== slot) slot.appendChild(wrap);
-    } else if (local.skipHome?.parentNode && wrap.parentNode === slot) {
-      local.skipHome.parentNode.insertBefore(wrap, local.skipHome);
+    const box = document.getElementById("rulesAutoSkip");
+    const button = document.getElementById("ubAutoSkipBtn");
+    if (!wrap || !box || !button) return;
+    button.hidden = !phone || wrap.classList.contains("hidden");
+    button.classList.toggle("on", box.checked);
+    button.setAttribute("aria-pressed", String(box.checked));
+    const label = `${t("rulesAutoSkipLabel")} · ${t(box.checked ? "ubOn" : "ubOff")}`;
+    button.title = label;
+    button.setAttribute("aria-label", label);
+    if (!button.dataset.bound) {
+      button.dataset.bound = "1";
+      box.addEventListener("change", () => syncAutoSkipButton(document.getElementById("gameScreen").classList.contains("ub-phone")));
+      button.addEventListener("click", () => {
+        const next = !box.checked;
+        showConfirm(t(next ? "ubAutoSkipOnAsk" : "ubAutoSkipOffAsk"), () => {
+          box.checked = next;
+          box.dispatchEvent(new Event("change", { bubbles: true }));
+        }, t(next ? "ubEnable" : "ubDisable"));
+      });
     }
   }
 
@@ -2174,7 +2198,7 @@
     screen.classList.toggle("ub-rules", rulesOn());
     screen.classList.toggle("ub-compact", G.compact);
     screen.classList.toggle("ub-phone", G.phone);
-    placeAutoSkip(G.phone);
+    syncAutoSkipButton(G.phone);
     fitHand();
     renderZones(geometry);
     renderInterzones(geometry);
