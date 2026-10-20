@@ -608,7 +608,44 @@ function placementEntersSupport(payload, source) {
   ));
 }
 
+// A card dropped with a finger is played after a short grace delay, so a slip
+// can be taken back before anything reaches the server (and before the
+// opponent is given priority). The First Manifestation, still movable until
+// validated, goes at once.
+const PLACEMENT_GRACE_MS = 2500;
+let pendingPlacementGrace = null;
 function sendCardPlacement(payload, source, triggerTargets = []) {
+  const commit = () => sendCardPlacementNow(payload, source, triggerTargets);
+  if (lastPointerType !== "touch" || !latestState?.rulesEngine?.enabled || rulesFirstManifestationActive()) {
+    commit();
+    return;
+  }
+  settlePlacementGrace(true);
+  const bar = document.createElement("div");
+  bar.className = "placement-grace";
+  bar.setAttribute("role", "status");
+  bar.innerHTML = `<img src="${esc(cardImage(payload.cardId))}" alt=""><span>${esc(rulesText("placementGracePlaying", { card: cardName(payload.cardId) }))}</span>`
+    + `<button type="button" data-grace-cancel>${esc(t("placementGraceCancel"))}</button>`
+    + `<button type="button" class="primary" data-grace-play>${esc(t("placementGracePlay"))}</button>`
+    + `<i class="placement-grace-timer" style="animation-duration:${PLACEMENT_GRACE_MS}ms"></i>`;
+  document.body.appendChild(bar);
+  const grace = { bar, commit, timer: window.setTimeout(() => settlePlacementGrace(true), PLACEMENT_GRACE_MS) };
+  pendingPlacementGrace = grace;
+  bar.querySelector("[data-grace-play]").addEventListener("click", () => settlePlacementGrace(true));
+  bar.querySelector("[data-grace-cancel]").addEventListener("click", () => {
+    settlePlacementGrace(false);
+    renderAll();
+  });
+}
+function settlePlacementGrace(play) {
+  const grace = pendingPlacementGrace;
+  if (!grace) return;
+  pendingPlacementGrace = null;
+  window.clearTimeout(grace.timer);
+  grace.bar.remove();
+  if (play) grace.commit();
+}
+function sendCardPlacementNow(payload, source, triggerTargets = []) {
   const playedAbility = (playedAbilitiesByCard.get(payload.cardId) || [])[0];
   if (!latestState?.rulesEngine?.enabled || !placementEntersSupport(payload, source)) {
     send({

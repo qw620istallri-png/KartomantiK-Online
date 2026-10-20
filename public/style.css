@@ -87,6 +87,21 @@ input, textarea, select {
   padding: 28px;
   margin-bottom: 18px;
 }
+/* phone held sideways: the hero beside the form, so Create / Join show without scrolling */
+@media (orientation: landscape) and (max-height: 560px) {
+  #joinScreen {
+    grid-template-columns: minmax(0, .8fr) minmax(0, 1fr); grid-template-rows: 1fr auto;
+    align-items: center; column-gap: 16px; row-gap: 8px; padding: 10px 16px; height: 100vh; height: 100dvh; overflow-y: auto;
+  }
+  .join-hero { grid-column: 1; grid-row: 1 / span 2; margin: 0; }
+  .join-hero img { width: min(100%, 62vh * 1.35); max-height: 62vh; }
+  .join-hero h1 { font-size: clamp(20px, 3.4vw, 30px); }
+  .join-card { grid-column: 2; grid-row: 1; justify-self: center; margin: 0; padding: 16px 18px; max-height: calc(100dvh - 70px); overflow-y: auto; }
+  .join-card .tagline { margin-bottom: 10px; }
+  #joinScreen .social-links { grid-column: 2; grid-row: 2; }
+  .tournament-create-launcher { right: auto; left: 10px; top: 10px; }
+  #joinScreen .social-links a, #joinScreen .social-links .social-link-btn { padding: 6px 12px; font-size: 13px; }
+}
 .join-card .tagline { margin: 0 0 20px; color: var(--muted); font-size: 14px; font-style: italic; }
 .social-links { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 .social-links a {
@@ -2221,6 +2236,8 @@ body.hand-drawing #myHandTray .hand-card { cursor: progress; }
 .rules-choice-card { padding: 7px; }
 .rules-choice-card img { display: block; width: 100%; aspect-ratio: 5 / 7; object-fit: cover; border-radius: 6px; box-shadow: 0 4px 12px #0005; }
 .rules-choice-card span { display: block; margin-top: 7px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* a card name keeps all its words: two lines (and a smaller font, see fitCardNames) before any cut */
+.rules-choice-card > span { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; white-space: normal; overflow-wrap: break-word; line-height: 1.2; }
 .rules-choice-player:hover,
 .rules-choice-card:hover { background: #fff6df; border-color: var(--gold-deep); transform: translateY(-1px); }
 
@@ -2288,6 +2305,7 @@ body.hand-drawing #myHandTray .hand-card { cursor: progress; }
 .sideboard-card-art { position: relative; display: block; width: 100%; aspect-ratio: .714; overflow: hidden; border-radius: 6px; background: #777; }
 .sideboard-card-art > img { width: 100%; height: 100%; object-fit: cover; }
 .sideboard-card strong, .sideboard-card small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sideboard-card strong { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; white-space: normal; line-height: 1.2; }
 .sideboard-card strong { font-size: 14px; }
 .sideboard-card small { color: var(--muted); font-size: 12px; }
 .sideboard-editor-footer { margin-top: 12px; }
@@ -3802,3 +3820,37 @@ body.flow-uses-hand .rules-board-flow.is-centered .rules-floating-card { top: 36
   box-shadow: 0 2px 0 #4f9cc0, 0 0 12px #35b7ff55; cursor: pointer;
 }
 .rules-activate-actions button:hover { background: linear-gradient(180deg, #fffbe0, #ffe98a); border-color: #fff1a3; box-shadow: 0 2px 0 #b8952f, 0 0 14px #ffe58a88; }
+
+/* ---------- connection banner (connection.js showConnectionBanner) */
+.connection-banner {
+  position: fixed; top: max(10px, env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); z-index: 4000;
+  display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 24px); padding: 10px 14px;
+  border-radius: 10px; border: 1px solid #c9a24a; background: #17140ef2; color: #f3e6c4; box-shadow: 0 10px 30px #0008;
+  font-size: 14px; animation: connection-banner-in .25s ease-out;
+}
+.connection-banner small { color: #b9a77c; margin-left: 4px; }
+.connection-banner button { flex: none; padding: 6px 12px; min-height: 32px; font-size: 13px; }
+.connection-banner.is-gone { border-color: #c0573f; }
+.connection-spinner { flex: none; width: 16px; height: 16px; border-radius: 50%; border: 2px solid #c9a24a55; border-top-color: #e7c46e; animation: connection-spin .8s linear infinite; }
+body.ko-offline #gameScreen, body.ko-offline #tournamentScreen { pointer-events: none; filter: saturate(.55) brightness(.8); transition: filter .3s; }
+@keyframes connection-spin { to { transform: rotate(360deg); } }
+@keyframes connection-banner-in { from { opacity: 0; transform: translate(-50%, -8px); } }
+@media (prefers-reduced-motion: reduce) { .connection-spinner, .connection-banner { animation: none; } }
+
+/* ---------- grace delay after a finger drop (hand.js sendCardPlacement) */
+.placement-grace {
+  position: fixed; left: 50%; bottom: max(14px, env(safe-area-inset-bottom)); transform: translateX(-50%); z-index: 3900;
+  display: flex; align-items: center; gap: 10px; max-width: calc(100vw - 24px); padding: 8px 10px 12px; overflow: hidden;
+  border-radius: 10px; border: 1px solid #c9a24a; background: #17140ef2; color: #f3e6c4; box-shadow: 0 10px 30px #0009; font-size: 13px;
+}
+.placement-grace img { width: 34px; height: auto; border-radius: 3px; flex: none; }
+.placement-grace span { min-width: 0; }
+.placement-grace button { flex: none; min-height: 36px; padding: 6px 12px; font-size: 13px; }
+.placement-grace-timer { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: #e7c46e; transform-origin: left; animation: placement-grace-timer linear forwards; }
+@keyframes placement-grace-timer { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+/* ---------- card art loading (cards.js watchCardImage) */
+img.ko-img-loading { background: #1d1a14 url('card-back.webp?v=20260905-1') center / cover no-repeat; filter: blur(1.5px) brightness(.85); }
+img.ko-img-in { animation: ko-img-in .3s ease-out; }
+@keyframes ko-img-in { from { opacity: .35; filter: blur(5px); } to { opacity: 1; filter: none; } }
+@media (prefers-reduced-motion: reduce) { img.ko-img-in { animation: none; } }

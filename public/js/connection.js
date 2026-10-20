@@ -284,7 +284,8 @@ function initJoinScreen() {
 let pendingCreateFlow = null;
 
 function connectAndJoin(joinPayload) {
-  setStatus(t("connecting"), "warning");
+  // while reconnecting, the banner says it (no "Connecting…" note per attempt)
+  if (!wasDisconnected) setStatus(t("connecting"), "warning");
   intentionalClose = false;
   joinedCode = joinPayload.code || null;
   joinedName = joinPayload.name;
@@ -307,8 +308,7 @@ function connectAndJoin(joinPayload) {
       return;
     }
     wasDisconnected = true;
-    if (!$("#tournamentScreen").classList.contains("hidden")) showToast(t("connectionLost"), true);
-    else setStatus(t("connectionLost"), "error");
+    showConnectionBanner("lost");
     scheduleReconnect();
   };
   ws.onerror = () => {};
@@ -316,10 +316,51 @@ function connectAndJoin(joinPayload) {
 
 function scheduleReconnect() {
   if (reconnectTimer) return;
+  // 1 s, 2 s, 4 s, then every 8 s
+  const delay = Math.min(8000, 1000 * 2 ** Math.min(reconnectAttempts, 3));
   reconnectTimer = setTimeout(() => {
     reconnectTimer = null;
-    connectAndJoin({ code: joinedCode || codePlayer, name: joinedName });
-  }, 2000);
+    reconnectNow();
+  }, delay);
+}
+let reconnectAttempts = 0;
+function reconnectNow() {
+  if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
+  if (!wasDisconnected || (ws && ws.readyState <= WebSocket.OPEN)) return;
+  reconnectAttempts += 1;
+  showConnectionBanner("lost");
+  connectAndJoin({ code: joinedCode || codePlayer, name: joinedName });
+}
+// A dropped connection shows a banner over the table (which cannot be played
+// meanwhile) until the seat is back; a session that is gone offers the way home.
+function showConnectionBanner(state) {
+  let banner = document.getElementById("connectionBanner");
+  document.body.classList.toggle("ko-offline", state === "lost");
+  if (!state) {
+    banner?.classList.add("hidden");
+    return;
+  }
+  if (!banner) {
+    banner = document.createElement("div");
+    banner.id = "connectionBanner";
+    banner.className = "connection-banner";
+    banner.setAttribute("role", "status");
+    banner.setAttribute("aria-live", "polite");
+    banner.addEventListener("click", (event) => {
+      if (event.target.closest("[data-connection-retry]")) reconnectNow();
+      if (event.target.closest("[data-connection-home]")) {
+        showConnectionBanner(null);
+        leaveSession();
+      }
+    });
+    document.body.appendChild(banner);
+  }
+  banner.classList.remove("hidden");
+  banner.classList.toggle("is-gone", state === "gone");
+  const attempt = reconnectAttempts > 1 ? ` <small>${esc(rulesText("connectionAttempt", { n: reconnectAttempts }))}</small>` : "";
+  banner.innerHTML = state === "gone"
+    ? `<span>${esc(t("sessionGone"))}</span><button type="button" data-connection-home>${esc(t("connectionHome"))}</button>`
+    : `<span class="connection-spinner" aria-hidden="true"></span><span>${esc(t("connectionLost"))}${attempt}</span><button type="button" data-connection-retry>${esc(t("connectionRetry"))}</button>`;
 }
 
 function showGameScreen() {
@@ -353,6 +394,8 @@ function showTournamentMatch() {
 function leaveSession() {
   intentionalClose = true;
   wasDisconnected = false;
+  reconnectAttempts = 0;
+  showConnectionBanner(null);
   if (ws) ws.close();
   ws = null;
   latestState = null;
@@ -406,6 +449,8 @@ function handleServerMessage(msg) {
     if (msg.codeOrganizer) codeOrganizer = msg.codeOrganizer;
     if (msg.tournamentCodes) tournamentCodes = msg.tournamentCodes;
     joinedCode = joinedCode || codeOrganizer || codePlayer;
+    reconnectAttempts = 0;
+    showConnectionBanner(null);
     if (wasDisconnected) {
       wasDisconnected = false;
       if (!$("#tournamentScreen").classList.contains("hidden")) showToast(t("reconnected"));
@@ -432,6 +477,7 @@ function handleServerMessage(msg) {
     const rulesEffectVfxChanges = prepareRulesEffectVfxChanges(msg);
     const rulesVfxBatch = prepareRulesVfxBatch(msg);
     latestState = msg;
+    preloadCardImages(stateCardIds(msg));
     if (connectionMode === "tournament" && connectionRole === "player") {
       const status = msg.tournament?.status;
       if (status && status !== "active" && status !== lastTournamentNoticeStatus) {
@@ -488,6 +534,7 @@ function handleServerMessage(msg) {
       if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
       if (ws) ws.close();
       setStatus(t("sessionGone"), "error");
+      showConnectionBanner("gone");
     } else if ($("#gameScreen").classList.contains("hidden") && $("#tournamentScreen").classList.contains("hidden")) {
       setStatus(msg.message, "error");
     } else if (connectionMode === "tournament" && connectionRole === "player") {

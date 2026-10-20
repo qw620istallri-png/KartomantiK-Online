@@ -365,6 +365,65 @@ function cardImage(cardId) {
   return card?.image || MISSING_CARD_IMAGE;
 }
 
+// Card art comes over the network: until a face has loaded the card shows its
+// back (blurred), then the face comes in (only the first time it is fetched).
+// The deck and the visible cards are fetched ahead, a few at a time, when idle.
+const loadedCardImages = new Set();
+let cardArtUrls = null;
+function isCardArt(src) {
+  if (!cardArtUrls || cardArtUrls.size < cardsById.size) {
+    cardArtUrls = new Set([...cardsById.values()].map((card) => card.image && new URL(card.image, location.href).href).filter(Boolean));
+  }
+  return cardArtUrls.has(src);
+}
+function watchCardImage(img) {
+  const src = img.currentSrc || img.src;
+  if (!src || loadedCardImages.has(src) || !isCardArt(src)) return;
+  if (img.complete && img.naturalWidth) {
+    loadedCardImages.add(src);
+    return;
+  }
+  img.classList.add("ko-img-loading");
+  img.addEventListener("load", () => {
+    loadedCardImages.add(src);
+    img.classList.remove("ko-img-loading");
+    img.classList.add("ko-img-in");
+    window.setTimeout(() => img.classList.remove("ko-img-in"), 400);
+  }, { once: true });
+  img.addEventListener("error", () => img.classList.remove("ko-img-loading"), { once: true });
+}
+const preloadedCardImages = new Set();
+function preloadCardImages(cardIds) {
+  const queue = [...new Set(cardIds)].map((cardId) => cardsById.get(cardId)?.image).filter((src) => src && !preloadedCardImages.has(src));
+  if (!queue.length) return;
+  queue.forEach((src) => preloadedCardImages.add(src));
+  const idle = window.requestIdleCallback || ((callback) => window.setTimeout(callback, 120));
+  const step = () => {
+    queue.splice(0, 4).forEach((src) => {
+      const img = new Image();
+      img.decoding = "async";
+      img.fetchPriority = "low";
+      img.onload = () => loadedCardImages.add(img.src);
+      img.src = src;
+    });
+    if (queue.length) idle(step);
+  };
+  idle(step);
+}
+// my whole deck, then every card the state shows
+function stateCardIds(state) {
+  const ids = [];
+  const collect = (value) => {
+    if (typeof value === "string") { if (cardsById.has(value)) ids.push(value); }
+    else if (Array.isArray(value)) value.forEach(collect);
+    else if (value && typeof value === "object") Object.values(value).forEach(collect);
+  };
+  collect(state?.players?.[myPlayerId]?.deckDefinition);
+  Object.values(state?.players || {}).forEach((player) => Object.values(player.zones || {}).forEach((zone) => collect(zone.cards)));
+  (state?.battlefield || []).forEach((item) => { if (item.faceUp && item.cardId) ids.push(item.cardId); });
+  return ids;
+}
+
 function battlefieldItemControllerId(item) {
   return item?.controllerId || item?.ownerId || null;
 }

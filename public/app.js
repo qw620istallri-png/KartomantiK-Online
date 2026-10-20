@@ -2,7 +2,7 @@
 // (see index.html); this file keeps every statement that runs at load, in order.
 
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261020-rules-beta-139-7";
+const STATIC_ASSET_VERSION = "20261020-rules-beta-139-8";
 
 {
   const versionEl = document.getElementById("appVersion");
@@ -124,6 +124,23 @@ try {
 } catch (_error) { /* storage unavailable */ }
 
 document.addEventListener("pointerdown", (event) => { lastPointerType = event.pointerType; }, true);
+
+// every card picture put on screen loads smoothly (see watchCardImage)
+new MutationObserver((records) => {
+  for (const record of records) {
+    for (const node of record.addedNodes) {
+      if (node.nodeType !== 1) continue;
+      if (node.tagName === "IMG") watchCardImage(node);
+      else node.querySelectorAll("img").forEach(watchCardImage);
+    }
+  }
+}).observe(document.body, { childList: true, subtree: true });
+
+// back online, or back on the tab after the phone slept: retry at once
+window.addEventListener("online", () => reconnectNow());
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") reconnectNow();
+});
 
 let revealCardWidth = Math.min(REVEAL_SIZE_MAX, Math.max(90, Number(localStorage.getItem(REVEAL_SIZE_KEY)) || 190));
 

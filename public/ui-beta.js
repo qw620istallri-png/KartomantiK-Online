@@ -73,6 +73,14 @@
     ubFold: "Replier",
     ubUnfold: "Déplier",
     ubPilesOf: "Decks de",
+    ubReceptacleShort: "Réceptacle",
+    ubLastOppAction: "Dernière action de {player} :",
+    ubInterzoneShort: "Inter.",
+    ubWillsShort: "Vol.",
+    ubAutoSkipShort: "Passer auto",
+    ubAppShort: "Kartomantik",
+    ubChatShort: "Msg",
+    ubTabLogShort: "Act.",
     ubShowOppPiles: "Afficher les piles adverses",
     ubHideOppPiles: "Replier les piles adverses",
     ubDropHint: "Lâche une carte de ta main n’importe où sur le terrain",
@@ -135,6 +143,14 @@
     ubFold: "Fold",
     ubUnfold: "Unfold",
     ubPilesOf: "Piles of",
+    ubReceptacleShort: "Vessel",
+    ubLastOppAction: "Last action by {player}:",
+    ubInterzoneShort: "Inter.",
+    ubWillsShort: "Wills",
+    ubAutoSkipShort: "Auto-skip",
+    ubAppShort: "Kartomantik",
+    ubChatShort: "Msg",
+    ubTabLogShort: "Act.",
     ubShowOppPiles: "Show the opponent’s piles",
     ubHideOppPiles: "Fold the opponent’s piles",
     ubDropHint: "Drop a card from your hand anywhere on the field",
@@ -197,6 +213,14 @@
     ubFold: "Chiudi",
     ubUnfold: "Apri",
     ubPilesOf: "Pile di",
+    ubReceptacleShort: "Bacino",
+    ubLastOppAction: "Ultima azione di {player}:",
+    ubInterzoneShort: "Inter.",
+    ubWillsShort: "Vol.",
+    ubAutoSkipShort: "Salta auto",
+    ubAppShort: "Kartomantik",
+    ubChatShort: "Msg",
+    ubTabLogShort: "Az.",
     ubShowOppPiles: "Mostra le pile avversarie",
     ubHideOppPiles: "Chiudi le pile avversarie",
     ubDropHint: "Rilascia una carta della mano ovunque sul campo",
@@ -227,6 +251,15 @@
     essence: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3c3 4 6 7 6 11a6 6 0 0 1-12 0c0-4 3-7 6-11Z"/></svg>',
     dice: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="3"/><circle cx="9" cy="9" r=".8"/><circle cx="15" cy="15" r=".8"/><circle cx="15" cy="9" r=".8"/><circle cx="9" cy="15" r=".8"/></svg>',
     palette: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 0 0 0 18c1.4 0 2-1 2-2 0-1.6-1.6-2 0-3h2a5 5 0 0 0 5-5c0-4.4-4-8-9-8Z"/><circle cx="7.5" cy="11" r="1"/><circle cx="10.5" cy="7" r="1"/><circle cx="15" cy="7.5" r="1"/></svg>',
+    skip: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 6 7 6-7 6ZM13 6l7 6-7 6Z"/></svg>',
+    chat: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4Z"/></svg>',
+    all: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v8H9l-5 4ZM8 17h8l4 3v-7"/></svg>',
+    interzone: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="2.5" width="10" height="5.5" rx="1"/><rect x="7" y="9.25" width="10" height="5.5" rx="1"/><rect x="7" y="16" width="10" height="5.5" rx="1"/></svg>',
+    wills: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M18 6l-2.5 2.5M8.5 15.5 6 18"/></svg>',
+    deck: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="3" width="12" height="16" rx="2"/><path d="M8 21h10a2 2 0 0 0 2-2V7"/></svg>',
+    limbo: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 18a5 5 0 1 1 1.4-9.8A6 6 0 0 1 19.5 11 3.5 3.5 0 0 1 18 18Z"/></svg>',
+    exile: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="m6.5 6.5 11 11"/></svg>',
+    vessel: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8M9 3v4l-4 6a6 6 0 0 0 5 8h4a6 6 0 0 0 5-8l-4-6V3"/></svg>',
     eye: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.6"/></svg>',
   };
 
@@ -291,6 +324,240 @@
   }
   function rulesOn() {
     return Boolean(latestState?.rulesEngine?.enabled);
+  }
+
+  // ------------------------------------------------------------ label fitting
+
+  // A label that does not fit first shows its short form, then its icon (the
+  // full text stays as tooltip). Names (players, cards) shrink their font
+  // instead and are only cut once at the minimum size.
+  const FIT_LABELS = {
+    interzone: () => ({ full: t("ubInterzone"), short: t("ubInterzoneShort"), icon: ICONS.interzone }),
+    wills: () => ({ full: t("ubWills"), short: t("ubWillsShort"), icon: ICONS.wills }),
+    autoskip: () => ({ full: t("rulesAutoSkipLabel"), short: t("ubAutoSkipShort"), icon: ICONS.skip }),
+    brand: () => ({ full: t("appName"), short: t("ubAppShort"), icon: "" }),
+    tabAll: () => ({ full: t("ubTabAll"), short: t("ubTabAll"), icon: ICONS.all }),
+    tabChat: () => ({ full: t("ubTabChat"), short: t("ubTabChat"), icon: ICONS.chat }),
+    tabLog: () => ({ full: t("ubTabLog"), short: t("ubTabLogShort"), icon: ICONS.log }),
+    "pile-deck": () => ({ full: t("deck"), short: t("deck"), icon: ICONS.deck }),
+    "pile-graveyard": () => ({ full: t("graveyard"), short: t("graveyard"), icon: ICONS.limbo }),
+    "pile-exile": () => ({ full: t("exile"), short: t("exile"), icon: ICONS.exile }),
+    "pile-receptacle": () => ({ full: t("receptacle"), short: t("ubReceptacleShort"), icon: ICONS.vessel }),
+  };
+  const overflows = (node) => node.scrollWidth > node.clientWidth + 1 || node.scrollHeight > node.clientHeight + 1;
+
+  function fitLabel(node) {
+    const spec = FIT_LABELS[node.dataset.fit]?.();
+    if (!spec) return;
+    node.classList.remove("ub-fit-icon");
+    node.removeAttribute("title");
+    node.textContent = spec.full;
+    if (!overflows(node)) return;
+    node.title = spec.full;
+    if (spec.short !== spec.full) {
+      node.textContent = spec.short;
+      if (!overflows(node)) return;
+    }
+    node.innerHTML = spec.icon;
+    node.classList.add("ub-fit-icon");
+    node.setAttribute("aria-label", spec.full);
+  }
+
+  // shrink a name until it fits (or reaches `min` px), the text stays whole
+  function fitName(node, min = 10) {
+    node.style.fontSize = "";
+    if (!overflows(node)) return;
+    let size = parseFloat(getComputedStyle(node).fontSize) || 14;
+    while (overflows(node) && size > min) {
+      size = Math.max(min, size - 1);
+      node.style.fontSize = `${size}px`;
+    }
+  }
+
+  function fitCardNames(root = document) {
+    root.querySelectorAll(".rules-choice-card > span, .sideboard-card strong").forEach((node) => {
+      if (node.offsetParent) fitName(node, 9);
+    });
+  }
+
+  function fitOppBar() {
+    const bar = document.getElementById("ubOppBar");
+    const name = bar?.querySelector(".v");
+    if (!name) return;
+    bar.classList.remove("ub-fit-short", "ub-fit-icons", "ub-fit-tight", "ub-fit-noname");
+    name.style.fontSize = "";
+    if (!overflows(name)) return;
+    bar.classList.add("ub-fit-short");
+    if (!overflows(name)) return;
+    bar.classList.add("ub-fit-icons");
+    if (!overflows(name)) return;
+    bar.classList.add("ub-fit-tight");
+    fitName(name, 9);
+    // the opponent is named in the box just above: an unreadable stub goes
+    if (overflows(name)) bar.classList.add("ub-fit-noname");
+  }
+
+  function fitWho() {
+    for (const node of document.querySelectorAll("#ubWhoMe, #ubWhoOpp")) {
+      const name = node.querySelector(".ub-name");
+      const activity = node.querySelector(".ub-activity");
+      if (!name) continue;
+      if (activity) activity.hidden = false;
+      node.classList.remove("ub-fit-tight");
+      name.style.fontSize = "";
+      if (!overflows(name)) continue;
+      if (activity) activity.hidden = true;
+      if (!overflows(name)) continue;
+      node.classList.add("ub-fit-tight");
+      fitName(name, 10);
+    }
+  }
+
+  function fitChatPlaceholder() {
+    const input = document.getElementById("ubChatInput");
+    if (!input) return;
+    const full = input.dataset.fullPlaceholder || input.placeholder;
+    input.dataset.fullPlaceholder = full;
+    const style = getComputedStyle(input);
+    const room = input.clientWidth - parseFloat(style.paddingLeft || 0) - parseFloat(style.paddingRight || 0);
+    const ctx = (local.measure ||= document.createElement("canvas").getContext("2d"));
+    ctx.font = `${style.fontSize} ${style.fontFamily}`;
+    const fits = (text) => ctx.measureText(text).width <= room;
+    input.placeholder = fits(full) ? full : fits(t("ubChatShort")) ? t("ubChatShort") : "✎";
+    input.title = full;
+  }
+
+  function fitLabels() {
+    for (const [id, key] of [["brandText", "brand"], ["rulesAutoSkipLabel", "autoskip"]]) {
+      const node = document.getElementById(id);
+      if (node) node.dataset.fit = key;
+    }
+    document.querySelectorAll("#gameScreen .ub-piles .field-pile[data-zone] .pile-label").forEach((node) => {
+      node.dataset.fit = `pile-${node.closest("[data-zone]").dataset.zone}`;
+    });
+    document.querySelectorAll("#gameScreen [data-fit]").forEach(fitLabel);
+    fitWho();
+    fitOppBar();
+    fitChatPlaceholder();
+    fitCardNames();
+    const priority = document.getElementById("rulesPriority");
+    if (priority) {
+      priority.style.fontSize = "";
+      if (document.getElementById("gameScreen").classList.contains("ub-phone")) fitName(priority, 8);
+    }
+  }
+
+  // back on the classic table: full texts, no inline sizes
+  function unfitLabels() {
+    document.querySelectorAll("#gameScreen [data-fit]").forEach((node) => {
+      const spec = FIT_LABELS[node.dataset.fit]?.();
+      node.classList.remove("ub-fit-icon");
+      node.removeAttribute("title");
+      if (spec) node.textContent = spec.full;
+      delete node.dataset.fit;
+    });
+    document.querySelectorAll("#gameScreen .ub-name, #ubOppBar .v").forEach((node) => { node.style.fontSize = ""; });
+  }
+
+  // ------------------------------------------------------------ last opponent action
+
+  // Once its spotlight is gone, the opponent's last declared action stays
+  // pointed at: its card on the field keeps an outline (a pulse when new) and
+  // the empty Stack names it, with its targets.
+  function lastOpponentAction() {
+    if (!rulesOn() || isObserver) return null;
+    const known = local.lastOpp;
+    const newest = Math.max(0, ...(latestState.recentLog || []).map((entry) => Number(entry.sequence) || 0));
+    if (known && newest < Number(known.sequence)) local.lastOpp = null; // a new session
+    for (const entry of latestState.recentLog || []) {
+      if (entry.type !== "rules_action_declared" || !entry.actorId || entry.actorId === myPlayerId || !entry.details?.source?.cardId) continue;
+      if (!local.lastOpp || Number(entry.sequence) > Number(local.lastOpp.sequence)) local.lastOpp = entry;
+    }
+    return local.lastOpp;
+  }
+
+  function markLastOpponentAction() {
+    const entry = lastOpponentAction();
+    document.querySelectorAll("#battlefield .ub-last-opp").forEach((node) => node.classList.remove("ub-last-opp", "ub-last-opp-fresh"));
+    if (!entry) return;
+    const source = entry.details.source;
+    const items = latestState.battlefield || [];
+    const item = items.find((candidate) => candidate.id === source.itemId)
+      || items.filter((candidate) => candidate.cardId === source.cardId && (candidate.controllerId || candidate.ownerId) === entry.actorId).pop();
+    const node = item ? document.querySelector(`#battlefield .bf-card[data-item-id="${CSS.escape(item.id)}"]`) : null;
+    if (!node) return;
+    node.classList.add("ub-last-opp");
+    node.style.setProperty("--last-opp", playerColor(entry.actorId));
+    if (local.lastOppPulsed !== entry.sequence) {
+      local.lastOppPulsed = entry.sequence;
+      node.classList.add("ub-last-opp-fresh");
+    }
+  }
+
+  function lastOpponentActionHtml() {
+    const entry = lastOpponentAction();
+    if (!entry) return "";
+    const targets = (entry.details.targets || []).map((target) => rulesActionTargetRef(target)).join(", ");
+    return `<span class="ub-last-opp-line" style="--last-opp:${esc(playerColor(entry.actorId))}">${esc(rulesText("ubLastOppAction", { player: rulesPlayerName(entry.actorId) }))} `
+      + `${rulesActionCardRef(entry.details.source.cardId)}${targets ? ` <span class="ub-last-opp-arrow" aria-hidden="true">→</span> ${targets}` : ""}</span>`;
+  }
+
+  // ------------------------------------------------------------ departures
+
+  // A card that leaves the field without an effect staging it (a manual move,
+  // a rule the effects do not animate) flies to the pile it went to.
+  const DEPARTURE_ZONES = ["graveyard", "exile", "receptacle", "hand", "deck"];
+
+  function boardSnapshot() {
+    const items = new Map((latestState?.battlefield || []).map((item) => [item.id, item]));
+    const nodes = new Map();
+    document.querySelectorAll("#battlefield .bf-card[data-item-id]").forEach((node) => {
+      const rect = node.getBoundingClientRect();
+      if (rect.width) nodes.set(node.dataset.itemId, { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
+    });
+    return { items: local.boardItems || items, nodes, counts: local.boardCounts || pileCounts() };
+  }
+
+  function pileCounts() {
+    const counts = {};
+    Object.values(latestState?.players || {}).forEach((player) => {
+      counts[player.id] = Object.fromEntries(DEPARTURE_ZONES.map((zone) => [zone, pileCount(player, zone)]));
+    });
+    return counts;
+  }
+
+  function departureZone(item, before) {
+    const players = Object.values(latestState?.players || {});
+    for (const player of players) {
+      for (const zone of DEPARTURE_ZONES) {
+        if ((player.zones?.[zone]?.cards || []).includes(item.cardId)) return { playerId: player.id, zone, visible: true };
+      }
+    }
+    // a hidden zone: the one of the owner that grew
+    const owner = latestState?.players?.[item.ownerId];
+    const zone = owner && DEPARTURE_ZONES.find((name) => pileCount(owner, name) > (before.counts[owner.id]?.[name] ?? Infinity));
+    return zone ? { playerId: owner.id, zone, visible: false } : null;
+  }
+
+  function flyDepartures(before) {
+    const now = new Map((latestState?.battlefield || []).map((item) => [item.id, item]));
+    local.boardItems = now;
+    local.boardCounts = pileCounts();
+    if (typeof playRulesVfxFlight !== "function" || rulesVfxReducedMotion()) return;
+    const claims = local.vfxClaims && Date.now() - local.vfxClaims.at < 4000 ? local.vfxClaims.ids : new Set();
+    const dropped = local.droppedItem && Date.now() - local.droppedItem.at < 1500 ? local.droppedItem.id : null;
+    let flights = 0;
+    for (const [itemId, item] of before.items) {
+      if (now.has(itemId) || flights >= 8) continue;
+      const origin = before.nodes.get(itemId);
+      if (!origin || !item.cardId || item.isTokenCard || itemId === dropped || claims.has(itemId) || claims.has(item.cardId)) continue;
+      const destination = departureZone(item, before);
+      if (!destination) continue;
+      const target = rulesVfxPileCenter(destination.playerId, destination.zone) || rulesVfxPlayerOrigin(destination.playerId);
+      const shown = item.faceUp && destination.visible;
+      playRulesVfxFlight(shown ? "effect-card" : "draw-card", origin, target, { cardId: shown ? item.cardId : null, index: flights });
+      flights += 1;
+    }
   }
 
   // ------------------------------------------------------------ players
@@ -1026,6 +1293,7 @@
     const observer = new MutationObserver(() => {
       if (active()) syncStackEmpty();
     });
+    document.fonts?.ready.then(() => { if (active() && latestState) fitLabels(); });
     observer.observe(document.getElementById("rulesStackPanel"), { attributes: true, attributeFilter: ["class"] });
   }
 
@@ -1318,10 +1586,10 @@
         `<span class="ub-slot" style="left:${rect.x - col.column.l}px;top:${rect.y}px;width:${rect.w}px;height:${rect.w * RATIO}px">${esc(t("ubFreeSlot"))}</span>`
       )).join("");
       node.innerHTML = `
-        <span class="ub-zlab" style="top:${col.iz.labelY}px"><span>${esc(t("ubInterzone"))}</span><b>${col.used}/${col.capacity}</b></span>
+        <span class="ub-zlab" style="top:${col.iz.labelY}px"><span data-fit="interzone">${esc(t("ubInterzone"))}</span><b>${col.used}/${col.capacity}</b></span>
         ${free}
         <span class="ub-divider" style="top:${col.divider}px"></span>
-        <span class="ub-zlab" style="top:${col.pz.labelY}px"><span>${esc(t("ubWills"))}</span><b>${col.wills}</b></span>`;
+        <span class="ub-zlab" style="top:${col.pz.labelY}px"><span data-fit="wills">${esc(t("ubWills"))}</span><b>${col.wills}</b></span>`;
       node.style.setProperty("--pc", players[side] ? playerColor(players[side].id) : "transparent");
     }
   }
@@ -1518,12 +1786,14 @@
     }
   }
 
+  const ZONE_ICONS = { deck: "deck", graveyard: "limbo", exile: "exile", receptacle: "vessel" };
+
   function renderOppBar(players) {
     const bar = document.getElementById("ubOppBar");
     const opp = players.opp;
     if (!opp) { bar.innerHTML = ""; return; }
     const mini = [["deck", "deck"], ["graveyard", "graveyard"], ["exile", "exile"], ["receptacle", "receptacle"]]
-      .map(([zone]) => `<span class="mini">${esc(t(zone)).slice(0, 5)}<b>${pileCount(opp, zone)}</b></span>`).join("");
+      .map(([zone]) => `<span class="mini" title="${esc(t(zone))}"><small>${esc(t(zone).slice(0, 5))}</small><i>${ICONS[ZONE_ICONS[zone]]}</i><b>${pileCount(opp, zone)}</b></span>`).join("");
     const points = receptaclePoints(opp.zones.receptacle || {}, opp.score);
     bar.innerHTML = `<span class="v"><span class="long">${esc(t("ubPilesOf"))} </span>${esc(opp.name)}</span>${mini}<span class="pts">${points}</span><span class="chev">${ICONS.chevron}</span>`;
   }
@@ -1555,7 +1825,12 @@
     const hidden = !panel || panel.classList.contains("hidden");
     if (empty) {
       empty.hidden = !hidden;
-      empty.textContent = t("ubStackEmpty");
+      empty.innerHTML = `<span>${esc(t("ubStackEmpty"))}</span>${hidden ? lastOpponentActionHtml() : ""}`;
+      empty.querySelectorAll("[data-rules-card]").forEach((ref) => {
+        ref.onmouseenter = () => showCardPreview(ref.dataset.rulesCard, ref);
+        ref.onmouseleave = hideCardPreview;
+        ref.onclick = () => showInspect(ref.dataset.rulesCard);
+      });
     }
     const stack = latestState?.rulesEngine?.actionStack || [];
     if (count) count.textContent = stack.length ? String(stack.length) : "";
@@ -1702,9 +1977,11 @@
     wirePlayerLogCardNames(log);
     const tabs = document.querySelectorAll("#ubChatTabs [data-ub-tab]");
     const labels = { all: "ubTabAll", chat: "ubTabChat", log: "ubTabLog" };
+    const fitKeys = { all: "tabAll", chat: "tabChat", log: "tabLog" };
     tabs.forEach((button) => {
       const key = button.dataset.ubTab;
       const label = button.querySelector("span") || button;
+      label.dataset.fit = fitKeys[key];
       label.textContent = t(labels[key]);
       button.setAttribute("aria-selected", String(key === tab));
     });
@@ -1781,6 +2058,11 @@
     layoutRight();
     syncToolState();
     syncBoardChoice();
+    markLastOpponentAction();
+    fitLabels();
+    // the columns settle a frame later (fonts, scrollbars): fit again then
+    cancelAnimationFrame(local.fitFrame);
+    local.fitFrame = requestAnimationFrame(() => { if (active()) fitLabels(); });
   }
 
   // ------------------------------------------------------------ toggles
@@ -1806,6 +2088,7 @@
       lockHandSize(true);
     } else if (screen.classList.contains("ui-beta")) {
       screen.classList.remove("ui-beta", "ub-rules", "ub-compact", "ub-phone", "ub-stale-open");
+      unfitLabels();
       restoreAll();
       lockHandSize(false);
       syncBoardChoice();
@@ -2533,9 +2816,36 @@
     return result;
   });
   wrap("renderBattlefield", (original) => function uiBetaRenderBattlefield(...args) {
+    const before = active() ? boardSnapshot() : null;
     const result = original.apply(this, args);
     placeManualStackCards();
+    if (before) flyDepartures(before);
     return result;
+  });
+  // the cards the effects of a state update already stage (flights, destructions...)
+  wrap("prepareRulesVfxBatch", (original) => function uiBetaPrepareVfxBatch(...args) {
+    const events = original.apply(this, args);
+    const claimed = new Set();
+    const claim = (value) => { if (value) claimed.add(value); };
+    for (const event of events || []) {
+      const details = event?.entry?.details || {};
+      [...(event?.stateDestroyed || []), ...(event?.cleanupMoves || [])].forEach((move) => claim(move.cardId));
+      (details.stateActions?.destroyed || []).forEach((move) => { claim(move.itemId); claim(move.cardId); });
+      [...(details.captured || []), ...(details.returned || []), ...(details.supportExiled || [])].forEach((move) => { claim(move?.itemId); claim(move?.cardId); });
+      (details.effectResult?.itemIds || []).forEach(claim);
+      claim(details.effectResult?.itemId);
+      claim(event?.movedCard?.cardId);
+      claim(event?.sacrifice?.cardId);
+      claim(event?.supportWin?.cardId);
+      claim(event?.supportWin?.itemId);
+    }
+    local.vfxClaims = { ids: claimed, at: Date.now() };
+    return events;
+  });
+  wrap("resolveDrop", (original) => function uiBetaResolveDrop(ctx, ...rest) {
+    // a card dragged off the field by hand already landed where it was dropped
+    if (ctx?.itemId) local.droppedItem = { id: ctx.itemId, at: Date.now() };
+    return original.call(this, ctx, ...rest);
   });
   // while a card is dragged, the drop-only areas (the empty Stalemate band) show up
   wrap("buildDragGhost", (original) => function uiBetaBuildDragGhost(...args) {
@@ -2662,6 +2972,12 @@
     if (destination && !document.getElementById("rulesChoicePanel")?.classList.contains("hidden")) local.destinationShownAt = Date.now();
     if (active()) markHandEligibility();
     if (local.built) syncBoardChoice();
+    fitCardNames();
+    return result;
+  });
+  wrap("renderSideboardEditor", (original) => function uiBetaRenderSideboardEditor(...args) {
+    const result = original.apply(this, args);
+    fitCardNames();
     return result;
   });
   wrap("armRulesBoardTargets", (original) => function uiBetaArmTargets(...args) {

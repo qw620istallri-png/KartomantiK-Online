@@ -1138,3 +1138,34 @@ Partie réelle pilotée dans Chromium (serveur Python, deux joueurs, UI bêta), 
 - `public/app.js` est réparti en 16 fichiers `public/js/*.js` chargés avant lui.
   Comme toutes les fonctions étaient déjà « remontées » (hoisting) avant
   l'exécution, l'ordre d'exécution reste identique.
+
+## Finitions de la nouvelle table (beta 139.8)
+
+- **Ancienne table gelée** : elle reste disponible (menu « Plus »), mais n'est plus
+  maintenue. Les évolutions d'interface visent uniquement la nouvelle table
+  (`ui-beta.js` / `ui-beta.css`) ; les tests navigateur existants continuent de
+  tourner sur l'ancienne pour couvrir le moteur.
+- **Libellés qui ne tiennent pas** (`fitLabels` dans `ui-beta.js`) : texte complet,
+  puis version courte, puis icône (texte complet en info-bulle) pour les zones,
+  les onglets du journal, « Passer les phases sans action », le nom du site et les
+  piles. Les noms de joueurs et de cartes passent d'abord sur deux lignes et/ou
+  réduisent leur police avant d'être coupés. Accueil en paysage sur téléphone :
+  illustration à gauche, formulaire à droite.
+- **Dernière action adverse** : sa carte garde un contour (pulsé quand l'action
+  est nouvelle) et la Pile vide affiche « Dernière action de … : carte → cibles ».
+- **Départs du terrain** : une carte qui quitte le terrain sans effet visuel dédié
+  vole vers la pile où elle est allée (les cartes déjà animées par les effets
+  sont exclues).
+- **Délai de grâce au doigt** (`sendCardPlacement`, `js/hand.js`) : une carte
+  lâchée au toucher en règles assistées est jouée après 2,5 s, avec « Annuler » /
+  « Jouer ». Rien n'est envoyé avant : l'adversaire ne reçoit pas la priorité.
+  La Première Manifestation (déplaçable jusqu'à validation) part tout de suite.
+- **Connexion** : bandeau « Connexion perdue » avec « Réessayer », table grisée
+  et non jouable pendant la coupure, reconnexion 1/2/4/8 s puis toutes les 8 s,
+  immédiate au retour du réseau ou de l'onglet ; session disparue → retour à
+  l'accueil.
+- **Images** : dos de carte flouté tant que l'illustration charge, puis fondu
+  (`watchCardImage`, `js/cards.js`) ; le deck et les cartes visibles sont
+  préchargés pendant les temps morts (`preloadCardImages`).
+- **Grille** : espacements de `ui-beta.css` alignés sur 2/4/6/8 puis 12/16/20/24/32 px
+  et échelle de polices 10–34 px (variables `--ub-space-*`).
