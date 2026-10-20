@@ -1217,6 +1217,7 @@
           <div class="ub-toolmenu"><button type="button" class="ub-tool" data-ub-menu="draw">${ICONS.pen}</button><div class="ub-toolpop" id="ubDrawPop"></div></div>
           <div class="ub-toolmenu"><button type="button" class="ub-tool" data-ub-menu="create">${ICONS.plus}</button><div class="ub-toolpop" id="ubCreatePop"></div></div>
           <span class="ub-toolslot" id="ubToolView"></span>
+          <span class="ub-toolslot" id="ubToolSkip"></span>
         </div>
       </div>`;
     const right = el("aside", "ub-col right");
@@ -1467,6 +1468,9 @@
     if (node.parentNode !== container || (before && node.nextSibling !== before)) container.insertBefore(node, before);
   }
   function restoreAll() {
+    placeAutoSkip(false);
+    local.skipHome?.remove();
+    local.skipHome = null;
     local.homes.forEach((marker, node) => {
       if (marker.parentNode) marker.parentNode.insertBefore(node, marker);
       marker.remove();
@@ -1481,6 +1485,23 @@
     // piles go back onto the board
     const board = document.getElementById("battlefield");
     document.querySelectorAll("#ubMyPiles .field-pile, #ubOppPiles .field-pile").forEach((pile) => board.appendChild(pile));
+  }
+
+  // phone: "Auto-skip" joins the tool row at the bottom left, out of the
+  // crowded phase block; it goes back there on a larger screen
+  function placeAutoSkip(phone) {
+    const wrap = document.getElementById("rulesAutoSkipWrap");
+    const slot = document.getElementById("ubToolSkip");
+    if (!wrap || !slot) return;
+    if (phone) {
+      if (!local.skipHome) {
+        local.skipHome = document.createComment("ub-skip-home");
+        wrap.parentNode.insertBefore(local.skipHome, wrap);
+      }
+      if (wrap.parentNode !== slot) slot.appendChild(wrap);
+    } else if (local.skipHome?.parentNode && wrap.parentNode === slot) {
+      local.skipHome.parentNode.insertBefore(wrap, local.skipHome);
+    }
   }
 
   function relocate() {
@@ -2153,6 +2174,7 @@
     screen.classList.toggle("ub-rules", rulesOn());
     screen.classList.toggle("ub-compact", G.compact);
     screen.classList.toggle("ub-phone", G.phone);
+    placeAutoSkip(G.phone);
     fitHand();
     renderZones(geometry);
     renderInterzones(geometry);
