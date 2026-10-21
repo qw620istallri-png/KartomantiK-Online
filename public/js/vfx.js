@@ -241,7 +241,7 @@ function prepareRulesEffectVfxChanges(nextState) {
 function removeRulesVfx() {
   clearRulesVfxQueue();
   rulesVfxActiveLabels.length = 0;
-  $$(".rules-vfx-spotlight, .rules-vfx-target-arrow, .rules-vfx-phase-banner, .rules-vfx-flight, .rules-vfx-impact, .rules-vfx-exhaust-ring, .rules-vfx-exhaust-label, .rules-vfx-impact-burst, .rules-vfx-target-lock, .rules-vfx-effect-cast, .rules-vfx-effect-seal, .rules-vfx-effect-release, .rules-vfx-stack-pulse")
+  $$(".rules-vfx-spotlight, .rules-vfx-resolve-reveal, .rules-vfx-target-arrow, .rules-vfx-phase-banner, .rules-vfx-flight, .rules-vfx-impact, .rules-vfx-exhaust-ring, .rules-vfx-exhaust-label, .rules-vfx-impact-burst, .rules-vfx-target-lock, .rules-vfx-effect-cast, .rules-vfx-effect-seal, .rules-vfx-effect-release, .rules-vfx-stack-pulse")
     .forEach((element) => element.remove());
 }
 
@@ -677,11 +677,12 @@ function playRulesVfxControlSwap(entry) {
 }
 
 // The card being resolved appears large for a moment, then flies to where it ends up
-function playRulesVfxResolveReveal(entry) {
-  if (rulesVfxReducedMotion()) return;
+function playRulesVfxResolveReveal(entry, immediate = false) {
+  const reduced = rulesVfxReducedMotion();
+  if (reduced && !immediate) return;
   const details = entry.details || {};
   const cardId = details.source?.cardId;
-  if (!cardId || !cardImage(cardId)) return;
+  if ((!cardId || !cardImage(cardId)) && !immediate) return;
   const resolution = details.sourceResolution || {};
   const ownerId = resolution.ownerId || details.source?.ownerId || entry.actorId;
   const destination = resolution.itemId
@@ -690,19 +691,28 @@ function playRulesVfxResolveReveal(entry) {
       ? rulesVfxPileCenter(ownerId, resolution.destination)
       : null;
   const reveal = document.createElement("div");
-  reveal.className = "rules-vfx-resolve-reveal";
-  reveal.setAttribute("aria-hidden", "true");
-  reveal.innerHTML = `<img src="${esc(cardImage(cardId))}" alt="">`;
+  reveal.className = `rules-vfx-resolve-reveal${immediate ? " rules-vfx-immediate" : ""}`;
+  if (immediate) reveal.setAttribute("role", "status");
+  else reveal.setAttribute("aria-hidden", "true");
+  reveal.innerHTML = cardId && cardImage(cardId) ? `<img src="${esc(cardImage(cardId))}" alt="">` : "";
+  if (immediate) {
+    reveal.innerHTML += `<div class="rules-vfx-immediate-caption"><strong>${esc(cardId ? cardName(cardId) : details.label || t("rulesVfxImmediate"))}</strong><span>${esc(t("rulesVfxImmediate"))}</span></div>`;
+  }
   document.body.appendChild(reveal);
   const dx = destination ? destination.x - window.innerWidth / 2 : 0;
   const dy = destination ? destination.y - window.innerHeight / 2 : 0;
-  rulesVfxAnimateAndRemove(reveal, [
+  // Even a long chain keeps a readable preview before an Immediate Effect's result.
+  const duration = immediate ? Math.max(1600, 1500 / vfxScale()) : 1350;
+  rulesVfxAnimateAndRemove(reveal, reduced ? [
+    { opacity: 0 }, { opacity: 1, offset: .1 }, { opacity: 1, offset: .9 }, { opacity: 0 },
+  ] : [
     { opacity: 0, transform: "translate(-50%,-50%) scale(.6)" },
     { opacity: 1, transform: "translate(-50%,-50%) scale(1)", offset: .1 },
-    { opacity: 1, transform: "translate(-50%,-50%) scale(1)", offset: .58 },
+    { opacity: 1, transform: "translate(-50%,-50%) scale(1)", offset: immediate ? .82 : .58 },
     { opacity: destination ? .9 : 0, transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(${destination ? .32 : 1.08})`, offset: destination ? .94 : 1 },
     { opacity: 0, transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(.3)` },
-  ], { duration: 1350, easing: "ease-in-out" });
+  ], { duration, easing: "ease-in-out" });
+  return duration;
 }
 
 function playRulesVfxCardScene(entry, target) {
@@ -1193,6 +1203,11 @@ function playRulesVfxBatch(batch) {
     beats.push(event);
   }
   beats.forEach((event) => {
+    if (event.entry.type === "rules_action_resolved" && event.entry.details?.immediate) {
+      // Immediate actions never remain in the server's Stack snapshot. Give their
+      // public source a separate reading beat before playing the normal outcome.
+      enqueueRulesVfx(() => playRulesVfxResolveReveal(event.entry, true), 1600);
+    }
     const slowed = VFX_EFFECT_PACE_TYPES.includes(event.entry.type);
     const base = RULES_VFX_BEAT_MS[event.entry.type] || 700;
     // effect beats run slower: the estimate must follow, or cards waiting for them land too early.
@@ -1542,7 +1557,7 @@ function playRulesVfxEventInner(event) {
       return;
     }
     if (entry.type === "rules_action_resolved") {
-      playRulesVfxResolveReveal(entry);
+      if (!entry.details?.immediate) playRulesVfxResolveReveal(entry);
       playRulesVfxStackPulse("resolved");
       playRulesVfxImpact(target, t("rulesVfxResolved"), "resolved");
       if (entry.details?.effectResult?.kind === "resolve_top_deck_by_type" && entry.details.effectResult.cardId) {

@@ -2528,8 +2528,7 @@ body.hand-drawing #myHandTray .hand-card { cursor: progress; }
 .rarity-effects-disabled .rarity-zen-secret { display: none; }
 .rarity-effects-disabled .hand-card-hover-clone.ko-rarity-card.zoomed { transform: translateY(-10px) scale(var(--hand-hover-scale,1.3)); }
 @media (prefers-reduced-motion: reduce) {
-  .rarity-galaxy,.rarity-void,.rarity-galaxy::after,.rarity-void::after,.rarity-glitter-layer,
-  .rarity-desert-surface,.desert-storm-layer { animation: none; }
+  .rarity-galaxy,.rarity-void,.rarity-galaxy::after,.rarity-void::after,.rarity-glitter-layer { animation: none; }
   .hand-card-hover-clone.ko-rarity-card.zoomed { transform: translateY(-10px) scale(var(--hand-hover-scale,1.3)); }
   .rules-vfx-flight { display: none; }
   .rules-effect-link-flow { animation: none; stroke-dasharray: 7 7; }
@@ -2567,7 +2566,10 @@ body.hand-drawing #myHandTray .hand-card { cursor: progress; }
   --desert-grain-opacity: .2; --desert-reflect-opacity: .24; --desert-reflect-size: 138px; --desert-diagonal-opacity: .47;
   --desert-reflect-angle: 111deg; --desert-reflect-width: 660%; --desert-reflect-height: 100%; --desert-reflect-travel: 10%;
   --desert-primary: #c58a3b; --desert-secondary: #ffe1a0; --desert-accent: #7f4b24;
-  position: relative; isolation: isolate; overflow: visible !important;
+}
+/* Rarity decoration must preserve the host's positioning, especially fixed hover clones. */
+body:not(.rarity-effects-disabled) .rarity-desert {
+  isolation: isolate; overflow: visible !important;
   mask-image: none; -webkit-mask-image: none;
   background: transparent !important; border: 0 !important; box-shadow: none !important;
   filter: drop-shadow(0 0 var(--desert-glow-size) color-mix(in srgb,var(--desert-accent) var(--desert-glow-opacity),transparent)) drop-shadow(0 0 calc(var(--desert-glow-size)*2) color-mix(in srgb,var(--desert-primary) calc(var(--desert-glow-opacity)*.55),transparent));
@@ -2639,8 +2641,15 @@ body.hand-drawing #myHandTray .hand-card { cursor: progress; }
   72% { transform: translate3d(.4%,-1.3%,0) scale(1.045); opacity: clamp(0,calc(var(--desert-storm-opacity,.65)*.17),1); }
 }
 .rarity-effects-disabled .rarity-desert { filter: none; }
+.rarity-effects-disabled .rarity-desert-surface {
+  mask-image: none; -webkit-mask-image: none; animation: none;
+}
+.rarity-effects-disabled .rarity-desert-surface > img { filter: none; }
 .rarity-effects-disabled .rarity-desert-surface::before,.rarity-effects-disabled .rarity-desert-surface::after,
 .rarity-effects-disabled .desert-diagonal-layer,.rarity-effects-disabled .desert-grain-layer,.rarity-effects-disabled .desert-storm-layer { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .rarity-desert-surface,.desert-storm-layer { animation: none; }
+}
 
 /* ---------- assisted combat: compact Arena-style play surface ---------- */
 .game-header-hot-zone {
@@ -3491,6 +3500,18 @@ body.hand-drop-choice .hand-area { z-index: 90; }
 
 .rules-vfx-resolve-reveal { position: fixed; left: 50%; top: 50%; z-index: 125; width: clamp(180px, 15vw, 240px); aspect-ratio: 5 / 7; pointer-events: none; }
 .rules-vfx-resolve-reveal img { width: 100%; height: 100%; object-fit: cover; border: 2px solid #d7ba68; border-radius: 10px; box-shadow: 0 16px 40px #000d; }
+.rules-vfx-immediate {
+  width: min(240px, 60vw, calc((100dvh - 140px) * .714));
+  aspect-ratio: auto; transform: translate(-50%, -50%);
+}
+.rules-vfx-immediate img { display: block; height: auto; aspect-ratio: 5 / 7; }
+.rules-vfx-immediate-caption {
+  display: grid; gap: 4px; margin-top: 8px; padding: 10px 12px;
+  border-radius: 8px; background: #101b30; color: #fff3ce;
+  box-shadow: 0 8px 20px #0008; text-align: center; overflow-wrap: anywhere;
+}
+.rules-vfx-immediate-caption strong { font-size: 16px; line-height: 1.25; }
+.rules-vfx-immediate-caption span { font-size: 14px; line-height: 1.25; color: #efd89c; }
 
 /* cards-only screens: the card at 100%, nothing behind it, and the hand stays usable only when the choice needs it */
 /* one constant dark screen everywhere; the hand rises above it only when the choice uses it */
@@ -3634,6 +3655,10 @@ body.flow-uses-hand .hand-area { z-index: 90; }
 .rules-board-flow.is-centered .rules-floating-copy { padding: 14px 18px; border: 0; border-radius: 10px; background: #0b0906d0; box-shadow: none; font-size: 16px; text-align: center; }
 .rules-board-flow.is-centered .rules-floating-copy strong { font-family: var(--display-font); font-size: 19px; }
 .rules-board-flow.is-centered .rules-flow-cost-row { justify-content: center; gap: 14px; }
+.rules-board-flow.is-centered .rules-white-essence-row { justify-content: space-between; }
+.rules-white-essence-row label { display: flex; align-items: center; gap: 8px; }
+.rules-white-essence-row label img { width: 22px; height: 22px; object-fit: contain; }
+.rules-white-essence-row .number-stepper button { width: 34px; padding: 0; }
 .rules-board-flow.is-centered .rules-cost-card-row { justify-content: center; }
 .rules-board-flow.is-centered .rules-cost-card-row .rules-choice-card { border: 0; background: transparent; box-shadow: none; }
 .rules-board-flow.is-centered .rules-flow-cancel { top: -6px; right: -6px; border: 0; background: transparent; box-shadow: none; color: #f6edcf; font-size: 28px; text-shadow: 0 2px 8px #000; }

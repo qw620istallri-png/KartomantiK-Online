@@ -183,7 +183,7 @@ class PaymentMixin:
         return requirements, True
 
     def rules_essence_payment_plan(self, player_id, requirements,
-                                   already_spent=None):
+                                   already_spent=None, transcendent_payment=None):
         remaining = dict(requirements)
         essence_tokens = [
             token for token in self.tokens
@@ -203,8 +203,11 @@ class PaymentMixin:
                 available[token_id] -= int(entry.get("amount") or 0)
         spent = []
 
-        def consume(requirement, candidates):
+        def consume(requirement, candidates, limit=None):
             needed = remaining.get(requirement, 0)
+            if limit is not None:
+                needed = min(needed, limit)
+            initial = needed
             for token in candidates:
                 if needed <= 0:
                     break
@@ -219,7 +222,7 @@ class PaymentMixin:
                     "amount": amount,
                     "pays": requirement,
                 })
-            remaining[requirement] = needed
+            remaining[requirement] -= initial - needed
 
         # Preserve versatile Essences whenever a more specific Essence is
         # available. Hollow Tributes accept every temperament, but Hollow
@@ -241,8 +244,42 @@ class PaymentMixin:
             token for token in essence_tokens if token.get("temperament") == "transcendent"
         ]
         for temperament in requirements:
-            consume(temperament, transcendent)
+            consume(temperament, transcendent, None if transcendent_payment is None
+                    else transcendent_payment.get(temperament, 0))
         return remaining, spent
+
+    def rules_transcendent_payment_options(self, player_id, requirements):
+        """All ways to spend the flexible Essence left after specific payment."""
+        remaining, spent = self.rules_essence_payment_plan(
+            player_id, requirements, transcendent_payment={},
+        )
+        available = sum(
+            int(token.get("counters", {}).get("essence") or 0)
+            for token in self.tokens
+            if token.get("ownerId") == player_id and token.get("isEssence")
+            and not token.get("isNeutralCounter")
+            and token.get("temperament") == "transcendent"
+            and int(token.get("counters", {}).get("essence") or 0) > 0
+        ) - sum(entry["amount"] for entry in spent if entry["temperament"] == "transcendent")
+        amount = min(available, sum(remaining.values()))
+        colours = [colour for colour, needed in remaining.items() if needed > 0]
+
+        def allocate(index, left, allocation):
+            if index == len(colours):
+                if left == 0:
+                    yield dict(allocation)
+                return
+            colour = colours[index]
+            minimum = max(0, left - sum(remaining[key] for key in colours[index + 1:]))
+            for count in range(min(left, remaining[colour]), minimum - 1, -1):
+                if count:
+                    allocation[colour] = count
+                else:
+                    allocation.pop(colour, None)
+                yield from allocate(index + 1, left - count, allocation)
+            allocation.pop(colour, None)
+
+        yield from allocate(0, amount, {})
 
     def rules_tribute_power_override(self, player_id, metadata):
         override = metadata.get("tributePowerOverride")
@@ -372,7 +409,8 @@ class PaymentMixin:
 
     def rules_action_payment(self, player_id, kind, source, payment_card_ids,
                              ability=None, targets=None,
-                             extra_essence_count=0, extra_payment_card_ids=None):
+                             extra_essence_count=0, extra_payment_card_ids=None,
+                             transcendent_payment=None):
         if payment_card_ids is None:
             payment_card_ids = []
         if not isinstance(payment_card_ids, list):
@@ -513,7 +551,21 @@ class PaymentMixin:
         requirements, enforce_printed_cost = self.rules_tribute_requirements(
             kind, source, ability, player_id
         )
-        essence_remaining, essence_spent = self.rules_essence_payment_plan(player_id, requirements)
+        if transcendent_payment is not None:
+            if not isinstance(transcendent_payment, dict) or any(
+                colour not in requirements or type(amount) is not int or amount < 0
+                for colour, amount in transcendent_payment.items()
+            ):
+                return "Choose a valid allocation for your Transcendent Essences.", None
+            transcendent_payment = {colour: amount for colour, amount in transcendent_payment.items() if amount}
+            if not any(
+                allocation == transcendent_payment
+                for allocation in self.rules_transcendent_payment_options(player_id, requirements)
+            ):
+                return "Choose a valid allocation for your Transcendent Essences.", None
+        essence_remaining, essence_spent = self.rules_essence_payment_plan(
+            player_id, requirements, transcendent_payment=transcendent_payment,
+        )
         excess = {}
         if enforce_printed_cost:
             covered, excess = self.rules_manifestations_cover(

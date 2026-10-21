@@ -17,14 +17,18 @@ function rulesDraftCanBePaid(draft) {
   if (!draft) return false;
   if (!rulesAdditionalCostAvailableClient(draft)) return false;
   if (draft.essenceCostPayable === false) return false;
-  if (Object.values(draft.essencePlan.remaining).every((amount) => amount <= 0)) return true;
   const candidates = draft.manifestations.slice(0, 12);
   const combinations = 1 << candidates.length;
-  for (let mask = 1; mask < combinations; mask += 1) {
-    const selected = candidates
-      .filter((_candidate, index) => mask & (1 << index))
-      .map((candidate) => candidate.paymentValue);
-    if (rulesManifestationsCover(selected, draft.essencePlan.remaining)) return true;
+  const plans = draft.essencePlan.transcendentChoice && draft.transcendentPayment === undefined
+    ? rulesEssencePaymentOptions(draft.paymentRequirements) : [draft.essencePlan];
+  for (const { remaining } of plans) {
+    if (Object.values(remaining).every((amount) => amount <= 0)) return true;
+    for (let mask = 1; mask < combinations; mask += 1) {
+      const selected = candidates
+        .filter((_candidate, index) => mask & (1 << index))
+        .map((candidate) => candidate.paymentValue);
+      if (rulesManifestationsCover(selected, remaining)) return true;
+    }
   }
   return false;
 }
@@ -613,7 +617,7 @@ function renderLimboPlayList() {
   });
 }
 
-function rulesActionPaymentDraft(source, card, encodedAbility) {
+function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayment = undefined) {
   const limboPlay = source.playFromField
     ? (source.fieldFree === false ? null : "free")
     : source.zone === "graveyard"
@@ -675,7 +679,12 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
     if (total > 0) paymentRequirements.hollow = total;
   }
   const hasPrintedTribute = Object.values(paymentRequirements).some((amount) => amount > 0);
-  const essencePlan = rulesEssencePaymentPreview(paymentRequirements);
+  let essencePlan = rulesEssencePaymentPreview(paymentRequirements, transcendentPayment);
+  // Before the player assigns White Essences, keep every remaining colour's
+  // Tribute candidates visible. Stack payment choices retain their existing flow.
+  if (essencePlan.transcendentChoice && transcendentPayment === undefined && source.zone !== "stack") {
+    essencePlan = rulesEssencePaymentPreview(paymentRequirements, {});
+  }
   const essenceCostRequirements = encodedAbility?.essenceCost
     ? printedTributeRequirements({ powerCost: encodedAbility.essenceCost })
     : {};
@@ -864,13 +873,14 @@ function rulesActionPaymentDraft(source, card, encodedAbility) {
     && !hasPrintedTribute
   ) manifestations.length = 0;
   return {
-    paymentRequirements, hasPrintedTribute, essencePlan,
+    paymentRequirements, hasPrintedTribute, essencePlan, transcendentPayment,
     essenceCostRequirements, essenceCostPlan, essenceCostPayable,
     optionalExtraEssenceMax, extraTributeCards, remainingTemperaments, manifestations,
   };
 }
 
 function rulesInitialActionStage(draft) {
+  if (draft.essencePlan.transcendentChoice && draft.transcendentPayment === undefined) return "essence_allocation";
   if (
     Object.values(draft.essencePlan.remaining)
       .some((amount) => amount > 0)
@@ -938,6 +948,12 @@ function openRulesActionPanel(source) {
   const draft = buildRulesActionDraft(source);
   const { card, encodedAbility } = draft;
   if (!rules?.enabled || rules.priorityPlayerId !== myPlayerId || isObserver || !card) return;
+  if (draft.essencePlan.transcendentChoice) {
+    closeRulesActionPanel();
+    pendingRulesBoardFlow = { mode: "action", source, draft, selectedPaymentIndexes: new Set(), stage: "essence_allocation" };
+    renderRulesBoardFlow();
+    return;
+  }
   pendingRulesActionSource = {
     cardId: source.cardId,
     zone: source.zone,

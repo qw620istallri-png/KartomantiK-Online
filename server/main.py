@@ -2189,6 +2189,7 @@ async def handle_message(ws, info, data):
             extra_essence_count=data.get("extraEssenceCount"),
             cost_card_id=data.get("costCardId"),
             extra_payment_card_ids=data.get("extraPaymentCardIds"),
+            transcendent_payment=data.get("transcendentPayment"),
         )
         if error:
             return await send_error(ws, error)

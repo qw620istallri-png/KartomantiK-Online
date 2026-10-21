@@ -161,18 +161,21 @@ class PriorityMixin:
         """Whether Essences plus hand Manifestations can pay these Tribute requirements."""
         player = self.players[player_id]
         try:
-            remaining, _spent = self.rules_essence_payment_plan(player_id, requirements)
-            if all(amount <= 0 for amount in remaining.values()):
-                return True
             candidates = [
                 other for other in player["zones"]["hand"]
                 if other != exclude_card_id and self.card_rules.get(other, {}).get("type") == "manifestation"
                 and self.card_rules.get(other, {}).get("canPayTribute", True)
             ][:12]
-            for mask in range(1, 1 << len(candidates)):
-                selected = [card for index, card in enumerate(candidates) if mask & (1 << index)]
-                if self.rules_manifestations_cover(selected, remaining, player_id=player_id)[0]:
+            for allocation in self.rules_transcendent_payment_options(player_id, requirements):
+                remaining, _spent = self.rules_essence_payment_plan(
+                    player_id, requirements, transcendent_payment=allocation,
+                )
+                if all(amount <= 0 for amount in remaining.values()):
                     return True
+                for mask in range(1, 1 << len(candidates)):
+                    selected = [card for index, card in enumerate(candidates) if mask & (1 << index)]
+                    if self.rules_manifestations_cover(selected, remaining, player_id=player_id)[0]:
+                        return True
             return False
         except Exception:  # never skip a phase because of a computation problem
             return True
@@ -568,7 +571,7 @@ class PriorityMixin:
                              targets=None, cost_note=None, payment_card_ids=None, ability_id=None,
                              placement=None, as_support=False,
                              extra_essence_count=0, cost_card_id=None, internal=False,
-                             extra_payment_card_ids=None):
+                             extra_payment_card_ids=None, transcendent_payment=None):
         if not self.rules_engine["enabled"]:
             return "Assisted rules are not active.", None
         if self.ended or player_id not in self.players:
@@ -655,6 +658,7 @@ class PriorityMixin:
             clean_targets,
             extra_essence_count,
             extra_payment_card_ids,
+            transcendent_payment=transcendent_payment,
         )
         if payment_error:
             return payment_error, None

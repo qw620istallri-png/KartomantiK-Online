@@ -68,15 +68,16 @@ function printedTributeRequirements(card) {
   return requirements;
 }
 
-function rulesEssencePaymentPreview(requirements) {
+function rulesEssencePaymentPreview(requirements, transcendentPayment = undefined) {
   const remaining = { ...requirements };
   const tokens = (latestState?.tokens || []).filter((token) => token.ownerId === myPlayerId
     && token.isEssence && !token.isNeutralCounter && token.temperament
     && Number(token.counters?.essence || 0) > 0);
   const available = new Map(tokens.map((token) => [token.id, Number(token.counters.essence)]));
   const spent = {};
-  const consume = (requirement, candidates) => {
-    let needed = remaining[requirement] || 0;
+  const consume = (requirement, candidates, limit = Infinity) => {
+    let needed = Math.min(remaining[requirement] || 0, limit);
+    const initial = needed;
     for (const token of candidates) {
       if (needed <= 0) break;
       const amount = Math.min(needed, available.get(token.id) || 0);
@@ -85,7 +86,7 @@ function rulesEssencePaymentPreview(requirements) {
       needed -= amount;
       spent[token.temperament] = (spent[token.temperament] || 0) + amount;
     }
-    remaining[requirement] = needed;
+    remaining[requirement] -= initial - needed;
   };
   Object.keys(requirements).filter((key) => key !== "hollow").forEach((temperament) => {
     consume(temperament, tokens.filter((token) => token.temperament === temperament));
@@ -97,8 +98,36 @@ function rulesEssencePaymentPreview(requirements) {
     consume("hollow", hollowOrder);
   }
   const transcendent = tokens.filter((token) => token.temperament === "transcendent");
-  Object.keys(requirements).forEach((temperament) => consume(temperament, transcendent));
-  return { remaining, spent };
+  const flexibleRemaining = { ...remaining };
+  const totalRemaining = Object.values(remaining).reduce((sum, amount) => sum + amount, 0);
+  const flexibleAmount = Math.min(totalRemaining, transcendent.reduce((sum, token) => sum + available.get(token.id), 0));
+  const transcendentChoice = flexibleAmount > 0 && flexibleAmount < totalRemaining
+    && Object.values(remaining).filter((amount) => amount > 0).length > 1
+    ? { requirements: flexibleRemaining, amount: flexibleAmount } : null;
+  Object.keys(requirements).forEach((temperament) => consume(
+    temperament, transcendent, transcendentPayment === undefined ? Infinity : Number(transcendentPayment[temperament] || 0),
+  ));
+  return { remaining, spent, transcendentChoice };
+}
+
+function* rulesEssencePaymentOptions(requirements) {
+  const plan = rulesEssencePaymentPreview(requirements);
+  const choice = plan.transcendentChoice;
+  if (!choice) { yield plan; return; }
+  const colours = Object.keys(choice.requirements).filter((key) => choice.requirements[key] > 0);
+  function* allocate(index, left, allocation) {
+    if (index === colours.length) {
+      if (left === 0) yield rulesEssencePaymentPreview(requirements, allocation);
+      return;
+    }
+    const colour = colours[index];
+    const minimum = Math.max(0, left - colours.slice(index + 1).reduce((sum, key) => sum + choice.requirements[key], 0));
+    for (let amount = Math.min(left, choice.requirements[colour]); amount >= minimum; amount--) {
+      allocation[colour] = amount;
+      yield* allocate(index + 1, left - amount, allocation);
+    }
+  }
+  yield* allocate(0, choice.amount, {});
 }
 
 const RULES_KANOPO_PATTERN = /you may sacrifice a Manifestation in your Interzone\. If you do, .{0,40}?base power of (\d+)/is;
@@ -219,14 +248,15 @@ function rulesCanAffordCard(cardId) {
   const card = cardsById.get(cardId);
   if (!card || !["ephemeral_will", "persistent_will"].includes(card.type)) return true;
   const requirements = printedTributeRequirements(card);
-  const remaining = rulesEssencePaymentPreview(requirements).remaining;
-  if (Object.values(remaining).every((amount) => amount <= 0)) return true;
   const manifestations = (latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [])
     .filter((candidateId) => candidateId !== cardId && cardsById.get(candidateId)?.type === "manifestation");
   const combinations = 1 << Math.min(manifestations.length, 12);
-  for (let mask = 1; mask < combinations; mask += 1) {
-    const selected = manifestations.filter((_candidate, index) => mask & (1 << index));
-    if (rulesManifestationsCover(selected, remaining)) return true;
+  for (const { remaining } of rulesEssencePaymentOptions(requirements)) {
+    if (Object.values(remaining).every((amount) => amount <= 0)) return true;
+    for (let mask = 1; mask < combinations; mask += 1) {
+      const selected = manifestations.filter((_candidate, index) => mask & (1 << index));
+      if (rulesManifestationsCover(selected, remaining)) return true;
+    }
   }
   return false;
 }

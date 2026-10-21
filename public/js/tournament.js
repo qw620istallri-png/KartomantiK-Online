@@ -101,6 +101,7 @@ function localizeServerError(message) {
     "A selected effect is no longer available on the Stack.": "rulesStackEffectTargetMovedError",
     "The targeted effect is no longer on the Stack.": "rulesStackEffectTargetMovedError",
     "The selected Manifestations do not pay the full printed Tribute.": "rulesTributeInsufficientError",
+    "Choose a valid allocation for your Transcendent Essences.": "rulesWhitePaymentError",
     "This Tribute must use fewer Manifestations.": "rulesTributeRedundantError",
     "Choose the activated ability to put on the Stack.": "rulesAbilityRequiredError",
     "Unknown activated ability.": "rulesAbilityUnknownError",

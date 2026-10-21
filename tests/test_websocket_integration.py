@@ -90,6 +90,32 @@ class WebSocketRulesIntegrationTests(unittest.IsolatedAsyncioTestCase):
         rules["autoSkipPhases"] = False
         self.session.phase_tracker["index"] = ADVANCED_PHASES.index(phase_id)
 
+    async def test_multicolour_will_uses_the_requested_white_essence_allocation(self):
+        self.prepare_active_rules("end_actions")
+        self.session.rules_engine["firstManifestationComplete"] = True
+        self.session.card_rules.update({
+            "white-choice-will": {"type": "persistent_will", "powerCost": "{R}{G}", "cost": 2, "temperaments": ["choleric", "phlegmatic"]},
+            "white-choice-red": {"type": "manifestation", "power": 1, "temperaments": ["choleric"]},
+            "white-choice-green": {"type": "manifestation", "power": 1, "temperaments": ["phlegmatic"]},
+        })
+        player = self.session.players["p1"]
+        player["zones"]["hand"] = ["white-choice-will", "white-choice-red", "white-choice-green"]
+        player["zoneOwners"]["hand"] = {card_id: "p1" for card_id in player["zones"]["hand"]}
+        self.session.add_rules_excess_essence("p1", [{"temperament": "transcendent", "amount": 1}])
+        await self.send(self.ws1, {
+            "type": "declare_rules_action", "label": "Chosen white payment", "kind": "play_card",
+            "source": {"cardId": "white-choice-will", "zone": "hand"},
+            "paymentCardIds": ["white-choice-red"], "transcendentPayment": {"phlegmatic": 1},
+        })
+        state = await self.receive_until(self.ws1, lambda message: message.get("type") == "state" and any(
+            entry.get("type") == "rules_action_declared" and entry.get("details", {}).get("label") == "Chosen white payment"
+            for entry in message.get("recentLog", [])
+        ))
+        declared = next(entry for entry in state["recentLog"] if entry["type"] == "rules_action_declared" and entry["details"].get("label") == "Chosen white payment")
+        self.assertEqual(declared["details"]["cost"]["essenceSpent"][0]["pays"], "phlegmatic")
+        self.assertEqual(player["zones"]["hand"], ["white-choice-green"])
+        self.assertIn("white-choice-red", player["zones"]["graveyard"])
+
     async def test_invalid_numeric_payload_returns_error_and_keeps_connection_open(self):
         await self.ws1.send('{"type":"add_token","x":NaN,"y":0}')
         error = await self.receive_until(

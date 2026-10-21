@@ -389,6 +389,7 @@ function submitRulesBoardFlow(target = null) {
     paymentCardIds: rulesBoardSelectedPayments(flow),
     extraEssenceCount: Number(flow.extraEssenceCount || 0),
   };
+  if (flow.draft.transcendentPayment !== undefined) payload.transcendentPayment = flow.draft.transcendentPayment;
   const extraTribute = rulesBoardExtraTributeCards(flow).map((entry) => entry.cardId);
   if (extraTribute.length) payload.extraPaymentCardIds = extraTribute;
   if (flow.costCardId) payload.costCardId = flow.costCardId;
@@ -699,7 +700,7 @@ function renderRulesBoardFlow() {
   const panel = $("#rulesBoardFlow");
   // paying or chaining from the hand (tribute, card cost, Advocate of Catharsis): the hand rises above the dark screen
   document.body.classList.toggle("flow-uses-hand", Boolean(
-    flow && flow.mode !== "stack_copy_target" && (flow.mode === "chain" || ["payment", "cost_card", "extra_essence"].includes(flow.stage)),
+    flow && flow.mode !== "stack_copy_target" && (flow.mode === "chain" || ["essence_allocation", "payment", "cost_card", "extra_essence"].includes(flow.stage)),
   ));
   if (!flow || !panel) {
     panel?.classList.add("hidden");
@@ -750,7 +751,7 @@ function renderRulesBoardFlow() {
   panel.classList.toggle("is-stack-payment", stackDecision);
   // pre-play choices (payment, cost card, extra essence) open in the middle of the screen; board targets keep the side card
   // paying a Tribute asked by an effect (stack_payment) uses the same centred dark screen, with the hand above it
-  panel.classList.toggle("is-centered", flow.mode !== "stack_copy_target" && ["choice", "payment", "cost_card", "extra_essence", "committing"].includes(flow.stage));
+  panel.classList.toggle("is-centered", flow.mode !== "stack_copy_target" && ["choice", "essence_allocation", "payment", "cost_card", "extra_essence", "committing"].includes(flow.stage));
   $("#rulesFloatingCardImg").src = cardImage(flow.source.cardId);
   $("#rulesFloatingCardImg").alt = cardName(flow.source.cardId);
   $("#rulesFloatingCardName").textContent = cardName(flow.source.cardId);
@@ -898,6 +899,44 @@ function renderRulesBoardFlow() {
     return;
   }
 
+  if (flow.stage === "essence_allocation") {
+    const choice = flow.draft.essencePlan.transcendentChoice;
+    const allocation = flow.transcendentAllocation ||= { ...(flow.draft.transcendentPayment || {}) };
+    const colours = Object.keys(choice.requirements).filter((colour) => choice.requirements[colour] > 0);
+    $("#rulesFlowInstruction").textContent = rulesText("rulesWhiteEssenceInstruction", { count: choice.amount });
+    $("#rulesFlowCost").innerHTML = colours.map((colour) => {
+      const name = t(`temperament${colour[0].toUpperCase()}${colour.slice(1)}`);
+      const maximum = Math.min(choice.amount, choice.requirements[colour]);
+      return `<div class="rules-flow-cost-row rules-white-essence-row"><label for="rulesWhite-${colour}"><img src="${esc(temperamentSymbol(colour))}" alt="">${esc(name)}</label><div class="number-stepper"><button type="button" data-white-minus="${colour}" aria-label="${esc(`${t("decrease")} · ${name}`)}">−</button><input id="rulesWhite-${colour}" data-white-colour="${colour}" type="number" min="0" max="${maximum}" value="${allocation[colour] || 0}" aria-label="${esc(name)}"><button type="button" data-white-plus="${colour}" aria-label="${esc(`${t("increase")} · ${name}`)}">+</button></div></div>`;
+    }).join("") + `<div class="rules-flow-cost-row"><span>${esc(t("rulesTributeRemaining"))}</span><span id="rulesWhiteRemaining"></span></div><button type="button" class="primary" id="rulesWhiteConfirm">${esc(t("confirm"))}</button>`;
+    const update = (colour, value) => {
+      allocation[colour] = Math.max(0, Math.min(Math.floor(Number(value) || 0), choice.amount, choice.requirements[colour]));
+      $(`#rulesWhite-${colour}`).value = allocation[colour];
+      const total = colours.reduce((sum, key) => sum + Number(allocation[key] || 0), 0);
+      $("#rulesWhiteConfirm").disabled = total !== choice.amount;
+      const remaining = Object.fromEntries(colours.map((key) => [key, choice.requirements[key] - Number(allocation[key] || 0)]));
+      $("#rulesWhiteRemaining").innerHTML = rulesTributeUnitsHtml(remaining, t("rulesCoveredByEssence"));
+    };
+    for (const colour of colours) {
+      $(`#rulesWhite-${colour}`).oninput = (event) => update(colour, event.target.value);
+      $(`[data-white-minus="${colour}"]`).onclick = () => update(colour, Number(allocation[colour] || 0) - 1);
+      $(`[data-white-plus="${colour}"]`).onclick = () => update(colour, Number(allocation[colour] || 0) + 1);
+    }
+    update(colours[0], allocation[colours[0]] || 0);
+    $("#rulesWhiteConfirm").onclick = () => {
+      const payment = Object.fromEntries(colours.filter((key) => allocation[key] > 0).map((key) => [key, allocation[key]]));
+      if (Object.values(payment).reduce((sum, value) => sum + value, 0) !== choice.amount) return;
+      Object.assign(flow.draft, rulesActionPaymentDraft(flow.source, flow.draft.card, flow.draft.encodedAbility, payment));
+      flow.selectedPaymentIndexes.clear();
+      if (Object.values(flow.draft.essencePlan.remaining).some((amount) => amount > 0)) {
+        flow.stage = "payment";
+        renderRulesBoardFlow();
+      } else advanceRulesBoardFlow();
+    };
+    clearRulesBoardTargets();
+    return;
+  }
+
   if (flow.stage === "payment") {
     const selected = rulesBoardSelectedPayments(flow);
     const remaining = rulesRemainingAfterManifestations(selected, flow.draft.essencePlan.remaining);
@@ -909,7 +948,9 @@ function renderRulesBoardFlow() {
         : "";
     $("#rulesFlowCost").innerHTML = `${sourceCost}
       <div class="rules-flow-cost-row"><span>${esc(t("rulesEssenceUsed"))}</span>${rulesTributeUnitsHtml(essence, t("rulesNoEssenceUsed"))}</div>
-      <div class="rules-flow-cost-row"><span>${esc(t("rulesTributeRemaining"))}</span>${rulesTributeUnitsHtml(remaining, t("rulesCoveredByEssence"))}</div>`;
+      <div class="rules-flow-cost-row"><span>${esc(t("rulesTributeRemaining"))}</span>${rulesTributeUnitsHtml(remaining, t("rulesCoveredByEssence"))}</div>${flow.draft.transcendentPayment !== undefined ? `<button type="button" id="rulesChangeWhitePayment">${esc(t("rulesChangeWhitePayment"))}</button>` : ""}`;
+    const changeWhite = $("#rulesChangeWhitePayment");
+    if (changeWhite) changeWhite.onclick = () => { flow.stage = "essence_allocation"; renderRulesBoardFlow(); };
     clearRulesBoardTargets();
     return;
   }
