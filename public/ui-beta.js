@@ -1376,6 +1376,19 @@
       const card = event.target.closest(".bf-card[data-item-id]");
       if (card && !card.contains(event.relatedTarget)) hidePeek();
     });
+    // In normal play, Stack cards are the same battlefield elements moved into
+    // the Stack panel. Give that container the field's full-size hover preview too.
+    const manualStack = document.getElementById("ubManualStack");
+    manualStack.addEventListener("mouseover", (event) => {
+      if (!active() || rulesOn()) return;
+      const card = event.target.closest(".bf-card.ub-mstack-card[data-item-id]");
+      if (!card || card === local.peekCard) return;
+      schedulePeek(card, () => boardPeekImage(card), 650);
+    });
+    manualStack.addEventListener("mouseout", (event) => {
+      const card = event.target.closest(".bf-card.ub-mstack-card[data-item-id]");
+      if (card && !card.contains(event.relatedTarget)) hidePeek();
+    });
     document.addEventListener("pointerdown", (event) => {
       local.lastPointerType = event.pointerType;
       local.peekWasFor = local.peekEl ? local.peekCard : null;

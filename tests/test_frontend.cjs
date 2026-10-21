@@ -1527,6 +1527,27 @@ function startServer() {
       window.uiBeta.setEnabled(true);
       renderAll();
       await new Promise((resolve) => setTimeout(resolve, 0));
+      const savedBattlefield = latestState.battlefield;
+      latestState.battlefield = [...savedBattlefield, {
+        id: "manual-stack-hover-probe", ownerId: "p1", cardId: sourceCard.id,
+        x: 600, y: 400, faceUp: true, rotation: 0, counters: {}, manualStack: Date.now(),
+      }];
+      renderAll();
+      const manualStackCard = document.querySelector('#ubManualStack [data-item-id="manual-stack-hover-probe"]');
+      manualStackCard.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
+      await new Promise((resolve) => setTimeout(resolve, 700));
+      const manualStackPreview = document.querySelector("body > .ub-peek");
+      const manualStackHoverPreview = {
+        shown: Boolean(manualStackPreview),
+        image: manualStackPreview?.querySelector("img")?.src || "",
+        expectedImage: cardImage(sourceCard.id),
+        height: Number.parseFloat(manualStackPreview?.style.height || "0"),
+        expectedHeight: Math.min(innerHeight - 24, Math.max(300, innerHeight * .52)),
+      };
+      manualStackCard.dispatchEvent(new MouseEvent("mouseout", { bubbles: true, relatedTarget: document.body }));
+      manualStackHoverPreview.hiddenAfterLeave = !document.querySelector("body > .ub-peek");
+      latestState.battlefield = savedBattlefield;
+      renderAll();
       const pointerTarget = (element) => {
         const rect = element.getBoundingClientRect();
         return document.elementFromPoint(rect.left + rect.width / 2, rect.top + rect.height / 2);
@@ -1651,7 +1672,7 @@ function startServer() {
       peroperoDeckHand.willHidden = !document.querySelector('#myHandTray [data-ghost-zone="deck"]');
       return {
         initial, voluntaryMulligan, recoveryMulligan, requestedUx, deckEditSummary, unaffordableAura, playableAura, essenceStripShown, essenceStripText, essenceStripBesideToggle, essenceStripRemovePayload, finalEssenceRemovePayload, betaEssence, essenceStripHiddenWhenEmpty,
-        hoverFullyVisible, supportKeywordPlayableFromHand, gorbBlocksController, gorbLeavesOpponentFree, peroperoDeckHand,
+        hoverFullyVisible, manualStackHoverPreview, supportKeywordPlayableFromHand, gorbBlocksController, gorbLeavesOpponentFree, peroperoDeckHand,
       };
     });
     const newChoiceScreens = await page.evaluate(() => {
@@ -4285,6 +4306,10 @@ function startServer() {
     });
     assert.equal(pregameUi.essenceStripHiddenWhenEmpty, true);
     assert.equal(pregameUi.hoverFullyVisible, true);
+    assert.equal(pregameUi.manualStackHoverPreview.shown, true);
+    assert.equal(pregameUi.manualStackHoverPreview.image, pregameUi.manualStackHoverPreview.expectedImage);
+    assert.equal(pregameUi.manualStackHoverPreview.height, pregameUi.manualStackHoverPreview.expectedHeight);
+    assert.equal(pregameUi.manualStackHoverPreview.hiddenAfterLeave, true);
     assert.equal(pregameUi.supportKeywordPlayableFromHand, true);
     assert.equal(pregameUi.gorbBlocksController, true);
     assert.equal(pregameUi.gorbLeavesOpponentFree, true);
