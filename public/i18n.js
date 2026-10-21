@@ -3441,6 +3441,10 @@ Object.assign(ui.it, {
   logRulesVesselRollVessel: "Dado per {card}: {roll} (pari) → va nel Bacino Empatico.",
 });
 
+Object.assign(ui.en, { rulesDragCardToEffect: "Drag a card here. Click a card to inspect it.", pickCardToDiscard: "Drag a card from your Hand to Limbo…" });
+Object.assign(ui.fr, { rulesDragCardToEffect: "Déposez une carte ici. Cliquez sur une carte pour l’inspecter.", pickCardToDiscard: "Glissez une carte de votre main vers les Limbes…" });
+Object.assign(ui.it, { rulesDragCardToEffect: "Trascina una carta qui. Clicca su una carta per esaminarla.", pickCardToDiscard: "Trascina una carta dalla mano al Limbo…" });
+
 const KO_LANGUAGE_KEY = "ko_language";
 const KO_LANGUAGES = ["fr", "en", "it"];
 const browserLanguage = String(navigator.language || "en").slice(0, 2).toLowerCase();

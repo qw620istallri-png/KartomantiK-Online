@@ -1177,12 +1177,6 @@ function renderBattlefield() {
       ? item.power
       : item.willManifestation ? 0 : cardsById.get(item.cardId)?.power;
     el.innerHTML = `<div class="bf-card-inner" style="transform:rotate(${item.rotation || 0}deg)">${inner}${item.faceUp && item.cardId ? automationCoverageBadgeHtml(item.cardId) : ""}${item.effectsDisabled ? `<span class="rules-effects-disabled-badge" title="${esc(t("rulesEffectsDisabled"))}" aria-label="${esc(t("rulesEffectsDisabled"))}">Ø</span>` : ""}${item.isCopy ? `<span class="copy-card-stamp">${esc(t("copyStamp"))}</span>` : ""}</div><div class="counters">${counterCircles(item.counters, ongoingEffects, item.effectivePower, printedPower)}</div>${rulesFieldZoneMarkerMarkup(item.fieldZone)}${rulesControllerMarkerMarkup(item)}${item.isSupport ? `<span class="rules-support-badge" title="${esc(t("playInSupport"))}" aria-label="${esc(t("playInSupport"))}">S</span>` : ""}${rulesEffectMarkerMarkup(ongoingEffects)}${rulesActivateMarkerMarkup(item)}`;
-    el.addEventListener("click", (event) => {
-      if (toggleRulesBoardPayment(`battlefield:${item.id}`)) {
-        event.preventDefault();
-        event.stopPropagation();
-      }
-    });
     if (!isObserver) bindCardDragSource(el, { kind: "battlefield", itemId: item.id });
     el.addEventListener("contextmenu", (event) => {
       event.preventDefault();

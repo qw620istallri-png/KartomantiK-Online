@@ -119,7 +119,7 @@ function beginRulesBoardAction(source) {
     ? limboWillIsPlayable(source.cardId, true)
     : source.zone === "graveyard"
       ? limboWillIsPlayable(source.cardId)
-      : handCardIsPlayable(source.cardId);
+      : handCardIsPlayable(source.cardId, source.zone === "suspended" ? source : null);
   if (!playable) {
     if (source.zone === "hand" && !source.tebebe && !source.playFromField) refuseHandCard(source.cardId, source.handIndex ?? null);
     else showToast(t("rulesBoardCardNotPlayable"), true);
@@ -469,7 +469,6 @@ function rulesGhostHandCards() {
       playable: handCardIsPlayable(uncoveredTop),
     });
   }
-  if (rules.pendingChoice) return ghosts;
   const paying = pendingRulesBoardFlow?.stage === "payment" ? pendingRulesBoardFlow : null;
   if (paying) {
     // Tribute cards outside the Hand appear beside it and retain their source-zone label.
@@ -483,6 +482,7 @@ function rulesGhostHandCards() {
     }
     return ghosts;
   }
+  if (rules.pendingChoice) return ghosts;
   for (const cardId of new Set(latestState.players[myPlayerId].zones?.graveyard?.cards || [])) {
     if (limboWillIsPlayable(cardId)) ghosts.push({ cardId, zone: "graveyard", label: t("graveyard") });
     // Wandering Veteran: playable in Support from the Limbo, shown in the hand while it can be played

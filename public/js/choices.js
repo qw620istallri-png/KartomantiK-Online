@@ -86,7 +86,7 @@ function renderResolvePrompt() {
   prompt.querySelector("button").textContent = t("rulesResolvePromptBtn");
 }
 
-// "Discard / give a card from your hand" choices: the source card sits in the middle of the screen and a hand card is dragged (or clicked) to pick it
+// Hand choices use a drop onto the effect screen; clicking a hand card only inspects it.
 let handDropSelection = { choiceId: null, indexes: [] };
 
 function rulesHandDropChoice() {
@@ -112,8 +112,7 @@ function sendHandDropSelection(choice) {
 function pickHandDropCard(handIndex, fromDrop = false) {
   const choice = rulesHandDropChoice();
   if (!choice) return false;
-  // a single card is only chosen when it is released on the screen, so hesitating (or a stray click) picks nothing
-  if (!fromDrop && !(Number(choice.count || 1) > 1 || choice.upTo)) return true;
+  if (!fromDrop) return false;
   const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
   const cardId = hand[handIndex];
   const requiredTypes = Array.isArray(choice.requireTypes) && choice.requireTypes.length ? choice.requireTypes
@@ -164,6 +163,12 @@ function renderRulesChoice() {
   const choicePanel = $("#rulesChoicePanel");
   const choiceOpen = !choicePanel.classList.contains("hidden");
   document.body.classList.toggle("hand-drop-choice", Boolean(handDrop) && choiceOpen);
+  if (handDrop && choiceOpen) {
+    const hint = document.createElement("p");
+    hint.className = "rules-card-drop-hint";
+    hint.textContent = t("rulesDragCardToEffect");
+    choicePanel.querySelector(".rules-choice-options")?.appendChild(hint);
+  }
   // a dark choice screen that does not use the hand also blocks it
   document.body.classList.toggle("choice-blocks-hand", choiceOpen && choicePanel.classList.contains("cards-screen") && !choicePanel.classList.contains("hand-drop") && !choicePanel.classList.contains("hand-swap"));
   const selected = handDrop ? rulesHandDropSelected(handDrop) : [];
@@ -887,7 +892,7 @@ function renderRulesChoiceScreen() {
     );
     const limit = Number(choice.count || 0);
     if (choice.kind === "hand_overflow") {
-      // the cards stay in the hand: drag (or click) the ones to put away, like a discard from hand
+      // the cards stay in the hand: drag the ones to put away, like a discard from hand
       panel.classList.add("cards-screen", "hand-drop");
       options.innerHTML = "";
       panel.classList.remove("hidden");
@@ -1532,7 +1537,7 @@ function renderRulesChoiceScreen() {
     },
   );
   if (!searching) {
-    // the cards stay in the hand: drag one onto the screen (or click it) instead of picking from a window
+    // the cards stay in the hand: drag one onto the asking card instead of picking from a window
     panel.classList.add("cards-screen", "hand-drop");
     closeButton.classList.add("hidden");
     const limit = Number(choice.count || 1);

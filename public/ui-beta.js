@@ -1537,6 +1537,8 @@
   }
 
   function relocate() {
+    // Escape the fixed board's stacking context so a full-screen choice can sit below the hand.
+    adopt(document.getElementById("handArea"), document.getElementById("gameScreen"));
     adopt(document.getElementById("rulesStackPanel"), document.getElementById("ubStackBody"), document.getElementById("ubStackEmpty"));
     adopt(document.getElementById("phaseTracker"), document.getElementById("ubPhase"), document.getElementById("ubManualPass"));
     adopt(document.getElementById("handToolsDock"), document.getElementById("ubToolHand"));
@@ -2466,14 +2468,9 @@
   function markHandEligibility() {
     const drop = typeof rulesHandDropChoice === "function" ? rulesHandDropChoice() : null;
     const types = drop ? (drop.requireTypes?.length ? drop.requireTypes : drop.requireManifestation ? ["manifestation"] : null) : null;
-    let handTop = Infinity;
     document.querySelectorAll("#myHandTray [data-hand-card]").forEach((card) => {
       card.classList.toggle("ub-ineligible", Boolean(types) && !types.includes(cardsById.get(card.dataset.handCard)?.type));
-      handTop = Math.min(handTop, card.getBoundingClientRect().top);
     });
-    // the hand lives in the fixed field layer, under the choice backdrop: the backdrop
-    // stops above it (ui-beta.css) so the cards to pick stay lit
-    if (drop && Number.isFinite(handTop)) document.documentElement.style.setProperty("--ub-hand-top", `${Math.round(handTop)}px`);
   }
 
   // a drawn card shows up in the hand when its draw animation lands, not before
@@ -3271,6 +3268,7 @@
     if (ctx?.kind === "battlefield") {
       el.addEventListener("pointerdown", (event) => {
         if (!active() || !rulesOn()) return;
+        if (rulesBoardPaymentKey(ctx) !== undefined) return;
         event.stopImmediatePropagation();
         if (event.button === 0) dragSupportFromInterzone(el, ctx.itemId, event);
       });

@@ -224,7 +224,9 @@ function dropTargetElAt(x, y) {
 }
 
 function highlightDropTargetAt(x, y) {
-  const target = dropTargetElAt(x, y);
+  const hit = document.elementFromPoint(x, y);
+  const target = pendingRulesBoardFlow ? hit?.closest("#rulesFloatingCard")
+    : rulesHandDropChoice() ? hit?.closest("#rulesChoicePanel .box") : dropTargetElAt(x, y);
   if (target === lastDropHighlight) return;
   clearDropHighlights();
   if (target) {
@@ -290,10 +292,17 @@ function resolveDrop(ctx, clientX, clientY) {
   const fieldEl = el.closest("#battlefieldWrap");
   const handEl = el.closest("#myHandTray");
 
-  if (ctx.kind === "card" && ctx.fromZone === "hand" && !handEl && rulesHandDropChoice()) {
-    pickHandDropCard(Number(ctx.handIndex), true);
+  if (ctx.kind === "card" && ctx.fromZone === "hand" && rulesHandDropChoice()) {
+    if (el.closest("#rulesChoicePanel .box")) pickHandDropCard(Number(ctx.handIndex), true);
+    else if (handEl) reorderHandDrop(ctx.cardId, clientX);
     return;
   }
+  if (handEl && ctx.kind === "card" && ctx.fromZone === "hand") {
+    reorderHandDrop(ctx.cardId, clientX);
+    return;
+  }
+  if (resolveRulesBoardCardDrop(ctx, el)) return;
+  if (ctx.fromZone === "payment") return; // the virtual cost card's choice may have ended mid-drag
   const manualStackDrop = manualStackAvailable() && el.closest("#ubStack");
   if (manualStackDrop && ctx.kind === "battlefield") {
     markLocalBoardMove(ctx.itemId);
@@ -358,17 +367,7 @@ function resolveDrop(ctx, clientX, clientY) {
   }
 
   // ctx.kind === "card": a card dragged from hand or from an open zone popover.
-  // handEl must be checked before fieldEl: the hand area now overlays the
-  // board, so #battlefieldWrap is an ancestor of the hand tray too.
-  if (
-    pendingRulesBoardFlow?.mode === "action"
-    && pendingRulesBoardFlow.stage === "payment"
-    && ctx.fromZone === "hand"
-    && pendingRulesBoardFlow.draft.manifestations.some((entry) => entry.index === ctx.handIndex)
-  ) {
-    toggleRulesBoardPayment(ctx.handIndex);
-    return;
-  }
+  // Hand reordering is handled before payment and board destinations above.
   if (pendingRulesBoardFlow?.mode === "chain") {
     const choice = rulesChainChoice();
     if (!choice || ctx.fromOwnerId !== myPlayerId || ctx.fromZone !== choice.fromZone || !rulesChainCardEligible(ctx.cardId, choice)) {
@@ -398,6 +397,10 @@ function resolveDrop(ctx, clientX, clientY) {
       return;
     }
     send({ type: "move_card", fromOwnerId: ctx.fromOwnerId, fromZone: ctx.fromZone, toOwnerId, toZone, cardId: ctx.cardId });
+    if (ctx.fromZone === "hand" && toZone === "graveyard" && handPickMode === "discard") {
+      handPickMode = null;
+      updateHandToolbarUi();
+    }
   } else if (handEl) {
     if (ctx.fromZone === "hand") reorderHandDrop(ctx.cardId, clientX);
     else if (cardDestinationAllowed(cardOwnerId, myPlayerId, "hand")) send({ type: "move_card", fromOwnerId: ctx.fromOwnerId, fromZone: ctx.fromZone, toOwnerId: myPlayerId, toZone: "hand", cardId: ctx.cardId });
@@ -406,6 +409,10 @@ function resolveDrop(ctx, clientX, clientY) {
     const logical = boardDropLogical(fieldEl, clientX, clientY, ctx);
     const anchor = stackAnchorAt(clientX, clientY, null);
     const card = cardsById.get(ctx.cardId);
+    if (latestState?.rulesEngine?.enabled && ctx.fromZone === "suspended") {
+      beginRulesBoardAction({ cardId: ctx.cardId, zone: "suspended", suspensionId: ctx.suspensionId, placement: { x: logical.x, y: logical.y } });
+      return;
+    }
     if (latestState?.rulesEngine?.enabled && ctx.fromZone === "field_free" && ctx.ghostHostId) {
       beginRulesBoardAction({
         cardId: ctx.cardId, zone: "battlefield", itemId: ctx.ghostHostId, playFromField: true, fieldFree: true,
@@ -461,12 +468,12 @@ function resolveDrop(ctx, clientX, clientY) {
       const firstManifestationPlaceholder = rulesFirstManifestationActive() && Boolean(card?.placeholder);
       if (
         card?.type === "manifestation" && !handCardIsPlayable(ctx.cardId) && handCardHasHandAction(ctx.cardId)
-        && (activatedAbilitiesByCard.get(ctx.cardId) || []).some((ability) => String(ability.result?.kind || "").includes("grant_source_support"))
         && !pendingRulesBoardFlow
       ) {
-        // Timid Brain: dropping the card pays its cost, then the card is played in Support on its own once the permission resolves
         if (beginRulesHandActivatedAction(ctx.cardId, ctx.handIndex)) {
-          pendingSupportDrop = { ctx, clientX, clientY, at: Date.now() };
+          if ((activatedAbilitiesByCard.get(ctx.cardId) || []).some(ability => String(ability.result?.kind || "").includes("grant_source_support"))) {
+            pendingSupportDrop = { ctx, clientX, clientY, at: Date.now() };
+          }
         }
         return;
       }
@@ -509,7 +516,9 @@ function reorderHandDrop(cardId, clientX) {
 
 function bindCardDragSource(el, ctx) {
   el.addEventListener("pointerdown", (event) => {
-    if (event.target.closest("button, select")) return;
+    if (event.button !== 0 || event.isPrimary === false) return;
+    const control = event.target.closest("button, select");
+    if (control && control !== el) return;
     // the freshly drawn Recovery hand is not playable before it has landed
     if (ctx.fromZone === "hand" && handDrawLocked() && latestState?.rulesEngine?.enabled) return;
     event.preventDefault();
@@ -517,7 +526,9 @@ function bindCardDragSource(el, ctx) {
     let moved = false;
     let ghost = null;
     const move = (e) => {
-      if (!moved && (Math.abs(e.clientX - startX) > 4 || Math.abs(e.clientY - startY) > 4)) {
+      if (e.pointerId !== event.pointerId) return;
+      const threshold = event.pointerType === "touch" ? 12 : 6;
+      if (!moved && Math.hypot(e.clientX - startX, e.clientY - startY) > threshold) {
         moved = true;
         ghost = buildDragGhost(ctx, el);
       }
@@ -527,14 +538,25 @@ function bindCardDragSource(el, ctx) {
       }
     };
     const up = (e) => {
+      if (e.pointerId !== undefined && e.pointerId !== event.pointerId) return;
       window.removeEventListener("pointermove", move);
       window.removeEventListener("pointerup", up);
+      window.removeEventListener("pointercancel", up);
+      window.removeEventListener("blur", cancel);
       clearDropHighlights();
       removeGhost(ghost);
-      if (moved) resolveDrop(ctx, e.clientX, e.clientY);
+      if (moved) {
+        const swallow = click => { click.stopImmediatePropagation(); click.preventDefault(); };
+        window.addEventListener("click", swallow, true);
+        setTimeout(() => window.removeEventListener("click", swallow, true), 0);
+        if (e.type === "pointerup" && el.isConnected) resolveDrop(ctx, e.clientX, e.clientY);
+      }
     };
+    const cancel = () => up({ type: "cancel" });
     window.addEventListener("pointermove", move);
     window.addEventListener("pointerup", up);
+    window.addEventListener("pointercancel", up);
+    window.addEventListener("blur", cancel);
   });
 }
 

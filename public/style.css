@@ -1889,6 +1889,12 @@ body.hand-drawing #myHandTray .hand-card { cursor: progress; }
   border-radius: 10px;
   background: #111;
 }
+
+.rules-card-drop-hint { display: block; margin: 10px 0 0; padding: 8px 12px; border: 1px dashed currentColor; border-radius: 8px; font-size: 14px; line-height: 1.4; text-align: center; color: inherit; }
+.rules-card-drop-hint[hidden] { display: none; }
+.rules-floating-card.drop-target-active > img,
+.rules-choice-panel.hand-drop .box.drop-target-active .rules-choice-source { outline: 2px solid #d7ba68; outline-offset: 4px; }
+[data-hand-card], [data-ghost-card], [data-suspended-card] { touch-action: none; }
 .rules-floating-copy {
   margin-top: 8px;
   padding: 9px 10px;

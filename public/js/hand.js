@@ -168,9 +168,9 @@ function handCardHasHandAction(cardId) {
 
 // a Will whose played ability needs a target (Annihilating Nectar...) is not
 // playable while no legal target exists
-function rulesPlayedAbilityTargetsAvailableClient(cardId) {
+function rulesPlayedAbilityTargetsAvailableClient(cardId, source = null) {
   const ability = (playedAbilitiesByCard.get(cardId) || [])[0];
-  const draft = ability ? buildRulesActionDraft({ cardId, zone: "hand" }, ability) : null;
+  const draft = ability ? buildRulesActionDraft(source || { cardId, zone: "hand" }, ability) : null;
   if (!draft) return true;
   if (Array.isArray(draft.targetRules?.groups)) {
     return draft.targetRules.groups.every((_group, index) => (
@@ -180,7 +180,8 @@ function rulesPlayedAbilityTargetsAvailableClient(cardId) {
   return Number(draft.targetRules?.min || 0) <= draft.structuredTargets.length;
 }
 
-function handCardIsPlayable(cardId) {
+function handCardIsPlayable(cardId, source = null) {
+  const canAfford = () => source ? rulesDraftCanBePaid(buildRulesActionDraft(source)) : rulesCanAffordCard(cardId);
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
   if (!rules?.enabled || !card || isObserver || rules.pendingChoice || handDrawLocked()) return false;
@@ -201,27 +202,27 @@ function handCardIsPlayable(cardId) {
     ? rulesEphemeralPhasesClient(card).includes(phaseId)
     : ["confrontation_reaction", "resolution_effects", "end_actions"].includes(phaseId);
   if (playType === "ephemeral_will") {
-    if (!responsePhase || !rulesCanAffordCard(cardId)) return false;
+    if (!responsePhase || !canAfford()) return false;
     const ability = (playedAbilitiesByCard.get(cardId) || [])[0];
     if (
       ability?.condition === "controller_lost_confrontation"
       && rules.confrontationResult?.loserId !== myPlayerId
     ) return false;
-    const draft = ability ? buildRulesActionDraft({ cardId, zone: "hand" }, ability) : null;
+    const draft = ability ? buildRulesActionDraft(source || { cardId, zone: "hand" }, ability) : null;
     if (!draft) return true;
     if (!rulesAdditionalCostAvailableClient(draft)) return false;
-    return rulesPlayedAbilityTargetsAvailableClient(cardId);
+    return rulesPlayedAbilityTargetsAvailableClient(cardId, source);
   }
   if (playType === "persistent_will") {
     if (
       ["confrontation_reaction", "resolution_effects"].includes(phaseId)
       && rulesPersistentWillsAsEphemeralClient()
-    ) return rulesCanAffordCard(cardId) && rulesPlayedAbilityTargetsAvailableClient(cardId);
+    ) return canAfford() && rulesPlayedAbilityTargetsAvailableClient(cardId, source);
     const timingOk = phaseId === "end_actions"
       || (phaseId === "confrontation_before_revelation" && rulesBeforeRevelationPlayClient(card));
     // a Stack in End actions or before the Revelation (Atavic Wills) can be answered
-    return timingOk && rulesCanAffordCard(cardId)
-      && rulesPlayedAbilityTargetsAvailableClient(cardId);
+    return timingOk && canAfford()
+      && rulesPlayedAbilityTargetsAvailableClient(cardId, source);
   }
   const supportLocked = (rules.supportEntryLockedPlayerIds || []).includes(myPlayerId);
   if (card.type === "manifestation" && rulesEndPhaseInterzonePlayClient(card)) {
@@ -499,23 +500,7 @@ function renderHandTray() {
   previousHandCardIds = currentIds;
   $$("[data-hand-card]").forEach((el) => {
     const cardId = el.dataset.handCard;
-    el.onclick = () => {
-      if (pickHandDropCard(Number(el.dataset.handIndex))) return;
-      if (toggleRulesBoardPayment(Number(el.dataset.handIndex))) return;
-      if (!handPickMode) {
-        // a Manifestation whose ability works from the Hand (Ranba, Diabolical Giant): click to use it
-        if (!pendingRulesBoardFlow && handCardHasHandAction(cardId) && !handCardIsPlayable(cardId)) {
-          beginRulesHandActivatedAction(cardId, Number(el.dataset.handIndex));
-        } else if (el.dataset.unplayable && !pendingRulesBoardFlow) {
-          refuseHandCard(cardId, Number(el.dataset.handIndex));
-        }
-        return;
-      }
-      const mode = handPickMode;
-      handPickMode = null;
-      updateHandToolbarUi();
-      if (mode === "discard") send({ type: "move_card", fromZone: "hand", toZone: "graveyard", cardId });
-    };
+    el.onclick = () => showInspect(cardId);
     bindCardDragSource(el, { kind: "card", cardId, handIndex: Number(el.dataset.handIndex), cardOwnerId: meId, fromOwnerId: meId, fromZone: "hand" });
     bindRarityPointer(el, false);
     wireCardHoverZoom(el, "hand-card-hover-clone");
@@ -564,18 +549,13 @@ function renderHandTray() {
     }
     if (zone === "payment") {
       const candidate = pendingRulesBoardFlow?.draft?.manifestations?.find((entry) => String(entry.selectionKey) === el.dataset.ghostKey);
-      el.onclick = () => { if (candidate) toggleRulesBoardPayment(candidate.selectionKey); };
+      el.onclick = () => showInspect(cardId);
+      bindCardDragSource(el, { kind: "card", cardId, fromOwnerId: meId, fromZone: "payment", paymentKey: candidate?.selectionKey });
       el.classList.toggle("is-choice-selected", Boolean(candidate && pendingRulesBoardFlow.selectedPaymentIndexes.has(candidate.selectionKey)));
       wireCardHoverZoom(el, "hand-card-hover-clone");
       return;
     }
-    const startPlay = (placement) => beginRulesBoardAction(zone === "attached"
-      ? { cardId, zone, itemId, placement }
-      : zone === "field_free"
-        ? { cardId, zone: "battlefield", itemId, playFromField: true, fieldFree: true, placement }
-        : { cardId, zone, placement });
-    // a Limbo permission (Wandering Veteran) is played by dragging it like a hand card
-    el.onclick = el.dataset.ghostPermission === "true" ? () => showInspect(cardId) : () => startPlay({ x: 700, y: 300 });
+    el.onclick = () => showInspect(cardId);
     bindCardDragSource(el, { kind: "card", cardId, handIndex: null, cardOwnerId: meId, fromOwnerId: meId, fromZone: zone, ghostHostId: itemId });
     wireCardHoverZoom(el, "hand-card-hover-clone");
     el.addEventListener("contextmenu", (event) => {
@@ -585,9 +565,8 @@ function renderHandTray() {
   });
   $$("[data-suspended-card]").forEach((el) => {
     const cardId = el.dataset.suspendedCard;
-    el.onclick = () => openRulesActionPanel({
-      cardId, zone: "suspended", suspensionId: el.dataset.suspensionId,
-    });
+    el.onclick = () => showInspect(cardId);
+    bindCardDragSource(el, { kind: "card", cardId, fromOwnerId: meId, fromZone: "suspended", suspensionId: el.dataset.suspensionId });
     wireCardHoverZoom(el, "hand-card-hover-clone");
     el.addEventListener("contextmenu", (event) => {
       event.preventDefault();

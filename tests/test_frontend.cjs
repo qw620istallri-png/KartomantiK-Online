@@ -546,7 +546,7 @@ function startServer() {
       resolveDrop = (ctx) => contexts.push(ctx);
       for (const zoneName of ["graveyard", "exile", "receptacle"]) {
         const source = document.querySelector(`[data-field-pile="p1:${zoneName}"] [data-pile-top-card]`);
-        source?.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true, clientX: 10, clientY: 10 }));
+        source?.dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true, cancelable: true, clientX: 10, clientY: 10 }));
         window.dispatchEvent(new PointerEvent("pointermove", { bubbles: true, clientX: 30, clientY: 30 }));
         window.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, clientX: 30, clientY: 30 }));
       }
@@ -597,7 +597,7 @@ function startServer() {
       const contexts = [];
       const originalResolveDrop = resolveDrop;
       resolveDrop = (ctx) => contexts.push(ctx);
-      playable?.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true, clientX: 20, clientY: 20 }));
+      playable?.dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true, cancelable: true, clientX: 20, clientY: 20 }));
       window.dispatchEvent(new PointerEvent("pointermove", { bubbles: true, clientX: 45, clientY: 45 }));
       window.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, clientX: 45, clientY: 45 }));
       resolveDrop = originalResolveDrop;
@@ -682,7 +682,7 @@ function startServer() {
       const originalResolveDrop = resolveDrop;
       resolveDrop = (ctx) => contexts.push(ctx);
       const handCard = document.querySelector(`[data-hand-card="${fromHand.id}"]`);
-      handCard.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true, clientX: 300, clientY: 800 }));
+      handCard.dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true, cancelable: true, clientX: 300, clientY: 800 }));
       window.dispatchEvent(new PointerEvent("pointermove", { bubbles: true, clientX: 340, clientY: 740 }));
       window.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, clientX: 340, clientY: 740 }));
       resolveDrop = originalResolveDrop;
@@ -801,7 +801,7 @@ function startServer() {
       const ownHighlighted = document.querySelector('[data-item-id="own-support"]')?.classList.contains("rules-valid-target") || false;
       const opponentTarget = document.querySelector('[data-item-id="opponent-support"]');
       const opponentHighlighted = opponentTarget?.classList.contains("rules-valid-target") || false;
-      opponentTarget?.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+      opponentTarget?.dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true, cancelable: true }));
       const payload = window.__targetedSupportSent[0] || null;
 
       closeRulesBoardFlow();
@@ -1435,7 +1435,7 @@ function startServer() {
       requestedUx.confirmArmed = document.querySelector("#importConfirmBtn").classList.contains("confirm-armed");
       requestedUx.confirmText = document.querySelector("#importConfirmBtn").textContent.trim();
       requestedUx.sentBeforeConfirmation = window.__sent.some((payload) => payload.confirmDeck === true);
-      document.querySelector("#importDeckHeading").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true }));
+      document.querySelector("#importDeckHeading").dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true }));
       requestedUx.confirmDisarmedOutside = !document.querySelector("#importConfirmBtn").classList.contains("confirm-armed");
       document.querySelector("#importConfirmBtn").click();
       document.querySelector("#importConfirmBtn").click();
@@ -1478,7 +1478,7 @@ function startServer() {
         handle: getComputedStyle(document.querySelector("#handResizeHandle")).pointerEvents,
       };
       const sizeBefore = handCardHeight;
-      document.querySelector("#handResizeHandle").dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, clientY: 700 }));
+      document.querySelector("#handResizeHandle").dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true, clientY: 700 }));
       window.dispatchEvent(new PointerEvent("pointermove", { bubbles: true, clientY: 660 }));
       window.dispatchEvent(new PointerEvent("pointerup", { bubbles: true, clientY: 660 }));
       requestedUx.handResizeDelta = handCardHeight - sizeBefore;
@@ -1791,7 +1791,7 @@ function startServer() {
       // cards wait in the middle pool; drag each onto a destination with real pointer events, the choice is sent when the pool is empty
       const dragTo = (card, side) => {
         const rect = document.querySelector(`.rules-reorder-lanes [data-rules-reorder-strip="${side}"]`).getBoundingClientRect();
-        card.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true, clientX: 5, clientY: 5 }));
+        card.dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true, cancelable: true, clientX: 5, clientY: 5 }));
         window.dispatchEvent(new PointerEvent("pointermove", { clientX: rect.left + 20, clientY: rect.top + 20 }));
         window.dispatchEvent(new PointerEvent("pointerup", {}));
       };
@@ -1824,7 +1824,7 @@ function startServer() {
       renderAll();
       const dragTo = (card, side) => {
         const rect = document.querySelector(`.rules-reorder-lanes [data-rules-reorder-strip="${side}"]`).getBoundingClientRect();
-        card.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true, clientX: 5, clientY: 5 }));
+        card.dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true, cancelable: true, clientX: 5, clientY: 5 }));
         window.dispatchEvent(new PointerEvent("pointermove", { clientX: rect.left + 20, clientY: rect.top + 20 }));
         window.dispatchEvent(new PointerEvent("pointerup", {}));
       };
@@ -2230,7 +2230,7 @@ function startServer() {
       renderAll();
       beginRulesHandActivatedAction(timid, 0);
       const stage = pendingRulesBoardFlow?.stage;
-      const costChoices = [...document.querySelectorAll("[data-rules-cost-card]")].map((button) => button.dataset.rulesCostCard);
+      const costChoices = [...document.querySelectorAll("#myHandTray .is-tribute-candidate")].map(card => card.dataset.handCard);
       closeRulesActionPanel();
       pendingRulesBoardFlow = null;
       latestState.battlefield = saved.battlefield;
@@ -2245,6 +2245,7 @@ function startServer() {
     assert.equal(vesselAndWillCostUi.stage, "cost_card");
     assert.deepEqual(vesselAndWillCostUi.costChoices.sort(), vesselAndWillCostUi.willIds.sort());
     const rulesChoice = await page.evaluate(() => {
+      const previouslyInspectedCardId = inspectCurrentId;
       const darkApparitionId = "7e2ppf4rfgkdfms_en";
       const discardCardId = [...cardsById.keys()].find((cardId) => cardId !== darkApparitionId);
       latestState.rulesEngine.pendingChoice = null;
@@ -2307,6 +2308,9 @@ function startServer() {
       };
       document.querySelector('[data-hand-card][data-hand-index="0"]').click();
       document.querySelector('[data-hand-card][data-hand-index="1"]').click();
+      multiDiscardStep.clickSelectedCount = document.querySelectorAll("#myHandTray .hand-card.is-choice-selected").length;
+      pickHandDropCard(0, true);
+      pickHandDropCard(1, true);
       multiDiscardStep.selectedCount = document.querySelectorAll(".hand-card.is-choice-selected").length;
       document.querySelector("#rulesDiscardConfirm").click();
       multiDiscardStep.payload = window.__sent.find((payload) => payload.type === "resolve_rules_choice");
@@ -2392,14 +2396,13 @@ function startServer() {
       const betaPanelRect = betaPanel.getBoundingClientRect();
       const betaHand = document.querySelector("#gameScreen.ui-beta .hand-area");
       const betaHandStyle = getComputedStyle(betaHand);
-      // the backdrop dims everything above the hand and stops at its top edge,
-      // so the hand stays bright and takes the pointer
+      // Full viewport backdrop, with the hand outside the board's stacking context.
       const handPeek = parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--ub-handPeek-root"));
       const betaHandCard = document.querySelector("#gameScreen.ui-beta [data-hand-card]").getBoundingClientRect();
       const handHit = document.elementFromPoint(betaHandCard.left + betaHandCard.width / 2, innerHeight - handPeek / 2);
       const betaDiscardBackdrop = {
         fullViewport: Math.abs(betaPanelRect.left) < 1 && Math.abs(betaPanelRect.top) < 1
-          && Math.abs(betaPanelRect.width - innerWidth) < 1 && Math.abs(betaPanelRect.bottom - (innerHeight - handPeek)) < 2,
+          && Math.abs(betaPanelRect.width - innerWidth) < 1 && Math.abs(betaPanelRect.bottom - innerHeight) < 2,
         solidBackdrop: betaPanelStyle.backgroundImage === "none"
           && betaPanelStyle.backgroundColor !== "rgba(0, 0, 0, 0)",
         handAboveBackdrop: Boolean(handHit?.closest("#gameScreen.ui-beta .hand-area")) && betaHandStyle.display !== "none",
@@ -2410,6 +2413,7 @@ function startServer() {
       latestState.rulesEngine.confrontationResult = null;
       closeRulesChoicePanel(true);
       renderAll();
+      if (previouslyInspectedCardId) showInspect(previouslyInspectedCardId);
       return { darkApparitionId, discardCardId, targetStep, discardStep, conditionalStep, multiDiscardStep, recoveryStep, comparison, destinationStep, replacementStep, betaDiscardBackdrop };
     });
     const rulesVfx = await page.evaluate(async ({ tributeCardId, encodedCardId, sacrificeCardId, gracefulCardId, moveTargetCardId, exileTargetCardId, destroyTargetCardId }) => {
@@ -2796,7 +2800,7 @@ function startServer() {
       const stackTarget = document.querySelector(`[data-stack-action-id="${targetActionId}"]`);
       const highlighted = stackTarget?.classList.contains("rules-valid-target") || false;
       const legend = document.querySelector("#rulesFlowInstruction")?.textContent || "";
-      stackTarget?.dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+      stackTarget?.dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true, cancelable: true }));
       const payload = window.__sent.find((entry) => entry.abilityId === "neutralize-stack-card") || null;
 
       latestState.rulesEngine.actionStack = [];
@@ -2861,11 +2865,11 @@ function startServer() {
         .structuredTargets.map((target) => target.kind);
       beginRulesBoardAction({ cardId: denyCardId, zone: "hand", handIndex: 0 });
       document.querySelector(`[data-stack-action-id="${cardActionId}"]`)
-        .dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+        .dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true, cancelable: true }));
       const denyPayload = window.__sent.find((entry) => entry.abilityId === "deny-stack-card-unless-paid");
       beginRulesBoardAction({ cardId: ignoreCardId, zone: "hand", handIndex: 1 });
       document.querySelector(`[data-stack-action-id="${effectActionId}"]`)
-        .dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+        .dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true, cancelable: true }));
       const ignorePayload = window.__sent.find((entry) => entry.abilityId === "ignore-stack-effect-unless-paid");
 
       latestState.players.p1.zones.hand = handZone([paymentCard.id]);
@@ -2894,6 +2898,14 @@ function startServer() {
           .filter(Number.isFinite)),
       };
       paymentCardElement.click();
+      paymentInitial.clickSelectedCount = pendingRulesBoardFlow.selectedPaymentIndexes.size;
+      const previousElementFromPoint = document.elementFromPoint;
+      document.elementFromPoint = () => document.querySelector("#rulesFloatingCardImg");
+      resolveDrop({
+        kind: "card", cardId: paymentCard.id, handIndex: 0,
+        cardOwnerId: "p1", fromOwnerId: "p1", fromZone: "hand",
+      }, 0, 0);
+      document.elementFromPoint = previousElementFromPoint;
       const payEnabledAfterSelection = !document.querySelector("#rulesFlowPayBtn").disabled;
       document.querySelector("#rulesFlowPayBtn").click();
       const payPayload = window.__sent.at(-1);
@@ -2979,7 +2991,7 @@ function startServer() {
         copyBadge: document.querySelector(".rules-stack-copy-state")?.textContent || "",
       };
       document.querySelector('.bf-card[data-item-id="imitate-target-2"]')
-        .dispatchEvent(new PointerEvent("pointerdown", { bubbles: true, cancelable: true }));
+        .dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true, cancelable: true }));
       const retargetPayload = window.__sent.at(-1);
 
       latestState.rulesEngine.pendingChoice = copyChoice("stack-copy-keep");
@@ -3184,7 +3196,9 @@ function startServer() {
       await page.evaluate(() => closeRulesActionPanel());
     }
 
-    await page.evaluate(() => {
+    await page.evaluate((cardId) => {
+      latestState.players.p1.cardRarities[cardId] = "desert";
+      showInspect(cardId);
       document.querySelector("#sideboardPanel").classList.add("hidden");
       document.querySelector("#inspectPanel .inspect-main").style.background = "repeating-conic-gradient(#20e0c0 0 25%, #c020e0 0 50%) 0 0 / 36px 36px";
       document.querySelector("#inspectPanel .inspect-img").style.setProperty(
@@ -3195,7 +3209,7 @@ function startServer() {
         animation.pause();
         animation.currentTime = 0;
       });
-    });
+    }, result.cardId);
     const inspectArt = page.locator("#inspectPanel .inspect-img");
     const clip = await inspectArt.boundingBox();
     const snap = async () => PNG.sync.read(await page.screenshot({ clip, animations: "disabled" }));
@@ -3432,7 +3446,7 @@ function startServer() {
         candidateCount: document.querySelectorAll(".hand-card.is-tribute-candidate").length,
         sentBeforePayment: window.__sent.length,
       };
-      document.elementFromPoint = () => document.querySelector("#battlefield");
+      document.elementFromPoint = () => document.querySelector("#rulesFloatingCardImg");
       resolveDrop({ kind: "card", cardId: tribute.id, handIndex: 1, cardOwnerId: "p1", fromOwnerId: "p1", fromZone: "hand" }, wrap.left + 40, wrap.top + 40);
       document.elementFromPoint = realElementFromPoint;
       const targeting = {
@@ -3444,7 +3458,7 @@ function startServer() {
         arrow: document.querySelector("#rulesTargetArrow .rules-target-arrow-line").getAttribute("d"),
         instruction: document.querySelector("#rulesFlowInstruction").textContent,
       };
-      document.querySelector('[data-item-id="board-flow-target"]').dispatchEvent(new PointerEvent("pointerdown", {
+      document.querySelector('[data-item-id="board-flow-target"]').dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true,
         bubbles: true, cancelable: true, clientX: 720, clientY: 460,
       }));
       targeting.targetLock = document.querySelectorAll(".rules-vfx-target-lock").length;
@@ -3500,9 +3514,14 @@ function startServer() {
         stage: pendingRulesBoardFlow?.stage,
         sentBeforePayment: window.__sent.length,
       };
-      document.querySelector('[data-hand-index="1"]').click();
+      document.elementFromPoint = () => document.querySelector("#rulesFloatingCardImg");
+      resolveDrop({
+        kind: "card", cardId: persistentTribute.id, handIndex: 1,
+        cardOwnerId: "p1", fromOwnerId: "p1", fromZone: "hand",
+      }, persistentDropX, persistentDropY);
+      document.elementFromPoint = realElementFromPoint;
       persistentPlacement.targetStage = pendingRulesBoardFlow?.stage;
-      document.querySelector('[data-item-id="persistent-play-target"]').dispatchEvent(new PointerEvent("pointerdown", {
+      document.querySelector('[data-item-id="persistent-play-target"]').dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true,
         bubbles: true, cancelable: true, clientX: 770, clientY: 440,
       }));
       persistentPlacement.payload = window.__sent.find((payload) => payload.type === "declare_rules_action");
@@ -3538,9 +3557,14 @@ function startServer() {
       document.querySelector('[data-item-id="activated-source"] [data-rules-activate-confirm]').click();
       activationButton.stage = pendingRulesBoardFlow?.stage;
       activationButton.costText = document.querySelector("#rulesFlowCost").textContent.replace(/\s+/g, " ").trim();
-      document.querySelector('[data-hand-index="0"]').click();
+      document.elementFromPoint = () => document.querySelector("#rulesFloatingCardImg");
+      resolveDrop({
+        kind: "card", cardId: activationTribute.id, handIndex: 0,
+        cardOwnerId: "p1", fromOwnerId: "p1", fromZone: "hand",
+      }, 0, 0);
+      document.elementFromPoint = realElementFromPoint;
       activationButton.targetStage = pendingRulesBoardFlow?.stage;
-      document.querySelector('[data-item-id="activated-target"]').dispatchEvent(new PointerEvent("pointerdown", {
+      document.querySelector('[data-item-id="activated-target"]').dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true,
         bubbles: true, cancelable: true, clientX: 790, clientY: 440,
       }));
       activationButton.payload = window.__sent.find((payload) => payload.type === "declare_rules_action");
@@ -4131,6 +4155,7 @@ function startServer() {
     assert.equal(conditionalStackPayment.paymentInitial.modalHidden, true);
     assert.equal(conditionalStackPayment.paymentInitial.actionsVisible, true);
     assert.equal(conditionalStackPayment.paymentInitial.payDisabled, true);
+    assert.equal(conditionalStackPayment.paymentInitial.clickSelectedCount, 0);
     assert.equal(conditionalStackPayment.paymentInitial.candidate, true);
     assert.equal(conditionalStackPayment.paymentInitial.targetMarked, true);
     assert(conditionalStackPayment.paymentInitial.pendingLabel.length > 0);
@@ -4283,6 +4308,7 @@ function startServer() {
     });
     assert.match(rulesChoice.conditionalStep.text, /2/);
     assert.equal(rulesChoice.multiDiscardStep.confirmEnabledBeforePick, true);
+    assert.equal(rulesChoice.multiDiscardStep.clickSelectedCount, 0);
     assert.equal(rulesChoice.multiDiscardStep.selectedCount, 2);
     assert.equal(rulesChoice.multiDiscardStep.payload.choiceId, "choice-multi");
     assert.equal(rulesChoice.multiDiscardStep.payload.cardIds.length, 2);

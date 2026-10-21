@@ -605,6 +605,52 @@ function advanceRulesBoardFlow() {
   scheduleRulesBoardSubmit();
 }
 
+function rulesBoardPaymentKey(ctx) {
+  const flow = pendingRulesBoardFlow;
+  if (!flow || flow.stage !== "payment") return undefined;
+  const key = ctx.kind === "battlefield" ? `battlefield:${ctx.itemId}`
+    : ctx.fromOwnerId !== myPlayerId ? undefined
+      : ctx.fromZone === "hand" ? ctx.handIndex : ctx.paymentKey;
+  return flow.draft.manifestations.some(entry => entry.selectionKey === key) ? key : undefined;
+}
+
+function rulesBoardHandCostCandidates(flow = pendingRulesBoardFlow) {
+  const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
+  const sourceIndex = flow?.source.zone === "hand"
+    ? (flow.source.handIndex ?? hand.indexOf(flow.source.cardId)) : -1;
+  const discardWill = flow?.draft.encodedAbility?.additionalCost === "discard_hand_will";
+  return hand.map((cardId, index) => ({ cardId, index })).filter(entry => entry.index !== sourceIndex
+    && (discardWill ? ["ephemeral_will", "persistent_will"].includes(cardsById.get(entry.cardId)?.type)
+      : cardsById.get(entry.cardId)?.type === "manifestation"));
+}
+
+// Every card cost uses the same deliberate drop onto the asking card.
+function resolveRulesBoardCardDrop(ctx, target) {
+  const flow = pendingRulesBoardFlow;
+  if (!flow || !["payment", "cost_card", "extra_essence"].includes(flow.stage)) return false;
+  if (!target?.closest("#rulesFloatingCard")) return true;
+  if (flow.stage === "payment") {
+    const key = rulesBoardPaymentKey(ctx);
+    if (key !== undefined) toggleRulesBoardPayment(key);
+    return true;
+  }
+  if (ctx.fromOwnerId !== myPlayerId || ctx.fromZone !== "hand") return true;
+  if (flow.stage === "cost_card") {
+    const candidate = rulesBoardHandCostCandidates(flow).find(entry => entry.index === ctx.handIndex);
+    if (candidate) { flow.costCardId = candidate.cardId; advanceRulesBoardFlow(); }
+  } else {
+    const candidate = (flow.draft.extraTributeCards || []).find(entry => entry.index === ctx.handIndex
+      && !flow.selectedPaymentIndexes.has(entry.index));
+    if (candidate) {
+      if (!flow.extraTributeIndexes) flow.extraTributeIndexes = new Set();
+      if (flow.extraTributeIndexes.has(candidate.index)) flow.extraTributeIndexes.delete(candidate.index);
+      else flow.extraTributeIndexes.add(candidate.index);
+      renderRulesBoardFlow();
+    }
+  }
+  return true;
+}
+
 function toggleRulesBoardPayment(index) {
   const flow = pendingRulesBoardFlow;
   if (!flow || flow.stage !== "payment") return false;
@@ -653,7 +699,7 @@ function renderRulesBoardFlow() {
   const panel = $("#rulesBoardFlow");
   // paying or chaining from the hand (tribute, card cost, Advocate of Catharsis): the hand rises above the dark screen
   document.body.classList.toggle("flow-uses-hand", Boolean(
-    flow && flow.mode !== "stack_copy_target" && (flow.mode === "chain" || ["payment", "cost_card"].includes(flow.stage)),
+    flow && flow.mode !== "stack_copy_target" && (flow.mode === "chain" || ["payment", "cost_card", "extra_essence"].includes(flow.stage)),
   ));
   if (!flow || !panel) {
     panel?.classList.add("hidden");
@@ -667,8 +713,9 @@ function renderRulesBoardFlow() {
     rulesFlowFlipTimer = setTimeout(() => { rulesFlowFlipTimer = null; renderRulesBoardFlow(); }, Math.min(flipWait + 30, 2500));
     return;
   }
-  const handSourceStillValid = ["hand", "graveyard"].includes(flow.source.zone)
-    && (latestState?.players?.[myPlayerId]?.zones?.[flow.source.zone]?.cards || []).includes(flow.source.cardId);
+  const handSourceStillValid = (["hand", "graveyard"].includes(flow.source.zone)
+    && (latestState?.players?.[myPlayerId]?.zones?.[flow.source.zone]?.cards || []).includes(flow.source.cardId))
+    || (flow.source.zone === "suspended" && (latestState?.rulesEngine?.suspendedCards || []).some(entry => entry.id === flow.source.suspensionId && entry.cardId === flow.source.cardId && entry.playableByPlayerId === myPlayerId));
   const battlefieldSource = flow.source.zone === "battlefield"
     ? latestState?.battlefield?.find((item) => item.id === flow.source.itemId)
     : null;
@@ -696,6 +743,9 @@ function renderRulesBoardFlow() {
     return;
   }
   panel.classList.remove("hidden");
+  const dropHint = $("#rulesCardDropHint");
+  dropHint.hidden = !["payment", "cost_card", "extra_essence"].includes(flow.stage);
+  dropHint.textContent = t("rulesDragCardToEffect");
   const stackDecision = ["stack_payment", "stack_copy_target"].includes(flow.mode);
   panel.classList.toggle("is-stack-payment", stackDecision);
   // pre-play choices (payment, cost card, extra essence) open in the middle of the screen; board targets keep the side card
@@ -723,11 +773,11 @@ function renderRulesBoardFlow() {
 
   $$('[data-hand-card]').forEach((element) => {
     const index = Number(element.dataset.handIndex);
-    const candidate = flow.stage === "payment" && flow.draft.manifestations.some(
-      (entry) => entry.selectionKey === index,
-    );
+    const candidate = flow.stage === "payment" ? flow.draft.manifestations.some(entry => entry.selectionKey === index)
+      : flow.stage === "cost_card" ? rulesBoardHandCostCandidates(flow).some(entry => entry.index === index)
+        : flow.stage === "extra_essence" && (flow.draft.extraTributeCards || []).some(entry => entry.index === index && !flow.selectedPaymentIndexes.has(index));
     element.classList.toggle("is-tribute-candidate", candidate);
-    element.classList.toggle("is-tribute-selected", candidate && flow.selectedPaymentIndexes.has(index));
+    element.classList.toggle("is-tribute-selected", candidate && (flow.stage === "extra_essence" ? flow.extraTributeIndexes?.has(index) : flow.selectedPaymentIndexes.has(index)));
     const chainCandidate = flow.mode === "chain"
       && flow.fromZone === "hand"
       && rulesChainCardEligible(element.dataset.handCard);
@@ -865,17 +915,7 @@ function renderRulesBoardFlow() {
   }
 
   if (flow.stage === "cost_card") {
-    const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
-    let skippedSource = false;
-    const choices = hand.filter((cardId) => {
-      if (!skippedSource && flow.source.zone === "hand" && cardId === flow.source.cardId) {
-        skippedSource = true;
-        return false;
-      }
-      return flow.draft.encodedAbility?.additionalCost === "discard_hand_will"
-        ? ["ephemeral_will", "persistent_will"].includes(cardsById.get(cardId)?.type)
-        : cardsById.get(cardId)?.type === "manifestation";
-    });
+    const choices = rulesBoardHandCostCandidates(flow);
     const discardCost = flow.draft.encodedAbility?.additionalCost === "discard_hand_will";
     $("#rulesBoardEssence").classList.add("hidden");
     $("#rulesFlowInstruction").textContent = t(
@@ -883,19 +923,8 @@ function renderRulesBoardFlow() {
         ? (discardCost ? "rulesCostWillInstruction" : "rulesCostCardInstruction")
         : (discardCost ? "rulesCostWillNone" : "rulesCostCardNone"),
     );
-    $("#rulesFlowCost").innerHTML = `<div class="rules-flow-cost-row rules-cost-card-row">${
-      choices.map((cardId, index) => `
-        <button type="button" class="rules-choice-card" data-rules-cost-card="${esc(cardId)}" data-index="${index}" title="${esc(cardName(cardId))}">
-          <img src="${esc(cardImage(cardId))}" alt="">
-          <span>${esc(cardName(cardId))}</span>
-        </button>`).join("")
-    }</div>`;
-    $$("[data-rules-cost-card]").forEach((button) => {
-      button.onclick = () => {
-        flow.costCardId = button.dataset.rulesCostCard;
-        advanceRulesBoardFlow();
-      };
-    });
+    // Use the real, highlighted hand cards instead of a second clickable picker.
+    $("#rulesFlowCost").innerHTML = "";
     clearRulesBoardTargets();
     return;
   }
@@ -912,11 +941,7 @@ function renderRulesBoardFlow() {
     const extraCardsHtml = extraCandidates.length ? `
       <div class="rules-flow-cost-row rules-extra-tribute-row">
         <span>${esc(t("rulesOptionalExtraCards"))}</span>
-        <div class="rules-extra-tribute-cards">${extraCandidates.map((entry) => `
-          <button type="button" class="rules-choice-card${flow.extraTributeIndexes.has(entry.index) ? " selected" : ""}" data-extra-tribute="${entry.index}" title="${esc(cardName(entry.cardId))}">
-            <img src="${esc(cardImage(entry.cardId))}" alt="">
-            <span>${esc(cardName(entry.cardId))} (+${entry.power})</span>
-          </button>`).join("")}</div>
+        <strong>${flow.extraTributeIndexes.size}/${extraCandidates.length}</strong>
       </div>` : "";
     $("#rulesBoardEssence").classList.add("hidden");
     $("#rulesFlowInstruction").textContent = rulesText(
@@ -935,14 +960,6 @@ function renderRulesBoardFlow() {
       <button type="button" class="primary rules-extra-essence-confirm" id="rulesExtraEssenceConfirm">
         ${esc(t("confirm"))}
       </button>`;
-    $$("[data-extra-tribute]").forEach((button) => {
-      button.onclick = () => {
-        const index = Number(button.dataset.extraTribute);
-        if (flow.extraTributeIndexes.has(index)) flow.extraTributeIndexes.delete(index);
-        else flow.extraTributeIndexes.add(index);
-        button.classList.toggle("selected", flow.extraTributeIndexes.has(index));
-      };
-    });
     const input = $("#rulesExtraEssenceCount");
     const setCount = (value) => {
       flow.extraEssenceCount = Math.max(
