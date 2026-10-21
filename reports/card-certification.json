@@ -2,27 +2,26 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 377,
-    "explicitAbilities": 493,
-    "smokedAbilities": 493,
-    "smokedCarriers": 497,
+    "explicitCards": 379,
+    "explicitAbilities": 497,
+    "smokedAbilities": 497,
+    "smokedCarriers": 501,
     "passed": 450,
     "failed": 0,
-    "executedScripts": 323,
-    "executedSteps": 1292,
+    "executedScripts": 321,
+    "executedSteps": 1284,
     "levels": {
       "scenario": 4,
       "simple": 47,
-      "ability": 373,
+      "ability": 375,
       "static": 24,
       "structural": 0,
       "partial": 0,
-      "manual": 2,
+      "manual": 0,
       "failed": 0
     },
     "declaredStatuses": {
-      "automated": 448,
-      "manual": 2
+      "automated": 450
     }
   },
   "cards": [
@@ -205,10 +204,10 @@
       "explicitAbilities": 5,
       "smokedAbilities": 5,
       "smokedCarriers": 5,
-      "genericScenarios": 2,
-      "genericScriptedScenarios": 1,
+      "genericScenarios": 1,
+      "genericScriptedScenarios": 0,
       "writtenScriptedScenarios": 0,
-      "executedSteps": 4,
+      "executedSteps": 0,
       "testRefs": [
         "tests/test_game_state.py",
         "tests/test_card_catalog.py"
@@ -5250,19 +5249,21 @@
       "collectionNumber": 249,
       "name": "Karma Bro",
       "setName": "Beta",
-      "declaredStatus": "manual",
-      "level": "manual",
+      "declaredStatus": "automated",
+      "level": "ability",
       "passed": true,
-      "explicitAbilities": 0,
-      "smokedAbilities": 0,
-      "smokedCarriers": 0,
+      "explicitAbilities": 1,
+      "smokedAbilities": 1,
+      "smokedCarriers": 1,
       "genericScenarios": 2,
       "genericScriptedScenarios": 0,
       "writtenScriptedScenarios": 0,
       "executedSteps": 0,
-      "testRefs": [],
+      "testRefs": [
+        "tests/test_reported_card_bugs.py"
+      ],
       "failures": [],
-      "notes": "Physical throw, rotation, and touched-card detection remain player-applied."
+      "notes": "Errata (2026-10): one card per player is chosen as it enters, one D6 each, a 1 or a 6 hits."
     },
     {
       "id": "rf5srmnqyh235tm_en",
@@ -5314,9 +5315,9 @@
       "declaredStatus": "automated",
       "level": "ability",
       "passed": true,
-      "explicitAbilities": 3,
-      "smokedAbilities": 3,
-      "smokedCarriers": 3,
+      "explicitAbilities": 5,
+      "smokedAbilities": 5,
+      "smokedCarriers": 5,
       "genericScenarios": 2,
       "genericScriptedScenarios": 1,
       "writtenScriptedScenarios": 0,
@@ -5458,19 +5459,21 @@
       "collectionNumber": 259,
       "name": "Kaos Bro",
       "setName": "Beta",
-      "declaredStatus": "manual",
-      "level": "manual",
+      "declaredStatus": "automated",
+      "level": "ability",
       "passed": true,
-      "explicitAbilities": 0,
-      "smokedAbilities": 0,
-      "smokedCarriers": 0,
+      "explicitAbilities": 1,
+      "smokedAbilities": 1,
+      "smokedCarriers": 1,
       "genericScenarios": 2,
       "genericScriptedScenarios": 0,
       "writtenScriptedScenarios": 0,
       "executedSteps": 0,
-      "testRefs": [],
+      "testRefs": [
+        "tests/test_reported_card_bugs.py"
+      ],
       "failures": [],
-      "notes": "Physical throw, rotation, and touched-card detection remain player-applied."
+      "notes": "Errata (2026-10): one card per player is chosen as it enters, one D6 each, a 1 or a 6 hits."
     },
     {
       "id": "chj7vmavn3d5c4s_en",
@@ -8431,10 +8434,10 @@
       "explicitAbilities": 3,
       "smokedAbilities": 3,
       "smokedCarriers": 3,
-      "genericScenarios": 2,
-      "genericScriptedScenarios": 1,
+      "genericScenarios": 1,
+      "genericScriptedScenarios": 0,
       "writtenScriptedScenarios": 0,
-      "executedSteps": 4,
+      "executedSteps": 0,
       "testRefs": [
         "tests/test_game_state.py",
         "tests/test_card_catalog.py"

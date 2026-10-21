@@ -34,8 +34,9 @@ Markdown.
 `--check` échoue si le rapport JSON versionné ne correspond plus au catalogue,
 au moteur, aux scénarios ou aux résultats Chrome enregistrés.
 
-## Limite physique conservée
+## Errata de Karma Bro et Kaos Bro
 
-Karma Bro et Kaos Bro restent signalées comme manuelles pour le lancer physique,
-la rotation et la détection de la carte touchée. Leur chargement serveur, leurs
-deux vues joueur et leur rendu client restent vérifiés automatiquement.
+L’errata d’octobre 2026 remplace le lancer physique par le choix d’une carte
+contrôlée par chaque joueur et un jet de D6 pour chacune. Ces deux cartes sont
+désormais automatisées et incluses dans les vérifications serveur, joueurs et
+client. Elles ne sont plus signalées comme manuelles dans les rapports.

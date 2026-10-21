@@ -1,6 +1,6 @@
 # Lot 25 — cartes 241 à 250
 
-Verdict : **PASS** · 1 contrôle(s) manuel(s) conservé(s).
+Verdict : **PASS** · 0 contrôle(s) manuel(s) conservé(s).
 
 | # | Carte | Serveur | Joueurs | Client | Statut |
 |---:|---|---|---|---|---|
@@ -12,7 +12,7 @@ Verdict : **PASS** · 1 contrôle(s) manuel(s) conservé(s).
 | 246 | Brabataba, the Unambitious | ✓ (1 cap.) | ✓ (0 actions) | ✓ | PASS |
 | 247 | Ononok, Chaotic Scatterer | ✓ (1 cap.) | ✓ (0 actions) | ✓ | PASS |
 | 248 | Kox, the Amoral | ✓ (4 cap.) | ✓ (0 actions) | ✓ | PASS |
-| 249 | Karma Bro | ✓ (0 cap.) | ✓ (0 actions) | ✓ | manuel |
+| 249 | Karma Bro | ✓ (1 cap.) | ✓ (0 actions) | ✓ | PASS |
 | 250 | Qu Lom, Haphazard Martyr | ✓ (1 cap.) | ✓ (0 actions) | ✓ | PASS |
 
 ## Parcours vérifié

@@ -26,9 +26,9 @@ class CardScenarioBatchTests(unittest.TestCase):
         self.assertEqual(summary["serverPassed"], 450)
         self.assertEqual(summary["playerPassed"], 450)
         self.assertEqual(summary["clientPassed"], 450)
-        self.assertEqual(summary["abilities"], 493)
-        self.assertEqual(summary["carriers"], 497)
-        self.assertEqual(summary["playerActions"], 181)
+        self.assertEqual(summary["abilities"], 497)
+        self.assertEqual(summary["carriers"], 501)
+        self.assertEqual(summary["playerActions"], 183)
 
     def test_batches_hold_ten_cards_and_keep_manual_cards_visible(self):
         cards = []

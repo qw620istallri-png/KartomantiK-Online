@@ -1,13 +1,13 @@
 # Scénarios réels des cartes KKO — lots de 10
 
-**450/450 cartes passent les trois couches** ; 0 échec(s), 2 contrôle(s) manuel(s) conservé(s).
+**450/450 cartes passent les trois couches** ; 0 échec(s), 0 contrôle(s) manuel(s) conservé(s).
 
 - Serveur : 450/450
 - Vues et actions joueurs : 450/450
 - Client Chromium : 450/450
-- Capacités : 493 · chemins : 497
-- Actions volontaires déclarées : 181 · messages : 527
-- Étapes génériques supplémentaires : 1273
+- Capacités : 497 · chemins : 501
+- Actions volontaires déclarées : 183 · messages : 533
+- Étapes génériques supplémentaires : 1265
 
 | Lot | Cartes | Verdict | Manuel | Rapport |
 |---:|---:|---|---:|---|
@@ -35,8 +35,8 @@
 | 22 | 211–220 | PASS | 0 | [lot-22.md](card-scenario-batches/lot-22.md) |
 | 23 | 221–230 | PASS | 0 | [lot-23.md](card-scenario-batches/lot-23.md) |
 | 24 | 231–240 | PASS | 0 | [lot-24.md](card-scenario-batches/lot-24.md) |
-| 25 | 241–250 | PASS | 1 | [lot-25.md](card-scenario-batches/lot-25.md) |
-| 26 | 251–260 | PASS | 1 | [lot-26.md](card-scenario-batches/lot-26.md) |
+| 25 | 241–250 | PASS | 0 | [lot-25.md](card-scenario-batches/lot-25.md) |
+| 26 | 251–260 | PASS | 0 | [lot-26.md](card-scenario-batches/lot-26.md) |
 | 27 | 261–270 | PASS | 0 | [lot-27.md](card-scenario-batches/lot-27.md) |
 | 28 | 271–280 | PASS | 0 | [lot-28.md](card-scenario-batches/lot-28.md) |
 | 29 | 281–290 | PASS | 0 | [lot-29.md](card-scenario-batches/lot-29.md) |

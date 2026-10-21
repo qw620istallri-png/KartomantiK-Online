@@ -12,18 +12,18 @@ sandbox sont cohérents ; elle ne remplace pas encore un scénario dédié à so
 | Cartes du catalogue | 450 |
 | Cartes sans échec mécanique | 450 |
 | Cartes en échec | 0 |
-| Capacités explicites | 493 |
-| Capacités exécutées par le smoke test | 493 |
-| Chemins de comportement exécutés | 497 |
-| Scripts exécutés | 323 |
-| Étapes de scripts exécutées | 1292 |
+| Capacités explicites | 497 |
+| Capacités exécutées par le smoke test | 497 |
+| Chemins de comportement exécutés | 501 |
+| Scripts exécutés | 321 |
+| Étapes de scripts exécutées | 1284 |
 | Scénarios comportementaux dédiés | 4 |
 | Cartes simples exécutées de bout en bout | 47 |
-| Cartes dont toutes les capacités sont exécutées isolément | 373 |
+| Cartes dont toutes les capacités sont exécutées isolément | 375 |
 | Cartes à règles statiques exécutées | 24 |
 | Preuve structurelle seulement | 0 |
 | Automatisation partielle | 0 |
-| Application manuelle | 2 |
+| Application manuelle | 0 |
 
 ## Interprétation
 
@@ -46,7 +46,7 @@ sandbox sont cohérents ; elle ne remplace pas encore un scénario dédié à so
 | 6 | Tidying Torment | Beta | automated | règles génériques exécutées | 0 | 2 | 8 | OK |
 | 7 | World Spore | Beta | automated | règles génériques exécutées | 0 | 3 | 12 | OK |
 | 8 | Graceful Petal | Beta | automated | capacités exécutées isolément | 1 | 1 | 4 | OK |
-| 9 | The Slumberer | Beta | automated | capacités exécutées isolément | 5 | 1 | 4 | OK |
+| 9 | The Slumberer | Beta | automated | capacités exécutées isolément | 5 | 0 | 0 | OK |
 | 10 | Amiable Blockhead | Beta | automated | règles génériques exécutées | 0 | 2 | 8 | OK |
 | 11 | First Stone | Beta | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |
 | 12 | Sprawling Tentacle | Beta | automated | règles statiques exécutées | 0 | 0 | 0 | OK |
@@ -286,17 +286,17 @@ sandbox sont cohérents ; elle ne remplace pas encore un scénario dédié à so
 | 246 | Brabataba, the Unambitious | Beta | automated | capacités exécutées isolément | 1 | 1 | 4 | OK |
 | 247 | Ononok, Chaotic Scatterer | Beta | automated | capacités exécutées isolément | 1 | 1 | 4 | OK |
 | 248 | Kox, the Amoral | Beta | automated | capacités exécutées isolément | 4 | 0 | 0 | OK |
-| 249 | Karma Bro | Beta | manual | application manuelle | 0 | 0 | 0 | OK |
+| 249 | Karma Bro | Beta | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |
 | 250 | Qu Lom, Haphazard Martyr | Beta | automated | capacités exécutées isolément | 1 | 1 | 4 | OK |
 | 251 | Buddhan the Transcended | Beta | automated | capacités exécutées isolément | 5 | 1 | 4 | OK |
-| 252 | Zum, the Manifold | Beta | automated | capacités exécutées isolément | 3 | 1 | 4 | OK |
+| 252 | Zum, the Manifold | Beta | automated | capacités exécutées isolément | 5 | 1 | 4 | OK |
 | 253 | Zizek, the Immolated | Beta | automated | règles statiques exécutées | 0 | 0 | 0 | OK |
 | 254 | Gorte, Timeless | Beta | automated | capacités exécutées isolément | 2 | 1 | 4 | OK |
 | 255 | Orator of the Absurd | Beta | automated | capacités exécutées isolément | 1 | 1 | 4 | OK |
 | 256 | Pluff | Beta | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |
 | 257 | Rocky Heartcrystal | Beta | automated | règles statiques exécutées | 0 | 1 | 4 | OK |
 | 258 | Granite Mass | Beta | automated | règles génériques exécutées | 0 | 3 | 11 | OK |
-| 259 | Kaos Bro | Beta | manual | application manuelle | 0 | 0 | 0 | OK |
+| 259 | Kaos Bro | Beta | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |
 | 260 | Plinius, Risk-taker | Beta | automated | capacités exécutées isolément | 1 | 1 | 4 | OK |
 | 261 | Mirrorbeast | Beta | automated | capacités exécutées isolément | 1 | 1 | 4 | OK |
 | 262 | Worn Old Shape | Beta | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |
@@ -437,7 +437,7 @@ sandbox sont cohérents ; elle ne remplace pas encore un scénario dédié à so
 | 397 | Chol | Inner Deserts | automated | règles génériques exécutées | 0 | 2 | 8 | OK |
 | 398 | Crickelob, the Vile | Inner Deserts | automated | capacités exécutées isolément | 1 | 1 | 4 | OK |
 | 399 | Palgonphio | Inner Deserts | automated | règles statiques exécutées | 0 | 1 | 4 | OK |
-| 400 | Juggernut, the Overwhelming | Inner Deserts | automated | capacités exécutées isolément | 3 | 1 | 4 | OK |
+| 400 | Juggernut, the Overwhelming | Inner Deserts | automated | capacités exécutées isolément | 3 | 0 | 0 | OK |
 | 401 | Sticky Fasces-fly | Inner Deserts | automated | capacités exécutées isolément | 2 | 1 | 4 | OK |
 | 402 | Orzo, the Greatmace | Inner Deserts | automated | règles génériques exécutées | 0 | 2 | 8 | OK |
 | 403 | Punitive Tripod | Inner Deserts | automated | capacités exécutées isolément | 2 | 1 | 4 | OK |

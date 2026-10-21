@@ -1,18 +1,18 @@
 # Lot 26 — cartes 251 à 260
 
-Verdict : **PASS** · 1 contrôle(s) manuel(s) conservé(s).
+Verdict : **PASS** · 0 contrôle(s) manuel(s) conservé(s).
 
 | # | Carte | Serveur | Joueurs | Client | Statut |
 |---:|---|---|---|---|---|
 | 251 | Buddhan the Transcended | ✓ (5 cap.) | ✓ (0 actions) | ✓ | PASS |
-| 252 | Zum, the Manifold | ✓ (3 cap.) | ✓ (3 actions) | ✓ | PASS |
+| 252 | Zum, the Manifold | ✓ (5 cap.) | ✓ (5 actions) | ✓ | PASS |
 | 253 | Zizek, the Immolated | ✓ (0 cap.) | ✓ (0 actions) | ✓ | PASS |
 | 254 | Gorte, Timeless | ✓ (2 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 255 | Orator of the Absurd | ✓ (1 cap.) | ✓ (0 actions) | ✓ | PASS |
 | 256 | Pluff | ✓ (1 cap.) | ✓ (0 actions) | ✓ | PASS |
 | 257 | Rocky Heartcrystal | ✓ (0 cap.) | ✓ (0 actions) | ✓ | PASS |
 | 258 | Granite Mass | ✓ (0 cap.) | ✓ (0 actions) | ✓ | PASS |
-| 259 | Kaos Bro | ✓ (0 cap.) | ✓ (0 actions) | ✓ | manuel |
+| 259 | Kaos Bro | ✓ (1 cap.) | ✓ (0 actions) | ✓ | PASS |
 | 260 | Plinius, Risk-taker | ✓ (1 cap.) | ✓ (0 actions) | ✓ | PASS |
 
 ## Parcours vérifié

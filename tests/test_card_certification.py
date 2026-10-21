@@ -36,8 +36,8 @@ class CardCertificationTests(unittest.TestCase):
 
     def test_every_declarative_ability_executes_its_behavior_carriers(self):
         summary = self.report["summary"]
-        self.assertEqual(summary["smokedAbilities"], 493)
-        self.assertGreaterEqual(summary["smokedCarriers"], 493)
+        self.assertEqual(summary["smokedAbilities"], 497)
+        self.assertGreaterEqual(summary["smokedCarriers"], 497)
         for card in self.report["cards"]:
             with self.subTest(card=card["name"]):
                 self.assertEqual(card["smokedAbilities"], card["explicitAbilities"])

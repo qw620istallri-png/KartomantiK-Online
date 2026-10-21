@@ -4,15 +4,15 @@
     "batches": 45,
     "passed": 450,
     "failed": 0,
-    "manualReview": 2,
+    "manualReview": 0,
     "serverPassed": 450,
     "playerPassed": 450,
     "clientPassed": 450,
-    "abilities": 493,
-    "carriers": 497,
-    "playerActions": 181,
-    "playerMessages": 527,
-    "genericSteps": 1273
+    "abilities": 497,
+    "carriers": 501,
+    "playerActions": 183,
+    "playerMessages": 533,
+    "genericSteps": 1265
   },
   "batches": [
     {
@@ -281,8 +281,8 @@
             "ok": true,
             "abilities": 5,
             "carriers": 5,
-            "genericScripts": 1,
-            "genericSteps": 4,
+            "genericScripts": 0,
+            "genericSteps": 0,
             "failures": []
           },
           "players": {
@@ -294,8 +294,8 @@
           },
           "client": {
             "ok": true,
-            "scenarioId": "generic:first:nlbgn1ranlrd09r_en",
-            "renderedIn": "main",
+            "scenarioId": "generic:confrontation:nlbgn1ranlrd09r_en",
+            "renderedIn": "plateau",
             "failures": []
           },
           "ok": true,
@@ -7676,7 +7676,7 @@
       "from": 241,
       "to": 250,
       "ok": true,
-      "manualReview": 1,
+      "manualReview": 0,
       "cards": [
         {
           "cardId": "ze99bj8uw2oisfx_en",
@@ -7931,12 +7931,12 @@
           "number": 249,
           "name": "Karma Bro",
           "type": "manifestation",
-          "declaredStatus": "manual",
-          "manualReview": true,
+          "declaredStatus": "automated",
+          "manualReview": false,
           "server": {
             "ok": true,
-            "abilities": 0,
-            "carriers": 0,
+            "abilities": 1,
+            "carriers": 1,
             "genericScripts": 0,
             "genericSteps": 0,
             "failures": []
@@ -7995,7 +7995,7 @@
       "from": 251,
       "to": 260,
       "ok": true,
-      "manualReview": 1,
+      "manualReview": 0,
       "cards": [
         {
           "cardId": "kmvhsfddh84cpq6_en",
@@ -8037,16 +8037,16 @@
           "manualReview": false,
           "server": {
             "ok": true,
-            "abilities": 3,
-            "carriers": 3,
+            "abilities": 5,
+            "carriers": 5,
             "genericScripts": 1,
             "genericSteps": 4,
             "failures": []
           },
           "players": {
             "ok": true,
-            "actionableAbilities": 3,
-            "messages": 9,
+            "actionableAbilities": 5,
+            "messages": 15,
             "views": 2,
             "failures": []
           },
@@ -8250,12 +8250,12 @@
           "number": 259,
           "name": "Kaos Bro",
           "type": "manifestation",
-          "declaredStatus": "manual",
-          "manualReview": true,
+          "declaredStatus": "automated",
+          "manualReview": false,
           "server": {
             "ok": true,
-            "abilities": 0,
-            "carriers": 0,
+            "abilities": 1,
+            "carriers": 1,
             "genericScripts": 0,
             "genericSteps": 0,
             "failures": []
@@ -12753,8 +12753,8 @@
             "ok": true,
             "abilities": 3,
             "carriers": 3,
-            "genericScripts": 1,
-            "genericSteps": 4,
+            "genericScripts": 0,
+            "genericSteps": 0,
             "failures": []
           },
           "players": {
