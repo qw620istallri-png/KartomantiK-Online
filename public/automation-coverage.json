@@ -4038,7 +4038,7 @@
       ],
       "mechanics": [
         "result:obelisk_gift",
-        "trigger:revelation"
+        "trigger:reaction"
       ],
       "testRefs": [
         "tests/test_game_state.py",

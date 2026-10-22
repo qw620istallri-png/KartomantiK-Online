@@ -6,14 +6,19 @@ function fieldItemIsManifestation(item) {
   return Boolean(item?.isTokenCard || item?.willManifestation || cardsById.get(item?.cardId)?.type === "manifestation");
 }
 
+function visibleFieldZone(item) {
+  return item.fieldZone || window.uiBeta?.fieldZone?.(item) || "field";
+}
+
 // Total Power of a player's face-up Manifestations in the Confrontation Zone
 function confrontationPowerOf(playerId) {
   return (latestState?.battlefield || []).reduce((total, item) => {
-    if (!item.faceUp || item.fieldZone !== "confrontation") return total;
+    if (!item.faceUp || item.pendingSupportActionId || visibleFieldZone(item) !== "confrontation") return total;
     if ((item.controllerId || item.ownerId) !== playerId) return total;
     if (!fieldItemIsManifestation(item)) return total;
     // the server's own count when it sends one (never below 0, ignored Power = 0)
-    const power = Number(item.confrontationPower ?? Math.max(0, Number(item.effectivePower ?? cardsById.get(item.cardId)?.power ?? item.power)));
+    const manualModifiers = latestState?.rulesEngine?.enabled ? 0 : Number(item.counters?.power || 0) + Number(item.counters?.tempCounter || 0);
+    const power = Number(item.confrontationPower ?? Math.max(0, Number(item.effectivePower ?? cardsById.get(item.cardId)?.power ?? item.power) + manualModifiers));
     return total + (Number.isFinite(power) ? power : 0);
   }, 0);
 }
@@ -24,7 +29,7 @@ function activeTemperamentOf(playerId) {
   const battlefield = latestState?.battlefield || [];
   let best = null;
   battlefield.forEach((item, index) => {
-    if (!item.faceUp || item.fieldZone !== "confrontation") return;
+    if (!item.faceUp || item.pendingSupportActionId || visibleFieldZone(item) !== "confrontation") return;
     if ((item.controllerId || item.ownerId) !== playerId) return;
     if (!fieldItemIsManifestation(item)) return;
     const order = Number(item.confrontationOrder || 0);

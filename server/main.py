@@ -1114,6 +1114,7 @@ async def handle_message(ws, info, data):
         # "pass everything" off, auto-skip) stay open while anyone decides
         pending_choice_messages = {
             "resolve_rules_choice", "set_activity", "chat_message",
+            "spend_counter_essence",
             "leave_session", "request_log", "reset_board",
             "set_rules_pass_all", "set_rules_auto_skip", "concede",
         }
@@ -2168,6 +2169,16 @@ async def handle_message(ws, info, data):
             return await send_error(ws, "Only the first player can change the advanced phase mode.")
         session.configure_phases(enabled=enabled, advanced=advanced)
         session.add_log(actor_id, "configure_phases", {"enabled": session.phase_tracker["enabled"], "advanced": session.phase_tracker["advanced"]})
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "spend_counter_essence":
+        if is_observer or actor_id not in session.players:
+            return await send_error(ws, "Observers cannot spend Essence counters.")
+        error, result = session.spend_rules_counter_essence(actor_id, data.get("itemId"), data.get("abilityId"))
+        if error:
+            return await send_error(ws, error)
+        session.add_log(actor_id, "rules_choice_resolved", {**result, "kind": "counter_essence", "playerId": actor_id})
         session.touch()
         await broadcast_state(session)
 

@@ -130,6 +130,7 @@ class Session(
             "priorityPasses": [],
             "actionStack": [],
             "deferredSimultaneousActions": [],
+            "deferredAfterImmediateActions": [],
             "suspendedCards": [],
             "lastResolvedAction": None,
             "ongoingEffects": [],

@@ -1249,7 +1249,7 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertTrue(session.battlefield[-1]["isSupport"])
         self.assertEqual(session.rules_engine["priorityPlayerId"], "p1")
 
-    def test_interzone_support_leaves_the_board_for_the_stack_then_returns_on_resolution(self):
+    def test_interzone_support_stays_on_the_board_while_its_movement_uses_the_stack(self):
         session, _p1, _p2 = self.make_session()
         session.phase_tracker["index"] = session.phase_sequence().index("confrontation_reaction")
         session.card_rules["m-0"]["supportFromInterzone"] = True
@@ -1271,8 +1271,8 @@ class AssistedRulesTests(unittest.TestCase):
             placement={"x": 500, "y": 500},
         )
         self.assertIsNone(error)
-        self.assertTrue(action["sourceOnStack"])
-        self.assertIsNone(session.find_battlefield_item("waiting"))
+        self.assertFalse(action["sourceOnStack"])
+        self.assertEqual(session.find_battlefield_item("waiting")["pendingSupportActionId"], action["id"])
         self.assertEqual(session.rules_engine["priorityPlayerId"], "p2")
 
         session.pass_rules_priority("p2")
@@ -6056,7 +6056,7 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertIsNone(session.rules_engine["pendingChoice"])
         self.assertEqual(
             [action["id"] for action in session.rules_engine["actionStack"]],
-            [triggers[0]["id"], paid_action["id"]],
+            [paid_action["id"]],
         )
         immediate_resolution = session.resolve_rules_immediate_actions()
         self.assertEqual(len(immediate_resolution), 1)
@@ -10019,7 +10019,7 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         pool = {t["temperament"]: t["counters"]["essence"] for t in session.tokens if t.get("isEssence") and t["ownerId"] == "p2"}
         self.assertEqual(pool, {"choleric": 3})
         ability = self.ABILITIES[drildrill][0]
-        self.assertEqual(ability["extraEssenceByTargetCount"], {"targetCount": 1, "amount": 2})
+        self.assertEqual(ability["essenceCost"], "{H}{H}")
 
     def test_partial_batch_phalanx_tower_discards_a_manifestation_to_weaken(self):
         tower = "inner-deserts-111"
@@ -14933,13 +14933,11 @@ class LotTwentyFourTests(RealCardRulesCase):
             self.item("first2", "p2", "m-5", "confrontation"),
         ]
         session.rules_engine["firstManifestationItemIds"] = {"p1": "first1", "p2": "first2"}
-        session.queue_rules_revelation_triggers()
-        for _ in range(2):
-            session.pass_rules_priority("p2")
-            session.pass_rules_priority("p1")
-            choice = session.rules_engine["pendingChoice"]
-            if choice and choice["kind"] == "optional_stack_action":
-                session.resolve_rules_choice("p1", choice["id"], option="accept")
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        session.queue_rules_reaction_triggers()
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["kind"], "optional_stack_action")
+        session.resolve_rules_choice("p1", choice["id"], option="accept")
         session.pass_rules_priority("p2")
         session.pass_rules_priority("p1")
         choice = session.rules_engine["pendingChoice"]

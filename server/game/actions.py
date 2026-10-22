@@ -105,6 +105,8 @@ class ActionsMixin:
                 ):
                     return "Your Interzone is full.", None
             if as_support:
+                if item.get("pendingSupportActionId"):
+                    return "This Manifestation is already entering Support.", None
                 if self.current_phase_id() != "confrontation_reaction":
                     return "A Manifestation can enter Support only during Reaction.", None
                 if metadata.get("type") != "manifestation":
@@ -292,7 +294,7 @@ class ActionsMixin:
         if target_kind == "stack_action":
             return action.get("kind") == "play_card" and bool(action.get("sourceOnStack"))
         if target_kind == "stack_effect":
-            return action.get("kind") in {"activated_effect", "triggered_effect"}
+            return action.get("kind") in {"activated_effect", "triggered_effect"} or bool(action.get("sourceRemainsOnField"))
         return False
 
     def rules_stack_action_is_protected(self, action, controller_id):
@@ -1329,7 +1331,7 @@ class ActionsMixin:
         source_item = self.find_battlefield_item(source.get("itemId"))
         metadata = (
             self.rules_item_card_rules(source_item)
-            if source_item is not None
+            if source_item is not None and source.get("zone") == "battlefield"
             else self.card_rules.get(source.get("cardId"), {})
         )
         abilities = metadata.get(ability_group) or []

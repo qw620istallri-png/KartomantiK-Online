@@ -7,6 +7,42 @@ from .common import TRIBUTE_SYMBOL_TEMPERAMENT, RULES_WILL_TYPES, new_id
 
 
 class PaymentMixin:
+    def rules_counter_essence_sources(self, player_id):
+        sources = []
+        for item in self.battlefield:
+            if self.rules_item_controller_id(item) != player_id or not self.rules_item_effects_active(item) or not item.get("chosenTemperament"):
+                continue
+            for ability in self.rules_item_card_rules(item).get("activatedAbilities") or []:
+                result = ability.get("result") or {}
+                cost = ability.get("removeCountersFromSource") or {}
+                if result.get("kind") != "create_essence" or result.get("temperament") != "source_chosen" or not cost.get("name"):
+                    continue
+                held = sum(int(value or 0) for key, value in (item.get("counters") or {}).items() if key.casefold() == cost["name"].casefold())
+                if held >= int(cost.get("amount") or 1):
+                    sources.append((item, ability))
+        return sources
+
+    def spend_rules_counter_essence(self, player_id, item_id, ability_id):
+        choice = self.rules_engine.get("pendingChoice") or {}
+        own_payment = choice.get("playerId") == player_id and choice.get("kind") in {
+            "stack_counter_payment", "effect_memory_payment", "effect_payment", "immediate_effect_payment",
+        }
+        if not self.rules_engine["enabled"] or self.ended or not self.rules_match_started() or (
+            not own_payment and (choice or self.rules_engine.get("priorityPlayerId") != player_id)
+        ):
+            return "You cannot use this Essence counter now.", None
+        candidate = next(((item, ability) for item, ability in self.rules_counter_essence_sources(player_id) if item.get("id") == item_id and ability.get("id") == ability_id), None)
+        if candidate is None:
+            return "This Essence counter is no longer available.", None
+        item, _ability = candidate
+        source = {"cardId": item["cardId"], "itemId": item_id, "zone": "battlefield", "controllerId": player_id}
+        error, ability = self.rules_action_ability(player_id, "activated_effect", source, ability_id, [])
+        if error:
+            return error, None
+        self.pay_rules_activation_cost(source, ability)
+        result = self.apply_rules_action_result({"controllerId": player_id, "source": source, "ability": ability, "targets": []})
+        return None, {**(result or {}), "sourceCardId": item["cardId"], "sourceItemId": item_id}
+
     @staticmethod
     def rules_requirements_from_symbols(power_cost):
         requirements = {}
@@ -551,25 +587,47 @@ class PaymentMixin:
         requirements, enforce_printed_cost = self.rules_tribute_requirements(
             kind, source, ability, player_id
         )
+        # Include the second target before allocating any Essence: a Tribute's
+        # surplus and White Essences can cover both parts of Multicastigate.
+        target_count_rule = (ability or {}).get("extraEssenceByTargetCount") or {}
+        extra_target_cost = (
+            int(target_count_rule.get("amount") or 0)
+            if len(targets or []) >= int(target_count_rule.get("targetCount") or 999)
+            else 0
+        )
+        point_rule = (ability or {}).get("extraEssenceForTargetPoints") or {}
+        if point_rule:
+            target = next((entry for entry in targets or [] if entry.get("kind") in {"card", "zone_card"}), None)
+            points = self.card_points.get((target or {}).get("cardId"), 0)
+            total = math.ceil(points / max(1, int(point_rule.get("multiplier") or 10)))
+            if total > 1 + max(0, int(point_rule.get("maxExtra") or 0)):
+                return "The target requires too many Essences for this effect.", None
+            extra_target_cost = max(extra_target_cost, total - sum(requirements.values()))
+        payment_requirements = dict(requirements)
+        if extra_target_cost:
+            payment_requirements["hollow"] = payment_requirements.get("hollow", 0) + extra_target_cost
         if transcendent_payment is not None:
             if not isinstance(transcendent_payment, dict) or any(
-                colour not in requirements or type(amount) is not int or amount < 0
+                colour not in payment_requirements or type(amount) is not int or amount < 0
                 for colour, amount in transcendent_payment.items()
             ):
                 return "Choose a valid allocation for your Transcendent Essences.", None
             transcendent_payment = {colour: amount for colour, amount in transcendent_payment.items() if amount}
             if not any(
                 allocation == transcendent_payment
-                for allocation in self.rules_transcendent_payment_options(player_id, requirements)
+                for allocation in self.rules_transcendent_payment_options(player_id, payment_requirements)
             ):
                 return "Choose a valid allocation for your Transcendent Essences.", None
         essence_remaining, essence_spent = self.rules_essence_payment_plan(
-            player_id, requirements, transcendent_payment=transcendent_payment,
+            player_id, payment_requirements, transcendent_payment=transcendent_payment,
         )
+        tribute_remaining = dict(essence_remaining)
+        if extra_target_cost and not enforce_printed_cost and any(tribute_remaining.values()):
+            return "Not enough Essences are available for the extra cost.", None
         excess = {}
         if enforce_printed_cost:
             covered, excess = self.rules_manifestations_cover(
-                clean_entries, essence_remaining, include_excess=True,
+                clean_entries, tribute_remaining, include_excess=True,
                 player_id=player_id,
             )
             if not covered:
@@ -583,13 +641,13 @@ class PaymentMixin:
                     for other in clean_entries
                 ]
                 if self.rules_manifestations_cover(
-                    plain_payment, essence_remaining, player_id=player_id
+                    plain_payment, tribute_remaining, player_id=player_id
                 )[0]:
                     return "The sacrifice is superfluous to this Tribute.", None
             for index in range(len(clean_ids)):
                 reduced_payment = clean_entries[:index] + clean_entries[index + 1:]
                 if self.rules_manifestations_cover(
-                    reduced_payment, essence_remaining, player_id=player_id
+                    reduced_payment, tribute_remaining, player_id=player_id
                 )[0]:
                     return "A selected Manifestation is superfluous to this Tribute.", None
         essence_cost = str((ability or {}).get("essenceCost") or "")
@@ -607,66 +665,6 @@ class PaymentMixin:
             if any(amount > 0 for amount in essence_cost_remaining.values()):
                 return "Not enough compatible Essences are available.", None
             essence_spent.extend(essence_cost_spent)
-        extra_essence_needed = 0
-        target_count_rule = (ability or {}).get("extraEssenceByTargetCount") or {}
-        if (
-            len(targets or []) >= int(target_count_rule.get("targetCount") or 999)
-        ):
-            extra_essence_needed = max(
-                extra_essence_needed,
-                int(target_count_rule.get("amount") or 0),
-            )
-        point_rule = (ability or {}).get("extraEssenceForTargetPoints") or {}
-        if point_rule:
-            target = next((
-                entry for entry in targets or []
-                if entry.get("kind") in {"card", "zone_card"}
-            ), None)
-            points = (
-                self.card_points.get(target.get("cardId"), 0)
-                if target and self.card_points else 0
-            )
-            multiplier = max(1, int(point_rule.get("multiplier") or 10))
-            required_total = math.ceil(points / multiplier)
-            max_total = 1 + max(0, int(point_rule.get("maxExtra") or 0))
-            if required_total > max_total:
-                return "The target requires too many Essences for this effect.", None
-            extra_essence_needed = max(
-                extra_essence_needed,
-                required_total - sum(
-                    int(entry.get("amount") or 0) for entry in essence_spent
-                ),
-            )
-        if extra_essence_needed > 0:
-            already_spent = {
-                entry["tokenId"]: sum(
-                    spent.get("amount") or 0
-                    for spent in essence_spent
-                    if spent["tokenId"] == entry["tokenId"]
-                )
-                for entry in essence_spent
-            }
-            for token in self.tokens:
-                if extra_essence_needed <= 0:
-                    break
-                if (
-                    token.get("ownerId") != player_id
-                    or not token.get("isEssence")
-                    or token.get("isNeutralCounter")
-                ):
-                    continue
-                available = int(token.get("counters", {}).get("essence") or 0) - already_spent.get(token["id"], 0)
-                amount = min(extra_essence_needed, max(0, available))
-                if amount:
-                    essence_spent.append({
-                        "tokenId": token["id"],
-                        "temperament": token.get("temperament"),
-                        "amount": amount,
-                        "pays": "extra",
-                    })
-                    extra_essence_needed -= amount
-            if extra_essence_needed:
-                return "Not enough Essences are available for the extra cost.", None
         optional_extra = (ability or {}).get("optionalExtraEssence") or {}
         try:
             optional_extra_count = int(extra_essence_count or 0)

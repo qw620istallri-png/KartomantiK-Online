@@ -2215,7 +2215,8 @@ function startServer() {
       beginRulesBoardAction({ cardId, zone: "hand", handIndex: 0 });
       const buttons = [...document.querySelectorAll("[data-zone-pick]")];
       buttons[0].click();
-      document.querySelector("[data-zone-pick]").click();
+      [...document.querySelectorAll("[data-zone-pick]")].find((button) => !button.classList.contains("selected")).click();
+      document.querySelector("[data-zone-pick-confirm]").click();
       await new Promise((resolve) => setTimeout(resolve, 220));
       const twoPayload = window.__sent.find((payload) => payload.source?.cardId === cardId);
       closeRulesActionPanel();

@@ -269,7 +269,7 @@ function renderRulesChoiceScreen() {
   options.classList.remove(
     "has-destination-card", "has-order", "has-card-picker", "is-reveal-hand", "is-destination-screen",
   );
-  panel.classList.remove("cards-screen", "destination-screen", "hand-drop", "replace-screen", "chain-screen", "player-screen", "hand-swap");
+  panel.classList.remove("cards-screen", "destination-screen", "hand-drop", "replace-screen", "chain-screen", "player-screen", "hand-swap", "temperament-screen");
   if (pendingTriggeredPlacement) {
     const { payload } = pendingTriggeredPlacement;
     $("#rulesChoiceHeading").textContent = t("rulesChooseTriggerTargetHeading");
@@ -776,10 +776,12 @@ function renderRulesChoiceScreen() {
     return;
   }
   if (choice.kind === "temperament_choice") {
+    panel.classList.add("temperament-screen");
     $("#rulesChoiceHeading").textContent = t("rulesTemperamentChoiceHeading");
     $("#rulesChoiceText").textContent = rulesText("rulesTemperamentChoiceText", { card: cardName(choice.sourceCardId) });
     options.innerHTML = (choice.options || []).map((temperament) => `
       <button type="button" class="rules-choice-destination" data-rules-temperament-option="${esc(temperament)}">
+        <img class="rules-temperament-choice-symbol" src="${esc(temperamentSymbol(temperament))}" alt="">
         <strong>${esc(t(`temperament${temperament[0].toUpperCase()}${temperament.slice(1)}`))}</strong>
       </button>`).join("");
     $$("[data-rules-temperament-option]").forEach((button) => {

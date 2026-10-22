@@ -100,6 +100,7 @@ class PhasesMixin:
         self.rules_engine["priorityPasses"] = []
         self.rules_engine["actionStack"] = []
         self.rules_engine["deferredSimultaneousActions"] = []
+        self.rules_engine["deferredAfterImmediateActions"] = []
         self.rules_engine["lastResolvedAction"] = None
         self.rules_engine["ongoingEffects"] = []
         self.rules_engine["effectMemories"] = []

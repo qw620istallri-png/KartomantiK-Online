@@ -178,7 +178,9 @@ class CensorTests(ReportedCardRulesCase):
         session.battlefield = [self.field_item("victim", "p2", "m-1")]
         self.put(p1, "hand", [CENSOR, "will-x"])
         session.card_rules["will-x"]["cost"] = 9  # unaffordable: only Censor could be played
-        self.assertFalse(session.rules_player_can_act("p1"))
+        # Reaction keeps the player's decision while they hold a Will, even
+        # when the automatic affordability estimate finds no payable action.
+        self.assertTrue(session.rules_player_can_act("p1"))
         error, _ = session.declare_rules_action(
             "p1", "Censor", kind="play_card", source={"cardId": CENSOR, "zone": "hand"},
             ability_id="censor-exiles-hand-manifestation-to-destroy",

@@ -570,6 +570,7 @@ class TriggersMixin:
                 "loses_confrontation": "battlefield",
                 "confrontation_stalemate": "battlefield",
                 "revelation": "battlefield",
+                "reaction": "battlefield",
                 "vessel_revelation": zone,
                 "before_revelation": "battlefield",
                 "enters_field_zone": "battlefield",
@@ -605,6 +606,7 @@ class TriggersMixin:
                         "loses_confrontation",
                         "confrontation_stalemate",
                         "revelation",
+                        "reaction",
                         "before_revelation",
                         "enters_field_zone", "end_of_turn", "resolution",
                     } else None,
@@ -687,7 +689,12 @@ class TriggersMixin:
                     (self.rules_engine.get("pendingChoice") or {}).get("kind")
                     == "trigger_targets"
                 )
-                if action["optional"] or target_choice_pending:
+                # Collect the full event before asking for normal targets:
+                # another source may have an Immediate that resolves first.
+                defer_entry_targets = defer and event in (
+                    RULES_ENTRY_EVENTS | {"revelation", "reaction"}
+                )
+                if defer_entry_targets or action["optional"] or target_choice_pending:
                     action["_preStackTargetChoice"] = {
                         "targetRules": action["ability"]["targets"],
                         "resumeConfrontationCleanup": bool(
@@ -771,6 +778,7 @@ class TriggersMixin:
 
     def _complete_rules_simultaneous_batch(self, ordered_actions):
         if ordered_actions:
+            ordered_actions = [action for action in ordered_actions if not action.get("immediate")] + [action for action in ordered_actions if action.get("immediate")]
             self.rules_engine["actionStack"].extend(ordered_actions)
             self.rules_engine["priorityPasses"] = []
             self.rules_engine["priorityPlayerId"] = self.other_rules_player_id(
@@ -927,6 +935,14 @@ class TriggersMixin:
         """Confirm optional triggers, then queue one simultaneous event atomically."""
         pending = self.rules_engine.get("pendingChoice") or {}
         new_actions = [action for action in actions or [] if isinstance(action, dict)]
+        immediate = [action for action in new_actions if action.get("immediate")]
+        if immediate or any(action.get("immediate") for action in self.rules_engine["actionStack"]):
+            regular = [action for action in new_actions if not action.get("immediate")]
+            self.rules_engine.setdefault("deferredAfterImmediateActions", []).extend(regular)
+            new_actions = immediate
+            actions = immediate
+            if not immediate:
+                return True
         if new_actions and pending.get("kind") == "trigger_targets":
             # A trigger of this event is waiting for its targets (Borombo): the
             # other simultaneous triggers join its batch instead of replacing
@@ -1584,6 +1600,19 @@ class TriggersMixin:
                 controller_id=self.rules_item_controller_id(item),
             ))
         if queued and not defer:
+            self.queue_rules_simultaneous_actions(queued)
+        return queued
+
+    def queue_rules_reaction_triggers(self):
+        queued = []
+        for item in list(self.battlefield):
+            if self.rules_item_effects_active(item):
+                queued.extend(self.queue_rules_triggers(
+                    item.get("cardId"), item.get("ownerId"), "reaction",
+                    item_id=item.get("id"), face_up=True,
+                    controller_id=self.rules_item_controller_id(item), defer=True,
+                ))
+        if queued:
             self.queue_rules_simultaneous_actions(queued)
         return queued
 

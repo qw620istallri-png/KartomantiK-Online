@@ -1136,6 +1136,7 @@ function renderBattlefield() {
     const el = document.createElement("div");
     el.className = `bf-card${item.isCopy ? " is-copy" : ""}${item.fieldZone ? ` field-zone-${item.fieldZone}` : ""}${Math.round(Number(item.rotation || 0)) % 180 ? " is-exhausted" : ""}`;
     el.dataset.itemId = item.id;
+    if (item.pendingSupportActionId) el.classList.add("is-pending-support");
     if (item.fieldZone) el.dataset.fieldZone = item.fieldZone;
     const betaBox = betaPlacement?.get(item.id) || null;
     const pos = betaBox || stackedScreenPos(item) || rotateForSeat(item.x, item.y, PILE_W, PILE_H);

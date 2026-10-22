@@ -237,6 +237,8 @@ class ViewMixin:
                 entry["manualStack"] = item["manualStack"]
             if item.get("chosenTemperament"):
                 entry["chosenTemperament"] = item["chosenTemperament"]
+            if item.get("pendingSupportActionId"):
+                entry["pendingSupportActionId"] = item["pendingSupportActionId"]
             if item.get("supportUntilTurn"):
                 entry["supportUntilTurn"] = item["supportUntilTurn"]
             controller_id = self.rules_item_controller_id(item)

@@ -1682,6 +1682,10 @@ function playRulesVfxEventInner(event) {
       return;
     }
     if (entry.type === "rules_choice_resolved") {
+      if (entry.details?.kind === "counter_essence") {
+        playRulesVfxImpact(rulesVfxPlayerOrigin(entry.details.playerId), `${t("essence")} +${Number(entry.details.amount || 1)}`, "cost");
+        return;
+      }
       if (entry.details?.powerGain?.value) playRulesVfxPowerSurge(entry.details.powerGain);
       if (entry.details?.kind === "stack_copy_targets") {
         playRulesVfxImpact(target, t("rulesVfxCopied"), "triggered");

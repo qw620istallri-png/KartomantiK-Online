@@ -21,7 +21,9 @@ class StackMixin:
         source_on_stack = bool(action.get("sourceOnStack"))
         if action.get("asSupport"):
             owner_id = source.get("ownerId")
-            if player is None or not source_on_stack or owner_id not in self.players:
+            on_field = bool(action.get("sourceRemainsOnField"))
+            existing = self.find_battlefield_item(source.get("itemId")) if on_field else None
+            if player is None or (not source_on_stack and not existing) or owner_id not in self.players:
                 return {"status": "source_missing", "destination": "battlefield", "asSupport": True}
             placement = action.get("placement") or {}
             stored_item = action.get("sourceBattlefieldItem")
@@ -30,7 +32,7 @@ class StackMixin:
                 if isinstance(stored_item, dict)
                 else None
             ) or source.get("zone")
-            item = dict(stored_item) if isinstance(stored_item, dict) else {
+            item = existing if existing is not None else dict(stored_item) if isinstance(stored_item, dict) else {
                 "id": new_id(), "ownerId": owner_id, "controllerId": controller_id,
                 "cardId": card_id, "faceUp": True, "rotation": 0.0, "counters": {},
                 "rarity": (self.players.get(owner_id) or {}).get("cardRarities", {}).get(card_id),
@@ -46,7 +48,9 @@ class StackMixin:
             if source.get("winAsSupportDestination") == "exile":
                 item["supportWinDestination"] = "exile"
             self.mark_rules_support_entry(item)
-            self.battlefield.append(item)
+            item.pop("pendingSupportActionId", None)
+            if item not in self.battlefield:
+                self.battlefield.append(item)
             self.transfer_rules_stack_protection(action, item)
             return {
                 "status": "moved", "destination": "battlefield", "itemId": item["id"],
@@ -154,6 +158,11 @@ class StackMixin:
     def neutralize_rules_action_source(self, action, destination="graveyard"):
         """Move a neutralized played card from the Stack to its owner's Limbo."""
         source = action.get("source") or {}
+        if action.get("sourceRemainsOnField"):
+            item = self.find_battlefield_item(source.get("itemId"))
+            if item:
+                item.pop("pendingSupportActionId", None)
+            return None
         if action.get("kind") != "play_card" or not action.get("sourceOnStack"):
             return None
         owner_id = source.get("ownerId")

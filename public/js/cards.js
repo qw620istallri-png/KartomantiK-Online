@@ -68,9 +68,24 @@ function printedTributeRequirements(card) {
   return requirements;
 }
 
-function rulesEssencePaymentPreview(requirements, transcendentPayment = undefined) {
+function rulesCounterEssenceSources() {
+  return (latestState?.battlefield || []).flatMap((item) => {
+    if (battlefieldItemControllerId(item) !== myPlayerId || !item.faceUp || item.effectsDisabled || item.effectsInactive || item.fieldZone === "stalemate" || !item.chosenTemperament) return [];
+    return (activatedAbilitiesByCard.get(item.cardId) || []).flatMap((ability) => {
+      const result = ability.result || {};
+      const cost = ability.removeCountersFromSource || {};
+      if (result.kind !== "create_essence" || result.temperament !== "source_chosen" || !cost.name) return [];
+      const held = Object.entries(item.counters || {}).filter(([key]) => key.toLowerCase() === cost.name.toLowerCase()).reduce((sum, [, value]) => sum + Number(value || 0), 0);
+      const count = Math.floor(held / Number(cost.amount || 1));
+      return count > 0 ? [{ item, ability, count, temperament: item.chosenTemperament, amount: count * Number(result.value || 1) }] : [];
+    });
+  });
+}
+
+function rulesEssencePaymentPreview(requirements, transcendentPayment = undefined, includeCounterEssence = false) {
   const remaining = { ...requirements };
-  const tokens = (latestState?.tokens || []).filter((token) => token.ownerId === myPlayerId
+  const pool = [...(latestState?.tokens || []), ...(includeCounterEssence ? rulesCounterEssenceSources().map((source) => ({ id: `counter:${source.item.id}:${source.ability.id}`, ownerId: myPlayerId, isEssence: true, temperament: source.temperament, counters: { essence: source.amount } })) : [])];
+  const tokens = pool.filter((token) => token.ownerId === myPlayerId
     && token.isEssence && !token.isNeutralCounter && token.temperament
     && Number(token.counters?.essence || 0) > 0);
   const available = new Map(tokens.map((token) => [token.id, Number(token.counters.essence)]));
@@ -110,14 +125,14 @@ function rulesEssencePaymentPreview(requirements, transcendentPayment = undefine
   return { remaining, spent, transcendentChoice };
 }
 
-function* rulesEssencePaymentOptions(requirements) {
-  const plan = rulesEssencePaymentPreview(requirements);
+function* rulesEssencePaymentOptions(requirements, includeCounterEssence = false) {
+  const plan = rulesEssencePaymentPreview(requirements, undefined, includeCounterEssence);
   const choice = plan.transcendentChoice;
   if (!choice) { yield plan; return; }
   const colours = Object.keys(choice.requirements).filter((key) => choice.requirements[key] > 0);
   function* allocate(index, left, allocation) {
     if (index === colours.length) {
-      if (left === 0) yield rulesEssencePaymentPreview(requirements, allocation);
+      if (left === 0) yield rulesEssencePaymentPreview(requirements, allocation, includeCounterEssence);
       return;
     }
     const colour = colours[index];
@@ -159,7 +174,10 @@ function rulesTributeCandidate(reference) {
     const powerSymbols = match
       ? [...match[1].matchAll(/\{[A-Z]\}|[🔥🌿💧🔮⚡🌈]/gu)]
       : [];
-    const power = powerSymbols.length || Number(card.power || 0);
+      const overrides = latestState?.rulesEngine?.tributePowerOverrides?.[myPlayerId];
+      const power = overrides
+        ? (overrides[card.id] ?? Number(card.power || 0))
+        : powerSymbols.length || Number(card.power || 0);
     return { ...card, power, paymentValue: value };
   }
   const cardId = value.includes("|") ? value.split("|").at(-1) : value;
@@ -247,18 +265,9 @@ function rulesManifestationsCover(cardIds, requirements) {
 function rulesCanAffordCard(cardId) {
   const card = cardsById.get(cardId);
   if (!card || !["ephemeral_will", "persistent_will"].includes(card.type)) return true;
-  const requirements = printedTributeRequirements(card);
-  const manifestations = (latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [])
-    .filter((candidateId) => candidateId !== cardId && cardsById.get(candidateId)?.type === "manifestation");
-  const combinations = 1 << Math.min(manifestations.length, 12);
-  for (const { remaining } of rulesEssencePaymentOptions(requirements)) {
-    if (Object.values(remaining).every((amount) => amount <= 0)) return true;
-    for (let mask = 1; mask < combinations; mask += 1) {
-      const selected = manifestations.filter((_candidate, index) => mask & (1 << index));
-      if (rulesManifestationsCover(selected, remaining)) return true;
-    }
-  }
-  return false;
+  // Hand highlighting must use the same zones, permissions and reductions as
+  // the payment picker, otherwise legal special Tributes never become playable.
+  return rulesDraftCanBePaid(buildRulesActionDraft({ cardId, zone: "hand" }));
 }
 
 function rulesTributeUnitsHtml(units, emptyLabel) {

@@ -160,6 +160,19 @@ class ResolutionMixin:
             result = self.resolve_rules_top_action()
             if result:
                 resolved.append(result)
+        if not self.rules_engine.get("pendingChoice") and not any(action.get("immediate") for action in self.rules_engine["actionStack"]):
+            deferred = self.rules_engine.pop("deferredAfterImmediateActions", [])
+            valid = []
+            for action in deferred:
+                trigger = (action.get("ability") or {}).get("trigger") or {}
+                source = action.get("source") or {}
+                if trigger.get("event") in {"enters_field", "enters_field_zone", "revelation", "reaction"}:
+                    item = self.find_battlefield_item(source.get("itemId"))
+                    if item is None or not self.rules_item_effects_active(item):
+                        continue
+                valid.append(action)
+            if valid:
+                self.queue_rules_simultaneous_actions(valid)
         return resolved
 
     def pass_rules_priority(self, player_id, passed=None):
@@ -310,6 +323,8 @@ class ResolutionMixin:
             )
             if end_triggered_actions:
                 self.queue_rules_simultaneous_actions(end_triggered_actions)
+        if self.current_phase_id() == "confrontation_reaction":
+            resolution_triggered_actions.extend(self.queue_rules_reaction_triggers())
         if self.current_phase_id() == "resolution_effects":
             resolution_triggered_actions = (
                 self.queue_rules_resolution_memory_triggers()

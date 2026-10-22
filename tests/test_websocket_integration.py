@@ -90,6 +90,46 @@ class WebSocketRulesIntegrationTests(unittest.IsolatedAsyncioTestCase):
         rules["autoSkipPhases"] = False
         self.session.phase_tracker["index"] = ADVANCED_PHASES.index(phase_id)
 
+    async def test_splendor_gem_is_optional_and_broadcasts_without_passing_priority(self):
+        self.prepare_active_rules("confrontation_reaction")
+        self.session.rules_engine["firstManifestationComplete"] = True
+        self.session.battlefield = [{
+            "id": "splendor", "cardId": "inner-deserts-143", "ownerId": "p1",
+            "faceUp": True, "fieldZone": "field", "chosenTemperament": "choleric",
+            "counters": {"Gem": 2}, "x": 0, "y": 0, "rotation": 0,
+        }]
+        await self.send(self.ws1, {
+            "type": "spend_counter_essence", "itemId": "splendor",
+            "abilityId": "splendor-spends-a-gem-as-excess-essence",
+        })
+        state = await self.receive_until(self.ws1, lambda message: message.get("type") == "state" and any(
+            entry.get("details", {}).get("kind") == "counter_essence"
+            for entry in message.get("recentLog", [])
+        ))
+        self.assertEqual(state["battlefield"][0]["counters"]["Gem"], 1)
+        self.assertEqual(state["tokens"][0]["counters"]["essence"], 1)
+        self.assertEqual(state["rulesEngine"]["priorityPlayerId"], "p1")
+        self.assertFalse(state["rulesEngine"]["actionStack"])
+        peer = await self.receive_until(self.ws2, lambda message: message.get("type") == "state" and any(
+            entry.get("details", {}).get("kind") == "counter_essence"
+            for entry in message.get("recentLog", [])
+        ))
+        self.assertEqual(peer["tokens"][0]["counters"]["essence"], 1)
+
+        # A requested payment may belong to the non-priority player. Converting
+        # their Gem must pass the socket guard without completing that choice.
+        self.session.status = "active"
+        self.session.rules_engine.update(priorityPlayerId="p2", pendingChoice={
+            "id": "requested-payment", "kind": "effect_payment", "playerId": "p1",
+            "payment": "{R}{R}", "sourceCardId": "inner-deserts-143",
+        })
+        await self.send(self.ws1, {"type": "spend_counter_essence", "itemId": "splendor", "abilityId": "splendor-spends-a-gem-as-excess-essence"})
+        paid = await self.receive_until(self.ws1, lambda message: message.get("type") == "state" and sum(
+            token.get("counters", {}).get("essence", 0) for token in message.get("tokens", [])
+        ) == 2)
+        self.assertEqual(paid["rulesEngine"]["pendingChoice"]["id"], "requested-payment")
+        self.assertEqual(paid["rulesEngine"]["priorityPlayerId"], "p2")
+
     async def test_multicolour_will_uses_the_requested_white_essence_allocation(self):
         self.prepare_active_rules("end_actions")
         self.session.rules_engine["firstManifestationComplete"] = True

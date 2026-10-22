@@ -124,6 +124,8 @@ class PriorityMixin:
         skipped by mistake.
         """
         metadata = self.card_rules.get(card_id, {})
+        if metadata.get("playAsPersistentWill"):
+            return True
         if self.rules_exotic_tribute_available(player_id) or any(
             entry.get("playerId") == player_id and (entry.get("noTribute") or entry.get("anyWill"))
             for entry in self.rules_engine.get("playPermissions") or []
@@ -140,6 +142,8 @@ class PriorityMixin:
     def rules_exotic_tribute_available(self, player_id):
         """An unusual Tribute source (Limbo, Vessel, field): affordability is not computed."""
         player = self.players[player_id]
+        if self.rules_counter_essence_sources(player_id):
+            return True
         if any(
             self.rules_active_passive_sources(kind)
             for kind in (
@@ -279,7 +283,7 @@ class PriorityMixin:
             try:
                 requirements = self.rules_requirements_from_symbols(essence_cost)
                 remaining, _spent = self.rules_essence_payment_plan(player_id, requirements)
-                if requirements and any(amount > 0 for amount in remaining.values()):
+                if requirements and any(amount > 0 for amount in remaining.values()) and not self.rules_counter_essence_sources(player_id):
                     return True
             except Exception:  # never skip a phase because of a computation problem
                 pass
@@ -352,7 +356,12 @@ class PriorityMixin:
 
         for card_id in set(player["zones"]["hand"]):
             metadata = self.card_rules.get(card_id, {})
-            card_type = metadata.get("type")
+            card_type = "persistent_will" if metadata.get("playAsPersistentWill") else metadata.get("type")
+            # Reaction is the last chance to change the Confrontation. A Will in
+            # hand keeps the decision with its player, even if the cheap payment
+            # or target preview cannot prove it playable yet.
+            if phase_id == "confrontation_reaction" and card_type == "ephemeral_will" and can_play(card_id, card_type):
+                return True
             if (
                 card_type in RULES_WILL_TYPES and can_play(card_id, card_type)
                 and self.rules_will_affordable(player_id, card_id)
@@ -774,11 +783,16 @@ class PriorityMixin:
             action["sourceBattlefieldItem"] = {
                 **source_item, "counters": dict(source_item.get("counters") or {})
             }
-            self.battlefield.remove(source_item)
-            for other in self.battlefield:
-                if other.get("stackedOn") == source_item.get("id"):
-                    other["stackedOn"] = None
-            action["sourceOnStack"] = True
+            if as_support:
+                source_item["pendingSupportActionId"] = action["id"]
+                action["sourceRemainsOnField"] = True
+                action["sourceOnStack"] = False
+            else:
+                self.battlefield.remove(source_item)
+                for other in self.battlefield:
+                    if other.get("stackedOn") == source_item.get("id"):
+                        other["stackedOn"] = None
+                action["sourceOnStack"] = True
         tribute_result = self.pay_rules_tribute(player_id, clean_payment)
         action["cost"]["tributeMovements"] = tribute_result["movements"]
         action["cost"]["createdEssence"] = tribute_result["createdEssence"]

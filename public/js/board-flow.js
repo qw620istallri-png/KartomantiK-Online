@@ -373,6 +373,11 @@ function submitRulesBoardFlow(target = null) {
   );
   const selectedTargets = [...(flow.selectedTargets || [])];
   if (target) selectedTargets.push(target);
+  if (target && flow.draft.encodedAbility?.extraEssenceForTargetPoints && !flow.targetsConfirmed) {
+    flow.selectedTargets = selectedTargets;
+    confirmRulesBoardTargets();
+    return;
+  }
   const payload = {
     type: "declare_rules_action",
     label: rulesText(activated ? "rulesDefaultActivate" : "rulesDefaultPlay", { card: cardName(flow.source.cardId) }),
@@ -403,6 +408,7 @@ function submitRulesBoardFlow(target = null) {
 // go back to where the player was so they can choose again (or decline).
 function releaseRulesBoardFlowAfterError() {
   const flow = pendingRulesBoardFlow;
+  if (flow?.counterEssencePending) { flow.counterEssencePending = null; renderRulesBoardFlow(); return; }
   if (!flow || flow.stage !== "committing") return;
   flow.stage = flow.previousStage && flow.previousStage !== "committing" ? flow.previousStage : "payment";
   if (flow.stage === "payment") flow.selectedPaymentIndexes = new Set();
@@ -423,6 +429,33 @@ function scheduleRulesBoardSubmit() {
   window.setTimeout(() => {
     if (pendingRulesBoardFlow === flow && flow.stage === "committing") submitRulesBoardFlow();
   }, 180);
+}
+
+function confirmRulesBoardTargets() {
+  const flow = pendingRulesBoardFlow;
+  if (!flow) return;
+  const count = (flow.selectedTargets || []).length;
+  if (count < Number(flow.draft.targetRules?.min || 0) || count > Number(flow.draft.targetRules?.max || 1)) return;
+  const extra = flow.draft.encodedAbility?.extraEssenceByTargetCount;
+  const points = flow.draft.encodedAbility?.extraEssenceForTargetPoints;
+  let extraAmount = extra && count >= Number(extra.targetCount) ? Number(extra.amount) : 0;
+  if (points) {
+    const base = rulesActionPaymentDraft({ ...flow.source, targetExtraEssence: 0 }, flow.draft.card, flow.draft.encodedAbility);
+    const total = Math.ceil(Number(cardsById.get(flow.selectedTargets[0]?.cardId)?.points || 0) / Number(points.multiplier || 10));
+    extraAmount = Math.max(extraAmount, total - Object.values(base.paymentRequirements).reduce((sum, value) => sum + Number(value || 0), 0));
+  }
+  if (extraAmount > 0) {
+    flow.source.targetExtraEssence = extraAmount;
+    Object.assign(flow.draft, rulesActionPaymentDraft(flow.source, flow.draft.card, flow.draft.encodedAbility, flow.draft.transcendentPayment));
+    flow.targetsConfirmed = true;
+    const selected = rulesBoardSelectedPayments(flow);
+    if (!rulesManifestationsCover(selected, flow.draft.essencePlan.remaining)) {
+      flow.stage = "payment";
+      renderRulesBoardFlow();
+      return;
+    }
+  }
+  scheduleRulesBoardSubmit();
 }
 
 function armRulesBoardTargets(flow) {
@@ -449,7 +482,9 @@ function armRulesBoardTargets(flow) {
     playRulesVfxTargetLock(rulesTargetElement(target));
     if (multiPick) {
       flow.selectedTargets = [...(flow.selectedTargets || []), target];
-      if (flow.selectedTargets.length >= Math.min(maxTargets, flow.selectedTargets.length + candidates.length - 1)) {
+      if (flow.draft.encodedAbility?.extraEssenceByTargetCount || minTargets < maxTargets) {
+        renderRulesBoardFlow();
+      } else if (flow.selectedTargets.length >= Math.min(maxTargets, flow.selectedTargets.length + candidates.length - 1)) {
         scheduleRulesBoardSubmit();
       } else {
         renderRulesBoardFlow();
@@ -489,9 +524,10 @@ function armRulesBoardTargets(flow) {
     return;
   }
   // Choosing among public-zone cards (Limbo, Exile...) that have no spot on the board: the cards-only screen
+  const zoneChoices = [...(flow.selectedTargets || []), ...candidates];
   if (
-    candidates.length
-    && candidates.every((target) => target.kind === "zone_card" && target.zone !== "hand" && !rulesTargetElement(target))
+    zoneChoices.length
+    && zoneChoices.every((target) => target.kind === "zone_card" && target.zone !== "hand")
   ) {
     const popup = document.createElement("div");
     popup.className = "log-panel rules-choice-panel rules-zone-target-panel cards-screen zone-pick-screen effect-screen";
@@ -502,7 +538,7 @@ function armRulesBoardTargets(flow) {
       ${sourceImage ? `<span class="rules-choice-source" title="${esc(cardName(sourceCard.id))}"><img src="${esc(sourceImage)}" alt="${esc(cardName(sourceCard.id))}"></span>` : ""}
       ${sourceEffect ? `<p class="rules-choice-effect">${esc(sourceEffect)}</p>` : ""}
       <div class="rules-choice-options has-card-picker">
-        ${[...(multiPick ? flow.selectedTargets || [] : []), ...candidates].map((target) => {
+        ${[...(flow.selectedTargets || []), ...candidates].map((target) => {
           const picked = selectedKeys.has(target.key);
           return `<button type="button" class="rules-choice-card${picked ? " is-selected" : ""}" ${picked ? "data-zone-unpick" : "data-zone-pick"}="${esc(target.key)}" title="${esc(cardName(target.cardId))}">
           <img src="${esc(cardImage(target.cardId))}" alt="${esc(cardName(target.cardId))}">
@@ -510,11 +546,16 @@ function armRulesBoardTargets(flow) {
         </button>`;
         }).join("")}
       </div>
-      ${multiPick ? `<div class="rules-zone-pick-actions"><button type="button" class="primary" data-zone-pick-confirm ${(flow.selectedTargets || []).length >= minTargets ? "" : "disabled"}>${esc(t("confirm"))} (${(flow.selectedTargets || []).length}/${maxTargets})</button></div>` : ""}
+      <div class="rules-zone-pick-actions"><button type="button" class="primary" data-zone-pick-confirm ${(flow.selectedTargets || []).length >= minTargets ? "" : "disabled"}>${esc(t("confirm"))} (${(flow.selectedTargets || []).length}/${maxTargets})</button></div>
     </div>`;
     document.body.appendChild(popup);
     popup.querySelectorAll("[data-zone-pick]").forEach((button) => {
-      button.onclick = () => commitTarget(candidates.find((target) => target.key === button.dataset.zonePick));
+      button.onclick = () => {
+        const target = candidates.find((target) => target.key === button.dataset.zonePick);
+        if (!multiPick) flow.selectedTargets = [target];
+        else if ((flow.selectedTargets || []).length < maxTargets) flow.selectedTargets = [...(flow.selectedTargets || []), target];
+        renderRulesBoardFlow();
+      };
     });
     popup.querySelectorAll("[data-zone-unpick]").forEach((button) => {
       button.onclick = () => {
@@ -523,10 +564,11 @@ function armRulesBoardTargets(flow) {
       };
     });
     const zoneConfirm = popup.querySelector("[data-zone-pick-confirm]");
-    if (zoneConfirm) zoneConfirm.onclick = () => { zoneConfirm.disabled = true; scheduleRulesBoardSubmit(); };
+    if (zoneConfirm) zoneConfirm.onclick = () => { zoneConfirm.disabled = true; confirmRulesBoardTargets(); };
     rulesBoardTargetCleanup.push(() => popup.remove());
     return;
   }
+  if ((flow.selectedTargets || []).length >= maxTargets) return;
   candidates.forEach((target) => {
     let element = rulesTargetElement(target);
     let temporaryTarget = false;
@@ -580,9 +622,28 @@ function armRulesBoardTargets(flow) {
   if (rect) updateRulesTargetArrow({ clientX: rect.left + rect.width / 2, clientY: rect.top + rect.height / 2 });
 }
 
+function appendRulesCounterEssenceOptions(flow, remaining) {
+  const counterSources = rulesCounterEssenceSources().filter((source) => Number(remaining[source.temperament] || 0) > 0 || Number(remaining.hollow || 0) > 0);
+  if (!counterSources.length) return;
+  const choices = document.createElement("div");
+  choices.className = "rules-counter-essence-options";
+  choices.innerHTML = `<p>${esc(t("rulesCounterEssenceOptional"))}</p>${counterSources.map((source, index) => `<button type="button" data-spend-counter-essence="${index}" ${flow.counterEssencePending ? "disabled" : ""}><img src="${esc(temperamentSymbol(source.temperament))}" alt="">${esc(t("rulesUseEssenceCounter"))} · ${esc(cardName(source.item.cardId))} (${source.count})</button>`).join("")}`;
+  $("#rulesFlowCost").appendChild(choices);
+  choices.querySelectorAll("[data-spend-counter-essence]").forEach((button) => {
+    button.onclick = () => {
+      const source = counterSources[Number(button.dataset.spendCounterEssence)];
+      if (flow.counterEssencePending) return;
+      flow.counterEssencePending = { itemId: source.item.id, counters: JSON.stringify(source.item.counters || {}) };
+      choices.querySelectorAll("button").forEach((candidate) => { candidate.disabled = true; });
+      send({ type: "spend_counter_essence", itemId: source.item.id, abilityId: source.ability.id });
+    };
+  });
+}
+
 function advanceRulesBoardFlow() {
   const flow = pendingRulesBoardFlow;
   if (!flow) return;
+  if (flow.targetsConfirmed) { scheduleRulesBoardSubmit(); return; }
   if (flow.draft.encodedAbility?.additionalCost && !flow.costCardId) {
     flow.stage = "cost_card";
     renderRulesBoardFlow();
@@ -685,6 +746,20 @@ let handGhostSignature = "";
 let rulesFlowFlipTimer = null;
 
 function renderRulesBoardFlow() {
+  const counterFlow = pendingRulesBoardFlow;
+  if (counterFlow?.counterEssencePending) {
+    const pending = counterFlow.counterEssencePending;
+    const source = (latestState?.battlefield || []).find((item) => item.id === pending.itemId);
+    const now = JSON.stringify(source?.counters || {});
+    if (now !== pending.counters) {
+      counterFlow.counterEssencePending = null;
+        const ability = counterFlow.mode === "stack_payment" ? { tribute: counterFlow.choice.payment } : counterFlow.draft.encodedAbility;
+        Object.assign(counterFlow.draft, rulesActionPaymentDraft(counterFlow.source, counterFlow.draft.card, ability));
+      counterFlow.selectedPaymentIndexes.clear();
+        counterFlow.stage = counterFlow.mode === "stack_payment" ? "payment" : rulesInitialActionStage(counterFlow.draft);
+      if (counterFlow.stage === "target") { advanceRulesBoardFlow(); return; }
+    }
+  }
   const ghostSignature = pendingRulesBoardFlow?.stage === "payment"
     ? [...pendingRulesBoardFlow.selectedPaymentIndexes].join(",") + "|" + (pendingRulesBoardFlow.draft?.manifestations || []).filter((entry) => entry.zone === "graveyard").map((entry) => entry.selectionKey).join(",")
     : "";
@@ -895,6 +970,7 @@ function renderRulesBoardFlow() {
     payButton.disabled = !covered || flow.stage === "committing";
     declineButton.disabled = flow.stage === "committing";
     declineButton.hidden = Boolean(flow.choice.mustPay);
+    appendRulesCounterEssenceOptions(flow, remaining);
     clearRulesBoardTargets();
     return;
   }
@@ -951,6 +1027,7 @@ function renderRulesBoardFlow() {
       <div class="rules-flow-cost-row"><span>${esc(t("rulesTributeRemaining"))}</span>${rulesTributeUnitsHtml(remaining, t("rulesCoveredByEssence"))}</div>${flow.draft.transcendentPayment !== undefined ? `<button type="button" id="rulesChangeWhitePayment">${esc(t("rulesChangeWhitePayment"))}</button>` : ""}`;
     const changeWhite = $("#rulesChangeWhitePayment");
     if (changeWhite) changeWhite.onclick = () => { flow.stage = "essence_allocation"; renderRulesBoardFlow(); };
+    appendRulesCounterEssenceOptions(flow, remaining);
     clearRulesBoardTargets();
     return;
   }
@@ -1042,6 +1119,11 @@ function renderRulesBoardFlow() {
     : flow.draft.encodedAbility?.sacrificeSource
       ? `<div class="rules-flow-cost-row"><span>${esc(t("rulesCostShort"))}</span><strong>${esc(t("rulesSacrificeSourceCost"))}</strong></div>`
       : "";
-  $("#rulesFlowCost").innerHTML = `${sourceCost}<div class="rules-flow-cost-row"><span>${esc(t("rulesTargetLegend"))}</span><strong>${esc(t("rulesBoardClickTarget"))}</strong></div>`;
+  const selected = flow.selectedTargets || [];
+  const targetRules = flow.draft.targetRules || {};
+  const canConfirm = !targetRules.groups && Number(targetRules.max || 0) > 1;
+  $("#rulesFlowCost").innerHTML = `${sourceCost}<div class="rules-flow-cost-row"><span>${esc(t("rulesTargetLegend"))}</span><strong>${esc(t("rulesBoardClickTarget"))}</strong></div>${canConfirm ? `<div class="rules-zone-pick-actions"><button type="button" class="primary" id="rulesConfirmTargets" ${selected.length >= Number(targetRules.min || 0) ? "" : "disabled"}>${esc(t("confirm"))} (${selected.length}/${targetRules.max})</button></div>` : ""}`;
+  const confirmTargets = $("#rulesConfirmTargets");
+  if (confirmTargets) confirmTargets.onclick = confirmRulesBoardTargets;
   armRulesBoardTargets(flow);
 }

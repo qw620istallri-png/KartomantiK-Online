@@ -3735,7 +3735,22 @@ body.flow-uses-hand .hand-area { z-index: 90; }
 .game-end-overlay { background: #050402d0; }
 .game-end-card { border: 0; background: transparent; box-shadow: none; }
 .game-end-card h2 { text-shadow: 0 3px 14px #000; }
-.game-end-close { border: 0; background: transparent; font-size: 22px; }
+.game-end-close { border: 0; background: transparent; font-size: 22px; padding: 0; min-height: 0; display: grid; place-items: center; line-height: 1; }
+.rules-temperament-choice-symbol { display: block; width: 32px; height: 32px; object-fit: contain; margin: 0 auto 8px; }
+#rulesChoicePanel.effect-screen.temperament-screen .rules-choice-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+#rulesChoicePanel.effect-screen.temperament-screen .rules-choice-destination { min-width: 0; width: 100%; padding: 10px 6px; }
+@media (max-height: 600px) {
+  #rulesChoicePanel.effect-screen.temperament-screen { padding: 12px; }
+  #rulesChoicePanel.effect-screen.temperament-screen .box.has-source { grid-template-columns: 140px minmax(0, 1fr); column-gap: 20px; }
+  #rulesChoicePanel.effect-screen.temperament-screen .rules-choice-effect { padding: 8px; font-size: 12px; margin-bottom: 6px; }
+  #rulesChoicePanel.effect-screen.temperament-screen #rulesChoiceText { font-size: 12px; margin-bottom: 6px; }
+  #rulesChoicePanel.effect-screen.temperament-screen .rules-choice-destination strong { font-size: 14px; }
+  #rulesChoicePanel.effect-screen.temperament-screen .rules-temperament-choice-symbol { width: 24px; height: 24px; margin-bottom: 4px; }
+}
+.rules-counter-essence-options { display: grid; gap: 8px; margin-top: 10px; }
+.rules-counter-essence-options p { margin: 0; }
+.rules-counter-essence-options button { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.rules-counter-essence-options img { width: 20px; height: 20px; object-fit: contain; }
 .game-end-close:hover { background: #ffffff14; color: #ffe7a0; }
 .game-end-player { background: #0b0906b0; }
 .game-end-actions button:not(.primary) { border: 0; background: transparent; box-shadow: none; color: #f6edcf; text-shadow: 0 2px 8px #000; }

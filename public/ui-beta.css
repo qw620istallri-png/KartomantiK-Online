@@ -1104,6 +1104,14 @@ body.flow-uses-hand #gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .
 
 /* touch phones: the hand is lifted off the bottom edge (system swipe zone) and
    its cards never pan or pull the page */
+.ub-suspension-strip { position: absolute; transform: translateX(-50%); z-index: 8; pointer-events: auto; min-height: 30px; padding: 5px 10px; font-size: 12px; border-radius: 8px; background: var(--ub-paper, #171c2c); color: var(--ub-gold-pale, #f0d98f); white-space: nowrap; }
+.ub-suspension-panel { position: fixed; z-index: 96; inset: 12% 15%; padding: 18px; overflow: auto; pointer-events: auto; background: #101b30; color: #fff3ce; border-radius: 12px; box-shadow: 0 16px 40px #000b; }
+.ub-suspension-panel header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+.ub-suspension-panel header button { width: 32px; height: 32px; padding: 0; min-height: 0; display: grid; place-items: center; line-height: 1; }
+.ub-suspension-cards { display: flex; flex-wrap: wrap; gap: 14px; }
+.ub-suspension-cards .rules-choice-card { width: clamp(84px, 12vw, 150px); }
+.ub-suspension-cards .rules-choice-card img { width: 100%; aspect-ratio: 5 / 7; object-fit: cover; }
+.bf-card.is-pending-support { opacity: .85; }
 #gameScreen.ui-beta.ub-phone .hand-tray { margin-bottom: calc(var(--hand-card-h, 170px) * -.38 + var(--ub-hand-lift, 0px)); }
 #gameScreen.ui-beta.ub-phone .hand-tray .hand-card { touch-action: none; }
 #gameScreen.ui-beta.ub-phone .hand-area { overscroll-behavior: none; }

@@ -688,7 +688,7 @@
 
   // zone: confrontation | interzone | will (Volontés) | stalemate
   function classify(item, firstIds) {
-    let zone = item.fieldZone || (firstIds.has(item.id) ? "confrontation" : null);
+    let zone = item.pendingSupportActionId ? "confrontation" : item.fieldZone || (firstIds.has(item.id) ? "confrontation" : null);
     let seat;
     if (zone) {
       seat = seatOfPlayer(battlefieldItemControllerId(item));
@@ -843,8 +843,10 @@
     // Zone does: the tray box ignores the hover transforms, so it does not jump
     const tray = document.querySelector("#handArea .hand-tray");
     const trayRect = tray && tray.childElementCount ? tray.getBoundingClientRect() : null;
-    const underHand = trayRect && trayRect.width > 0
-      && trayRect.right - G.wrapLeft > column.l && trayRect.left - G.wrapLeft < column.r;
+    const underHand = trayRect && [...tray.querySelectorAll(".hand-card")].some((card) => {
+      const rect = card.getBoundingClientRect();
+      return rect.right - G.wrapLeft > column.l && rect.left - G.wrapLeft < column.r;
+    });
     const bottom = underHand ? G.H - G.handPeek - 6 : G.H - 12;
     const available = bottom - top - labelH * 2 - 18;
     const wills = groups[side].will.length;
@@ -1207,9 +1209,17 @@
       <button type="button" class="ub-stale-strip hidden" id="ubStaleStrip"></button>
       <div class="ub-stale-drop hidden" id="ubStaleDrop"></div>
       <div class="ub-stale-panel hidden" id="ubStalePanel"></div>`;
+    const suspension = el("button", "ub-suspension-strip hidden");
+    suspension.id = "ubSuspensionStrip";
+    suspension.type = "button";
+    const suspensionPanel = el("div", "ub-suspension-panel hidden");
+    suspensionPanel.id = "ubSuspensionPanel";
+    suspension.onclick = () => { suspensionPanel.classList.remove("hidden"); suspension.setAttribute("aria-expanded", "true"); };
     const battlefield = document.getElementById("battlefield");
     const controls = el("div", "ub-field-controls");
     controls.id = "ubFieldControls";
+    controls.appendChild(suspension);
+    document.getElementById("gameScreen").appendChild(suspensionPanel);
     controls.appendChild(field.querySelector("#ubTotals"));
     wrap.insertBefore(field, battlefield);
     wrap.insertBefore(controls, battlefield);
@@ -1608,7 +1618,7 @@
   function activeTemperamentKey(playerId) {
     let best = null;
     (latestState?.battlefield || []).forEach((item, index) => {
-      if (!item.faceUp || item.fieldZone !== "confrontation") return;
+      if (!item.faceUp || item.pendingSupportActionId || visibleFieldZone(item) !== "confrontation") return;
       if (battlefieldItemControllerId(item) !== playerId) return;
       if (!fieldItemIsManifestation(item)) return;
       const order = Number(item.confrontationOrder || 0);
@@ -1620,7 +1630,7 @@
 
   function sideHasConfrontation(playerId) {
     return (latestState?.battlefield || []).some((item) => (
-      item.faceUp && item.fieldZone === "confrontation" && battlefieldItemControllerId(item) === playerId
+      item.faceUp && !item.pendingSupportActionId && visibleFieldZone(item) === "confrontation" && battlefieldItemControllerId(item) === playerId
       && fieldItemIsManifestation(item)
     ));
   }
@@ -1639,6 +1649,17 @@
     if (DOMINATES[ta]?.includes(tb)) return "me";
     if (DOMINATES[tb]?.includes(ta)) return "opp";
     return "tie";
+  }
+
+  function tablePriorityPlayerId() {
+    if (rulesOn()) return latestState.rulesEngine.priorityPlayerId;
+    if (!latestState?.phaseTracker?.enabled) return null;
+    const players = sidePlayers();
+    if (!players.me || !players.opp) return null;
+    const passed = latestState.phaseTracker.passedPlayerIds || [];
+    if (passed.length === 1) return passed[0] === players.me.id ? players.opp.id : players.me.id;
+    const lead = leader(players.me, players.opp);
+    return lead === "me" ? players.opp.id : lead === "opp" ? players.me.id : null;
   }
 
   function essencePool(playerId) {
@@ -1794,7 +1815,7 @@
     const field = document.getElementById("ubField");
     field.style.setProperty("--me", players.me ? playerColor(players.me.id) : "#3fc9a8");
     field.style.setProperty("--opp", players.opp ? playerColor(players.opp.id) : "#d3654a");
-    const priorityId = rulesOn() ? latestState.rulesEngine.priorityPlayerId : null;
+    const priorityId = tablePriorityPlayerId();
     const prio = priorityId ? (priorityId === players.me?.id ? "me" : priorityId === players.opp?.id ? "opp" : "") : "";
     if (field.dataset.prio !== prio) field.dataset.prio = prio;
     // while the First Manifestations are being placed, the Confrontation Zone
@@ -1873,6 +1894,26 @@
     }
   }
 
+  function renderSuspension(G) {
+    const entries = latestState?.rulesEngine?.suspendedCards || [];
+    const strip = document.getElementById("ubSuspensionStrip");
+    const panel = document.getElementById("ubSuspensionPanel");
+    strip.classList.toggle("hidden", !entries.length);
+    strip.textContent = `${t("rulesSuspensionZone")} · ${entries.length}`;
+    strip.setAttribute("aria-controls", panel.id);
+    strip.setAttribute("aria-expanded", String(!panel.classList.contains("hidden")));
+    strip.style.left = `${G.cx}px`;
+    strip.style.top = `${Math.min(G.zcBottom - 34, (G.zcTop + G.zcBottom) / 2 + Math.min(108, G.gutW) + 12)}px`;
+    if (!entries.length) { panel.classList.add("hidden"); return; }
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-label", t("rulesSuspensionZone"));
+    panel.innerHTML = `<header><strong>${esc(t("rulesSuspensionZone"))} · ${entries.length}</strong><button type="button" data-close-suspension aria-label="${esc(t("close"))}">×</button></header><div class="ub-suspension-cards">${entries.map((entry, index) => `<button type="button" class="rules-choice-card" data-suspension-card="${index}" ${entry.cardId ? "" : "disabled"} title="${esc(entry.cardId ? cardName(entry.cardId) : t("rulesSuspended"))}"><img src="${esc(entry.cardId ? cardImage(entry.cardId) : staticAsset("card-back.webp"))}" alt="${esc(entry.cardId ? cardName(entry.cardId) : t("rulesSuspended"))}"><span>${esc(latestState.players?.[entry.ownerId]?.name || "")}</span></button>`).join("")}</div>`;
+    panel.querySelector("[data-close-suspension]").onclick = () => { panel.classList.add("hidden"); strip.setAttribute("aria-expanded", "false"); strip.focus(); };
+    panel.querySelectorAll("[data-suspension-card]").forEach((button) => {
+      button.onclick = () => { const entry = entries[Number(button.dataset.suspensionCard)]; if (entry.cardId) showInspect(entry.cardId); };
+    });
+  }
+
   // the points waiting in the Stalemate Zone (what the next winner takes)
   function stalePoints(entries) {
     return entries.reduce((total, entry) => total + (Number(cardsById.get(entry.item.cardId)?.points) || 0), 0);
@@ -1884,7 +1925,7 @@
   }
 
   function renderWho(players) {
-    const priorityId = rulesOn() ? latestState.rulesEngine.priorityPlayerId : null;
+    const priorityId = tablePriorityPlayerId();
     const passed = new Set(rulesOn() ? (latestState.rulesEngine.priorityPasses || []) : (latestState.phaseTracker?.passedPlayerIds || []));
     for (const side of ["me", "opp"]) {
       const node = document.getElementById(side === "me" ? "ubWhoMe" : "ubWhoOpp");
@@ -1918,7 +1959,7 @@
   // player icons on each side of the opponent's hand: priority / passed state,
   // and the Vessel total next to them; also a target when a player is chosen
   function renderAvatars(G, players) {
-    const priorityId = rulesOn() ? latestState.rulesEngine.priorityPlayerId : null;
+    const priorityId = tablePriorityPlayerId();
     const passed = new Set(rulesOn() ? (latestState.rulesEngine.priorityPasses || []) : (latestState.phaseTracker?.passedPlayerIds || []));
     const size = Math.round(clamp(G.oppHandH - 14, 30, 46));
     document.getElementById("gameScreen").style.setProperty("--ub-avW", `${size + 92}px`);
@@ -2230,6 +2271,7 @@
     renderTotals(G, players);
     renderWheel(G, players);
     renderStalemate(geometry);
+    renderSuspension(G);
     renderWho(players);
     renderAvatars(G, players);
     renderScores(players);
@@ -3437,6 +3479,7 @@
     active,
     enabled,
     placement,
+    fieldZone(item) { return active() ? classify(item, firstManifestationIds()).zone : null; },
     decorateCard,
     dropLogical,
     setEnabled(on) { setEnabled(on); apply(); },

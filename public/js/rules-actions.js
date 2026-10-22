@@ -19,8 +19,8 @@ function rulesDraftCanBePaid(draft) {
   if (draft.essenceCostPayable === false) return false;
   const candidates = draft.manifestations.slice(0, 12);
   const combinations = 1 << candidates.length;
-  const plans = draft.essencePlan.transcendentChoice && draft.transcendentPayment === undefined
-    ? rulesEssencePaymentOptions(draft.paymentRequirements) : [draft.essencePlan];
+  const plans = (draft.essencePlan.transcendentChoice || rulesCounterEssenceSources().length) && draft.transcendentPayment === undefined
+    ? rulesEssencePaymentOptions(draft.paymentRequirements, true) : [draft.essencePlan];
   for (const { remaining } of plans) {
     if (Object.values(remaining).every((amount) => amount <= 0)) return true;
     for (let mask = 1; mask < combinations; mask += 1) {
@@ -123,7 +123,7 @@ function beginRulesBoardAction(source) {
     ? limboWillIsPlayable(source.cardId, true)
     : source.zone === "graveyard"
       ? limboWillIsPlayable(source.cardId)
-      : handCardIsPlayable(source.cardId, source.zone === "suspended" ? source : null);
+      : handCardIsPlayable(source.cardId, source);
   if (!playable) {
     if (source.zone === "hand" && !source.tebebe && !source.playFromField) refuseHandCard(source.cardId, source.handIndex ?? null);
     else showToast(t("rulesBoardCardNotPlayable"), true);
@@ -373,7 +373,7 @@ function rulesStructuredActionTargets(encodedAbility) {
           ? ["play_card", "activated_effect", "triggered_effect"].includes(action.kind)
           : allowsStackCard
           ? action.kind === "play_card" && action.sourceOnStack && action.source?.cardId
-          : ["activated_effect", "triggered_effect"].includes(action.kind) && action.source?.cardId
+          : (["activated_effect", "triggered_effect"].includes(action.kind) || action.sourceRemainsOnField) && action.source?.cardId
       ))
       .filter((action) => targetMatchesRules(action.source.cardId))
       .filter((action) => !targetRules?.targetsConfrontationManifestation
@@ -501,11 +501,12 @@ function rulesGhostHandCards() {
     ) ghosts.push({ cardId: item.cardId, zone: "field_free", itemId: item.id, label: cardName(JU_LIEN_CARD_ID).split(",")[0] });
   }
   for (const host of latestState.battlefield || []) {
-    if (host.ownerId !== myPlayerId || !(host.attachedCards || []).length) continue;
+    if (battlefieldItemControllerId(host) !== myPlayerId || host.faceUp === false || host.effectsDisabled || !(host.attachedCards || []).length) continue;
     if (!(passiveEffectsByCard.get(host.cardId) || []).some((effect) => effect.kind === "play_attached_wills")) continue;
     for (const cardId of new Set(host.attachedCards.map((entry) => entry.cardId))) {
-      if (["ephemeral_will", "persistent_will"].includes(cardsById.get(cardId)?.type) && handCardIsPlayable(cardId)) {
-        ghosts.push({ cardId, zone: "attached", itemId: host.id, label: cardName(host.cardId) });
+      if (["ephemeral_will", "persistent_will"].includes(cardsById.get(cardId)?.type)) {
+        const source = { cardId, zone: "attached", itemId: host.id };
+        ghosts.push({ ...source, playable: handCardIsPlayable(cardId, source), label: cardName(host.cardId) });
       }
     }
   }
@@ -625,7 +626,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
       ? rulesLimboPlayMode() : null;
   const isPrintedWill = (["hand", "suspended", "attached"].includes(source.zone) || Boolean(limboPlay) || Boolean(source.playFromField))
     && ["ephemeral_will", "persistent_will"].includes(rulesPlayType(card));
-  const freeWillPermission = isPrintedWill && (latestState?.rulesEngine?.playPermissions || []).some((permission) => (
+  const freeWillPermission = (source.zone === "hand" && source.actionKind !== "activated_effect" && card?.type === "manifestation" && rulesPlayType(card) === "persistent_will") || isPrintedWill && (latestState?.rulesEngine?.playPermissions || []).some((permission) => (
     permission.playerId === myPlayerId
     && permission.fromZone === "hand"
     && permission.noTribute
@@ -641,7 +642,9 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
     : encodedAbility && Object.hasOwn(encodedAbility, "tribute")
     ? printedTributeRequirements({ powerCost: encodedAbility.tribute })
     : isPrintedWill ? printedTributeRequirements(card) : {};
-  let reduction = (limboPlay || source.fixedHollow) ? 0 : (latestState?.battlefield || []).reduce((total, item) => {
+  const passiveSources = (latestState?.battlefield || []).filter((item) => item.faceUp && !item.effectsDisabled && !item.effectsInactive && item.fieldZone !== "stalemate");
+  const printedWillTribute = isPrintedWill && !limboPlay && !source.fixedHollow && !freeWillPermission && !(encodedAbility && Object.hasOwn(encodedAbility, "tribute"));
+  let reduction = !printedWillTribute ? 0 : passiveSources.reduce((total, item) => {
     if ((item.controllerId || item.ownerId) !== myPlayerId || item.fieldZone !== "interzone") return total;
     return total + (passiveEffectsByCard.get(item.cardId) || [])
       .filter((effect) => effect.kind === "reduce_will_tribute")
@@ -659,8 +662,8 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
     paymentRequirements[payable] -= 1;
     reduction -= 1;
   }
-  if (isPrintedWill && !limboPlay && !source.fixedHollow && !freeWillPermission && !(encodedAbility && Object.hasOwn(encodedAbility, "tribute"))) {
-    const increase = (latestState?.battlefield || []).reduce((total, item) => (
+  if (printedWillTribute) {
+    const increase = passiveSources.reduce((total, item) => (
       total + (passiveEffectsByCard.get(item.cardId) || [])
         .filter((effect) => effect.kind === "increase_will_tribute")
         .reduce((sum, effect) => sum + Number(effect.value || 0), 0)
@@ -678,17 +681,21 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
     Object.keys(paymentRequirements).forEach((key) => { delete paymentRequirements[key]; });
     if (total > 0) paymentRequirements.hollow = total;
   }
+  if (Number(source.targetExtraEssence || 0) > 0) paymentRequirements.hollow = Number(paymentRequirements.hollow || 0) + Number(source.targetExtraEssence);
   const hasPrintedTribute = Object.values(paymentRequirements).some((amount) => amount > 0);
+  const essenceCostRequirements = encodedAbility?.essenceCost
+    ? printedTributeRequirements({ powerCost: encodedAbility.essenceCost })
+    : {};
+  // An Essence-only ability can wait in the payment flow while the player
+  // explicitly converts a Gem. Manifestations remain unavailable for this cost.
+  if (!hasPrintedTribute) Object.assign(paymentRequirements, essenceCostRequirements);
   let essencePlan = rulesEssencePaymentPreview(paymentRequirements, transcendentPayment);
   // Before the player assigns White Essences, keep every remaining colour's
   // Tribute candidates visible. Stack payment choices retain their existing flow.
   if (essencePlan.transcendentChoice && transcendentPayment === undefined && source.zone !== "stack") {
     essencePlan = rulesEssencePaymentPreview(paymentRequirements, {});
   }
-  const essenceCostRequirements = encodedAbility?.essenceCost
-    ? printedTributeRequirements({ powerCost: encodedAbility.essenceCost })
-    : {};
-  const essenceCostPlan = rulesEssencePaymentPreview(essenceCostRequirements);
+  const essenceCostPlan = rulesEssencePaymentPreview(essenceCostRequirements, undefined, true);
   const essenceCostPayable = Object.values(essenceCostPlan.remaining)
     .every((amount) => amount <= 0);
   const totalEssence = (latestState?.tokens || [])
@@ -733,6 +740,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
   const manifestations = handCards.flatMap((cardId, index) => {
     const manifestation = cardsById.get(cardId);
     if (manifestation?.type !== "manifestation") return [];
+    if (/^Cannot be used (?:to pay tributes|as tribute)/im.test(String(manifestation.effect || ""))) return [];
     const isSourceCopy = source.zone === "hand" && cardId === source.cardId
       && (Number.isInteger(source.handIndex) ? index === source.handIndex : !sourceCopyReserved);
     if (isSourceCopy) {
@@ -751,7 +759,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
       paymentValue: cardId, zone: "hand",
     }];
   });
-  const limboSource = (latestState?.battlefield || []).find((item) => (
+  const limboSource = passiveSources.find((item) => (
     (item.controllerId || item.ownerId) === myPlayerId
     && Number(item.counters?.Formula || 0) > 0
     && (passiveEffectsByCard.get(item.cardId) || []).some(
@@ -791,7 +799,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
       });
     }
   }
-  const fieldTributeActive = (latestState?.battlefield || []).some((item) => (
+  const fieldTributeActive = passiveSources.some((item) => (
     (passiveEffectsByCard.get(item.cardId) || []).some(
       (effect) => effect.kind === "field_manifestations_as_tribute"
     )
@@ -843,7 +851,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
       });
     }
   }
-  const vesselTributeActive = (latestState?.battlefield || []).some((item) => (
+  const vesselTributeActive = passiveSources.some((item) => (
     battlefieldItemControllerId(item) === myPlayerId
     && (passiveEffectsByCard.get(item.cardId) || []).some(
       (effect) => effect.kind === "vessel_manifestations_as_tribute"
