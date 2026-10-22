@@ -303,7 +303,22 @@ function rulesBoardExtraTributeCards(flow) {
   const chosen = flow?.extraTributeIndexes || new Set();
   return (flow?.draft?.extraTributeCards || []).filter((entry) => (
     chosen.has(entry.index) && !flow.selectedPaymentIndexes?.has(entry.index)
+    && entry.index !== flow.costCardIndex
   ));
+}
+
+function rulesBoardOptionalExtraEssenceMax(flow) {
+  const optional = flow.draft.encodedAbility?.optionalExtraEssence;
+  if (!optional) return 0;
+  const available = Number(flow.draft.optionalExtraEssenceMax || 0);
+  const room = Math.max(0, Number(optional.max || 0) - available);
+  const selected = rulesBoardSelectedPayments(flow);
+  if (!room || !selected.length) return available;
+  const requirements = { ...flow.draft.essencePlan.remaining };
+  requirements[optional.temperament] = Number(requirements[optional.temperament] || 0) + room;
+  const remaining = rulesRemainingAfterManifestations(selected, requirements);
+  const missing = Object.values(remaining).reduce((sum, amount) => sum + Math.max(0, amount), 0);
+  return available + Math.max(0, room - missing);
 }
 
 function rulesBoardMinimumPaymentCount(flow) {
@@ -347,7 +362,7 @@ function submitRulesBoardFlow(target = null) {
   }
   if (flow.mode === "trigger_target") {
     const chosen = [...(flow.selectedTargets || []), ...(target ? [target] : [])];
-    if (!chosen.length) return;
+    if (chosen.length < Number(flow.draft.targetRules?.min || 0)) return;
     flow.previousStage = flow.stage;
     flow.stage = "committing";
     renderRulesBoardFlow();
@@ -660,7 +675,7 @@ function advanceRulesBoardFlow() {
     return;
   }
   if (
-    (flow.draft.optionalExtraEssenceMax > 0 || flow.draft.extraTributeCards?.length)
+    (rulesBoardOptionalExtraEssenceMax(flow) > 0 || flow.draft.extraTributeCards?.length)
     && !flow.extraEssenceConfirmed
   ) {
     flow.stage = "extra_essence";
@@ -692,6 +707,8 @@ function rulesBoardHandCostCandidates(flow = pendingRulesBoardFlow) {
     ? (flow.source.handIndex ?? hand.indexOf(flow.source.cardId)) : -1;
   const discardWill = flow?.draft.encodedAbility?.additionalCost === "discard_hand_will";
   return hand.map((cardId, index) => ({ cardId, index })).filter(entry => entry.index !== sourceIndex
+    && !flow?.selectedPaymentIndexes?.has(entry.index)
+    && !flow?.extraTributeIndexes?.has(entry.index)
     && (discardWill ? ["ephemeral_will", "persistent_will"].includes(cardsById.get(entry.cardId)?.type)
       : cardsById.get(entry.cardId)?.type === "manifestation"));
 }
@@ -709,10 +726,14 @@ function resolveRulesBoardCardDrop(ctx, target) {
   if (ctx.fromOwnerId !== myPlayerId || ctx.fromZone !== "hand") return true;
   if (flow.stage === "cost_card") {
     const candidate = rulesBoardHandCostCandidates(flow).find(entry => entry.index === ctx.handIndex);
-    if (candidate) { flow.costCardId = candidate.cardId; advanceRulesBoardFlow(); }
+    if (candidate) {
+      flow.costCardId = candidate.cardId;
+      flow.costCardIndex = candidate.index;
+      advanceRulesBoardFlow();
+    }
   } else {
     const candidate = (flow.draft.extraTributeCards || []).find(entry => entry.index === ctx.handIndex
-      && !flow.selectedPaymentIndexes.has(entry.index));
+      && !flow.selectedPaymentIndexes.has(entry.index) && entry.index !== flow.costCardIndex);
     if (candidate) {
       if (!flow.extraTributeIndexes) flow.extraTributeIndexes = new Set();
       if (flow.extraTributeIndexes.has(candidate.index)) flow.extraTributeIndexes.delete(candidate.index);
@@ -862,7 +883,7 @@ function renderRulesBoardFlow() {
     const index = Number(element.dataset.handIndex);
     const candidate = flow.stage === "payment" ? flow.draft.manifestations.some(entry => entry.selectionKey === index)
       : flow.stage === "cost_card" ? rulesBoardHandCostCandidates(flow).some(entry => entry.index === index)
-        : flow.stage === "extra_essence" && (flow.draft.extraTributeCards || []).some(entry => entry.index === index && !flow.selectedPaymentIndexes.has(index));
+        : flow.stage === "extra_essence" && (flow.draft.extraTributeCards || []).some(entry => entry.index === index && !flow.selectedPaymentIndexes.has(index) && entry.index !== flow.costCardIndex);
     element.classList.toggle("is-tribute-candidate", candidate);
     element.classList.toggle("is-tribute-selected", candidate && (flow.stage === "extra_essence" ? flow.extraTributeIndexes?.has(index) : flow.selectedPaymentIndexes.has(index)));
     const chainCandidate = flow.mode === "chain"
@@ -1058,13 +1079,13 @@ function renderRulesBoardFlow() {
   }
 
   if (flow.stage === "extra_essence") {
-    const max = Number(flow.draft.optionalExtraEssenceMax || 0);
+    const max = rulesBoardOptionalExtraEssenceMax(flow);
     const current = Math.max(
       0, Math.min(Number(flow.extraEssenceCount || 0), max),
     );
     if (!flow.extraTributeIndexes) flow.extraTributeIndexes = new Set();
     const extraCandidates = (flow.draft.extraTributeCards || []).filter(
-      (entry) => !flow.selectedPaymentIndexes?.has(entry.index),
+      (entry) => !flow.selectedPaymentIndexes?.has(entry.index) && entry.index !== flow.costCardIndex,
     );
     const extraCardsHtml = extraCandidates.length ? `
       <div class="rules-flow-cost-row rules-extra-tribute-row">

@@ -738,12 +738,13 @@ class ZonesMixin:
             )
         return expired
 
-    def move_zone_card_by_effect(self, from_container_id, from_zone,
-                                 to_container_id, to_zone, card_id,
-                                 position="top"):
+    def rules_zone_move_replacement(self, from_container_id, from_zone, to_zone, card_id):
+        """Apply replacements before an effect extracts a card from its zone."""
         owner_id = self.card_owner_in_zone(
             from_container_id, from_zone, card_id
         )
+        if card_id not in self.players.get(from_container_id, {}).get("zones", {}).get(from_zone, []):
+            return "Card not found in source zone.", owner_id, None
         if from_zone == "hand" and self.rules_hands_are_immune():
             return "Cards in Hand are Immune to cards and effects.", owner_id, None
         suspension_source = next((
@@ -764,6 +765,16 @@ class ZonesMixin:
                 "cardId": card_id,
                 "ownerId": owner_id,
             } if suspended else None)
+        return None, owner_id, None
+
+    def move_zone_card_by_effect(self, from_container_id, from_zone,
+                                 to_container_id, to_zone, card_id,
+                                 position="top"):
+        error, owner_id, replacement = self.rules_zone_move_replacement(
+            from_container_id, from_zone, to_zone, card_id,
+        )
+        if error or replacement:
+            return error, owner_id, replacement
         error, owner_id = self.move_zone_card(
             from_container_id, from_zone,
             to_container_id, to_zone, card_id, position,

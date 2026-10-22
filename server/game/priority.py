@@ -61,6 +61,8 @@ class PriorityMixin:
         if card_type == "ephemeral_will":
             return None if phase_id in response_phases else "An Ephemeral Will cannot be played during the current step."
         if card_type == "persistent_will":
+            if self.rules_engine["actionStack"] and not self.rules_persistent_wills_as_ephemeral(player_id):
+                return "A Persistent Will cannot be played as a response."
             if phase_id == "end_actions":
                 return None
             if (
@@ -447,10 +449,11 @@ class PriorityMixin:
             ):
                 return True
             if (
-                response and item.get("faceUp")
+                item.get("faceUp")
                 and self.rules_item_effects_active(item)
                 and any(
-                    self.rules_field_ability_usable(item, ability, zone, phase_id)
+                    (response or phase_id in (ability.get("phaseIds") or []))
+                    and self.rules_field_ability_usable(item, ability, zone, phase_id)
                     for ability in metadata.get("activatedAbilities") or []
                 )
             ):
@@ -691,6 +694,11 @@ class PriorityMixin:
             hand_cards = list(self.players[player_id]["zones"]["hand"])
             if clean_source.get("zone") == "hand" and clean_source.get("cardId") in hand_cards:
                 hand_cards.remove(clean_source["cardId"])
+            # A Hand card reserved for either Tribute cannot also pay an
+            # additional discard/exile cost. Preserve distinct copies.
+            for entry in clean_payment["cardEntries"]:
+                if entry["zone"] == "hand":
+                    hand_cards.remove(entry["cardId"])
             cost_types = (
                 RULES_WILL_TYPES if additional_cost == "discard_hand_will"
                 else {"manifestation"}
@@ -813,7 +821,7 @@ class PriorityMixin:
         ]
         if cost_card_id and additional_cost == "discard_hand_will":
             cost_owner = self.card_owner_in_zone(player_id, "hand", cost_card_id) or player_id
-            cost_error, _owner, _replacement = self.move_zone_card_by_effect(
+            cost_error, _owner = self.move_zone_card(
                 player_id, "hand", cost_owner, "graveyard", cost_card_id, "top"
             )
             if not cost_error:
@@ -822,7 +830,9 @@ class PriorityMixin:
                 }
         elif cost_card_id:
             cost_owner = self.card_owner_in_zone(player_id, "hand", cost_card_id) or player_id
-            cost_error, _owner, _replacement = self.move_zone_card_by_effect(
+            # Costs are paid by the player; BOB's immunity/replacements for
+            # cards moved by effects do not prevent paying a validated cost.
+            cost_error, _owner = self.move_zone_card(
                 player_id, "hand", cost_owner, "exile", cost_card_id, "top"
             )
             if not cost_error:
@@ -835,7 +845,7 @@ class PriorityMixin:
             source_owner = self.card_owner_in_zone(
                 player_id, "hand", clean_source["cardId"]
             ) or player_id
-            source_error, _owner, _replacement = self.move_zone_card_by_effect(
+            source_error, _owner = self.move_zone_card(
                 player_id, "hand", source_owner, "graveyard",
                 clean_source["cardId"], "top",
             )

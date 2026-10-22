@@ -458,6 +458,16 @@ class StackMixin:
         return created
 
     def prune_rules_ongoing_effects(self):
+        # BOB's cards return as soon as it leaves the CZ, even while BOB
+        # remains on the field. Gobres uses a different suspension lifetime.
+        for source_id in {entry.get("sourceEffectId") for entry in self.rules_engine.get("suspendedCards") or []}:
+            source = self.find_battlefield_item(source_id)
+            if (
+                source is not None
+                and self.rules_item_card_rules(source).get("suspensionThresholds")
+                and self.rules_field_zone(source) != "confrontation"
+            ):
+                self.release_rules_suspended_by(source_id)
         for pending in [entry for entry in self.battlefield if entry.get("pendingExile")]:
             self._rules_remove_field_item(pending, pending.get("ownerId"), "exile", "top")
         for expired in [

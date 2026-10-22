@@ -133,22 +133,20 @@ class RemovalEffectsMixin:
         if item is None or metadata.get("type") != "persistent_will":
             return {"kind": result.get("kind"), "status": "target_missing"}
         controller_id = self.rules_item_controller_id(item)
-        cost = int(metadata.get("cost") or 0)
-        temperament = next(iter(metadata.get("temperaments") or []), "hollow")
+        essences = self.rules_printed_tribute_essence(item.get("cardId"))
+        cost = sum(entry["amount"] for entry in essences)
         movement = self._rules_remove_field_item_by_effect(
             item, item.get("ownerId"), "graveyard", "top", reason="destroy"
         )
         self.prune_rules_ongoing_effects()
         if movement.get("status") not in {"moved", "removed_copy"}:
             return {"kind": result.get("kind"), "status": movement.get("status")}
-        if cost > 0:
-            self.add_rules_excess_essence(
-                controller_id, [{"temperament": temperament, "amount": cost}]
-            )
+        refunded = self.add_rules_excess_essence(controller_id, essences)
         return {
             "kind": result.get("kind"), "status": "destroyed",
             "controllerId": controller_id, "essences": cost,
-            "temperament": temperament,
+            "temperament": essences[0]["temperament"] if len(essences) == 1 else None,
+            "refundedEssence": refunded,
         }
 
     def _rules_result_karmapult_sacrifice(self, action, result, player_id, player):

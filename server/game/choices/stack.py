@@ -199,6 +199,7 @@ class StackChoicesMixin:
             source_item_id=(
                 (choice.get("_triggerAction") or {}).get("source") or {}
             ).get("itemId"),
+            source_card_id=choice.get("sourceCardId"),
         )
         if ability_error:
             return ability_error, None

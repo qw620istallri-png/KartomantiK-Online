@@ -170,6 +170,26 @@ lorsqu'il diffère du propriétaire.
 - la Résolution capture les Manifestations selon leur propriétaire, comme
   indiqué par le livret, même si leur contrôle avait changé.
 
+Les destinations spéciales liées à une victoire ou une défaite sont traitées
+avant ces captures ordinaires. `winnerItemIds` et `loserItemIds` figent les
+participants gagnants/perdants lors de la comparaison ; un changement de
+contrôle pendant la fenêtre d'effets ne change pas ce résultat. Ainsi, une
+Manifestation réanimée par Reforging Fate est exilée si elle a gagné sous le
+contrôle de son réanimateur, même si elle appartient à l'adversaire.
+
+Une entrée ordinaire dans Stalemate rend le contrôle au propriétaire. Lors du
+placement ordinaire d'une carte gagnante dans l'Interzone de son propriétaire,
+le contrôle est également rattaché au joueur de cette Interzone.
+
+Le nettoyage des effets libère les cartes suspendues par BOB dès que leur
+source quitte la CZ pour une autre zone du champ. Une simple baisse de
+puissance ne libère pas ces cartes ; au seuil 11, le chemin d'exil de BOB et
+de ses cartes suspendues reste prioritaire. Gobres garde sa durée distincte.
+
+Les coûts supplémentaires validés (défausse/exil en main) utilisent le chemin
+de paiement des coûts, sans appliquer l'immunité des mains de BOB ni ses
+remplacements réservés aux déplacements dus aux effets.
+
 La famille est couverte par :
 
 - Hot Potato : transfert initial, coût dynamique selon les marqueurs Burn,

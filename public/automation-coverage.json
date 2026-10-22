@@ -1597,6 +1597,7 @@
         "result:add_counter_source",
         "result:move_target",
         "result:split_targeted_limbo_cards",
+        "target:zone_card",
         "trigger:card_played",
         "trigger:end_of_turn"
       ],

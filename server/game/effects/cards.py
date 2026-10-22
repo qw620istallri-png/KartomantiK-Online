@@ -570,18 +570,25 @@ class CardsEffectsMixin:
                 "kind": result.get("kind"),
                 "status": "target_missing",
             }
-        owner_id = self.card_owner_in_zone(
-            target.get("containerId"), "graveyard",
-            target.get("cardId"),
+        error, owner_id, replacement = self.rules_zone_move_replacement(
+            target.get("containerId"), "graveyard", "battlefield", target.get("cardId"),
         )
-        if owner_id is None:
+        if error or owner_id is None:
             return {
                 "kind": result.get("kind"),
                 "status": "target_missing",
             }
-        self.take_zone_card(
+        if replacement:
+            return {"kind": result.get("kind"), **replacement}
+        owner_id = self.take_zone_card(
             target.get("containerId"), "graveyard",
             target.get("cardId"),
+        )
+        if owner_id is None:
+            return {"kind": result.get("kind"), "status": "target_missing"}
+        self.record_rules_observed_event(
+            "manifestation_left_by_effect", target.get("containerId"),
+            cardId=target.get("cardId"),
         )
         seat = self.players[player_id].get("seat")
         item = {
@@ -600,6 +607,20 @@ class CardsEffectsMixin:
         if result.get("exileInsteadOfLeaving"):
             item["exileInsteadOfLeaving"] = True
         self.battlefield.append(item)
+        triggered = []
+        if self.rules_item_effects_active(item):
+            triggered.extend(self.queue_rules_battlefield_entry_triggers(
+                item["cardId"], player_id, item["id"], True, defer=True,
+            ))
+            triggered.extend(self.queue_rules_field_zone_entry_triggers(
+                item, "confrontation", defer=True,
+            ))
+        triggered.extend(self.queue_rules_support_entry_triggers(
+            item, played=False, from_zone="graveyard", defer=True,
+        ))
+        triggered.extend(self.queue_rules_manifestation_entry_watchers(
+            item, played=False, defer=True,
+        ))
         return {
             "kind": result.get("kind"),
             "status": "moved",
@@ -607,6 +628,7 @@ class CardsEffectsMixin:
             "cardId": item["cardId"],
             "ownerId": owner_id,
             "controllerId": player_id,
+            "resolutionTriggers": triggered,
         }
 
     def _rules_result_reveal_hand_discard_choice(self, action, result, player_id, player):
@@ -780,11 +802,19 @@ class CardsEffectsMixin:
                 self.players[target_player_id]["zones"]["deck"][:count]
             )
             if card_ids:
+                # Tut puts one card on the bottom, then the remaining cards on
+                # top, even when fewer than three remain in the Deck.
+                bottom_count = result.get("bottomCount")
+                top_count = result.get("topCount")
+                if bottom_count is not None:
+                    bottom_count = min(int(bottom_count), len(card_ids))
+                if top_count is not None:
+                    top_count = min(int(top_count), len(card_ids) - (bottom_count or 0))
                 groups.append({
                     "playerId": target_player_id,
                     "cardIds": card_ids,
-                    "topCount": result.get("topCount"),
-                    "bottomCount": result.get("bottomCount"),
+                    "topCount": top_count,
+                    "bottomCount": bottom_count,
                     **({
                         "extraSide": result["extraSide"],
                         "extraMin": int(result.get("extraMin") or 0),
@@ -807,6 +837,23 @@ class CardsEffectsMixin:
             "_afterDraw": int(result.get("afterDraw") or 0),
             "_afterDiscard": int(result.get("afterDiscard") or 0),
         }
+        if all(
+            len(group["cardIds"]) == len(self.players[group["playerId"]]["zones"]["deck"]) == 1
+            and not group.get("extraSide") for group in groups
+        ):
+            # A whole one-card Deck is identical with that card on top or on
+            # the bottom. Run the usual continuation without asking to order it.
+            choice = self.rules_engine["pendingChoice"]
+            option = {"groups": [{
+                "playerId": group["playerId"],
+                "top": [] if group.get("bottomCount") else list(group["cardIds"]),
+                "bottom": list(group["cardIds"]) if group.get("bottomCount") else [],
+            } for group in groups]}
+            error, payload = self._rules_choice_deck_reorder(
+                player_id, choice_id, choice, None, option, None, None, None,
+            )
+            if error is None:
+                return {**payload, "kind": "reorder_top_decks", "status": "automatic"}
         return {
             "kind": "choice_required",
             "choiceId": choice_id,

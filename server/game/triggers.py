@@ -151,45 +151,39 @@ class TriggersMixin:
             clean["targetPlayer"] = True
         return clean
 
-    def rules_trigger_has_no_legal_target(self, target_rules, controller_id, event_item_id=None):
+    def rules_trigger_has_no_legal_target(self, target_rules, controller_id, event_item_id=None,
+                                         source_item_id=None, source_card_id=None):
         """True when the required card targets cannot be met in their legal zones.
 
         The event still happens; its triggered effect is simply not put on the Stack.
         """
         target_rules = target_rules or {}
         minimum = int(target_rules.get("min") or 0)
-        if target_rules.get("kind") == "zone_card" and minimum > 0 and not target_rules.get("groups"):
-            legal = 0
-            for container_id, player in self.players.items():
-                for zone in target_rules.get("zones") or []:
-                    for card_id in set(player.get("zones", {}).get(zone, [])):
-                        error, clean = self.rules_action_targets([{
-                            "kind": "zone_card", "containerId": container_id,
-                            "zone": zone, "cardId": card_id,
-                        }], controller_id)
-                        if not error and self.rules_ability_targets_error(
-                            {**target_rules, "min": 1}, clean, controller_id,
-                            event_item_id=event_item_id,
-                        ) is None:
-                            legal += 1
-                            if legal >= minimum:
-                                return False
-            return True
+        zones = set(target_rules.get("zones") or ["battlefield"])
         if (
-            target_rules.get("groups") or str(target_rules.get("kind") or "card") != "card"
+            target_rules.get("groups")
+            or str(target_rules.get("kind") or "card") not in {"card", "zone_card"}
             or minimum < 1
-            or set(target_rules.get("zones") or ["battlefield"]) - {"battlefield"}
         ):
             return False
+        candidates = [
+            {"kind": "card", "itemId": item.get("id"), "cardId": item.get("cardId")}
+            for item in self.battlefield if "battlefield" in zones
+        ]
+        candidates.extend(
+            {"kind": "zone_card", "containerId": container_id, "zone": zone, "cardId": card_id}
+            for container_id, player in self.players.items()
+            for zone in zones - {"battlefield"}
+            for card_id in set(player.get("zones", {}).get(zone, []))
+        )
         legal = 0
-        for item in self.battlefield:
-            error, clean = self.rules_action_targets([{
-                "kind": "card", "itemId": item.get("id"), "cardId": item.get("cardId"),
-            }])
+        for candidate in candidates:
+            error, clean = self.rules_action_targets([candidate], controller_id)
             if error:
                 continue
             if self.rules_ability_targets_error(
                 {**target_rules, "min": 1}, clean, controller_id, event_item_id=event_item_id,
+                source_item_id=source_item_id, source_card_id=source_card_id,
             ) is None:
                 legal += 1
                 if legal >= minimum:
@@ -249,9 +243,11 @@ class TriggersMixin:
                     return "Choose a valid player for this triggered effect."
             error = self.rules_ability_targets_error(
                 target_rules, targets, controller_id, event_item_id=event_item_id,
+                source_item_id=event_item_id, source_card_id=card_id,
             )
             if error and not targets and event in RULES_ENTRY_EVENTS and self.rules_trigger_has_no_legal_target(
-                target_rules, controller_id, event_item_id
+                target_rules, controller_id, event_item_id,
+                source_item_id=event_item_id, source_card_id=card_id,
             ):
                 continue
             if error:
@@ -511,11 +507,15 @@ class TriggersMixin:
             target_validation_error = self.rules_ability_targets_error(
                 target_rules, clean_targets, controller_id,
                 event_item_id=event_item_id,
+                source_item_id=item_id, source_card_id=card_id,
             )
             needs_target_choice = bool(
-                target_validation_error
-                and not clean_targets
-                and int(target_rules.get("min") or 0) > 0
+                not clean_targets and (
+                    target_validation_error and int(target_rules.get("min") or 0) > 0
+                    or (clean_result or {}).get("kind") in {
+                        "shuffle_limbo_targets_into_deck", "exile_limbo_wills_add_power_each",
+                    }
+                )
             )
             if target_validation_error and not needs_target_choice:
                 continue
@@ -524,6 +524,7 @@ class TriggersMixin:
                 # cannot target itself)
                 target_rules, controller_id,
                 event_item_id or (item_id if event in RULES_ENTRY_EVENTS else None),
+                source_item_id=item_id, source_card_id=card_id,
             ):
                 continue
             if clean_targets:
@@ -870,15 +871,86 @@ class TriggersMixin:
         ]
         return self._continue_rules_simultaneous_batch(groups, [])
 
+    def rules_optional_trigger_available(self, action):
+        """Avoid offering optional effects with no usable payment/card to choose.
+
+        Only known immediate prerequisites are checked here. Effects that create
+        permissions for later in the turn must still be offered with empty zones.
+        The result handlers recheck availability when the Stack resolves.
+        """
+        ability = action.get("ability") or {}
+        result = ability.get("result") or {}
+        kind = result.get("kind")
+        player_id = action.get("controllerId")
+        player = self.players.get(player_id) or {}
+        zones = player.get("zones") or {}
+        hand = zones.get("hand") or []
+        source = action.get("source") or {}
+        if kind in {"optional_discard_then_draw", "optional_discard_up_to"}:
+            return bool(hand)
+        if kind in {
+            "optional_discard_wills_for_power", "choose_hand_will_as_support_manifestation",
+            "bullyboo_reveal", "grimoire_place",
+        }:
+            return any(self.card_rules.get(cid, {}).get("type") in RULES_WILL_TYPES for cid in hand)
+        if kind in {
+            "optional_discard_manifestation_weaken_target", "hand_manifestation_choice",
+            "amphora_offer", "obelisk_gift", "auction_offer",
+        }:
+            if (action.get("cost") or {}).get("revealedCard"):
+                return True
+            minimum = 2 if kind == "amphora_offer" else 1
+            return sum(self.card_rules.get(cid, {}).get("type") == "manifestation" for cid in hand) >= minimum
+        if kind == "gummo_copy_vessel":
+            return bool(self.find_battlefield_item(source.get("itemId"))) and any(
+                self.card_rules.get(cid, {}).get("type") == "manifestation"
+                for cid in zones.get("receptacle") or []
+            )
+        if kind == "copy_related_tribute_if_exhaust":
+            host = self.find_battlefield_item(source.get("itemId"))
+            related = (ability.get("trigger") or {}).get("relatedCardId")
+            return bool(host) and not int(round(float(host.get("rotation") or 0))) % 180 and (
+                self.card_rules.get(related, {}).get("type") == "manifestation"
+            )
+        if kind == "chain_from_zone":
+            # Numbi still reveals an opponent's Hand if they cannot Chain.
+            if result.get("players") == "each_opponent" and result.get("zone") == "hand":
+                return any(
+                    other["zones"]["hand"] for pid, other in self.players.items() if pid != player_id
+                )
+            if result.get("players") in {"each_opponent", "all"}:
+                return True
+            return bool(self.rules_chain_candidates(player_id, result.get("zone")))
+        if kind == "exile_limbo_targets_add_power":
+            return any(
+                self.card_rules.get(cid, {}).get("type") == "manifestation"
+                for cid in zones.get("graveyard") or []
+            )
+        if kind in {"shuffle_limbo_targets_into_deck", "exile_limbo_wills_add_power_each"}:
+            return not self.rules_trigger_has_no_legal_target(
+                {**(ability.get("targets") or {}), "min": 1}, player_id,
+                source_item_id=source.get("itemId"), source_card_id=source.get("cardId"),
+            )
+        return True
+
     def _continue_rules_optional_stack_choices(
         self, actions, next_index=0, accepted_actions=None,
         priority_player_id=None,
     ):
         actions = [action for action in actions if isinstance(action, dict)]
         accepted_actions = list(accepted_actions or [])
+        # A prompt temporarily gives priority to its chooser. Keep the event's
+        # original priority throughout this batch, including target selections.
+        if priority_player_id not in self.players:
+            priority_player_id = self.rules_engine.get("priorityPlayerId")
         while next_index < len(actions):
             action = actions[next_index]
             next_index += 1
+            if (
+                action.get("optional") and not action.get("optionalAccepted")
+                and not self.rules_optional_trigger_available(action)
+            ):
+                continue
             if (
                 ((action.get("ability") or {}).get("result") or {}).get("kind") == "grimoire_place"
                 and not any(
@@ -892,6 +964,7 @@ class TriggersMixin:
             if (
                 action.get("optional") and not action.get("optionalAccepted")
                 and chain_result.get("kind") == "chain_from_zone" and chain_result.get("zone") == "hand"
+                and chain_result.get("players") not in {"each_opponent", "all"}
             ):
                 # Chain from the hand: no "use the effect?" question; the player simply drags a card or passes
                 if not self.rules_chain_candidates(action.get("controllerId"), "hand"):
@@ -1359,6 +1432,9 @@ class TriggersMixin:
             if int(memory.get("createdTurn") or 0) != turn:
                 continue
             if int(memory.get("queuedTurn") or 0) == turn:
+                continue
+            if memory.get("cardId") not in self.players.get(memory.get("ownerId"), {}).get("zones", {}).get("graveyard", []):
+                self.remove_rules_effect_memory(memory["id"])
                 continue
             if (memory.get("data") or {}).get("requireLostConfrontation") and not self.rules_player_lost_confrontation_this_turn(memory.get("controllerId") or memory.get("ownerId")):
                 self.remove_rules_effect_memory(memory["id"])

@@ -51,6 +51,70 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
         };
       });
 
+      const reservedCost = await page.evaluate(() => {
+        window.__setup139({ hand: ["3gqrmx5jegwz8kb_en", "r139-2", "r139-2"] });
+        beginRulesBoardAction({ cardId: "3gqrmx5jegwz8kb_en", zone: "hand", handIndex: 0 });
+        toggleRulesBoardPayment(1);
+        const candidates = rulesBoardHandCostCandidates().map((entry) => entry.index);
+        resolveRulesBoardCardDrop({ fromOwnerId: "p1", fromZone: "hand", handIndex: 1 }, document.querySelector("#rulesFloatingCard"));
+        return { candidates, stage: pendingRulesBoardFlow.stage, sent: window.__sent.length };
+      });
+      assert.deepEqual(reservedCost, { candidates: [2], stage: "cost_card", sent: 0 });
+      await page.evaluate(() => resolveRulesBoardCardDrop({ fromOwnerId: "p1", fromZone: "hand", handIndex: 2 }, document.querySelector("#rulesFloatingCard")));
+      await page.waitForFunction(() => window.__sent.length === 1);
+      assert.deepEqual(await page.evaluate(() => ({ tribute: window.__sent[0].paymentCardIds, exile: window.__sent[0].costCardId })),
+        { tribute: ["r139-2"], exile: "r139-2" });
+
+      for (const existing of [0, 1]) {
+        const rally = await page.evaluate((existing) => {
+          cardsById.get("r139-5").temperaments = ["phlegmatic"];
+          window.__setup139({ hand: ["5q6t7i5pzctbi8s_en", "r139-5"], essences: existing ? [["hollow", existing]] : [] });
+          beginRulesBoardAction({ cardId: "5q6t7i5pzctbi8s_en", zone: "hand", handIndex: 0 });
+          toggleRulesBoardPayment(1);
+          const input = document.querySelector("#rulesExtraEssenceCount");
+          return { max: Number(input.max), stage: pendingRulesBoardFlow.stage, visible: !input.closest(".rules-extra-essence-row").hidden };
+        }, existing);
+        assert.deepEqual(rally, { max: 3 + existing, stage: "extra_essence", visible: true });
+        await page.locator("#rulesExtraEssenceCount").fill(String(3 + existing));
+        await page.locator("#rulesExtraEssenceConfirm").click();
+        await page.waitForFunction(() => window.__sent.length === 1);
+        assert.equal(await page.evaluate(() => window.__sent[0].extraEssenceCount), 3 + existing);
+      }
+      await page.evaluate(() => { cardsById.get("r139-5").temperaments = ["choleric"]; });
+
+      const cancelledPayment = await page.evaluate(() => {
+        window.__setup139({ hand: ["3gqrmx5jegwz8kb_en", "r139-2"] });
+        const before = JSON.stringify({ players: latestState.players, tokens: latestState.tokens });
+        beginRulesBoardAction({ cardId: "3gqrmx5jegwz8kb_en", zone: "hand", handIndex: 0 });
+        toggleRulesBoardPayment(1);
+        closeRulesBoardFlow();
+        return { unchanged: before === JSON.stringify({ players: latestState.players, tokens: latestState.tokens }), sent: window.__sent.length };
+      });
+      assert.deepEqual(cancelledPayment, { unchanged: true, sent: 0 });
+
+      const persistentResponses = await page.evaluate(() => {
+        const checks = [];
+        for (const phase of ["end_actions", "confrontation_before_revelation", "confrontation_reaction"]) {
+          for (const soup of [false, true]) for (const occupied of [false, true]) {
+            window.__setup139({ phase, hand: ["265f4wdooq43pjn_en"], field: soup ? [{
+              id: "soup", cardId: "s4dofvhan101mew_en", ownerId: "p1", fieldZone: "interzone",
+              faceUp: true, rotation: 0, counters: {}, x: 445, y: 700,
+            }] : [] });
+            if (occupied) latestState.rulesEngine.actionStack = [{
+              id: "pending", controllerId: "p2", kind: "triggered_effect", source: { cardId: "r139-1" },
+            }];
+            const expected = (phase !== "confrontation_reaction" || soup) && (!occupied || soup);
+            checks.push({ phase, soup, occupied, expected, actual: handCardIsPlayable("265f4wdooq43pjn_en"),
+              reason: handCardUnplayableReason("265f4wdooq43pjn_en") });
+          }
+        }
+        return checks;
+      });
+      for (const check of persistentResponses) {
+        assert.equal(check.actual, check.expected, JSON.stringify(check));
+        assert.equal(Boolean(check.reason), !check.expected, JSON.stringify(check));
+      }
+
       const automaticHonor = await page.evaluate(() => {
         window.__setup139();
         latestState.battlefield.push({ id: "honor", cardId: "y4muuingw5y9l7z_en", ownerId: "p1", fieldZone: "field", x: 445, y: 1300, faceUp: true, rotation: 0, counters: {} });
@@ -292,6 +356,38 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
         return { waitingForExtra, extraRequirement, committing: pendingRulesBoardFlow.stage === "committing" };
       });
       assert.deepEqual(subjugatePayment, { waitingForExtra: true, extraRequirement: 3, committing: true });
+
+      // Optional ranges 0..N still need a usable target picker before the Stack.
+      for (const cardId of ["inner-deserts-063", "inner-deserts-038"]) {
+        for (const selectCard of [false, true]) {
+          await page.evaluate((cardId) => {
+            window.__setup139({ limbo: [cardId, "r139-1", "lmx5uff1z53fo0g_en"], opponentLimbo: ["r139-2"] });
+            const ability = triggeredAbilitiesByCard.get(cardId).find((entry) => entry.optional);
+            latestState.rulesEngine.pendingChoice = {
+              id: "audit-targets", kind: "trigger_targets", playerId: "p1", sourceCardId: cardId,
+              targetRules: ability.targets,
+            };
+            renderAll();
+          }, cardId);
+          const picker = page.locator(".rules-zone-target-panel");
+          assert.equal(await picker.locator("[data-zone-pick]").count(), cardId === "inner-deserts-063" ? 2 : 1);
+          const confirm = picker.locator("[data-zone-pick-confirm]");
+          assert.equal(await confirm.isEnabled(), true);
+          if (selectCard) await picker.locator("[data-zone-pick]").first().click();
+          assert.equal(await page.evaluate(() => window.__sent.length), 0);
+          if (selectCard && process.env.SCREENSHOT_DIR) {
+            await page.mouse.move(4, 4);
+            await page.waitForFunction(() => !document.querySelector(".choice-card-preview"));
+            await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `audit-${cardId}-${viewport.width}.png`) });
+          }
+          await confirm.click();
+          await page.waitForFunction(() => window.__sent.length === 1);
+          const selection = await page.evaluate(() => window.__sent[0]);
+          assert.equal(selection.type, "resolve_rules_choice");
+          assert.equal(selection.targets.length, selectCard ? 1 : 0);
+          if (selectCard) assert.equal(selection.targets[0].cardId, cardId === "inner-deserts-063" ? "r139-1" : "lmx5uff1z53fo0g_en");
+        }
+      }
 
       // Limbo selection always uses cards and an explicit confirmation, even if
       // a pile browser has already created matching data-zone-card elements.

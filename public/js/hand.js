@@ -112,6 +112,7 @@ function handCardUnplayableReason(cardId) {
     if (rulesBeforeRevelationPlayClient(card)) phases.unshift("confrontation_before_revelation");
     if (rulesPersistentWillsAsEphemeralClient()) phases.unshift("confrontation_reaction", "resolution_effects");
     if (!phases.includes(phaseId)) return wrongPhase(phases);
+    if ((rules.actionStack || []).length && !rulesPersistentWillsAsEphemeralClient()) return t("unplayableStack");
     return payable() || t("rulesBoardCardNotPlayable");
   }
   if (card.type !== "manifestation") return t("rulesBoardCardNotPlayable");
@@ -220,8 +221,7 @@ function handCardIsPlayable(cardId, source = null) {
     ) return canAfford() && rulesPlayedAbilityTargetsAvailableClient(cardId, source);
     const timingOk = phaseId === "end_actions"
       || (phaseId === "confrontation_before_revelation" && rulesBeforeRevelationPlayClient(card));
-    // a Stack in End actions or before the Revelation (Atavic Wills) can be answered
-    return timingOk && canAfford()
+    return timingOk && (!stackHasActions || rulesPersistentWillsAsEphemeralClient()) && canAfford()
       && rulesPlayedAbilityTargetsAvailableClient(cardId, source);
   }
   const supportLocked = (rules.supportEntryLockedPlayerIds || []).includes(myPlayerId);

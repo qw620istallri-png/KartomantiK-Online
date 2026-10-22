@@ -686,6 +686,16 @@ class PaymentMixin:
                     essence_spent,
                 )
             )
+            # The selected Tribute produces its surplus during this same
+            # payment. Reserve the portion spent here before creating tokens.
+            temperament = optional_extra["temperament"]
+            for key, available in list(excess.items()):
+                colour = key[0] if isinstance(key, tuple) else key
+                if temperament != "hollow" and colour not in {temperament, "transcendent"}:
+                    continue
+                used = min(available, optional_remaining.get(temperament, 0))
+                excess[key] -= used
+                optional_remaining[temperament] -= used
             if any(
                 amount > 0 for amount in optional_remaining.values()
             ):
@@ -869,17 +879,25 @@ class PaymentMixin:
             for lock in self.rules_engine.get("supportLocks") or []
         )
 
-    def rules_refund_stack_action_essence(self, stack_action):
-        """Give the Will's controller excess essence equal to its Tribute cost."""
-        card_id = (stack_action.get("source") or {}).get("cardId")
+    def rules_printed_tribute_essence(self, card_id):
+        """Read the printed cost's colour distribution, without cost modifiers."""
         metadata = self.card_rules.get(card_id, {})
-        owner_id = stack_action.get("controllerId")
-        cost = int(metadata.get("cost") or 0)
-        if owner_id not in self.players or cost <= 0:
+        requirements = self.rules_requirements_from_symbols(metadata.get("powerCost"))
+        if not requirements and not metadata.get("powerCost"):
+            # Older metadata can contain only a total cost and temperament.
+            cost = int(metadata.get("cost") or 0)
+            if cost > 0:
+                requirements[next(iter(metadata.get("temperaments") or []), "hollow")] = cost
+        return [{"temperament": colour, "amount": amount} for colour, amount in requirements.items()]
+
+    def rules_refund_stack_action_essence(self, stack_action):
+        """Compensate grants the owner the Will's printed Tribute as Essences."""
+        source = stack_action.get("source") or {}
+        owner_id = source.get("ownerId") or stack_action.get("controllerId")
+        if owner_id not in self.players:
             return []
-        temperament = next(iter(metadata.get("temperaments") or []), "hollow")
         return self.add_rules_excess_essence(
-            owner_id, [{"temperament": temperament, "amount": cost}]
+            owner_id, self.rules_printed_tribute_essence(source.get("cardId"))
         )
 
     def add_rules_excess_essence(self, player_id, generated):

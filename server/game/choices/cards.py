@@ -259,40 +259,53 @@ class CardsChoicesMixin:
                     target_id, from_zone, card_id
                 )
                 remaining.remove(card_id)
-            for card_id in group.get("cardIds") or []:
-                self.take_zone_card(target_id, from_zone, card_id)
+            movements = []
+            placed = {"top": [], "bottom": [], "extra": []}
+            if from_zone == "deck":
+                # Reordering within a Deck does not enter or leave that zone.
+                # Cards set aside below are actual transfers and can Suspend.
+                for card_id in top + bottom:
+                    self.take_zone_card(target_id, from_zone, card_id)
+                placed["top"], placed["bottom"] = list(top), list(bottom)
+            else:
+                for side, ordered in [("top", reversed(top)), ("bottom", bottom)]:
+                    for card_id in ordered:
+                        error, _owner, replacement = self.move_zone_card_by_effect(
+                            target_id, from_zone, target_id, "deck", card_id, side,
+                        )
+                        if error:
+                            return error, None
+                        if replacement:
+                            movements.append(replacement)
+                        elif side == "top":
+                            placed[side].insert(0, card_id)
+                        else:
+                            placed[side].append(card_id)
+            for card_id in extra:
+                destination = "hand" if group.get("extraSide") == "hand" else "exile"
+                recipient = player_id if destination == "hand" else owners[card_id]
+                error, _owner, replacement = self.move_zone_card_by_effect(
+                    target_id, from_zone, recipient, destination, card_id, "top",
+                )
+                if error:
+                    return error, None
+                if replacement:
+                    movements.append(replacement)
+                else:
+                    placed["extra"].append(card_id)
             if from_zone == "deck":
                 existing = list(self.players[target_id]["zones"]["deck"])
-                self.players[target_id]["zones"]["deck"] = (
-                    list(top) + existing + list(bottom)
-                )
+                self.players[target_id]["zones"]["deck"] = list(top) + existing + list(bottom)
                 self.players[target_id]["zoneOwners"]["deck"].update({
                     card_id: owners[card_id] for card_id in top + bottom
                 })
-            else:
-                for card_id in reversed(top):
-                    self.put_zone_card(
-                        target_id, "deck", card_id, owners[card_id], "top"
-                    )
-                for card_id in bottom:
-                    self.put_zone_card(
-                        target_id, "deck", card_id, owners[card_id], "bottom"
-                    )
-            for card_id in extra:
-                if group.get("extraSide") == "hand":
-                    self.put_zone_card(
-                        player_id, "hand", card_id, owners[card_id], "top"
-                    )
-                else:
-                    self.put_zone_card(
-                        owners[card_id], "exile", card_id, owners[card_id], "top"
-                    )
             resolved_groups.append({
                 "playerId": target_id,
-                "top": list(top),
-                "bottom": list(bottom),
+                "top": placed["top"],
+                "bottom": placed["bottom"],
                 "fromZone": from_zone,
-                **({"extraSide": group["extraSide"], "extra": list(extra)} if extra else {}),
+                **({"extraSide": group["extraSide"], "extra": placed["extra"]} if extra else {}),
+                **({"replacements": movements} if movements else {}),
             })
         self.rules_engine["pendingChoice"] = None
         payload = {

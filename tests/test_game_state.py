@@ -11028,9 +11028,9 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         session.card_points = {"m-a": 30, "m-b": 30, "m-c": 20}
         ability = self.ABILITIES[everspring][1]["targets"]
         targets = [{"kind": "zone_card", "cardId": cid, "zone": "receptacle", "containerId": "p2", "ownerId": "p2"} for cid in ("m-a", "m-b", "m-c")]
+        self.put(p2, "receptacle", {"m-a": "p2", "m-b": "p2", "m-c": "p2"})
         self.assertIn("too many points", session.rules_ability_targets_error(ability, targets, "p1"))
         self.assertIsNone(session.rules_ability_targets_error(ability, targets[:2], "p1"))
-        self.put(p2, "receptacle", {"m-a": "p2", "m-b": "p2", "m-c": "p2"})
         session.apply_rules_action_result({
             "id": "ev", "controllerId": "p1", "source": {"cardId": everspring}, "targets": targets[:2],
             "ability": {"result": self.ABILITIES[everspring][1]["result"]},
@@ -14392,11 +14392,12 @@ class AtavicDoesNotCountItsOwnPlayTests(RealCardRulesCase):
             item = next(i for i in session.battlefield if i["cardId"] == card_id)
             self.assertEqual(sum(item.get("counters", {}).values()), 0, card_id)
 
-    def test_an_atavic_answers_another_atavic_on_the_stack_before_the_revelation(self):
+    def test_an_atavic_needs_an_empty_stack_before_the_revelation(self):
         welcome, introspection = self.ALL[0], self.ALL[1]
         session, p1, p2 = self.make_session()
         session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_before_revelation")
         session.rules_engine["priorityPlayerId"] = "p1"
+        session.rules_engine.update(readyPlayerIds=["p1", "p2"], firstManifestationComplete=True)
         p1["zones"]["hand"] = [welcome]
         p2["zones"]["hand"] = [introspection]
         error, _action = session.declare_rules_action(
@@ -14405,12 +14406,13 @@ class AtavicDoesNotCountItsOwnPlayTests(RealCardRulesCase):
         self.assertIsNone(error)
         self.assertEqual(len(session.rules_engine["actionStack"]), 1)
         session.rules_engine["priorityPlayerId"] = "p2"
-        self.assertTrue(session.rules_player_can_act("p2"))
+        self.assertFalse(session.rules_player_can_act("p2"))
         error, _action = session.declare_rules_action(
             "p2", "Atavic", kind="play_card", source={"cardId": introspection, "zone": "hand"},
         )
-        self.assertIsNone(error)
-        self.assertEqual(len(session.rules_engine["actionStack"]), 2)
+        self.assertIn("cannot be played as a response", error)
+        self.assertEqual(len(session.rules_engine["actionStack"]), 1)
+        self.assertIn(introspection, p2["zones"]["hand"])
 
 
 if __name__ == "__main__":

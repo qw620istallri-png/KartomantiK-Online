@@ -196,15 +196,9 @@ class ActionsMixin:
             return "Unsupported source zone.", None
         if (
             kind == "play_card"
-            and metadata.get("type") == "persistent_will"
+            and (metadata.get("type") == "persistent_will" or metadata.get("playAsPersistentWill"))
             and self.rules_engine["actionStack"]
-            and self.current_phase_id() != "end_actions"
-            # the Atavic Wills, playable before the Revelation, may answer the
-            # Stack there (even another Atavic)
-            and not (
-                self.current_phase_id() == "confrontation_before_revelation"
-                and self.card_rules.get(card_id, {}).get("playBeforeRevelation")
-            )
+            and not self.rules_persistent_wills_as_ephemeral(player_id)
         ):
             return "A Persistent Will cannot be played as a response.", None
         if (
@@ -1065,7 +1059,7 @@ class ActionsMixin:
         return clean
 
     def rules_ability_targets_error(self, target_rules, targets, controller_id,
-                                    event_item_id=None, source_item_id=None):
+                                    event_item_id=None, source_item_id=None, source_card_id=None):
         target_rules = target_rules or {}
         groups = target_rules.get("groups")
         if isinstance(groups, list):
@@ -1076,6 +1070,7 @@ class ActionsMixin:
                     group, [target], controller_id,
                     event_item_id=event_item_id,
                     source_item_id=source_item_id,
+                    source_card_id=source_card_id,
                 )
                 if error:
                     return error
@@ -1200,6 +1195,8 @@ class ActionsMixin:
                 if not isinstance(points, (int, float)) or points > target_rules["maxPoints"]:
                     return "This effect requires a target with a lower point value."
             if target.get("kind") != "card":
+                if target_rules.get("excludeSource") and target.get("cardId") == source_card_id:
+                    return "This effect requires another card."
                 if (
                     target.get("zone") == "receptacle"
                     and target.get("containerId") in self.players
@@ -1223,6 +1220,10 @@ class ActionsMixin:
                     and target.get("containerId") != controller_id
                 ):
                     return "This effect requires a card in your own zone."
+                if target.get("cardId") not in self.players.get(
+                    target.get("containerId"), {}
+                ).get("zones", {}).get(target.get("zone"), []):
+                    return "The targeted card is no longer in its expected zone."
                 if target_rules.get("enteredThisTurn"):
                     entry_turn = self.rules_engine.get("zoneEntryTurns", {}).get(
                         f'{target.get("containerId")}:{target.get("zone")}:{target.get("cardId")}'
@@ -1400,6 +1401,7 @@ class ActionsMixin:
         target_error = self.rules_ability_targets_error(
             target_contract, targets, player_id,
             source_item_id=source.get("itemId"),
+            source_card_id=source.get("cardId"),
         )
         if target_error:
             return target_error, None

@@ -204,6 +204,7 @@ class ConfrontationChoicesMixin:
             share_anchor = self.rules_interzone_share_anchor(player_id, item)
             if share_anchor:
                 item["fieldZone"] = "interzone"
+                item["controllerId"] = player_id
                 self.mark_rules_interzone_entry(item)
                 item["stackedOn"] = share_anchor
                 result.setdefault("returned", []).append({
@@ -243,6 +244,7 @@ class ConfrontationChoicesMixin:
                 "cardId": item.get("cardId"), "itemId": item.get("id"),
             }
         item["fieldZone"] = "interzone"
+        item["controllerId"] = player_id
         self.mark_rules_interzone_entry(item)
         result.setdefault("returned", []).append({
             "status": "interzone", "itemId": item["id"], "cardId": item.get("cardId"),
@@ -278,6 +280,7 @@ class ConfrontationChoicesMixin:
             return "This Interzone choice is no longer available.", None
         movement = self._rules_remove_field_item(replaced, replaced["ownerId"], "deck", "bottom")
         entering["fieldZone"] = "interzone"
+        entering["controllerId"] = player_id
         self.mark_rules_interzone_entry(entering)
         result = self.rules_engine.get("confrontationResult") or {}
         result.setdefault("returned", []).extend([

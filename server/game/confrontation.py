@@ -448,6 +448,8 @@ class ConfrontationMixin:
             "stalemate": winner_id is None, "reason": reason,
             "totals": totals, "lastTemperaments": last_temperaments,
             "participantItemIds": participant_ids, "destroyed": destroyed,
+            "winnerItemIds": [item["id"] for item in self.rules_confrontation_items(winner_id)] if winner_id else [],
+            "loserItemIds": [item["id"] for item in self.rules_confrontation_items(loser_id)] if loser_id else [],
             "stateReplacements": state_actions["replacements"],
             "priorityPlayerId": priority_id, "priorityRolls": priority_rolls,
             "captured": [], "returned": [],
@@ -618,6 +620,13 @@ class ConfrontationMixin:
             "playerId": player_id,
         }
 
+    def rules_item_confrontation_outcome(self, item, result, *, won):
+        side = "winner" if won else "loser"
+        participants = result.get(f"{side}ItemIds")
+        if participants is not None:
+            return item.get("id") in participants
+        return self.rules_item_controller_id(item) == result.get(f"{side}Id")
+
     def begin_rules_confrontation_cleanup(self):
         result = self.rules_engine.get("confrontationResult")
         if not result or result.get("turn") != self.phase_tracker["turn"]:
@@ -657,6 +666,7 @@ class ConfrontationMixin:
                     moved.append(self._rules_remove_field_item(item, item.get("ownerId"), "exile", "top"))
                 else:
                     item["fieldZone"] = "stalemate"
+                    item.pop("controllerId", None)
                     moved.append({"status": "stalemate", "itemId": item["id"], "cardId": item.get("cardId")})
             result["returned"] = moved
             result["status"] = "complete"
@@ -672,14 +682,90 @@ class ConfrontationMixin:
             else []
         )
         captured = []
-        # cards in Stalemate never take part in the resolution
-        for item in list(self.rules_confrontation_items_owned_by(
-            loser_id, ("confrontation",)
-        )):
+        support_exiled = []
+        support_resolved = []
+        # Card-specific victory destinations precede ordinary owner-based capture.
+        # Use the comparison snapshot: later control changes cannot change who won.
+        for item in list(self.rules_confrontation_items()):
+            if (
+                not self.rules_item_confrontation_outcome(item, result, won=True)
+                or item.get("id") in rematch_item_ids
+                or self.rules_item_zone_locked(item)
+                or int(item.get("holdUntilResolution") or 0) > self.phase_tracker["turn"]
+                or self.rules_stalemate_win_blocked(item)
+            ):
+                continue
+            win_exile_memory = next((
+                memory for memory in self.rules_effect_memories_for(
+                    item.get("ownerId"), item.get("cardId"),
+                    "win_destination_exile",
+                )
+                if (memory.get("data") or {}).get("itemId") == item.get("id")
+            ), None)
+            if win_exile_memory:
+                support_exiled.append(self._rules_remove_field_item(
+                    item, item.get("ownerId"), "exile", "top"
+                ))
+                continue
+            if (
+                loser_id in self.players
+                and self.rules_item_effects_active(item)
+                and not item.get("isCopy") and not item.get("isTokenCard")
+                and any(
+                    passive.get("kind") == "win_to_opponent_interzone"
+                    for passive in self.rules_item_card_rules(item).get(
+                        "passiveEffects"
+                    ) or []
+                )
+            ):
+                if self.rules_interzone_slot_count(loser_id) >= self.rules_interzone_capacity(loser_id):
+                    anchor = self.rules_interzone_share_anchor(loser_id, item)
+                    item.update({
+                        "stackedOn": anchor, "stackOffsetX": 18.0, "stackOffsetY": 18.0,
+                    } if anchor else {"stackedOn": None})
+                else:
+                    item["stackedOn"] = None
+                item["controllerId"] = loser_id
+                item["fieldZone"] = "interzone"
+                item["isSupport"] = False
+                self.mark_rules_interzone_entry(item)
+                support_resolved.append({
+                    "kind": "win_to_opponent_interzone", "cardId": item.get("cardId"),
+                    "itemId": item.get("id"), "playerId": loser_id,
+                })
+                continue
+            if not item.get("isSupport"):
+                continue
+            support_effect = item.get("supportWinEffect") or {}
+            if support_effect.get("kind") == "opponent_vessel_score" and loser_id in self.players:
+                movement = self._rules_remove_field_item(item, loser_id, "receptacle", "top")
+                delta = max(0, min(int(support_effect.get("value") or 0), 999))
+                delta = self.adjust_rules_score(loser_id, delta)
+                support_resolved.append({
+                    "kind": "opponent_vessel_score", "cardId": item.get("cardId"),
+                    "itemId": item.get("id"), "playerId": loser_id,
+                    "delta": delta, "score": self.players[loser_id]["score"],
+                    "movement": movement,
+                })
+            elif item.get("supportWinDestination") == "exile":
+                support_exiled.append(self._rules_remove_field_item(
+                    item, item.get("ownerId"), "exile", "top"
+                ))
+            elif item.get("supportWinDestination") == "opponent_receptacle" and loser_id in self.players:
+                movement = self._rules_remove_field_item(item, loser_id, "receptacle", "top")
+                support_resolved.append({
+                    "kind": "opponent_vessel", "cardId": item.get("cardId"),
+                    "itemId": item.get("id"), "playerId": loser_id,
+                    "movement": movement,
+                })
+        # Loss destinations are also card effects and follow the actual outcome.
+        for item in list(self.rules_confrontation_items()):
             if item.get("id") in rematch_item_ids or self.rules_item_zone_locked(item):
                 continue
             if (
                 self.rules_item_card_rules(item).get("lossDestination") == "winner_interzone"
+                and self.rules_item_confrontation_outcome(item, result, won=False)
+                and self.rules_item_effects_active(item)
                 and winner_id in self.players
                 and not item.get("isCopy") and not item.get("isTokenCard")
             ):
@@ -702,9 +788,11 @@ class ConfrontationMixin:
                 continue
             if (
                 self.rules_item_card_rules(item).get("lossDestination") == "own_interzone"
+                and self.rules_item_confrontation_outcome(item, result, won=False)
+                and self.rules_item_effects_active(item)
                 and not item.get("isCopy") and not item.get("isTokenCard")
             ):
-                owner_id = self.rules_item_controller_id(item)
+                owner_id = loser_id
                 if self.rules_interzone_slot_count(owner_id) >= self.rules_interzone_capacity(owner_id):
                     anchor = self.rules_interzone_share_anchor(owner_id, item)
                     item.update({
@@ -713,6 +801,7 @@ class ConfrontationMixin:
                 else:
                     item["stackedOn"] = None
                 item["fieldZone"] = "interzone"
+                item["controllerId"] = owner_id
                 item["isSupport"] = False
                 self.mark_rules_interzone_entry(item)
                 captured.append({
@@ -720,6 +809,12 @@ class ConfrontationMixin:
                     "cardId": item.get("cardId"), "ownerId": item.get("ownerId"),
                     "containerId": owner_id, "zone": "interzone",
                 })
+                continue
+        # cards in Stalemate never take part in the resolution
+        for item in list(self.rules_confrontation_items_owned_by(
+            loser_id, ("confrontation",)
+        )):
+            if item.get("id") in rematch_item_ids or self.rules_item_zone_locked(item):
                 continue
             captured.append(self._rules_remove_field_item(item, winner_id, "receptacle", "top"))
         # The Stalemate Zone is settled by the first confrontation with a winner
@@ -755,77 +850,6 @@ class ConfrontationMixin:
         for held_item in self.battlefield:
             if int(held_item.get("holdUntilResolution") or 0) == self.phase_tracker["turn"]:
                 held_item.pop("holdUntilResolution", None)
-        support_exiled = []
-        support_resolved = []
-        for item in list(own_items):
-            win_exile_memory = next((
-                memory for memory in self.rules_effect_memories_for(
-                    item.get("ownerId"), item.get("cardId"),
-                    "win_destination_exile",
-                )
-                if (memory.get("data") or {}).get("itemId") == item.get("id")
-            ), None)
-            if win_exile_memory:
-                support_exiled.append(self._rules_remove_field_item(
-                    item, item.get("ownerId"), "exile", "top"
-                ))
-                own_items.remove(item)
-                continue
-            if (
-                loser_id in self.players
-                and self.rules_item_effects_active(item)
-                and not item.get("isCopy") and not item.get("isTokenCard")
-                and any(
-                    passive.get("kind") == "win_to_opponent_interzone"
-                    for passive in self.rules_item_card_rules(item).get(
-                        "passiveEffects"
-                    ) or []
-                )
-            ):
-                if self.rules_interzone_slot_count(loser_id) >= self.rules_interzone_capacity(loser_id):
-                    anchor = self.rules_interzone_share_anchor(loser_id, item)
-                    item.update({
-                        "stackedOn": anchor, "stackOffsetX": 18.0, "stackOffsetY": 18.0,
-                    } if anchor else {"stackedOn": None})
-                else:
-                    item["stackedOn"] = None
-                item["controllerId"] = loser_id
-                item["fieldZone"] = "interzone"
-                item["isSupport"] = False
-                self.mark_rules_interzone_entry(item)
-                support_resolved.append({
-                    "kind": "win_to_opponent_interzone", "cardId": item.get("cardId"),
-                    "itemId": item.get("id"), "playerId": loser_id,
-                })
-                own_items.remove(item)
-                continue
-            if not item.get("isSupport"):
-                continue
-            support_effect = item.get("supportWinEffect") or {}
-            if support_effect.get("kind") == "opponent_vessel_score" and loser_id in self.players:
-                movement = self._rules_remove_field_item(item, loser_id, "receptacle", "top")
-                delta = max(0, min(int(support_effect.get("value") or 0), 999))
-                delta = self.adjust_rules_score(loser_id, delta)
-                support_resolved.append({
-                    "kind": "opponent_vessel_score", "cardId": item.get("cardId"),
-                    "itemId": item.get("id"), "playerId": loser_id,
-                    "delta": delta, "score": self.players[loser_id]["score"],
-                    "movement": movement,
-                })
-                own_items.remove(item)
-            elif item.get("supportWinDestination") == "exile":
-                support_exiled.append(self._rules_remove_field_item(
-                    item, item.get("ownerId"), "exile", "top"
-                ))
-                own_items.remove(item)
-            elif item.get("supportWinDestination") == "opponent_receptacle" and loser_id in self.players:
-                movement = self._rules_remove_field_item(item, loser_id, "receptacle", "top")
-                support_resolved.append({
-                    "kind": "opponent_vessel", "cardId": item.get("cardId"),
-                    "itemId": item.get("id"), "playerId": loser_id,
-                    "movement": movement,
-                })
-                own_items.remove(item)
         result["captured"] = captured
         result["supportExiled"] = support_exiled
         result["supportResolved"] = support_resolved
