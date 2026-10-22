@@ -198,6 +198,11 @@ class ConfrontationMixin:
             and not item.get("isCopy") and not item.get("isTokenCard")
         ):
             container_id, zone, position = item.get("ownerId"), "exile", "top"
+        if not item.get("isCopy") and not item.get("isTokenCard"):
+            container_id, zone, position = self.rules_zone_move_destination(
+                container_id, zone, item.get("cardId"), item.get("ownerId"),
+                position, from_field=True,
+            )
         self.battlefield.remove(item)
         for entry in item.pop("attachedCards", None) or []:
             self.put_zone_card(entry["ownerId"], "exile", entry["cardId"], entry["ownerId"], "top")
@@ -248,53 +253,28 @@ class ConfrontationMixin:
 
     def _rules_remove_field_item_by_effect(self, item, container_id, zone,
                                            position="top", reason=None):
-        if (
-            item.get("exileIfLeaves")
-            and zone in {"graveyard", "hand", "deck"}
-            and not item.get("isCopy") and not item.get("isTokenCard")
-        ):
-            container_id, zone, position = item.get("ownerId"), "exile", "top"
-        home_vessel = item.get("returnToVesselId")
-        if (
-            home_vessel in self.players
-            and zone != "receptacle"
-            and self.rules_field_zone(item) == "confrontation"
-            and not item.get("isCopy") and not item.get("isTokenCard")
-        ):
-            # Dol: a Chained card leaving the Confrontation Zone by an effect
-            # goes back to the Vessel it came from instead.
-            container_id, zone, position = home_vessel, "receptacle", "top"
-        elif (
-            item.get("exileInsteadOfLeaving")
-            and zone != "exile"
-            and self.rules_field_zone(item) == "confrontation"
-            and not item.get("isCopy") and not item.get("isTokenCard")
-        ):
-            # Regurgitating Catacomb: the raised Manifestation is exiled
-            # instead of leaving the Confrontation Zone due to an effect.
-            container_id, zone, position = item.get("ownerId"), "exile", "top"
-        field_penalty = 0
-        if (
-            zone != "exile"
-            and self.rules_field_zone(item) == "confrontation"
-            and not item.get("isCopy") and not item.get("isTokenCard")
-            and self.rules_item_card_rules(item).get("exileIfLeavesConfrontationByEffect")
-            and self.rules_item_effects_active(item)
-        ):
-            # Gigabonblade: exiled instead, and every field Manifestation weakens.
-            container_id, zone, position = item.get("ownerId"), "exile", "top"
-            field_penalty = int(self.rules_item_card_rules(item).get("exiledByEffectFieldPenalty") or 0)
+        if item not in self.battlefield:
+            return {"status": "missing", "itemId": item.get("id")}
         if item.get("isCopy") or item.get("isTokenCard"):
-            return self._rules_remove_field_item(
-                item, container_id, zone, position
-            )
-        suspension_source = (
-            self.rules_active_suspension_source(zone)
-            if zone in {"deck", "graveyard"} else None
+            return self._rules_remove_field_item(item, container_id, zone, position)
+        replacement = self.rules_effect_move_replacement(
+            item.get("ownerId"), "battlefield", container_id, zone, item.get("cardId"), item,
         )
+        field_penalty = 0
+        suspension_source = None
+        if replacement:
+            if replacement['replacementKind'] == 'suspend':
+                suspension_source = replacement['_sourceItem']
+            else:
+                container_id, zone = replacement['_destination']
+                position = 'top'
+                if replacement['actionId'].startswith('exile-cz:'):
+                    field_penalty = int(self.rules_item_card_rules(item).get('exiledByEffectFieldPenalty') or 0)
         if suspension_source:
             self.remember_rules_copy_characteristics(item)
             self.battlefield.remove(item)
+            for attached in item.pop("attachedCards", None) or []:
+                self.put_zone_card(attached['ownerId'], 'exile', attached['cardId'], attached['ownerId'])
             for other in self.battlefield:
                 if other.get("stackedOn") == item.get("id"):
                     other["stackedOn"] = None
@@ -340,7 +320,7 @@ class ConfrontationMixin:
             )
         if (
             movement.get("status") == "moved"
-            and zone == "graveyard"
+            and movement.get("zone") == "graveyard"
             and reason in {"destroy", "discard"}
         ):
             self.record_rules_limbo_entry(
@@ -673,7 +653,7 @@ class ConfrontationMixin:
                     moved.append(self._rules_remove_field_item(item, item.get("ownerId"), "exile", "top"))
                 else:
                     item["fieldZone"] = "stalemate"
-                    item.pop("controllerId", None)
+                    # Stalemate's explicit rule preserves controller and modifiers.
                     moved.append({"status": "stalemate", "itemId": item["id"], "cardId": item.get("cardId")})
             result["returned"] = moved
             result["status"] = "complete"

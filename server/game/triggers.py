@@ -461,6 +461,11 @@ class TriggersMixin:
                 fired[fired_key] = self.phase_tracker["turn"]
             raw_result = ability.get("result") or {}
             if (
+                raw_result.get("kind") == "force_win_if_highest_base_first"
+                and not self.rules_is_strictly_highest_base_first(trigger_source_item)
+            ):
+                continue
+            if (
                 event == "card_played"
                 and raw_result.get("kind") == "add_counter_source"
                 and not ability.get("optional")

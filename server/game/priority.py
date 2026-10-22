@@ -8,6 +8,8 @@ from .common import (
 )
 
 
+from .replacements import replacement_checkpoint
+
 class PriorityMixin:
     def rules_action_timing_error(self, kind, source, as_support=False, player_id=None):
         """Reject voluntary card actions outside the rulebook response windows.
@@ -581,6 +583,7 @@ class PriorityMixin:
             return None  # ask before resolving the Confrontation
         return player_id
 
+    @replacement_checkpoint("declaration")
     def declare_rules_action(self, player_id, label, kind="manual", source=None, target=None,
                              targets=None, cost_note=None, payment_card_ids=None, ability_id=None,
                              placement=None, as_support=False,

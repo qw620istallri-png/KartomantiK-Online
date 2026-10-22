@@ -5,6 +5,8 @@ purpose-specific branches applied, in which case the generic discard path runs.
 """
 
 
+from ..replacements import replacement_checkpoint
+
 RULES_CHOICE_HANDLERS = {
     "optional_stack_action": "_rules_choice_optional_stack_action",
     "support_return_order": "_rules_choice_support_return_order",
@@ -48,11 +50,14 @@ RULES_CHOICE_HANDLERS = {
 
 
 class ChoicesMixin:
+    @replacement_checkpoint("choice")
     def resolve_rules_choice(self, player_id, choice_id, card_ids=None, option=None, item_id=None,
                              placement=None, targets=None):
         choice = self.rules_engine.get("pendingChoice")
         if not choice or choice.get("id") != choice_id or choice.get("playerId") != player_id:
             return "This card choice is no longer available.", None
+        if choice.get("kind") == "replacement_order":
+            return self.resolve_rules_replacement_order(player_id, choice, card_ids)
         handler = RULES_CHOICE_HANDLERS.get(choice.get("kind"))
         if handler is not None:
             response = getattr(self, handler)(player_id, choice_id, choice, card_ids, option, item_id, placement, targets)

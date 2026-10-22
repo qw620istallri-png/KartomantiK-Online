@@ -1171,10 +1171,10 @@ function renderRulesChoiceScreen() {
     panel.classList.remove("hidden");
     return;
   }
-  if (choice.kind === "simultaneous_stack_order") {
+  if (["simultaneous_stack_order", "replacement_order"].includes(choice.kind)) {
     options.classList.add("has-order");
-    $("#rulesChoiceHeading").textContent = t("rulesSimultaneousOrderHeading");
-    $("#rulesChoiceText").textContent = t("rulesSimultaneousOrderText");
+    $("#rulesChoiceHeading").textContent = t(choice.kind === "replacement_order" ? "rulesReplacementOrderHeading" : "rulesSimultaneousOrderHeading");
+    $("#rulesChoiceText").textContent = t(choice.kind === "replacement_order" ? "rulesReplacementOrderText" : "rulesSimultaneousOrderText");
     // shown in resolution order: the first card resolves first (top of the Pile);
     // the server takes the list from the bottom of the Pile up
     let ordered = [...(choice.actions || [])].reverse();
@@ -1183,7 +1183,7 @@ function renderRulesChoiceScreen() {
         <div class="rules-drag-order">
           ${ordered.map((action, index) => dragOrderCardHtml(
             action.actionId, action.cardId,
-              `${rulesActiveAbilityEffect(action.abilityId)?.text || action.label || cardName(action.cardId)}${action.immediate ? ` · ${t("rulesImmediateLabel")}` : ""}`,
+              `${action.replacementKind ? t(`rulesReplacement_${action.replacementKind}`) : rulesActiveAbilityEffect(action.abilityId)?.text || action.label || cardName(action.cardId)}${action.immediate ? ` · ${t("rulesImmediateLabel")}` : ""}`,
             index + 1,
           )).join("")}
         </div>

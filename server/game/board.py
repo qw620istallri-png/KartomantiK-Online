@@ -93,6 +93,28 @@ class BoardMixin:
             item["layoutSlot"] = index
             item["x"], item["y"] = self.rules_layout_slot(zone, seat, index)
 
+    def rules_ongoing_effect_active(self, effect):
+        """A temporarily blanked continuous source keeps its link, but applies nothing."""
+        if effect.get("duration") not in {"while_source_and_target_on_field", "while_source_on_field"}:
+            return True
+        source = self.find_battlefield_item((effect.get("source") or {}).get("itemId"))
+        if source is None:
+            return False
+        # Mimer's activated copying modifier already resolved independently.
+        if effect.get("kind") == "copy_power_temperament":
+            return True
+        checking = getattr(self, "_rules_checking_effects", None)
+        if checking is None:
+            checking = self._rules_checking_effects = set()
+        key = id(effect)
+        if key in checking:
+            return False
+        checking.add(key)
+        try:
+            return self.rules_item_effects_active(source)
+        finally:
+            checking.remove(key)
+
     def rules_item_controller_id(self, item):
         linked = next((
             effect for effect in reversed(
@@ -100,6 +122,7 @@ class BoardMixin:
             )
             if effect.get("kind") == "control_link"
             and effect.get("target", {}).get("itemId") == (item or {}).get("id")
+            and self.rules_ongoing_effect_active(effect)
         ), None)
         return (
             linked.get("controllerId")
@@ -183,7 +206,7 @@ class BoardMixin:
             "kind": "move_card",
             "status": (
                 "target_missing" if error
-                else "suspended" if replacement
+                else replacement["status"] if replacement
                 else "moved"
             ),
             "random": True, "cardId": card_id, "ownerId": owner_id,
@@ -285,6 +308,7 @@ class BoardMixin:
         return not any(
             effect.get("kind") in {"lose_effects", "obscure_lock", "interzone_lock"}
             and effect.get("target", {}).get("itemId") == item.get("id")
+            and self.rules_ongoing_effect_active(effect)
             for effect in self.rules_engine.get("ongoingEffects") or []
         )
 
@@ -303,6 +327,7 @@ class BoardMixin:
             if any(
                 effect.get("kind") == "lose_effects"
                 and effect.get("target", {}).get("itemId") == other.get("id")
+                and self.rules_ongoing_effect_active(effect)
                 for effect in self.rules_engine.get("ongoingEffects") or []
             ):
                 continue
@@ -534,6 +559,7 @@ class BoardMixin:
         if any(
             effect.get("kind") == "grant_support"
             and effect.get("target", {}).get("itemId") == item.get("id")
+            and self.rules_ongoing_effect_active(effect)
             for effect in self.rules_engine.get("ongoingEffects") or []
         ):
             return True

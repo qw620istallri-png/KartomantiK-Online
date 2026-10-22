@@ -514,10 +514,7 @@ class SignatureEffectsMixin:
             self.rules_manifestation_base_power(item)
             for item in first_items
         ), default=source_power)
-        qualifies = (
-            first_ids.get(controller_id) == source_item.get("id")
-            and source_power >= highest
-        )
+        qualifies = self.rules_is_strictly_highest_base_first(source_item)
         confrontation = None
         if qualifies:
             self.rules_engine["forcedConfrontationWinnerId"] = controller_id

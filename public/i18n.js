@@ -3502,3 +3502,19 @@ if (!KO_LANGUAGES.includes(currentLanguage)) currentLanguage = "en";
 function t(key) {
   return (ui[currentLanguage] && ui[currentLanguage][key]) ?? ui.en[key] ?? key;
 }
+
+Object.assign(ui.en, {
+  rulesReplacementOrderHeading: "Order simultaneous replacements",
+  rulesReplacementOrderText: "Drag the effect to apply first to the left. The first replacement moves the card; the others then have no card to move.",
+  rulesReplacement_suspend: "Suspend the card", rulesReplacement_exile: "Exile the card", rulesReplacement_receptacle: "Return the card to the Vessel",
+});
+Object.assign(ui.fr, {
+  rulesReplacementOrderHeading: "Ordonner les remplacements simultanés",
+  rulesReplacementOrderText: "Glissez à gauche l’effet à appliquer en premier. Le premier remplacement déplace la carte ; les autres n’ont alors plus de carte à déplacer.",
+  rulesReplacement_suspend: "Suspendre la carte", rulesReplacement_exile: "Exiler la carte", rulesReplacement_receptacle: "Renvoyer la carte au Réceptacle",
+});
+Object.assign(ui.it, {
+  rulesReplacementOrderHeading: "Ordina le sostituzioni simultanee",
+  rulesReplacementOrderText: "Trascina a sinistra l’effetto da applicare per primo. La prima sostituzione sposta la carta; le altre non hanno più una carta da spostare.",
+  rulesReplacement_suspend: "Sospendi la carta", rulesReplacement_exile: "Esilia la carta", rulesReplacement_receptacle: "Rimetti la carta nel Ricettacolo",
+});

@@ -236,24 +236,30 @@ class ZonesMixin:
             ]
         return owner_id
 
+    def rules_zone_move_destination(self, container_id, zone, card_id, owner_id,
+                                    position="top", *, from_field=False):
+        """Resolve destination replacements without extracting or recording an entry."""
+        marked = card_id in (getattr(self, "rules_engine", {}).get("limboDrawn", {}).get(owner_id) or [])
+        if (zone in {"deck", "graveyard"} and self.rules_exiles_incoming_manifestations(container_id, card_id)
+                or marked and (zone in {"deck", "graveyard"} or from_field and zone != "receptacle")):
+            return owner_id, "exile", "top"
+        return container_id, zone, position
+
     def put_zone_card(self, container_id, zone, card_id, owner_id, position="top"):
+        container_id, zone, position = self.rules_zone_move_destination(
+            container_id, zone, card_id, owner_id, position,
+        )
         player = self.players.get(container_id)
         if player is None:
             return False
-        if zone in {"deck", "graveyard"} and self.rules_exiles_incoming_manifestations(
-            container_id, card_id
-        ):
-            zone, position = "exile", "top"
         marked_cards = (
-            self.rules_engine.get("limboDrawn", {}).get(container_id)
+            self.rules_engine.get("limboDrawn", {}).get(owner_id)
             if hasattr(self, "rules_engine") else None
         )
         if marked_cards and card_id in marked_cards:
             # Quasimillenary: cards drawn from Limbo are exiled instead of
             # returning to Limbo or the deck; they stay marked until they end
             # in the Vessel or the exile.
-            if zone in {"deck", "graveyard"}:
-                zone, position = "exile", "top"
             if zone in {"exile", "receptacle"}:
                 marked_cards.remove(card_id)
         if position == "bottom":
@@ -313,6 +319,9 @@ class ZonesMixin:
         if error:
             return error, owner_id
         self.take_zone_card(from_container_id, from_zone, card_id)
+        to_container_id, to_zone, position = self.rules_zone_move_destination(
+            to_container_id, to_zone, card_id, owner_id, position,
+        )
         self.put_zone_card(to_container_id, to_zone, card_id, owner_id, position)
         if (
             self.rules_engine.get("enabled")
@@ -656,7 +665,7 @@ class ZonesMixin:
         self.put_zone_card(owner_id, zone, suspended["cardId"], owner_id, position)
         return None, suspended
 
-    def rules_active_suspension_source(self, zone):
+    def rules_active_suspension_sources(self, zone):
         threshold_key = "graveyard" if zone == "graveyard" else zone
         candidates = []
         for item in self.rules_confrontation_items():
@@ -670,7 +679,118 @@ class ZonesMixin:
                 and self.rules_manifestation_characteristics(item)["power"] >= threshold
             ):
                 candidates.append(item)
-        return candidates[0] if candidates else None
+        return candidates
+
+    def rules_active_suspension_source(self, zone):
+        return next(iter(self.rules_active_suspension_sources(zone)), None)
+
+    def rules_competing_replacements_possible(self):
+        sources = {item['id'] for zone in ('deck', 'graveyard')
+                   for item in self.rules_active_suspension_sources(zone)}
+        exile_effect = any(e.get('kind') == 'exile_incoming_manifestations' for e in self.rules_engine['ongoingEffects'])
+        marked = any(self.rules_engine.get('limboDrawn', {}).values())
+        field_replacement = any(i.get('exileIfLeaves') or i.get('exileInsteadOfLeaving') or i.get('returnToVesselId')
+                                or self.rules_item_card_rules(i).get('exileIfLeavesConfrontationByEffect') for i in self.battlefield)
+        return (len(sources) > 1 or bool(sources) and (exile_effect or marked or field_replacement)
+                or any(i.get('returnToVesselId') and (exile_effect or marked or i.get('exileIfLeaves')
+                                                     or i.get('exileInsteadOfLeaving')) for i in self.battlefield))
+
+
+    def rules_effect_move_replacement(self, owner_id, from_zone, container_id, zone, card_id, item=None, *, exclude_source_id=None):
+        """Order simultaneous replacements; the first one moves the card out of its source."""
+        from .replacements import ReplacementOrderRequired
+        effects = []
+        def add(key, controller, source_card, kind, destination, source_item=None):
+            if any(e['actionId'] == key for e in effects):
+                return
+            effects.append({'actionId': key, 'controllerId': controller or owner_id,
+                            'cardId': source_card, 'replacementKind': kind,
+                            '_destination': destination, '_sourceItem': source_item})
+        for affected_zone in {from_zone, zone} & {'deck', 'graveyard'}:
+            for source in self.rules_active_suspension_sources(affected_zone):
+                if source['id'] == exclude_source_id:
+                    continue
+                add('suspend:' + source['id'], self.rules_item_controller_id(source), source['cardId'],
+                    'suspend', None, source)
+        if zone in {'deck', 'graveyard'} and self.card_rules.get(card_id, {}).get('type') == 'manifestation':
+            for effect in self.rules_engine['ongoingEffects']:
+                if effect.get('kind') == 'exile_incoming_manifestations' and (effect.get('target') or {}).get('playerId') == container_id:
+                    add('exile:' + str(effect.get('actionId') or effect.get('id')), effect.get('controllerId'),
+                        (effect.get('source') or {}).get('cardId') or '36l7iw5m5hk1pmr_en', 'exile', (owner_id, 'exile'))
+        if (card_id in (self.rules_engine.get('limboDrawn', {}).get(owner_id) or [])
+                and (zone in {'deck', 'graveyard'} or from_zone == 'battlefield' and zone != 'receptacle')):
+            add('quasimillenary:' + owner_id, owner_id, 'v6slubph4q5ijfb_en', 'exile', (owner_id, 'exile'))
+        if item:
+            controller = self.rules_item_controller_id(item)
+            if item.get('exileIfLeaves') and zone in {'graveyard', 'hand', 'deck'}:
+                add('exile-on-leave:' + item['id'], controller, card_id, 'exile', (owner_id, 'exile'))
+            if self.rules_field_zone(item) == 'confrontation':
+                if item.get('returnToVesselId') in self.players and zone != 'receptacle':
+                    add('vessel:' + item['id'], item['returnToVesselId'], card_id, 'receptacle', (item['returnToVesselId'], 'receptacle'))
+                if item.get('exileInsteadOfLeaving') and zone != 'exile':
+                    add('catacomb:' + item['id'], controller, 'inner-deserts-067', 'exile', (owner_id, 'exile'))
+                if zone != 'exile' and self.rules_item_card_rules(item).get('exileIfLeavesConfrontationByEffect') and self.rules_item_effects_active(item):
+                    add('exile-cz:' + item['id'], controller, card_id, 'exile', (owner_id, 'exile'))
+        if not effects:
+            return None
+        priority = getattr(self, '_rules_replacement_priority', None) or (self.rules_lowest_confrontation_power_player() if self.current_phase_group() == 'confrontation'
+                    else self.rules_engine.get('lastConfrontationWinnerId')) or self.rules_engine.get('priorityPlayerId')
+        controllers = [pid for pid in self.players if pid != priority] + ([priority] if priority in self.players else [])
+        # Non-priority player's group resolves first (last group placed on the Stack).
+        group = next([e for e in effects if e['controllerId'] == pid] for pid in controllers
+                     if any(e['controllerId'] == pid for e in effects))
+        signatures = {(e['replacementKind'], tuple(e['_destination'] or ()),
+                       (e['_sourceItem'] or {}).get('id')) for e in group}
+        if len(signatures) <= 1:
+            return group[0]
+        key = '|'.join([owner_id, from_zone, container_id, zone, card_id,
+                        str((item or {}).get('id') or ''), *sorted(e['actionId'] for e in group)])
+        supplied = getattr(self, '_rules_replacement_orders', {}).get(key)
+        if not supplied:
+            if getattr(self, '_rules_replacement_running', False):
+                raise ReplacementOrderRequired(key, group[0]['controllerId'], [
+                    {k: v for k, v in e.items() if not k.startswith('_')} for e in group])
+            # Non-interactive internal callers retain a deterministic ordering.
+            return group[0]
+        return next(e for e in group if e['actionId'] == supplied[-1])
+
+    def resolve_rules_replacement_order(self, player_id, choice, card_ids):
+        expected = [e['actionId'] for e in choice['actions']]
+        if not isinstance(card_ids, list) or not all(isinstance(key, str) for key in card_ids) or len(card_ids) != len(expected) or set(card_ids) != set(expected):
+            return 'Order every replacement exactly once.', None
+        orders = {**choice['_orders'], choice['_orderKey']: list(card_ids)}
+        self.rules_engine['pendingChoice'] = choice['_originalChoice']
+        self.rules_engine['priorityPlayerId'] = choice['_priorityPlayerId']
+        self.rules_engine['priorityPasses'] = choice['_priorityPasses']
+        previous = getattr(self, '_rules_replacement_orders', {})
+        previous_random = getattr(self, '_rules_replacement_random_state', None)
+        previous_priority = getattr(self, '_rules_replacement_priority', None)
+        self._rules_replacement_orders = orders
+        self._rules_replacement_random_state = choice['_randomState']
+        self._rules_replacement_priority = choice['_replacementPriority']
+        operation = choice['_operation']
+        try:
+            result = getattr(self, operation['method'])(*operation['args'], **operation['kwargs'])
+        finally:
+            self._rules_replacement_orders = previous
+            self._rules_replacement_random_state = previous_random
+            self._rules_replacement_priority = previous_priority
+        if operation['shape'] == 'choice':
+            return result
+        if operation['shape'] == 'declaration':
+            error, action = result
+            if error:
+                return error, None
+            payload = {'kind': 'replacement_order', 'playerId': player_id, 'choiceId': choice['id'],
+                       'status': 'continued' if action.get('status') == 'choice_required' else 'completed'}
+            if payload['status'] == 'completed':
+                payload['_declaredActions'] = [action]
+            return None, payload
+        payload = {'kind': 'replacement_order', 'playerId': player_id, 'choiceId': choice['id'],
+                   'status': 'continued' if (result or {}).get('status') == 'choice_required' else 'completed'}
+        if operation['shape'] == 'resolution' and (result or {}).get('status') == 'resolved':
+            payload['_resolvedActions'] = [result]
+        return None, payload
 
     def rules_hands_are_immune(self):
         return any(
@@ -712,14 +832,29 @@ class ZonesMixin:
             if entry.get("id") not in released_ids
         ]
         shuffled_owner_ids = set()
+        destinations = {}
         for entry in released:
             owner_id = entry.get("ownerId")
             zone = "exile" if exile else entry.get("returnZone") or "deck"
-            self.put_zone_card(
-                owner_id, zone, entry.get("cardId"), owner_id,
-                "bottom" if zone == "deck" else "top"
-            )
-            if not exile and zone == "deck":
+            replacement = self.rules_effect_move_replacement(
+                owner_id, "suspended", owner_id, zone, entry['cardId'], exclude_source_id=source_item_id)
+            if replacement and replacement['replacementKind'] == 'suspend':
+                self.rules_engine['suspendedCards'].append({
+                    'id': new_id(), 'cardId': entry['cardId'], 'ownerId': owner_id,
+                    'fromContainerId': entry.get('fromContainerId') or owner_id,
+                    'fromZone': entry.get('fromZone'),
+                    'sourceEffectId': replacement['_sourceItem']['id'],
+                })
+                destinations[entry['id']] = 'suspended'
+                continue
+            recipient = owner_id
+            if replacement:
+                recipient, zone = replacement['_destination']
+            recipient, zone, position = self.rules_zone_move_destination(
+                recipient, zone, entry['cardId'], owner_id, 'bottom' if zone == 'deck' else 'top')
+            self.put_zone_card(recipient, zone, entry['cardId'], owner_id, position)
+            destinations[entry['id']] = zone
+            if zone == "deck":
                 shuffled_owner_ids.add(owner_id)
         for owner_id in shuffled_owner_ids:
             random.shuffle(self.players[owner_id]["zones"]["deck"])
@@ -729,9 +864,7 @@ class ZonesMixin:
             "ownerId": entry.get("ownerId"),
             "fromZone": entry.get("fromZone"),
             "playableByPlayerId": entry.get("playableByPlayerId"),
-            "destination": (
-                "exile" if exile else entry.get("returnZone") or "deck"
-            ),
+            "destination": destinations[entry['id']],
         } for entry in released]
 
     def expire_rules_temporary_suspensions(self, completed_turn):
@@ -749,7 +882,7 @@ class ZonesMixin:
             )
         return expired
 
-    def rules_zone_move_replacement(self, from_container_id, from_zone, to_zone, card_id):
+    def rules_zone_move_replacement(self, from_container_id, from_zone, to_zone, card_id, to_container_id=None):
         """Apply replacements before an effect extracts a card from its zone."""
         owner_id = self.card_owner_in_zone(
             from_container_id, from_zone, card_id
@@ -758,12 +891,15 @@ class ZonesMixin:
             return "Card not found in source zone.", owner_id, None
         if from_zone == "hand" and self.rules_hands_are_immune():
             return "Cards in Hand are Immune to cards and effects.", owner_id, None
-        suspension_source = next((
-            source for zone in {from_zone, to_zone}
-            if zone in {"deck", "graveyard"}
-            for source in [self.rules_active_suspension_source(zone)]
-            if source is not None
-        ), None)
+        selected = self.rules_effect_move_replacement(
+            owner_id, from_zone, to_container_id or owner_id, to_zone, card_id,
+        )
+        suspension_source = (selected or {}).get('_sourceItem')
+        if selected and selected['replacementKind'] != 'suspend':
+            recipient, destination = selected['_destination']
+            error, _owner = self.move_zone_card(from_container_id, from_zone, recipient, destination, card_id)
+            return error, owner_id, ({'status': 'exiled', 'cardId': card_id, 'ownerId': owner_id,
+                                      'fromZone': from_zone, 'destination': destination} if not error else None)
         if suspension_source:
             error, suspended = self.suspend_zone_card(
                 from_container_id, from_zone, card_id,
@@ -782,7 +918,7 @@ class ZonesMixin:
                                  to_container_id, to_zone, card_id,
                                  position="top"):
         error, owner_id, replacement = self.rules_zone_move_replacement(
-            from_container_id, from_zone, to_zone, card_id,
+            from_container_id, from_zone, to_zone, card_id, to_container_id,
         )
         if error or replacement:
             return error, owner_id, replacement

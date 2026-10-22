@@ -38,6 +38,9 @@ class ViewMixin:
                 and (viewer_id is None or viewer_id not in {value.get("ownerId"), value.get("playableByPlayerId")})
                 and value.get("destination") not in SHARED_ZONES):
             result.pop("cardId", None)
+        if (value.get('status') == 'exiled' and value.get('fromZone') in {'hand', 'deck', 'exile'}
+                and (viewer_id is None or viewer_id != value.get('ownerId'))):
+            result.pop('cardId', None)
         return result
 
     # -- zone permissioning --------------------------------------------
@@ -417,7 +420,8 @@ class ViewMixin:
                 "priorityPasses": list(self.rules_engine["priorityPasses"]),
                 "actionStack": self.rules_payload_for_view(self.rules_engine["actionStack"], viewer_id, role),
                 "lastResolvedAction": self.rules_payload_for_view(self.rules_engine["lastResolvedAction"], viewer_id, role),
-                "ongoingEffects": list(self.rules_engine["ongoingEffects"]),
+                "ongoingEffects": [effect for effect in self.rules_engine["ongoingEffects"]
+                                   if self.rules_ongoing_effect_active(effect)],
                 "effectMemories": [
                     {
                         "id": memory.get("id"),

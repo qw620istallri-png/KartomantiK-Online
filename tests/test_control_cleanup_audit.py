@@ -148,11 +148,17 @@ class ControlCleanupAuditTests(unittest.TestCase):
         self.assertEqual(borrowed["fieldZone"], "interzone")
         self.assertEqual(session.rules_item_controller_id(borrowed), "p2")
 
-    def test_stalemate_entry_returns_borrowed_cards_to_owner_control(self):
+    def test_stalemate_entry_preserves_controller_and_modifiers(self):
         session, _, _ = self.case.started()
         borrowed = self.case.field_item("borrowed", "p2", self.SWINE, controllerId="p1")
-        session.battlefield = [borrowed, self.case.field_item("other", "p2", self.SWINE)]
+        other = self.case.field_item("other", "p1", self.SWINE, controllerId="p2")
+        borrowed["counters"] = {"power": 1}
+        other["counters"] = {"power": 1}
+        session.battlefield = [borrowed, other]
+        power_before = session.rules_manifestation_characteristics(borrowed)["power"]
         self.assertTrue(self.compare(session)["stalemate"])
         session.begin_rules_confrontation_cleanup()
         self.assertEqual(borrowed["fieldZone"], "stalemate")
-        self.assertEqual(session.rules_item_controller_id(borrowed), "p2")
+        self.assertEqual(session.rules_item_controller_id(borrowed), "p1")
+        self.assertEqual(session.rules_item_controller_id(other), "p2")
+        self.assertEqual(session.rules_manifestation_characteristics(borrowed)["power"], power_before)

@@ -521,6 +521,29 @@ def log_rules_triggered_actions(session, actions, caused_by_actor_id):
         })
 
 
+def log_rules_declared_action(session, action):
+    actor_id = action['controllerId']
+    session.add_log(actor_id, "rules_action_declared", {
+        "actionId": action["id"],
+        "label": action["label"],
+        "kind": action["kind"],
+        "source": action["source"],
+        "target": action["target"],
+        "targets": action["targets"],
+        "ability": action["ability"],
+        "cost": action["cost"],
+        "asSupport": bool(action.get("asSupport")),
+        "phaseId": action["phaseId"],
+        "stackDepth": len(session.rules_engine["actionStack"]),
+    })
+    triggered_actions = session.queue_rules_tribute_triggers(
+        action["cost"].get("tributeCardIds") or [], actor_id,
+        simultaneous_action_id=action["id"],
+        tribute_movements=action["cost"].get("tributeMovements") or [],
+    )
+    log_rules_triggered_actions(session, triggered_actions, actor_id)
+
+
 async def record_rules_resolution(session, result, actor_id):
     resolved = result["action"]
     session.add_log(actor_id, "rules_action_resolved", {
@@ -1522,6 +1545,10 @@ async def handle_message(ws, info, data):
                 session.touch()
                 await broadcast_state(session)
             return
+        for declared in result.pop("_declaredActions", []):
+            log_rules_declared_action(session, declared)
+        for completed in result.pop("_resolvedActions", []):
+            await record_rules_resolution(session, completed, actor_id)
         triggered_actions = result.pop("triggeredActions", [])
         session.add_log(actor_id, "rules_choice_resolved", result)
         log_rules_triggered_actions(session, triggered_actions, actor_id)
@@ -2213,25 +2240,11 @@ async def handle_message(ws, info, data):
         )
         if error:
             return await send_error(ws, error)
-        session.add_log(actor_id, "rules_action_declared", {
-            "actionId": action["id"],
-            "label": action["label"],
-            "kind": action["kind"],
-            "source": action["source"],
-            "target": action["target"],
-            "targets": action["targets"],
-            "ability": action["ability"],
-            "cost": action["cost"],
-            "asSupport": bool(action.get("asSupport")),
-            "phaseId": action["phaseId"],
-            "stackDepth": len(session.rules_engine["actionStack"]),
-        })
-        triggered_actions = session.queue_rules_tribute_triggers(
-            action["cost"].get("tributeCardIds") or [], actor_id,
-            simultaneous_action_id=action["id"],
-            tribute_movements=action["cost"].get("tributeMovements") or [],
-        )
-        log_rules_triggered_actions(session, triggered_actions, actor_id)
+        if action.get('status') == 'choice_required':
+            session.touch()
+            await broadcast_state(session)
+            return
+        log_rules_declared_action(session, action)
         for immediate_result in session.resolve_rules_immediate_actions():
             await record_rules_resolution(session, immediate_result, actor_id)
         session.touch()

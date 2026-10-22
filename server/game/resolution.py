@@ -1,9 +1,11 @@
 """Resolving the top of the Stack and passing priority."""
 
 from .common import ADVANCED_PHASES
+from .replacements import replacement_checkpoint
 
 
 class ResolutionMixin:
+    @replacement_checkpoint("resolution")
     def resolve_rules_top_action(self):
         action_stack = self.rules_engine["actionStack"]
         if not action_stack:
@@ -158,7 +160,7 @@ class ResolutionMixin:
             and not self.rules_engine.get("pendingChoice")
         ):
             result = self.resolve_rules_top_action()
-            if result:
+            if result and result.get("status") == "resolved":
                 resolved.append(result)
         if not self.rules_engine.get("pendingChoice") and not any(action.get("immediate") for action in self.rules_engine["actionStack"]):
             deferred = self.rules_engine.pop("deferredAfterImmediateActions", [])

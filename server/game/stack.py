@@ -510,7 +510,8 @@ class StackMixin:
             )
             source_present = (
                 source_item is not None
-                and self.rules_item_effects_active(source_item)
+                and (effect.get("kind") == "copy_power_temperament"
+                     or self.rules_field_zone(source_item) != "stalemate")
             )
             turn_active = not (
                 effect.get("duration") == "until_end_of_turn"

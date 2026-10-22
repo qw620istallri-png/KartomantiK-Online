@@ -1252,7 +1252,7 @@ class BoardEffectsMixin:
                 })
             payload = {
                 "kind": "move_card",
-                "status": "suspended" if replacement else "moved",
+                "status": replacement["status"] if replacement else "moved",
                 "cardId": card_id,
                 "ownerId": owner_id, "fromZone": from_zone,
                 "fromContainerId": container_id, "toZone": destination,

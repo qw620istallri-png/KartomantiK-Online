@@ -44,7 +44,7 @@ class DecisionsChoicesMixin:
             )
             status = (
                 "target_missing" if error
-                else "suspended" if replacement
+                else replacement["status"] if replacement
                 else "returned"
             )
         self.remove_rules_effect_memory(memory["id"])

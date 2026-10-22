@@ -974,9 +974,8 @@ class PaymentMixin:
         for sacrifice_id in payment.get("sacrificeItemIds") or []:
             sacrificed = self.find_battlefield_item(sacrifice_id)
             if sacrificed is not None:
-                self._rules_remove_field_item_by_effect(
+                self._rules_remove_field_item(
                     sacrificed, sacrificed.get("ownerId"), "graveyard", "top",
-                    reason="sacrifice",
                 )
         limbo_source = self.find_battlefield_item(
             payment.get("limboTributeSourceItemId")
@@ -1013,10 +1012,10 @@ class PaymentMixin:
                 continue
             owner_id = self.card_owner_in_zone(player_id, from_zone, card_id)
             if from_zone == "receptacle":
-                error, _owner_id, replacement = self.move_zone_card_by_effect(
+                error, _owner_id = self.move_zone_card(
                     player_id, "receptacle", owner_id, "exile", card_id, "top",
                 )
-                if error or replacement:
+                if error:
                     raise RuntimeError("Validated Vessel Tribute payment failed.")
                 movements.append({
                     "cardId": card_id, "ownerId": owner_id,
@@ -1024,11 +1023,11 @@ class PaymentMixin:
                 })
                 continue
             if from_zone == "graveyard":
-                error, _owner_id, replacement = self.move_zone_card_by_effect(
+                error, _owner_id = self.move_zone_card(
                     player_id, "graveyard", owner_id, "exile",
                     card_id, "top",
                 )
-                if error or replacement:
+                if error:
                     raise RuntimeError(
                         "Validated Limbo Tribute payment failed."
                     )
@@ -1105,18 +1104,11 @@ class PaymentMixin:
         if ability.get("exhaustSource"):
             item["rotation"] = 90.0
         if ability.get("sacrificeSource"):
-            self.battlefield.remove(item)
-            for other in self.battlefield:
-                if other.get("stackedOn") == item.get("id"):
-                    other["stackedOn"] = None
             sacrifice_zone = "exile" if ability.get("sacrificeDestination") == "exile" else "graveyard"
-            if item.get("isCopy") or item.get("isTokenCard"):
-                sacrifice_zone = None
-            if sacrifice_zone:
-                self.put_zone_card(item["ownerId"], sacrifice_zone, item["cardId"], item["ownerId"], "top")
+            movement = self._rules_remove_field_item(item, item["ownerId"], sacrifice_zone, "top")
             result["sacrificedCards"].append({
                 "itemId": item["id"], "cardId": item["cardId"], "ownerId": item["ownerId"],
-                "destination": sacrifice_zone or "removed",
+                "destination": movement.get("zone") or "removed",
             })
             self.prune_rules_ongoing_effects()
         if ability.get("sacrificeTokenCreatedBySource"):
@@ -1131,7 +1123,7 @@ class PaymentMixin:
                 raise RuntimeError(
                     "Validated source-created Token disappeared before payment."
                 )
-            self.battlefield.remove(token)
+            self._rules_remove_field_item(token, token.get("ownerId"), "graveyard", "top")
             result["sacrificedCards"].append({
                 "itemId": token["id"], "cardId": token.get("cardId"),
                 "ownerId": token.get("ownerId"), "destination": "removed",

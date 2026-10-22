@@ -283,6 +283,7 @@ class PowerMixin:
             for effect in self.rules_engine.get("ongoingEffects") or []
             if effect.get("kind") == "power_modifier"
             and effect.get("target", {}).get("itemId") == item.get("id")
+            and self.rules_ongoing_effect_active(effect)
         )
         power += self.rules_continuous_power_modifier(item)
         set_effect = next((
@@ -329,6 +330,20 @@ class PowerMixin:
         if isinstance(maximum_power, (int, float)):
             power = min(power, int(maximum_power))
         return {"power": power, "temperament": temperament}
+
+    def rules_is_strictly_highest_base_first(self, item):
+        if item is None:
+            return False
+        first_ids = self.rules_engine.get("firstManifestationItemIds", {})
+        if first_ids.get(self.rules_item_controller_id(item)) != item.get("id"):
+            return False
+        source_power = self.rules_manifestation_base_power(item)
+        return all(
+            source_power > self.rules_manifestation_base_power(other)
+            for item_id in first_ids.values()
+            if item_id != item.get("id")
+            and (other := self.find_battlefield_item(item_id)) is not None
+        )
 
     def rules_manifestation_base_power(self, item, visiting=None):
         if item is None:
@@ -440,6 +455,7 @@ class PowerMixin:
             if (
                 effect.get("kind") == "protection"
                 and effect.get("target", {}).get("itemId") == (item or {}).get("id")
+                and self.rules_ongoing_effect_active(effect)
                 and (
                     not effect.get("fromOpponents")
                     or controller_id != item_controller

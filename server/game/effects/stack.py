@@ -208,7 +208,7 @@ class StackEffectsMixin:
                 self.remove_rules_effect_memory(memory["id"])
                 return {
                     "kind": "resolve_effect_memory",
-                    "status": "target_missing" if error else "suspended" if replacement else (
+                    "status": "target_missing" if error else replacement["status"] if replacement else (
                         "returned" if destination == "hand" else "exiled"
                     ),
                     "memoryId": memory["id"], "cardId": card_id, "roll": roll,
@@ -262,7 +262,7 @@ class StackEffectsMixin:
                 "kind": "resolve_effect_memory",
                 "status": (
                     "target_missing" if error
-                    else "suspended" if replacement
+                    else replacement["status"] if replacement
                     else "returned"
                 ),
                 "memoryId": memory["id"],

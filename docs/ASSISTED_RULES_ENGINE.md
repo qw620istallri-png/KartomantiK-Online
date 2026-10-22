@@ -177,7 +177,7 @@ contrôle pendant la fenêtre d'effets ne change pas ce résultat. Ainsi, une
 Manifestation réanimée par Reforging Fate est exilée si elle a gagné sous le
 contrôle de son réanimateur, même si elle appartient à l'adversaire.
 
-Une entrée ordinaire dans Stalemate rend le contrôle au propriétaire. Lors du
+Stalemate conserve le contrôleur et les modificateurs (exception explicite du glossaire du livret, page 39). Lors du
 placement ordinaire d'une carte gagnante dans l'Interzone de son propriétaire,
 le contrôle est également rattaché au joueur de cette Interzone.
 
@@ -436,7 +436,9 @@ La Révélation produit désormais un événement serveur distinct capable de
 résoudre des Effets Immédiats avant les déclenchements d'entrée habituels.
 
 - The Stomper mémorise un gagnant forcé lorsque sa Première possède la plus
-  haute puissance de base et mélange automatiquement lorsqu'il atteint le
+  haute puissance de base, strictement supérieure à celle de toute autre Première
+  (une égalité ne déclenche pas son effet, même avec un tempérament dominant),
+  et mélange automatiquement lorsqu'il atteint le
   dessous du Deck ;
 - Sermon demande au joueur concerné de perdre 10 points ou de passer la
   Confrontation ;

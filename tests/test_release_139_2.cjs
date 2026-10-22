@@ -51,6 +51,20 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
         };
       });
 
+      const replacements = await page.evaluate(() => {
+        window.__setup139();
+        latestState.rulesEngine.pendingChoice = { id: "replacement-order", kind: "replacement_order", playerId: "p1",
+          actions: [{ actionId: "suspend:bob", cardId: "inner-deserts-134", replacementKind: "suspend" },
+                    { actionId: "exile:nullify", cardId: "36l7iw5m5hk1pmr_en", replacementKind: "exile" }] };
+        renderRulesChoice();
+        const text = document.querySelector("#rulesChoiceOptions").textContent;
+        document.querySelector("#rulesSimultaneousOrderConfirm").click();
+        return { text, sent: window.__sent[0] };
+      });
+      assert.match(replacements.text, /Exile|Exiler|Esilia/);
+      assert.match(replacements.text, /Suspend|Suspendre|Sospendi/);
+      assert.deepEqual(replacements.sent.cardIds, ["suspend:bob", "exile:nullify"]);
+
       const bottomOrder = await page.evaluate(() => {
         window.__setup139();
         latestState.rulesEngine.pendingChoice = { id: "timid-order", kind: "support_return_order", playerId: "p1",
