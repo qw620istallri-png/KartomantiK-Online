@@ -7,6 +7,39 @@ from .common import (
 
 
 class ViewMixin:
+    def rules_payload_for_view(self, value, viewer_id, role, private_player_id=None):
+        """Filter private resolution data as well as the visible board zones."""
+        if normalize_role(role) in PRIVILEGED_VIEW_ROLES:
+            return value
+        if isinstance(value, list):
+            return [self.rules_payload_for_view(entry, viewer_id, role, private_player_id)
+                    for entry in value]
+        if not isinstance(value, dict):
+            return value
+        private_player_id = value.get("playerId") or value.get("controllerId") or private_player_id
+        visible = viewer_id is not None and viewer_id == private_player_id
+        result = {key: self.rules_payload_for_view(entry, viewer_id, role, private_player_id)
+                  for key, entry in value.items() if not key.startswith("_")}
+        if not visible:
+            for key in ("drawn", "drawnCards", "drawnCardIds"):
+                if isinstance(result.get(key), list):
+                    result[key] = {"count": len(result[key])}
+            kind = value.get("kind")
+            if kind in {"deck_reorder", "reorder_top_decks"}:
+                result["groups"] = [{key: entry for key, entry in group.items()
+                                     if key not in {"top", "bottom", "extra"}}
+                                    for group in result.get("groups") or []]
+            if (kind in {"peek_top_card", "deck_bottom_from_hand"}
+                    or kind == "search_deck" and not value.get("interzone")
+                    or kind == "suspend_hand_will" and (viewer_id is None or viewer_id != value.get("playableByPlayerId"))):
+                result.pop("cardId", None)
+                result.pop("cardIds", None)
+        if (value.get("suspensionId") and value.get("fromZone") != "battlefield"
+                and (viewer_id is None or viewer_id not in {value.get("ownerId"), value.get("playableByPlayerId")})
+                and value.get("destination") not in SHARED_ZONES):
+            result.pop("cardId", None)
+        return result
+
     # -- zone permissioning --------------------------------------------
     def can_view_zone(self, viewer_id, role, owner_id, zone):
         role = normalize_role(role)
@@ -382,8 +415,8 @@ class ViewMixin:
                 ),
                 "conditionalSupportHandCardIds": conditional_support_hand_card_ids,
                 "priorityPasses": list(self.rules_engine["priorityPasses"]),
-                "actionStack": list(self.rules_engine["actionStack"]),
-                "lastResolvedAction": self.rules_engine["lastResolvedAction"],
+                "actionStack": self.rules_payload_for_view(self.rules_engine["actionStack"], viewer_id, role),
+                "lastResolvedAction": self.rules_payload_for_view(self.rules_engine["lastResolvedAction"], viewer_id, role),
                 "ongoingEffects": list(self.rules_engine["ongoingEffects"]),
                 "effectMemories": [
                     {
@@ -450,7 +483,7 @@ class ViewMixin:
             # separate poll — the full log (request_log) is still the
             # authoritative, complete history used for the debug/download panel
             "recentLog": [
-                self.log_entry_for_role(entry, role) for entry in self.log[-30:]
+                self.log_entry_for_role(entry, role, viewer_id) for entry in self.log[-30:]
                 if self.log_entry_visible_to(entry, role)
             ],
         }
@@ -464,18 +497,19 @@ class ViewMixin:
             and (entry.get("details") or {}).get("channel") == "observers"
         )
 
-    def log_entry_for_role(self, entry, role):
+    def log_entry_for_role(self, entry, role, viewer_id=None):
+        redacted = self.rules_payload_for_view(entry, viewer_id, role, entry.get("actorId"))
         if self.mode != "tournament" or normalize_role(role) not in {"player", "spectator"}:
-            return entry
-        redacted = dict(entry)
-        details = dict(entry.get("details") or {})
+            return redacted
+        redacted = dict(redacted)
+        details = dict(redacted.get("details") or {})
         for key in ("cardId", "cardIds", "cards", "deck", "deckDefinition", "sideboard"):
             details.pop(key, None)
         redacted["details"] = details
         return redacted
 
-    def serialize_log(self, role="observer"):
+    def serialize_log(self, role="observer", viewer_id=None):
         return {"type": "log", "entries": [
-            self.log_entry_for_role(entry, role) for entry in self.log
+            self.log_entry_for_role(entry, role, viewer_id) for entry in self.log
             if self.log_entry_visible_to(entry, role)
         ]}

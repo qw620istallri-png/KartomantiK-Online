@@ -47,7 +47,14 @@ class ConfrontationChoicesMixin:
         )
         if not isinstance(supplied, list) or len(supplied) != len(groups):
             return "Choose a destination for every Confrontation Manifestation.", None
-        movements = []
+        validated_groups = []
+        supplied_players = [entry.get("playerId") if isinstance(entry, dict) else None for entry in supplied]
+        if (
+            not all(isinstance(pid, str) for pid in supplied_players)
+            or len(set(supplied_players)) != len(supplied_players)
+            or set(supplied_players) != {group.get("playerId") for group in groups}
+        ):
+            return "Choose every player's Confrontation destinations.", None
         for group in groups:
             submitted = next((
                 entry for entry in supplied
@@ -62,15 +69,27 @@ class ConfrontationChoicesMixin:
             if (
                 not isinstance(interzone_ids, list)
                 or not isinstance(deck_ids, list)
+                or not all(isinstance(current_id, str) for current_id in interzone_ids + deck_ids)
                 or len(interzone_ids) > int(group.get("interzoneSlots") or 0)
                 or len(set(interzone_ids + deck_ids)) != len(expected)
                 or set(interzone_ids + deck_ids) != set(expected)
             ):
                 return "Use every Confrontation Manifestation exactly once within the Interzone limit.", None
+            for current_id in interzone_ids + deck_ids:
+                item = self.find_battlefield_item(current_id)
+                if (
+                    item is None or self.rules_field_zone(item) != "confrontation"
+                    or item.get("ownerId") != group.get("playerId")
+                ):
+                    return "A Confrontation Manifestation is no longer available.", None
+            validated_groups.append((interzone_ids, deck_ids))
+
+        movements = []
+        for interzone_ids, deck_ids in validated_groups:
             for current_id in interzone_ids:
                 item = self.find_battlefield_item(current_id)
                 if item is None:
-                    return "A Confrontation Manifestation is no longer available.", None
+                    continue
                 item["fieldZone"] = "interzone"
                 self.mark_rules_interzone_entry(item)
                 item["isSupport"] = False
@@ -82,7 +101,7 @@ class ConfrontationChoicesMixin:
             for current_id in deck_ids:
                 item = self.find_battlefield_item(current_id)
                 if item is None:
-                    return "A Confrontation Manifestation is no longer available.", None
+                    continue
                 movements.append(self._rules_remove_field_item_by_effect(
                     item, item.get("ownerId"), "deck", "bottom"
                 ))

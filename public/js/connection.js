@@ -549,7 +549,7 @@ function handleServerMessage(msg) {
     }
     console.warn("Server error:", msg.message);
     releaseRulesBoardFlowAfterError();
-    if (rulesDeckReorderRetry) rulesDeckReorderRetry();
+    if (rulesChoiceRetry) rulesChoiceRetry();
     // a refused destination leaves the other destinations usable (drag or click)
     $$("#rulesChoicePanel [data-rules-destination]:disabled").forEach((button) => { button.disabled = false; });
   } else if (msg.type === "log") {

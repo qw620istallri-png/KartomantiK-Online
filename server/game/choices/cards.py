@@ -207,7 +207,14 @@ class CardsChoicesMixin:
         supplied = option["groups"]
         if len(supplied) != len(groups):
             return "Order every revealed deck group exactly once.", None
-        resolved_groups = []
+        validated_groups = []
+        supplied_players = [entry.get("playerId") if isinstance(entry, dict) else None for entry in supplied]
+        if (
+            not all(isinstance(pid, str) for pid in supplied_players)
+            or len(set(supplied_players)) != len(supplied_players)
+            or set(supplied_players) != {group.get("playerId") for group in groups}
+        ):
+            return "Order every revealed deck group exactly once.", None
         for group in groups:
             submitted = next((
                 entry for entry in supplied
@@ -259,6 +266,34 @@ class CardsChoicesMixin:
                     target_id, from_zone, card_id
                 )
                 remaining.remove(card_id)
+            transfers = (
+                [(card_id, target_id, "deck") for card_id in top + bottom]
+                if from_zone != "deck" else []
+            )
+            transfers.extend(
+                (card_id, player_id if group.get("extraSide") == "hand" else owners[card_id],
+                 "hand" if group.get("extraSide") == "hand" else "exile")
+                for card_id in extra
+            )
+            for card_id, recipient, destination in transfers:
+                error = self.rules_source_reservation_error(target_id, from_zone, card_id)
+                if error:
+                    return error, None
+                if from_zone == "hand" and self.rules_hands_are_immune():
+                    return "Cards in Hand are Immune to cards and effects.", None
+                suspended_instead = any(
+                    self.rules_active_suspension_source(zone) is not None
+                    for zone in {from_zone, destination} if zone in {"deck", "graveyard"}
+                )
+                if not suspended_instead:
+                    error = self.destination_error(owners[card_id], recipient, destination)
+                    if error:
+                        return error, None
+            validated_groups.append((group, target_id, from_zone, owners, top, bottom, extra))
+
+        # No card or metadata changes until every group and transfer is valid.
+        resolved_groups = []
+        for group, target_id, from_zone, owners, top, bottom, extra in validated_groups:
             movements = []
             placed = {"top": [], "bottom": [], "extra": []}
             if from_zone == "deck":

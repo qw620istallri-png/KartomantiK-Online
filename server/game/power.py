@@ -214,6 +214,16 @@ class PowerMixin:
                     modifier += int(passive.get("value") or 0)
         return modifier
 
+    def remember_rules_copy_characteristics(self, departing_item):
+        """Keep Mimer's last values before its target leaves, without relying on a view refresh."""
+        for effect in self.rules_engine.get("ongoingEffects") or []:
+            if (effect.get("kind") == "copy_power_temperament"
+                    and effect.get("duration") == "while_source_on_field"
+                    and (effect.get("target") or {}).get("itemId") == departing_item.get("id")):
+                copied = self.rules_manifestation_characteristics(departing_item)
+                effect["snapshot"] = {**copied,
+                    "basePower": self.rules_manifestation_base_power(departing_item)}
+
     def rules_manifestation_characteristics(self, item, visiting=None):
         """Return current Power and Temperament without confrontation-only suppression."""
         if item is None:

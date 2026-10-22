@@ -78,21 +78,24 @@ class StackChoicesMixin:
             return "Order every Support Manifestation exactly once.", None
         counts = dict(choice.get("_counts") or {})
         moved = []
-        for item_id in reversed(supplied_ids):
+        position = choice.get("position") or "top"
+        for item_id in reversed(supplied_ids) if position == "top" else supplied_ids:
             item = self.find_battlefield_item(item_id)
             if item is None or not item.get("isSupport"):
                 continue
             controller_id = self.rules_item_controller_id(item)
-            movement = self._rules_remove_field_item(
-                item, item.get("ownerId"), "deck", "top"
+            movement = self._rules_remove_field_item_by_effect(
+                item, item.get("ownerId"), "deck", position
             )
             moved.append(movement)
-            counts[controller_id] = counts.get(controller_id, 0) + 1
+            if movement.get("status") in {"moved", "removed_copy"}:
+                counts[controller_id] = counts.get(controller_id, 0) + 1
         self.rules_engine["pendingChoice"] = None
         continuation = self._continue_rules_support_return_groups(
             choice.get("_remainingGroups") or [],
             counts,
             choice.get("_action") or {},
+            position=position, boost_firsts=choice.get("_boostFirsts", True),
         )
         return None, {
             "kind": "support_return_order",

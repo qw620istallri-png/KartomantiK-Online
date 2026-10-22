@@ -186,6 +186,7 @@ class ConfrontationMixin:
                                  release_suspended=True):
         if item not in self.battlefield:
             return {"status": "missing", "itemId": item.get("id")}
+        self.remember_rules_copy_characteristics(item)
         rolls_for_vessel = bool(
             zone == "receptacle"
             and self.rules_item_card_rules(item).get("vesselEntryRoll")
@@ -204,9 +205,14 @@ class ConfrontationMixin:
             if other.get("stackedOn") == item.get("id"):
                 other["stackedOn"] = None
         if item.get("isCopy") or item.get("isTokenCard"):
+            self.rules_engine["effectMemories"] = [memory
+                for memory in self.rules_engine.get("effectMemories") or []
+                if (memory.get("data") or {}).get("itemId") != item.get("id")]
+            released = self.release_rules_suspended_by(item.get("id")) if release_suspended else []
             return {
                 "status": "removed_copy", "itemId": item.get("id"),
                 "cardId": item.get("cardId"), "ownerId": item.get("ownerId"),
+                "releasedSuspended": released,
             }
         vessel_roll = None
         if rolls_for_vessel:
@@ -287,6 +293,7 @@ class ConfrontationMixin:
             if zone in {"deck", "graveyard"} else None
         )
         if suspension_source:
+            self.remember_rules_copy_characteristics(item)
             self.battlefield.remove(item)
             for other in self.battlefield:
                 if other.get("stackedOn") == item.get("id"):

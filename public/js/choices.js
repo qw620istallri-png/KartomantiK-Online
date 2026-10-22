@@ -162,9 +162,11 @@ function rulesAnimationsBusyFor() {
 let rulesChoiceFlipTimer = null;
 
 let rulesDeckReorderRetry = null;
+let rulesChoiceRetry = null;
 
 function renderRulesChoice() {
   rulesDeckReorderRetry = null;
+  rulesChoiceRetry = null;
   const waiting = rulesAnimationsBusyFor();
   if (waiting > 0 && latestState?.rulesEngine?.pendingChoice?.playerId === myPlayerId) {
     $("#rulesChoicePanel").classList.add("hidden");
@@ -175,6 +177,7 @@ function renderRulesChoice() {
   renderResolvePrompt();
   renderOpponentDecidingBanner();
   renderRulesChoiceContent();
+  if (!rulesChoiceRetry) rulesChoiceRetry = () => renderRulesChoice();
   syncRulesChoiceSourceCard();
   const handDrop = rulesHandDropChoice();
   const choicePanel = $("#rulesChoicePanel");
@@ -523,6 +526,7 @@ function renderRulesChoiceScreen() {
     let reorderSent = false;
     // a refused distribution can be corrected and sent again
     rulesDeckReorderRetry = () => { reorderSent = false; showReorderProblem(); };
+    rulesChoiceRetry = rulesDeckReorderRetry;
     const submitReorder = () => {
       if (reorderSent || showReorderProblem()) return;
       reorderSent = true;
@@ -687,7 +691,7 @@ function renderRulesChoiceScreen() {
   if (choice.kind === "support_return_order") {
     options.classList.add("has-order");
     $("#rulesChoiceHeading").textContent = t("rulesSupportOrderHeading");
-    $("#rulesChoiceText").textContent = t("rulesSupportOrderText");
+    $("#rulesChoiceText").textContent = t(choice.position === "bottom" ? "rulesSupportBottomOrderText" : "rulesSupportOrderText");
     let ordered = [...(choice.items || [])];
     const paintOrder = () => {
       options.innerHTML = `
@@ -1077,6 +1081,7 @@ function renderRulesChoiceScreen() {
         </div>
       </section>`).join("");
     let relocationSent = false;
+    rulesChoiceRetry = () => { relocationSent = false; };
     const refreshLanes = () => {
       options.querySelectorAll("[data-rules-relocation-group]").forEach((section) => {
         const interzone = section.querySelector('[data-rules-relocation-strip="interzone"]');

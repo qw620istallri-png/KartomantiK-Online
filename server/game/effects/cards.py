@@ -94,23 +94,21 @@ class CardsEffectsMixin:
             entry.get("itemId") for entry in action.get("targets") or []
             if entry.get("kind") == "card"
         }
-        moved = []
-        for item in list(self.battlefield):
-            if (
-                not item.get("isSupport") or item.get("id") in kept
-                or not item.get("faceUp", True)
-            ):
-                continue
-            movement = self._rules_remove_field_item(
-                item, item.get("ownerId"), "deck", "bottom"
-            )
-            if movement.get("status") in {"moved", "removed_copy"}:
-                moved.append(item["id"])
-        self.prune_rules_ongoing_effects()
-        return {
-            "kind": result.get("kind"),
-            "status": "moved" if moved else "nothing", "itemIds": moved,
-        }
+        groups = []
+        for owner_id in self.players:
+            item_ids = [item["id"] for item in self.battlefield
+                        if item.get("isSupport") and item.get("id") not in kept
+                        and item.get("faceUp", True) and item.get("ownerId") == owner_id]
+            if item_ids:
+                # "In any order": Timidette's controller orders each owner's Deck.
+                groups.append({"controllerId": player_id, "itemIds": item_ids})
+        continuation = self._continue_rules_support_return_groups(
+            groups, {}, action, position="bottom", boost_firsts=False,
+        )
+        if continuation.get("kind") == "support_return_order":
+            return {"kind": "choice_required", "choiceId": continuation["id"],
+                    "choiceKind": "support_return_order", "playerId": player_id}
+        return {"kind": result.get("kind"), "status": "resolved", **continuation}
 
     def _rules_result_optional_discard_up_to(self, action, result, player_id, player):
         hand = player["zones"]["hand"]

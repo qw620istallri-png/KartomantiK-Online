@@ -297,11 +297,11 @@ class DecisionsChoicesMixin:
             or not all(item_id in choice.get("candidateItemIds", []) for item_id in item_ids)
         ):
             return "Choose one valid target for each discarded Will.", None
+        items = [self.find_battlefield_item(item_id) for item_id in item_ids]
+        if any(item is None for item in items):
+            return "A selected Manifestation is no longer on the field.", None
         applied = []
-        for item_id in item_ids:
-            item = self.find_battlefield_item(item_id)
-            if item is None:
-                return "A selected Manifestation is no longer on the field.", None
+        for item_id, item in zip(item_ids, items):
             effect = {
                 "id": new_id(),
                 "actionId": choice.get("id"),

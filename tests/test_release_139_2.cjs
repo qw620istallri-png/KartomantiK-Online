@@ -51,6 +51,58 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
         };
       });
 
+      const bottomOrder = await page.evaluate(() => {
+        window.__setup139();
+        latestState.rulesEngine.pendingChoice = { id: "timid-order", kind: "support_return_order", playerId: "p1",
+          position: "bottom", sourceCardId: "inner-deserts-041",
+          items: [{ itemId: "a", cardId: "r139-1", ownerId: "p2" }, { itemId: "b", cardId: "r139-2", ownerId: "p2" }] };
+        renderRulesChoice();
+        const text = document.querySelector("#rulesChoiceText").textContent;
+        document.querySelector("#rulesSupportOrderConfirm").click();
+        return { text, payload: window.__sent[0] };
+      });
+      assert.match(bottomOrder.text, /bottom|sous les Decks|fondo ai Deck/);
+      assert.deepEqual(bottomOrder.payload.cardIds, ["a", "b"]);
+
+      const retryOptional = await page.evaluate(() => {
+        window.__setup139();
+        latestState.rulesEngine.pendingChoice = { id: "retry-optional", kind: "optional_trigger", playerId: "p1",
+          sourceCardId: "inner-deserts-047", options: ["accept", "decline"] };
+        renderRulesChoice();
+        document.querySelector('[data-rules-optional-trigger="accept"]').click();
+        const locked = document.querySelector('[data-rules-optional-trigger="accept"]').disabled;
+        handleServerMessage({ type: "error", message: "Choose a valid option." });
+        const unlocked = [...document.querySelectorAll('[data-rules-optional-trigger]')].every((b) => !b.disabled);
+        document.querySelector('[data-rules-optional-trigger="accept"]').click();
+        return { locked, unlocked, sent: window.__sent.length };
+      });
+      assert.deepEqual(retryOptional, { locked: true, unlocked: true, sent: 2 });
+
+      await page.evaluate(() => {
+        window.__setup139();
+        latestState.rulesEngine.pendingChoice = { id: "retry-relocation", kind: "confrontation_relocation", playerId: "p1",
+          sourceCardId: "inner-deserts-047", groups: [{ playerId: "p1", itemIds: ["mine"], interzoneSlots: 3 }] };
+        renderRulesChoice();
+      });
+      const moveRelocation = async (side) => {
+        const cardLocator = page.locator('[data-rules-relocation-card="mine"]');
+        await cardLocator.hover();
+        const card = await cardLocator.boundingBox();
+        const lane = await page.locator(`[data-rules-relocation-strip="${side}"]`).boundingBox();
+        await page.mouse.move(card.x + card.width / 2, card.y + card.height / 2);
+        await page.mouse.down();
+        await page.mouse.move(lane.x + lane.width / 2, lane.y + lane.height / 2, { steps: 10 });
+        await page.mouse.up();
+      };
+      await moveRelocation("interzone");
+      assert.equal(await page.evaluate(() => window.__sent.length), 1);
+      await page.evaluate(() => handleServerMessage({ type: "error", message: "Choose a valid destination." }));
+      assert.equal(await page.locator('[data-rules-relocation-strip="interzone"] [data-rules-relocation-card="mine"]').count(), 1);
+      await moveRelocation("deck");
+      assert.equal(await page.evaluate(() => window.__sent.length), 2);
+      assert.deepEqual(await page.evaluate(() => window.__sent[1].option.groups[0]),
+        { playerId: "p1", interzone: [], deckBottom: ["mine"] });
+
       const reservedCost = await page.evaluate(() => {
         window.__setup139({ hand: ["3gqrmx5jegwz8kb_en", "r139-2", "r139-2"] });
         beginRulesBoardAction({ cardId: "3gqrmx5jegwz8kb_en", zone: "hand", handIndex: 0 });

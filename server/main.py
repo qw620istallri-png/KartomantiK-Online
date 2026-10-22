@@ -1506,13 +1506,22 @@ async def handle_message(ws, info, data):
     elif msg_type == "resolve_rules_choice":
         if is_observer or actor_id not in session.players:
             return await send_error(ws, "Observers cannot resolve card choices.")
+        previous_choice_id = (session.rules_engine.get("pendingChoice") or {}).get("id")
         error, result = session.resolve_rules_choice(
             actor_id, data.get("choiceId"), data.get("cardIds"),
             option=data.get("option"), item_id=data.get("itemId"),
             placement=data.get("placement"), targets=data.get("targets"),
         )
         if error:
-            return await send_error(ws, error)
+            await send_error(ws, error)
+            # Some obsolete choices are deliberately cancelled by their
+            # resolver. Publish that cancellation instead of leaving every
+            # client displaying a choice that the server no longer accepts.
+            current_choice_id = (session.rules_engine.get("pendingChoice") or {}).get("id")
+            if current_choice_id != previous_choice_id:
+                session.touch()
+                await broadcast_state(session)
+            return
         triggered_actions = result.pop("triggeredActions", [])
         session.add_log(actor_id, "rules_choice_resolved", result)
         log_rules_triggered_actions(session, triggered_actions, actor_id)
@@ -2501,7 +2510,7 @@ async def handle_message(ws, info, data):
         if session.mode == "tournament" and role not in {"organizer", "judge"} and session.status != "ended":
             return await send_error(ws, "The full tournament log is restricted to organizers and judges during the match.")
         log_role = "judge" if session.mode == "tournament" and session.status == "ended" and role == "player" else role
-        await send_to(ws, session.serialize_log(log_role))
+        await send_to(ws, session.serialize_log(log_role, actor_id))
 
     else:
         await send_error(ws, f"Unknown message type: {msg_type}")

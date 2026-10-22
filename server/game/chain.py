@@ -505,7 +505,8 @@ class ChainMixin:
             effects.append(effect)
         return effects
 
-    def _continue_rules_support_return_groups(self, groups, counts, action):
+    def _continue_rules_support_return_groups(self, groups, counts, action, *,
+                                             position="top", boost_firsts=True):
         groups = [dict(group) for group in groups if group.get("itemIds")]
         while groups:
             group = groups.pop(0)
@@ -514,19 +515,25 @@ class ChainMixin:
                 for item_id in group.get("itemIds") or []
             ]
             items = [item for item in items if item is not None and item.get("isSupport")]
-            if len(items) <= 1:
+            needs_order = any(sum(
+                1 for item in items if item.get("ownerId") == owner_id
+                and not item.get("isCopy") and not item.get("isTokenCard")
+            ) > 1 for owner_id in self.players)
+            if not needs_order:
                 for item in items:
                     controller_id = self.rules_item_controller_id(item)
-                    self._rules_remove_field_item(
-                        item, item.get("ownerId"), "deck", "top"
+                    movement = self._rules_remove_field_item_by_effect(
+                        item, item.get("ownerId"), "deck", position
                     )
-                    counts[controller_id] = counts.get(controller_id, 0) + 1
+                    if movement.get("status") in {"moved", "removed_copy"}:
+                        counts[controller_id] = counts.get(controller_id, 0) + 1
                 continue
             choice = {
                 "id": new_id(),
                 "kind": "support_return_order",
                 "playerId": group.get("controllerId"),
                 "sourceCardId": (action.get("source") or {}).get("cardId"),
+                "position": position,
                 "items": [{
                     "itemId": item.get("id"),
                     "cardId": item.get("cardId"),
@@ -535,12 +542,14 @@ class ChainMixin:
                 "_remainingGroups": groups,
                 "_counts": counts,
                 "_action": action,
+                "_boostFirsts": boost_firsts,
             }
             self.rules_engine["pendingChoice"] = choice
             self.rules_engine["priorityPasses"] = []
             self.rules_engine["priorityPlayerId"] = choice["playerId"]
             return choice
-        effects = self._finish_rules_support_returns(counts, action)
+        effects = self._finish_rules_support_returns(counts, action) if boost_firsts else []
+        self.prune_rules_ongoing_effects()
         self.rules_engine["pendingChoice"] = None
         return {
             "kind": "support_returns_completed",

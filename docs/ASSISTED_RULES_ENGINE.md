@@ -720,7 +720,7 @@ périmètre tant que le mode deux joueurs n'est pas stabilisé.
 
 ### Cartes partielles passées en automatique
 
-Lament, Nameless Arcane, Ononok, Lilitha, Mamelath, Silem, Timidette, Drildrill et Phalanx Tower ont des résultats dédiés (`mill_deck_per_confrontation_manifestation`, `sacrifice_other_confrontation_for_essence`, `exile_source_then_shuffle_limbo_and_interzone`, `destroy_target_tokens_for_controller`, `first_manifestations_to_interzone_tokens`, `stalemate_to_support_disabled`, `timidette_support_to_deck_bottom`, `destroy_persistent_will_refund_essence`, `optional_discard_manifestation_weaken_target`). Timidette range les Supports dans l'ordre du plateau (l'ordre choisi par le joueur n'est pas demandé).
+Lament, Nameless Arcane, Ononok, Lilitha, Mamelath, Silem, Timidette, Drildrill et Phalanx Tower ont des résultats dédiés (`mill_deck_per_confrontation_manifestation`, `sacrifice_other_confrontation_for_essence`, `exile_source_then_shuffle_limbo_and_interzone`, `destroy_target_tokens_for_controller`, `first_manifestations_to_interzone_tokens`, `stalemate_to_support_disabled`, `timidette_support_to_deck_bottom`, `destroy_persistent_will_refund_essence`, `optional_discard_manifestation_weaken_target`). Timidette propose à son contrôleur de choisir l'ordre des Supports sous chaque deck concerné, via `support_return_order` avec `position: bottom`, sans le bonus de Gusted Nebula. Les retours ordonnés appliquent les remplacements de mouvement, dont la suspension de BOB.
 
 ### Cartes partielles, lot 2
 

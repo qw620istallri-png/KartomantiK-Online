@@ -591,6 +591,15 @@ class ZonesMixin:
             ]
         return removed
 
+    def restore_rules_item_memories(self, item):
+        """Memories survive Limbo/Hand visits; copies never inherit the real card's memory."""
+        if not item or item.get("isCopy") or item.get("isTokenCard"):
+            return
+        for memory in self.rules_effect_memories_for(item.get("ownerId"), item.get("cardId")):
+            data = memory.get("data") or {}
+            if data.get("itemId") and self.find_battlefield_item(data["itemId"]) is None:
+                data["itemId"] = item["id"]
+
     def rules_effect_memories_for(self, owner_id, card_id, kind=None):
         return [
             memory for memory in self.rules_engine.get("effectMemories") or []
@@ -718,6 +727,8 @@ class ZonesMixin:
             "suspensionId": entry.get("id"),
             "cardId": entry.get("cardId"),
             "ownerId": entry.get("ownerId"),
+            "fromZone": entry.get("fromZone"),
+            "playableByPlayerId": entry.get("playableByPlayerId"),
             "destination": (
                 "exile" if exile else entry.get("returnZone") or "deck"
             ),

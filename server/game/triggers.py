@@ -1117,6 +1117,7 @@ class TriggersMixin:
     def queue_rules_battlefield_entry_triggers(self, card_id, owner_id, item_id, face_up,
                                                target_player_id=None, event_targets=None,
                                                defer=False):
+        self.restore_rules_item_memories(self.find_battlefield_item(item_id))
         return self.queue_rules_triggers(
             card_id, owner_id, "enters_field", item_id=item_id, face_up=face_up,
             target_player_id=target_player_id, event_targets=event_targets,
