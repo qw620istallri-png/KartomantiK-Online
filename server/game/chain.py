@@ -639,8 +639,7 @@ class ChainMixin:
 
     def rules_item_becomes_first_manifestation(self, item, player_id):
         """Gummo / The Slumberer: enters the Confrontation Zone as First Manifestation."""
-        first_ids = self.rules_engine["firstManifestationItemIds"]
-        if player_id in first_ids or self.rules_engine.get("firstManifestationComplete"):
+        if self.rules_first_manifestation_slot_taken(player_id):
             return False
         self.mark_rules_confrontation_entry(item)
         self._mark_rules_persisted_first(item, player_id)

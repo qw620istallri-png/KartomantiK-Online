@@ -153,7 +153,7 @@ function formatLogEntry(e, options = {}) {
     case "rules_priority_passed": return f("logRulesPriorityPassed");
     case "rules_priority_cancelled": return f("logRulesPriorityCancelled");
     case "rules_action_resolved": {
-      const resolved = f("logRulesActionResolved", { action: d.label, remaining: d.stackDepth });
+      const resolved = d.automatic ? "" : f("logRulesActionResolved", { action: d.label, remaining: d.stackDepth });
       const source = d.source?.cardId
         ? `${translateFor("rulesSourceShort", language)}: ${card(d.source.cardId)}`
         : "";

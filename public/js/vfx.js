@@ -1557,6 +1557,12 @@ function playRulesVfxEventInner(event) {
       return;
     }
     if (entry.type === "rules_action_resolved") {
+      if (entry.details?.automatic && entry.details.effectResult?.kind === "score") {
+        const result = entry.details.effectResult;
+        const delta = Number(result.delta || 0);
+        playRulesVfxImpact(effectTarget || rulesVfxPlayerOrigin(result.playerId), `${delta >= 0 ? "+" : ""}${delta}`, delta < 0 ? "score-loss" : "score");
+        return;
+      }
       if (!entry.details?.immediate) playRulesVfxResolveReveal(entry);
       playRulesVfxStackPulse("resolved");
       playRulesVfxImpact(target, t("rulesVfxResolved"), "resolved");

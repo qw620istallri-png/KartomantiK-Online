@@ -5,8 +5,8 @@
 - Serveur : 450/450
 - Vues et actions joueurs : 450/450
 - Client Chromium : 450/450
-- Capacités : 497 · chemins : 501
-- Actions volontaires déclarées : 183 · messages : 533
+- Capacités : 496 · chemins : 500
+- Actions volontaires déclarées : 183 · messages : 531
 - Étapes génériques supplémentaires : 1265
 
 | Lot | Cartes | Verdict | Manuel | Rapport |

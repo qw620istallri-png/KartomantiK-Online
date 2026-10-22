@@ -8,10 +8,10 @@
     "serverPassed": 450,
     "playerPassed": 450,
     "clientPassed": 450,
-    "abilities": 497,
-    "carriers": 501,
+    "abilities": 496,
+    "carriers": 500,
     "playerActions": 183,
-    "playerMessages": 533,
+    "playerMessages": 531,
     "genericSteps": 1265
   },
   "batches": [
@@ -14129,8 +14129,8 @@
           "manualReview": false,
           "server": {
             "ok": true,
-            "abilities": 3,
-            "carriers": 3,
+            "abilities": 2,
+            "carriers": 2,
             "genericScripts": 0,
             "genericSteps": 0,
             "failures": []
@@ -14138,7 +14138,7 @@
           "players": {
             "ok": true,
             "actionableAbilities": 1,
-            "messages": 3,
+            "messages": 1,
             "views": 2,
             "failures": []
           },

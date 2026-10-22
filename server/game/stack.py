@@ -107,6 +107,7 @@ class StackMixin:
                 "controllerId": controller_id, "cardId": card_id,
                 "x": float(placement.get("x") or 0), "y": float(placement.get("y") or 0),
                 "faceUp": True, "rotation": 0.0, "counters": {},
+                "fieldZone": "field",
                 "rarity": (self.players.get(owner_id) or {}).get("cardRarities", {}).get(card_id),
                 "stackedOn": None,
             }

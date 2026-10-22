@@ -421,7 +421,11 @@ class ActionsMixin:
         }:
             return {"kind": kind}
         if kind == "choose_source_temperament":
-            return {"kind": kind, **({"baseOnly": True} if result.get("baseOnly") else {})}
+            clean = {"kind": kind, **({"baseOnly": True} if result.get("baseOnly") else {})}
+            counters = cls.clean_rules_trigger_result({"kind": "add_counter_source", **(result.get("addCounters") or {})})
+            if counters:
+                clean["addCounters"] = counters
+            return clean
         if kind == "declare_name_top_card_power" and isinstance(result.get("value"), (int, float)):
             return {"kind": kind, "value": max(1, min(int(result["value"]), 99))}
         if kind == "clemency_choice" and isinstance(result.get("value"), (int, float)):
@@ -1381,6 +1385,8 @@ class ActionsMixin:
             return "This ability cannot be activated during the current phase.", None
 
         required_source_field_zone = str(ability.get("sourceFieldZone") or "")
+        if (ability.get("result") or {}).get("kind") in {"field_becomes_first_manifestation", "interzone_becomes_first_manifestation"} and self.rules_first_manifestation_slot_taken(player_id):
+            return "You already have a First Manifestation in the Confrontation Zone.", None
         if required_source_field_zone and source.get("zone") == "battlefield":
             item = self.find_battlefield_item(source.get("itemId"))
             if item is None or self.rules_field_zone(item) != required_source_field_zone:

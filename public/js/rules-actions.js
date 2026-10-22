@@ -50,6 +50,15 @@ function rulesActivatedAbilitiesForItem(item) {
   return item?.gummoCopy ? [...own, ...(activatedAbilitiesByCard.get(item.gummoCopy) || [])] : own;
 }
 
+function rulesFirstManifestationSlotTakenClient() {
+  const rules = latestState?.rulesEngine;
+  return !!rules?.firstManifestationComplete || !!rules?.firstManifestationItemIds?.[myPlayerId]
+    || (latestState?.battlefield || []).some((item) => (
+      battlefieldItemControllerId(item) === myPlayerId && item.fieldZone === "confrontation"
+      && (item.isTokenCard || item.willManifestation || cardsById.get(item.cardId)?.type === "manifestation")
+    ));
+}
+
 function rulesActivatedActionDraft(item, abilityOverride = null) {
   const abilities = rulesActivatedAbilitiesForItem(item);
   const ability = abilityOverride
@@ -74,7 +83,8 @@ function rulesActivatedActionDraft(item, abilityOverride = null) {
     || latestState.rulesEngine.priorityPlayerId !== myPlayerId
     || rules_pregame_active_client()
     || rules_recovery_mulligan_active_client()
-    || !["confrontation_reaction", "resolution_effects", "end_actions"].includes(currentPhaseUi().phase?.id)
+    || (!["confrontation_reaction", "resolution_effects", "end_actions"].includes(currentPhaseUi().phase?.id)
+      && !ability?.phaseIds?.includes(currentPhaseUi().phase?.id))
   ) return null;
   if (!abilities.length) return null;
   if (
@@ -85,6 +95,7 @@ function rulesActivatedActionDraft(item, abilityOverride = null) {
   const source = { cardId: item.cardId, zone: "battlefield", itemId: item.id };
   const draft = buildRulesActionDraft(source, ability);
   if (!draft.encodedAbility) return null;
+  if (["field_becomes_first_manifestation", "interzone_becomes_first_manifestation"].includes(ability.result?.kind) && rulesFirstManifestationSlotTakenClient()) return null;
   if (draft.encodedAbility.sourceFieldZone && item.fieldZone !== draft.encodedAbility.sourceFieldZone) return null;
   if (
     Array.isArray(draft.encodedAbility.sourceZones)
@@ -188,6 +199,12 @@ function beginRulesBoardActivatedAction(item, abilityId = null) {
         (candidate) => candidate.id === abilityId,
       )
     : null;
+  const counterSource = rulesCounterEssenceSources().find((entry) => entry.item.id === item.id && (!abilityId || entry.ability.id === abilityId));
+  if (counterSource && rulesCanSpendCounterEssence()) {
+    closeRulesActionPanel();
+    send({ type: "spend_counter_essence", itemId: item.id, abilityId: counterSource.ability.id });
+    return true;
+  }
   const available = rulesActivatedActionDraft(item, ability);
   if (!available) {
     showToast(t("rulesBoardEffectNotAvailable"), true);
@@ -431,7 +448,7 @@ function trapPlayableClient(cardId) {
   return Boolean(
     rules?.enabled && !isObserver && isTrapCardClient(cardId)
     && rulesFirstManifestationActive()
-    && !(rules.firstManifestationItemIds || {})[myPlayerId]
+    && !rulesFirstManifestationSlotTakenClient()
     && !(rules.firstManifestationValidatedPlayerIds || []).includes(myPlayerId)
     && !(rules.trapPlayerIds || []).includes(myPlayerId)
   );
@@ -492,10 +509,14 @@ function rulesGhostHandCards() {
     // Wandering Veteran: playable in Support from the Limbo, shown in the hand while it can be played
     else if (rulesLimboPermissionPlayable(cardId)) ghosts.push({ cardId, zone: "graveyard", label: t("graveyard"), permission: true });
   }
-  // Ju Lien: the Will that won is played "as if it were in your hand", without tribute
+  // Ju Lien and Concealed Wills: cards playable from the field use the hand's play path.
   for (const item of latestState.battlefield || []) {
-    if (
-      (item.controllerId || item.ownerId) === myPlayerId && item.faceUp
+    if (battlefieldItemControllerId(item) !== myPlayerId) continue;
+    if (item.concealedWill && ["ephemeral_will", "persistent_will"].includes(cardsById.get(item.cardId)?.type)) {
+      const source = rulesFieldWillPlaySource(item);
+      ghosts.push({ cardId: item.cardId, zone: "field_play", itemId: item.id, label: t("rulesConcealedLabel"), playable: limboWillIsPlayable(item.cardId, true) && rulesDraftCanBePaid(buildRulesActionDraft(source)) });
+    } else if (
+      item.faceUp
       && Number(item.playableFree) === Number(latestState.phaseTracker?.turn)
       && limboWillIsPlayable(item.cardId, true)
     ) ghosts.push({ cardId: item.cardId, zone: "field_free", itemId: item.id, label: cardName(JU_LIEN_CARD_ID).split(",")[0] });
@@ -511,6 +532,16 @@ function rulesGhostHandCards() {
     }
   }
   return ghosts;
+}
+
+function rulesFieldWillPlaySource(item, placement = { x: item.x, y: item.y }) {
+  return {
+    cardId: item.cardId, zone: "battlefield", itemId: item.id, playFromField: true,
+    fieldFree: Number(item.playableFree) === Number(latestState?.phaseTracker?.turn) || Boolean(item.concealedFree),
+    surcharge: item.persuaded ? 2 : 0,
+    ...(item.tebebeConcealed ? { fixedHollow: 3 } : {}),
+    placement,
+  };
 }
 
 // Tebebe: a Concealed Manifestation is played into the Interzone for 3 hollow Essences

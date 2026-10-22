@@ -51,6 +51,157 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
         };
       });
 
+      const automaticHonor = await page.evaluate(() => {
+        window.__setup139();
+        latestState.battlefield.push({ id: "honor", cardId: "y4muuingw5y9l7z_en", ownerId: "p1", fieldZone: "field", x: 445, y: 1300, faceUp: true, rotation: 0, counters: {} });
+        latestState.players.p1.score = 10;
+        renderAll();
+        const entry = { type: "rules_action_resolved", actorId: "p1", actorName: "Player 1", details: { controllerId: "p1", automatic: true, label: "Honor and Respect", source: { cardId: "y4muuingw5y9l7z_en", itemId: "honor", zone: "battlefield" }, effectResult: { kind: "score", playerId: "p1", delta: 10, score: 10 }, stackDepth: 0 } };
+        playRulesVfxEvent(captureRulesVfxEvent(entry));
+        return { score: document.querySelector('.rules-vfx-impact-score')?.textContent, stackPulses: document.querySelectorAll('.rules-vfx-stack-pulse').length, stackReveals: document.querySelectorAll('.rules-vfx-resolve-reveal').length, log: formatLogEntry(entry) };
+      });
+      assert.equal(automaticHonor.score, "+10");
+      assert.equal(automaticHonor.stackPulses, 0);
+      assert.equal(automaticHonor.stackReveals, 0);
+      assert.match(automaticHonor.log, /\+10/);
+      assert.doesNotMatch(automaticHonor.log, /passe|restante/);
+      if (process.env.SCREENSHOT_DIR) { fs.mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true }); await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `honor-automatic-${viewport.width}.png`) }); }
+
+      for (const mode of ["power", "essence"]) {
+        await page.evaluate(() => {
+          window.__setup139();
+          latestState.battlefield.push({ id: "sando", cardId: "inner-deserts-114", ownerId: "p1", fieldZone: "interzone", x: 445, y: 1064, faceUp: true, rotation: 0, counters: { Banner: 1 } });
+          renderAll();
+        });
+        const sando = page.locator('.bf-card[data-item-id="sando"]');
+        assert.equal(await sando.locator('.rules-activate-badge').count(), 1);
+        assert.match(await sando.locator('.rules-activate-badge').getAttribute("aria-label"), /Dépenser 1 Bannière/);
+        await sando.locator('.rules-activate-badge').click();
+        assert.equal(await sando.locator('[data-rules-activate-confirm]').count(), 2);
+        assert.match(await sando.locator('.rules-activate-text').textContent(), /1 Bannière/);
+        assert.match(await sando.locator('[data-rules-activate-confirm="sandokaron-banner-power"]').textContent(), /\+3 puissance/);
+        assert.match(await sando.locator('[data-rules-activate-confirm="sandokaron-banner-essence"]').textContent(), /2 Essences colériques/);
+        assert.doesNotMatch(await sando.locator('.rules-activate-actions').textContent(), /Activer/);
+        assert.ok(await sando.locator('.rules-activate-confirm').evaluate((el) => {
+          const rect = el.getBoundingClientRect();
+          const button = el.querySelector('[data-rules-activate-confirm]');
+          return rect.x >= 0 && rect.y >= 0 && rect.right <= innerWidth && rect.bottom <= innerHeight && button.getBoundingClientRect().height >= 34;
+        }));
+        if (mode === "power" && process.env.SCREENSHOT_DIR) { fs.mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true }); await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `sandokaron-${viewport.width}.png`) }); }
+        await sando.locator(`[data-rules-activate-confirm="sandokaron-banner-${mode}"]`).click();
+        if (mode === "power") await page.locator('.bf-card[data-item-id="theirs"]').dispatchEvent("pointerdown");
+        await page.waitForFunction(() => window.__sent.length === 1);
+        assert.equal(await page.evaluate(() => window.__sent[0].abilityId), `sandokaron-banner-${mode}`);
+        await page.evaluate(() => { closeRulesBoardFlow(); latestState.battlefield.find((item) => item.id === "sando").counters.Banner = 0; renderAll(); });
+        assert.equal(await sando.locator('.rules-activate-badge').count(), 0);
+      }
+
+      for (const free of [false, true]) {
+        const requirements = await page.evaluate((free) => {
+          window.__setup139({ phase: "end_actions", field: [{ id: "jigon-will", cardId: "lmx5uff1z53fo0g_en", ownerId: "p1", fieldZone: "field", x: 445, y: 1300, faceUp: false, rotation: 0, counters: {}, concealedWill: true, concealedFree: free }], essences: free ? [] : [["vitreous", 2], ["capricious", 2]] });
+          const item = latestState.battlefield[0];
+          return buildRulesActionDraft(rulesFieldWillPlaySource(item)).paymentRequirements;
+        }, free);
+        assert.deepEqual(requirements, free ? {} : { vitreous: 2, capricious: 2 });
+        const hiddenGhost = page.locator('[data-ghost-card="lmx5uff1z53fo0g_en"][data-ghost-zone="field_play"]');
+        assert.equal(await hiddenGhost.count(), 1);
+        assert.equal(await hiddenGhost.getAttribute("data-ghost-playable"), "true");
+        if (process.env.SCREENSHOT_DIR) { fs.mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true }); await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `jigon-${free ? "free" : "paid"}-${viewport.width}.png`) }); }
+        const ghostRect = await hiddenGhost.boundingBox();
+        const boardRect = await page.locator('#battlefieldWrap').boundingBox();
+        await page.mouse.move(ghostRect.x + ghostRect.width / 2, ghostRect.y + ghostRect.height / 2);
+        await page.mouse.down();
+        await page.mouse.move(boardRect.x + boardRect.width * .55, boardRect.y + boardRect.height * .4, { steps: 12 });
+        await page.mouse.up();
+        await page.waitForFunction(() => window.__sent.length === 1);
+        assert.equal(await page.evaluate(() => window.__sent[0].type), "declare_rules_action");
+        assert.equal(await page.evaluate(() => window.__sent[0].source.zone), "battlefield");
+        assert.equal(await page.evaluate(() => window.__sent[0].source.itemId), "jigon-will");
+      }
+      await page.evaluate(() => {
+        closeRulesBoardFlow();
+        latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "confrontation_reaction");
+        renderAll();
+      });
+      assert.equal(await page.locator('[data-ghost-zone="field_play"][data-ghost-playable="false"]').count(), 1);
+      assert.equal(await page.evaluate(() => limboWillIsPlayable("lmx5uff1z53fo0g_en", true)), false);
+      await page.evaluate(() => { myPlayerId = "p2"; renderAll(); });
+      assert.equal(await page.locator('[data-ghost-zone="field_play"]').count(), 0);
+
+      await page.evaluate(() => {
+        window.__setup139();
+        latestState.battlefield.push({ id: "gem", cardId: "inner-deserts-143", ownerId: "p1", x: 600, y: 1300, fieldZone: "field", faceUp: true, rotation: 0, counters: { Gem: 2, Choleric: 1 }, chosenTemperament: "choleric" });
+        latestState.rulesEngine.actionStack = [{ id: "existing", controllerId: "p2", kind: "triggered_effect", label: "Existing effect", source: { cardId: "r139-1", zone: "battlefield" } }];
+        renderAll();
+      });
+      const gemCard = page.locator('.bf-card[data-item-id="gem"]');
+      assert.equal(await gemCard.locator('.bf-counter').count(), 2);
+      assert.equal(await gemCard.locator('[data-gem-essence] img').count(), 2);
+      assert.equal(await gemCard.locator('.rules-activate-badge').count(), 0);
+      assert.equal((await gemCard.locator('.counters').textContent()).trim(), "");
+      if (process.env.SCREENSHOT_DIR) { fs.mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true }); await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `splendor-counter-icons-${viewport.width}.png`) }); }
+      await gemCard.locator('[data-gem-essence]').first().click();
+      assert.deepEqual(await page.evaluate(() => window.__sent), [{ type: "spend_counter_essence", itemId: "gem", abilityId: "splendor-spends-a-gem-as-excess-essence" }]);
+      assert.equal(await page.evaluate(() => latestState.rulesEngine.actionStack.length), 1);
+      await page.evaluate(() => { latestState.rulesEngine.priorityPlayerId = "p2"; renderAll(); });
+      assert.equal(await gemCard.locator('[data-gem-essence]:disabled').count(), 2);
+
+      await page.evaluate(() => {
+        window.__setup139({ hand: ["inner-deserts-148"], essences: [["hollow", 2]] });
+        latestState.battlefield.push(
+          { id: "support-them", cardId: "r139-2", ownerId: "p2", isSupport: true, fieldZone: "confrontation", faceUp: true, rotation: 0, counters: {}, x: 600, y: 525 },
+          { id: "support-me", cardId: "r139-1", ownerId: "p1", isSupport: true, fieldZone: "confrontation", faceUp: true, rotation: 0, counters: {}, x: 600, y: 800 }
+        );
+        renderAll();
+        beginRulesBoardAction({ cardId: "inner-deserts-148", zone: "hand", handIndex: 0 });
+      });
+      if (process.env.SCREENSHOT_DIR) { fs.mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true }); await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `induce-first-${viewport.width}.png`) }); }
+      assert.match(await page.locator("#rulesFlowInstruction").textContent(), /1\/2/);
+      await page.locator('.bf-card[data-item-id="theirs"]').dispatchEvent("pointerdown");
+      assert.match(await page.locator("#rulesFlowInstruction").textContent(), /2\/2/);
+      assert.equal(await page.locator('.bf-card[data-item-id="theirs"].rules-selected-effect-target').count(), 1);
+      assert.equal(await page.locator('.bf-card[data-item-id="support-me"].rules-valid-target').count(), 0);
+      assert.equal(await page.locator('.bf-card[data-item-id="support-them"].rules-valid-target').count(), 1);
+      if (process.env.SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `induce-second-${viewport.width}.png`) });
+      await page.locator('.bf-card[data-item-id="support-them"]').dispatchEvent("pointerdown");
+      await page.waitForFunction(() => window.__sent.length === 1);
+      assert.deepEqual(await page.evaluate(() => window.__sent[0].targets.map((target) => target.itemId)), ["theirs", "support-them"]);
+      for (const [abilityId, symbol] of [["pidue-choleric-weakens", "choleric"], ["pidue-capricious-silences", "capricious"], ["pidue-melancholic-discards", "melancholic"]]) {
+        await page.evaluate((abilityId) => {
+          window.__setup139();
+          latestState.rulesEngine.pendingChoice = { id: "pidue-target", kind: "trigger_targets", playerId: "p1", sourceCardId: "inner-deserts-129", sourceAbilityId: abilityId, targetRules: abilityId.includes("melancholic") ? { kind: "player", min: 1, max: 1 } : { kind: "card", cardType: "manifestation", zones: ["battlefield"], min: 1, max: 1 } };
+          renderAll();
+        }, abilityId);
+        const selector = symbol === "melancholic" ? ".rules-player-target-panel .rules-choice-effect" : "#rulesFlowInstruction";
+        assert.equal(await page.locator(`${selector} [data-active-ability="${abilityId}"]`).count(), 1);
+        assert.equal(await page.locator(`${selector} .rules-current-effect-label img`).count(), 1);
+        if (process.env.SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `pidue-${symbol}-${viewport.width}.png`) });
+      }
+      await page.evaluate(() => {
+        window.__setup139({ hand: ["r139-1", "r139-2"] });
+        latestState.rulesEngine.pendingChoice = { id: "pidue-discard", kind: "discard_from_hand", playerId: "p1", sourceCardId: "inner-deserts-129", sourceAbilityId: "pidue-melancholic-discards", count: 1 };
+        renderAll();
+      });
+      assert.equal(await page.locator('#rulesChoicePanel .rules-choice-effect [data-active-ability="pidue-melancholic-discards"]').count(), 1);
+      const effectLocales = await page.evaluate(() => {
+        const saved = currentLanguage;
+        const checks = [];
+        for (currentLanguage of ["en", "fr", "it"]) for (const [temperament, suffix] of [["choleric", "weakens"], ["capricious", "silences"], ["phlegmatic", "token"], ["vitreous", "draws"], ["melancholic", "discards"]]) {
+          const effect = rulesActiveAbilityEffect(`pidue-${temperament}-${suffix}`);
+          checks.push(effect?.temperament === temperament && Boolean(effect.text) && !effect.text.includes("\n"));
+        }
+        currentLanguage = saved;
+        window.__setup139();
+        latestState.rulesEngine.pendingChoice = { id: "pidue-order", kind: "simultaneous_stack_order", playerId: "p1", actions: [
+          { actionId: "draw", cardId: "inner-deserts-129", abilityId: "pidue-vitreous-draws" },
+          { actionId: "token", cardId: "inner-deserts-129", abilityId: "pidue-phlegmatic-token" },
+        ] };
+        renderAll();
+        checks.push(new Set([...document.querySelectorAll("#rulesChoiceOptions [data-order-key] > span")].map((entry) => entry.textContent)).size === 2);
+        return checks;
+      });
+      assert.ok(effectLocales.every(Boolean));
+
       const specialPayments = await page.evaluate(() => {
         const field = (id, cardId, extra = {}) => ({ id, cardId, ownerId: "p1", faceUp: true, rotation: 0, fieldZone: "interzone", counters: {}, x: 400, y: 700, ...extra });
         const will = "0coh7nrbvcvan1i_en";
@@ -189,6 +340,31 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
       sent = await page.evaluate(() => window.__sent[0]);
       assert.deepEqual(sent.paymentCardIds, []);
 
+      await page.evaluate(() => {
+        window.__setup139({ phase: "recovery_end", field: [{ id: "jugg", cardId: "inner-deserts-100", ownerId: "p1", fieldZone: "field", faceUp: true, rotation: 0, counters: {}, x: 445, y: 1300 }], essences: [["hollow", 2]] });
+        latestState.rulesEngine.firstManifestationComplete = false;
+        renderAll();
+      });
+      const juggCard = page.locator('.bf-card[data-item-id="jugg"]');
+      assert.equal(await juggCard.evaluate((el) => el.classList.contains("ub-zone-will")), true);
+      assert.equal(await juggCard.locator('.rules-activate-badge').count(), 1);
+      if (process.env.SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `juggernut-recovery-${viewport.width}.png`) });
+      await juggCard.locator('.rules-activate-badge').click();
+      await juggCard.locator('[data-rules-activate-confirm="juggernut-charges-into-confrontation"]').click();
+      await page.waitForFunction(() => window.__sent.length === 1);
+      assert.equal(await page.evaluate(() => window.__sent[0].abilityId), "juggernut-charges-into-confrontation");
+      assert.deepEqual(await page.evaluate(() => window.__sent[0].paymentCardIds), []);
+      const occupiedPm = await page.evaluate(() => {
+        closeRulesBoardFlow();
+        latestState.battlefield.push({ id: "already-cz", cardId: "r139-2", ownerId: "p1", fieldZone: "confrontation", faceUp: true, rotation: 0, counters: {}, x: 445, y: 800 });
+        renderAll();
+        const available = rulesActivatedActionDraft(latestState.battlefield[0]);
+        latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "confrontation_choose");
+        latestState.players.p1.zones.hand = { cards: ["r139-1"], count: 1, owners: { "r139-1": "p1" } };
+        return { activation: !!available, hand: handCardIsPlayable("r139-1") };
+      });
+      assert.deepEqual(occupiedPm, { activation: false, hand: false });
+
       for (const [second, moreTribute] of [[false, false], [true, false], [true, true]]) {
         await page.evaluate(({ moreTribute }) => {
           window.__setup139({ hand: ["inner-deserts-138", moreTribute ? "r139-2" : "r139-5", "r139-3"] });
@@ -241,7 +417,7 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
         renderRulesChoice();
       });
       assert.equal(await page.locator("[data-rules-temperament-option] img").count(), 5);
-      if (process.env.SCREENSHOT_DIR) { fs.mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true }); await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `splendor-${viewport.width}.png`) }); }
+      if (process.env.SCREENSHOT_DIR) { fs.mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true }); await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `splendor-gems-${viewport.width}.png`) }); }
 
       await page.evaluate(() => {
         window.__setup139();

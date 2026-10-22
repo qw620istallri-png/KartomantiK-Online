@@ -122,6 +122,17 @@ class ViewMixin:
             }
             if pending_choice else None
         )
+        if pending_choice_view and pending_choice.get("sourceCardId"):
+            # Choices keep private action data server-side, but the public
+            # ability id lets the UI identify one branch of a multi-effect card.
+            action = pending_choice.get("_triggerAction") or pending_choice.get("_action")
+            if not action:
+                action = next((entry for entry in [*self.rules_engine["actionStack"], self.rules_engine.get("lastResolvedAction")]
+                               if entry and entry.get("id") == pending_choice.get("actionId")), None)
+            if action and (action.get("source") or {}).get("cardId") == pending_choice["sourceCardId"]:
+                ability_id = (action.get("ability") or {}).get("id")
+                if ability_id:
+                    pending_choice_view["sourceAbilityId"] = ability_id
         if (
             pending_choice_view
             and pending_choice.get("kind") in {
@@ -227,6 +238,8 @@ class ViewMixin:
             }
             if item.get("fieldZone"):
                 entry["fieldZone"] = item["fieldZone"]
+            elif self.rules_engine.get("enabled") and self.card_rules.get(card_id, {}).get("playAsPersistentWill") and self.rules_field_zone(item) == "field":
+                entry["fieldZone"] = "field"
             elif self.rules_engine.get("enabled") and self.rules_field_zone(item) == "confrontation":
                 # a First Manifestation stands in the Confrontation (rules_field_zone):
                 # say so, so every client check reads the same zone (Unruly Flail...)

@@ -365,6 +365,13 @@ def _run_player_action(card_id, ability):
         ),
         "placement": {"x": 0, "y": 0},
     }
+    if (
+        (ability.get("result") or {}).get("kind") == "create_essence"
+        and (ability.get("result") or {}).get("temperament") == "source_chosen"
+        and ability.get("removeCountersFromSource")
+    ):
+        session.find_battlefield_item(source.get("itemId"))["chosenTemperament"] = "phlegmatic"
+        message = {"type": "spend_counter_essence", "itemId": source.get("itemId"), "abilityId": ability["id"]}
     error, messages = asyncio.run(_send_action(session, actor, message))
     if error:
         failures.append(f"action joueur {ability.get('id')}: {error}")

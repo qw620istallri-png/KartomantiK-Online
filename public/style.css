@@ -1344,6 +1344,10 @@ body.hand-drawing #myHandTray .hand-card { cursor: progress; }
   box-shadow: 0 9px 22px #000a; font-size: 14px; font-weight: 800;
 }
 .rules-activate-confirm.hidden { display: none; }
+.rules-activate-confirm[popover] {
+  position: fixed; margin: 0; right: auto; bottom: auto;
+  max-width: calc(100vw - 16px); max-height: calc(100dvh - 16px); overflow-y: auto;
+}
 .rules-activate-confirm button { min-height: 32px; padding: 5px 9px; border-color: #86dcff; background: #dff7ff; color: #102434; font-size: 14px; }
 .rules-activate-confirm .rules-activate-cancel { width: 32px; padding: 0; background: transparent; color: #dff7ff; }
 @keyframes rules-activate-ready {
@@ -1387,6 +1391,11 @@ body.hand-drawing #myHandTray .hand-card { cursor: progress; }
   display: grid; place-items: center; font-size: 14px; font-weight: 900; color: var(--carbon); box-shadow: 1px 2px 4px #0004;
 }
 .bf-counter-temp { background: #5aa9c9; border-color: #2f7392; color: #fff; }
+.bf-gem-essence { padding: 2px; cursor: pointer; }
+.bf-gem-essence img { width: 24px; height: 24px; object-fit: contain; }
+.bf-gem-essence:disabled { opacity: 1; cursor: default; }
+.bf-gem-essence:not(:disabled):hover { border-color: var(--carbon); }
+.bf-gem-essence:focus-visible { outline: 2px solid var(--ivory); outline-offset: 2px; }
 .bf-token {
   position: absolute; width: 52px; height: 52px; border-radius: 50%; display: grid; place-items: center;
   border: 3px solid var(--carbon); box-shadow: 2px 3px 6px #0004; cursor: grab; font-size: 14px; font-weight: 900; color: #fff; text-align: center;
@@ -3737,6 +3746,10 @@ body.flow-uses-hand .hand-area { z-index: 90; }
 .game-end-card h2 { text-shadow: 0 3px 14px #000; }
 .game-end-close { border: 0; background: transparent; font-size: 22px; padding: 0; min-height: 0; display: grid; place-items: center; line-height: 1; }
 .rules-temperament-choice-symbol { display: block; width: 32px; height: 32px; object-fit: contain; margin: 0 auto 8px; }
+.rules-current-effect { display: block; }
+.rules-current-effect-label { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 8px; color: var(--gold-pale, #f0d98f); font-size: 14px; }
+.rules-current-effect-label img { width: 24px; height: 24px; object-fit: contain; flex: none; }
+.rules-selected-effect-target { outline: 3px solid var(--gold-pale, #f0d98f); outline-offset: 4px; }
 #rulesChoicePanel.effect-screen.temperament-screen .rules-choice-options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
 #rulesChoicePanel.effect-screen.temperament-screen .rules-choice-destination { min-width: 0; width: 100%; padding: 10px 6px; }
 @media (max-height: 600px) {

@@ -11764,24 +11764,23 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         session, p1, _p2 = self.make_session()
         session.card_rules[honor] = {
             "type": "persistent_will",
-            "triggeredAbilities": self.ABILITIES[honor],
+            "passiveEffects": [ability["passiveEffect"] for ability in self.ABILITIES[honor]],
         }
         session.battlefield = [
             self.field_item("honor", "p1", honor, field_zone="field"),
             self.field_item("a", "p1", "m-1"),
             self.field_item("foe", "p2", "m-3"),
         ]
-        self.set_outcome(session, "p1", "p2", "a", "foe")
-        queued = [
-            a for a in session.queue_rules_confrontation_win_triggers(defer=True)
-            if a["source"]["cardId"] == honor
-        ]
-        self.assertEqual(len(queued), 1)
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_compare")
+        session.rules_engine["forcedConfrontationWinnerId"] = "p1"
+        session.prepare_rules_confrontation_result()
+        self.assertEqual(p1["score"], 10)
+        self.assertEqual(session.queue_rules_confrontation_win_triggers(defer=True), [])
+        self.assertEqual(session.rules_engine["actionStack"], [])
         session.battlefield.append(self.field_item("b", "p1", "m-2"))
-        self.assertEqual([
-            a for a in session.queue_rules_confrontation_win_triggers(defer=True)
-            if a["source"]["cardId"] == honor
-        ], [])
+        session.rules_engine["confrontationResult"] = None
+        session.prepare_rules_confrontation_result()
+        self.assertEqual(p1["score"], 10)
 
     def test_soul_borer_drains_the_vessel_owner_every_turn(self):
         borer = "wfxxi0znaojxiti_en"
@@ -11838,6 +11837,18 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         )[0])
         self.assertEqual(session.rules_engine["actionStack"], [])
         self.assertEqual(p1["zones"]["graveyard"], ["m-3"])
+
+    def test_sallow_thief_does_not_trigger_without_an_eligible_vessel_manifestation(self):
+        for cards in [{}, {"m-6": "p2"}, {"field-will": "p1"}]:
+            with self.subTest(cards=cards):
+                session, p1, p2 = self.make_session(self.SALLOW_THIEF)
+                self.put(p2, "receptacle", cards)
+                self.put(p1, "receptacle", {"m-7": "p1"})
+                session.battlefield = [self.field_item("thief", "p1", self.SALLOW_THIEF)]
+                self.set_outcome(session, "p1", "p2", "thief")
+                session.queue_rules_confrontation_win_triggers()
+                self.assertIsNone(session.rules_engine["pendingChoice"])
+                self.assertEqual(session.rules_engine["actionStack"], [])
 
     def test_sallow_thief_retrieves_only_own_cards_from_an_opponent_vessel(self):
         session, p1, p2 = self.make_session(self.SALLOW_THIEF)
@@ -15061,9 +15072,8 @@ class LotTwentySevenTests(RealCardRulesCase):
         session, p1, p2 = self.setup_game()
         gem = self.item("gem", "p1", self.SPLENDOR, "field")
         session.battlefield = [gem]
-        self.act(session, self.SPLENDOR, "splendor-gets-gem-counters", gem)
-        self.assertEqual(gem["counters"]["Gem"], 2)
         self.act(session, self.SPLENDOR, "splendor-chooses-a-base-temperament", gem)
+        self.assertEqual(gem["counters"]["Gem"], 2)
         choice = session.rules_engine["pendingChoice"]
         self.assertEqual(choice["kind"], "temperament_choice")
         self.assertNotIn("hollow", choice["options"])

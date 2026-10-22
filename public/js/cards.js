@@ -68,13 +68,29 @@ function printedTributeRequirements(card) {
   return requirements;
 }
 
+function rulesIsCounterEssenceAbility(ability) {
+  return ability?.result?.kind === "create_essence"
+    && ability.result.temperament === "source_chosen"
+    && !!ability.removeCountersFromSource?.name;
+}
+
+function rulesCanSpendCounterEssence() {
+  const engine = latestState?.rulesEngine;
+  const choice = engine?.pendingChoice;
+  const ownPayment = choice?.playerId === myPlayerId
+    && ["stack_counter_payment", "effect_memory_payment", "effect_payment", "immediate_effect_payment"].includes(choice.kind);
+  return !isObserver && engine?.enabled && !latestState?.ended
+    && !rules_pregame_active_client()
+    && (ownPayment || (!choice && engine.priorityPlayerId === myPlayerId));
+}
+
 function rulesCounterEssenceSources() {
   return (latestState?.battlefield || []).flatMap((item) => {
     if (battlefieldItemControllerId(item) !== myPlayerId || !item.faceUp || item.effectsDisabled || item.effectsInactive || item.fieldZone === "stalemate" || !item.chosenTemperament) return [];
     return (activatedAbilitiesByCard.get(item.cardId) || []).flatMap((ability) => {
       const result = ability.result || {};
       const cost = ability.removeCountersFromSource || {};
-      if (result.kind !== "create_essence" || result.temperament !== "source_chosen" || !cost.name) return [];
+      if (!rulesIsCounterEssenceAbility(ability)) return [];
       const held = Object.entries(item.counters || {}).filter(([key]) => key.toLowerCase() === cost.name.toLowerCase()).reduce((sum, [, value]) => sum + Number(value || 0), 0);
       const count = Math.floor(held / Number(cost.amount || 1));
       return count > 0 ? [{ item, ability, count, temperament: item.chosenTemperament, amount: count * Number(result.value || 1) }] : [];

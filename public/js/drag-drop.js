@@ -413,11 +413,9 @@ function resolveDrop(ctx, clientX, clientY) {
       beginRulesBoardAction({ cardId: ctx.cardId, zone: "suspended", suspensionId: ctx.suspensionId, placement: { x: logical.x, y: logical.y } });
       return;
     }
-    if (latestState?.rulesEngine?.enabled && ctx.fromZone === "field_free" && ctx.ghostHostId) {
-      beginRulesBoardAction({
-        cardId: ctx.cardId, zone: "battlefield", itemId: ctx.ghostHostId, playFromField: true, fieldFree: true,
-        placement: { x: logical.x, y: logical.y },
-      });
+    if (latestState?.rulesEngine?.enabled && ["field_free", "field_play"].includes(ctx.fromZone) && ctx.ghostHostId) {
+      const item = latestState.battlefield.find((entry) => entry.id === ctx.ghostHostId && entry.cardId === ctx.cardId);
+      if (item) beginRulesBoardAction(rulesFieldWillPlaySource(item, { x: logical.x, y: logical.y }));
       return;
     }
     if (latestState?.rulesEngine?.enabled && ctx.fromZone === "attached" && ctx.ghostHostId) {

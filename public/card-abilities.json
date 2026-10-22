@@ -2132,8 +2132,7 @@
   "y4muuingw5y9l7z_en": [
     {
       "id": "gain-ten-when-winning-with-a-single-manifestation",
-      "trigger": {"event": "player_wins_confrontation", "eventController": "owner", "controllerConfrontationManifestations": 1},
-      "result": {"kind": "score_owner", "value": 10}
+      "passiveEffect": {"kind": "solo_confrontation_win_points", "value": 10}
     }
   ],
   "wfxxi0znaojxiti_en": [
@@ -5051,18 +5050,6 @@
   ],
   "inner-deserts-143": [
     {
-      "id": "splendor-gets-gem-counters",
-      "trigger": {
-        "event": "enters_field",
-        "visibility": "face_up"
-      },
-      "result": {
-        "kind": "add_counter_source",
-        "counter": "Gem",
-        "value": 2
-      }
-    },
-    {
       "id": "splendor-chooses-a-base-temperament",
       "trigger": {
         "event": "enters_field",
@@ -5070,7 +5057,8 @@
       },
       "result": {
         "kind": "choose_source_temperament",
-        "baseOnly": true
+        "baseOnly": true,
+        "addCounters": {"counter": "Gem", "value": 2}
       }
     },
     {

@@ -10,6 +10,21 @@ function closeRulesChoicePanel(force = false) {
 
 // Every decision popup shows the card that asks for the decision; hovering it
 // shows the card at full reading size (see CHOICE_PREVIEW_SELECTOR).
+function rulesActiveAbilityEffect(abilityId) {
+  const temperament = String(abilityId || "").match(/^pidue-(choleric|capricious|phlegmatic|vitreous|melancholic)-/)?.[1];
+  if (!temperament) return null;
+  const symbols = { choleric: "🔥", capricious: "⚡", phlegmatic: "🌿", vitreous: "💧", melancholic: "🔮" };
+  const line = String(cardField(cardsById.get("inner-deserts-129"), "effect") || "").split(/\r?\n/).find((entry) => entry.includes(symbols[temperament]));
+  return line ? { temperament, text: line.slice(line.indexOf(",") + 1).trim() } : null;
+}
+
+function rulesActiveAbilityMarkup(abilityId) {
+  const effect = rulesActiveAbilityEffect(abilityId);
+  if (!effect) return "";
+  const temperament = t(`temperament${effect.temperament[0].toUpperCase()}${effect.temperament.slice(1)}`);
+  return `<span class="rules-current-effect" data-active-ability="${esc(abilityId)}"><strong class="rules-current-effect-label"><img src="${esc(temperamentSymbol(effect.temperament))}" alt="">${esc(rulesText("rulesCurrentEffect", { temperament }))}</strong><span>${esc(effect.text)}</span></span>`;
+}
+
 function syncRulesChoiceSourceCard() {
   const head = document.querySelector("#rulesChoicePanel .rules-choice-head");
   if (!head) return;
@@ -34,7 +49,9 @@ function syncRulesChoiceSourceCard() {
   if (effectText) {
     const effect = document.createElement("p");
     effect.className = "rules-choice-effect";
-    effect.textContent = effectText;
+    const activeEffect = rulesActiveAbilityMarkup(choice?.sourceAbilityId);
+    if (activeEffect) effect.innerHTML = activeEffect;
+    else effect.textContent = effectText;
     head.insertAdjacentElement("afterend", effect);
   }
 }
@@ -269,7 +286,7 @@ function renderRulesChoiceScreen() {
   options.classList.remove(
     "has-destination-card", "has-order", "has-card-picker", "is-reveal-hand", "is-destination-screen",
   );
-  panel.classList.remove("cards-screen", "destination-screen", "hand-drop", "replace-screen", "chain-screen", "player-screen", "hand-swap", "temperament-screen");
+  panel.classList.remove("cards-screen", "destination-screen", "hand-drop", "replace-screen", "chain-screen", "player-screen", "hand-swap", "temperament-screen", "deck-reorder-screen");
   if (pendingTriggeredPlacement) {
     const { payload } = pendingTriggeredPlacement;
     $("#rulesChoiceHeading").textContent = t("rulesChooseTriggerTargetHeading");
@@ -394,7 +411,7 @@ function renderRulesChoiceScreen() {
       return "pool";
     };
     // cards-only screen: the cards to place wait in the middle, the destinations sit on the right
-    panel.classList.add("cards-screen");
+    panel.classList.add("cards-screen", "deck-reorder-screen");
     const cardMarkup = (cardId) => `
       <div class="rules-reorder-card rules-choice-card" data-rules-reorder-card="${esc(cardId)}" title="${esc(cardName(cardId))}">
         <img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"><b></b>
@@ -1161,7 +1178,7 @@ function renderRulesChoiceScreen() {
         <div class="rules-drag-order">
           ${ordered.map((action, index) => dragOrderCardHtml(
             action.actionId, action.cardId,
-            `${action.label || cardName(action.cardId)}${action.immediate ? ` · ${t("rulesImmediateLabel")}` : ""}`,
+              `${rulesActiveAbilityEffect(action.abilityId)?.text || action.label || cardName(action.cardId)}${action.immediate ? ` · ${t("rulesImmediateLabel")}` : ""}`,
             index + 1,
           )).join("")}
         </div>

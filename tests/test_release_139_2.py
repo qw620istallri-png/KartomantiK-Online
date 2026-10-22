@@ -65,6 +65,8 @@ class Release1392Tests(game_tests.RealCardRulesCase):
         result = session.resolve_rules_top_action()["action"]["sourceResolution"]
         item_id = result["itemId"]
         session.phase_tracker["index"] = ADVANCED_PHASES.index("recovery_end")
+        session.battlefield = [item for item in session.battlefield if item["id"] == item_id]
+        session.rules_engine["firstManifestationComplete"] = False
         session.rules_engine["firstManifestationItemIds"] = {}
         session.rules_engine["priorityPlayerId"] = "p1"
         error, _ = session.declare_rules_action("p1", "Charge", kind="activated_effect", source={"zone": "battlefield", "itemId": item_id, "cardId": self.JUGGERNUT}, ability_id="juggernut-charges-into-confrontation")

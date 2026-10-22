@@ -689,6 +689,30 @@ function initHandResize() {
 
 // ---------------------------------------------------------------- battlefield
 
+function rulesCardCountersMarkup(item, ongoingEffects, printedPower) {
+  const ability = rulesActivatedAbilitiesForItem(item).find(rulesIsCounterEssenceAbility);
+  if (!ability) return counterCircles(item.counters, ongoingEffects, item.effectivePower, printedPower);
+  const counters = { ...(item.counters || {}) };
+  const counterName = ability.removeCountersFromSource.name.toLowerCase();
+  let count = 0;
+  for (const key of Object.keys(counters)) {
+    if (key.toLowerCase() === counterName) {
+      count += Number(counters[key] || 0);
+      delete counters[key];
+    } else if (key.toLowerCase() === item.chosenTemperament) {
+      // Older states used a numeric counter to display the chosen colour.
+      delete counters[key];
+    }
+  }
+  const canSpend = rulesCanSpendCounterEssence()
+    && rulesCounterEssenceSources().some((entry) => entry.item.id === item.id && entry.ability.id === ability.id);
+  const temperament = item.chosenTemperament || "hollow";
+  const label = `${t("rulesUseEssenceCounter")} · ${t(`temperament${temperament[0].toUpperCase()}${temperament.slice(1)}`)}`;
+  const gems = Array.from({ length: Math.max(0, Math.min(50, count)) }, () =>
+    `<button type="button" class="bf-counter bf-gem-essence" data-gem-essence="${esc(ability.id)}" title="${esc(label)}" aria-label="${esc(label)}" ${canSpend ? "" : "disabled"}><img src="${esc(temperamentSymbol(temperament))}" alt=""></button>`).join("");
+  return counterCircles(counters, ongoingEffects, item.effectivePower, printedPower) + gems;
+}
+
 function counterCircles(
   counters, ongoingEffects = [], effectivePower = null,
   printedPower = null,
@@ -836,19 +860,22 @@ function rulesControllerMarkerMarkup(item) {
 
 function rulesActivateMarkerMarkup(item) {
   const available = rulesActivatedAbilitiesForItem(item)
+    .filter((ability) => !rulesIsCounterEssenceAbility(ability))
     .map((ability) => ({
       ability,
       draft: rulesActivatedActionDraft(item, ability),
     }))
     .filter((entry) => entry.draft);
   if (!available.length) return "";
-  const baseLabel = rulesText("rulesActivateCardEffect", { card: cardName(item.cardId) });
-  const printedEffect = cardField(cardsById.get(item.cardId), "effect");
+  const bannerModes = { "sandokaron-banner-power": "rulesBannerPower", "sandokaron-banner-essence": "rulesBannerEssence" };
+  const bannerChoice = available.every(({ ability }) => Object.hasOwn(bannerModes, ability.id));
+  const baseLabel = bannerChoice ? t("rulesSpendBanner") : rulesText("rulesActivateCardEffect", { card: cardName(item.cardId) });
+  const printedEffect = bannerChoice ? t("rulesBannerChoice") : cardField(cardsById.get(item.cardId), "effect");
   const label = printedEffect ? `${baseLabel} — ${printedEffect}` : baseLabel;
   return `<button type="button" class="rules-activate-badge" title="${esc(label)}" aria-label="${esc(label)}">
     <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5 5.8 13h5.6l-.6 8.5L18.4 11h-5.7l.5-8.5Z"></path></svg>
   </button>
-  <div class="rules-activate-confirm hidden" role="group" aria-label="${esc(t("confirmQuestion"))}">
+  <div class="rules-activate-confirm hidden" role="group" aria-label="${esc(t(bannerChoice ? "rulesSpendBanner" : "confirmQuestion"))}">
     <header>
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.2 2.5 5.8 13h5.6l-.6 8.5L18.4 11h-5.7l.5-8.5Z"></path></svg>
       <b>${esc(cardName(item.cardId))}</b>
@@ -858,7 +885,7 @@ function rulesActivateMarkerMarkup(item) {
     <div class="rules-activate-actions">
       ${available.map(({ ability }, index) => `
         <button type="button" data-rules-activate-confirm="${esc(ability.id)}">
-          ${esc(ability.immediate ? t("rulesImmediateLabel") : (available.length > 1 ? `${t("rulesActivateShort")} ${index + 1}` : t("rulesActivateShort")))}
+          ${esc(bannerModes[ability.id] ? t(bannerModes[ability.id]) : ability.immediate ? t("rulesImmediateLabel") : (available.length > 1 ? `${t("rulesActivateShort")} ${index + 1}` : t("rulesActivateShort")))}
         </button>`).join("")}
     </div>
   </div>`;
@@ -867,12 +894,24 @@ function rulesActivateMarkerMarkup(item) {
 let rulesActivationDismiss = null;
 
 function closeRulesActivationConfirmation() {
-  $$(".rules-activate-confirm").forEach((element) => element.classList.add("hidden"));
+  $$(".rules-activate-confirm").forEach((element) => {
+    if (typeof element.hidePopover === "function" && element.matches(":popover-open")) element.hidePopover();
+    element.classList.add("hidden");
+  });
   if (rulesActivationDismiss) document.removeEventListener("pointerdown", rulesActivationDismiss);
   rulesActivationDismiss = null;
 }
 
 function wireRulesActivateMarker(cardElement, item) {
+  cardElement.querySelectorAll("[data-gem-essence]").forEach((counter) => {
+    counter.addEventListener("pointerdown", (event) => event.stopPropagation());
+    counter.addEventListener("click", (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      cardElement.querySelectorAll("[data-gem-essence]").forEach((button) => { button.disabled = true; });
+      beginRulesBoardActivatedAction(item, counter.dataset.gemEssence);
+    });
+  });
   const button = cardElement.querySelector(".rules-activate-badge");
   const confirmation = cardElement.querySelector(".rules-activate-confirm");
   if (!button) return;
@@ -892,6 +931,14 @@ function wireRulesActivateMarker(cardElement, item) {
     event.stopPropagation();
     closeRulesActivationConfirmation();
     confirmation.classList.remove("hidden");
+    if (typeof confirmation.showPopover === "function") {
+      confirmation.setAttribute("popover", "manual");
+      confirmation.showPopover();
+      const anchor = button.getBoundingClientRect();
+      const popup = confirmation.getBoundingClientRect();
+      confirmation.style.left = `${Math.max(8, Math.min(innerWidth - popup.width - 8, anchor.right + 8))}px`;
+      confirmation.style.top = `${Math.max(8, Math.min(innerHeight - popup.height - 8, anchor.bottom - popup.height))}px`;
+    }
     rulesActivationDismiss = (outsideEvent) => {
       if (confirmation.contains(outsideEvent.target) || button.contains(outsideEvent.target)) return;
       closeRulesActivationConfirmation();
@@ -1177,7 +1224,7 @@ function renderBattlefield() {
     const printedPower = item.isTokenCard
       ? item.power
       : item.willManifestation ? 0 : cardsById.get(item.cardId)?.power;
-    el.innerHTML = `<div class="bf-card-inner" style="transform:rotate(${item.rotation || 0}deg)">${inner}${item.faceUp && item.cardId ? automationCoverageBadgeHtml(item.cardId) : ""}${item.effectsDisabled ? `<span class="rules-effects-disabled-badge" title="${esc(t("rulesEffectsDisabled"))}" aria-label="${esc(t("rulesEffectsDisabled"))}">Ø</span>` : ""}${item.isCopy ? `<span class="copy-card-stamp">${esc(t("copyStamp"))}</span>` : ""}</div><div class="counters">${counterCircles(item.counters, ongoingEffects, item.effectivePower, printedPower)}</div>${rulesFieldZoneMarkerMarkup(item.fieldZone)}${rulesControllerMarkerMarkup(item)}${item.isSupport ? `<span class="rules-support-badge" title="${esc(t("playInSupport"))}" aria-label="${esc(t("playInSupport"))}">S</span>` : ""}${rulesEffectMarkerMarkup(ongoingEffects)}${rulesActivateMarkerMarkup(item)}`;
+    el.innerHTML = `<div class="bf-card-inner" style="transform:rotate(${item.rotation || 0}deg)">${inner}${item.faceUp && item.cardId ? automationCoverageBadgeHtml(item.cardId) : ""}${item.effectsDisabled ? `<span class="rules-effects-disabled-badge" title="${esc(t("rulesEffectsDisabled"))}" aria-label="${esc(t("rulesEffectsDisabled"))}">Ø</span>` : ""}${item.isCopy ? `<span class="copy-card-stamp">${esc(t("copyStamp"))}</span>` : ""}</div><div class="counters">${rulesCardCountersMarkup(item, ongoingEffects, printedPower)}</div>${rulesFieldZoneMarkerMarkup(item.fieldZone)}${rulesControllerMarkerMarkup(item)}${item.isSupport ? `<span class="rules-support-badge" title="${esc(t("playInSupport"))}" aria-label="${esc(t("playInSupport"))}">S</span>` : ""}${rulesEffectMarkerMarkup(ongoingEffects)}${rulesActivateMarkerMarkup(item)}`;
     if (!isObserver) bindCardDragSource(el, { kind: "battlefield", itemId: item.id });
     el.addEventListener("contextmenu", (event) => {
       event.preventDefault();
@@ -1273,12 +1320,7 @@ function renderBattlefield() {
         items.push({
           keepInBeta: true,
           label: fieldFree ? t("rulesPlayFreeFromField") : item.persuaded ? t("rulesPlayPersuaded") : t("rulesPlayConcealed"),
-          onSelect: () => beginRulesBoardAction({
-            cardId: item.cardId, zone: "battlefield", itemId: item.id, playFromField: true, fieldFree,
-            surcharge: item.persuaded ? 2 : 0,
-            ...(item.tebebeConcealed ? { fixedHollow: 3 } : {}),
-            placement: { x: item.x, y: item.y },
-          }),
+          onSelect: () => beginRulesBoardAction(rulesFieldWillPlaySource(item)),
         });
       }
       if (item.faceUp) items.push({ label: t("copyCard"), onSelect: () => send({ type: "copy_card", itemId: item.id }) });

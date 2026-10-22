@@ -254,6 +254,8 @@ class PriorityMixin:
         if phase_ids and phase_id not in phase_ids:
             return True
         result_kind = (ability.get("result") or {}).get("kind")
+        if result_kind in {"field_becomes_first_manifestation", "interzone_becomes_first_manifestation"} and self.rules_first_manifestation_slot_taken(player_id):
+            return True
         if result_kind in {"grant_source_support_until_end_turn", "stalemate_target_grant_source_support"} and phase_id != "confrontation_reaction":
             # Support only matters while Supports can still be played
             return True
@@ -658,6 +660,13 @@ class PriorityMixin:
         )
         if ability_error:
             return ability_error, None
+        if (
+            kind == "activated_effect" and clean_ability
+            and (clean_ability.get("result") or {}).get("kind") == "create_essence"
+            and (clean_ability.get("result") or {}).get("temperament") == "source_chosen"
+            and clean_ability.get("removeCountersFromSource")
+        ):
+            return "Use this card's Essence counters directly, without the Stack.", None
         payment_error, clean_payment = self.rules_action_payment(
             player_id,
             kind,

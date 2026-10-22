@@ -655,6 +655,8 @@ class PowerEffectsMixin:
         item = self.find_battlefield_item(source.get("itemId"))
         if item is None:
             return {"kind": result.get("kind"), "status": "source_missing"}
+        if result.get("addCounters"):
+            self._rules_result_add_counter_source(action, result["addCounters"], player_id, player)
         choice_id = new_id()
         self.rules_engine["pendingChoice"] = {
             "id": choice_id, "kind": "temperament_choice", "playerId": player_id,

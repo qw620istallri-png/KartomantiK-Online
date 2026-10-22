@@ -336,6 +336,38 @@ class PregameMixin:
             and not self.rules_engine["firstManifestationComplete"]
         )
 
+    def rules_existing_first_manifestation(self, player_id):
+        return next((
+            item for item in sorted(self.battlefield, key=lambda entry: int(entry.get("confrontationOrder") or 0))
+            if self.rules_item_controller_id(item) == player_id
+            and self.rules_field_zone(item) == "confrontation"
+            and (item.get("isTokenCard") or self.rules_item_card_rules(item).get("type") == "manifestation")
+        ), None)
+
+    def rules_first_manifestation_slot_taken(self, player_id):
+        return bool(
+            self.rules_engine.get("firstManifestationComplete")
+            or player_id in self.rules_engine["firstManifestationItemIds"]
+            or self.rules_existing_first_manifestation(player_id)
+        )
+
+    def register_rules_existing_first_manifestations(self):
+        """Cards already in the CZ before selection occupy their controller's PM slot."""
+        selected = self.rules_engine["firstManifestationItemIds"]
+        validated = self.rules_engine["firstManifestationValidatedPlayerIds"]
+        for player_id in self.players:
+            if player_id in selected:
+                continue
+            item = self.rules_existing_first_manifestation(player_id)
+            if item is not None:
+                item["isSupport"] = False
+                selected[player_id] = item["id"]
+                if player_id not in validated:
+                    validated.append(player_id)
+        if len(self.players) >= NUM_SEATS and all(pid in selected and pid in validated for pid in self.players):
+            self.rules_engine["firstManifestationComplete"] = False
+            self.validate_first_manifestation(next(iter(self.players)))
+
     def _rules_wants_first_manifestation_after(self, player_id):
         if player_id in (self.rules_engine.get("trapPlayerIds") or []):
             return True
@@ -378,7 +410,7 @@ class PregameMixin:
         if player is None or card_id not in player["zones"]["hand"] or not self.rules_is_trap_card(card_id):
             return "Choose a Trap from your Hand.", None
         if (
-            player_id in self.rules_engine["firstManifestationItemIds"]
+            self.rules_first_manifestation_slot_taken(player_id)
             or player_id in self.rules_engine["firstManifestationValidatedPlayerIds"]
             or player_id in self.rules_engine["trapPlayerIds"]
         ):
@@ -421,7 +453,8 @@ class PregameMixin:
         if item.get("ownerId") != player_id or not self.rules_card_can_be_first_manifestation(item.get("cardId"), player_id):
             return "Your first play must be one of your Manifestations."
         selected = self.rules_engine["firstManifestationItemIds"]
-        if player_id in selected:
+        existing = self.rules_existing_first_manifestation(player_id)
+        if player_id in selected or (existing is not None and existing.get("id") != item.get("id")):
             return "You have already chosen your first Manifestation."
         # Playing after the opponent (Trap, Hermetic Hourglass): their First
         # Manifestation is already revealed and this one arrives face up.

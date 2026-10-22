@@ -152,12 +152,29 @@ class TriggersMixin:
         return clean
 
     def rules_trigger_has_no_legal_target(self, target_rules, controller_id, event_item_id=None):
-        """True when the required card targets cannot be met by what is on the field.
+        """True when the required card targets cannot be met in their legal zones.
 
         The event still happens; its triggered effect is simply not put on the Stack.
         """
         target_rules = target_rules or {}
         minimum = int(target_rules.get("min") or 0)
+        if target_rules.get("kind") == "zone_card" and minimum > 0 and not target_rules.get("groups"):
+            legal = 0
+            for container_id, player in self.players.items():
+                for zone in target_rules.get("zones") or []:
+                    for card_id in set(player.get("zones", {}).get(zone, [])):
+                        error, clean = self.rules_action_targets([{
+                            "kind": "zone_card", "containerId": container_id,
+                            "zone": zone, "cardId": card_id,
+                        }], controller_id)
+                        if not error and self.rules_ability_targets_error(
+                            {**target_rules, "min": 1}, clean, controller_id,
+                            event_item_id=event_item_id,
+                        ) is None:
+                            legal += 1
+                            if legal >= minimum:
+                                return False
+            return True
         if (
             target_rules.get("groups") or str(target_rules.get("kind") or "card") != "card"
             or minimum < 1
@@ -808,6 +825,7 @@ class TriggersMixin:
                 "actions": [{
                     "actionId": action["id"],
                     "label": action.get("label"),
+                    "abilityId": (action.get("ability") or {}).get("id"),
                     "cardId": (action.get("source") or {}).get("cardId"),
                     "kind": action.get("kind"),
                     "immediate": bool(action.get("immediate")),
@@ -1341,6 +1359,9 @@ class TriggersMixin:
             if int(memory.get("createdTurn") or 0) != turn:
                 continue
             if int(memory.get("queuedTurn") or 0) == turn:
+                continue
+            if (memory.get("data") or {}).get("requireLostConfrontation") and not self.rules_player_lost_confrontation_this_turn(memory.get("controllerId") or memory.get("ownerId")):
+                self.remove_rules_effect_memory(memory["id"])
                 continue
             memory["queuedTurn"] = turn
             # the delayed effect belongs to the card that created it (Coral Skull), not to the Will it returns

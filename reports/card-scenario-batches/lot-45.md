@@ -6,7 +6,7 @@ Verdict : **PASS** · 0 contrôle(s) manuel(s) conservé(s).
 |---:|---|---|---|---|---|
 | 441 | Explosive Rancor | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 442 | Flower of Evil | ✓ (2 cap.) | ✓ (1 actions) | ✓ | PASS |
-| 443 | Temperamental Splendor | ✓ (3 cap.) | ✓ (1 actions) | ✓ | PASS |
+| 443 | Temperamental Splendor | ✓ (2 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 444 | Palm Coercer | ✓ (1 cap.) | ✓ (0 actions) | ✓ | PASS |
 | 445 | Cleanse | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 446 | Wall off | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |

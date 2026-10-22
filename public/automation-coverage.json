@@ -3,7 +3,7 @@
   "summary": {
     "catalogCards": 450,
     "explicitCards": 379,
-    "explicitAbilities": 497,
+    "explicitAbilities": 496,
     "statuses": {
       "automated": 450,
       "generic": 0,
@@ -3890,8 +3890,7 @@
         "gain-ten-when-winning-with-a-single-manifestation"
       ],
       "mechanics": [
-        "result:score_owner",
-        "trigger:player_wins_confrontation"
+        "passive:solo_confrontation_win_points"
       ],
       "testRefs": [
         "tests/test_game_state.py",
@@ -7689,12 +7688,10 @@
       "setName": "Inner Deserts",
       "status": "automated",
       "abilityIds": [
-        "splendor-gets-gem-counters",
         "splendor-chooses-a-base-temperament",
         "splendor-spends-a-gem-as-excess-essence"
       ],
       "mechanics": [
-        "result:add_counter_source",
         "result:choose_source_temperament",
         "result:create_essence",
         "trigger:enters_field"

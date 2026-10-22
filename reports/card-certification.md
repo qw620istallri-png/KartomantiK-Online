@@ -12,9 +12,9 @@ sandbox sont cohérents ; elle ne remplace pas encore un scénario dédié à so
 | Cartes du catalogue | 450 |
 | Cartes sans échec mécanique | 450 |
 | Cartes en échec | 0 |
-| Capacités explicites | 497 |
-| Capacités exécutées par le smoke test | 497 |
-| Chemins de comportement exécutés | 501 |
+| Capacités explicites | 496 |
+| Capacités exécutées par le smoke test | 496 |
+| Chemins de comportement exécutés | 500 |
 | Scripts exécutés | 321 |
 | Étapes de scripts exécutées | 1284 |
 | Scénarios comportementaux dédiés | 4 |
@@ -480,7 +480,7 @@ sandbox sont cohérents ; elle ne remplace pas encore un scénario dédié à so
 | 440 | Subjugate | Inner Deserts | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |
 | 441 | Explosive Rancor | Inner Deserts | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |
 | 442 | Flower of Evil | Inner Deserts | automated | capacités exécutées isolément | 2 | 0 | 0 | OK |
-| 443 | Temperamental Splendor | Inner Deserts | automated | capacités exécutées isolément | 3 | 0 | 0 | OK |
+| 443 | Temperamental Splendor | Inner Deserts | automated | capacités exécutées isolément | 2 | 0 | 0 | OK |
 | 444 | Palm Coercer | Inner Deserts | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |
 | 445 | Cleanse | Inner Deserts | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |
 | 446 | Wall off | Inner Deserts | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |

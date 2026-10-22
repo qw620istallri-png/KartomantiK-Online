@@ -76,7 +76,7 @@ function handCardUnplayableReason(cardId) {
   // a Trap only goes face down while the First Manifestations are being chosen
   if (isTrapCardClient(cardId)) return rulesFirstManifestationActive() ? t("unplayableTrapUsed") : t("unplayableTrapWindow");
   if (rulesFirstManifestationActive()) {
-    if ((rules.firstManifestationItemIds || {})[myPlayerId]) return t("unplayableFirstDone");
+    if (rulesFirstManifestationSlotTakenClient()) return t("unplayableFirstDone");
     if (card.type !== "manifestation" && !card.placeholder) return t("unplayableFirstType");
     return t("unplayableFirstForbidden");
   }
@@ -191,7 +191,7 @@ function handCardIsPlayable(cardId, source = null) {
     if (trapPlayableClient(cardId)) return true;
     return ((card.type === "manifestation" && rulesPlayType(card) === "manifestation") || card.placeholder)
       && !String(card.effect || "").includes("Cannot be played as First Manifestation")
-      && !(rules.firstManifestationItemIds || {})[myPlayerId];
+      && !rulesFirstManifestationSlotTakenClient();
   }
   if (rules.priorityPlayerId !== myPlayerId) return false;
   if (rulesCardPlayRestrictedClient(cardId)) return false;

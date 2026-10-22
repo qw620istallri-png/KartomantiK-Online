@@ -461,6 +461,27 @@ class ConfrontationMixin:
             self.rules_engine.setdefault("confrontationStalemates", {})[
                 str(self.phase_tracker["turn"])
             ] = True
+        if winner_id and len(self.rules_confrontation_items(winner_id)) == 1:
+            for source in self.rules_active_passive_sources("solo_confrontation_win_points"):
+                if self.rules_item_controller_id(source) != winner_id:
+                    continue
+                value = sum(
+                    int(passive.get("value") or 0)
+                    for passive in self.rules_item_card_rules(source).get("passiveEffects") or []
+                    if passive.get("kind") == "solo_confrontation_win_points"
+                )
+                effect_source = {"cardId": source.get("cardId"), "itemId": source.get("id"), "zone": "battlefield"}
+                effect_result = self.apply_rules_action_result({
+                    "controllerId": winner_id, "source": effect_source,
+                    "ability": {"result": {"kind": "score_owner", "value": value}},
+                })
+                result.setdefault("automaticEffects", []).append({"source": effect_source, "effectResult": effect_result})
+                self.add_log(winner_id, "rules_action_resolved", {
+                    "controllerId": winner_id, "automatic": True,
+                    "label": self.card_labels.get(source.get("cardId"), source.get("cardId")),
+                    "source": effect_source, "effectResult": effect_result,
+                    "stackDepth": len(self.rules_engine["actionStack"]),
+                })
         return result
 
     def rules_revelation_order(self):

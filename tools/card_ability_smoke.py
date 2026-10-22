@@ -84,6 +84,17 @@ def make_session(card_id, ability):
     session.phase_tracker["advanced"] = True
     session.phase_tracker["turn"] = 2
     session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+    if (ability.get("result") or {}).get("kind") in {
+        "first_manifestation_trap", "field_becomes_first_manifestation", "interzone_becomes_first_manifestation",
+    }:
+        if (ability.get("result") or {}).get("kind") == "interzone_becomes_first_manifestation":
+            source["fieldZone"] = "interzone"
+        session.rules_engine["firstManifestationItemIds"] = {}
+        session.rules_engine["firstManifestationComplete"] = False
+        for item in session.battlefield:
+            if item is not source and session.rules_item_controller_id(item) == "p1" and item.get("fieldZone") == "confrontation":
+                item["fieldZone"] = "interzone"
+                item["isSupport"] = False
     stack_action = {
         "id": "stack-1", "controllerId": "p2", "kind": "play_card",
         "source": {"cardId": "hand-will", "ownerId": "p2", "zone": "hand"},

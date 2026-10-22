@@ -460,6 +460,13 @@ function confirmRulesBoardTargets() {
 
 function armRulesBoardTargets(flow) {
   clearRulesBoardTargets();
+  const induceDesertion = flow.draft.encodedAbility?.id === "induce-desertion";
+  const firstTarget = (flow.selectedTargets || [])[0];
+  if (induceDesertion && firstTarget) {
+    const element = rulesTargetElement(firstTarget);
+    element?.classList.add("rules-selected-effect-target");
+    rulesBoardTargetCleanup.push(() => element?.classList.remove("rules-selected-effect-target"));
+  }
   const visibleTargets = [];
   const zoneTargetOffsets = new Map();
   const selectedKeys = new Set(
@@ -472,7 +479,10 @@ function armRulesBoardTargets(flow) {
       || target.targetGroupIndex === targetGroupIndex
     ))
     .filter((target) => !selectedKeys.has(target.key))
-    .filter((target) => !rulesBoardIngredientTarget(flow, target));
+    .filter((target) => !rulesBoardIngredientTarget(flow, target))
+    .filter((target) => !induceDesertion || (firstTarget
+      ? battlefieldItemControllerId(target) === battlefieldItemControllerId(firstTarget)
+      : flow.draft.structuredTargets.some((support) => support.targetGroupIndex === 1 && support.id !== target.id && battlefieldItemControllerId(support) === battlefieldItemControllerId(target))));
   // several targets without groups (Atavic Introspection: 2 Limbo cards): pick them
   // one by one, sent once the maximum is reached (or confirmed past the minimum)
   const maxTargets = Number(flow.draft.targetRules?.max || 1);
@@ -511,7 +521,7 @@ function armRulesBoardTargets(flow) {
     const sourceEffect = sourceCard ? cardField(sourceCard, "effect") : "";
     popup.innerHTML = `<div class="box${sourceImage ? " has-source" : ""}">
       ${sourceImage ? `<span class="rules-choice-source" title="${esc(cardName(sourceCard.id))}"><img src="${esc(sourceImage)}" alt="${esc(cardName(sourceCard.id))}"></span>` : ""}
-      ${sourceEffect ? `<p class="rules-choice-effect">${esc(sourceEffect)}</p>` : ""}
+      ${sourceEffect ? `<p class="rules-choice-effect">${rulesActiveAbilityMarkup(flow.choice?.sourceAbilityId) || esc(sourceEffect)}</p>` : ""}
       <div class="rules-choice-options">
         ${candidates.map((target) => `<button type="button" class="rules-choice-player" data-player-target="${esc(target.key)}" style="--player-tone:${esc(playerColor(target.playerId))}">${esc(target.playerId === myPlayerId ? t("rulesTargetSelf") : t("rulesTargetOpponent"))} · ${esc(rulesPlayerName(target.playerId))}</button>`).join("")}
       </div>
@@ -827,6 +837,7 @@ function renderRulesBoardFlow() {
   // pre-play choices (payment, cost card, extra essence) open in the middle of the screen; board targets keep the side card
   // paying a Tribute asked by an effect (stack_payment) uses the same centred dark screen, with the hand above it
   panel.classList.toggle("is-centered", flow.mode !== "stack_copy_target" && ["choice", "essence_allocation", "payment", "cost_card", "extra_essence", "committing"].includes(flow.stage));
+  panel.classList.toggle("is-guided-target", flow.stage === "target" && (flow.draft.encodedAbility?.id === "induce-desertion" || Boolean(rulesActiveAbilityEffect(flow.choice?.sourceAbilityId))));
   $("#rulesFloatingCardImg").src = cardImage(flow.source.cardId);
   $("#rulesFloatingCardImg").alt = cardName(flow.source.cardId);
   $("#rulesFloatingCardName").textContent = cardName(flow.source.cardId);
@@ -914,10 +925,9 @@ function renderRulesBoardFlow() {
     return;
   }
   if (flow.mode === "trigger_target") {
-    $("#rulesFlowInstruction").textContent = rulesText(
-      "rulesTriggerChooseTargetInstruction",
-      { card: cardName(flow.choice.sourceCardId) },
-    );
+    const activeEffect = rulesActiveAbilityMarkup(flow.choice.sourceAbilityId);
+    if (activeEffect) $("#rulesFlowInstruction").innerHTML = activeEffect;
+    else $("#rulesFlowInstruction").textContent = rulesText("rulesTriggerChooseTargetInstruction", { card: cardName(flow.choice.sourceCardId) });
     $("#rulesFlowCost").innerHTML = "";
     if (flow.stage === "committing") clearRulesBoardTargets();
     else armRulesBoardTargets(flow);
@@ -1113,7 +1123,10 @@ function renderRulesBoardFlow() {
   }
 
   const effect = cardField(flow.draft.card, "effect") || t("rulesNoPrintedEffect");
-  $("#rulesFlowInstruction").textContent = `${t("rulesBoardChooseTarget")} — ${effect}`;
+  const firstTarget = (flow.selectedTargets || [])[0];
+  $("#rulesFlowInstruction").textContent = flow.draft.encodedAbility?.id === "induce-desertion"
+    ? firstTarget ? rulesText("rulesInduceSecondTarget", { card: cardName(firstTarget.cardId), player: rulesPlayerName(battlefieldItemControllerId(firstTarget)) }) : t("rulesInduceFirstTarget")
+    : `${t("rulesBoardChooseTarget")} — ${effect}`;
   const sourceCost = flow.draft.encodedAbility?.exhaustSource
     ? `<div class="rules-flow-cost-row"><span>${esc(t("rulesCostShort"))}</span><strong>${esc(t("rulesExhaustSourceCost"))}</strong></div>`
     : flow.draft.encodedAbility?.sacrificeSource
@@ -1123,6 +1136,7 @@ function renderRulesBoardFlow() {
   const targetRules = flow.draft.targetRules || {};
   const canConfirm = !targetRules.groups && Number(targetRules.max || 0) > 1;
   $("#rulesFlowCost").innerHTML = `${sourceCost}<div class="rules-flow-cost-row"><span>${esc(t("rulesTargetLegend"))}</span><strong>${esc(t("rulesBoardClickTarget"))}</strong></div>${canConfirm ? `<div class="rules-zone-pick-actions"><button type="button" class="primary" id="rulesConfirmTargets" ${selected.length >= Number(targetRules.min || 0) ? "" : "disabled"}>${esc(t("confirm"))} (${selected.length}/${targetRules.max})</button></div>` : ""}`;
+  if (flow.draft.encodedAbility?.id === "induce-desertion") $("#rulesFlowCost").innerHTML = sourceCost;
   const confirmTargets = $("#rulesConfirmTargets");
   if (confirmTargets) confirmTargets.onclick = confirmRulesBoardTargets;
   armRulesBoardTargets(flow);

@@ -305,6 +305,8 @@ class ResolutionMixin:
             beginning_triggered_actions = self.queue_rules_beginning_turn_triggers()
         if started_new_turn and not beginning_triggered_actions:
             self.phase_tracker["index"] = ADVANCED_PHASES.index("recovery_draw")
+        if self.current_phase_id() == "confrontation_choose":
+            self.register_rules_existing_first_manifestations()
         if (
             self.current_phase_id() == "recovery_draw"
             and self.rules_engine["recoveryDrawTurn"] != self.phase_tracker["turn"]

@@ -61,7 +61,7 @@ class BoardMixin:
             ):
                 continue
             zone = self.rules_field_zone(item)
-            if zone == "field" and card_type != "persistent_will":
+            if zone == "field" and card_type != "persistent_will" and not metadata.get("playAsPersistentWill"):
                 continue
             controller_id = self.rules_item_controller_id(item)
             seat = (self.players.get(controller_id) or {}).get("seat")
