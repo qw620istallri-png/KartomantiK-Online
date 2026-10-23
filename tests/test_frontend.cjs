@@ -43,6 +43,39 @@ function startServer() {
   try {
     await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "networkidle" });
     await page.waitForFunction(() => typeof copyCardMenuItem === "function" && cardsById.size === 450);
+    const liveTargetTypes = await page.evaluate(() => {
+      const savedState = latestState;
+      const savedPlayerId = myPlayerId;
+      try {
+        myPlayerId = "p1";
+        latestState = {
+          battlefield: [
+            { id: "animated", cardId: "inner-deserts-143", ownerId: "p1", controllerId: "p1",
+              faceUp: true, fieldZone: "confrontation", willManifestation: { power: 4 } },
+            { id: "will", cardId: "inner-deserts-143", ownerId: "p1", faceUp: true, fieldZone: "field" },
+            { id: "will-token", cardId: "inner-deserts-143", ownerId: "p1", faceUp: true,
+              fieldZone: "field", isTokenCard: true, isCopy: true },
+          ],
+          players: { p1: { zones: { graveyard: { cards: ["inner-deserts-143"] } } } },
+          rulesEngine: {},
+        };
+        const targets = (rules) => rulesStructuredActionTargets({ targets: { min: 1, max: 1, ...rules } })
+          .structuredTargets.map((entry) => entry.id || entry.key);
+        const manifestation = targets({ cardType: "manifestation" });
+        const persistentWill = targets({ cardType: "persistent_will" });
+        const zoneManifestation = targets({ cardType: "manifestation", zones: ["graveyard"] });
+        const byTypeZone = targets({ cardTypes: ["manifestation", "persistent_will"],
+          fieldZonesByType: { manifestation: ["interzone"], persistent_will: ["field"] } });
+        delete latestState.battlefield[0].willManifestation;
+        const afterCleanse = targets({ cardType: "manifestation" });
+        return { manifestation, persistentWill, zoneManifestation, byTypeZone, afterCleanse };
+      } finally {
+        latestState = savedState;
+        myPlayerId = savedPlayerId;
+      }
+    });
+    assert.deepEqual(liveTargetTypes, { manifestation: ["animated"], persistentWill: ["will", "will-token"],
+      zoneManifestation: [], byTypeZone: ["will", "will-token"], afterCleanse: [] });
     const newUiDefaultsOn = await page.evaluate(() => {
       const saved = localStorage.getItem("ko_ui_beta");
       localStorage.removeItem("ko_ui_beta");
@@ -3021,6 +3054,24 @@ function startServer() {
       renderAll();
       document.querySelector("#rulesFlowDeclineBtn").click();
       const keepPayload = window.__sent.at(-1);
+      const multiPayloads = [];
+      for (const grouped of [false, true]) {
+        const choice = copyChoice(`stack-copy-multi-${grouped}`);
+        choice.targetRules = grouped ? { groups: [
+          { min: 1, max: 1, cardType: "manifestation", controller: "self" },
+          { min: 1, max: 1, cardType: "manifestation", controller: "opponent" },
+        ] } : { min: 1, max: 2, cardType: "manifestation" };
+        latestState.rulesEngine.pendingChoice = choice;
+        window.__sent = [];
+        renderAll();
+        const clickTarget = (id) => document.querySelector(`.bf-card[data-item-id="${id}"]`)
+          .dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true, cancelable: true }));
+        clickTarget("imitate-target-1");
+        const sentAfterFirst = window.__sent.length;
+        clickTarget("imitate-target-2");
+        if (!grouped) document.querySelector("#rulesConfirmTargets").click();
+        multiPayloads.push({ grouped, sentAfterFirst, payload: window.__sent.at(-1) });
+      }
       const logHtml = formatLogEntry({
         actorId: "p1", actorName: "P1", type: "rules_choice_resolved",
         details: {
@@ -3034,7 +3085,8 @@ function startServer() {
       latestState = savedState;
       renderAll();
       return {
-        initial, retargetPayload, keepPayload, logHtml,
+        initial, retargetPayload, keepPayload, logHtml, multiPayloads,
+        firstCardId: manifestations[0].id,
         secondCardId: manifestations[1].id,
       };
     });
@@ -4207,6 +4259,14 @@ function startServer() {
     assert.deepEqual(stackCopy.keepPayload, {
       type: "resolve_rules_choice", choiceId: "stack-copy-keep", option: "keep", targets: [],
     });
+    for (const { grouped, sentAfterFirst, payload } of stackCopy.multiPayloads) {
+      assert.equal(sentAfterFirst, 0);
+      assert.deepEqual(payload, { type: "resolve_rules_choice", choiceId: `stack-copy-multi-${grouped}`, option: "retarget",
+        targets: [
+          { kind: "card", itemId: "imitate-target-1", cardId: stackCopy.firstCardId },
+          { kind: "card", itemId: "imitate-target-2", cardId: stackCopy.secondCardId },
+        ] });
+    }
     assert.match(stackCopy.logHtml, /log-card-ref/);
     assert.equal(pregameUi.initial.panelVisible, true);
     assert.equal(pregameUi.initial.panelProminent, true);

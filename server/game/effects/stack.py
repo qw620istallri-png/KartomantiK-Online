@@ -436,7 +436,7 @@ class StackEffectsMixin:
             }
         target_rules = self.rules_action_target_rules(target_action)
         copied_action = self.build_rules_stack_copy(target_action, player_id, action.get("id"))
-        if target_rules and int(target_rules.get("max") or 0) > 0:
+        if target_rules and (target_rules.get("groups") or int(target_rules.get("max") or 0) > 0):
             choice_id = new_id()
             original_targets = [dict(entry) for entry in target_action.get("targets") or []]
             self.rules_engine["pendingChoice"] = {

@@ -295,15 +295,18 @@ function rulesStructuredActionTargets(encodedAbility) {
   const maxTargetPoints = Number(targetRules?.maxPoints);
   const maxTargetPower = Number(targetRules?.maxPower);
   const minTargetPower = Number(targetRules?.minPower);
-  const targetMatchesRules = (cardId) => {
+  const fieldTargetType = (item) => item.willManifestation
+    ? "manifestation" : cardsById.get(item.cardId)?.type;
+  const targetMatchesRules = (cardId, fieldItem = null) => {
     const targetCard = cardsById.get(cardId);
-    if (allowedTargetTypes.length && !allowedTargetTypes.includes(targetCard?.type)) return false;
+    const targetType = fieldItem ? fieldTargetType(fieldItem) : targetCard?.type;
+    if (allowedTargetTypes.length && !allowedTargetTypes.includes(targetType)) return false;
     return !Number.isFinite(maxTargetPoints) || (Number.isFinite(Number(targetCard?.points)) && Number(targetCard.points) <= maxTargetPoints);
   };
   const fieldTargets = (latestState?.battlefield || [])
     .filter(() => !noTargetRequired && allowsFieldCard && allowedTargetZones.includes("battlefield"))
     .filter((item) => item.faceUp && item.cardId)
-    .filter((item) => targetMatchesRules(item.cardId))
+    .filter((item) => targetMatchesRules(item.cardId, item))
     .filter((item) => {
       const controller = item.controllerId || item.ownerId;
       // same field zone as the server (rules_field_zone): a resolved persistent Will has no
@@ -319,7 +322,7 @@ function rulesStructuredActionTargets(encodedAbility) {
       // the Stalemate Zone is not on the field (server: rules_ability_targets_error)
       if (
         itemFieldZone === "stalemate" && targetRules?.fieldZone !== "stalemate"
-        && !(targetRules?.fieldZonesByType?.[cardsById.get(item.cardId)?.type] || []).includes("stalemate")
+        && !(targetRules?.fieldZonesByType?.[fieldTargetType(item)] || []).includes("stalemate")
       ) return false;
       if (
         targetRules?.firstManifestationOnly
@@ -327,7 +330,7 @@ function rulesStructuredActionTargets(encodedAbility) {
           latestState?.rulesEngine?.firstManifestationItemIds || {},
         ).includes(item.id)
       ) return false;
-      const zonesForType = targetRules?.fieldZonesByType?.[cardsById.get(item.cardId)?.type];
+      const zonesForType = targetRules?.fieldZonesByType?.[fieldTargetType(item)];
       if (Array.isArray(zonesForType) && !zonesForType.includes(itemFieldZone)) return false;
       if (targetRules?.supportOnly && !item.isSupport) return false;
       if (targetRules?.exhaustedOnly && Math.round(Number(item.rotation || 0)) % 180 === 0) return false;

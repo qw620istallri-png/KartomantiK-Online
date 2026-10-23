@@ -5,6 +5,29 @@ from .replacements import replacement_checkpoint
 
 
 class ResolutionMixin:
+    def rules_valid_action_target_indices(self, action, target_rules):
+        """Revalidate each declared target without changing grouped target roles."""
+        targets = action.get("targets") or []
+        groups = target_rules.get("groups")
+        if isinstance(groups, list):
+            if len(groups) != len(targets):
+                return None
+            contracts = groups
+        else:
+            minimum = max(0, int(target_rules.get("min") or 0))
+            maximum = max(minimum, int(target_rules.get("max") or minimum))
+            if not minimum <= len(targets) <= maximum:
+                return None
+            contracts = [{**target_rules, "min": 1, "max": 1}] * len(targets)
+        return [
+            index for index, (contract, target) in enumerate(zip(contracts, targets))
+            if self.rules_ability_targets_error(
+                contract, [target], action.get("controllerId"),
+                event_item_id=((action.get("ability") or {}).get("trigger") or {}).get("eventItemId"),
+                source_item_id=(action.get("source") or {}).get("itemId"),
+            ) is None
+        ]
+
     def rules_top_action_has_no_valid_targets(self):
         engine = self.rules_engine
         if (
@@ -21,21 +44,7 @@ class ResolutionMixin:
         # normal response window. Never inspect a lower Stack entry here.
         if not targets or target_rules is None:
             return False
-        groups = target_rules.get("groups")
-        if isinstance(groups, list):
-            if len(groups) != len(targets):
-                return False
-            contracts = groups
-        else:
-            contracts = [{**target_rules, "min": 1, "max": 1}] * len(targets)
-        return all(
-            self.rules_ability_targets_error(
-                contract, [target], action.get("controllerId"),
-                event_item_id=((action.get("ability") or {}).get("trigger") or {}).get("eventItemId"),
-                source_item_id=(action.get("source") or {}).get("itemId"),
-            ) is not None
-            for contract, target in zip(contracts, targets)
-        )
+        return self.rules_valid_action_target_indices(action, target_rules) == []
 
     @replacement_checkpoint("resolution")
     def resolve_rules_top_action(self):
@@ -114,6 +123,26 @@ class ResolutionMixin:
             ).get("eventItemId"),
             source_item_id=(resolved.get("source") or {}).get("itemId"),
         ) if target_rules is not None else None
+        execution_action = resolved
+        if target_error:
+            valid_indices = self.rules_valid_action_target_indices(resolved, target_rules)
+            original_targets = resolved.get("targets") or []
+            if valid_indices and len(valid_indices) < len(original_targets):
+                # Keep the declaration intact for logs. Group positions carry
+                # roles (e.g. counter donor/recipient), so never compact them.
+                grouped = isinstance(target_rules.get("groups"), list)
+                execution_action = {
+                    **resolved,
+                    "targets": [
+                        target if index in valid_indices else {"kind": "invalid_target"}
+                        for index, target in enumerate(original_targets)
+                        if grouped or index in valid_indices
+                    ],
+                }
+                resolved["invalidTargetIndices"] = [
+                    index for index in range(len(original_targets)) if index not in valid_indices
+                ]
+                target_error = None
         if target_error:
             resolved["targetValidationError"] = target_error
             resolved["effectResult"] = {
@@ -122,14 +151,14 @@ class ResolutionMixin:
                 "error": target_error,
             }
         else:
-            effect_result = self.apply_rules_action_result(resolved)
+            effect_result = self.apply_rules_action_result(execution_action)
             if effect_result:
                 resolved["effectResult"] = effect_result
                 if isinstance(effect_result, dict):
                     triggered_actions.extend(
                         effect_result.pop("resolutionTriggers", None) or []
                     )
-            ongoing_effects = self.create_rules_ongoing_effects(resolved)
+            ongoing_effects = self.create_rules_ongoing_effects(execution_action)
             if ongoing_effects:
                 resolved["ongoingEffects"] = ongoing_effects
                 for effect in ongoing_effects:

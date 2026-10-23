@@ -154,11 +154,24 @@ sourceOnly
 `sourceOnly` sert notamment à Gornagor : l'effet ne peut cibler que sa propre
 source.
 
-Une cible devenue invalide produit `invalid_targets` et l'effet ne se produit
-pas. Lorsque toutes les cibles choisies de l'entrée au sommet de la Stack sont
+Les cibles sont revérifiées avec leur type et leur contrôleur effectifs au moment
+de la résolution, y compris les Volontés animées et les liens de contrôle actifs.
+Une cible devenue invalide est ignorée ; les instructions applicables aux autres
+cibles indépendantes se résolvent normalement. Les opérations dépendantes, comme
+un échange de contrôle ou un transfert de compteur, exigent toujours leurs deux
+cibles. L'historique conserve la déclaration et indique `invalidTargetIndices` en
+cas de résolution partielle. Si toutes les cibles sont invalides, le résultat est
+`invalid_targets` et l'effet ne se produit pas.
+Lorsque toutes les cibles choisies de l'entrée au sommet de la Stack sont
 invalides, cette entrée se résout automatiquement par le parcours habituel
 (déplacement de la source et journal compris), sans attendre de passes. Une cible
 encore valide, un effet sans cible ou un choix en cours conserve la fenêtre normale.
+
+Une copie de Volonté sur la Stack propose aussi un choix lorsque son contrat
+contient plusieurs groupes de cibles. Le client rassemble toutes les cibles avant
+de les envoyer ; les contrats sans groupes à plusieurs cibles proposent Confirmer.
+Les nouvelles cibles sont validées pour le contrôleur de la copie et la copie ne
+déplace pas de deuxième exemplaire physique de la Volonté.
 
 ## Propriété et contrôle
 

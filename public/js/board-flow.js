@@ -245,6 +245,12 @@ function syncRulesStackCopyBoardFlow() {
 function resolveRulesStackCopyTargets(option, target = null) {
   const flow = pendingRulesBoardFlow;
   if (flow?.mode !== "stack_copy_target" || flow.stage === "committing") return;
+  const chosen = [...(flow.selectedTargets || []), ...(target ? [target] : [])];
+  const targetRules = flow.draft.targetRules || {};
+  if (option === "retarget" && (
+    chosen.length < Number(targetRules.min || 0)
+    || chosen.length > Number(targetRules.max || 1)
+  )) return;
   flow.previousStage = flow.stage;
   flow.stage = "committing";
   renderRulesBoardFlow();
@@ -252,7 +258,7 @@ function resolveRulesStackCopyTargets(option, target = null) {
     type: "resolve_rules_choice",
     choiceId: flow.choiceId,
     option,
-    targets: target ? [rulesTargetPayload(target)] : [],
+    targets: option === "retarget" ? chosen.map(rulesTargetPayload) : [],
   });
 }
 
@@ -357,7 +363,7 @@ function submitRulesBoardFlow(target = null) {
   const flow = pendingRulesBoardFlow;
   if (!flow) return;
   if (flow.mode === "stack_copy_target") {
-    if (target) resolveRulesStackCopyTargets("retarget", target);
+    resolveRulesStackCopyTargets("retarget", target);
     return;
   }
   if (flow.mode === "trigger_target") {
@@ -438,6 +444,10 @@ function rulesDraftOffersOptionalTargets(draft) {
 function scheduleRulesBoardSubmit() {
   const flow = pendingRulesBoardFlow;
   if (!flow) return;
+  if (flow.mode === "stack_copy_target") {
+    resolveRulesStackCopyTargets("retarget");
+    return;
+  }
   flow.previousStage = flow.stage;
   flow.stage = "committing";
   renderRulesBoardFlow();
@@ -940,7 +950,12 @@ function renderRulesBoardFlow() {
       card: cardName(flow.choice.targetCardId),
     });
     const original = (flow.choice.originalTargets || []).map(rulesActionTargetRef).join(", ");
-    $("#rulesFlowCost").innerHTML = `<div class="rules-flow-cost-row"><span>${esc(t("rulesCurrentTarget"))}</span><strong>${original || esc(t("rulesNoTargetRequired"))}</strong></div>`;
+    const selected = flow.selectedTargets || [];
+    const targetRules = flow.draft.targetRules || {};
+    const canConfirm = !targetRules.groups && Number(targetRules.max || 0) > 1;
+    $("#rulesFlowCost").innerHTML = `<div class="rules-flow-cost-row"><span>${esc(t("rulesCurrentTarget"))}</span><strong>${original || esc(t("rulesNoTargetRequired"))}</strong></div>${canConfirm ? `<div class="rules-zone-pick-actions"><button type="button" class="primary" id="rulesConfirmTargets" ${selected.length >= Number(targetRules.min || 0) ? "" : "disabled"}>${esc(t("confirm"))} (${selected.length}/${targetRules.max})</button></div>` : ""}`;
+    const confirmTargets = $("#rulesConfirmTargets");
+    if (confirmTargets) confirmTargets.onclick = confirmRulesBoardTargets;
     if (flow.stage === "committing") clearRulesBoardTargets();
     else armRulesBoardTargets(flow);
     return;

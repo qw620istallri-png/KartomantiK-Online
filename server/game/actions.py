@@ -1187,7 +1187,15 @@ class ActionsMixin:
             allowed_zones = set(target_rules.get("zones") or ["battlefield"])
             if str(target.get("zone") or "battlefield") not in allowed_zones:
                 return "This effect requires a target in a different zone."
-            metadata = self.card_rules.get(target.get("cardId"), {})
+            item = None
+            if target.get("kind") == "card":
+                item = self.find_battlefield_item(target.get("itemId"))
+                if item is None:
+                    return "The selected battlefield target is no longer available."
+            metadata = (
+                self.rules_item_card_rules(item) if item is not None
+                else self.card_rules.get(target.get("cardId"), {})
+            )
             if required_types and metadata.get("type") not in required_types:
                 return "This effect requires a different type of target."
             if isinstance(target_rules.get("maxPoints"), (int, float)):
@@ -1243,9 +1251,6 @@ class ActionsMixin:
                 ):
                     return "This effect requires a card destroyed or discarded this turn."
                 continue
-            item = self.find_battlefield_item(target.get("itemId"))
-            if item is None:
-                return "The selected battlefield target is no longer available."
             if self.rules_item_is_immune(item, controller_id):
                 return "The selected card is Immune to cards and effects."
             if self.rules_item_is_protected(item, controller_id):
@@ -1277,7 +1282,7 @@ class ActionsMixin:
             if target_rules.get("excludeSource") and item.get("id") == source_item_id:
                 return "This effect requires another Manifestation."
             relation = target_rules.get("controller")
-            item_controller = item.get("controllerId") or item.get("ownerId")
+            item_controller = self.rules_item_controller_id(item)
             if relation == "self" and item_controller != controller_id:
                 return "This effect requires a Manifestation you control."
             if relation == "opponent" and item_controller == controller_id:
