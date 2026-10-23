@@ -200,9 +200,10 @@ function wireDragOrderRow(row, onReorder) {
   const keys = () => [...row.querySelectorAll("[data-order-key]")].map((entry) => entry.dataset.orderKey);
   row.querySelectorAll("[data-order-key]").forEach((card) => {
     card.addEventListener("pointerdown", (event) => {
-      if (event.button !== 0) return;
+      if (event.button !== 0 || event.isPrimary === false) return;
       event.preventDefault();
       const start = keys().join("|");
+      const originalCards = [...row.querySelectorAll("[data-order-key]")];
       card.classList.add("is-dragging");
       const move = (e) => {
         const siblings = [...row.querySelectorAll("[data-order-key]")].filter((entry) => entry !== card);
@@ -213,14 +214,16 @@ function wireDragOrderRow(row, onReorder) {
         if (before) row.insertBefore(card, before);
         else row.appendChild(card);
       };
-      const up = () => {
-        window.removeEventListener("pointermove", move);
-        window.removeEventListener("pointerup", up);
+      const up = (e) => {
         card.classList.remove("is-dragging");
+        if (e.type !== "pointerup") {
+          originalCards.forEach((entry) => row.appendChild(entry));
+          return;
+        }
         if (keys().join("|") !== start) onReorder(keys());
       };
-      window.addEventListener("pointermove", move);
-      window.addEventListener("pointerup", up);
+      // Moving between parents releases browser capture; the window still tracks the gesture.
+      startCardPointerDrag(event, card, move, up, { capture: false });
     });
   });
 }
@@ -246,7 +249,7 @@ function wireCardToSlots(card, slots, onPick) {
     return best;
   };
   card.addEventListener("pointerdown", (event) => {
-    if (event.button !== 0) return;
+    if (event.button !== 0 || event.isPrimary === false) return;
     event.preventDefault();
     const originX = event.clientX;
     const originY = event.clientY;
@@ -257,16 +260,13 @@ function wireCardToSlots(card, slots, onPick) {
       slots.forEach((slot) => slot.classList.toggle("is-over", slot === near));
     };
     const up = (e) => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
       card.classList.remove("is-dragging");
       card.style.transform = "";
       slots.forEach((slot) => slot.classList.remove("is-over"));
-      const near = nearest(e);
+      const near = e.type === "pointerup" ? nearest(e) : null;
       if (near) onPick(near);
     };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
+    startCardPointerDrag(event, card, move, up);
   });
   slots.forEach((slot) => { slot.onclick = () => onPick(slot); });
 }
@@ -481,6 +481,7 @@ function renderRulesChoiceScreen() {
     numberStrips();
     options.querySelectorAll(".rules-reorder-card").forEach((card) => {
       card.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0 || event.isPrimary === false) return;
         event.preventDefault();
         const section = card.closest("[data-rules-reorder-group]");
         card.classList.add("is-dragging");
@@ -512,15 +513,12 @@ function renderRulesChoiceScreen() {
           numberStrips();
         };
         const up = () => {
-          window.removeEventListener("pointermove", move);
-          window.removeEventListener("pointerup", up);
           card.classList.remove("is-dragging");
           options.querySelectorAll(".rules-reorder-strip").forEach((entry) => entry.classList.remove("is-over"));
           // the order is only sent with the Confirm button, so it can still be changed
           showReorderProblem();
         };
-        window.addEventListener("pointermove", move);
-        window.addEventListener("pointerup", up);
+        startCardPointerDrag(event, card, move, up, { capture: false });
       });
     });
     let reorderSent = false;
@@ -1104,7 +1102,7 @@ function renderRulesChoiceScreen() {
     };
     options.querySelectorAll("[data-rules-relocation-card]").forEach((card) => {
       card.addEventListener("pointerdown", (event) => {
-        if (event.button !== 0 || relocationSent) return;
+        if (event.button !== 0 || event.isPrimary === false || relocationSent) return;
         event.preventDefault();
         const section = card.closest("[data-rules-relocation-group]");
         card.classList.add("is-dragging");
@@ -1129,16 +1127,13 @@ function renderRulesChoiceScreen() {
           else strip.appendChild(card);
           refreshLanes();
         };
-        const up = () => {
-          window.removeEventListener("pointermove", move);
-          window.removeEventListener("pointerup", up);
+        const up = (e) => {
           card.classList.remove("is-dragging");
           section.querySelectorAll("[data-rules-relocation-strip]").forEach((entry) => entry.classList.remove("is-over"));
           // everything placed: no confirmation step
-          if (!options.querySelector('[data-rules-relocation-strip="pool"] [data-rules-relocation-card]')) submitRelocation();
+          if (e.type === "pointerup" && !options.querySelector('[data-rules-relocation-strip="pool"] [data-rules-relocation-card]')) submitRelocation();
         };
-        window.addEventListener("pointermove", move);
-        window.addEventListener("pointerup", up);
+        startCardPointerDrag(event, card, move, up, { capture: false });
       });
     });
     refreshLanes();
@@ -1455,6 +1450,7 @@ function renderRulesChoiceScreen() {
     options.querySelectorAll("[data-rules-replace-item]").forEach((card) => {
       card.addEventListener("click", () => chooseItem(card.dataset.rulesReplaceItem));
       card.addEventListener("pointerdown", (event) => {
+        if (event.button !== 0 || event.isPrimary === false) return;
         event.preventDefault();
         const startX = event.clientX;
         const startY = event.clientY;
@@ -1474,15 +1470,12 @@ function renderRulesChoiceScreen() {
           }
         };
         const up = (e) => {
-          window.removeEventListener("pointermove", move);
-          window.removeEventListener("pointerup", up);
           deck.classList.remove("is-over");
           card.classList.remove("is-dragging");
           card.style.transform = "";
-          if (!moved || near(e)) chooseItem(card.dataset.rulesReplaceItem);
+          if (e.type === "pointerup" && (!moved || near(e))) chooseItem(card.dataset.rulesReplaceItem);
         };
-        window.addEventListener("pointermove", move);
-        window.addEventListener("pointerup", up);
+        startCardPointerDrag(event, card, move, up);
       });
     });
     panel.classList.remove("hidden");

@@ -285,7 +285,35 @@ function initJoinScreen() {
 
 let pendingCreateFlow = null;
 
+function clearConnectionGameInteractions() {
+  activeCardPointerDrag?.();
+  settlePlacementGrace(false);
+  pendingSupportDrop = null;
+  pendingTriggeredPlacement = null;
+  pendingIncomingRequest = null;
+  rulesChoiceRetry = null;
+  rulesDeckReorderRetry = null;
+  closeRulesBoardFlow();
+  closeRulesActionPanel();
+  closeRulesActivationConfirmation();
+  closeContextMenu();
+  hideCardPreview();
+  hideChoiceCardPreview();
+  clearCardHoverZooms();
+  pileBrowserStaged = new Map();
+  for (const id of ["rulesChoicePanel", "handRequestPanel", "deckBrowserPanel", "revealPanel", "handViewPanel", "inspectPanel"]) {
+    document.getElementById(id)?.classList.add("hidden");
+  }
+  document.body.classList.remove("choice-blocks-hand", "hand-drop-choice");
+  removeRulesVfx();
+  window.uiBeta?.resetTransient();
+}
+
 function connectAndJoin(joinPayload) {
+  clearConnectionGameInteractions();
+  const previous = ws;
+  ws = null;
+  previous?.close();
   // while reconnecting, the banner says it (no "Connecting…" note per attempt)
   if (!wasDisconnected) setStatus(t("connecting"), "warning");
   intentionalClose = false;
@@ -298,13 +326,16 @@ function connectAndJoin(joinPayload) {
   pendingCreateFlow = createTournament ? "tournament" : (createNew ? "casual" : null);
 
   const proto = location.protocol === "https:" ? "wss:" : "ws:";
-  ws = new WebSocket(`${proto}//${location.host}/ws`);
-  ws.onopen = () => {
-    ws.send(JSON.stringify({ type: "join", createNew, createTournament, rulesBeta, banListEnabled, deckPolicy: joinPayload.deckPolicy, code: joinedCode, name: joinedName, clientId, sandbox: joinPayload.sandbox }));
+  const socket = new WebSocket(`${proto}//${location.host}/ws`);
+  ws = socket;
+  socket.onopen = () => {
+    if (ws !== socket) return;
+    socket.send(JSON.stringify({ type: "join", createNew, createTournament, rulesBeta, banListEnabled, deckPolicy: joinPayload.deckPolicy, code: joinedCode, name: joinedName, clientId, sandbox: joinPayload.sandbox }));
   };
-  ws.onmessage = (event) => handleServerMessage(JSON.parse(event.data));
-  ws.onclose = () => {
-    if (intentionalClose) return;
+  socket.onmessage = (event) => { if (ws === socket) handleServerMessage(JSON.parse(event.data)); };
+  socket.onclose = () => {
+    if (ws !== socket || intentionalClose) return;
+    clearConnectionGameInteractions();
     if ($("#gameScreen").classList.contains("hidden") && $("#tournamentScreen").classList.contains("hidden")) {
       setStatus(t("invalidCode"), "error");
       return;
@@ -313,7 +344,7 @@ function connectAndJoin(joinPayload) {
     showConnectionBanner("lost");
     scheduleReconnect();
   };
-  ws.onerror = () => {};
+  socket.onerror = () => {};
 }
 
 function scheduleReconnect() {
@@ -394,6 +425,7 @@ function showTournamentMatch() {
 // everyone else) and, after send()-ing end_session, for P1's own client —
 // in both cases *this* client is done and goes back to the home screen.
 function leaveSession() {
+  clearConnectionGameInteractions();
   clearResumeSession();
   intentionalClose = true;
   wasDisconnected = false;
@@ -781,7 +813,7 @@ function animateScoreDeltas() {
     float.style.top = `${rise > 0 ? rect.top : rect.bottom}px`;
     document.body.appendChild(float);
     const scoreDelay = Math.min(1500, rulesVfxQueueRemaining());
-    window.setTimeout(() => spawnVfxParticles(
+    setRulesVfxTimeout(() => spawnVfxParticles(
       { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 },
       null,
       {

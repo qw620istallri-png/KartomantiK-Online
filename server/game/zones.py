@@ -94,14 +94,25 @@ class ZonesMixin:
     def concede(self, player_id):
         """The conceding player loses at once; everyone else wins."""
         winner_ids = [pid for pid in self.players if pid != player_id]
-        self.rules_engine["outcome"] = {
+        self.finish_rules_game({
             "reason": "concession",
             "loserIds": [player_id],
             "winnerIds": winner_ids,
             "draw": len(winner_ids) != 1,
-        }
+        })
+
+    def finish_rules_game(self, outcome):
+        """Freeze play at a result while preserving cards and Stack for inspection."""
+        if self.ended:
+            return
+        self.rules_engine["outcome"] = outcome
         self.rules_engine["pendingChoice"] = None
         self.rules_engine["priorityPlayerId"] = None
+        self.rules_engine["priorityPasses"] = []
+        for key in ("deferredSimultaneousActions", "deferredAfterImmediateActions",
+                    "pendingChainSequences", "observedEvents"):
+            self.rules_engine[key] = []
+        self.rules_engine.pop("resumeConfrontationCleanupAfterChoices", None)
         self.ended = True
 
     def tournament_codes(self):

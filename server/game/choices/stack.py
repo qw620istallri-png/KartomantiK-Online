@@ -25,6 +25,8 @@ class StackChoicesMixin:
                         action.get("source") or {}
                     ).get("cardId"),
                     "targetRules": target_choice.get("targetRules") or {},
+                    "sourceItemId": (action.get("source") or {}).get("itemId"),
+                    "eventItemId": ((action.get("ability") or {}).get("trigger") or {}).get("eventItemId"),
                     "_triggerAction": action,
                     "_resumeConfrontationCleanup": bool(
                         target_choice.get("resumeConfrontationCleanup")
@@ -199,6 +201,7 @@ class StackChoicesMixin:
             return target_error, None
         ability_error = self.rules_ability_targets_error(
             choice.get("targetRules"), clean_targets, player_id,
+            event_item_id=(((choice.get("_triggerAction") or {}).get("ability") or {}).get("trigger") or {}).get("eventItemId"),
             source_item_id=(
                 (choice.get("_triggerAction") or {}).get("source") or {}
             ).get("itemId"),
@@ -246,15 +249,19 @@ class StackChoicesMixin:
         if not isinstance(copied_action, dict):
             self.rules_engine["pendingChoice"] = None
             return "The copied Stack action is no longer available.", None
-        selected_targets = choice.get("originalTargets") if option == "keep" else targets
-        target_error, clean_targets = self.rules_action_targets(selected_targets)
-        if target_error:
-            return target_error, None
-        ability_error = self.rules_ability_targets_error(
-            choice.get("targetRules"), clean_targets, player_id,
-        )
-        if ability_error:
-            return ability_error, None
+        if option == "keep":
+            # Inherited targets are a snapshot, not a fresh declaration. Even
+            # illegal/missing inherited targets reach normal Stack revalidation.
+            clean_targets = [dict(entry) for entry in copied_action.get("targets") or []]
+        else:
+            target_error, clean_targets = self.rules_action_targets(targets)
+            if target_error:
+                return target_error, None
+            ability_error = self.rules_ability_targets_error(
+                choice.get("targetRules"), clean_targets, player_id,
+            )
+            if ability_error:
+                return ability_error, None
         copied_action["targets"] = clean_targets
         self.rules_engine["actionStack"].append(copied_action)
         self.rules_engine["pendingChoice"] = None
@@ -271,7 +278,7 @@ class StackChoicesMixin:
             "targets": [dict(entry) for entry in clean_targets],
         }
 
-    def _rules_choice_stack_counter_payment(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets):
+    def _rules_choice_stack_counter_payment(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets, transcendent_payment=None):
         if option not in {"pay", "decline"}:
             return "Choose whether to pay the requested Tribute.", None
         target_action = next((
@@ -292,6 +299,7 @@ class StackChoicesMixin:
             payment_error, payment = self.rules_action_payment(
                 player_id, "activated_effect", None, card_ids,
                 {"tribute": choice.get("payment")},
+                transcendent_payment=transcendent_payment,
             )
             if payment_error:
                 return payment_error, None

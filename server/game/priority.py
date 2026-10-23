@@ -129,7 +129,7 @@ class PriorityMixin:
                 return False
         return True
 
-    def rules_will_affordable(self, player_id, card_id):
+    def rules_will_affordable(self, player_id, card_id, source=None):
         """Whether the Tribute of a Will can be paid with what the player has.
 
         Generous whenever an unusual payment source exists, so a phase is never
@@ -145,7 +145,7 @@ class PriorityMixin:
             return True
         try:
             requirements, _enforced = self.rules_tribute_requirements(
-                "play_card", {"cardId": card_id, "cardType": metadata.get("type")}, None, player_id,
+                "play_card", source or {"cardId": card_id, "cardType": metadata.get("type")}, None, player_id,
             )
         except Exception:  # never skip a phase because of a computation problem
             return True
@@ -402,6 +402,19 @@ class PriorityMixin:
                 for ability in metadata.get("activatedAbilities") or []
             ):
                 return True
+        for suspended in self.rules_engine.get("suspendedCards") or []:
+            if suspended.get("playableByPlayerId") != player_id:
+                continue
+            card_id = suspended.get("cardId")
+            card_type = self.card_rules.get(card_id, {}).get("type")
+            error, source = self.rules_action_source(player_id, "play_card", {
+                "zone": "suspended", "cardId": card_id, "suspensionId": suspended.get("id"),
+            })
+            if error or not can_play(card_id, card_type):
+                continue
+            if (phase_id == "confrontation_reaction" and card_type == "ephemeral_will"
+                    or card_type in RULES_WILL_TYPES and self.rules_will_affordable(player_id, card_id, source)):
+                return True
         if response:
             for card_id in set(player["zones"]["receptacle"]):
                 if any(
@@ -605,6 +618,8 @@ class PriorityMixin:
             return "Both players must join before using priority.", None
         if self.rules_engine.get("pendingChoice"):
             return "A required card choice must be completed first.", None
+        if not internal and self.rules_engine["actionStack"] and self.rules_engine["actionStack"][-1].get("immediate"):
+            return "Immediate Effects must resolve before another action can be declared.", None
         if self.rules_engine["priorityPlayerId"] != player_id and not internal:
             return "You do not have priority.", None
         kind = str(kind or "manual")

@@ -218,6 +218,8 @@ from ..replacements import replacement_checkpoint
 class EffectsMixin:
     @replacement_checkpoint("effect")
     def apply_rules_action_result(self, action):
+        if self.ended:
+            return None
         result = (action.get("ability") or {}).get("result") or {}
         player_id = action.get("controllerId")
         player = self.players.get(player_id)

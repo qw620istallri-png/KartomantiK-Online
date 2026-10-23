@@ -729,19 +729,8 @@ class ChainMixin:
             counters.pop("Placed", None)
 
     def rules_can_afford_tribute(self, player_id, cost):
-        """True when some set of cards in hand (plus Essence) covers `cost`."""
-        hand = list(self.players[player_id]["zones"]["hand"])
-        if not self.rules_requirements_from_symbols(cost):
-            return True
-        pool = [c for c in hand if self.card_rules.get(c, {}).get("type") == "manifestation"][:7]
-        for mask in range(1 << len(pool)):
-            picked = [pool[i] for i in range(len(pool)) if mask >> i & 1]
-            error, _payment = self.rules_action_payment(
-                player_id, "activated_effect", None, picked, {"tribute": cost},
-            )
-            if not error:
-                return True
-        return False
+        """Only report payable when the settlement validator accepts a witness."""
+        return self.rules_find_tribute_payment(player_id, cost) is not None
 
     def rules_chain_candidates(self, chain_player_id, zone):
         """Chainable Manifestations as {card_id: container_id}.

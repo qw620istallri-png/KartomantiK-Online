@@ -52,7 +52,9 @@ RULES_CHOICE_HANDLERS = {
 class ChoicesMixin:
     @replacement_checkpoint("choice")
     def resolve_rules_choice(self, player_id, choice_id, card_ids=None, option=None, item_id=None,
-                             placement=None, targets=None):
+                             placement=None, targets=None, transcendent_payment=None):
+        if self.ended:
+            return "The game has already ended.", None
         choice = self.rules_engine.get("pendingChoice")
         if not choice or choice.get("id") != choice_id or choice.get("playerId") != player_id:
             return "This card choice is no longer available.", None
@@ -60,7 +62,10 @@ class ChoicesMixin:
             return self.resolve_rules_replacement_order(player_id, choice, card_ids)
         handler = RULES_CHOICE_HANDLERS.get(choice.get("kind"))
         if handler is not None:
-            response = getattr(self, handler)(player_id, choice_id, choice, card_ids, option, item_id, placement, targets)
+            payment_options = {"transcendent_payment": transcendent_payment} if choice.get("kind") in {
+                "stack_counter_payment", "effect_memory_payment", "immediate_effect_payment", "effect_payment",
+            } else {}
+            response = getattr(self, handler)(player_id, choice_id, choice, card_ids, option, item_id, placement, targets, **payment_options)
             if response is not None:
                 return response
         return self._resolve_rules_discard_choice(player_id, choice_id, choice, card_ids)

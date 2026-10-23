@@ -3072,6 +3072,18 @@ function startServer() {
         if (!grouped) document.querySelector("#rulesConfirmTargets").click();
         multiPayloads.push({ grouped, sentAfterFirst, payload: window.__sent.at(-1) });
       }
+      const noTargetChoice = copyChoice("stack-copy-no-new-target");
+      noTargetChoice.targetRules.controller = "self";
+      latestState.battlefield.forEach((item) => { item.controllerId = "p2"; item.ownerId = "p2"; });
+      latestState.rulesEngine.pendingChoice = noTargetChoice;
+      window.__sent = [];
+      renderAll();
+      const noNewTarget = {
+        candidates: document.querySelectorAll(".bf-card.rules-valid-target").length,
+        keepAvailable: !document.querySelector("#rulesFlowDeclineBtn").hidden && !document.querySelector("#rulesFlowDeclineBtn").disabled,
+      };
+      document.querySelector("#rulesFlowDeclineBtn").click();
+      noNewTarget.payload = window.__sent.at(-1);
       const logHtml = formatLogEntry({
         actorId: "p1", actorName: "P1", type: "rules_choice_resolved",
         details: {
@@ -3085,11 +3097,95 @@ function startServer() {
       latestState = savedState;
       renderAll();
       return {
-        initial, retargetPayload, keepPayload, logHtml, multiPayloads,
+        initial, retargetPayload, keepPayload, logHtml, multiPayloads, noNewTarget,
         firstCardId: manifestations[0].id,
         secondCardId: manifestations[1].id,
       };
     });
+    const whiteEffectPayment = await page.evaluate(() => {
+      const savedState = structuredClone(latestState);
+      const blue = [...cardsById.values()].find((card) => card.type === "manifestation"
+        && card.temperaments?.includes("vitreous") && Number(card.power) > 0);
+      const results = [];
+      try {
+        latestState.battlefield = [];
+        latestState.players.p1.zones.hand.cards = [blue.id];
+        latestState.tokens = [{ id: "white-effect-essence", ownerId: "p1", isEssence: true,
+          temperament: "transcendent", counters: { essence: 1 } }];
+        for (const mandatory of [false, true]) {
+          latestState.rulesEngine.pendingChoice = { id: `white-effect-${mandatory}`, kind: "effect_payment",
+            playerId: "p1", payment: "{B}{R}", sourceCardId: "q6rha5kz42bkxle_en", mustPay: mandatory };
+          window.__sent = [];
+          renderAll();
+          const initial = { stage: pendingRulesBoardFlow.stage,
+            declineHidden: document.querySelector("#rulesFlowDeclineBtn").hidden,
+            payHidden: document.querySelector("#rulesFlowPayBtn").classList.contains("hidden") };
+          document.querySelector('[data-white-plus="choleric"]').click();
+          document.querySelector("#rulesWhiteConfirm").click();
+          const afterWhite = pendingRulesBoardFlow.stage;
+          document.querySelector("#rulesChangeWhitePayment").click();
+          document.querySelector("#rulesWhiteConfirm").click();
+          toggleRulesBoardPayment(0);
+          const canPay = !document.querySelector("#rulesFlowPayBtn").disabled;
+          document.querySelector("#rulesFlowPayBtn").click();
+          results.push({ mandatory, initial, afterWhite, canPay, payload: window.__sent.at(-1) });
+        }
+      } finally {
+        latestState = savedState;
+        renderAll();
+      }
+      return { blueId: blue.id, results };
+    });
+    for (const result of whiteEffectPayment.results) {
+      assert.deepEqual(result.initial, { stage: "essence_allocation", declineHidden: result.mandatory, payHidden: true });
+      assert.equal(result.afterWhite, "payment");
+      assert.equal(result.canPay, true);
+      assert.deepEqual(result.payload, { type: "resolve_rules_choice", choiceId: `white-effect-${result.mandatory}`,
+        option: "pay", cardIds: [whiteEffectPayment.blueId], transcendentPayment: { choleric: 1 } });
+    }
+    const broGroupedTargets = await page.evaluate(async () => {
+      const savedState = structuredClone(latestState);
+      const manifestation = [...cardsById.values()].find((card) => card.type === "manifestation");
+      const results = [];
+      try {
+        latestState.ended = false;
+        latestState.rulesEngine.enabled = true;
+        for (const cid of ["b0amfkmb3xewx7x_en", "9d2y8uy9ut7omyo_en"]) {
+          latestState.battlefield = [
+            { id: "group-bro", cardId: cid, ownerId: "p1", faceUp: true, fieldZone: "confrontation", x: 550, y: 800, counters: {}, rotation: 0 },
+            { id: "group-mine", cardId: manifestation.id, ownerId: "p1", faceUp: true, fieldZone: "confrontation", x: 700, y: 800, counters: {}, rotation: 0 },
+            { id: "group-foe", cardId: manifestation.id, ownerId: "p2", faceUp: true, fieldZone: "confrontation", x: 700, y: 525, counters: {}, rotation: 0 },
+          ];
+          latestState.rulesEngine.pendingChoice = { id: `bro-${cid}`, kind: "trigger_targets", playerId: "p1",
+            sourceCardId: cid, sourceItemId: "group-bro", eventItemId: "group-bro",
+            targetRules: triggeredAbilitiesByCard.get(cid)[0].targets };
+          window.__sent = [];
+          renderAll();
+          const candidateIds = () => [...document.querySelectorAll(".bf-card.rules-valid-target")].map((el) => el.dataset.itemId).sort();
+          const first = candidateIds();
+          const click = (id) => document.querySelector(`.bf-card[data-item-id="${id}"]`)
+            .dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true, bubbles: true, cancelable: true }));
+          click("group-mine");
+          const second = candidateIds();
+          const sentAfterFirst = window.__sent.length;
+          click("group-foe");
+          await new Promise((resolve) => setTimeout(resolve, 220));
+          results.push({ cid, first, second, sentAfterFirst, payload: window.__sent.at(-1) });
+        }
+      } finally {
+        latestState = savedState;
+        renderAll();
+      }
+      return { manifestationId: manifestation.id, results };
+    });
+    for (const result of broGroupedTargets.results) {
+      assert.deepEqual(result.first, ["group-mine"]);
+      assert.deepEqual(result.second, ["group-foe"]);
+      assert.equal(result.sentAfterFirst, 0);
+      assert.deepEqual(result.payload, { type: "resolve_rules_choice", choiceId: `bro-${result.cid}`,
+        targets: [{ kind: "card", itemId: "group-mine", cardId: broGroupedTargets.manifestationId },
+          { kind: "card", itemId: "group-foe", cardId: broGroupedTargets.manifestationId }] });
+    }
     const ongoingEffect = await page.evaluate(async ({ encodedCardId, targetCardId }) => {
       latestState.rulesEngine.ongoingEffects = [
         {
@@ -4259,6 +4355,8 @@ function startServer() {
     assert.deepEqual(stackCopy.keepPayload, {
       type: "resolve_rules_choice", choiceId: "stack-copy-keep", option: "keep", targets: [],
     });
+    assert.deepEqual(stackCopy.noNewTarget, { candidates: 0, keepAvailable: true,
+      payload: { type: "resolve_rules_choice", choiceId: "stack-copy-no-new-target", option: "keep", targets: [] } });
     for (const { grouped, sentAfterFirst, payload } of stackCopy.multiPayloads) {
       assert.equal(sentAfterFirst, 0);
       assert.deepEqual(payload, { type: "resolve_rules_choice", choiceId: `stack-copy-multi-${grouped}`, option: "retarget",

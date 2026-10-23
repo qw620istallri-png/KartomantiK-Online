@@ -29,7 +29,7 @@ class PaymentChoicesMixin:
             "sourceCardId": choice.get("sourceCardId"),
         }
 
-    def _rules_choice_effect_memory_payment(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets):
+    def _rules_choice_effect_memory_payment(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets, transcendent_payment=None):
         if option not in {"pay", "decline"}:
             return "Choose whether to pay the requested Tribute.", None
         memory = next((
@@ -43,6 +43,7 @@ class PaymentChoicesMixin:
             payment_error, payment = self.rules_action_payment(
                 player_id, "activated_effect", None, card_ids,
                 {"tribute": choice.get("payment")},
+                transcendent_payment=transcendent_payment,
             )
             if payment_error:
                 return payment_error, None
@@ -75,13 +76,14 @@ class PaymentChoicesMixin:
             ),
         }
 
-    def _rules_choice_immediate_effect_payment(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets):
+    def _rules_choice_immediate_effect_payment(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets, transcendent_payment=None):
         if choice.get("kind") == "immediate_effect_payment" and choice.get("purpose") == "bullyboo":
             if option != "pay":
                 return "You must pay this Tribute.", None
             payment_error, payment = self.rules_action_payment(
                 player_id, "activated_effect", None, card_ids,
                 {"tribute": choice.get("payment")},
+                transcendent_payment=transcendent_payment,
             )
             if payment_error:
                 return payment_error, None
@@ -123,6 +125,7 @@ class PaymentChoicesMixin:
                 payment_error, payment = self.rules_action_payment(
                     player_id, "activated_effect", None, card_ids,
                     {"tribute": choice.get("payment")},
+                    transcendent_payment=transcendent_payment,
                 )
                 if payment_error:
                     return payment_error, None
@@ -267,7 +270,7 @@ class PaymentChoicesMixin:
                 )
             return None, payload
 
-    def _rules_choice_effect_payment(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets):
+    def _rules_choice_effect_payment(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets, transcendent_payment=None):
         if option not in {"pay", "decline"}:
             return "Choose whether to pay the requested Tribute.", None
         on_decline = choice.get("onDecline") or {}
@@ -275,6 +278,7 @@ class PaymentChoicesMixin:
             payment_error, payment = self.rules_action_payment(
                 player_id, "activated_effect", None, card_ids,
                 {"tribute": choice.get("payment")},
+                transcendent_payment=transcendent_payment,
             )
             if payment_error:
                 return payment_error, None

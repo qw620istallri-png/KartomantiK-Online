@@ -121,6 +121,8 @@ function localizeServerError(message) {
     "A selected card is no longer in your hand.": "rulesChoiceMovedError",
     "Order every simultaneous Stack action exactly once.": "rulesSimultaneousOrderError",
     "Immediate Effects must remain above other simultaneous actions.": "rulesImmediateOrderError",
+    "Immediate Effects must resolve before another action can be declared.": "rulesImmediateResolving",
+    "Immediate Effects must resolve before priority can be passed.": "rulesImmediateResolving",
     "Choose a valid Persist Manifestation.": "rulesPersistChoiceError",
     "A Persist Manifestation is no longer available.": "rulesPersistExpiredError",
     "Choose whether to return the remembered card.": "rulesMemoryReturnChoiceError",

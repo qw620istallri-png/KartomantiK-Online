@@ -71,6 +71,7 @@ function handCardUnplayableReason(cardId) {
   const card = cardsById.get(cardId);
   if (!rules?.enabled || !card || isObserver || handCardIsPlayable(cardId) || handCardHasHandAction(cardId)) return "";
   if (rules.pendingChoice) return t("unplayablePending");
+  if (rulesImmediateEffectPendingClient()) return t("rulesImmediateResolving");
   if (handDrawLocked()) return t("unplayableDrawing");
   if (rules_pregame_active_client() || rules_recovery_mulligan_active_client()) return t("unplayablePregame");
   // a Trap only goes face down while the First Manifestations are being chosen
@@ -143,7 +144,7 @@ function refuseHandCard(cardId, handIndex = null) {
 function handCardHasHandAction(cardId) {
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
-  if (!rules?.enabled || !card || isObserver || rules.pendingChoice || handDrawLocked() || card.type !== "manifestation") return false;
+  if (!rules?.enabled || !card || isObserver || rules.pendingChoice || rulesImmediateEffectPendingClient() || handDrawLocked() || card.type !== "manifestation") return false;
   // while the first Manifestation (or a mulligan) is being chosen, hand effects are not usable
   if (rules_pregame_active_client() || rules_recovery_mulligan_active_client() || rulesFirstManifestationActive()) return false;
   if (rules.priorityPlayerId !== myPlayerId) return false;
@@ -185,7 +186,7 @@ function handCardIsPlayable(cardId, source = null) {
   const canAfford = () => source ? rulesDraftCanBePaid(buildRulesActionDraft(source)) : rulesCanAffordCard(cardId);
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
-  if (!rules?.enabled || !card || isObserver || rules.pendingChoice || handDrawLocked()) return false;
+  if (!rules?.enabled || !card || isObserver || rules.pendingChoice || rulesImmediateEffectPendingClient() || handDrawLocked()) return false;
   if (rules_pregame_active_client() || rules_recovery_mulligan_active_client()) return false;
   if (isTrapCardClient(cardId)) return trapPlayableClient(cardId);
   if (rulesFirstManifestationActive()) {
@@ -487,8 +488,9 @@ function renderHandTray() {
     })
     .join("") + suspendedCards.map((entry, index) => {
       const cardId = entry.cardId;
+      const playable = handCardIsPlayable(cardId, { cardId, zone: "suspended", suspensionId: entry.id });
       const curve = handCurveStyle(cards.length + index, cards.length + suspendedCards.length + ghostCards.length);
-      return `<div class="hand-card is-playable" data-suspended-card="${esc(cardId)}" data-suspension-id="${esc(entry.id)}" role="button" tabindex="0" aria-label="${esc(`${cardName(cardId)} · ${t("rulesSuspended")}`)}" title="${esc(`${cardName(cardId)} · ${t("rulesSuspended")}`)}" style="${curve}--hand-z:${cards.length + index};${rarityCosmosStyle(cardId)}">
+      return `<div class="hand-card${playable ? " is-playable" : ""}" data-suspended-card="${esc(cardId)}" data-suspension-id="${esc(entry.id)}" role="button" tabindex="0" aria-label="${esc(`${cardName(cardId)} · ${t("rulesSuspended")}`)}" title="${esc(`${cardName(cardId)} · ${t("rulesSuspended")}`)}" style="${curve}--hand-z:${cards.length + index};${rarityCosmosStyle(cardId)}">
         ${raritySurfaceMarkup(null, `<img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}">`)}
         ${automationCoverageBadgeHtml(cardId)}
         <span class="hand-card-revealed-icon" title="${esc(t("rulesSuspended"))}">S</span>
@@ -571,7 +573,7 @@ function renderHandTray() {
     el.addEventListener("contextmenu", (event) => {
       event.preventDefault();
       const items = [{ label: t("inspect"), onSelect: () => showInspect(cardId) }];
-      const rulesItem = rulesActionContextItem({ cardId, zone: "suspended" });
+      const rulesItem = rulesActionContextItem({ cardId, zone: "suspended", suspensionId: el.dataset.suspensionId });
       if (rulesItem) items.push(rulesItem);
       showContextMenu(event.clientX, event.clientY, items);
     });

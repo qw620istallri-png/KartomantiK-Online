@@ -1467,9 +1467,9 @@ function rearmRulesBoardTargetsIfDetached() {
 
 function bindDrag(el, onDrop) {
   el.addEventListener("pointerdown", (event) => {
+    if (event.button !== 0 || event.isPrimary === false) return;
     if (event.target.closest("button, select")) return;
     event.preventDefault();
-    const wrap = $("#battlefieldWrap");
     const startX = event.clientX, startY = event.clientY;
     const startLeft = parseFloat(el.style.left) || 0, startTop = parseFloat(el.style.top) || 0;
     const move = (e) => {
@@ -1478,12 +1478,13 @@ function bindDrag(el, onDrop) {
       el.style.left = x + "px";
       el.style.top = y + "px";
     };
-    const up = () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-      onDrop(parseFloat(el.style.left), parseFloat(el.style.top));
+    const up = (e) => {
+      if (e.type === "pointerup") onDrop(parseFloat(el.style.left), parseFloat(el.style.top));
+      else {
+        el.style.left = startLeft + "px";
+        el.style.top = startTop + "px";
+      }
     };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
+    startCardPointerDrag(event, el, move, up);
   });
 }

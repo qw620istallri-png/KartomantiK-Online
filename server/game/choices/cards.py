@@ -685,15 +685,13 @@ class CardsChoicesMixin:
         follow_up = None
         if will_count:
             source_controller_id = choice.get("sourceControllerId")
+            target_rules = {"min": 1, "max": 1, "cardType": "manifestation", "controller": "opponent"}
             candidates = [
                 item["id"] for item in self.battlefield
                 if item.get("faceUp")
-                and (
-                    self.rules_item_card_rules(item).get("type")
-                    == "manifestation" or item.get("isTokenCard")
-                )
-                and self.rules_item_controller_id(item)
-                != source_controller_id
+                and self.rules_ability_targets_error(target_rules, [{
+                    "kind": "card", "itemId": item["id"], "cardId": item.get("cardId"),
+                }], source_controller_id) is None
             ]
             if candidates:
                 follow_up = {
@@ -702,6 +700,7 @@ class CardsChoicesMixin:
                     "playerId": source_controller_id,
                     "count": will_count,
                     "candidateItemIds": candidates,
+                    "targetRules": target_rules,
                     "sourceCardId": choice.get("sourceCardId"),
                 }
                 self.rules_engine["pendingChoice"] = follow_up

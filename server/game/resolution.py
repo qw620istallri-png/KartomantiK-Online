@@ -48,6 +48,8 @@ class ResolutionMixin:
 
     @replacement_checkpoint("resolution")
     def resolve_rules_top_action(self):
+        if self.ended:
+            return None
         action_stack = self.rules_engine["actionStack"]
         if not action_stack:
             return None
@@ -216,14 +218,14 @@ class ResolutionMixin:
     def resolve_rules_immediate_actions(self):
         resolved = []
         while (
-            self.rules_engine["actionStack"]
+            not self.ended and self.rules_engine["actionStack"]
             and self.rules_engine["actionStack"][-1].get("immediate")
             and not self.rules_engine.get("pendingChoice")
         ):
             result = self.resolve_rules_top_action()
             if result and result.get("status") == "resolved":
                 resolved.append(result)
-        if not self.rules_engine.get("pendingChoice") and not any(action.get("immediate") for action in self.rules_engine["actionStack"]):
+        if not self.ended and not self.rules_engine.get("pendingChoice") and not any(action.get("immediate") for action in self.rules_engine["actionStack"]):
             deferred = self.rules_engine.pop("deferredAfterImmediateActions", [])
             valid = []
             for action in deferred:
@@ -248,6 +250,8 @@ class ResolutionMixin:
             return "Both players must join before using priority.", None
         if self.rules_engine.get("pendingChoice"):
             return "A required card choice must be completed first.", None
+        if self.rules_engine["actionStack"] and self.rules_engine["actionStack"][-1].get("immediate"):
+            return "Immediate Effects must resolve before priority can be passed.", None
         if self.rules_recovery_mulligan_active():
             return "Complete the required Recovery Mulligan before playing.", None
         if passed is False:

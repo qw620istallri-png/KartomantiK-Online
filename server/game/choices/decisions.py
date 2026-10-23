@@ -300,6 +300,13 @@ class DecisionsChoicesMixin:
         items = [self.find_battlefield_item(item_id) for item_id in item_ids]
         if any(item is None for item in items):
             return "A selected Manifestation is no longer on the field.", None
+        for item in items:
+            error = self.rules_ability_targets_error(
+                choice.get("targetRules") or {"min": 1, "max": 1, "cardType": "manifestation"},
+                [{"kind": "card", "itemId": item["id"], "cardId": item.get("cardId")}], player_id,
+            )
+            if error:
+                return error, None
         applied = []
         for item_id, item in zip(item_ids, items):
             effect = {

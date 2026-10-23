@@ -11371,8 +11371,9 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertIsNone(error, error)
         self.assertIn("will-ephemeral", p1["zones"]["graveyard"])
         self.assertIn(timid, p1["zones"]["hand"])
-        session.pass_rules_priority("p2")
-        session.pass_rules_priority("p1")
+        self.assertTrue(action["immediate"])
+        self.assertEqual(len(session.resolve_rules_immediate_actions()), 1)
+        self.assertEqual(session.rules_engine["priorityPasses"], [])
         self.assertTrue(any(
             entry.get("cardId") == timid and entry.get("asSupport")
             for entry in session.rules_engine["playPermissions"]
@@ -14889,12 +14890,17 @@ class LotTwentyFourTests(RealCardRulesCase):
         session.pass_rules_priority("p2")
         session.pass_rules_priority("p1")
         for _ in range(4):
+            # Resolve the entry only; passing later phases can reach an empty
+            # Recovery and end this fixture before its wake-up assertions.
+            if not session.rules_engine["actionStack"] and not session.rules_engine["pendingChoice"]:
+                break
             choice = session.rules_engine["pendingChoice"]
             if choice and choice["kind"] == "optional_stack_action":
                 session.resolve_rules_choice("p1", choice["id"], option="accept")
             session.pass_rules_priority("p2")
             session.pass_rules_priority("p1")
         item = next(i for i in session.battlefield if i["cardId"] == self.SLUMBER)
+        self.assertFalse(session.ended)
         self.assertEqual(item["counters"].get("Sleep"), 3)
         self.assertEqual(session.rules_field_zone(item), "field")
         # Winning removes a Sleep counter, losing hands it to the winner's Vessel.

@@ -307,6 +307,7 @@ function initGameControls() {
         cardId: pendingRulesActionSource.cardId,
         zone: pendingRulesActionSource.zone,
         itemId: pendingRulesActionSource.itemId,
+        ...(pendingRulesActionSource.suspensionId ? { suspensionId: pendingRulesActionSource.suspensionId } : {}),
       },
       target: $("#rulesActionTarget").value.trim(),
       targets,

@@ -3080,6 +3080,7 @@
   }
 
   function startChoiceDrag(event, card, itemId) {
+    if (event.button !== 0 || event.isPrimary === false) return;
     const rect = card.getBoundingClientRect();
     const ghost = card.cloneNode(true);
     ghost.removeAttribute("id");
@@ -3105,23 +3106,18 @@
       myDeckPile()?.classList.toggle("ub-drop-over", over === "deck");
     };
     const up = (e) => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-      window.removeEventListener("pointercancel", up);
       ghost.remove();
       card.classList.remove("ub-choice-lifted");
       document.querySelectorAll(".ub-drop-over").forEach((node) => node.classList.remove("ub-drop-over"));
       const choice = local.choice;
-      if (!choice?.drag) return;
+      if (e.type !== "pointerup" || !choice?.drag || !card.isConnected) return;
       const over = moved ? choiceDropTarget(e.clientX, e.clientY) : null;
       const target = over && choice.drag.targets[over];
       if (target === "item") choice.items.get(itemId)?.click();
       else if (target) target.click();
       else if (!moved && choice.items.has(itemId)) choice.items.get(itemId).click();
     };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
-    window.addEventListener("pointercancel", up);
+    startCardPointerDrag(event, card, move, up);
   }
 
   // ------------------------------------------------------------ wrapping
@@ -3353,7 +3349,7 @@
         if (!active() || !rulesOn()) return;
         if (rulesBoardPaymentKey(ctx) !== undefined) return;
         event.stopImmediatePropagation();
-        if (event.button === 0) dragSupportFromInterzone(el, ctx.itemId, event);
+        if (event.button === 0 && event.isPrimary !== false) dragSupportFromInterzone(el, ctx.itemId, event);
       });
     }
     return original.call(this, el, ctx, ...rest);
@@ -3457,9 +3453,6 @@
       zc.classList.toggle("ub-drop-hover", inZone(event));
     };
     const end = (event) => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", end);
-      window.removeEventListener("pointercancel", end);
       window.removeEventListener("dragstart", noNativeDrag, true);
       el.style.translate = "";
       el.classList.remove("ub-support-drag");
@@ -3469,15 +3462,13 @@
       const swallow = (click) => { click.stopPropagation(); click.preventDefault(); };
       window.addEventListener("click", swallow, { capture: true, once: true });
       setTimeout(() => window.removeEventListener("click", swallow, true), 0);
-      if (event.type !== "pointerup" || !inZone(event)) return;
+      if (event.type !== "pointerup" || !el.isConnected || !inZone(event)) return;
       const current = (latestState?.battlefield || []).find((entry) => entry.id === itemId);
       if (!supportFromInterzoneAllowed(current)) return;
       const payload = { type: "set_rules_field_zone", itemId: current.id, cardId: current.cardId, faceUp: current.faceUp, fieldZone: "confrontation", x: current.x, y: current.y };
       requestCardPlacement(payload, { cardId: current.cardId, zone: "battlefield", itemId: current.id });
     };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", end);
-    window.addEventListener("pointercancel", end);
+    startCardPointerDrag(down, el, move, end);
   }
 
   // the beta table lays cards out itself: no manual layer order
@@ -3510,6 +3501,22 @@
     fieldZone(item) { return active() ? classify(item, firstManifestationIds()).zone : null; },
     decorateCard,
     dropLogical,
+    resetTransient() {
+      hidePeek();
+      cancelLongPress();
+      clearTimeout(local.handRevealTimer);
+      local.handRevealTimer = null;
+      local.handHidden.clear();
+      local.handSeen = null;
+      local.choice = null;
+      local.boardItems = null;
+      local.boardCounts = null;
+      local.vfxClaims = null;
+      local.droppedItem = null;
+      document.body.classList.remove("ub-hand-drawing");
+      document.querySelectorAll(".ub-draw-pop, .ub-choice-arrow, .ub-spotlight, #ubChoiceBanner").forEach((node) => node.remove());
+      document.querySelectorAll(".ub-draw-pending, .ub-choice-lifted, .ub-drop-over").forEach((node) => node.classList.remove("ub-draw-pending", "ub-choice-lifted", "ub-drop-over"));
+    },
     setEnabled(on) { setEnabled(on); apply(); },
   };
 

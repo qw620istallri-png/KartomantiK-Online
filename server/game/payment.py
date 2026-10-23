@@ -1,5 +1,6 @@
 """Tribute, Essence and activation costs."""
 
+import copy
 import math
 import re
 
@@ -443,10 +444,8 @@ class PaymentMixin:
         covered = all(amount <= 0 for amount in remaining.values())
         return covered, excess
 
-    def rules_action_payment(self, player_id, kind, source, payment_card_ids,
-                             ability=None, targets=None,
-                             extra_essence_count=0, extra_payment_card_ids=None,
-                             transcendent_payment=None):
+    def rules_tribute_selection(self, player_id, source, payment_card_ids):
+        """Validate physical Tribute sources independently of the requested cost."""
         if payment_card_ids is None:
             payment_card_ids = []
         if not isinstance(payment_card_ids, list):
@@ -584,6 +583,144 @@ class PaymentMixin:
             ((limbo_source or {}).get("counters") or {}).get("Formula") or 0
         ):
             return "There are not enough Formula counters for those Limbo Tributes.", None
+        return None, {
+            "cardIds": clean_ids, "cardEntries": clean_entries,
+            "sacrificeItems": sacrifice_items, "limboSource": limbo_source,
+            "limboCount": limbo_count,
+        }
+
+    def rules_find_tribute_payment(self, player_id, cost):
+        """Find a legal payment witness, including sources outside the Hand.
+
+        Counter conversion is tested on an isolated session. The real payment
+        validator remains authoritative for source rights and shared budgets.
+        """
+        session = self
+        counter_sources = self.rules_counter_essence_sources(player_id)
+        if counter_sources:
+            memo = {id(getattr(self, key)): getattr(self, key)
+                    for key in ("card_rules", "card_points", "card_labels")}
+            session = copy.deepcopy(self, memo)
+            session._rules_replacement_running = True
+            session.rules_engine["pendingChoice"] = {
+                "kind": "effect_payment", "playerId": player_id,
+            }
+            blocked = set()
+            while True:
+                candidates = [(item, ability) for item, ability in session.rules_counter_essence_sources(player_id)
+                              if (item["id"], ability["id"]) not in blocked]
+                if not candidates:
+                    break
+                item, ability = candidates[0]
+                error, _result = session.spend_rules_counter_essence(player_id, item["id"], ability["id"])
+                if error:
+                    blocked.add((item["id"], ability["id"]))
+        requirements = session.rules_requirements_from_symbols(cost)
+        references = [
+            f"{zone}|{cid}" for zone in ("hand", "graveyard", "receptacle")
+            for cid in session.players[player_id]["zones"].get(zone, [])
+            if session.card_rules.get(cid, {}).get("type") == "manifestation"
+        ] + [f'battlefield|{item["id"]}' for item in session.battlefield]
+        sacrifices = [f'sacrifice|{item["id"]}' for item in session.battlefield
+                      if session.rules_item_controller_id(item) == player_id
+                      and session.rules_field_zone(item) == "interzone"
+                      and session.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"]
+        options = []
+        for reference in references:
+            error, selected = session.rules_tribute_selection(player_id, None, [reference])
+            if error:
+                continue
+            variants = [([reference], selected["cardEntries"][0])]
+            if session.card_rules.get(variants[0][1]["cardId"], {}).get("tributeSacrificePower"):
+                for sacrifice in sacrifices:
+                    error, boosted = session.rules_tribute_selection(player_id, None, [reference, sacrifice])
+                    if not error:
+                        variants.append(([reference, sacrifice], boosted["cardEntries"][0]))
+            options.append(variants)
+
+        def entries(chosen):
+            return [entry for _refs, entry in chosen]
+
+        def refs(chosen):
+            return [ref for selected_refs, _entry in chosen for ref in selected_refs]
+
+        def covers(chosen, remaining):
+            return session.rules_manifestations_cover(entries(chosen), remaining, player_id=player_id)[0]
+
+        def capacity(variant):
+            entry = variant[1]
+            metadata = session.card_rules[entry["cardId"]]
+            # An upper bound is enough to reject costs that need more than the
+            # permitted seven Tribute cards, without exploring every subset.
+            return max(0, int(metadata.get("power") or 0), int(metadata.get("interzoneTributePower") or 0),
+                       int(entry.get("powerOverride") or 0), int(session.rules_tribute_power_override(player_id, metadata) or 0))
+
+        capacities = [max(capacity(variant) for variant in group) for group in options]
+
+        for allocation in session.rules_transcendent_payment_options(player_id, requirements):
+            remaining, _spent = session.rules_essence_payment_plan(player_id, requirements, transcendent_payment=allocation)
+            required = sum(max(0, value) for value in remaining.values())
+            if sum(sorted(capacities, reverse=True)[:7]) < required:
+                continue
+            # Prune impossible colours before exploring combinations. Variants
+            # overestimate supply here; source budgets are checked below.
+            if not covers([variant for group in options for variant in group], remaining):
+                continue
+
+            def search(index, chosen):
+                error, _selected = session.rules_tribute_selection(player_id, None, refs(chosen))
+                if error:
+                    return None
+                if covers(chosen, remaining):
+                    minimal = list(chosen)
+                    for candidate in list(minimal):
+                        reduced = list(minimal)
+                        reduced.remove(candidate)
+                        if covers(reduced, remaining):
+                            minimal = reduced
+                    # A Kanopo may be needed while its extra sacrifice is not.
+                    for position, (selected_refs, entry) in enumerate(minimal):
+                        if len(selected_refs) > 1:
+                            error, plain = session.rules_tribute_selection(player_id, None, selected_refs[:1])
+                            downgraded = list(minimal)
+                            if not error:
+                                downgraded[position] = (selected_refs[:1], plain["cardEntries"][0])
+                                if covers(downgraded, remaining):
+                                    minimal = downgraded
+                    error, payment = session.rules_action_payment(
+                        player_id, "activated_effect", None, refs(minimal), {"tribute": cost},
+                        transcendent_payment=allocation,
+                    )
+                    if not error:
+                        return payment
+                if index >= len(options) or len(chosen) >= 7:
+                    return None
+                if sum(capacity(variant) for variant in chosen) + sum(sorted(capacities[index:], reverse=True)[:7 - len(chosen)]) < required:
+                    return None
+                if not covers(chosen + [variant for group in options[index:] for variant in group], remaining):
+                    return None
+                for variant in options[index]:
+                    found = search(index + 1, chosen + [variant])
+                    if found is not None:
+                        return found
+                return search(index + 1, chosen)
+
+            found = search(0, [])
+            if found is not None:
+                return found
+        return None
+
+    def rules_action_payment(self, player_id, kind, source, payment_card_ids,
+                             ability=None, targets=None,
+                             extra_essence_count=0, extra_payment_card_ids=None,
+                             transcendent_payment=None):
+        error, selection = self.rules_tribute_selection(player_id, source, payment_card_ids)
+        if error:
+            return error, None
+        clean_ids, clean_entries = selection["cardIds"], selection["cardEntries"]
+        sacrifice_items = selection["sacrificeItems"]
+        limbo_source, limbo_count = selection["limboSource"], selection["limboCount"]
+        hand = self.players[player_id]["zones"]["hand"]
         requirements, enforce_printed_cost = self.rules_tribute_requirements(
             kind, source, ability, player_id
         )

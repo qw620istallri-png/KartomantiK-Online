@@ -298,8 +298,9 @@ function renderRulesStack() {
   const opponentFirstValidated = firstValidated.some((playerId) => playerId !== myPlayerId);
   const priorityPasses = rules.priorityPasses || [];
   const myPassActive = priorityPasses.includes(myPlayerId);
-  const myPriority = playersReady && !pendingChoice && !firstManifestation && !isObserver && priorityPlayerId === myPlayerId;
-  const canCancelPass = playersReady && !pendingChoice && !isObserver && myPassActive;
+  const immediatePending = rulesImmediateEffectPendingClient();
+  const myPriority = playersReady && !pendingChoice && !immediatePending && !firstManifestation && !isObserver && priorityPlayerId === myPlayerId;
+  const canCancelPass = playersReady && !pendingChoice && !immediatePending && !isObserver && myPassActive;
   const stack = Array.isArray(rules.actionStack) ? rules.actionStack : [];
   const resolutionArmed = stack.length > 0 && priorityPasses.length > 0;
   if (!myPriority && !$("#rulesActionPanel").classList.contains("hidden")) closeRulesActionPanel();
@@ -313,13 +314,15 @@ function renderRulesStack() {
   $("#rulesTurnContext").textContent = phaseContext;
   $("#rulesTurnContext").title = phaseContext;
   const priority = $("#rulesPriority");
-  priority.classList.toggle("waiting", firstManifestation || !playersReady || !priorityPlayerId || Boolean(pendingChoice));
+  priority.classList.toggle("waiting", firstManifestation || !playersReady || !priorityPlayerId || Boolean(pendingChoice) || immediatePending);
   priority.classList.toggle("is-mine", myPriority);
   priority.classList.toggle("is-passed", canCancelPass);
   priority.textContent = firstManifestation
     ? t(isObserver ? "rulesFirstManifestationObserver" : mineFirstValidated ? "rulesFirstManifestationWaiting" : "rulesFirstManifestationChoose")
     : pendingChoice
     ? (pendingChoice.playerId === myPlayerId ? t("rulesYourChoice") : rulesText("rulesWaitingChoice", { player: rulesPlayerName(pendingChoice.playerId) }))
+    : immediatePending
+    ? t("rulesImmediateResolving")
     : !playersReady || !priorityPlayerId
     ? t("rulesWaitingPlayers")
     : canCancelPass
@@ -395,7 +398,7 @@ function renderRulesStack() {
   $("#passPriorityBtn").setAttribute("aria-pressed", String(canCancelPass));
   $("#passPriorityBtn").disabled = firstManifestation
     ? (!mineHasFirstManifestation || isObserver || mineFirstValidated)
-    : (!myPriority && !canCancelPass && !passAllLocked);
+    : (immediatePending || !myPriority && !canCancelPass && !passAllLocked);
 
   const firstPasser = priorityPasses[0];
   const hint = $("#rulesStackHint");

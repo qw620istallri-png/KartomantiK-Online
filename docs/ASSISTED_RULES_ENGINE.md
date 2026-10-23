@@ -172,6 +172,47 @@ contient plusieurs groupes de cibles. Le client rassemble toutes les cibles avan
 de les envoyer ; les contrats sans groupes à plusieurs cibles proposent Confirmer.
 Les nouvelles cibles sont validées pour le contrôleur de la copie et la copie ne
 déplace pas de deuxième exemplaire physique de la Volonté.
+Conserver les cibles reprend le snapshot serveur sans nouvelle déclaration :
+leur validité est alors revérifiée à la résolution, avec résolution partielle ou
+`invalid_targets` selon les cibles restantes. Un client ne peut pas remplacer ce
+snapshot en envoyant des cibles avec l'option `keep`.
+
+Les cibles des déclenchements différés sont aussi revérifiées avant d'ouvrir leur
+sélecteur, car un Effet Immédiat peut avoir retiré les derniers candidats depuis
+la collecte de l'événement. Le déclenchement sans cible légale est ignoré ; les
+autres actions du lot et la continuation des destinations de confrontation sont
+conservées. Ju Lien ne propose ni n'ouvre de choix d'entrée en Soutien pendant un
+verrouillage de cette entrée. La distribution de pertes de puissance de Kanon
+utilise les contrats de ciblage du champ, y compris Protection, Immunité,
+Stalemate et type effectif.
+
+Les choix `stack_counter_payment`, `effect_memory_payment`,
+`immediate_effect_payment` et `effect_payment` acceptent `transcendentPayment`
+dans `resolve_rules_choice`, comme les déclarations de cartes. Le sélecteur de
+couleurs est proposé avant le tribut en cartes lorsque plusieurs allocations
+blanches sont possibles ; le joueur peut modifier son choix avant de payer. Le
+serveur valide cette allocation avant toute dépense, et un paiement optionnel peut
+toujours être refusé pendant ce choix.
+
+Les contrats groupés restent attachés aux déclenchements comme aux actions jouées.
+Leur disponibilité exige une affectation complète de cibles distinctes : une carte
+ne remplit pas deux rôles. Les candidats joueur, carte de zone et élément de Stack
+passent par le même validateur que les déclarations. Les choix de déclenchement
+publient `sourceItemId` et `eventItemId` pour que le client applique aussi les
+exclusions de source dans chaque groupe. La sélection d'un joueur ne change jamais
+l'identité de l'acteur autorisé à sélectionner sa propre Main.
+
+`rules_can_afford_tribute` recherche un paiement accepté par le validateur de
+règlement, avec les tributaires de Main, Limbes, Réceptacle et champ ainsi que les
+sacrifices de Kanopo. La conversion possible de compteurs en Essences est évaluée
+sur une copie de session. Cette vérification ne dépense aucune ressource réelle,
+respecte les budgets partagés et ne change pas le flux aléatoire de la partie.
+
+`finish_rules_game` termine les parties par abandon, échec de Mulligan, Recovery
+incomplète ou arrêt explicite. Les cartes et la Stack restent consultables, mais
+les choix, continuations et priorités sont annulés. Les résolveurs d'effets,
+choix et Stack refusent ensuite toute progression interne. Aucun nouveau seuil
+de victoire immédiate sur un changement de points n'est introduit.
 
 ## Propriété et contrôle
 
@@ -234,6 +275,11 @@ Une action payée et les déclenchements des Manifestations utilisées comme
 Tribut sont dans le même lot. Reliable Ammonite est le pilote de cette règle.
 
 ## Effets Immédiats
+
+La boucle d'auto-avance résout les effets immédiats au sommet avant de chercher
+une réponse volontaire. Une déclaration et une passe de priorité sont refusées
+dans cet état ; les paiements internes restent des choix bloquants. L'interface
+affiche la résolution en cours et retire ses contrôles de réponse.
 
 Une capacité déclarée avec `"immediate": true` est placée au-dessus des autres
 actions simultanées et résolue sans passe de priorité. La résolution utilise le
@@ -545,6 +591,12 @@ Persist peut être :
   normales ;
 - `minimumPower` / `maximumPower` et effets `power_minimum` /
   `power_maximum` : limites appliquées après les modificateurs.
+
+Une permission de jeu depuis Suspend participe au calcul d'auto-pass, avec
+son timing et ses Tributs propres. Un identifiant de suspension fourni doit
+correspondre à la permission courante. La confidentialité s'applique tant que
+la carte reste suspendue ; une Volonté jouée depuis cette zone devient publique
+sur la Stack. Le seuil d'exil de BOB exige que ses effets soient actifs.
 
 ## Choix bloquants
 

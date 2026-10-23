@@ -50,6 +50,8 @@ function clearRulesBoardTargets() {
 }
 
 function closeRulesBoardFlow() {
+  clearTimeout(rulesFlowFlipTimer);
+  rulesFlowFlipTimer = null;
   document.body.classList.remove("flow-uses-hand");
   clearRulesBoardTargets();
   pendingRulesBoardFlow = null;
@@ -133,6 +135,13 @@ function rulesStackPaymentChoice() {
     : null;
 }
 
+function rulesStackPaymentDeclineLabel(choice) {
+  return t(choice.kind === "effect_memory_payment" ? "rulesDeclineMemoryPayment"
+    : choice.kind === "immediate_effect_payment" ? "rulesDeclineImmediatePayment"
+      : choice.kind === "effect_payment" ? "rulesDeclineEffectPayment"
+        : choice.mode === "cancel" ? "rulesLetEffectCancel" : "rulesLetCardNeutralize");
+}
+
 function syncRulesStackPaymentBoardFlow() {
   const choice = rulesStackPaymentChoice();
   if (!choice) {
@@ -141,11 +150,12 @@ function syncRulesStackPaymentBoardFlow() {
   }
   if (pendingRulesBoardFlow?.mode === "stack_payment" && pendingRulesBoardFlow.choiceId === choice.id) return;
   closeRulesBoardFlow();
-  const source = { cardId: choice.targetCardId, zone: "stack" };
+  const source = { cardId: choice.targetCardId || choice.relatedCardId || choice.sourceCardId, zone: "stack" };
+  const encodedAbility = { tribute: choice.payment };
   const paymentDraft = rulesActionPaymentDraft(
     source,
-    cardsById.get(choice.targetCardId),
-    { tribute: choice.payment },
+    cardsById.get(source.cardId),
+    encodedAbility,
   );
   pendingRulesBoardFlow = {
     mode: "stack_payment",
@@ -153,13 +163,13 @@ function syncRulesStackPaymentBoardFlow() {
     choice,
     source,
     draft: {
-      card: cardsById.get(choice.targetCardId),
-      encodedAbility: null,
+      card: cardsById.get(source.cardId),
+      encodedAbility,
       structuredTargets: [], targetRules: null,
       ...paymentDraft,
     },
     selectedPaymentIndexes: new Set(),
-    stage: "payment",
+    stage: rulesInitialActionStage(paymentDraft) === "essence_allocation" ? "essence_allocation" : "payment",
   };
 }
 
@@ -200,7 +210,9 @@ function syncRulesTriggerTargetBoardFlow() {
     draft: {
       card: cardsById.get(choice.sourceCardId),
       encodedAbility,
-      ...rulesStructuredActionTargets(encodedAbility),
+      ...rulesStructuredActionTargets(encodedAbility, {
+        sourceItemId: choice.sourceItemId, sourceCardId: choice.sourceCardId, eventItemId: choice.eventItemId,
+      }),
       essencePlan: { spent: {}, remaining: {} },
       manifestations: [],
     },
@@ -280,6 +292,8 @@ function resolveRulesStackPayment(option) {
     choiceId: flow.choiceId,
     option,
     cardIds: paymentCardIds,
+    ...(option === "pay" && flow.draft.transcendentPayment !== undefined
+      ? { transcendentPayment: flow.draft.transcendentPayment } : {}),
   });
 }
 
@@ -408,6 +422,7 @@ function submitRulesBoardFlow(target = null) {
       zone: flow.source.zone,
       itemId: (activated || flow.source.playFromField || flow.source.zone === "attached") ? flow.source.itemId : null,
       ...(flow.source.containerId ? { containerId: flow.source.containerId } : {}),
+      ...(flow.source.suspensionId ? { suspensionId: flow.source.suspensionId } : {}),
     },
     target: "",
     targets: selectedTargets.map(rulesTargetPayload),
@@ -795,9 +810,10 @@ function renderRulesBoardFlow() {
     if (now !== pending.counters) {
       counterFlow.counterEssencePending = null;
         const ability = counterFlow.mode === "stack_payment" ? { tribute: counterFlow.choice.payment } : counterFlow.draft.encodedAbility;
-        Object.assign(counterFlow.draft, rulesActionPaymentDraft(counterFlow.source, counterFlow.draft.card, ability));
+        Object.assign(counterFlow.draft, rulesActionPaymentDraft(counterFlow.source, counterFlow.draft.card, ability, counterFlow.draft.transcendentPayment));
       counterFlow.selectedPaymentIndexes.clear();
-        counterFlow.stage = counterFlow.mode === "stack_payment" ? "payment" : rulesInitialActionStage(counterFlow.draft);
+        const nextStage = rulesInitialActionStage(counterFlow.draft);
+        counterFlow.stage = counterFlow.mode === "stack_payment" && nextStage !== "essence_allocation" ? "payment" : nextStage;
       if (counterFlow.stage === "target") { advanceRulesBoardFlow(); return; }
     }
   }
@@ -970,7 +986,7 @@ function renderRulesBoardFlow() {
     return;
   }
 
-  if (flow.mode === "stack_payment") {
+  if (flow.mode === "stack_payment" && flow.stage !== "essence_allocation") {
     const selected = rulesBoardSelectedPayments(flow);
     const remaining = rulesRemainingAfterManifestations(selected, flow.draft.essencePlan.remaining);
     const covered = Object.values(remaining).every((amount) => amount <= 0);
@@ -991,17 +1007,7 @@ function renderRulesBoardFlow() {
     $("#rulesFlowCost").innerHTML = `
       <div class="rules-flow-cost-row"><span>${esc(t("rulesEssenceUsed"))}</span>${rulesTributeUnitsHtml(essence, t("rulesNoEssenceUsed"))}</div>
       <div class="rules-flow-cost-row"><span>${esc(t("rulesTributeRemaining"))}</span>${rulesTributeUnitsHtml(remaining, t("rulesCoveredByEssence"))}</div>`;
-    declineButton.textContent = t(
-      flow.choice.kind === "effect_memory_payment"
-        ? "rulesDeclineMemoryPayment"
-        : flow.choice.kind === "immediate_effect_payment"
-          ? "rulesDeclineImmediatePayment"
-        : flow.choice.kind === "effect_payment"
-          ? "rulesDeclineEffectPayment"
-        : flow.choice.mode === "cancel"
-          ? "rulesLetEffectCancel"
-          : "rulesLetCardNeutralize"
-    );
+    declineButton.textContent = rulesStackPaymentDeclineLabel(flow.choice);
     payButton.textContent = t(
       covered
         ? flow.choice.kind === "effect_memory_payment"
@@ -1017,11 +1023,26 @@ function renderRulesBoardFlow() {
     declineButton.disabled = flow.stage === "committing";
     declineButton.hidden = Boolean(flow.choice.mustPay);
     appendRulesCounterEssenceOptions(flow, remaining);
+    if (flow.draft.transcendentPayment !== undefined) {
+      const changeWhite = document.createElement("button");
+      changeWhite.type = "button";
+      changeWhite.id = "rulesChangeWhitePayment";
+      changeWhite.textContent = t("rulesChangeWhitePayment");
+      changeWhite.onclick = () => { flow.stage = "essence_allocation"; renderRulesBoardFlow(); };
+      $("#rulesFlowCost").appendChild(changeWhite);
+    }
     clearRulesBoardTargets();
     return;
   }
 
   if (flow.stage === "essence_allocation") {
+    $("#rulesFlowPayBtn").classList.add("hidden");
+    if (flow.mode === "stack_payment") {
+      const declineButton = $("#rulesFlowDeclineBtn");
+      declineButton.hidden = Boolean(flow.choice.mustPay);
+      declineButton.disabled = false;
+      declineButton.textContent = rulesStackPaymentDeclineLabel(flow.choice);
+    }
     const choice = flow.draft.essencePlan.transcendentChoice;
     const allocation = flow.transcendentAllocation ||= { ...(flow.draft.transcendentPayment || {}) };
     const colours = Object.keys(choice.requirements).filter((colour) => choice.requirements[colour] > 0);
@@ -1050,7 +1071,7 @@ function renderRulesBoardFlow() {
       if (Object.values(payment).reduce((sum, value) => sum + value, 0) !== choice.amount) return;
       Object.assign(flow.draft, rulesActionPaymentDraft(flow.source, flow.draft.card, flow.draft.encodedAbility, payment));
       flow.selectedPaymentIndexes.clear();
-      if (Object.values(flow.draft.essencePlan.remaining).some((amount) => amount > 0)) {
+      if (flow.mode === "stack_payment" || Object.values(flow.draft.essencePlan.remaining).some((amount) => amount > 0)) {
         flow.stage = "payment";
         renderRulesBoardFlow();
       } else advanceRulesBoardFlow();

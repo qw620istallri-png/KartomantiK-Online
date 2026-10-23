@@ -224,6 +224,8 @@ class CardsEffectsMixin:
         }
 
     def _rules_result_choose_hand_will_as_support_manifestation(self, action, result, player_id, player):
+        if self.rules_support_entry_locked(player_id):
+            return {"kind": result.get("kind"), "status": "prevented"}
         hand = player["zones"]["hand"]
         if not any(self.card_rules.get(c, {}).get("type") in RULES_WILL_TYPES for c in hand):
             return {"kind": result.get("kind"), "status": "no_hand_card"}

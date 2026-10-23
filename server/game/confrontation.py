@@ -57,6 +57,8 @@ class ConfrontationMixin:
                     "startedTurn": self.phase_tracker["turn"],
                 })
         for item in list(self.rules_confrontation_items()):
+            if not self.rules_item_effects_active(item):
+                continue
             threshold = self.rules_item_card_rules(item).get(
                 "suspensionThresholds", {}
             ).get("exile")

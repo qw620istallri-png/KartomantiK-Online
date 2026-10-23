@@ -416,10 +416,19 @@ function showChoiceCardPreview(source) {
   choicePreviewAnchor = source;
 }
 
+const activeCardHoverCleanups = new Set();
+
+function clearCardHoverZooms() {
+  [...activeCardHoverCleanups].forEach((clear) => clear());
+  document.querySelectorAll(".hand-card-hover-clone, .db-card-hover-clone").forEach((node) => node.remove());
+  document.querySelectorAll(".ub-hover-src").forEach((node) => node.classList.remove("ub-hover-src"));
+}
+
 function wireCardHoverZoom(el, cloneClassName) {
   let clone = null;
   let removalObserver = null;
   const clearClone = () => {
+    activeCardHoverCleanups.delete(clearClone);
     if (clone && clone.classList.contains("ub-grow") && el.isConnected) {
       // beta table: the card shrinks back into the hand before it shows again
       const closing = clone;
@@ -433,6 +442,7 @@ function wireCardHoverZoom(el, cloneClassName) {
       el.classList.remove("ub-hover-src");
     }
     clone = null;
+    window.removeEventListener("blur", clearClone);
     if (removalObserver) removalObserver.disconnect();
     removalObserver = null;
   };
@@ -497,13 +507,17 @@ function wireCardHoverZoom(el, cloneClassName) {
       }
     }
     document.body.appendChild(clone);
+    activeCardHoverCleanups.add(clearClone);
     // State updates rebuild card containers with innerHTML. Removing a
     // hovered source does not emit mouseleave, so clean up its fixed clone
     // when the source node is detached as well.
     removalObserver = new MutationObserver(() => {
       if (!el.isConnected) clearClone();
     });
-    removalObserver.observe(el.parentNode, { childList: true });
+    // A containing panel can disappear as a whole, without changing the
+    // source's immediate parent or sending it a mouseleave.
+    removalObserver.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener("blur", clearClone);
     requestAnimationFrame(() => clone && clone.classList.add("zoomed"));
   });
   el.addEventListener("mousemove", (event) => {

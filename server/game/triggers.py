@@ -2,6 +2,7 @@
 
 import re
 import time
+from itertools import combinations
 
 from .common import (
     RULES_SCORE_COUNTS, RULES_AFTER_CHAIN, ADVANCED_PHASES, NUM_SEATS,
@@ -151,44 +152,67 @@ class TriggersMixin:
             clean["targetPlayer"] = True
         return clean
 
-    def rules_trigger_has_no_legal_target(self, target_rules, controller_id, event_item_id=None,
-                                         source_item_id=None, source_card_id=None):
-        """True when the required card targets cannot be met in their legal zones.
-
-        The event still happens; its triggered effect is simply not put on the Stack.
-        """
-        target_rules = target_rules or {}
-        minimum = int(target_rules.get("min") or 0)
+    def rules_legal_target_candidates(self, target_rules, controller_id, event_item_id=None,
+                                     source_item_id=None, source_card_id=None):
+        """Enumerate public targets using the same validation as declarations."""
+        kind = str(target_rules.get("kind") or "card")
         zones = set(target_rules.get("zones") or ["battlefield"])
-        if (
-            target_rules.get("groups")
-            or str(target_rules.get("kind") or "card") not in {"card", "zone_card"}
-            or minimum < 1
-        ):
-            return False
         candidates = [
             {"kind": "card", "itemId": item.get("id"), "cardId": item.get("cardId")}
-            for item in self.battlefield if "battlefield" in zones
+            for item in self.battlefield
+            if kind in {"card", "card_or_stack_action"} and "battlefield" in zones
         ]
         candidates.extend(
             {"kind": "zone_card", "containerId": container_id, "zone": zone, "cardId": card_id}
             for container_id, player in self.players.items()
             for zone in zones - {"battlefield"}
             for card_id in set(player.get("zones", {}).get(zone, []))
+            if kind in {"card", "zone_card"}
         )
-        legal = 0
+        if kind == "player":
+            candidates.extend({"kind": "player", "playerId": pid} for pid in self.players)
+        if kind in {"stack_action", "stack_effect", "stack_item", "card_or_stack_action"}:
+            candidates.extend({
+                "kind": "stack_action" if kind == "card_or_stack_action" else kind,
+                "actionId": action.get("id"),
+            } for action in self.rules_engine.get("actionStack") or [])
+        legal = []
         for candidate in candidates:
             error, clean = self.rules_action_targets([candidate], controller_id)
             if error:
                 continue
             if self.rules_ability_targets_error(
-                {**target_rules, "min": 1}, clean, controller_id, event_item_id=event_item_id,
+                {**target_rules, "min": 1, "max": 1}, clean, controller_id, event_item_id=event_item_id,
                 source_item_id=source_item_id, source_card_id=source_card_id,
             ) is None:
-                legal += 1
-                if legal >= minimum:
-                    return False
-        return True
+                legal.extend(clean)
+        return legal
+
+    def rules_trigger_has_no_legal_target(self, target_rules, controller_id, event_item_id=None,
+                                         source_item_id=None, source_card_id=None):
+        """Required groups need a complete assignment of distinct legal targets."""
+        target_rules = target_rules or {}
+        context = {"event_item_id": event_item_id, "source_item_id": source_item_id,
+                   "source_card_id": source_card_id}
+        groups = target_rules.get("groups")
+        if isinstance(groups, list):
+            candidates = [self.rules_legal_target_candidates(group, controller_id, **context) for group in groups]
+
+            def assign(index, chosen):
+                if index == len(candidates):
+                    error, clean = self.rules_action_targets(chosen, controller_id)
+                    return not error and len(clean) == len(chosen)
+                return any(target not in chosen and assign(index + 1, chosen + [target])
+                           for target in candidates[index])
+
+            return not assign(0, [])
+        minimum = int(target_rules.get("min") or 0)
+        if minimum < 1:
+            return False
+        candidates = self.rules_legal_target_candidates(target_rules, controller_id, **context)
+        return not any(self.rules_ability_targets_error(
+            target_rules, list(chosen), controller_id, **context,
+        ) is None for chosen in combinations(candidates, minimum))
 
     def rules_trigger_target_error(self, card_id, event, target_player_id=None, *,
                                    face_up=True, trigger_targets=None, controller_id=None,
@@ -231,7 +255,9 @@ class TriggersMixin:
                 ) != trigger.get("zone")
             ):
                 continue
-            target_rules = ability.get("targets") or {}
+            target_rules = self.rules_action_target_rules({"ability": ability}) or {}
+            if isinstance(target_rules.get("groups"), list):
+                target_rules = {**target_rules, "min": len(target_rules["groups"]), "max": len(target_rules["groups"])}
             targets = clean_targets
             if target_rules.get("kind") == "player":
                 if target_player_id in self.players:
@@ -269,6 +295,8 @@ class TriggersMixin:
             return []
         if owner_id not in self.players:
             return []
+        if event_item_id is None and event in RULES_ENTRY_EVENTS:
+            event_item_id = item_id
         controller_id = (
             controller_id if controller_id in self.players else owner_id
         )
@@ -478,7 +506,9 @@ class TriggersMixin:
                     )
                 continue
             clean_result = self.clean_rules_trigger_result(raw_result) or self.clean_rules_action_result(raw_result)
-            target_rules = ability.get("targets") or {}
+            target_rules = self.rules_action_target_rules({"ability": ability}) or {}
+            if isinstance(target_rules.get("groups"), list):
+                target_rules = {**target_rules, "min": len(target_rules["groups"]), "max": len(target_rules["groups"])}
             clean_targets = (
                 list(supplied_targets)
                 if int(target_rules.get("max") or target_rules.get("min") or 0) > 0
@@ -682,7 +712,7 @@ class TriggersMixin:
                             "maxPower", "minPower", "excludeEventSource", "excludeSource", "sourceOnly",
                             "fieldZonesByType", "enteredThisTurn", "enteredInterzoneThisTurn", "confrontationOutcome", "owner",
                             "firstManifestationOnly", "counter", "minCounters",
-                            "limboReasons", "container", "targetsConfrontationManifestation",
+                            "limboReasons", "container", "targetsConfrontationManifestation", "groups",
                         }
                     },
                 },
@@ -732,6 +762,8 @@ class TriggersMixin:
                     "playerId": controller_id,
                     "sourceCardId": card_id,
                     "targetRules": action["ability"]["targets"],
+                    "sourceItemId": (action.get("source") or {}).get("itemId"),
+                    "eventItemId": (action["ability"].get("trigger") or {}).get("eventItemId"),
                     "_triggerAction": action,
                     "_resumeConfrontationCleanup": bool(
                         resume_confrontation_cleanup
@@ -886,6 +918,8 @@ class TriggersMixin:
         zones = player.get("zones") or {}
         hand = zones.get("hand") or []
         source = action.get("source") or {}
+        if kind == "choose_hand_will_as_support_manifestation" and self.rules_support_entry_locked(player_id):
+            return False
         if kind in {"optional_discard_then_draw", "optional_discard_up_to"}:
             return bool(hand)
         if kind in {
@@ -937,6 +971,8 @@ class TriggersMixin:
         self, actions, next_index=0, accepted_actions=None,
         priority_player_id=None,
     ):
+        if self.ended:
+            return True
         actions = [action for action in actions if isinstance(action, dict)]
         accepted_actions = list(accepted_actions or [])
         # A prompt temporarily gives priority to its chooser. Keep the event's
@@ -946,6 +982,18 @@ class TriggersMixin:
         while next_index < len(actions):
             action = actions[next_index]
             next_index += 1
+            target_choice = action.get("_preStackTargetChoice")
+            source = action.get("source") or {}
+            if target_choice and self.rules_trigger_has_no_legal_target(
+                target_choice.get("targetRules"), action.get("controllerId"),
+                event_item_id=((action.get("ability") or {}).get("trigger") or {}).get("eventItemId"),
+                source_item_id=source.get("itemId"), source_card_id=source.get("cardId"),
+            ):
+                # An Immediate may have removed the last candidate since this
+                # batch was collected. Do not open an impossible target picker.
+                if target_choice.get("resumeConfrontationCleanup"):
+                    self.rules_engine["resumeConfrontationCleanupAfterChoices"] = True
+                continue
             if (
                 action.get("optional") and not action.get("optionalAccepted")
                 and not self.rules_optional_trigger_available(action)
@@ -1003,6 +1051,8 @@ class TriggersMixin:
                     "playerId": controller_id,
                     "sourceCardId": (action.get("source") or {}).get("cardId"),
                     "targetRules": target_choice.get("targetRules") or {},
+                    "sourceItemId": (action.get("source") or {}).get("itemId"),
+                    "eventItemId": ((action.get("ability") or {}).get("trigger") or {}).get("eventItemId"),
                     "_triggerAction": action,
                     "_resumeConfrontationCleanup": bool(
                         target_choice.get("resumeConfrontationCleanup")
@@ -1018,12 +1068,24 @@ class TriggersMixin:
                 self.rules_engine["priorityPlayerId"] = controller_id
                 return False
             accepted_actions.append(action)
-        return self._queue_rules_simultaneous_actions_ready(
+        completed = self._queue_rules_simultaneous_actions_ready(
             accepted_actions, priority_player_id
         )
+        self.resume_rules_confrontation_cleanup_after_choices()
+        return completed
+
+    def resume_rules_confrontation_cleanup_after_choices(self):
+        if self.ended:
+            return
+        if not self.rules_engine.get("pendingChoice") and self.rules_engine.pop(
+            "resumeConfrontationCleanupAfterChoices", False
+        ):
+            self._queue_next_rules_confrontation_destination()
 
     def queue_rules_simultaneous_actions(self, actions, priority_player_id=None):
         """Confirm optional triggers, then queue one simultaneous event atomically."""
+        if self.ended:
+            return True
         pending = self.rules_engine.get("pendingChoice") or {}
         new_actions = [action for action in actions or [] if isinstance(action, dict)]
         immediate = [action for action in new_actions if action.get("immediate")]
@@ -1052,6 +1114,8 @@ class TriggersMixin:
 
     def queue_or_defer_rules_simultaneous_actions(self, actions,
                                                   priority_player_id=None):
+        if self.ended:
+            return True
         actions = [action for action in actions if isinstance(action, dict)]
         if not actions:
             return True
@@ -1062,6 +1126,11 @@ class TriggersMixin:
         return self.queue_rules_simultaneous_actions(actions, priority_player_id)
 
     def flush_rules_deferred_simultaneous_actions(self):
+        if self.ended:
+            return []
+        if self.rules_engine.get("pendingChoice"):
+            return []
+        self.resume_rules_confrontation_cleanup_after_choices()
         if self.rules_engine.get("pendingChoice"):
             return []
         observed = self.queue_rules_observed_event_triggers(defer=True)

@@ -189,6 +189,7 @@ class ActionsMixin:
                 entry for entry in self.rules_engine.get("suspendedCards") or []
                 if entry.get("cardId") == card_id
                 and entry.get("playableByPlayerId") == player_id
+                and (not source.get("suspensionId") or entry.get("id") == source["suspensionId"])
             ), None)
             if suspension is None or kind != "play_card":
                 return "This Suspended card is not available to play.", None
@@ -355,13 +356,13 @@ class ActionsMixin:
                     "ownerId": self.card_owner_in_zone(container_id, zone, card_id),
                 })
             elif kind == "player":
-                player_id = str(target.get("playerId") or "")
-                target_key = (kind, player_id)
-                if not player_id or player_id not in self.players:
+                target_player_id = str(target.get("playerId") or "")
+                target_key = (kind, target_player_id)
+                if not target_player_id or target_player_id not in self.players:
                     return "A selected player target is no longer in the game.", None
                 if target_key in seen_targets:
                     continue
-                clean_targets.append({"kind": "player", "playerId": player_id})
+                clean_targets.append({"kind": "player", "playerId": target_player_id})
             elif kind in {"stack_action", "stack_effect", "stack_item"}:
                 action_id = str(target.get("actionId") or "")
                 target_key = (kind, action_id)

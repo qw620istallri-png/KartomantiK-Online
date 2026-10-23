@@ -240,9 +240,28 @@ function prepareRulesEffectVfxChanges(nextState) {
 
 function removeRulesVfx() {
   clearRulesVfxQueue();
+  for (const timer of rulesVfxDelayedTimers) window.clearTimeout(timer);
+  rulesVfxDelayedTimers.clear();
+  for (const cardId of [...rulesVfxHolds.keys()]) rulesVfxReleaseHold(cardId);
+  if (handDrawLockTimer) window.clearTimeout(handDrawLockTimer);
+  handDrawLockTimer = null;
+  handDrawLockUntil = 0;
+  document.body.classList.remove("hand-drawing");
+  document.querySelectorAll('body > [class^="rules-vfx-"], body > .vfx-particle, body > .score-float').forEach((node) => node.remove());
   rulesVfxActiveLabels.length = 0;
   $$(".rules-vfx-spotlight, .rules-vfx-resolve-reveal, .rules-vfx-target-arrow, .rules-vfx-phase-banner, .rules-vfx-flight, .rules-vfx-impact, .rules-vfx-exhaust-ring, .rules-vfx-exhaust-label, .rules-vfx-impact-burst, .rules-vfx-target-lock, .rules-vfx-effect-cast, .rules-vfx-effect-seal, .rules-vfx-effect-release, .rules-vfx-stack-pulse")
     .forEach((element) => element.remove());
+}
+
+const rulesVfxDelayedTimers = new Set();
+
+function setRulesVfxTimeout(callback, delay) {
+  const timer = window.setTimeout(() => {
+    rulesVfxDelayedTimers.delete(timer);
+    callback();
+  }, delay);
+  rulesVfxDelayedTimers.add(timer);
+  return timer;
 }
 
 // ---------------------------------------------------------------- VFX pacing
@@ -751,7 +770,7 @@ function playRulesVfxDice(roll, anchor) {
     { offset: .92, transform: "translate(-50%,-50%) rotate(0deg) scale(1)", opacity: 1 },
     { transform: "translate(-50%,-50%) rotate(0deg) scale(.8)", opacity: 0 },
   ], { duration: 2000, easing: "ease-out" }).finished.finally(() => window.clearInterval(timer));
-  window.setTimeout(() => spawnVfxParticles({ x: anchor.x, y: anchor.y - 70 }, "capricious", { count: 10, spread: 40, direction: "out" }), vfxMs(1100));
+  setRulesVfxTimeout(() => spawnVfxParticles({ x: anchor.x, y: anchor.y - 70 }, "capricious", { count: 10, spread: 40, direction: "out" }), vfxMs(1100));
 }
 
 // A card that is about to fly away stays visible at its place until its flight starts, so it never vanishes first
@@ -789,7 +808,7 @@ function rulesVfxAfterWinnerChoices(play, waited = 0) {
   const waiting = latestState?.rulesEngine?.pendingChoice?.kind === "confrontation_destination"
     || (Array.isArray(result?.pendingOwnItemIds) && result.pendingOwnItemIds.length > 0);
   if (waiting && waited < 60000) {
-    window.setTimeout(() => rulesVfxAfterWinnerChoices(play, waited + 300), 300);
+    setRulesVfxTimeout(() => rulesVfxAfterWinnerChoices(play, waited + 300), 300);
     return;
   }
   play();
@@ -856,12 +875,12 @@ function playRulesVfxFlight(kind, origin, target, options = {}) {
         x: origin.x + dx * progress,
         y: origin.y + dy * progress - Math.sin(Math.PI * progress) * arc * 0.9,
       };
-      window.setTimeout(
+      setRulesVfxTimeout(
         () => spawnVfxParticles(point, flightTemperament, { count: 2, spread: 14 }),
         vfxMs(trailDelay + duration * progress),
       );
     }
-    window.setTimeout(
+    setRulesVfxTimeout(
       () => spawnVfxParticles(target, flightTemperament, big ? { count: 20, spread: 70 } : { count: 8, spread: 36 }),
       vfxMs(trailDelay + duration * 0.7),
     );
@@ -1439,7 +1458,7 @@ function playRulesVfxSpotlight(event) {
     const angle = Math.atan2(point.y - centerY, point.x - centerX);
     const edge = Math.min(width, height) / 2 + 6;
     playRulesVfxTargetArrow({ x: centerX + Math.cos(angle) * edge, y: centerY + Math.sin(angle) * edge }, point, index);
-    if (element) window.setTimeout(() => playRulesVfxTargetLock(element, 2000), vfxMs(420 + index * 90));
+    if (element) setRulesVfxTimeout(() => playRulesVfxTargetLock(element, 2000), vfxMs(420 + index * 90));
     else playRulesVfxPulse(point, "triggered", { delay: 420 + index * 90 });
   });
 }
@@ -1516,7 +1535,7 @@ function playRulesVfxEventInner(event) {
       const cleanupMoves = event.cleanupMoves || [];
       const cleanupStep = 380;
       cleanupMoves.slice(0, 12).forEach((move, index) => {
-        window.setTimeout(() => rulesVfxAfterWinnerChoices(() => {
+        setRulesVfxTimeout(() => rulesVfxAfterWinnerChoices(() => {
           if (rulesVfxReducedMotion()) {
             playRulesVfxImpact(move.target, t(move.zone === "exile" ? "rulesVfxExiled" : "rulesVfxMoved"), "moved");
             return;
@@ -1577,7 +1596,7 @@ function playRulesVfxEventInner(event) {
           playRulesVfxImpact(move.target, t("rulesVfxDestroyed") || t("rulesVfxMoved"), "destroyed");
           return;
         }
-        window.setTimeout(() => {
+        setRulesVfxTimeout(() => {
           playRulesVfxWither(move.origin, move.target, move.cardId);
         }, vfxMs(500 + index * 260));
       });
@@ -1589,7 +1608,7 @@ function playRulesVfxEventInner(event) {
           const card = rolled.itemId ? document.querySelector(`#battlefield [data-item-id="${CSS.escape(rolled.itemId)}"]`) : null;
           const rect = card?.getBoundingClientRect();
           const anchor = rect?.width ? { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 } : target;
-          window.setTimeout(() => playRulesVfxDice(Number(rolled.roll), anchor), vfxMs(index * 320));
+          setRulesVfxTimeout(() => playRulesVfxDice(Number(rolled.roll), anchor), vfxMs(index * 320));
         });
       }
       if (entry.details?.effectResult?.kind === "neutralize_stack_action") {

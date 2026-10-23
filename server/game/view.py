@@ -35,6 +35,7 @@ class ViewMixin:
                 result.pop("cardId", None)
                 result.pop("cardIds", None)
         if (value.get("suspensionId") and value.get("fromZone") != "battlefield"
+                and value.get("zone") != "suspended"  # a Will played from Suspend is now public on the Stack
                 and (viewer_id is None or viewer_id not in {value.get("ownerId"), value.get("playableByPlayerId")})
                 and value.get("destination") not in SHARED_ZONES):
             result.pop("cardId", None)

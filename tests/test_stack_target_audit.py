@@ -230,7 +230,7 @@ class StackTargetAuditTests(game_tests.RealCardRulesCase):
         self.assertEqual(result["kind"], "choice_required")
         choice = session.rules_engine["pendingChoice"]
         before = copy.deepcopy(session.rules_engine["actionStack"])
-        error, _ = session.resolve_rules_choice("p1", choice["id"], option="keep")
+        error, _ = session.resolve_rules_choice("p1", choice["id"], option="retarget", targets=original["targets"])
         self.assertIsNotNone(error)
         self.assertEqual(before, session.rules_engine["actionStack"])
         error, _ = session.resolve_rules_choice("p1", choice["id"], option="retarget", targets=[self.target(second), self.target(first)])

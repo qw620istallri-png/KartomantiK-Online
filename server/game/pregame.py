@@ -582,9 +582,7 @@ class PregameMixin:
                     "winnerIds": winner_ids,
                     "draw": len(winner_ids) != 1,
                 }
-                self.rules_engine["outcome"] = outcome
-                self.rules_engine["priorityPlayerId"] = None
-                self.ended = True
+                self.finish_rules_game(outcome)
             elif all(
                 candidate_id in self.rules_engine["readyPlayerIds"]
                 for candidate_id in self.players
@@ -796,9 +794,7 @@ class PregameMixin:
                     "draw": len(winner_ids) != 1,
                     "turn": self.phase_tracker["turn"],
                 }
-                self.rules_engine["outcome"] = outcome
-                self.rules_engine["priorityPlayerId"] = None
-                self.ended = True
+                self.finish_rules_game(outcome)
             else:
                 resumed = True
                 self._advance_rules_after_recovery()
@@ -882,10 +878,9 @@ class PregameMixin:
             if len(player["zones"]["hand"]) < hand_limits[player_id]
         ]
         if incomplete_player_ids:
-            self.rules_engine["outcome"] = self.calculate_final_scores()
-            self.rules_engine["outcome"]["incompletePlayerIds"] = incomplete_player_ids
-            self.rules_engine["priorityPlayerId"] = None
-            self.ended = True
+            outcome = self.calculate_final_scores()
+            outcome["incompletePlayerIds"] = incomplete_player_ids
+            self.finish_rules_game(outcome)
         else:
             required = [
                 player_id for player_id in self.players

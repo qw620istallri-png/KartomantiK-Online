@@ -512,6 +512,61 @@ function reorderHandDrop(cardId, clientX) {
   send({ type: "reorder", zone: "hand", order });
 }
 
+// One card gesture owns its temporary visuals. A release can be lost outside
+// the window, and state updates can detach its source before it arrives.
+let activeCardPointerDrag = null;
+
+function startCardPointerDrag(down, source, onMove, onEnd, { capture = true } = {}) {
+  activeCardPointerDrag?.();
+  let ended = false;
+  const matches = (event) => event.pointerId === down.pointerId;
+  const finish = (event) => {
+    if (ended) return;
+    ended = true;
+    window.removeEventListener("pointermove", move, true);
+    window.removeEventListener("pointerup", up, true);
+    window.removeEventListener("pointercancel", up, true);
+    window.removeEventListener("pointerdown", replace, true);
+    source.removeEventListener("lostpointercapture", lost);
+    window.removeEventListener("blur", cancel);
+    window.removeEventListener("pagehide", cancel);
+    document.removeEventListener("visibilitychange", visibility);
+    observer.disconnect();
+    if (activeCardPointerDrag === cancel) activeCardPointerDrag = null;
+    if (source.hasPointerCapture?.(down.pointerId)) source.releasePointerCapture(down.pointerId);
+    onEnd(event);
+  };
+  const cancel = () => finish({ type: "cancel" });
+  const visibility = () => { if (document.hidden) cancel(); };
+  const replace = (event) => { if (event.button === 0 && event.isPrimary !== false) cancel(); };
+  const lost = (event) => { if (matches(event)) cancel(); };
+  const move = (event) => {
+    if (!matches(event)) return;
+    if (!source.isConnected || (["mouse", "pen"].includes(event.pointerType) && !(event.buttons & 1))) {
+      cancel();
+      return;
+    }
+    onMove(event);
+  };
+  const up = (event) => { if (matches(event)) finish(event); };
+  const observer = new MutationObserver(() => { if (!source.isConnected) cancel(); });
+  activeCardPointerDrag = cancel;
+  observer.observe(document.body, { childList: true, subtree: true });
+  window.addEventListener("pointermove", move, true);
+  window.addEventListener("pointerup", up, true);
+  window.addEventListener("pointercancel", up, true);
+  window.addEventListener("pointerdown", replace, true);
+  if (capture) source.addEventListener("lostpointercapture", lost);
+  window.addEventListener("blur", cancel);
+  window.addEventListener("pagehide", cancel);
+  document.addEventListener("visibilitychange", visibility);
+  // Keep receiving releases outside the card/window; synthetic events used
+  // by previews/tests may not have a live browser pointer to capture.
+  if (capture) {
+    try { source.setPointerCapture(down.pointerId); } catch {}
+  }
+}
+
 function bindCardDragSource(el, ctx) {
   el.addEventListener("pointerdown", (event) => {
     if (event.button !== 0 || event.isPrimary === false) return;
@@ -524,7 +579,6 @@ function bindCardDragSource(el, ctx) {
     let moved = false;
     let ghost = null;
     const move = (e) => {
-      if (e.pointerId !== event.pointerId) return;
       const threshold = event.pointerType === "touch" ? 12 : 6;
       if (!moved && Math.hypot(e.clientX - startX, e.clientY - startY) > threshold) {
         moved = true;
@@ -536,11 +590,6 @@ function bindCardDragSource(el, ctx) {
       }
     };
     const up = (e) => {
-      if (e.pointerId !== undefined && e.pointerId !== event.pointerId) return;
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-      window.removeEventListener("pointercancel", up);
-      window.removeEventListener("blur", cancel);
       clearDropHighlights();
       removeGhost(ghost);
       if (moved) {
@@ -550,11 +599,7 @@ function bindCardDragSource(el, ctx) {
         if (e.type === "pointerup" && el.isConnected) resolveDrop(ctx, e.clientX, e.clientY);
       }
     };
-    const cancel = () => up({ type: "cancel" });
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
-    window.addEventListener("pointercancel", up);
-    window.addEventListener("blur", cancel);
+    startCardPointerDrag(event, el, move, up);
   });
 }
 

@@ -1061,6 +1061,17 @@ async def auto_advance_rules_phases(session, actor_id):
     first_phase = session.current_phase_id()
     first_turn = session.phase_tracker["turn"]
     while steps < AUTO_PASS_MAX_STEPS:
+        stack = session.rules_engine.get("actionStack") or []
+        if (not session.ended and stack and stack[-1].get("immediate")
+                and not session.rules_engine.get("pendingChoice")):
+            immediate_results = session.resolve_rules_immediate_actions()
+            for result in immediate_results:
+                await record_rules_resolution(session, result, actor_id)
+            # A replacement-order choice may pause before the first resolution.
+            count = max(1, len(immediate_results))
+            steps += count
+            automatic_resolutions += count
+            continue
         if session.rules_top_action_has_no_valid_targets():
             result = session.resolve_rules_top_action()
             if not result or result.get("status") != "resolved":
@@ -1551,6 +1562,7 @@ async def handle_message(ws, info, data):
             actor_id, data.get("choiceId"), data.get("cardIds"),
             option=data.get("option"), item_id=data.get("itemId"),
             placement=data.get("placement"), targets=data.get("targets"),
+            transcendent_payment=data.get("transcendentPayment"),
         )
         if error:
             await send_error(ws, error)
@@ -2399,7 +2411,7 @@ async def handle_message(ws, info, data):
             return await send_error(ws, "Only the tournament organizer can end this match.")
         if is_observer or player is None or player.get("seat") != 0:
             return await send_error(ws, "Only the session's first player can end it for everyone.")
-        session.ended = True
+        session.finish_rules_game(session.rules_engine.get("outcome"))
         session.add_log(actor_id, "end_session", {})
         session.touch()
         await broadcast_state(session)
@@ -2533,7 +2545,7 @@ async def handle_message(ws, info, data):
                     "ownerId": alert["ownerId"], "zone": alert["zone"], "followupAction": "end_tournament",
                 })
         session.status = "ended"
-        session.ended = True
+        session.finish_rules_game(session.rules_engine.get("outcome"))
         session.add_log(actor_id, "end_tournament", {}, actor_name="Organizer")
         session.touch()
         await broadcast_state(session)
@@ -2795,7 +2807,13 @@ async def handler(ws):
         if info:
             if info.get("role") == "player" and not info.get("left"):
                 player = info["session"].players.get(info["playerId"])
-                if player:
+                still_connected = any(
+                    peer.get("session") is info["session"]
+                    and peer.get("playerId") == info["playerId"]
+                    and peer.get("role") == "player" and not peer.get("left")
+                    for peer in connections.values()
+                )
+                if player and not still_connected:
                     player["connected"] = False
                     info["session"].add_log(info["playerId"], "player_disconnected", {"seat": player.get("seat")})
             await broadcast_state(info["session"])

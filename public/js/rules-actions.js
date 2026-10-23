@@ -63,13 +63,18 @@ function rulesFirstManifestationSlotTakenClient() {
     ));
 }
 
+function rulesImmediateEffectPendingClient() {
+  const stack = latestState?.rulesEngine?.actionStack || [];
+  return Boolean(stack[stack.length - 1]?.immediate);
+}
+
 function rulesActivatedActionDraft(item, abilityOverride = null) {
   const abilities = rulesActivatedAbilitiesForItem(item);
   const ability = abilityOverride
     || abilities[0]
     || null;
   if (
-    isObserver
+    isObserver || rulesImmediateEffectPendingClient()
     || !item?.faceUp
     // a card without its effects (Stalemate Zone, lost effects) has nothing to activate
     || item.effectsInactive
@@ -266,7 +271,7 @@ function rulesActionKindOptions(zone) {
     : [["activated_effect", "rulesKindActivated"], ["triggered_effect", "rulesKindTriggered"]];
 }
 
-function rulesStructuredActionTargets(encodedAbility) {
+function rulesStructuredActionTargets(encodedAbility, context = {}) {
   // abilities may spell their target groups as targets.groups (Shattering the Self)
   if (!Array.isArray(encodedAbility?.targetGroups) && Array.isArray(encodedAbility?.targets?.groups)) {
     encodedAbility = { ...encodedAbility, targetGroups: encodedAbility.targets.groups };
@@ -274,7 +279,7 @@ function rulesStructuredActionTargets(encodedAbility) {
   if (Array.isArray(encodedAbility?.targetGroups)) {
     const groups = encodedAbility.targetGroups;
     const structuredTargets = groups.flatMap((group, targetGroupIndex) => (
-      rulesStructuredActionTargets({ targets: group }).structuredTargets
+      rulesStructuredActionTargets({ targets: group }, context).structuredTargets
         .map((target) => ({ ...target, targetGroupIndex }))
     ));
     return {
@@ -309,6 +314,9 @@ function rulesStructuredActionTargets(encodedAbility) {
     .filter((item) => targetMatchesRules(item.cardId, item))
     .filter((item) => {
       const controller = item.controllerId || item.ownerId;
+      if (targetRules?.sourceOnly && context.sourceItemId && item.id !== context.sourceItemId) return false;
+      if (targetRules?.excludeSource && item.id === context.sourceItemId) return false;
+      if (targetRules?.excludeEventSource && item.id === context.eventItemId) return false;
       // same field zone as the server (rules_field_zone): a resolved persistent Will has no
       // explicit fieldZone and stands in the "field" zone, a First Manifestation in the Confrontation
       const itemFieldZone = ["field", "confrontation", "interzone", "stalemate"].includes(item.fieldZone)
@@ -357,6 +365,7 @@ function rulesStructuredActionTargets(encodedAbility) {
         key: `zone:${containerId}:${zone}:${cardId}:${index}`,
       })))
   )).filter((item) => targetMatchesRules(item.cardId))
+    .filter((item) => !targetRules?.excludeSource || item.cardId !== context.sourceCardId)
     .filter((item) => (
       targetRules?.owner === "self"
         ? item.ownerId === myPlayerId
@@ -737,8 +746,8 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
   if (!hasPrintedTribute) Object.assign(paymentRequirements, essenceCostRequirements);
   let essencePlan = rulesEssencePaymentPreview(paymentRequirements, transcendentPayment);
   // Before the player assigns White Essences, keep every remaining colour's
-  // Tribute candidates visible. Stack payment choices retain their existing flow.
-  if (essencePlan.transcendentChoice && transcendentPayment === undefined && source.zone !== "stack") {
+  // Tribute candidates visible, including payments requested by effects.
+  if (essencePlan.transcendentChoice && transcendentPayment === undefined) {
     essencePlan = rulesEssencePaymentPreview(paymentRequirements, {});
   }
   const essenceCostPlan = rulesEssencePaymentPreview(essenceCostRequirements, undefined, true);
@@ -983,7 +992,7 @@ function buildRulesActionDraft(source, abilityOverride = undefined) {
       ),
     };
   }
-  const targetDraft = rulesStructuredActionTargets(encodedAbility);
+  const targetDraft = rulesStructuredActionTargets(encodedAbility, { sourceItemId: source?.itemId, sourceCardId: source?.cardId });
   if (encodedAbility?.targets?.sourceOnly && source?.itemId) {
     targetDraft.structuredTargets = targetDraft.structuredTargets.filter(
       (target) => target.id === source.itemId,
@@ -1011,6 +1020,7 @@ function openRulesActionPanel(source) {
   pendingRulesActionSource = {
     cardId: source.cardId,
     zone: source.zone,
+    ...(source.suspensionId ? { suspensionId: source.suspensionId } : {}),
     itemId: source.itemId || null,
     abilityId: encodedAbility?.id || null,
     actionKind: source.actionKind || null,
@@ -1148,7 +1158,7 @@ function rulesActionContextItem(source) {
       onSelect: () => send({ type: "play_first_manifestation_trap", cardId: source.cardId }),
     };
   }
-  if (!rules?.enabled || rules.priorityPlayerId !== myPlayerId || isObserver) return null;
+  if (!rules?.enabled || rules.priorityPlayerId !== myPlayerId || isObserver || rulesImmediateEffectPendingClient()) return null;
   if (["hand", "suspended"].includes(source.zone)) {
     const cardType = rulesPlayType(cardsById.get(source.cardId));
     const handAbility = source.zone === "hand"
