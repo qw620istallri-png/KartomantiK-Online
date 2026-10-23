@@ -8638,7 +8638,7 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertEqual(item["fieldZone"], "interzone")
         self.assertTrue(item["isSupport"])
         self.assertEqual(item["rotation"], 90)
-        self.assertEqual(item["counters"], {"power": 2, "Atavic": 3})
+        self.assertEqual(item["counters"], {"Atavic": 3})
         self.assertEqual(item["controllerId"], "p1")
         self.assertNotIn("effectsDisabled", item)
         self.assertNotIn("temperamentOverride", item)
@@ -8648,7 +8648,7 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertEqual(session.rules_engine["ongoingEffects"], [])
         self.assertEqual(
             session.rules_manifestation_characteristics(item),
-            {"power": 5, "temperament": "phlegmatic"},
+            {"power": 3, "temperament": "phlegmatic"},
         )
 
     def test_support_entry_batch_uses_reusable_trigger_scopes_and_token_result(self):

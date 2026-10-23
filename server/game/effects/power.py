@@ -442,14 +442,20 @@ class PowerEffectsMixin:
             ) or []
             if effect not in removed_effects
         ]
-        metadata = self.rules_item_card_rules(item)
         item["controllerId"] = item.get("ownerId")
+        # These two legacy counter slots hold stat modifiers, not resources
+        # such as Gem, Quiet or Shackle counters.
+        for key in ("power", "tempCounter"):
+            (item.get("counters") or {}).pop(key, None)
         for key in {
             "effectsDisabled", "zeroPowerSustained",
             "temperamentOverride", "supportUntilTurn", "hasFloat",
-            "baseDoublings",
+            "baseDoublings", "gummoCopy", "minimumPower", "maximumPower",
         }:
             item.pop(key, None)
+        if item.get("willManifestation"):
+            self.revert_rules_will_manifestation(item)
+        metadata = self.rules_item_card_rules(item)
         if metadata.get("supportWinDestination"):
             item["supportWinDestination"] = metadata[
                 "supportWinDestination"

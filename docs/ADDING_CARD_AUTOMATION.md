@@ -174,9 +174,14 @@ contrôleur s'il souhaite utiliser l'effet avant de demander ses cibles et
 avant de l'ajouter à la Pile.
 
 `cleanse_target` retire uniquement les modifications ajoutées à la carte :
-effets continus qui la modifient, caractéristiques copiées, perte d'effets,
-Tempérament ou Support temporaire et contrôle ajouté. Ne jamais supprimer ses
-compteurs, sa zone, son orientation ni ses caractéristiques imprimées.
+modificateurs résolus, caractéristiques copiées, perte d'effets, Tempérament ou
+Support temporaire et contrôle ajouté. Les emplacements internes `power` et
+`tempCounter` contiennent des bonus/malus et sont nettoyés ; les vrais compteurs
+nommés (Gem, Quiet, Shackle, Atavic…) restent. L'orientation, les caractéristiques
+imprimées et les mémoires d'effets sont conservées. Une Volonté animée redevient
+immédiatement une Volonté dans sa zone du champ ; les autres cartes gardent leur
+zone et leur rôle. Un passif imprimé externe continue à s'appliquer. Un lien
+résolu de Jaw/Nectar retiré par Cleanse attend une nouvelle activation de ciblage.
 
 ### Permission de jeu
 

@@ -106,10 +106,29 @@ class StackEffectsMixin:
             if entry.get("source", {}).get("itemId") == source_item_id
             and entry.get("kind") == result.get("effectKind")
         ), None)
-        if effect is None or target_item is None:
+        if target_item is None:
             return {
                 "kind": "retarget_source_effect",
                 "status": "target_missing",
+            }
+        if effect is None:
+            # Cleanse or the old target leaving removes the modifier, but the
+            # persistent Will can still use its printed retargeting ability.
+            source_item = self.find_battlefield_item(source_item_id)
+            source_rules = self.rules_item_card_rules(source_item) if source_item else {}
+            template = next((
+                ability for ability in [*(source_rules.get("triggeredAbilities") or []),
+                                        *(source_rules.get("playedAbilities") or [])]
+                if (ability.get("ongoingEffect") or {}).get("kind") == result.get("effectKind")
+            ), None)
+            effects = self.create_rules_ongoing_effects({
+                **action, "targets": [target], "ability": template,
+            }) if template else []
+            if not effects:
+                return {"kind": "retarget_source_effect", "status": "target_missing"}
+            return {
+                "kind": "retarget_source_effect", "status": "retargeted",
+                "effectId": effects[0]["id"], "previousItemId": None, "itemId": target_item["id"],
             }
         previous_item_id = effect.get("target", {}).get("itemId")
         powers_before = self.rules_field_power_snapshot()

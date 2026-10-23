@@ -3056,6 +3056,7 @@
         "cost:exhaustSource",
         "cost:tribute",
         "ongoing:lose_effects",
+        "phase-window",
         "result:retarget_source_effect"
       ],
       "testRefs": [

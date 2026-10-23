@@ -395,10 +395,14 @@ Les primitives existantes couvrent également :
   Repelling Urn.
 
 Cleanse supprime les effets et caractéristiques ajoutés à sa cible, y compris
-les effets continus, pertes d'effets, changements de Tempérament, permissions
-temporaires, Protection, copie de caractéristiques et contrôle ajouté. La
-carte conserve sa zone, son rôle normal dans cette zone, son orientation, son
-texte et ses statistiques imprimés ainsi que tous ses compteurs.
+les modificateurs résolus, pertes d'effets, changements de Tempérament,
+Protection, copie de caractéristiques et contrôle ajouté. Les vrais compteurs
+nommés restent, tandis que les emplacements internes `power` et `tempCounter`
+(bonus/malus) sont nettoyés. L'orientation, le texte, les statistiques imprimées
+et les mémoires d'effets restent. Une Volonté animée redevient immédiatement une
+Volonté dans sa zone du champ ; les autres cartes gardent leur zone et leur rôle.
+Les passifs imprimés externes continuent à s'appliquer. Les modificateurs de
+Jaw/Nectar nettoyés ne reviennent qu'après un nouveau ciblage payé.
 
 Rally déclare désormais un nombre optionnel d'Essences supplémentaires après
 le paiement de son Tribut minimal. Le serveur prélève exactement ce montant et
@@ -1366,3 +1370,12 @@ Travail fait sur le PC après la beta 139, jamais publié, récupéré via la br
 - Katun voit les sorties par effet même remplacées par suspension ou exil, et les sorties de copies. Le contrôleur de l'effet peut être n'importe quel joueur ; les déplacements naturels des règles et le simple réordonnancement d'une zone restent exclus.
 - Les événements de destruction de Manifestation et d'entrée de Manifestation dans un Réceptacle vérifient le type effectif de la carte. Une destruction remplacée n'est pas annoncée comme réalisée.
 - Régressions et arbitrages : [audit des événements après 139.42](AUDIT_OBSERVED_EVENTS_AFTER_139_42.md).
+
+## Audit Cleanse et durée des états (23 octobre 2026)
+
+- Cleanse nettoie les bonus/malus des anciens emplacements de compteurs `power` / `tempCounter`, les copies `gummoCopy` et les bornes directes de puissance. La restauration des capacités imprimées intervient après suppression des copies, pour éviter de rétablir une propriété héritée.
+- `willManifestation` est annulé immédiatement avec `revert_rules_will_manifestation` : la Volonté reste sur le champ, cesse d'être un Soutien et retrouve ses capacités d'origine sans répéter son entrée.
+- Les mémoires ne sont pas des modificateurs. Elles survivent à Cleanse, aux Limbes et à la main ; le Deck et l'Exil les retirent selon le livret.
+- Si un lien a disparu après Cleanse ou le départ de la cible, `retarget_source_effect` le recrée depuis la capacité initiale compilée de sa source. Jaw, Nectar, Armored Husk et Altruistic Inflorescence conservent leurs coûts et leur Épuisement ; aucun lien ne revient automatiquement.
+- Le reciblage de Nectar exige maintenant `end_actions`, comme son texte et les autres Volontés de cette famille. Le registre d'automatisation est régénéré.
+- Scénarios et limites : [audit Cleanse et états après 139.42](AUDIT_CLEANSE_STATE_AFTER_139_42.md).
