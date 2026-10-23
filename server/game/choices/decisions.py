@@ -68,7 +68,7 @@ class DecisionsChoicesMixin:
                 (self.rules_engine.get("firstManifestationItemIds") or {}).get(player_id)
             )
             if first is not None:
-                self.rules_engine["ongoingEffects"].append({
+                self.append_rules_ongoing_effect({
                     "id": new_id(), "actionId": None, "abilityId": "points-or-weaken-first",
                     "controllerId": player_id,
                     "source": {"cardId": choice.get("sourceCardId")},
@@ -321,7 +321,7 @@ class DecisionsChoicesMixin:
                 "startedTurn": self.phase_tracker["turn"],
                 "value": -1,
             }
-            self.rules_engine["ongoingEffects"].append(effect)
+            self.append_rules_ongoing_effect(effect)
             applied.append(effect["id"])
         self.rules_engine["pendingChoice"] = None
         return None, {
@@ -357,7 +357,7 @@ class DecisionsChoicesMixin:
             "duration": "until_end_of_turn",
             "startedTurn": self.phase_tracker["turn"],
         }
-        self.rules_engine["ongoingEffects"].append(effect)
+        self.append_rules_ongoing_effect(effect)
         self.rules_engine["pendingChoice"] = None
         return None, {
             "kind": "random_target_effect",

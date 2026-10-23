@@ -466,10 +466,7 @@ class BoardMixin:
         )
         if not total:
             return 0
-        counters = item.setdefault("counters", {})
-        counters["power"] = int(counters.get("power") or 0) + total
-        if total < 0:
-            self.record_rules_power_lost(item.get("id"))
+        self.adjust_rules_power_counter(item, total)
         return total
 
     def mark_rules_confrontation_entry(self, item):
@@ -495,7 +492,7 @@ class BoardMixin:
         item["supportUsedTurn"] = turn
         for bonus in self.rules_engine.get("supportEntryBonuses") or []:
             if bonus.get("turn") == turn and bonus.get("playerId") == self.rules_item_controller_id(item):
-                self.rules_engine["ongoingEffects"].append({
+                self.append_rules_ongoing_effect({
                     "id": new_id(), "actionId": None, "abilityId": "support-entry-bonus",
                     "controllerId": bonus["playerId"],
                     "source": {"cardId": bonus.get("sourceCardId")},

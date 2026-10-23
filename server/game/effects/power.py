@@ -22,12 +22,7 @@ class PowerEffectsMixin:
         item = self.find_battlefield_item((target or {}).get("itemId"))
         if item is None:
             return {"kind": result.get("kind"), "status": "target_missing"}
-        counters = item.setdefault("counters", {})
-        counters["power"] = int(counters.get("power") or 0) + int(result.get("value") or 0)
-        if int(result.get("value") or 0) < 0:
-            self.record_rules_power_lost(item["id"])
-        elif int(result.get("value") or 0) > 0:
-            self.record_rules_power_gained(item["id"])
+        self.adjust_rules_power_counter(item, int(result.get("value") or 0))
         return {
             "kind": result.get("kind"), "status": "changed",
             "itemId": item["id"], "value": int(result.get("value") or 0),
@@ -74,8 +69,7 @@ class PowerEffectsMixin:
         ):
             return {"kind": result.get("kind"), "status": "target_missing"}
         base = int(self.card_rules.get(reference.get("cardId"), {}).get("power") or 0)
-        counters = weakened.setdefault("counters", {})
-        counters["power"] = int(counters.get("power") or 0) - base
+        self.adjust_rules_power_counter(weakened, -base)
         return {
             "kind": result.get("kind"), "status": "weakened",
             "itemId": weakened["id"], "value": -base,
@@ -192,7 +186,7 @@ class PowerEffectsMixin:
                 "value": int(result.get("value") or 1),
             }
             effect["powerAdjustment"] = effect["value"] - self.rules_manifestation_characteristics(item)["power"]
-            self.rules_engine["ongoingEffects"].append(effect)
+            self.append_rules_ongoing_effect(effect)
             effects.append(effect["id"])
         return {
             "kind": result.get("kind"),
@@ -218,7 +212,7 @@ class PowerEffectsMixin:
             if not error:
                 exiled.append(card_id)
         if exiled and source_item is not None:
-            self.rules_engine["ongoingEffects"].append({
+            self.append_rules_ongoing_effect({
                 "id": new_id(), "actionId": action.get("id"),
                 "abilityId": (action.get("ability") or {}).get("id"),
                 "controllerId": player_id,
@@ -246,7 +240,7 @@ class PowerEffectsMixin:
         ), None)
         item = self.find_battlefield_item((target or {}).get("itemId"))
         if item is not None and total:
-            self.rules_engine["ongoingEffects"].append({
+            self.append_rules_ongoing_effect({
                 "id": new_id(), "actionId": action.get("id"),
                 "abilityId": (action.get("ability") or {}).get("id"),
                 "controllerId": player_id,
@@ -284,7 +278,7 @@ class PowerEffectsMixin:
                 "startedTurn": self.phase_tracker["turn"], "value": int(value),
             }
             effect["powerAdjustment"] = effect["value"] - self.rules_manifestation_characteristics(item)["power"]
-            self.rules_engine["ongoingEffects"].append(effect)
+            self.append_rules_ongoing_effect(effect)
             effect_ids.append(effect["id"])
         return {
             "kind": result.get("kind"), "status": "set" if effect_ids else "nothing",
@@ -355,8 +349,7 @@ class PowerEffectsMixin:
             exiled.append(card_id)
             added += int(self.card_rules.get(card_id, {}).get("power") or 0)
         if exiled and source_item is not None:
-            counters = source_item.setdefault("counters", {})
-            counters["power"] = int(counters.get("power") or 0) + added
+            self.adjust_rules_power_counter(source_item, added)
         return {
             "kind": result.get("kind"), "status": "exiled" if exiled else "nothing",
             "cardIds": exiled, "power": added,
@@ -426,6 +419,7 @@ class PowerEffectsMixin:
                 "status": "target_missing",
             }
         item_id = item.get("id")
+        powers_before = self.rules_field_power_snapshot()
         removed_effects = [
             effect for effect in self.rules_engine.get(
                 "ongoingEffects"
@@ -469,6 +463,7 @@ class PowerEffectsMixin:
         else:
             item.pop("supportWinEffect", None)
         self.prune_rules_ongoing_effects()
+        self.record_rules_power_changes(powers_before)
         return {
             "kind": result.get("kind"),
             "status": "cleansed",
@@ -491,6 +486,7 @@ class PowerEffectsMixin:
                 "status": "source_missing",
             }
         counter_name = str(result.get("counter") or "")
+        power_before = self.rules_manifestation_characteristics(source_item)["power"]
         counters = source_item.setdefault("counters", {})
         counter_key = next((
             key for key in counters
@@ -499,6 +495,7 @@ class PowerEffectsMixin:
         counters[counter_key] = max(0, int(counters.get(counter_key) or 0) + int(
             result.get("value") or 0
         ))
+        self.record_rules_power_change(source_item, power_before)
         if (
             result.get("onZeroTemperament") in RULES_TEMPERAMENTS
             and counters[counter_key] == 0 and int(result.get("value") or 0) < 0
@@ -617,6 +614,7 @@ class PowerEffectsMixin:
                 "status": "counter_missing",
                 "counter": counter_name,
             }
+        powers_before = self.rules_field_power_snapshot()
         source_counters[source_key] = int(
             source_counters.get(source_key) or 0
         ) - amount
@@ -630,6 +628,7 @@ class PowerEffectsMixin:
         target_counters[target_key] = int(
             target_counters.get(target_key) or 0
         ) + amount
+        self.record_rules_power_changes(powers_before)
         return {
             "kind": "move_counter",
             "status": "moved",
@@ -655,8 +654,7 @@ class PowerEffectsMixin:
                 "status": "target_missing",
             }
         value = int(result.get("value") or 0)
-        counters = target_item.setdefault("counters", {})
-        counters["power"] = int(counters.get("power") or 0) + value
+        self.adjust_rules_power_counter(target_item, value)
         return {
             "kind": "adjust_target_power",
             "status": "adjusted",

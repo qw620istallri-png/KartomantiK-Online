@@ -385,6 +385,7 @@ class StackMixin:
         elif definition.get("scope") == "global":
             targets = [{"kind": "global"}]
 
+        powers_before = self.rules_field_power_snapshot()
         # A source-bound ability can only maintain one modifier for that
         # ability. Re-resolving it replaces the previous modifier.
         if duration in {"while_source_and_target_on_field", "while_source_on_field"}:
@@ -462,16 +463,7 @@ class StackMixin:
                 )
             self.rules_engine["ongoingEffects"].append(effect)
             created.append(effect)
-            if (
-                effect["kind"] == "power_modifier" and target_kind == "card"
-                and int(effect.get("value") or 0) < 0
-            ):
-                self.record_rules_power_lost(target.get("itemId"))
-            if (
-                effect["kind"] == "power_modifier" and target_kind == "card"
-                and int(effect.get("value") or 0) > 0
-            ):
-                self.record_rules_power_gained(target.get("itemId"))
+        self.record_rules_power_changes(powers_before)
         return created
 
     def prune_rules_ongoing_effects(self):

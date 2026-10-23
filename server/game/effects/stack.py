@@ -112,12 +112,14 @@ class StackEffectsMixin:
                 "status": "target_missing",
             }
         previous_item_id = effect.get("target", {}).get("itemId")
+        powers_before = self.rules_field_power_snapshot()
         effect["target"] = {
             "kind": "card",
             "itemId": target_item.get("id"),
             "cardId": target_item.get("cardId"),
             "ownerId": target_item.get("ownerId"),
         }
+        self.record_rules_power_changes(powers_before)
         return {
             "kind": "retarget_source_effect",
             "status": "retargeted",

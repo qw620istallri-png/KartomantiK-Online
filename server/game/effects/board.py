@@ -603,7 +603,7 @@ class BoardEffectsMixin:
         related["cannotBeNeutralized"] = True
         related_source = related.get("source") or {}
         if self.card_rules.get(related_source.get("cardId"), {}).get("type") == "persistent_will":
-            self.rules_engine["ongoingEffects"].append({
+            self.append_rules_ongoing_effect({
                 "id": new_id(), "actionId": action.get("id"),
                 "abilityId": (action.get("ability") or {}).get("id"),
                 "controllerId": related.get("controllerId"),

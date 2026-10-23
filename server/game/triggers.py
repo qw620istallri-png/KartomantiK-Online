@@ -1343,7 +1343,9 @@ class TriggersMixin:
         counter_key = next((
             key for key in counters if str(key).casefold() == counter_name.casefold()
         ), counter_name)
+        before = self.rules_field_power_snapshot()
         counters[counter_key] = max(0, int(counters.get(counter_key) or 0) + int(result.get("value") or 0))
+        self.record_rules_power_changes(before)
         return True
 
     def queue_rules_persistent_will_entry_watchers(self, item, defer=False):

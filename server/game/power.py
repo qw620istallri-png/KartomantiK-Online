@@ -4,6 +4,38 @@ from .common import RULES_TEMPERAMENTS
 
 
 class PowerMixin:
+    def record_rules_power_change(self, item, previous_power):
+        """Observe effective Power, after caps/floors, rather than a nominal modifier."""
+        if item is None or not item.get("faceUp") or self.rules_field_zone(item) == "stalemate":
+            return
+        if self.rules_item_card_rules(item).get("type") != "manifestation" and not item.get("isTokenCard"):
+            return
+        current = self.rules_manifestation_characteristics(item)["power"]
+        if current < previous_power:
+            self.record_rules_power_lost(item.get("id"))
+        elif current > previous_power:
+            self.record_rules_power_gained(item.get("id"))
+
+    def rules_field_power_snapshot(self):
+        return {item["id"]: self.rules_manifestation_characteristics(item)["power"]
+                for item in self.battlefield if item.get("faceUp")}
+
+    def record_rules_power_changes(self, before):
+        for item in self.battlefield:
+            if item.get("id") in before:
+                self.record_rules_power_change(item, before[item["id"]])
+
+    def adjust_rules_power_counter(self, item, value):
+        before = self.rules_field_power_snapshot()
+        counters = item.setdefault("counters", {})
+        counters["power"] = int(counters.get("power") or 0) + int(value)
+        self.record_rules_power_changes(before)
+
+    def append_rules_ongoing_effect(self, effect):
+        before = self.rules_field_power_snapshot()
+        self.rules_engine["ongoingEffects"].append(effect)
+        self.record_rules_power_changes(before)
+
     def rules_continuous_power_modifier(self, item):
         """Resolve printed, public power rules without creating Stack objects."""
         if item not in self.battlefield or not item.get("faceUp"):

@@ -161,7 +161,7 @@ class RemovalEffectsMixin:
         for entry in sacrificed:
             self.put_zone_card(entry["ownerId"], "graveyard", entry["cardId"], entry["ownerId"], "top")
         if sacrificed:
-            self.rules_engine["ongoingEffects"].append({
+            self.append_rules_ongoing_effect({
                 "id": new_id(), "actionId": action.get("id"),
                 "abilityId": "karmapult-power-loss",
                 "controllerId": action.get("controllerId") or player_id,

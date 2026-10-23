@@ -119,8 +119,7 @@ class CardsChoicesMixin:
                     return error, None
                 host = self.find_battlefield_item(choice.get("sourceItemId"))
                 if host is not None:
-                    counters = host.setdefault("counters", {})
-                    counters["power"] = int(counters.get("power") or 0) - len(card_ids)
+                    self.adjust_rules_power_counter(host, -len(card_ids))
                 self.rules_engine["pendingChoice"] = None
                 return None, {
                     "kind": "gorlok_exile", "playerId": player_id, "targetPlayerId": target_id,
@@ -583,7 +582,7 @@ class CardsChoicesMixin:
             if matched:
                 source_item = self.find_battlefield_item(choice.get("sourceItemId"))
                 if source_item is not None:
-                    self.rules_engine["ongoingEffects"].append({
+                    self.append_rules_ongoing_effect({
                         "id": new_id(), "actionId": choice.get("actionId"),
                         "abilityId": "declared-name-power",
                         "controllerId": player_id,
@@ -598,7 +597,6 @@ class CardsChoicesMixin:
                         "duration": "until_end_of_turn",
                         "startedTurn": self.phase_tracker["turn"],
                     })
-                    self.record_rules_power_gained(source_item["id"])
                 return None, {**payload, "status": "matched"}
             error, _owner, replacement = self.move_zone_card_by_effect(
                 owner_id, "deck", owner_id, "graveyard", top_card, "top",
@@ -972,7 +970,7 @@ class CardsChoicesMixin:
                         self.rules_engine.get("firstManifestationItemIds", {}).get(winners[0])
                     )
                     if first is not None:
-                        self.rules_engine["ongoingEffects"].append({
+                        self.append_rules_ongoing_effect({
                             "id": new_id(), "actionId": choice.get("actionId"),
                             "abilityId": "obelisk-gift-boost",
                             "controllerId": winners[0],
@@ -1138,15 +1136,14 @@ class CardsChoicesMixin:
             weak_item = self.find_battlefield_item(choice["weakenTargetItemId"])
             base = int(self.card_rules.get(selected[0], {}).get("power") or 0) if selected else 0
             if weak_item is not None and base:
-                counters = weak_item.setdefault("counters", {})
-                counters["power"] = int(counters.get("power") or 0) - base
+                self.adjust_rules_power_counter(weak_item, -base)
                 weakened = {"itemId": weak_item["id"], "value": -base}
         power_gain = None
         if choice.get("sourcePowerPerDiscard") and selected:
             source_item = self.find_battlefield_item(choice.get("sourceItemId"))
             if source_item is not None:
                 value = len(selected) * int(choice["sourcePowerPerDiscard"])
-                self.rules_engine["ongoingEffects"].append({
+                self.append_rules_ongoing_effect({
                     "id": new_id(), "actionId": choice.get("actionId"),
                     "abilityId": "discard-wills-for-power",
                     "controllerId": choice.get("controllerId") or player_id,

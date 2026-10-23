@@ -221,7 +221,7 @@ class ChainMixin:
                 )
                 boost = int(after_chain.get("value") or 0)
                 if first_item is not None and boost:
-                    self.rules_engine["ongoingEffects"].append({
+                    self.append_rules_ongoing_effect({
                         "id": new_id(), "actionId": action_id,
                         "abilityId": "chain-controller-boost",
                         "controllerId": boost_player_id,
@@ -248,8 +248,7 @@ class ChainMixin:
                     (target or {}).get("itemId")
                 )
                 if target_item is not None:
-                    counters = target_item.setdefault("counters", {})
-                    counters["power"] = int(counters.get("power") or 0) + base_power
+                    self.adjust_rules_power_counter(target_item, base_power)
                     after_result = {
                         "kind": "power_counter", "itemId": target_item["id"],
                         "value": base_power,
@@ -501,7 +500,7 @@ class ChainMixin:
                 "startedTurn": self.phase_tracker["turn"],
                 "value": count,
             }
-            self.rules_engine["ongoingEffects"].append(effect)
+            self.append_rules_ongoing_effect(effect)
             effects.append(effect)
         return effects
 

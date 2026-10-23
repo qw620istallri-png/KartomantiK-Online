@@ -556,8 +556,10 @@ class SignatureEffectsMixin:
         )
         if source_item is None:
             return {"kind": result.get("kind"), "status": "source_missing"}
+        powers_before = self.rules_field_power_snapshot()
         source_item["effectsDisabled"] = True
         self.prune_rules_ongoing_effects()
+        self.record_rules_power_changes(powers_before)
         return {
             "kind": result.get("kind"), "status": "disabled",
             "itemId": source_item["id"], "cardId": source_item.get("cardId"),

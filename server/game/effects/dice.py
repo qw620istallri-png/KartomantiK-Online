@@ -65,8 +65,7 @@ class DiceEffectsMixin:
                     discarded += 1
             source_item["rollDiscarded"] = discarded
             if discarded:
-                counters = source_item.setdefault("counters", {})
-                counters["power"] = int(counters.get("power") or 0) + discarded
+                self.adjust_rules_power_counter(source_item, discarded)
             return {
                 "kind": result.get("kind"), "status": "resolved",
                 "roll": roll, "discarded": discarded,
@@ -168,7 +167,7 @@ class DiceEffectsMixin:
             "startedTurn": self.phase_tracker["turn"],
             "value": value,
         }
-        self.rules_engine["ongoingEffects"].append(effect)
+        self.append_rules_ongoing_effect(effect)
         return {
             "kind": result.get("kind"),
             "status": "resolved",
@@ -205,7 +204,7 @@ class DiceEffectsMixin:
                     "startedTurn": self.phase_tracker["turn"],
                     "value": value,
                 }
-                self.rules_engine["ongoingEffects"].append(effect)
+                self.append_rules_ongoing_effect(effect)
             return {
                 "kind": result.get("kind"),
                 "status": "resolved", "table": table,
@@ -241,7 +240,7 @@ class DiceEffectsMixin:
                 "startedTurn": self.phase_tracker["turn"],
                 "value": value,
             }
-            self.rules_engine["ongoingEffects"].append(effect)
+            self.append_rules_ongoing_effect(effect)
             effect_result = {"status": "power", "value": value}
         return {
             "kind": result.get("kind"),
@@ -341,9 +340,7 @@ class DiceEffectsMixin:
             (action.get("source") or {}).get("itemId")
         )
         if source_item is not None and even_count:
-            source_item.setdefault("counters", {})["power"] = int(
-                source_item.get("counters", {}).get("power") or 0
-            ) + even_count
+            self.adjust_rules_power_counter(source_item, even_count)
         discard_count = min(
             odd_count, len(self.players[player_id]["zones"]["hand"])
         )

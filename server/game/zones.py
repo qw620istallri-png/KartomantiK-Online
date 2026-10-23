@@ -245,7 +245,8 @@ class ZonesMixin:
             return owner_id, "exile", "top"
         return container_id, zone, position
 
-    def put_zone_card(self, container_id, zone, card_id, owner_id, position="top"):
+    def put_zone_card(self, container_id, zone, card_id, owner_id, position="top", *,
+                      limbo_reason="move", from_zone=None):
         container_id, zone, position = self.rules_zone_move_destination(
             container_id, zone, card_id, owner_id, position,
         )
@@ -281,6 +282,9 @@ class ZonesMixin:
             ] = int(self.phase_tracker.get("turn") or 1)
         if zone in {"deck", "exile"} and hasattr(self, "rules_engine"):
             self.clear_rules_effect_memories(owner_id, card_id)
+        if (zone == "graveyard" and from_zone != "graveyard"
+                and getattr(self, "rules_engine", {}).get("enabled")):
+            self.record_rules_limbo_entry(owner_id, card_id, limbo_reason, from_zone=from_zone)
         return True
 
     @staticmethod
@@ -322,15 +326,13 @@ class ZonesMixin:
         to_container_id, to_zone, position = self.rules_zone_move_destination(
             to_container_id, to_zone, card_id, owner_id, position,
         )
-        self.put_zone_card(to_container_id, to_zone, card_id, owner_id, position)
+        self.put_zone_card(to_container_id, to_zone, card_id, owner_id, position,
+                           limbo_reason=limbo_reason, from_zone=from_zone)
         if (
             self.rules_engine.get("enabled")
             and to_zone == "graveyard"
             and from_zone in {"hand", "deck"}
         ):
-            self.record_rules_limbo_entry(
-                owner_id, card_id, limbo_reason, from_zone=from_zone
-            )
             # Only a discard is a discard: a Tribute moved from the Hand is not
             if limbo_reason == "discard":
                 self.record_rules_observed_event("cards_discarded", owner_id)
@@ -929,22 +931,24 @@ class ZonesMixin:
         error, owner_id, replacement = self.rules_zone_move_replacement(
             from_container_id, from_zone, to_zone, card_id, to_container_id,
         )
-        if error or replacement:
+        if error:
             return error, owner_id, replacement
-        error, owner_id = self.move_zone_card(
-            from_container_id, from_zone,
-            to_container_id, to_zone, card_id, position,
-        )
+        if not replacement:
+            error, owner_id = self.move_zone_card(
+                from_container_id, from_zone,
+                to_container_id, to_zone, card_id, position,
+            )
         if (
             not error
             and from_zone in {"graveyard", "receptacle"}
+            and (replacement or (from_container_id, from_zone) != (to_container_id, to_zone))
             and self.card_rules.get(card_id, {}).get("type") == "manifestation"
         ):
             self.record_rules_observed_event(
                 "manifestation_left_by_effect", from_container_id,
                 cardId=card_id,
             )
-        return error, owner_id, None
+        return error, owner_id, replacement
 
     def reset_cards_to_owners(self):
         self.forget_revealed_hand()

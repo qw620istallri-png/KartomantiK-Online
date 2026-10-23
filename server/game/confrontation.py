@@ -43,7 +43,7 @@ class ConfrontationMixin:
                     item.get("ownerId"), "graveyard", defer=True,
                 ))
             for other in self.rules_confrontation_items(controller_id):
-                self.rules_engine["ongoingEffects"].append({
+                self.append_rules_ongoing_effect({
                     "id": new_id(), "actionId": None,
                     "abilityId": "sacrifice-at-power-bonus",
                     "controllerId": controller_id,
@@ -183,7 +183,7 @@ class ConfrontationMixin:
                 return winners[0], rolls
 
     def _rules_remove_field_item(self, item, container_id, zone, position="top",
-                                 release_suspended=True):
+                                 release_suspended=True, reason=None):
         if item not in self.battlefield:
             return {"status": "missing", "itemId": item.get("id")}
         rolls_for_vessel = bool(
@@ -227,8 +227,10 @@ class ConfrontationMixin:
             }
             if vessel_roll % 2 == 1:
                 container_id, zone, position = item["ownerId"], "hand", "top"
-        self.put_zone_card(container_id, zone, item["cardId"], item["ownerId"], position)
-        if zone == "receptacle" and container_id != item.get("ownerId"):
+        self.put_zone_card(container_id, zone, item["cardId"], item["ownerId"], position,
+                           limbo_reason=reason or "move", from_zone="battlefield")
+        if (zone == "receptacle" and container_id != item.get("ownerId")
+                and self.rules_item_card_rules(item).get("type") == "manifestation"):
             self.record_rules_observed_event(
                 "manifestation_enters_opponent_vessel", item.get("ownerId")
             )
@@ -255,7 +257,12 @@ class ConfrontationMixin:
         if item not in self.battlefield:
             return {"status": "missing", "itemId": item.get("id")}
         if item.get("isCopy") or item.get("isTokenCard"):
-            return self._rules_remove_field_item(item, container_id, zone, position)
+            controller_before = self.rules_item_controller_id(item)
+            is_manifestation = self.rules_item_card_rules(item).get("type") == "manifestation" or item.get("isTokenCard")
+            movement = self._rules_remove_field_item(item, container_id, zone, position)
+            if is_manifestation:
+                self.record_rules_observed_event("manifestation_left_by_effect", controller_before, cardId=item.get("cardId"))
+            return movement
         replacement = self.rules_effect_move_replacement(
             item.get("ownerId"), "battlefield", container_id, zone, item.get("cardId"), item,
         )
@@ -269,6 +276,7 @@ class ConfrontationMixin:
                 position = 'top'
                 if replacement['actionId'].startswith('exile-cz:'):
                     field_penalty = int(self.rules_item_card_rules(item).get('exiledByEffectFieldPenalty') or 0)
+        controller_before = self.rules_item_controller_id(item)
         if suspension_source:
             self.battlefield.remove(item)
             for attached in item.pop("attachedCards", None) or []:
@@ -285,6 +293,10 @@ class ConfrontationMixin:
                 "sourceEffectId": suspension_source.get("id"),
             }
             self.rules_engine["suspendedCards"].append(suspended)
+            if self.rules_item_card_rules(item).get("type") == "manifestation":
+                self.record_rules_observed_event(
+                    "manifestation_left_by_effect", controller_before, cardId=item.get("cardId"),
+                )
             self.prune_rules_ongoing_effects()
             released = (
                 self.release_rules_suspended_by(suspension_source.get("id"))
@@ -299,15 +311,13 @@ class ConfrontationMixin:
                 "sourceItemId": suspension_source.get("id"),
                 "releasedSuspended": released,
             }
-        controller_before = self.rules_item_controller_id(item)
         movement = self._rules_remove_field_item(
-            item, container_id, zone, position
+            item, container_id, zone, position, reason=reason
         )
         if field_penalty and movement.get("status") == "moved":
             for other in self.battlefield:
                 if self.card_rules.get(other.get("cardId"), {}).get("type") == "manifestation":
-                    counters = other.setdefault("counters", {})
-                    counters["power"] = int(counters.get("power") or 0) - field_penalty
+                    self.adjust_rules_power_counter(other, -field_penalty)
         if (
             movement.get("status") == "moved"
             and self.rules_item_card_rules(item).get("type") == "manifestation"
@@ -321,15 +331,9 @@ class ConfrontationMixin:
             and movement.get("zone") == "graveyard"
             and reason in {"destroy", "discard"}
         ):
-            self.record_rules_limbo_entry(
-                item.get("ownerId"), item.get("cardId"), reason,
-                from_zone="battlefield",
-            )
             if reason == "destroy":
-                self.record_rules_observed_event(
-                    "manifestation_destroyed",
-                    self.rules_item_controller_id(item),
-                )
+                if self.rules_item_card_rules(item).get("type") == "manifestation":
+                    self.record_rules_observed_event("manifestation_destroyed", controller_before)
             else:
                 self.record_rules_observed_event(
                     "cards_discarded", item.get("ownerId")

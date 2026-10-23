@@ -1183,6 +1183,7 @@ class PaymentMixin:
         if reduction > 0:
             if item is None:
                 raise RuntimeError("Validated Reduce source disappeared before payment.")
+            # Reduce is an activation cost, not Power lost due to a card/effect.
             counters = item.setdefault("counters", {})
             counters["power"] = int(counters.get("power") or 0) - reduction
             result["reducedSourcePower"] = reduction

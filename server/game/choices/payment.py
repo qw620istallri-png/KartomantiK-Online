@@ -320,7 +320,7 @@ class PaymentChoicesMixin:
         elif on_decline.get("kind") == "lose_effects":
             item = self.find_battlefield_item(on_decline.get("itemId"))
             if item is not None:
-                self.rules_engine["ongoingEffects"].append({
+                self.append_rules_ongoing_effect({
                     "id": new_id(), "actionId": choice.get("actionId"),
                     "abilityId": "effect-payment-declined",
                     "controllerId": choice.get("controllerId") or player_id,
