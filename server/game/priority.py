@@ -103,6 +103,14 @@ class PriorityMixin:
             return False
         if ability.get("exhaustSource") and int(round(float(item.get("rotation") or 0))) % 180:
             return False  # already exhausted
+        counter_gate = ability.get("requireSourceCounter")
+        if isinstance(counter_gate, dict):
+            held = sum(int(value or 0) for key, value in (item.get("counters") or {}).items()
+                       if str(key).casefold() == str(counter_gate.get("name") or "").casefold())
+            if not int(counter_gate.get("min") or 0) <= held <= int(counter_gate.get("max", 99)):
+                return False
+        if ability.get("requireHandCard") and not self.players[self.rules_item_controller_id(item)]["zones"]["hand"]:
+            return False
         if self.rules_ability_clearly_unusable(
             self.rules_item_controller_id(item), ability, phase_id, item.get("cardId"),
         ):
@@ -272,7 +280,7 @@ class PriorityMixin:
             hand = list(self.players[player_id]["zones"]["hand"])
             if source_card_id in hand:
                 hand.remove(source_card_id)
-            if not any(self.card_rules.get(card, {}).get("type") == "manifestation" for card in hand):
+            if not any(card in self.rules_chain_candidates(player_id, "hand") for card in hand):
                 return True
         tribute = str(ability.get("tribute") or "")
         if tribute and player_id in self.players and not self.rules_exotic_tribute_available(player_id):

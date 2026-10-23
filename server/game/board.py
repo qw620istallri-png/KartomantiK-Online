@@ -167,12 +167,9 @@ class BoardMixin:
             if effect.get("kind") == "copy_power_effects"
             and effect.get("source", {}).get("itemId") == item_id
         ), None)
-        copied_item = self.find_battlefield_item(
-            (copy_effect or {}).get("target", {}).get("itemId")
-        )
-        if copied_item is None:
+        if copy_effect is None:
             return metadata
-        copied_metadata = self.rules_item_card_rules(copied_item, visiting)
+        copied_metadata = copy_effect.get("copiedRules") or {}
         for key in RULES_COPIED_EFFECT_KEYS:
             if key in copied_metadata:
                 metadata[key] = copied_metadata[key]
@@ -791,6 +788,11 @@ class BoardMixin:
             return None
         hand_count = self.players.get(player_id, {}).get("zones", {}).get("hand", []).count(card_id)
         return "This card cannot be played again until the end of the turn." if hand_count <= restricted else None
+
+    def rules_card_chain_restriction_error(self, player_id, card_id):
+        if self.card_rules.get(card_id, {}).get("playAsPersistentWill"):
+            return "This Manifestation can only be played as a Persistent Will and cannot be Chained."
+        return self.rules_card_play_restriction_error(player_id, card_id)
 
     def prune_rules_play_restrictions(self):
         current_turn = self.phase_tracker["turn"]

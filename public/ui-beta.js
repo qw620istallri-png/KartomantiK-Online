@@ -1341,7 +1341,11 @@
       strip.classList.toggle("is-hover", over);
       document.getElementById("battlefield").style.cursor = over ? "zoom-in" : "";
     });
-    // a Trap also sits under the board layer: its card shows in large on hover once it can be seen
+    // Traps sit under the board layer, so inspection must also route through it.
+    ["click", "contextmenu"].forEach((type) => {
+      document.getElementById("battlefield").addEventListener(type, inspectTrapAtPointer, true);
+    });
+    // Its card shows in large on hover once it can be seen.
     document.getElementById("battlefield").addEventListener("mousemove", (event) => {
       if (!active()) return;
       const trap = [...document.querySelectorAll(".ub-trap")].find((node) => {
@@ -1830,6 +1834,28 @@
 
   // a Trap waiting face down in the Confrontation Zone, turned over when the
   // opponent's First Manifestation is revealed
+  function inspectTrapAtPointer(event) {
+    if (!active() || event.target.closest(".bf-card")) return;
+    const node = [...document.querySelectorAll(".ub-trap")].find((trap) => {
+      const rect = trap.getBoundingClientRect();
+      return event.clientX >= rect.left && event.clientX <= rect.right
+        && event.clientY >= rect.top && event.clientY <= rect.bottom;
+    });
+    const cardId = node?.dataset.logCard || (node?.classList.contains("is-peek")
+      ? latestState?.rulesEngine?.trapCards?.[myPlayerId]?.cardId : null);
+    if (!cardId) return;
+    event.preventDefault();
+    event.stopImmediatePropagation();
+    hidePeek();
+    if (event.type === "contextmenu") {
+      showContextMenu(event.clientX, event.clientY, [
+        { keepInBeta: true, label: t("inspect"), onSelect: () => showInspect(cardId) },
+      ]);
+    } else {
+      showInspect(cardId);
+    }
+  }
+
   function renderTrap(side, trap) {
     const id = side === "me" ? "ubTrapMe" : "ubTrapOpp";
     let node = document.getElementById(id);
@@ -1840,6 +1866,8 @@
     if (!node) {
       node = el("div", "ub-trap");
       node.id = id;
+      node.onclick = inspectTrapAtPointer;
+      node.oncontextmenu = inspectTrapAtPointer;
       document.getElementById("ubField").appendChild(node);
     }
     const shown = trap.revealed && trap.cardId;

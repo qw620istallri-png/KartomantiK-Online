@@ -88,21 +88,24 @@ class RemainingRulesAuditTests(unittest.TestCase):
         self.assertEqual(movement['releasedSuspended'][0]['suspensionId'], suspended['id'])
         self.assertNotIn(bob, p1['zones']['graveyard'])
 
-    def test_mimer_remembers_values_at_departure_without_serialization(self):
+    def test_mimer_keeps_resolution_values_at_departure_without_serialization(self):
         for previously_viewed in [False, True]:
             with self.subTest(previously_viewed=previously_viewed):
                 session, _, _ = self.case.started()
-                source = self.case.field_item('copy', 'p1', 'm-3')
+                source = self.case.field_item('copy', 'p1', 'pwsjhnw4vpvqgkv_en')
                 target = self.case.field_item('target', 'p2', 'm-4')
                 session.battlefield += [source, target]
-                session.rules_engine['ongoingEffects'] = [{
-                    'id': 'link', 'kind': 'copy_power_temperament', 'duration': 'while_source_on_field',
-                    'source': {'itemId': 'copy'}, 'target': {'itemId': 'target'}}]
+                expected = session.rules_manifestation_characteristics(target)
+                base = session.rules_manifestation_base_power(target)
+                session.create_rules_ongoing_effects({
+                    'id': 'copy-action', 'controllerId': 'p1',
+                    'source': {'itemId': 'copy', 'cardId': source['cardId']},
+                    'targets': [{'kind': 'card', 'itemId': 'target'}],
+                    'ability': session.card_rules[source['cardId']]['activatedAbilities'][0],
+                })
                 if previously_viewed:
                     session.rules_manifestation_characteristics(source)
                 target['counters']['power'] = 5
-                expected = session.rules_manifestation_characteristics(target)
-                base = session.rules_manifestation_base_power(target)
                 session._rules_remove_field_item(target, 'p2', 'graveyard')
                 session.prune_rules_ongoing_effects()
                 self.assertEqual(session.rules_manifestation_characteristics(source), expected)

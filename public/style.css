@@ -2211,6 +2211,13 @@ body.hand-drawing #myHandTray .hand-card { cursor: progress; }
 .automation-coverage-badge.status-partial { background: #a66b20e8; }
 .automation-coverage-badge.status-generic { background: #4d7087e8; }
 .automation-coverage-badge.status-manual { background: #565b61cc; }
+.bf-card .rules-temperament-badge {
+  position: absolute; left: 5px; top: 5px; z-index: 8;
+  width: 32px; height: 32px; padding: 2px; object-fit: contain;
+  border-radius: 50%; background: #142437; box-shadow: 0 2px 6px #0009;
+  pointer-events: none;
+}
+.rules-temperament-badge ~ .rules-effects-disabled-badge { top: 42px; }
 .rules-effects-disabled-badge {
   position: absolute; left: 5px; top: 5px; z-index: 9;
   display: grid; place-items: center; width: 21px; height: 21px;
@@ -3886,6 +3893,8 @@ body.flow-uses-hand .rules-board-flow.is-centered .rules-floating-card { top: 36
   box-shadow: 0 2px 0 #4f9cc0, 0 0 12px #35b7ff55; cursor: pointer;
 }
 .rules-activate-actions button:hover { background: linear-gradient(180deg, #fffbe0, #ffe98a); border-color: #fff1a3; box-shadow: 0 2px 0 #b8952f, 0 0 14px #ffe58a88; }
+.rules-activate-actions button:has(img) { display: inline-flex; align-items: center; justify-content: center; gap: 6px; }
+.rules-activate-actions button img { width: 22px; height: 22px; object-fit: contain; }
 
 /* ---------- connection banner (connection.js showConnectionBanner) */
 .connection-banner {

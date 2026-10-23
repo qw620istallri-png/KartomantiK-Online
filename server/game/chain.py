@@ -85,7 +85,7 @@ class ChainMixin:
             return "The selected Manifestation is no longer in the required zone.", None
         if self.card_rules.get(card_id, {}).get("type") != "manifestation":
             return "Only a Manifestation can be Chained.", None
-        restriction_error = self.rules_card_play_restriction_error(
+        restriction_error = self.rules_card_chain_restriction_error(
             player_id, card_id
         )
         if restriction_error:
@@ -764,7 +764,7 @@ class ChainMixin:
                 if (
                     card_id not in found
                     and self.card_rules.get(card_id, {}).get("type") == "manifestation"
-                    and self.rules_card_play_restriction_error(
+                    and self.rules_card_chain_restriction_error(
                         chain_player_id, card_id
                     ) is None
                 ):

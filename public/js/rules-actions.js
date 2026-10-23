@@ -35,7 +35,7 @@ function rulesDraftCanBePaid(draft) {
 
 function rulesCopiedEffectsCardId(item) {
   const effect = (latestState?.rulesEngine?.ongoingEffects || [])
-    .find((entry) => (
+    .findLast((entry) => (
       entry.kind === "copy_power_effects"
       && entry.source?.itemId === item?.id
       && entry.target?.cardId
@@ -44,8 +44,12 @@ function rulesCopiedEffectsCardId(item) {
 }
 
 function rulesActivatedAbilitiesForItem(item) {
+  const copy = (latestState?.rulesEngine?.ongoingEffects || []).findLast((entry) => (
+    entry.kind === "copy_power_effects" && entry.source?.itemId === item?.id
+  ));
   const copiedCardId = rulesCopiedEffectsCardId(item);
-  const own = activatedAbilitiesByCard.get(copiedCardId || item?.cardId) || [];
+  const own = copy?.copiedRules ? copy.copiedRules.activatedAbilities || []
+    : activatedAbilitiesByCard.get(copiedCardId || item?.cardId) || [];
   // Gummo gains the effects of a Vessel card in addition to its own.
   return item?.gummoCopy ? [...own, ...(activatedAbilitiesByCard.get(item.gummoCopy) || [])] : own;
 }
@@ -103,6 +107,14 @@ function rulesActivatedActionDraft(item, abilityOverride = null) {
     && !draft.encodedAbility.sourceZones.includes("battlefield")
   ) return null;
   if (draft.encodedAbility.exhaustSource && Math.round(Number(item.rotation || 0)) % 180 !== 0) return null;
+  const counterGate = ability.requireSourceCounter;
+  if (counterGate) {
+    const held = Object.entries(item.counters || {})
+      .filter(([name]) => name.toLocaleLowerCase() === String(counterGate.name || "").toLocaleLowerCase())
+      .reduce((total, [, amount]) => total + Number(amount || 0), 0);
+    if (held < Number(counterGate.min || 0) || held > Number(counterGate.max ?? 99)) return null;
+  }
+  if (ability.requireHandCard && !latestState?.players?.[myPlayerId]?.zones?.hand?.cards?.length) return null;
   const turnNow = Number(latestState?.phaseTracker?.turn || 0);
   if (ability.oncePerTurnSupport && [item.supportUsedTurn, item.supportUntilTurn].some((value) => Number(value || 0) === turnNow)) return null;
   const counterCost = draft.encodedAbility.removeCountersFromSource;

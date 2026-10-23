@@ -214,16 +214,6 @@ class PowerMixin:
                     modifier += int(passive.get("value") or 0)
         return modifier
 
-    def remember_rules_copy_characteristics(self, departing_item):
-        """Keep Mimer's last values before its target leaves, without relying on a view refresh."""
-        for effect in self.rules_engine.get("ongoingEffects") or []:
-            if (effect.get("kind") == "copy_power_temperament"
-                    and effect.get("duration") == "while_source_on_field"
-                    and (effect.get("target") or {}).get("itemId") == departing_item.get("id")):
-                copied = self.rules_manifestation_characteristics(departing_item)
-                effect["snapshot"] = {**copied,
-                    "basePower": self.rules_manifestation_base_power(departing_item)}
-
     def rules_manifestation_characteristics(self, item, visiting=None):
         """Return current Power and Temperament without confrontation-only suppression."""
         if item is None:
@@ -255,19 +245,10 @@ class PowerMixin:
             and effect.get("source", {}).get("itemId") == item.get("id")
         ), None)
         if copy_effect:
-            copied_item = self.find_battlefield_item(copy_effect.get("target", {}).get("itemId"))
-            if copied_item is not None:
-                copied = self.rules_manifestation_characteristics(copied_item, visiting)
-                # Mimer keeps the copied values once its target has left the field
-                copy_effect["snapshot"] = {
-                    "power": copied["power"], "temperament": copied["temperament"],
-                    "basePower": self.rules_manifestation_base_power(copied_item, visiting),
-                }
-            else:
-                copied = copy_effect.get("snapshot") or {"power": 0, "temperament": None}
-            power = copied["power"]
+            copied = copy_effect.get("snapshot") or {}
+            power = copied.get("power", power)
             if copy_effect.get("kind") == "copy_power_temperament":
-                temperament = copied["temperament"]
+                temperament = copied.get("temperament", temperament)
         override_effect = next((
             effect for effect in reversed(self.rules_engine.get("ongoingEffects") or [])
             if effect.get("kind") == "temperament_override"
@@ -362,16 +343,8 @@ class PowerMixin:
             }
             and effect.get("source", {}).get("itemId") == item_id
         ), None)
-        if copy_effect:
-            copied_item = self.find_battlefield_item(
-                copy_effect.get("target", {}).get("itemId")
-            )
-            if copied_item is not None:
-                return self.rules_manifestation_base_power(
-                    copied_item, visiting
-                )
-            if (copy_effect.get("snapshot") or {}).get("basePower") is not None:
-                return int(copy_effect["snapshot"]["basePower"])
+        if copy_effect and (copy_effect.get("snapshot") or {}).get("basePower") is not None:
+            return int(copy_effect["snapshot"]["basePower"])
         # Entrust doubles the base power itself: a modifier kept while the card stays on the field
         doubling = 2 ** int(item.get("baseDoublings") or 0)
         if item.get("isTokenCard"):

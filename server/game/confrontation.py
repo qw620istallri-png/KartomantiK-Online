@@ -186,7 +186,6 @@ class ConfrontationMixin:
                                  release_suspended=True):
         if item not in self.battlefield:
             return {"status": "missing", "itemId": item.get("id")}
-        self.remember_rules_copy_characteristics(item)
         rolls_for_vessel = bool(
             zone == "receptacle"
             and self.rules_item_card_rules(item).get("vesselEntryRoll")
@@ -271,7 +270,6 @@ class ConfrontationMixin:
                 if replacement['actionId'].startswith('exile-cz:'):
                     field_penalty = int(self.rules_item_card_rules(item).get('exiledByEffectFieldPenalty') or 0)
         if suspension_source:
-            self.remember_rules_copy_characteristics(item)
             self.battlefield.remove(item)
             for attached in item.pop("attachedCards", None) or []:
                 self.put_zone_card(attached['ownerId'], 'exile', attached['cardId'], attached['ownerId'])

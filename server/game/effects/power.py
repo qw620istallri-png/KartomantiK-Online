@@ -414,7 +414,8 @@ class PowerEffectsMixin:
                 "ongoingEffects"
             ) or []
             if (
-                effect.get("target", {}).get("itemId") == item_id
+                (effect.get("target", {}).get("itemId") == item_id
+                 and effect.get("kind") not in {"copy_power_temperament", "copy_power_effects"})
                 or (
                     effect.get("source", {}).get("itemId") == item_id
                     and effect.get("kind") in {

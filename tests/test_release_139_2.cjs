@@ -65,6 +65,136 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
       assert.match(replacements.text, /Suspend|Suspendre|Sospendi/);
       assert.deepEqual(replacements.sent.cardIds, ["suspend:bob", "exile:nullify"]);
 
+      const activationAudit = await page.evaluate(() => {
+        const savedLanguage = currentLanguage;
+        const results = [];
+        const field = (cid, counters = {}) => ({ id: "audit-source", ownerId: "p1", cardId: cid, fieldZone: "field", x: 445, y: 1200, faceUp: true, rotation: 0, counters });
+        const setup = (cid, counters = {}) => {
+          window.__setup139({ hand: ["r139-1"], limbo: ["r139-2"], essences: TEMPERAMENTS.map(({ key }) => [key, 5]) });
+          latestState.battlefield.push(field(cid, counters));
+          renderAll();
+        };
+        for (const language of ["en", "fr", "it"]) {
+          currentLanguage = language;
+          for (const [cid, count] of [["282b0n6ldnzdp0p_en", 5], ["inner-deserts-125", 2], ["inner-deserts-136", 2]]) {
+            setup(cid);
+            const labels = [...document.querySelectorAll('[data-item-id="audit-source"] [data-rules-activate-confirm]')].map((node) => node.textContent.trim());
+            results.push({ language, count, labels });
+          }
+        }
+        const mechanism = [];
+        for (let count = 0; count <= 4; count++) {
+          setup("inner-deserts-093", { Enigma: count });
+          mechanism.push([...document.querySelectorAll('[data-item-id="audit-source"] [data-rules-activate-confirm]')].map((node) => node.dataset.rulesActivateConfirm));
+        }
+        setup("inner-deserts-093", { Enigma: 3 });
+        latestState.players.p1.zones.hand = { cards: [], count: 0, owners: {} };
+        renderAll();
+        const emptyHand = document.querySelectorAll('[data-item-id="audit-source"] [data-rules-activate-confirm]').length;
+        setup("0e7afy7zmyhbfal_en");
+        latestState.rulesEngine.ongoingEffects = [{ id: "copy", kind: "copy_power_effects", source: { itemId: "audit-source" },
+          target: { cardId: "282b0n6ldnzdp0p_en", itemId: "gone" },
+          copiedRules: { activatedAbilities: activatedAbilitiesByCard.get("282b0n6ldnzdp0p_en").filter((a) => a.id === "zum-draw") } }];
+        renderAll();
+        const copied = [...document.querySelectorAll('[data-item-id="audit-source"] [data-rules-activate-confirm]')].map((node) => node.dataset.rulesActivateConfirm);
+        currentLanguage = savedLanguage;
+        return { results, mechanism, emptyHand, copied };
+      });
+      for (const { language, count, labels } of activationAudit.results) {
+        assert.equal(labels.length, count, `${language}: ${labels}`);
+        assert.equal(new Set(labels).size, count);
+        assert.ok(labels.every((text) => !/^(Activate|Activer|Attiva)\s+\d+$/.test(text) && !text.startsWith("rulesAbility")), `${language}: ${labels}`);
+      }
+      assert.deepEqual(activationAudit.mechanism, [[], ["mechanism-one-shuffle"], ["mechanism-two-peek-and-swap"], ["mechanism-three-bottom-a-card"], []]);
+      assert.equal(activationAudit.emptyHand, 0);
+      assert.deepEqual(activationAudit.copied, ["zum-draw"]);
+
+      const maskLabels = await page.evaluate(() => {
+        window.__maskLanguage = currentLanguage;
+        window.__setup139({ essences: [["hollow", 5]] });
+        latestState.battlefield.push({ id: "mask", cardId: "1ixfmjkfewc0o42_en", ownerId: "p1", fieldZone: "field", x: 445, y: 1200, faceUp: true, rotation: 0, counters: {} });
+        const target = latestState.battlefield[0];
+        target.effectiveTemperament = "vitreous";
+        latestState.rulesEngine.ongoingEffects = [{ id: "mask-color", kind: "temperament_override", temperament: "vitreous", target: { itemId: target.id }, duration: "until_end_of_turn" }];
+        const results = [];
+        for (const language of ["en", "fr", "it"]) {
+          currentLanguage = language;
+          renderAll();
+          const buttons = [...document.querySelectorAll('[data-item-id="mask"] [data-rules-activate-confirm]')];
+          results.push({
+            labels: buttons.map((node) => node.textContent.trim()),
+            expected: ["Choleric", "Vitreous", "Phlegmatic", "Capricious", "Melancholic"].map((key) => t(`temperament${key}`)),
+            symbols: buttons.map((node) => node.querySelector("img")?.getAttribute("src")),
+          });
+        }
+        currentLanguage = "en";
+        renderAll();
+        return results;
+      });
+      for (const result of maskLabels) {
+        assert.deepEqual(result.labels, result.expected);
+        assert.ok(result.symbols.every((src) => /temperaments\/.+\.webp/.test(src)), "Mask choices show essence symbols");
+      }
+      const colorBadge = page.locator('[data-item-id="mine"] .rules-temperament-badge');
+      assert.match(await colorBadge.getAttribute("src"), /temperaments\/vitreous\.webp/);
+      const badgeRect = await colorBadge.boundingBox();
+      const cardRect = await page.locator('[data-item-id="mine"]').boundingBox();
+      assert.ok(badgeRect.x < cardRect.x + cardRect.width / 2 && badgeRect.y < cardRect.y + cardRect.height / 2, "Changed color appears at the top left");
+      assert.ok(badgeRect.width <= cardRect.width * .3 && badgeRect.height <= cardRect.height * .3, "The essence symbol leaves the card art readable");
+      assert.equal(await page.locator('[data-item-id="theirs"] .rules-temperament-badge').count(), 0);
+      await page.locator('[data-item-id="mask"] .rules-activate-badge').click();
+      if (process.env.SCREENSHOT_DIR) await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `empathic-mask-${viewport.width > 1000 ? "desktop" : "mobile"}.png`) });
+      await page.evaluate(() => {
+        closeRulesActivationConfirmation();
+        latestState.battlefield[0].effectiveTemperament = "melancholic";
+        latestState.rulesEngine.ongoingEffects[0].temperament = "melancholic";
+        renderAll();
+      });
+      assert.match(await colorBadge.getAttribute("src"), /temperaments\/melancholic\.webp/);
+      await page.evaluate(() => {
+        latestState.battlefield[0].faceUp = false;
+        renderAll();
+      });
+      assert.equal(await colorBadge.count(), 0, "Face-down cards do not disclose their color");
+      await page.evaluate(() => {
+        latestState.battlefield[0].faceUp = true;
+        latestState.battlefield[0].effectiveTemperament = "choleric";
+        latestState.rulesEngine.ongoingEffects = [];
+        renderAll();
+      });
+      assert.equal(await colorBadge.count(), 0, "The marker clears when the color change expires");
+      await page.waitForFunction(() => rulesAnimationsBusyFor() <= 0);
+      await page.evaluate(() => { currentLanguage = window.__maskLanguage; });
+
+      for (const [owner, revealed, cardId, inspectable] of [
+        ["p1", true, "r139-1", true],
+        ["p2", true, "r139-2", true],
+        ["p1", false, "r139-3", true],
+        ["p2", false, "r139-4", false],
+        ["p2", false, null, false],
+      ]) {
+        await page.evaluate(({ owner, revealed, cardId }) => {
+          window.__setup139({ field: [] });
+          closeContextMenu();
+          latestState.rulesEngine.trapCards = { [owner]: { cardId, revealed } };
+          renderAll();
+        }, { owner, revealed, cardId });
+        const selector = owner === "p1" ? "#ubTrapMe" : "#ubTrapOpp";
+        let rect = await page.locator(selector).boundingBox();
+        await page.mouse.click(rect.x + rect.width / 2, rect.y + rect.height / 2, { button: "right" });
+        assert.equal(await page.locator(".ctx-menu button").count(), inspectable ? 1 : 0, `Trap menu: ${owner}, revealed=${revealed}`);
+        if (inspectable) {
+          await page.locator(".ctx-menu button").click();
+          assert.equal(await page.evaluate(() => inspectCurrentId), cardId);
+          assert.equal(await page.locator("#inspectPanel").evaluate((node) => node.classList.contains("hidden")), false);
+          await page.evaluate(() => { toggleInspectPanel(); renderAll(); });
+        }
+        rect = await page.locator(selector).boundingBox();
+        await page.mouse.click(rect.x + rect.width / 2, rect.y + rect.height / 2);
+        assert.equal(await page.locator("#inspectPanel").evaluate((node) => !node.classList.contains("hidden")), inspectable, `Trap click: ${owner}, revealed=${revealed}`);
+        if (inspectable) assert.equal(await page.evaluate(() => inspectCurrentId), cardId);
+      }
+
       const bottomOrder = await page.evaluate(() => {
         window.__setup139();
         latestState.rulesEngine.pendingChoice = { id: "timid-order", kind: "support_return_order", playerId: "p1",

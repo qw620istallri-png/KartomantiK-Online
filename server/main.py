@@ -1050,9 +1050,19 @@ AUTO_PASS_MAX_STEPS = 60
 async def auto_advance_rules_phases(session, actor_id):
     """Pass priority for players with nothing to do, until someone can act."""
     steps = 0
+    automatic_resolutions = 0
     first_phase = session.current_phase_id()
     first_turn = session.phase_tracker["turn"]
     while steps < AUTO_PASS_MAX_STEPS:
+        if session.rules_top_action_has_no_valid_targets():
+            result = session.resolve_rules_top_action()
+            if not result or result.get("status") != "resolved":
+                break
+            session.rules_engine["priorityPasses"] = []
+            await record_rules_resolution(session, result, actor_id)
+            steps += 1
+            automatic_resolutions += 1
+            continue
         player_id = session.rules_auto_pass_player()
         if player_id is None:
             break
@@ -1060,9 +1070,9 @@ async def auto_advance_rules_phases(session, actor_id):
         if error:
             break
         steps += 1
-    if steps:
+    if steps > automatic_resolutions:
         session.add_log(actor_id, "rules_auto_passed", {
-            "steps": steps, "fromPhaseId": first_phase, "fromTurn": first_turn,
+            "steps": steps - automatic_resolutions, "fromPhaseId": first_phase, "fromTurn": first_turn,
             "phaseId": session.current_phase_id(), "turn": session.phase_tracker["turn"],
         })
     return steps

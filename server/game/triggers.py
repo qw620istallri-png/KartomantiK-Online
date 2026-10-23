@@ -750,16 +750,11 @@ class TriggersMixin:
         source_item = self.find_battlefield_item(
             (effect.get("source") or {}).get("itemId")
         )
-        copied_item = self.find_battlefield_item(
-            (effect.get("target") or {}).get("itemId")
-        )
-        if source_item is None or copied_item is None:
+        if source_item is None:
             return []
         abilities = [
             ability
-            for ability in self.rules_item_card_rules(
-                copied_item
-            ).get("triggeredAbilities") or []
+            for ability in (effect.get("copiedRules") or {}).get("triggeredAbilities") or []
             if (ability.get("ongoingEffect") or {}).get("kind")
             != "copy_power_effects"
         ]

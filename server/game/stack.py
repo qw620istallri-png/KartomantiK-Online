@@ -1,8 +1,9 @@
 """Resolving, countering and cleaning up Stack actions; ongoing effects."""
 
 import math
+from copy import deepcopy
 
-from .common import RULES_EFFECT_DURATIONS, RULES_TEMPERAMENTS, new_id
+from .common import RULES_COPIED_EFFECT_KEYS, RULES_EFFECT_DURATIONS, RULES_TEMPERAMENTS, new_id
 
 
 class StackMixin:
@@ -281,6 +282,9 @@ class StackMixin:
         if duration not in RULES_EFFECT_DURATIONS:
             return []
         source_on_field = self.find_battlefield_item(source.get("itemId")) if source.get("itemId") else None
+        copying = definition.get("kind") in {"copy_power_temperament", "copy_power_effects"}
+        if copying and source_on_field is None:
+            return []
         if duration in {"while_source_and_target_on_field", "while_source_on_field"} and source_on_field is None:
             return []
         if definition.get("scope") == "all_manifestations_on_field":
@@ -381,8 +385,8 @@ class StackMixin:
         elif definition.get("scope") == "global":
             targets = [{"kind": "global"}]
 
-        # A source with a continuous copying-style ability can only maintain one
-        # target for that ability. Re-resolving it replaces the previous link.
+        # A source-bound ability can only maintain one modifier for that
+        # ability. Re-resolving it replaces the previous modifier.
         if duration in {"while_source_and_target_on_field", "while_source_on_field"}:
             self.rules_engine["ongoingEffects"] = [
                 effect for effect in self.rules_engine["ongoingEffects"]
@@ -435,6 +439,18 @@ class StackMixin:
                 )
             if definition.get("fromOpponents"):
                 effect["fromOpponents"] = True
+            if copying and target_kind == "card":
+                copied_item = self.find_battlefield_item(target.get("itemId"))
+                effect["snapshot"] = {
+                    **self.rules_manifestation_characteristics(copied_item),
+                    "basePower": self.rules_manifestation_base_power(copied_item),
+                }
+                if effect["kind"] == "copy_power_effects":
+                    copied_rules = self.rules_item_card_rules(copied_item)
+                    effect["copiedRules"] = deepcopy({
+                        key: copied_rules[key] for key in RULES_COPIED_EFFECT_KEYS
+                        if key in copied_rules
+                    })
             if (
                 effect["kind"] == "power_modifier"
                 and int(effect.get("value") or 0) < 0
@@ -500,17 +516,18 @@ class StackMixin:
                     for action in self.rules_engine.get("actionStack") or []
                 )
             )
-            source_required = effect.get("duration") in {
+            copying = effect.get("kind") in {"copy_power_temperament", "copy_power_effects"}
+            source_required = copying or effect.get("duration") in {
                 "while_source_and_target_on_field", "while_source_on_field",
             }
-            if effect.get("duration") == "while_source_on_field":
+            if copying or effect.get("duration") == "while_source_on_field":
                 target_present = True
             source_item = self.find_battlefield_item(
                 effect.get("source", {}).get("itemId")
             )
             source_present = (
                 source_item is not None
-                and (effect.get("kind") == "copy_power_temperament"
+                and (copying
                      or self.rules_field_zone(source_item) != "stalemate")
             )
             turn_active = not (

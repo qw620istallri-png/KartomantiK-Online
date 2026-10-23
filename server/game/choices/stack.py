@@ -353,6 +353,9 @@ class StackChoicesMixin:
             return "Only a Manifestation can be Chained.", None
         if zone == "hand" and self.rules_hands_are_immune():
             return "Cards in Hand are Immune to cards and effects.", None
+        restriction_error = self.rules_card_chain_restriction_error(player_id, card_id)
+        if restriction_error:
+            return restriction_error, None
         self.rules_engine["pendingChoice"] = None
         self.queue_rules_chain_continuation(choice)
         return self.chain_rules_manifestation(

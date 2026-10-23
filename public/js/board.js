@@ -858,6 +858,34 @@ function rulesControllerMarkerMarkup(item) {
   return `<span class="rules-controller-badge" style="--controller-tone:${esc(playerColor(controllerId))}" title="${esc(label)}" aria-label="${esc(label)}">C</span>`;
 }
 
+function rulesTemperamentMarkerMarkup(item, effects) {
+  if (!item.faceUp) return "";
+  const override = [...effects].reverse().find((effect) => effect.kind === "temperament_override");
+  const temperament = item.effectiveTemperament || override?.temperament || item.temperamentOverride;
+  if (!TEMPERAMENTS.some((entry) => entry.key === temperament)) return "";
+  const printed = item.isTokenCard ? [item.temperament] : cardsById.get(item.cardId)?.temperaments || [];
+  if (!override && !item.temperamentOverride && printed.includes(temperament)) return "";
+  const name = t(`temperament${temperament[0].toUpperCase()}${temperament.slice(1)}`);
+  return `<img class="rules-temperament-badge" src="${esc(temperamentSymbol(temperament))}" title="${esc(name)}" alt="${esc(name)}">`;
+}
+
+function rulesActivationChoiceLabel(ability, index, count) {
+  const labels = {
+    "sandokaron-banner-power": "rulesBannerPower", "sandokaron-banner-essence": "rulesBannerEssence",
+    "zum-weaken": "rulesAbilityWeaken", "zum-silence": "rulesAbilitySilence",
+    "zum-strengthen": "rulesAbilityStrengthen", "zum-draw": "rulesAbilityDraw", "zum-mill": "rulesAbilityMill",
+    "malaleuco-copy-will": "rulesAbilityCopyWill", "malaleuco-to-interzone": "rulesAbilityToInterzone",
+    "mechanism-one-shuffle": "rulesAbilityShuffle", "mechanism-two-peek-and-swap": "rulesAbilityPeekSwap",
+    "mechanism-three-bottom-a-card": "rulesAbilityResetEnigma",
+    "exhaust-to-change-points": "rulesAbilityChangePoints", "exhaust-sacrifice-to-prevent-point-changes": "rulesAbilityFreezePoints",
+    "shattered-memory-exile-limbo-card": "rulesAbilityExileLimbo", "shattered-memory-sacrifice-for-essence": "rulesAbilityExileForEssence",
+  };
+  const temperament = ability.ongoingEffect?.kind === "temperament_override" ? ability.ongoingEffect.temperament : null;
+  if (temperament) return t(`temperament${temperament[0].toUpperCase()}${temperament.slice(1)}`);
+  if (labels[ability.id]) return `${ability.immediate ? `${t("rulesImmediateLabel")} · ` : ""}${t(labels[ability.id])}`;
+  return ability.immediate ? t("rulesImmediateLabel") : count > 1 ? `${t("rulesActivateShort")} ${index + 1}` : t("rulesActivateShort");
+}
+
 function rulesActivateMarkerMarkup(item) {
   const available = rulesActivatedAbilitiesForItem(item)
     .filter((ability) => !rulesIsCounterEssenceAbility(ability))
@@ -883,10 +911,13 @@ function rulesActivateMarkerMarkup(item) {
     </header>
     ${printedEffect ? `<p class="rules-activate-text">${esc(printedEffect)}</p>` : ""}
     <div class="rules-activate-actions">
-      ${available.map(({ ability }, index) => `
-        <button type="button" data-rules-activate-confirm="${esc(ability.id)}">
-          ${esc(bannerModes[ability.id] ? t(bannerModes[ability.id]) : ability.immediate ? t("rulesImmediateLabel") : (available.length > 1 ? `${t("rulesActivateShort")} ${index + 1}` : t("rulesActivateShort")))}
-        </button>`).join("")}
+      ${available.map(({ ability }, index) => {
+        const temperament = ability.ongoingEffect?.kind === "temperament_override" ? ability.ongoingEffect.temperament : null;
+        const label = rulesActivationChoiceLabel(ability, index, available.length);
+        return `<button type="button" data-rules-activate-confirm="${esc(ability.id)}">
+          ${temperament ? `<img src="${esc(temperamentSymbol(temperament))}" alt="">` : ""}${esc(label)}
+        </button>`;
+      }).join("")}
     </div>
   </div>`;
 }
@@ -1224,7 +1255,7 @@ function renderBattlefield() {
     const printedPower = item.isTokenCard
       ? item.power
       : item.willManifestation ? 0 : cardsById.get(item.cardId)?.power;
-    el.innerHTML = `<div class="bf-card-inner" style="transform:rotate(${item.rotation || 0}deg)">${inner}${item.faceUp && item.cardId ? automationCoverageBadgeHtml(item.cardId) : ""}${item.effectsDisabled ? `<span class="rules-effects-disabled-badge" title="${esc(t("rulesEffectsDisabled"))}" aria-label="${esc(t("rulesEffectsDisabled"))}">Ø</span>` : ""}${item.isCopy ? `<span class="copy-card-stamp">${esc(t("copyStamp"))}</span>` : ""}</div><div class="counters">${rulesCardCountersMarkup(item, ongoingEffects, printedPower)}</div>${rulesFieldZoneMarkerMarkup(item.fieldZone)}${rulesControllerMarkerMarkup(item)}${item.isSupport ? `<span class="rules-support-badge" title="${esc(t("playInSupport"))}" aria-label="${esc(t("playInSupport"))}">S</span>` : ""}${rulesEffectMarkerMarkup(ongoingEffects)}${rulesActivateMarkerMarkup(item)}`;
+    el.innerHTML = `<div class="bf-card-inner" style="transform:rotate(${item.rotation || 0}deg)">${inner}${item.faceUp && item.cardId ? automationCoverageBadgeHtml(item.cardId) : ""}${rulesTemperamentMarkerMarkup(item, ongoingEffects)}${item.effectsDisabled ? `<span class="rules-effects-disabled-badge" title="${esc(t("rulesEffectsDisabled"))}" aria-label="${esc(t("rulesEffectsDisabled"))}">Ø</span>` : ""}${item.isCopy ? `<span class="copy-card-stamp">${esc(t("copyStamp"))}</span>` : ""}</div><div class="counters">${rulesCardCountersMarkup(item, ongoingEffects, printedPower)}</div>${rulesFieldZoneMarkerMarkup(item.fieldZone)}${rulesControllerMarkerMarkup(item)}${item.isSupport ? `<span class="rules-support-badge" title="${esc(t("playInSupport"))}" aria-label="${esc(t("playInSupport"))}">S</span>` : ""}${rulesEffectMarkerMarkup(ongoingEffects)}${rulesActivateMarkerMarkup(item)}`;
     if (!isObserver) bindCardDragSource(el, { kind: "battlefield", itemId: item.id });
     el.addEventListener("contextmenu", (event) => {
       event.preventDefault();

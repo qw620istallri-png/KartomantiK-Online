@@ -5,6 +5,38 @@ from .replacements import replacement_checkpoint
 
 
 class ResolutionMixin:
+    def rules_top_action_has_no_valid_targets(self):
+        engine = self.rules_engine
+        if (
+            not engine.get("enabled") or not self.phase_tracker.get("enabled")
+            or self.ended or len(self.players) < 2 or engine.get("pendingChoice")
+            or not engine.get("actionStack") or not self.rules_match_started()
+            or self.rules_first_manifestation_active() or self.rules_recovery_mulligan_active()
+        ):
+            return False
+        action = engine["actionStack"][-1]
+        targets = action.get("targets") or []
+        target_rules = self.rules_action_target_rules(action)
+        # Untargeted effects and choices made during resolution still need their
+        # normal response window. Never inspect a lower Stack entry here.
+        if not targets or target_rules is None:
+            return False
+        groups = target_rules.get("groups")
+        if isinstance(groups, list):
+            if len(groups) != len(targets):
+                return False
+            contracts = groups
+        else:
+            contracts = [{**target_rules, "min": 1, "max": 1}] * len(targets)
+        return all(
+            self.rules_ability_targets_error(
+                contract, [target], action.get("controllerId"),
+                event_item_id=((action.get("ability") or {}).get("trigger") or {}).get("eventItemId"),
+                source_item_id=(action.get("source") or {}).get("itemId"),
+            ) is not None
+            for contract, target in zip(contracts, targets)
+        )
+
     @replacement_checkpoint("resolution")
     def resolve_rules_top_action(self):
         action_stack = self.rules_engine["actionStack"]

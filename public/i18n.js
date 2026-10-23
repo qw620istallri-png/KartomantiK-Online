@@ -3505,16 +3505,40 @@ function t(key) {
 
 Object.assign(ui.en, {
   rulesReplacementOrderHeading: "Order simultaneous replacements",
+  rulesChainPersistentOnlyError: "This Manifestation can only be played as a Persistent Will and cannot be Chained.",
+  rulesAbilityWeaken: "−1 Power", rulesAbilityStrengthen: "+1 Power", rulesAbilitySilence: "Remove effects",
+  rulesAbilityDraw: "Draw 1 card", rulesAbilityMill: "Discard the top card of the Deck",
+  rulesAbilityCopyWill: "Copy a Will", rulesAbilityToInterzone: "Move to your Interzone",
+  rulesAbilityShuffle: "Shuffle your Deck", rulesAbilityPeekSwap: "Look at and swap the top card",
+  rulesAbilityResetEnigma: "Bottom a Hand card; remove 2 Enigma counters",
+  rulesAbilityChangePoints: "Gain or lose 10 Points", rulesAbilityFreezePoints: "Sacrifice: prevent Point changes",
+  rulesAbilityExileLimbo: "Exile a card from Limbo", rulesAbilityExileForEssence: "Exile this card: gain 1 Transcendent Essence",
   rulesReplacementOrderText: "Drag the effect to apply first to the left. The first replacement moves the card; the others then have no card to move.",
   rulesReplacement_suspend: "Suspend the card", rulesReplacement_exile: "Exile the card", rulesReplacement_receptacle: "Return the card to the Vessel",
 });
 Object.assign(ui.fr, {
   rulesReplacementOrderHeading: "Ordonner les remplacements simultanés",
+  rulesChainPersistentOnlyError: "Cette Manifestation ne peut être jouée que comme une Volonté persistante et ne peut pas être jouée en Chain.",
+  rulesAbilityWeaken: "−1 Puissance", rulesAbilityStrengthen: "+1 Puissance", rulesAbilitySilence: "Retirer les effets",
+  rulesAbilityDraw: "Piocher 1 carte", rulesAbilityMill: "Défausser la carte du dessus du Deck",
+  rulesAbilityCopyWill: "Copier une Volonté", rulesAbilityToInterzone: "Placer dans votre Interzone",
+  rulesAbilityShuffle: "Mélanger votre Deck", rulesAbilityPeekSwap: "Regarder et échanger la carte du dessus",
+  rulesAbilityResetEnigma: "Une carte sous le Deck ; retirer 2 compteurs Énigme",
+  rulesAbilityChangePoints: "Gagner ou perdre 10 Points", rulesAbilityFreezePoints: "Sacrifier : empêcher les changements de Points",
+  rulesAbilityExileLimbo: "Exiler une carte des Limbes", rulesAbilityExileForEssence: "Exiler cette carte : gagner 1 Essence transcendante",
   rulesReplacementOrderText: "Glissez à gauche l’effet à appliquer en premier. Le premier remplacement déplace la carte ; les autres n’ont alors plus de carte à déplacer.",
   rulesReplacement_suspend: "Suspendre la carte", rulesReplacement_exile: "Exiler la carte", rulesReplacement_receptacle: "Renvoyer la carte au Réceptacle",
 });
 Object.assign(ui.it, {
   rulesReplacementOrderHeading: "Ordina le sostituzioni simultanee",
+  rulesChainPersistentOnlyError: "Questa Manifestazione può essere giocata solo come Volontà persistente e non può essere giocata in Chain.",
+  rulesAbilityWeaken: "−1 Potere", rulesAbilityStrengthen: "+1 Potere", rulesAbilitySilence: "Rimuovi gli effetti",
+  rulesAbilityDraw: "Pesca 1 carta", rulesAbilityMill: "Scarta la prima carta del Mazzo",
+  rulesAbilityCopyWill: "Copia una Volontà", rulesAbilityToInterzone: "Metti nella tua Interzona",
+  rulesAbilityShuffle: "Mescola il tuo Mazzo", rulesAbilityPeekSwap: "Guarda e scambia la prima carta",
+  rulesAbilityResetEnigma: "Una carta in fondo al Mazzo; rimuovi 2 segnalini Enigma",
+  rulesAbilityChangePoints: "Guadagna o perdi 10 Punti", rulesAbilityFreezePoints: "Sacrifica: impedisci modifiche ai Punti",
+  rulesAbilityExileLimbo: "Esilia una carta dal Limbo", rulesAbilityExileForEssence: "Esilia questa carta: guadagna 1 Essenza trascendente",
   rulesReplacementOrderText: "Trascina a sinistra l’effetto da applicare per primo. La prima sostituzione sposta la carta; le altre non hanno più una carta da spostare.",
   rulesReplacement_suspend: "Sospendi la carta", rulesReplacement_exile: "Esilia la carta", rulesReplacement_receptacle: "Rimetti la carta nel Ricettacolo",
 });

@@ -155,7 +155,10 @@ sourceOnly
 source.
 
 Une cible devenue invalide produit `invalid_targets` et l'effet ne se produit
-pas.
+pas. Lorsque toutes les cibles choisies de l'entrée au sommet de la Stack sont
+invalides, cette entrée se résout automatiquement par le parcours habituel
+(déplacement de la source et journal compris), sans attendre de passes. Une cible
+encore valide, un effet sans cible ou un choix en cours conserve la fenêtre normale.
 
 ## Propriété et contrôle
 
@@ -862,7 +865,7 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 - Gomeran: résultat `create_event_token_copy_in_support` (jeton copie en Soutien via `create_rules_token_copy`). Les copies sont des jetons, donc pas de boucle. Le jeton déclenche ses propres effets d'entrée et ceux des observateurs d'entrée en Soutien; le filtre `eventNonToken` empêche Gomeran de réagir aux jetons.
 - Simulacrum of Clemency: résultat `clemency_choice` → choix `clemency_choice` pour le joueur adverse (`allow`/`neutralize`). Neutraliser retire la Volonté de la Pile (`counter_rules_stack_action`) et épuise Simulacrum; si la Volonté ne peut pas être neutralisée, Simulacrum gagne quand même les points. Passif `no_effects_while_exhausted` dans `rules_item_effects_active`.
 - Spiked Pit: passif `interzone_entry_penalty`, appliqué par `apply_rules_interzone_entry_penalty` (depuis `mark_rules_interzone_entry` et le placement manuel). Le malus est un compteur de puissance -1 qui reste tant que la Manifestation est sur le terrain (le texte ne donne pas de durée).
-- Empathic Mask: `ongoingEffect` `temperament_override` (tempérament de base choisi, jusqu'à la fin du tour), appliqué dans `rules_manifestation_characteristics`.
+- Empathic Mask: `ongoingEffect` `temperament_override` (tempérament de base choisi, jusqu'à la fin du tour), appliqué dans `rules_manifestation_characteristics`. Les activations affichent les noms et symboles des tempéraments. Une essence en haut à gauche des cartes affectées indique leur tempérament actuel ; elle est actualisée avec les effets et disparaît à leur expiration.
 - Powerful Pidue: cinq déclencheurs `card_played` par tempérament (Volonté ou Manifestation de l'adversaire pendant `confrontation_before_revelation`/`confrontation_reaction`). Filtre `playedAs: support_or_hand_will`: une Manifestation compte seulement si elle entre en Soutien, une Volonté seulement si elle est jouée depuis la main.
 - Version des assets: `20261010-rules-beta-110`.
 - Registre: 389 automated / 0 partial / 61 manual.
@@ -1094,7 +1097,7 @@ Relecture des 150 cartes des cinq decks de départ, texte imprimé contre `card-
 - Entrust double réellement la Puissance de base (`item["baseDoublings"]`, lu par `rules_manifestation_base_power` et `rules_manifestation_characteristics`). Deux Entrust donnent ×4. Jondo, The Stomper, Kiss of the Myrmillo, Ranba, Inflate the Ego et les destructions qui lisent la puissance de base utilisent cette valeur. Cleanse retire le doublement.
 - Stampeding Brood : « jusqu'à deux » ouvre le choix `token_count` (0 à N, limité aux places libres de l'Interzone). Résultat `create_support_tokens` avec `upTo`.
 - Déclencheur obligatoire sans cible légale : `rules_trigger_has_no_legal_target` vaut pour tous les événements et pour `min` > 1. L'effet n'est pas mis sur la Pile au lieu d'ouvrir un choix impossible. Echo of the Wilds redevient obligatoire.
-- Mimer : durée `while_source_on_field`. La copie survit au départ de sa cible grâce à la dernière valeur mémorisée (`snapshot` de l'effet).
+- Mimer : durée `while_source_on_field`. Puissance et tempérament sont figés à la résolution dans le `snapshot` de l'effet. Les changements ultérieurs ou le départ de la cible ne les actualisent jamais ; une nouvelle activation prend un nouveau cliché.
 - Trim the Excess et Equalize n'affectent plus la Zone d'Impasse, qui ne fait pas partie du champ.
 - Tests : `StarterDeckFollowUpTests` dans `tests/test_reported_card_bugs.py`.
 
@@ -1344,3 +1347,13 @@ Travail fait sur le PC après la beta 139, jamais publié, récupéré via la br
 - **Choix depuis la main** (Grimoire, défausse…) : le fond sombre s'arrête au-dessus de
   la main, qui reste visible et utilisable ; sur téléphone la carte est à gauche, le
   texte et le bouton à droite.
+
+
+## Audit des cas voisins : copie, activations, inspection et Chain (23 octobre 2026)
+
+- Mirrorbeast mémorise également sa puissance et ses effets à la résolution (`snapshot` et `copiedRules`). La copie persiste si la cible part, sans relire ses caractéristiques, jusqu'à la Résolution. Les activations proposées par le client viennent des effets effectivement copiés.
+- Nettoyer la carte originale n'efface pas la copie portée par Mimer ou Mirrorbeast. Nettoyer le copieur retire bien son propre modificateur de copie.
+- Zum, Haltan, Shattered Memory, Bizarre Mechanism et Malaleuco affichent des noms d'actions traduits plutôt que des numéros. Sandokaron conserve ses choix de Bannières ; Empathic Mask conserve ses noms et symboles de tempéraments.
+- Bizarre Mechanism et les autres activations avec `requireSourceCounter` respectent leur intervalle de compteurs dans les boutons et les contrôles d'auto-passe. Une capacité avec `requireHandCard` n'est pas proposée avec une main vide.
+- `playAsPersistentWill` interdit le Chain de Slumberer et Juggernut depuis la main, le Deck, les Limbes et le Réceptacle. Le choix, l'exécution et les effets de repli (Womb) utilisent le même contrôle. Les mises en jeu directes, comme Urolong, restent autorisées.
+- L'inspection des Traps révélés passe par la couche d'interaction du plateau ; un Trap adverse couvert reste privé. Les cartes suspendues, sources de Stack et références du journal ont des chemins d'inspection séparés conservés.

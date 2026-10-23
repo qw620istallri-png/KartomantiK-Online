@@ -129,6 +129,7 @@ function localizeServerError(message) {
     "Choose one Manifestation to Chain.": "rulesChainChoiceError",
     "The selected Manifestation is no longer in the required zone.": "rulesChainMovedError",
     "Only a Manifestation can be Chained.": "rulesChainTypeError",
+    "This Manifestation can only be played as a Persistent Will and cannot be Chained.": "rulesChainPersistentOnlyError",
     "Choose a valid confrontation destination.": "rulesConfrontationDestinationError",
     "This confrontation card is no longer available.": "rulesConfrontationCardMovedError",
     "Choose a valid Interzone card to replace.": "rulesConfrontationReplacementError",

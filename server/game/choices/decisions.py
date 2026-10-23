@@ -130,7 +130,7 @@ class DecisionsChoicesMixin:
             chainable = [
                 c for c in hand
                 if self.card_rules.get(c, {}).get("type") == "manifestation"
-                and self.rules_card_play_restriction_error(player_id, c) is None
+                and self.rules_card_chain_restriction_error(player_id, c) is None
             ] if option == "yes" and not self.rules_hands_are_immune() else []
             if not chainable:
                 tokens = self.apply_rules_action_result({
