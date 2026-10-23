@@ -441,16 +441,17 @@ class StackMixin:
                 effect["fromOpponents"] = True
             if copying and target_kind == "card":
                 copied_item = self.find_battlefield_item(target.get("itemId"))
-                effect["snapshot"] = {
-                    **self.rules_manifestation_characteristics(copied_item),
-                    "basePower": self.rules_manifestation_base_power(copied_item),
-                }
+                effect["snapshot"] = self.rules_manifestation_characteristics(copied_item)
+                effect["snapshot"]["basePower"] = effect["snapshot"]["power"]
                 if effect["kind"] == "copy_power_effects":
                     copied_rules = self.rules_item_card_rules(copied_item)
                     effect["copiedRules"] = deepcopy({
                         key: copied_rules[key] for key in RULES_COPIED_EFFECT_KEYS
                         if key in copied_rules
                     })
+            if effect["kind"] == "power_set_maximum" and target_kind == "card":
+                current = self.rules_manifestation_characteristics(self.find_battlefield_item(target.get("itemId")))["power"]
+                effect["powerAdjustment"] = int(effect.get("value") or 0) - current
             if (
                 effect["kind"] == "power_modifier"
                 and int(effect.get("value") or 0) < 0
@@ -511,6 +512,8 @@ class StackMixin:
                 if target.get("itemId")
                 else target.get("playerId") in self.players
                 if target.get("kind") == "player"
+                else True
+                if target.get("kind") == "global"
                 else any(
                     action.get("id") == target.get("actionId")
                     for action in self.rules_engine.get("actionStack") or []

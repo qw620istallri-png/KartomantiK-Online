@@ -223,13 +223,7 @@ class PowerMixin:
             return {"power": 0, "temperament": None}
         visiting.add(item.get("id"))
         metadata = self.card_rules.get(item.get("cardId"), {})
-        power = item.get("power") if item.get("isTokenCard") else metadata.get("power")
-        if item.get("willManifestation"):
-            power = item["willManifestation"].get("power")
-        if item.get("gummoCopy"):
-            power = self.card_rules.get(item["gummoCopy"], {}).get("power")
-        power = int(power or 0) * (2 ** int(item.get("baseDoublings") or 0))
-        base_power = power
+        power = self.rules_manifestation_base_power(item)
         temperaments = (
             [item.get("temperament")]
             if item.get("isTokenCard")
@@ -237,32 +231,25 @@ class PowerMixin:
         )
         temperament = item.get("temperamentOverride") or (temperaments[0] if temperaments else None)
 
-        copy_effect = next((
-            effect for effect in reversed(self.rules_engine.get("ongoingEffects") or [])
-            if effect.get("kind") in {
-                "copy_power_temperament", "copy_power_effects"
-            }
-            and effect.get("source", {}).get("itemId") == item.get("id")
-        ), None)
-        if copy_effect:
-            copied = copy_effect.get("snapshot") or {}
-            power = copied.get("power", power)
-            if copy_effect.get("kind") == "copy_power_temperament":
-                temperament = copied.get("temperament", temperament)
-        override_effect = next((
-            effect for effect in reversed(self.rules_engine.get("ongoingEffects") or [])
-            if effect.get("kind") == "temperament_override"
-            and effect.get("target", {}).get("itemId") == item.get("id")
-        ), None)
-        if override_effect and override_effect.get("temperament") in RULES_TEMPERAMENTS:
-            temperament = override_effect["temperament"]
+        # Both operations change the same characteristic: the last resolved
+        # modifier wins, regardless of which card produced it.
+        for effect in self.rules_engine.get("ongoingEffects") or []:
+            if effect.get("kind") == "copy_power_temperament" and effect.get("source", {}).get("itemId") == item.get("id"):
+                if self.rules_ongoing_effect_active(effect):
+                    temperament = (effect.get("snapshot") or {}).get("temperament", temperament)
+            elif (effect.get("kind") == "temperament_override"
+                  and effect.get("target", {}).get("itemId") == item.get("id")
+                  and effect.get("temperament") in RULES_TEMPERAMENTS
+                  and self.rules_ongoing_effect_active(effect)):
+                temperament = effect["temperament"]
 
         power += int((item.get("counters") or {}).get("power") or 0)
         power += int((item.get("counters") or {}).get("tempCounter") or 0)
         power += sum(
-            int(effect.get("value") or 0)
+            int(effect.get("powerAdjustment") if effect.get("kind") == "power_set_maximum" else effect.get("value") or 0)
             for effect in self.rules_engine.get("ongoingEffects") or []
-            if effect.get("kind") == "power_modifier"
+            if (effect.get("kind") == "power_modifier"
+                or effect.get("kind") == "power_set_maximum" and "powerAdjustment" in effect)
             and effect.get("target", {}).get("itemId") == item.get("id")
             and self.rules_ongoing_effect_active(effect)
         )
@@ -272,6 +259,7 @@ class PowerMixin:
                 self.rules_engine.get("ongoingEffects") or []
             )
             if effect.get("kind") == "power_set_maximum"
+            and "powerAdjustment" not in effect
             and effect.get("target", {}).get("itemId") == item.get("id")
         ), None)
         if set_effect:
@@ -285,7 +273,7 @@ class PowerMixin:
                 )
             )
         ):
-            power = max(power, base_power)
+            power = max(power, self.rules_manifestation_base_power(item))
         minimum_power = item.get("minimumPower")
         maximum_power = item.get("maximumPower")
         for effect in self.rules_engine.get("ongoingEffects") or []:
@@ -334,26 +322,23 @@ class PowerMixin:
         if item_id in visiting:
             return 0
         visiting.add(item_id)
-        copy_effect = next((
-            effect for effect in reversed(
-                self.rules_engine.get("ongoingEffects") or []
-            )
-            if effect.get("kind") in {
-                "copy_power_temperament", "copy_power_effects"
-            }
-            and effect.get("source", {}).get("itemId") == item_id
-        ), None)
-        if copy_effect and (copy_effect.get("snapshot") or {}).get("basePower") is not None:
-            return int(copy_effect["snapshot"]["basePower"])
-        # Entrust doubles the base power itself: a modifier kept while the card stays on the field
+        # Legacy item flags precede the ordered, resolved modifiers.
         doubling = 2 ** int(item.get("baseDoublings") or 0)
         if item.get("isTokenCard"):
-            return int(item.get("power") or 0) * doubling
-        if item.get("gummoCopy"):
-            return int(self.card_rules.get(item["gummoCopy"], {}).get("power") or 0) * doubling
-        return int(
-            self.card_rules.get(item.get("cardId"), {}).get("power") or 0
-        ) * doubling
+            base = int(item.get("power") or 0)
+        elif item.get("willManifestation"):
+            base = int(item["willManifestation"].get("power") or 0)
+        else:
+            base = int(self.card_rules.get(item.get("gummoCopy") or item.get("cardId"), {}).get("power") or 0)
+        base *= doubling
+        for effect in self.rules_engine.get("ongoingEffects") or []:
+            if effect.get("kind") in {"copy_power_temperament", "copy_power_effects"} and effect.get("source", {}).get("itemId") == item_id:
+                if self.rules_ongoing_effect_active(effect):
+                    base = int((effect.get("snapshot") or {}).get("power", base))
+            elif (effect.get("kind") == "base_power_double" and effect.get("target", {}).get("itemId") == item_id
+                  and self.rules_ongoing_effect_active(effect)):
+                base *= 2
+        return base
 
     def rules_stalemate_win_blocked(self, item):
         return (

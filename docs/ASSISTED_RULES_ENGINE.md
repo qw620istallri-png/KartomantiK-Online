@@ -809,7 +809,7 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 
 ### Lot 12 (dix cartes du set Beta)
 
-- Trim the Excess / Equalize : résultat `set_field_power` (`mode` `base` ou `lowest_base`) → un effet `power_set_maximum` jusqu'à la fin du tour sur chaque Manifestation du champ (la puissance fixée ignore les modificateurs ultérieurs).
+- Trim the Excess / Equalize : résultat `set_field_power` (`mode` `base` ou `lowest_base`) → un effet `power_set_maximum` jusqu'à la fin du tour sur chaque Manifestation du champ. La puissance est ajustée à la résolution et plafonnée à cette valeur ; les modificateurs ultérieurs peuvent la réduire.
 - Soup : passif `persistent_wills_as_ephemeral` ; `rules_action_timing_error(player_id=…)` (serveur) et `rulesPersistentWillsAsEphemeralClient` (client) autorisent les Volontés persistantes en Réaction / Résolution tant que Soup est dans l'Interzone du joueur.
 - Altruistic Inflorescence : effet continu `grant_support` (tant que la source et la cible sont sur le champ, lu par `rules_card_can_enter_support`) ; changement de cible en Phase de Fin via `retarget_source_effect`.
 - Logos : résultat `stalemate_targets` (`includeSource`, `lockZone`) ; victoire = une Manifestation d'Interzone choisie, défaite = Logos et une Manifestation gagnante ; toutes gelées (`zoneLockTurn`) jusqu'à la fin du tour.
@@ -1094,7 +1094,7 @@ Relecture des 150 cartes des cinq decks de départ, texte imprimé contre `card-
 ## Suites de l'audit des decks de départ (beta 139.2)
 
 - Duel Honorably : seul l'adversaire paie, au moment de la résolution (décision du 2026-10-20 : l'option « un joueur » vise le multijoueur).
-- Entrust double réellement la Puissance de base (`item["baseDoublings"]`, lu par `rules_manifestation_base_power` et `rules_manifestation_characteristics`). Deux Entrust donnent ×4. Jondo, The Stomper, Kiss of the Myrmillo, Ranba, Inflate the Ego et les destructions qui lisent la puissance de base utilisent cette valeur. Cleanse retire le doublement.
+- Entrust double réellement la Puissance de base (modificateur ordonné `base_power_double`, lu par `rules_manifestation_base_power` et `rules_manifestation_characteristics`). Deux Entrust donnent ×4. Une copie résolue ensuite remplace cette base ; un Entrust résolu après une copie double la base copiée. Jondo, The Stomper, Kiss of the Myrmillo, Ranba, Inflate the Ego et les destructions qui lisent la puissance de base utilisent cette valeur. Cleanse retire le doublement.
 - Stampeding Brood : « jusqu'à deux » ouvre le choix `token_count` (0 à N, limité aux places libres de l'Interzone). Résultat `create_support_tokens` avec `upTo`.
 - Déclencheur obligatoire sans cible légale : `rules_trigger_has_no_legal_target` vaut pour tous les événements et pour `min` > 1. L'effet n'est pas mis sur la Pile au lieu d'ouvrir un choix impossible. Echo of the Wilds redevient obligatoire.
 - Mimer : durée `while_source_on_field`. Puissance et tempérament sont figés à la résolution dans le `snapshot` de l'effet. Les changements ultérieurs ou le départ de la cible ne les actualisent jamais ; une nouvelle activation prend un nouveau cliché.

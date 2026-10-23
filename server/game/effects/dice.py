@@ -226,7 +226,7 @@ class DiceEffectsMixin:
             }
             effect_result = self.apply_rules_action_result(nested)
         elif roll == 3:
-            item["temperamentOverride"] = "hollow"
+            self.set_rules_item_temperament(item, "hollow", action)
             effect_result = {"status": "temperament", "temperament": "hollow"}
         else:
             value = 2 if roll <= 5 else 3

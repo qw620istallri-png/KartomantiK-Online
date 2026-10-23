@@ -1379,7 +1379,7 @@ class TriggersMixin:
             self.queue_rules_simultaneous_actions(queued)
         return queued
 
-    def queue_rules_beginning_turn_triggers(self):
+    def queue_rules_beginning_turn_triggers(self, defer=False):
         """Queue public beginning-of-turn effects exactly once for this turn.
 
         Optional play permissions such as Wandering Veteran are deliberately
@@ -1420,7 +1420,7 @@ class TriggersMixin:
                     face_up=True,
                     defer=True,
                 ))
-        if queued:
+        if queued and not defer:
             self.queue_rules_simultaneous_actions(queued)
         return queued
 

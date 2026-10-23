@@ -4,6 +4,16 @@ from ..common import RULES_WILL_TYPES, RULES_TEMPERAMENTS, new_id
 
 
 class PowerEffectsMixin:
+    def set_rules_item_temperament(self, item, temperament, action):
+        item["temperamentOverride"] = temperament
+        return self.create_rules_ongoing_effects({
+            **action,
+            "targets": [{"kind": "card", "itemId": item["id"], "cardId": item.get("cardId")}],
+            "ability": {"id": (action.get("ability") or {}).get("id"), "ongoingEffect": {
+                "kind": "temperament_override", "temperament": temperament, "duration": "while_target_on_field",
+            }},
+        })
+
     def _rules_result_add_power_counter_target(self, action, result, player_id, player):
         target = next((
             entry for entry in action.get("targets") or []
@@ -181,6 +191,7 @@ class PowerEffectsMixin:
                 "startedTurn": self.phase_tracker["turn"],
                 "value": int(result.get("value") or 1),
             }
+            effect["powerAdjustment"] = effect["value"] - self.rules_manifestation_characteristics(item)["power"]
             self.rules_engine["ongoingEffects"].append(effect)
             effects.append(effect["id"])
         return {
@@ -272,6 +283,7 @@ class PowerEffectsMixin:
                 "kind": "power_set_maximum", "duration": "until_end_of_turn",
                 "startedTurn": self.phase_tracker["turn"], "value": int(value),
             }
+            effect["powerAdjustment"] = effect["value"] - self.rules_manifestation_characteristics(item)["power"]
             self.rules_engine["ongoingEffects"].append(effect)
             effect_ids.append(effect["id"])
         return {
@@ -288,7 +300,12 @@ class PowerEffectsMixin:
         if item is None:
             return {"kind": result.get("kind"), "status": "target_missing"}
         base = self.rules_manifestation_base_power(item)
-        item["baseDoublings"] = int(item.get("baseDoublings") or 0) + 1
+        self.create_rules_ongoing_effects({
+            **action, "targets": [target],
+            "ability": {"id": (action.get("ability") or {}).get("id"), "ongoingEffect": {
+                "kind": "base_power_double", "duration": "while_target_on_field",
+            }},
+        })
         return {
             "kind": result.get("kind"), "status": "doubled",
             "itemId": item["id"], "value": base,
@@ -486,7 +503,7 @@ class PowerEffectsMixin:
             result.get("onZeroTemperament") in RULES_TEMPERAMENTS
             and counters[counter_key] == 0 and int(result.get("value") or 0) < 0
         ):
-            source_item["temperamentOverride"] = result["onZeroTemperament"]
+            self.set_rules_item_temperament(source_item, result["onZeroTemperament"], action)
         return {
             "kind": "add_counter_source",
             "status": "added",

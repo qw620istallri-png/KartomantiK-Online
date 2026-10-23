@@ -63,7 +63,7 @@ def replacement_checkpoint(shape):
                 result = {'status': 'choice_required', 'kind': 'choice_required',
                           'choiceKind': 'replacement_order', 'choiceId': choice['id'],
                           'playerId': choice['playerId'], 'stackDepth': len(self.rules_engine['actionStack'])}
-                return (None, result) if shape in {'choice', 'declaration'} else result
+                return (None, result) if shape in {'choice', 'declaration', 'priority'} else result
             previous_running = getattr(self, '_rules_replacement_running', False)
             previous_priority = getattr(self, '_rules_replacement_priority', None)
             self._rules_replacement_running = True

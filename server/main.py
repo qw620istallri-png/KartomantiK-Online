@@ -919,6 +919,11 @@ async def apply_rules_pass(session, actor_id, passed=None):
     error, result = session.pass_rules_priority(actor_id, passed=passed)
     if error:
         return error
+    return await record_rules_pass_result(session, result, actor_id)
+
+
+async def record_rules_pass_result(session, result, actor_id):
+    """Log a completed priority operation, including one resumed after a replacement choice."""
     if result["status"] == "passed":
         session.add_log(actor_id, "rules_priority_passed", {
             "phaseId": session.current_phase_id(),
@@ -987,10 +992,12 @@ async def apply_rules_pass(session, actor_id, passed=None):
             "expiredEssenceTokenIds": result.get("expiredEssenceTokenIds") or [],
             "readiedItemIds": result.get("readiedItemIds") or [],
             "rematchStarted": bool(result.get("rematchStarted")),
+            "stateActions": result.get("phaseStateActions") or {},
         })
         log_rules_triggered_actions(
             session, result.get("beginningTriggeredActions") or [], actor_id
         )
+        log_rules_triggered_actions(session, result.get("phaseTriggeredActions") or [], actor_id)
         log_rules_triggered_actions(
             session, result.get("endTriggeredActions") or [], actor_id
         )
@@ -1559,6 +1566,8 @@ async def handle_message(ws, info, data):
             log_rules_declared_action(session, declared)
         for completed in result.pop("_resolvedActions", []):
             await record_rules_resolution(session, completed, actor_id)
+        for completed in result.pop("_priorityResults", []):
+            await record_rules_pass_result(session, completed, actor_id)
         triggered_actions = result.pop("triggeredActions", [])
         session.add_log(actor_id, "rules_choice_resolved", result)
         log_rules_triggered_actions(session, triggered_actions, actor_id)

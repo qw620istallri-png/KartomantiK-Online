@@ -777,6 +777,15 @@ class ZonesMixin:
             self._rules_replacement_priority = previous_priority
         if operation['shape'] == 'choice':
             return result
+        if operation['shape'] == 'priority':
+            error, passed = result
+            if error:
+                return error, None
+            payload = {'kind': 'replacement_order', 'playerId': player_id, 'choiceId': choice['id'],
+                       'status': 'continued' if passed.get('status') == 'choice_required' else 'completed'}
+            if payload['status'] == 'completed':
+                payload['_priorityResults'] = [passed]
+            return None, payload
         if operation['shape'] == 'declaration':
             error, action = result
             if error:

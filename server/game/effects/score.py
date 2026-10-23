@@ -97,7 +97,7 @@ class ScoreEffectsMixin:
         item = self.find_battlefield_item((target or {}).get("itemId"))
         if item is None:
             return {"kind": result.get("kind"), "status": "target_missing"}
-        item["temperamentOverride"] = "hollow"
+        self.set_rules_item_temperament(item, "hollow", action)
         counters = item.setdefault("counters", {})
         counters["power"] = int(counters.get("power") or 0) - 1
         controller_id = self.rules_item_controller_id(item)

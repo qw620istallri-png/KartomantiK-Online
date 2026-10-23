@@ -53,7 +53,7 @@ class MimerSnapshotTests(game_tests.RealCardRulesCase):
         for _ in range(2):
             session.serialize_for("p1", "player")
             self.assertEqual(session.rules_manifestation_characteristics(mimer), expected)
-            self.assertEqual(session.rules_manifestation_base_power(mimer), 3)
+            self.assertEqual(session.rules_manifestation_base_power(mimer), 5)
         view = session.serialize_for("p2", "player")
         copied_view = next(item for item in view["battlefield"] if item["id"] == "mimer")
         self.assertEqual(copied_view["effectiveTemperament"], "vitreous")

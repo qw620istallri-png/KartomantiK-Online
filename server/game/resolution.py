@@ -209,6 +209,7 @@ class ResolutionMixin:
                 self.queue_rules_simultaneous_actions(valid)
         return resolved
 
+    @replacement_checkpoint("priority")
     def pass_rules_priority(self, player_id, passed=None):
         if not self.rules_engine["enabled"]:
             return "Assisted rules are not active.", None
@@ -265,6 +266,10 @@ class ResolutionMixin:
                     "playerId": overflow["playerId"],
                     "stackDepth": 0,
                 }
+        powers_before_phase = {
+            item.get("id"): self.rules_manifestation_characteristics(item)["power"]
+            for item in self.battlefield if item.get("faceUp")
+        }
         sequence = self.phase_sequence()
         next_index = self.phase_tracker["index"] + 1
         started_new_turn = False
@@ -292,6 +297,10 @@ class ResolutionMixin:
             started_new_turn = True
         self.phase_tracker["index"] = next_index
         expired_effects = self.prune_rules_ongoing_effects()
+        phase_state_actions = self.resolve_rules_state_actions(powers_before_phase) if expired_effects else {}
+        phase_triggers = list(phase_state_actions.get("triggeredActions") or [])
+        if phase_state_actions:
+            phase_triggers.extend(self.queue_rules_observed_event_triggers(defer=True))
         self.prune_rules_play_restrictions()
         self.phase_passes.clear()
         self.rules_engine["priorityPlayerId"] = self.other_rules_player_id(player_id)
@@ -336,8 +345,10 @@ class ResolutionMixin:
             readied_item_ids = self.ready_rules_exhausted_cards()
             self.reset_rules_confrontation_turn()
             self.grant_rules_beginning_turn_permissions()
-            beginning_triggered_actions = self.queue_rules_beginning_turn_triggers()
-        if started_new_turn and not beginning_triggered_actions:
+            beginning_triggered_actions = self.queue_rules_beginning_turn_triggers(defer=True)
+        if phase_triggers or beginning_triggered_actions:
+            self.queue_or_defer_rules_simultaneous_actions([*phase_triggers, *beginning_triggered_actions])
+        if started_new_turn and not beginning_triggered_actions and not phase_triggers and not self.rules_engine.get("pendingChoice"):
             self.phase_tracker["index"] = ADVANCED_PHASES.index("recovery_draw")
         if self.current_phase_id() == "confrontation_choose":
             self.register_rules_existing_first_manifestations()
@@ -392,6 +403,8 @@ class ResolutionMixin:
             "beginningTriggeredActions": beginning_triggered_actions,
             "endTriggeredActions": end_triggered_actions,
             "resolutionTriggeredActions": resolution_triggered_actions,
+            "phaseTriggeredActions": phase_triggers,
+            "phaseStateActions": {key: value for key, value in phase_state_actions.items() if key != "triggeredActions"},
             "readiedItemIds": readied_item_ids,
             "revealedItemIds": revealed_item_ids,
             "expiredEssenceTokenIds": [
