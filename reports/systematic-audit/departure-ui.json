@@ -1,0 +1,29 @@
+{
+  "sourceDigest": "571770c0bf984d0c7b61dfc362101d24dd864295d6f4e200dd32f902732a2121",
+  "finishedAt": "2026-10-24T10:35:47.131305+00:00",
+  "summary": {
+    "executed": 2,
+    "failed": 0,
+    "parityScenarios": 609
+  },
+  "gates": [
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "output": "Rules frontend/server parity: 609 catalog scenarios OK"
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_choice_continuity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "output": "[{\"width\":1440,\"emptyUndoSafe\":true,\"partialPowerSurvives\":true,\"validPowerSent\":true,\"privatePickSurvives\":true,\"privateConfirmReady\":true,\"limboPickSurvives\":true,\"limboPickSent\":true,\"waitingStaysLocked\":true,\"singleAnswer\":true,\"retryUnlocked\":true,\"retrySent\":true,\"reconnectUnlocked\":true,\"handPicked\":true,\"staleHandCleared\":true,\"oldChoiceIgnored\":true,\"chabakRemainsInHand\":true,\"chabakOtherCardsSent\":true,\"lastChabakCopyReserved\":true,\"spareChabakCopyAllowed\":true,\"reorderSurvives\":true,\"errors\":[]},{\"width\":844,\"emptyUndoSafe\":true,\"partialPowerSurvives\":true,\"validPowerSent\":true,\"privatePickSurvives\":true,\"privateConfirmReady\":true,\"limboPickSurvives\":true,\"limboPickSent\":true,\"waitingStaysLocked\":true,\"singleAnswer\":true,\"retryUnlocked\":true,\"retrySent\":true,\"reconnectUnlocked\":true,\"handPicked\":true,\"staleHandCleared\":true,\"oldChoiceIgnored\":true,\"chabakRemainsInHand\":true,\"chabakOtherCardsSent\":true,\"lastChabakCopyReserved\":true,\"spareChabakCopyAllowed\":true,\"reorderSurvives\":true,\"errors\":[]}]\nChoice continuity regression: OK"
+    }
+  ]
+}

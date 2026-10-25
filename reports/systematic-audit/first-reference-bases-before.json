@@ -1,0 +1,9 @@
+{
+  "historical": true,
+  "methods": 10,
+  "failedAssertionsIncludingSubtests": 2,
+  "errors": 0,
+  "sourceDigestNotRecorded": true,
+  "logSha256": "3c14125ecd32f9a656c4851c7d8806640fc8f6ba7c581e813194ca5f9ee137f0",
+  "output": "======================================================================\nFAIL: test_hourglass_compares_modified_base_power_and_excludes_additive_bonuses (test_first_reference_audit.FirstReferenceAuditTests.test_hourglass_compares_modified_base_power_and_excludes_additive_bonuses) (ownDoubles=1, otherDoubles=0, bonus=0)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 161, in test_hourglass_compares_modified_base_power_and_excludes_additive_bonuses\n    self.assertEqual(bool(session.rules_engine[\"pendingChoice\"]), expects_choice)\nAssertionError: True != False\n\n======================================================================\nFAIL: test_mamelath_counts_modified_bases_of_the_moved_firsts_not_printed_values_or_bonuses (test_first_reference_audit.FirstReferenceAuditTests.test_mamelath_counts_modified_bases_of_the_moved_firsts_not_printed_values_or_bonuses)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 149, in test_mamelath_counts_modified_bases_of_the_moved_firsts_not_printed_values_or_bonuses\n    self.assertEqual(counts, {\"p1\": 8, \"p2\": 6})\nAssertionError: {'p1': 4, 'p2': 3} != {'p1': 8, 'p2': 6}\n- {'p1': 4, 'p2': 3}\n?        ^        ^\n\n+ {'p1': 8, 'p2': 6}\n?        ^        ^\n\n\n----------------------------------------------------------------------\nRan 10 tests in 1.223s\n\nFAILED (failures=2)\n"
+}

@@ -24,8 +24,8 @@ Cette version regroupe les corrections des audits réalisés après 139.45.
 Les textes des 450 cartes ont une revue indépendante enregistrée dans
 `audit/semantic-reviews/`. Cette revue ne certifie pas l’exécution de toutes les
 branches et interactions : les preuves et leurs limites restent séparées dans
-`reports/systematic-audit/`. La consolidation de la campagne est poursuivie
-après cette publication. Les essais sur téléphone physique seront réalisés
+`reports/systematic-audit/`. La campagne finale et la consolidation des preuves
+ont été exécutées après cette publication. Les essais sur téléphone physique seront réalisés
 par le créateur, conformément à son choix.
 
 Les versions du client, des URLs de ressources et du service worker sont
@@ -34,3 +34,9 @@ synchronisées en `20261025-rules-beta-140`.
 Validation avant publication : 1 205 tests Python réussis et les 13 suites
 Chrome de régression réussies. La suite UI générale a été rejouée après
 adaptation de ses assertions à l’effet d’entrée séparé de Flaying Jaw.
+
+Campagne finale : 1 206 tests Python, 13 suites UI, 182 parcours d'action et
+deux parcours navigateur de reconnexion, 40 séquences comprenant 12 175 étapes,
+ainsi que les 450 illustrations distantes passent sans échec. La revue
+indépendante conserve les 450 textes et leurs 760 paragraphes ; les limites de
+certification par clause restent explicites dans le rapport des exécutions.

@@ -1,0 +1,110 @@
+{
+  "sourceDigest": "f0a9a21f7fff5a6600cb638cf5f32dc9bfed5e0a3b461e10d714a5901c985250",
+  "finishedAt": "2026-10-24T08:33:53.709452+00:00",
+  "stage": "before-product-fix",
+  "tests": [
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_agrupol_counts_ownership_across_both_vessels",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_corrode_affects_both_sides_and_tokens_but_only_existing_cz",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_dancer_counts_tokens_under_current_control",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_quantitative_card_audit.py\", line 164, in test_dancer_counts_tokens_under_current_control\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (10, 0))\nAssertionError: Tuples differ: (5, 0) != (10, 0)\n\nFirst differing element 0:\n5\n10\n\n- (5, 0)\n?  ^\n\n+ (10, 0)\n?  ^^\n\n",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_donmo_counts_exhaustion_and_control_not_ownership_or_type",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_excess_power_points_use_current_first_power_and_floor_at_zero",
+      "status": "pass",
+      "durationSeconds": 0.172
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_friendly_presence_targets_current_opponent_cz_only",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_graceful_petal_rewards_immutable_owner_after_vessel_entry",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_humiliate_penalizes_current_controller_and_persists",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_induce_counts_generic_token_base",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_quantitative_card_audit.py\", line 129, in test_induce_counts_generic_token_base\n    self.play(session, self.INDUCE, [self.target(mine), self.target(support)])\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_quantitative_card_audit.py\", line 69, in play\n    self.declare(session, cid, targets)\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_quantitative_card_audit.py\", line 65, in declare\n    self.assertIsNone(error)\nAssertionError: 'A selected target is no longer face up on the battlefield.' is not None\n",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_induce_uses_doubled_base_and_excludes_additive_bonus",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_quantitative_card_audit.py\", line 109, in test_induce_uses_doubled_base_and_excludes_additive_bonus\n    self.assertEqual(self.power_of(session, \"mine\"), 12)  # 20 - base 8, not 4 or 11\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 16 != 12\n",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_induce_uses_mimers_snapshot_base_and_not_its_bonus",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_quantitative_card_audit.py\", line 123, in test_induce_uses_mimers_snapshot_base_and_not_its_bonus\n    self.assertEqual(self.power_of(session, \"mine\"), 15)\nAssertionError: 17 != 15\n",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_judgment_snapshots_hand_on_resolution_excluding_played_will",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_mukkabell_win_uses_chained_modified_base_not_print_or_bonus",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_quantitative_card_audit.py\", line 150, in test_mukkabell_win_uses_chained_modified_base_not_print_or_bonus\n    self.assertEqual(p1[\"score\"], 40)  # base 4 * 2, then 5 points each\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 20 != 40\n",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_pimbo_includes_generic_tokens_and_animated_wills_on_field",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_quantitative_card_audit.py\", line 258, in test_pimbo_includes_generic_tokens_and_animated_wills_on_field\n    self.assertEqual([self.power_of(session, i[\"id\"]) for i in (mine, foe, token, animated)], [19, 3, 7, 6])\nAssertionError: Lists differ: [19, 3, 8, 6] != [19, 3, 7, 6]\n\nFirst differing element 2:\n8\n7\n\n- [19, 3, 8, 6]\n?         ^\n\n+ [19, 3, 7, 6]\n?         ^\n\n",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_pinpia_creates_one_retained_essence_per_actual_interzone_manifestation",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_quantitative_card_audit.py\", line 173, in test_pinpia_creates_one_retained_essence_per_actual_interzone_manifestation\n    self.assertEqual(sum(t[\"counters\"][\"essence\"] for t in essences), 2)\nAssertionError: 1 != 2\n",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_plea_excludes_tokens_and_copies_but_counts_animated_will",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_printed_fixed_modifiers_have_exact_amount_and_expiry",
+      "status": "pass",
+      "durationSeconds": 0.188
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_viper_locks_existing_opponent_interzone_including_tokens",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_quantitative_card_audit.py\", line 283, in test_viper_locks_existing_opponent_interzone_including_tokens\n    self.assertEqual({e[\"target\"][\"itemId\"] for e in locks}, {token[\"id\"], other[\"id\"]})\nAssertionError: Items in the second set but not the first:\n'e5453d3b7706'\n",
+      "durationSeconds": 0.047
+    }
+  ],
+  "summary": {
+    "executed": 18,
+    "passed": 10,
+    "failed": 8
+  }
+}

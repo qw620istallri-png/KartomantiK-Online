@@ -1,0 +1,30 @@
+{
+  "sourceDigest": "a6714c2394854b0f2e6fefe816244e76065e27564a45cd084a4364a83d5f93dd",
+  "observations": [
+    {
+      "case": "source-power-after-departure",
+      "status": "observed-not-adjudicated",
+      "baseAtTrigger": 4,
+      "baseBeforeDeparture": 8,
+      "actualPoints": 20,
+      "candidatePointsUsingLastKnownValue": 40
+    },
+    {
+      "case": "limbo-target-roundtrip",
+      "status": "observed-not-adjudicated",
+      "actualEffectResult": {
+        "kind": "move_card",
+        "status": "moved",
+        "cardId": "m-3",
+        "ownerId": "p1",
+        "fromZone": "graveyard",
+        "fromContainerId": "p1",
+        "toZone": "hand",
+        "position": "top",
+        "reason": "return"
+      },
+      "returnedCardInHand": true
+    }
+  ],
+  "note": "These are actual current behaviors; no rule verdict or semantic PASS is claimed."
+}

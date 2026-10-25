@@ -1,0 +1,388 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "a6714c2394854b0f2e6fefe816244e76065e27564a45cd084a4364a83d5f93dd",
+  "finishedAt": "2026-10-24T09:06:47.736137+00:00",
+  "summary": {
+    "executed": 23,
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "cardsWithSelectedClauseProof": 24,
+    "fullCatalogSemanticCertification": false
+  },
+  "coverage": {
+    "voluntaryWills": "production declaration, payment and Stack resolution",
+    "triggeredEffects": "isolated at resolution; trigger timing/activation not certified",
+    "mukkabell": "actual Chain choice, granted win trigger, Stack resolution",
+    "gracefulPetal": "physical movement, explicit production zone-entry trigger, Stack resolution"
+  },
+  "cards": [
+    {
+      "cardId": "inner-deserts-148",
+      "name": "Induce Desertion",
+      "printedText": "A target Manifestation in the Confrontation Zone loses power equal to the base power of another target Manifestation in Support under the control of the same player.",
+      "printedTextSha256": "467e641a1a2a122e8e5b0e39e4983001d7ef5d4b9e81a66d3fd7c51aa481188e",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_induce_uses_doubled_base_and_excludes_additive_bonus",
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_induce_uses_mimers_snapshot_base_and_not_its_bonus",
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_induce_counts_generic_token_base"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-012",
+      "name": "Mukkabell",
+      "printedText": "When Mukkabell enters the field, you may Chain from your hand.\nIf the Chained manifestation wins the confrontation, you gain 5 Points for each point of its base power.",
+      "printedTextSha256": "818625dbc6eeda3a3d21801c0543f6329e53aabdf74bfee418c9a6bf3b565ef2",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_mukkabell_win_uses_chained_modified_base_not_print_or_bonus"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "fr1414jedqssttr_en",
+      "name": "Floating Dancer",
+      "printedText": "If Floating Dancer wins the confrontation, you gain 5 points for each manifestation in your Interzone.",
+      "printedTextSha256": "bb52ea7bce718599e25dd840c2ec3ef90143cc9c47c22a5167c311754b6a8869",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_dancer_counts_tokens_under_current_control"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "5xurdeiiyq7kgir_en",
+      "name": "Pinpia Psychobulb",
+      "printedText": "When Pinpia Psychobulb wins a confrontation, you gain a number of {T} essences equal to the number of manifestations in your Interzone. These essences are not lost at the end of the turn.",
+      "printedTextSha256": "fa92bb09563776ff5cf77d898105d6e9219d1fbd06314feac6a7ad7b9895f61e",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_pinpia_creates_one_retained_essence_per_actual_interzone_manifestation"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "31k2b7hz7ockvvn_en",
+      "name": "Plea for Generosity",
+      "printedText": "Gain 5 points for each non-token manifestation in the Confrontation Zone under the control of a target player.",
+      "printedTextSha256": "ceef04ed3d5d5f634b9572700f6940b89c2902dbe7ddb0b52536ce4b66631509",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_plea_excludes_tokens_and_copies_but_counts_animated_will"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "j2a7x783j5ql0ab_en",
+      "name": "Agrupol, Ponderer of Fields",
+      "printedText": "When Agrupol wins a confrontation, you gain 5 points for each manifestation of which you are the owner in each Empathic Vessel.\r\nIf Agrupol is put at the bottom of the deck, shuffle it.",
+      "printedTextSha256": "1b357c7058ed30106721f54922afb437f080e1f921b8803da1c10cf48a6c6c8e",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_agrupol_counts_ownership_across_both_vessels"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-121",
+      "name": "Donmo, the Truth-Bender",
+      "printedText": "Cannot be used as tribute.\nAs long as Donmo is in the Interzone, you may Exhaust it: Restore one target Exhausted card for each Temperament, other than Donmo.\nAs long as Donmo is on the field, at the end of the turn each opponent gains 5 Points for each Exhausted card under your control.",
+      "printedTextSha256": "d535ac266ccc494a75f0c36a503e72e9d3f79e7d9199cb628afe36db30d7d529",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_donmo_counts_exhaustion_and_control_not_ownership_or_type"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "pqi88s5ytyfnalf_en",
+      "name": "Humiliate",
+      "printedText": "A target manifestation on the field becomes of {H} temperament and gets -1 power.\r\nIts controller loses 5 points.",
+      "printedTextSha256": "33e0a4bca62d70c1e4eb420d02b3b694d270e77645a1dbe754118ed51e80f32f",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_humiliate_penalizes_current_controller_and_persists"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-046",
+      "name": "Pass Judgment",
+      "printedText": "A target Manifestation on the field gets -1 power until the end of the turn for each card currently in your hand.",
+      "printedTextSha256": "887e9e6989b66cfbc823614d9ad1e9a00a02fa050a66dd83f4d285c436b04e50",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_judgment_snapshots_hand_on_resolution_excluding_played_will"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "lo85kdsow36bymu_en",
+      "name": "Strengthen",
+      "printedText": "A target manifestation on the field gets +3 power until the end of the turn.",
+      "printedTextSha256": "7f1b016c556f9177796ed7aae26f0069e59db2ce3d58c6af05a6b65bb02bd583",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_printed_fixed_modifiers_have_exact_amount_and_expiry"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "ztunjt1msq1ofsv_en",
+      "name": "Accentuate",
+      "printedText": "A target manifestation on the field gets +1 power until the end of the turn.",
+      "printedTextSha256": "45b15eb4f18e6576c2874f4ec2785aa3a9e72b8b2770850c483299af605bf079",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_printed_fixed_modifiers_have_exact_amount_and_expiry"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "bithch9c4vi77cu_en",
+      "name": "Weaken",
+      "printedText": "A target manifestation on the field gets -1 power until the end of the turn.",
+      "printedTextSha256": "b1b2272655ed5a6a54befcf205583428ffbea68a4a9067bc07c02c923c66bd5f",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_printed_fixed_modifiers_have_exact_amount_and_expiry"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "obn1uv72ewxv3y5_en",
+      "name": "Oppress",
+      "printedText": "A target manifestation on the field gets -3 power until the end of the turn.",
+      "printedTextSha256": "9d136115822443fe3a753ff74156b6d5a1f886ae6e3832e5e6b150e6a2ad37c5",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_printed_fixed_modifiers_have_exact_amount_and_expiry",
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_generic_token_targeting_keeps_type_visibility_and_protection_checks"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "w3jt07uuk00nmaj_en",
+      "name": "Corrode",
+      "printedText": "All manifestations currently in the Confrontation Zone get -1 power until the end of the turn.",
+      "printedTextSha256": "973efadda8560949849f5980633a8456b581cd37f7afc65c3ebe5d66b6f18fe6",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_corrode_affects_both_sides_and_tokens_but_only_existing_cz"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "ng6w09m6mrjq3xc_en",
+      "name": "Pimbo",
+      "printedText": "As long as Pimbo is in the Interzone, you may sacrifice it: All manifestations currently on the field get -1 power until the end of the turn.",
+      "printedTextSha256": "3956d4623595de222f3e61c9a61a999789e8912a8f58b01a3782e3db5a0d85c6",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_pimbo_includes_generic_tokens_and_animated_wills_on_field",
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_pimbo_does_not_reach_stalemate_which_is_outside_the_field"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "l6ragmkyw5oyued_en",
+      "name": "Friendly Presence",
+      "printedText": "Support from hand.\r\nWhen Friendly Presence enters the Confrontation Zone, the manifestations controlled by the opponents currently in the Confrontation Zone get -2 power until the end of the turn.",
+      "printedTextSha256": "bbebab09b3858d0144f0155ab976539ffe519cc51a8312779bb87e9dc96a4e6f",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_friendly_presence_targets_current_opponent_cz_only"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "3gy8gbbbmamc8d0_en",
+      "name": "Venerable Viper",
+      "printedText": "Support from hand.\r\nIf Venerable Viper loses the confrontation, choose a target opponent. The manifestations currently in that player's Interzone cannot be replaced and lose all their effects until the end of the next turn.",
+      "printedTextSha256": "b686876fc236c24c15ead34c0ca9cdc5e1ff50442ad657b9acebaa0e5f5c349a",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_viper_locks_existing_opponent_interzone_including_tokens"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-014",
+      "name": "Lombriculpop",
+      "printedText": "When Lombriculpop wins a confrontation, you gain 5 Points for each point of excess difference between Lombriculpop's power and that of the First Manifestation controlled by a target opponent.",
+      "printedTextSha256": "093396410e74f8267cf6c4bdc28e99f3f09de51f0bb6ac299678730b56038bc6",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_excess_power_points_use_current_first_power_and_floor_at_zero"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "9ypw4x4igfon1qi_en",
+      "name": "Armored Pachywyrm",
+      "printedText": "If Armored Pachywyrm wins the confrontation, a target opponent loses 5 points for each point of excess difference between Armored Pachywyrm's power and that of the First Manifestation controlled by that player.",
+      "printedTextSha256": "148262dec4ba795098d2d0f41887a25f77a15be19b5849516d40cfc85c2fd403",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_excess_power_points_use_current_first_power_and_floor_at_zero"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "aumzs91roqg77y1_en",
+      "name": "Graceful Petal",
+      "printedText": "When Graceful Petal enters the Empathic Vessel of an opponent, the owner of this card gains 20 points.",
+      "printedTextSha256": "5ea6511d80fca154dfe8b7ec0215624a3422b86662da5e65cdf793c616f5b36d",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_graceful_petal_rewards_immutable_owner_after_vessel_entry"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "8xi4zh0ekdl42me_en",
+      "name": "Reap What You’ve Sown",
+      "printedText": "Gain 5 points for each manifestation in your Interzone, then draw a card for each free space in your Interzone.",
+      "printedTextSha256": "8e8f49bf150944eff1bca809ce51a8edfc3cfed9a738bc74b43935ac5d9280ff",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_reap_counts_tokens_for_score_and_draws_only_for_free_spaces"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "whwfrjzl6flgww9_en",
+      "name": "Protect",
+      "printedText": "The manifestations and Wills currently on the field you control are Protected from cards and effects controlled by opponents until the end of the turn.",
+      "printedTextSha256": "ea6f4c606ea48381d9a8a882fddeaab31e8cfce534d057bc1df9ee94e72cba08",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_protect_covers_current_controlled_field_cards_but_not_stalemate"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "ei33difzdc81zha_en",
+      "name": "Starkaz, the Brilliant",
+      "printedText": "When Starkaz enters the Confrontation Zone, all other manifestations currently on the field lose their effects until the end of the turn.",
+      "printedTextSha256": "fd54b3c2e6a3cb157948582fd4c16f30c6940fec352c7a78b07ce247b9ad39bc",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_starkaz_and_sever_share_field_scope_without_reaching_stalemate"
+      ],
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-150",
+      "name": "Sever the Ascent",
+      "printedText": "All Manifestations currently on the field lose Float.",
+      "printedTextSha256": "253f459408b257bf282df9205ed61db784f9da4fde8c9f7be7edaee19d940fd7",
+      "testIds": [
+        "test_quantitative_card_audit.QuantitativeCardAuditTests.test_starkaz_and_sever_share_field_scope_without_reaching_stalemate"
+      ],
+      "allClausesAndBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_agrupol_counts_ownership_across_both_vessels",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_corrode_affects_both_sides_and_tokens_but_only_existing_cz",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_dancer_counts_tokens_under_current_control",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_donmo_counts_exhaustion_and_control_not_ownership_or_type",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_excess_power_points_use_current_first_power_and_floor_at_zero",
+      "status": "pass",
+      "durationSeconds": 0.188
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_friendly_presence_targets_current_opponent_cz_only",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_generic_token_targeting_keeps_type_visibility_and_protection_checks",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_graceful_petal_rewards_immutable_owner_after_vessel_entry",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_humiliate_penalizes_current_controller_and_persists",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_induce_counts_generic_token_base",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_induce_uses_doubled_base_and_excludes_additive_bonus",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_induce_uses_mimers_snapshot_base_and_not_its_bonus",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_judgment_snapshots_hand_on_resolution_excluding_played_will",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_mukkabell_win_uses_chained_modified_base_not_print_or_bonus",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_pimbo_does_not_reach_stalemate_which_is_outside_the_field",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_pimbo_includes_generic_tokens_and_animated_wills_on_field",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_pinpia_creates_one_retained_essence_per_actual_interzone_manifestation",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_plea_excludes_tokens_and_copies_but_counts_animated_will",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_printed_fixed_modifiers_have_exact_amount_and_expiry",
+      "status": "pass",
+      "durationSeconds": 0.187
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_protect_covers_current_controlled_field_cards_but_not_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_reap_counts_tokens_for_score_and_draws_only_for_free_spaces",
+      "status": "pass",
+      "durationSeconds": 0.11
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_starkaz_and_sever_share_field_scope_without_reaching_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_quantitative_card_audit.QuantitativeCardAuditTests.test_viper_locks_existing_opponent_interzone_including_tokens",
+      "status": "pass",
+      "durationSeconds": 0.063
+    }
+  ],
+  "remaining": [
+    "Autres cartes et clauses non couvertes par les assertions de ce lot.",
+    "Déclenchement, timing et branches alternatives des effets isolés.",
+    "Valeurs à conserver lorsque la source ou une cible quitte une zone avant la résolution.",
+    "Combinaisons supplémentaires, navigateurs et appareils réels."
+  ]
+}

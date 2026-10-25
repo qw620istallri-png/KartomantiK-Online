@@ -1,0 +1,539 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "d7206b761c14f98bfb92805803e73341e06ebecf175e711c5e60197b4d50bf07",
+  "finishedAt": "2026-10-25T16:58:35.909448+00:00",
+  "summary": {
+    "cards": 450,
+    "voluntaryUiActions": 182,
+    "unit": {
+      "executed": 1206,
+      "passed": 1206,
+      "failed": 0,
+      "skipped": 0
+    },
+    "matrix": {
+      "cards": 450,
+      "abilities": 496,
+      "matrix": {
+        "carrier-only": 314,
+        "dedicated-path": 36,
+        "needs-family-scenario": 2826,
+        "not-applicable": 222,
+        "pass": 1562
+      },
+      "failures": 0,
+      "printedAssertions": 119,
+      "printedFailures": 0
+    },
+    "browser": {
+      "cards": 450,
+      "actions": 182,
+      "journeys": 2,
+      "failed": 0,
+      "unresolvedChoiceScenarios": 0
+    },
+    "traces": {
+      "traces": 40,
+      "steps": 12175,
+      "failed": 0
+    },
+    "ui": {
+      "executed": 13,
+      "failed": 0
+    },
+    "independentReview": {
+      "catalogCards": 450,
+      "reviewRecords": 450,
+      "uniqueReviewedCards": 450,
+      "catalogParagraphs": 760,
+      "matchedParagraphEntries": 760,
+      "recordedCardStatuses": {
+        "reviewed-defect": 51,
+        "reviewed-match": 396,
+        "ruling-required": 3
+      },
+      "indexedTestMethods": 139,
+      "cardsMentionedByTests": 96,
+      "indexedMethodsWithCurrentExecution": 139
+    },
+    "remoteArt": {
+      "cards": 450,
+      "passed": 450,
+      "failed": 0,
+      "supplementalFailed": 0,
+      "identicalBodyGroups": 0,
+      "pageErrors": 0
+    },
+    "failed": 0,
+    "fullTextSemanticCertification": false
+  },
+  "families": {
+    "payment": {
+      "executed": 26,
+      "passed": 26,
+      "missingModules": [],
+      "testIds": [
+        "test_combined_payment_audit.CombinedPaymentAuditTests.test_additional_cost_cannot_reuse_the_only_tribute_copy",
+        "test_combined_payment_audit.CombinedPaymentAuditTests.test_bob_hand_immunity_does_not_prevent_paying_an_additional_cost",
+        "test_combined_payment_audit.CombinedPaymentAuditTests.test_compensate_refunds_owner_and_uses_printed_cost",
+        "test_combined_payment_audit.CombinedPaymentAuditTests.test_multicolour_refunds_preserve_printed_distribution",
+        "test_combined_payment_audit.CombinedPaymentAuditTests.test_rally_cannot_overspend_tribute_surplus",
+        "test_combined_payment_audit.CombinedPaymentAuditTests.test_rally_optional_payment_combines_pool_surplus_and_extra_tribute",
+        "test_combined_payment_audit.CombinedPaymentAuditTests.test_separate_copies_can_pay_tribute_and_additional_cost",
+        "test_payment_interruption_audit.PaymentInterruptionAuditTests.test_counter_payment_retry_reconnect_and_replay",
+        "test_payment_interruption_audit.PaymentInterruptionAuditTests.test_effect_payment_retry_reconnect_and_replay",
+        "test_payment_interruption_audit.PaymentInterruptionAuditTests.test_essence_converted_before_reconnect_remains_available_once",
+        "test_payment_interruption_audit.PaymentInterruptionAuditTests.test_immediate_payment_retry_reconnect_and_replay",
+        "test_payment_interruption_audit.PaymentInterruptionAuditTests.test_memory_payment_retry_reconnect_and_replay",
+        "test_payment_interruption_audit.PaymentInterruptionAuditTests.test_replacement_order_resumes_and_logs_the_stack_resolution_once",
+        "test_rules_availability.RulesAvailabilityTests.test_chabak_hand_gate_updates_the_server_hint",
+        "test_rules_availability.RulesAvailabilityTests.test_field_source_does_not_reserve_another_copy_in_hand",
+        "test_rules_availability.RulesAvailabilityTests.test_jija_needs_its_own_controlled_token",
+        "test_rules_availability.RulesAvailabilityTests.test_opponents_paid_ability_preserves_priority",
+        "test_rules_availability.RulesAvailabilityTests.test_retarget_rights_use_the_original_effect_controller_without_mutation",
+        "test_rules_availability.RulesAvailabilityTests.test_target_rights_are_viewer_specific_and_hidden_cards_stay_private",
+        "test_rules_availability.RulesAvailabilityTests.test_tribute_search_keeps_the_thirteenth_candidate_and_reserves_source",
+        "test_rules_availability.RulesAvailabilityTests.test_zum_usage_is_unavailable_until_the_next_turn",
+        "test_special_payments.SpecialPaymentTests.test_all_printed_interzone_tributes_can_pay_their_value",
+        "test_special_payments.SpecialPaymentTests.test_drildrill_requires_two_real_essences_and_exhausts_only_after_payment",
+        "test_special_payments.SpecialPaymentTests.test_every_encoded_tribute_and_essence_cost_accepts_a_sufficient_pool",
+        "test_special_payments.SpecialPaymentTests.test_gems_can_pay_own_requested_cost_but_not_interrupt_another_choice",
+        "test_special_payments.SpecialPaymentTests.test_subjugate_uses_tribute_surplus_for_point_based_extra_cost"
+      ]
+    },
+    "stack-target-priority": {
+      "executed": 25,
+      "passed": 25,
+      "missingModules": [],
+      "testIds": [
+        "test_grouped_target_audit.GroupedTargetAuditTests.test_a_player_target_does_not_change_whose_private_hand_can_be_selected",
+        "test_grouped_target_audit.GroupedTargetAuditTests.test_beacon_group_requires_both_a_targeting_stack_item_and_a_field_card",
+        "test_grouped_target_audit.GroupedTargetAuditTests.test_bro_entry_preserves_groups_and_rejects_wrong_roles_without_mutation",
+        "test_grouped_target_audit.GroupedTargetAuditTests.test_bro_with_no_other_friendly_card_never_opens_an_impossible_group",
+        "test_grouped_target_audit.GroupedTargetAuditTests.test_group_availability_requires_distinct_targets_across_overlapping_groups",
+        "test_grouped_target_audit.GroupedTargetAuditTests.test_immune_opponent_player_does_not_leave_a_required_player_picker",
+        "test_stack_priority_audit.StackPriorityAuditTests.test_optional_simultaneous_effects_preserve_initial_priority_in_either_source_order",
+        "test_stack_priority_audit.StackPriorityAuditTests.test_optional_target_pickers_also_preserve_the_batch_priority",
+        "test_stack_priority_audit.StackPriorityAuditTests.test_persistent_timing_and_empty_stack_rule_including_soup_and_juggernut",
+        "test_stack_priority_audit.StackPriorityAuditTests.test_phase_specific_activations_prevent_auto_pass_and_can_be_paid",
+        "test_stack_priority_audit.StackPriorityAuditTests.test_unanswerable_persistent_will_does_not_hold_auto_resolution_open",
+        "test_stack_target_audit.StackTargetAuditTests.test_all_invalid_targets_have_no_effect_but_played_will_still_leaves_stack",
+        "test_stack_target_audit.StackTargetAuditTests.test_control_exchange_does_not_take_half_of_a_protected_pair",
+        "test_stack_target_audit.StackTargetAuditTests.test_controller_requirement_is_rechecked_at_resolution",
+        "test_stack_target_audit.StackTargetAuditTests.test_dependent_counter_transfer_needs_both_targets",
+        "test_stack_target_audit.StackTargetAuditTests.test_grouped_independent_effect_keeps_each_valid_target",
+        "test_stack_target_audit.StackTargetAuditTests.test_grouped_stack_copy_requests_legal_targets_for_its_new_controller",
+        "test_stack_target_audit.StackTargetAuditTests.test_live_animated_type_is_used_without_changing_printed_zone_cards",
+        "test_stack_target_audit.StackTargetAuditTests.test_multicastigate_resolves_remaining_target_without_refund_or_rewriting_history",
+        "test_stack_target_audit.StackTargetAuditTests.test_ongoing_modifier_only_attaches_to_remaining_valid_target",
+        "test_stack_target_audit.StackTargetAuditTests.test_partial_resolution_does_not_accept_wrong_declaration_cardinality",
+        "test_stack_target_audit.StackTargetAuditTests.test_resolved_stack_effect_keeps_its_controller_after_source_departure_or_control_change",
+        "test_stack_target_audit.StackTargetAuditTests.test_shattering_discards_even_when_its_manifestation_target_is_protected",
+        "test_stack_target_audit.StackTargetAuditTests.test_target_contract_uses_active_control_link_and_tracks_blanking",
+        "test_stack_target_integration.StackTargetIntegrationTests.test_wall_off_response_leaves_other_multicastigate_target_destroyed"
+      ]
+    },
+    "copy-control": {
+      "executed": 35,
+      "passed": 35,
+      "missingModules": [],
+      "testIds": [
+        "test_chosen_entry_control.ChosenEntryControlTests.test_bibi_accepts_either_controller_without_reusing_it_as_etb_target",
+        "test_chosen_entry_control.ChosenEntryControlTests.test_bibi_given_to_opponent_draws_for_its_entry_controller",
+        "test_chosen_entry_control.ChosenEntryControlTests.test_targeted_entry_still_rejects_an_unrelated_player_target",
+        "test_control_cleanup_audit.ControlCleanupAuditTests.test_bob_releases_after_a_real_stalemate",
+        "test_control_cleanup_audit.ControlCleanupAuditTests.test_bob_threshold_eleven_exiles_the_suspended_cards",
+        "test_control_cleanup_audit.ControlCleanupAuditTests.test_loss_destinations_follow_actual_defeat_before_owner_based_cleanup",
+        "test_control_cleanup_audit.ControlCleanupAuditTests.test_normal_capture_keeps_the_rulebooks_owner_based_destination",
+        "test_control_cleanup_audit.ControlCleanupAuditTests.test_owner_destination_can_return_a_losing_borrowed_card_to_its_interzone",
+        "test_control_cleanup_audit.ControlCleanupAuditTests.test_power_loss_without_leaving_cz_does_not_release_suspended_cards",
+        "test_control_cleanup_audit.ControlCleanupAuditTests.test_reanimation_exile_depends_on_victory_not_ownership",
+        "test_control_cleanup_audit.ControlCleanupAuditTests.test_stalemate_entry_preserves_controller_and_modifiers",
+        "test_control_cleanup_audit.ControlCleanupAuditTests.test_state_pass_releases_bob_after_it_moves_to_another_field_zone",
+        "test_control_cleanup_audit.ControlCleanupAuditTests.test_victory_override_keeps_the_comparison_outcome_after_control_changes",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_mechanism_counter_condition_controls_usable_activations",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_mirrorbeast_freezes_power_and_copied_effects_when_copy_resolves",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_mirrorbeast_keeps_copy_after_original_leaves_and_expires_at_resolution",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_persistent_only_manifestations_are_not_chain_candidates_in_any_zone",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_rejected_chain_choice_does_not_discard_the_pending_choice",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_urolong_still_puts_persistent_only_manifestations_into_support",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_womb_uses_its_fallback_when_the_revealed_hand_cannot_chain",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_additive_bonuses_and_maluses_commute_and_expire_together",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_berta_floor_uses_the_same_base_power_as_other_rules_after_a_copy",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_cleanse_removes_resolved_modifiers_but_preserves_counters",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_copy_replaces_base_stats_but_keeps_own_power_modifiers",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_double_base_does_not_double_additive_modifiers",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_entrust_and_copy_update_base_power_in_resolution_order",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_expiration_replacement_is_chosen_before_advancing_the_turn",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_expiring_buff_destroys_zero_power_before_beginning_turn_triggers",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_haltan_global_modifier_survives_cleanup_and_expires_next_turn",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_humiliate_after_mask_or_copy_really_changes_current_temperament",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_inflate_sets_current_power_then_allows_later_maluses_below_its_cap",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_mirror_copy_and_own_bonus_have_separate_expiration_times",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_resolved_copy_and_doubling_survive_blanking_and_stalemate_until_exit",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_temperament_changes_follow_actual_stack_resolution_order",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_temporary_blanking_of_a_continuous_source_suspends_its_modifier"
+      ]
+    },
+    "chain": {
+      "executed": 23,
+      "passed": 23,
+      "missingModules": [],
+      "testIds": [
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_all_effect_payment_choices_accept_explicit_white_allocation_atomically",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_bullyboo_affordability_sees_the_eighth_manifestation_and_all_white_allocations",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_bullyboo_cannot_pay_takes_the_fallback_without_a_mandatory_payment_prompt",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_bullyboo_required_payment_can_finish_with_alternate_white_allocation",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_copy_can_keep_inherited_targets_even_when_none_are_legal_for_new_controller",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_empty_searches_finish_without_a_card_picker",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_immediate_limbo_exile_drops_deferred_zombie_prompt_and_preserves_the_next_effect",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_inherited_multitarget_copy_still_resolves_its_remaining_valid_target",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_ju_lien_does_not_open_an_impossible_support_choice_after_a_lock_resolves",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_ju_lien_still_resolves_with_an_open_support_slot",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_kanon_followup_only_offers_legal_field_manifestations",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_kanon_legal_distribution_remains_retryable_after_an_invalid_target",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_mandatory_deferred_target_choice_is_rechecked_before_it_opens",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_new_copy_targets_still_require_legal_targets_and_refusal_is_atomic",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_nonempty_search_with_only_one_eligible_will_remains_completable",
+        "test_choice_liveness_audit.ChoiceLivenessAuditTests.test_skipped_deferred_target_resumes_cleanup_after_other_choices_finish",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_mechanism_counter_condition_controls_usable_activations",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_mirrorbeast_freezes_power_and_copied_effects_when_copy_resolves",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_mirrorbeast_keeps_copy_after_original_leaves_and_expires_at_resolution",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_persistent_only_manifestations_are_not_chain_candidates_in_any_zone",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_rejected_chain_choice_does_not_discard_the_pending_choice",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_urolong_still_puts_persistent_only_manifestations_into_support",
+        "test_copy_chain_followup_audit.CopyChainFollowupAuditTests.test_womb_uses_its_fallback_when_the_revealed_hand_cannot_chain"
+      ]
+    },
+    "departure-memory": {
+      "executed": 27,
+      "passed": 27,
+      "missingModules": [],
+      "testIds": [
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_a_second_chain_retains_each_grant_with_its_own_controller_once",
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_another_live_physical_copy_cannot_inherit_the_grant",
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_cleanse_preserves_granted_memory_after_a_limbo_roundtrip",
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_copy_does_not_inherit_the_real_cards_granted_memory",
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_exiling_another_physical_copy_does_not_erase_the_live_cards_memory",
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_granted_chain_abilities_survive_hand_and_limbo_visits",
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_granted_memory_is_erased_in_deck_or_exile",
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_granted_memory_keeps_original_effect_controller_after_reentry",
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_looj_rewards_the_actual_winner_after_the_chained_card_changes_control",
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_mimer_does_not_copy_a_reentered_instance_of_its_old_target",
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_mukkabells_queued_chain_resolves_after_mukkabell_leaves",
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_self_modification_does_not_attach_to_a_new_instance_of_the_source",
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_source_changes_do_not_transfer_control_of_its_queued_effect",
+        "test_departure_resolution_audit.DepartureResolutionAuditTests.test_targeted_activation_resolves_after_source_returns_to_hand_or_is_exiled",
+        "test_departure_resolution_integration.DepartureResolutionIntegrationTests.test_exile_response_then_reconnect_preserves_the_queued_activation",
+        "test_departure_resolution_integration.DepartureResolutionIntegrationTests.test_reentered_limbo_card_does_not_revive_a_recover_target_after_reconnect",
+        "test_departure_resolution_integration.DepartureResolutionIntegrationTests.test_restored_chain_memory_keeps_its_controller_through_reconnect",
+        "test_departure_rulings.DepartureRulingTests.test_an_untouched_private_hand_target_can_also_be_bound_without_mutation",
+        "test_departure_rulings.DepartureRulingTests.test_excess_power_effects_use_the_sources_printed_power_after_it_leaves",
+        "test_departure_rulings.DepartureRulingTests.test_inherited_copy_targets_keep_the_old_entry_but_new_targets_can_be_selected",
+        "test_departure_rulings.DepartureRulingTests.test_mukkabell_reads_modified_base_on_field_and_printed_base_after_departure",
+        "test_departure_rulings.DepartureRulingTests.test_new_source_instance_does_not_restore_modifiers_to_the_old_effect",
+        "test_departure_rulings.DepartureRulingTests.test_public_vessel_targets_resolve_only_the_remaining_valid_entry",
+        "test_departure_rulings.DepartureRulingTests.test_recover_and_reforge_reject_the_old_limbo_entry_after_roundtrip",
+        "test_departure_rulings.DepartureRulingTests.test_referen_reads_current_power_only_while_its_original_instance_remains",
+        "test_departure_rulings.DepartureRulingTests.test_target_enumeration_and_refused_declarations_do_not_mutate_identity",
+        "test_departure_rulings.DepartureRulingTests.test_untouched_target_and_reordered_same_zone_remain_valid"
+      ]
+    },
+    "first-reference": {
+      "executed": 11,
+      "passed": 11,
+      "missingModules": [],
+      "testIds": [
+        "test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave",
+        "test_first_reference_audit.FirstReferenceAuditTests.test_hourglass_compares_modified_base_power_and_excludes_additive_bonuses",
+        "test_first_reference_audit.FirstReferenceAuditTests.test_mamelath_counts_modified_bases_of_the_moved_firsts_not_printed_values_or_bonuses",
+        "test_first_reference_audit.FirstReferenceAuditTests.test_mimer_old_target_fizzles_and_new_declaration_can_target_promoted_first",
+        "test_first_reference_audit.FirstReferenceAuditTests.test_next_support_is_promoted_by_entry_order_and_its_current_power_is_read",
+        "test_first_reference_audit.FirstReferenceAuditTests.test_promotion_is_public_without_replaying_entry_or_mutating_target_enumeration",
+        "test_first_reference_audit.FirstReferenceAuditTests.test_retreat_promotes_but_interzone_stalemate_and_hidden_supports_do_not_qualify",
+        "test_first_reference_audit.FirstReferenceAuditTests.test_state_destruction_promotes_without_generating_a_new_entry_trigger",
+        "test_first_reference_audit.FirstReferenceAuditTests.test_strict_base_comparison_uses_the_promoted_first_not_the_departed_one",
+        "test_first_reference_audit.FirstReferenceAuditTests.test_unrevealed_initial_selection_is_not_replaced_by_refresh",
+        "test_first_reference_integration.FirstReferenceIntegrationTests.test_exile_promotes_next_first_and_reconnect_keeps_current_reference"
+      ]
+    },
+    "suspend-immediate": {
+      "executed": 11,
+      "passed": 11,
+      "missingModules": [],
+      "testIds": [
+        "test_suspend_immediate_audit.SuspendImmediateAuditTests.test_an_immediate_on_top_cannot_receive_a_voluntary_response",
+        "test_suspend_immediate_audit.SuspendImmediateAuditTests.test_auto_advance_drains_immediates_before_looking_for_responses",
+        "test_suspend_immediate_audit.SuspendImmediateAuditTests.test_disabled_bob_does_not_exile_itself_or_its_suspended_cards_at_eleven",
+        "test_suspend_immediate_audit.SuspendImmediateAuditTests.test_playable_suspended_will_holds_priority_and_accepts_any_temperament",
+        "test_suspend_immediate_audit.SuspendImmediateAuditTests.test_priority_pass_cannot_open_a_response_window_above_an_immediate",
+        "test_suspend_immediate_audit.SuspendImmediateAuditTests.test_stale_suspension_id_cannot_select_a_different_permission",
+        "test_suspend_immediate_audit.SuspendImmediateAuditTests.test_suspended_persistent_will_keeps_its_timing_restriction",
+        "test_sync_suspend_integration.SyncSuspendIntegrationTests.test_closing_an_old_socket_keeps_the_reconnected_seat_online",
+        "test_sync_suspend_integration.SyncSuspendIntegrationTests.test_immediate_payment_reconnect_blocks_responses_and_resumes_remaining_immediates",
+        "test_sync_suspend_integration.SyncSuspendIntegrationTests.test_private_bob_suspension_stays_private_in_state_log_and_reconnect",
+        "test_sync_suspend_integration.SyncSuspendIntegrationTests.test_suspend_choice_permission_and_owner_survive_reconnect_without_leaking_candidates"
+      ]
+    },
+    "replacement-events": {
+      "executed": 43,
+      "passed": 43,
+      "missingModules": [],
+      "testIds": [
+        "test_observed_events_audit.ObservedEventsAuditTests.test_adjust_target_power_is_observed",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_cleanse_and_retarget_observe_changes_but_natural_expiry_does_not",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_counter_malus_at_a_minimum_does_not_announce_a_loss",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_destroyed_will_is_not_a_destroyed_manifestation",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_destruction_replaced_by_suspension_or_exile_only_announces_exit",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_dice_power_gain_is_observed_once",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_expiration_does_not_announce_power_loss_or_gain",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_fixed_power_increase_and_decrease_are_observed",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_generic_source_power_counter_is_observed_but_resource_counters_are_not",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_grouped_discards_trigger_once_but_limbo_entries_stay_per_card",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_humiliate_announces_its_real_power_loss",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_katun_sees_a_field_exit_replaced_by_suspension",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_katun_sees_a_limbo_exit_replaced_by_suspension",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_mimer_reactivation_compares_with_previous_copy_not_printed_power",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_move_power_counter_observes_each_real_change_once",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_natural_field_removal_does_not_announce_an_effect_exit",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_no_gain_or_guart_trigger_when_a_maximum_blocks_the_bonus",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_no_loss_or_imgurd_trigger_when_berta_blocks_the_malus",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_partial_change_announces_one_event_and_flush_cannot_replay_it",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_power_choice_emits_only_after_a_valid_answer",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_reduce_activation_cost_is_not_power_lost_due_to_a_card_or_effect",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_rejected_move_emits_nothing_and_preserves_the_game",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_reordering_inside_limbo_is_not_a_zone_exit",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_source_sacrifice_enters_limbo_once_without_discard_or_destruction",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_token_effect_exit_is_observed_without_a_fake_limbo_entry",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_will_entering_a_vessel_is_not_a_manifestation_entry",
+        "test_observed_events_audit.ObservedEventsAuditTests.test_zone_entry_is_recorded_once_for_destruction_and_ordinary_move",
+        "test_replacement_order_audit.ReplacementOrderAuditTests.test_a_card_choice_resumes_after_its_replacement_order",
+        "test_replacement_order_audit.ReplacementOrderAuditTests.test_a_later_conflict_does_not_apply_earlier_targets",
+        "test_replacement_order_audit.ReplacementOrderAuditTests.test_a_stack_action_is_resolved_once_after_the_order",
+        "test_replacement_order_audit.ReplacementOrderAuditTests.test_different_controllers_use_non_priority_group_first",
+        "test_replacement_order_audit.ReplacementOrderAuditTests.test_dormant_replacement_orders_do_not_change_other_games_random_draws",
+        "test_replacement_order_audit.ReplacementOrderAuditTests.test_quasimillenary_and_bob_have_the_same_order_choice",
+        "test_replacement_order_audit.ReplacementOrderAuditTests.test_rejected_or_replayed_order_never_changes_the_game",
+        "test_replacement_order_audit.ReplacementOrderAuditTests.test_replacement_during_payment_is_chosen_before_any_cost_is_spent",
+        "test_replacement_order_audit.ReplacementOrderAuditTests.test_same_controller_chooses_exile_or_suspension_before_any_move",
+        "test_zone_transition_audit.ZoneTransitionAuditTests.test_bob_allows_in_deck_order_but_suspends_the_card_set_aside",
+        "test_zone_transition_audit.ZoneTransitionAuditTests.test_bob_suspends_reanimation_and_releases_to_owners_deck",
+        "test_zone_transition_audit.ZoneTransitionAuditTests.test_caress_transfers_honor_bob_after_the_reorder_choice",
+        "test_zone_transition_audit.ZoneTransitionAuditTests.test_reanimated_seeker_triggers_once_under_its_new_controller",
+        "test_zone_transition_audit.ZoneTransitionAuditTests.test_reanimation_handler_also_checks_extraction",
+        "test_zone_transition_audit.ZoneTransitionAuditTests.test_reforging_cannot_reanimate_a_target_exiled_in_response",
+        "test_zone_transition_audit.ZoneTransitionAuditTests.test_urolong_reanimation_without_effects_does_not_trigger_seeker"
+      ]
+    },
+    "cleanse-duration": {
+      "executed": 39,
+      "passed": 39,
+      "missingModules": [],
+      "testIds": [
+        "test_choice_modifier_lifetime.ChoiceModifierLifetimeTests.test_dulfer_choice_power_loss_survives_turn",
+        "test_choice_modifier_lifetime.ChoiceModifierLifetimeTests.test_kanon_power_loss_survives_turn_and_source_departure",
+        "test_choice_modifier_lifetime.ChoiceModifierLifetimeTests.test_quorum_explicit_end_of_turn_bonus_still_expires",
+        "test_choice_modifier_lifetime.ChoiceModifierLifetimeTests.test_shattering_the_self_power_loss_survives_turn",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_cleanse_can_reveal_zero_power_due_to_a_printed_passive",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_cleanse_cancels_will_animation_immediately_without_leaving_the_field",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_cleanse_keeps_exile_on_win_memory_and_it_still_resolves",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_cleanse_link_stays_removed_then_paid_retarget_restores_it",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_cleanse_preserves_printed_float",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_cleanse_preserves_splendor_resources_and_choice_without_retriggering_etb",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_cleanse_removes_added_power_bounds_but_keeps_zone_role_and_orientation",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_cleanse_removes_both_parts_of_humiliate",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_cleanse_removes_direct_gummo_copy_and_restores_printed_rules",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_cleanse_removes_internal_power_modifiers_but_keeps_named_resources",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_cleanse_source_restores_its_blanked_continuous_link_without_new_etb",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_cleansing_a_source_does_not_cancel_its_already_queued_effect",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_external_printed_blanking_still_applies_after_cleanse",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_interzone_to_support_keeps_same_instance_and_its_resources",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_leave_and_return_uses_fresh_state_and_does_not_inherit_old_modifiers",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_link_can_choose_a_new_target_after_previous_target_left_the_field",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_memories_survive_limbo_and_hand_but_end_in_deck_or_exile",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_nectar_retarget_is_restricted_to_end_phase",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_resolved_modifier_survives_source_departure_until_target_is_cleansed",
+        "test_cleanse_state_audit.CleanseStateAuditTests.test_suspension_then_return_discards_modifiers_and_counters",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_additive_bonuses_and_maluses_commute_and_expire_together",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_berta_floor_uses_the_same_base_power_as_other_rules_after_a_copy",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_cleanse_removes_resolved_modifiers_but_preserves_counters",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_copy_replaces_base_stats_but_keeps_own_power_modifiers",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_double_base_does_not_double_additive_modifiers",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_entrust_and_copy_update_base_power_in_resolution_order",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_expiration_replacement_is_chosen_before_advancing_the_turn",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_expiring_buff_destroys_zero_power_before_beginning_turn_triggers",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_haltan_global_modifier_survives_cleanup_and_expires_next_turn",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_humiliate_after_mask_or_copy_really_changes_current_temperament",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_inflate_sets_current_power_then_allows_later_maluses_below_its_cap",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_mirror_copy_and_own_bonus_have_separate_expiration_times",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_resolved_copy_and_doubling_survive_blanking_and_stalemate_until_exit",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_temperament_changes_follow_actual_stack_resolution_order",
+        "test_modifier_order_audit.ModifierOrderAuditTests.test_temporary_blanking_of_a_continuous_source_suspends_its_modifier"
+      ]
+    },
+    "choices-reconnect": {
+      "executed": 16,
+      "passed": 16,
+      "missingModules": [],
+      "testIds": [
+        "test_choice_atomicity.ChoiceAtomicityTests.test_failed_transfer_does_not_remove_the_cards_being_reordered",
+        "test_choice_atomicity.ChoiceAtomicityTests.test_power_distribution_can_assign_multiple_losses_to_one_target",
+        "test_choice_atomicity.ChoiceAtomicityTests.test_power_distribution_rejects_stale_target_without_partial_modifier",
+        "test_choice_atomicity.ChoiceAtomicityTests.test_relocation_success_scores_and_ends_the_confrontation_once",
+        "test_choice_atomicity.ChoiceAtomicityTests.test_relocation_validates_all_groups_and_sources_before_moving",
+        "test_choice_atomicity.ChoiceAtomicityTests.test_second_deck_group_rejected_without_applying_the_first",
+        "test_choice_atomicity.ChoiceAtomicityTests.test_snapshot_keeps_pending_choice_ready_for_reconnection",
+        "test_choice_atomicity.ChoiceAtomicityTests.test_valid_retry_after_rejection_and_duplicate_submission",
+        "test_choice_atomicity.ChoiceAtomicityTests.test_wrong_player_or_obsolete_choice_id_cannot_change_current_choice",
+        "test_choice_liveness_integration.ChoiceLivenessIntegrationTests.test_copy_without_friendly_manifestations_can_finish_after_reconnect_once",
+        "test_choice_liveness_integration.ChoiceLivenessIntegrationTests.test_effect_payment_preserves_the_players_white_allocation",
+        "test_choice_reconnect.ChoiceReconnectTests.test_cancelled_obsolete_current_choice_is_broadcast_to_both_players",
+        "test_choice_reconnect.ChoiceReconnectTests.test_opponent_cannot_answer_and_obsolete_id_cannot_replace_current_choice",
+        "test_choice_reconnect.ChoiceReconnectTests.test_private_deck_order_stays_private_after_resolution_log_and_reconnect",
+        "test_choice_reconnect.ChoiceReconnectTests.test_reconnect_can_retry_and_the_old_submission_cannot_apply_twice",
+        "test_choice_reconnect.ChoiceReconnectTests.test_two_immediate_validations_apply_the_choice_once"
+      ]
+    },
+    "endgame": {
+      "executed": 6,
+      "passed": 6,
+      "missingModules": [],
+      "testIds": [
+        "test_terminal_state_audit.TerminalStateAuditTests.test_a_stale_payment_choice_cannot_spend_resources_after_completion",
+        "test_terminal_state_audit.TerminalStateAuditTests.test_concession_cancels_choices_and_continuations_without_discarding_cards",
+        "test_terminal_state_audit.TerminalStateAuditTests.test_concession_stops_stack_resolution_but_preserves_the_final_field",
+        "test_terminal_state_audit.TerminalStateAuditTests.test_new_internal_batches_cannot_open_choices_after_the_game_ends",
+        "test_terminal_state_audit.TerminalStateAuditTests.test_points_and_payments_do_not_introduce_a_new_mid_effect_victory_threshold",
+        "test_terminal_state_audit.TerminalStateAuditTests.test_recovery_completion_from_a_choice_does_not_reopen_a_deferred_prompt"
+      ]
+    }
+  },
+  "rulings": {
+    "simultaneous-order": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 15,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "stomper-strict-base": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 50,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "mimer-snapshot": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 22,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "inflate-cap": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 15,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "modifier-expiration": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 27,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "replacement-not-destruction": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 36,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "katun-either-controller": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 27,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "cleanse-links": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 20,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "cleanse-memory": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 20,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "cleanse-animation": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 20,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "partial-resolution": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 14,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "slumberer-entry": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 57,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "juggernut": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 58,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "obelisk-atomic": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 19,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "permanent-modifiers": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 31,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "immediate": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 11,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "source-power-after-departure": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 10,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "limbo-target-roundtrip": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 13,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "current-first-reference": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 10,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "denblew-draw-events": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 14,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "balance-tie": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 14,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "jesterina-direct-chain": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 14,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "lunar-individual-end": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 14,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    },
+    "duel-stack-payment": {
+      "missingReferences": [],
+      "executedTestsInReferencedModules": 16,
+      "note": "Module execution is not proof that every assertion of this ruling is covered."
+    }
+  },
+  "remaining": [
+    "Relier chaque clause revue à un oracle exécutable ; les mentions AST ne certifient pas les clauses.",
+    "Compléter les branches alternatives et interactions pertinentes qui ne sont pas encore exécutées.",
+    "Les porteurs déclenchés/passifs isolés ne prouvent pas toutes les séquences de partie.",
+    "Les parcours navigateur vérifient la fin du choix/Pile ; leurs résultats chiffrés demandent un oracle dédié."
+  ]
+}

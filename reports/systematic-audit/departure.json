@@ -1,0 +1,285 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "6c2f35c141e38df5929a6186dede0d8bbe2cbed938e3ab93a693e1fe465ca0f1",
+  "finishedAt": "2026-10-24T10:52:25.765044+00:00",
+  "summary": {
+    "executed": 27,
+    "passed": 27,
+    "failed": 0,
+    "skipped": 0,
+    "pendingRulings": 0,
+    "departureAuditComplete": true,
+    "fullCatalogSemanticCertification": false
+  },
+  "cards": [
+    {
+      "cardId": "inner-deserts-012",
+      "name": "Mukkabell",
+      "printedText": "When Mukkabell enters the field, you may Chain from your hand.\nIf the Chained manifestation wins the confrontation, you gain 5 Points for each point of its base power.",
+      "printedTextSha256": "818625dbc6eeda3a3d21801c0543f6329e53aabdf74bfee418c9a6bf3b565ef2",
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-036",
+      "name": "Looj, Cautious Agitator",
+      "printedText": "When Looj enters the field, Chain from your hand.\nIf the Chained Manifestation loses the Confrontation, that Manifestation returns to its owner's hand and the winning opponent gains points equal to its point value.",
+      "printedTextSha256": "927056764e3a487e21d5b4b5c0ef0b03718385319ede7e60aebb39f392409472",
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "pgvrly9397pua77_en",
+      "name": "Bolbakazim, the Cursed",
+      "printedText": "As long as it is on the field, you may exhaust Bolbakazim and pay {H}{H}: A target manifestation on the field gets -2 power until the end of the turn.",
+      "printedTextSha256": "37496754347200c6b008900ea8a114e4731c02e72a36a976b50c86af40a53bb3",
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "pwsjhnw4vpvqgkv_en",
+      "name": "Mimer",
+      "printedText": "Pay {H}: Mimer copies the power and temperament of a target First Manifestation controlled by an opponent.",
+      "printedTextSha256": "57f26516a584af2146fc638c6fa6b6cfc66571ca2c713013d14cca9f361c6d02",
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-145",
+      "name": "Cleanse",
+      "printedText": "Remove all modifiers on a target card on the field.",
+      "printedTextSha256": "98532b2c534224a17ffb0e41e43b0a48ad0030393cfa74125ffdcd051018247b",
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "1q6crbc7nwugrgs_en",
+      "name": "Exile",
+      "printedText": "Exile a target manifestation on the field or in a Limbo.",
+      "printedTextSha256": "ddb0bd7e205ce197830933f8800b3fa484f22556b42edf9e4d1b340e3975107b",
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-038",
+      "name": "Referen-Doom, the Dreamer",
+      "printedText": "When Referen-Doom enters the field, you may Exile any number of target Wills from your Limbo. Referen-Doom gets +1 power for each Will Exiled this way until the end of the turn.\nWhen Referen-Doom loses a Confrontation, you gain a number of 🌈 essences equal to its power.",
+      "printedTextSha256": "c46202b9c1fc6a8b9ff48d9202a29476b90d48ac97e921b85e0481ee911ad27c",
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-014",
+      "name": "Lombriculpop",
+      "printedText": "When Lombriculpop wins a confrontation, you gain 5 Points for each point of excess difference between Lombriculpop's power and that of the First Manifestation controlled by a target opponent.",
+      "printedTextSha256": "093396410e74f8267cf6c4bdc28e99f3f09de51f0bb6ac299678730b56038bc6",
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "9ypw4x4igfon1qi_en",
+      "name": "Armored Pachywyrm",
+      "printedText": "If Armored Pachywyrm wins the confrontation, a target opponent loses 5 points for each point of excess difference between Armored Pachywyrm's power and that of the First Manifestation controlled by that player.",
+      "printedTextSha256": "148262dec4ba795098d2d0f41887a25f77a15be19b5849516d40cfc85c2fd403",
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "0coh7nrbvcvan1i_en",
+      "name": "Recover from the Abyss",
+      "printedText": "Return a target card from your Limbo to your hand.",
+      "printedTextSha256": "8556415606a12d37dd9ab308b27573b7f97f5f918e8ddb6da928d060f94f71a5",
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "z2fen73ktw8pbqz_en",
+      "name": "Reforging Fate",
+      "printedText": "A target manifestation in a player's Limbo enters into Support under your control.\r\nIf that manifestation wins the confrontation, exile it.",
+      "printedTextSha256": "d5026c64bd9fbf310f9144d003e9efd885f992c254990da271d6058eb0c6eab7",
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-019",
+      "name": "Dissolve and Coagulate",
+      "printedText": "Shuffle up to 2 target manifestations from your Empathic Vessel into their owners' decks.\nYou gain 30 Points for each manifestation that leaves your Empathic Vessel this way.",
+      "printedTextSha256": "8bcad4578b90c7bbadc00dca63e6430c20be117442428f7389c35cdc495292aa",
+      "allClausesAndBranchesCertified": false
+    },
+    {
+      "cardId": "ud9clfoj2c6x96o_en",
+      "name": "Entrust",
+      "printedText": "Double the base power of a target manifestation on the field.",
+      "printedTextSha256": "269f1edd66ac857d4148c2bdfe82678e3abefd781157f69408b04e67428204f8",
+      "allClausesAndBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_a_second_chain_retains_each_grant_with_its_own_controller_once",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_another_live_physical_copy_cannot_inherit_the_grant",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_cleanse_preserves_granted_memory_after_a_limbo_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_copy_does_not_inherit_the_real_cards_granted_memory",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_exiling_another_physical_copy_does_not_erase_the_live_cards_memory",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_granted_chain_abilities_survive_hand_and_limbo_visits",
+      "status": "pass",
+      "durationSeconds": 0.235
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_granted_memory_is_erased_in_deck_or_exile",
+      "status": "pass",
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_granted_memory_keeps_original_effect_controller_after_reentry",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_looj_rewards_the_actual_winner_after_the_chained_card_changes_control",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_mimer_does_not_copy_a_reentered_instance_of_its_old_target",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_mukkabells_queued_chain_resolves_after_mukkabell_leaves",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_self_modification_does_not_attach_to_a_new_instance_of_the_source",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_source_changes_do_not_transfer_control_of_its_queued_effect",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_targeted_activation_resolves_after_source_returns_to_hand_or_is_exiled",
+      "status": "pass",
+      "durationSeconds": 0.172
+    },
+    {
+      "testId": "test_departure_resolution_integration.DepartureResolutionIntegrationTests.test_exile_response_then_reconnect_preserves_the_queued_activation",
+      "status": "pass",
+      "durationSeconds": 0.5
+    },
+    {
+      "testId": "test_departure_resolution_integration.DepartureResolutionIntegrationTests.test_reentered_limbo_card_does_not_revive_a_recover_target_after_reconnect",
+      "status": "pass",
+      "durationSeconds": 0.453
+    },
+    {
+      "testId": "test_departure_resolution_integration.DepartureResolutionIntegrationTests.test_restored_chain_memory_keeps_its_controller_through_reconnect",
+      "status": "pass",
+      "durationSeconds": 0.438
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_an_untouched_private_hand_target_can_also_be_bound_without_mutation",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_excess_power_effects_use_the_sources_printed_power_after_it_leaves",
+      "status": "pass",
+      "durationSeconds": 0.328
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_inherited_copy_targets_keep_the_old_entry_but_new_targets_can_be_selected",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_mukkabell_reads_modified_base_on_field_and_printed_base_after_departure",
+      "status": "pass",
+      "durationSeconds": 0.359
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_new_source_instance_does_not_restore_modifiers_to_the_old_effect",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_public_vessel_targets_resolve_only_the_remaining_valid_entry",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_recover_and_reforge_reject_the_old_limbo_entry_after_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.375
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_referen_reads_current_power_only_while_its_original_instance_remains",
+      "status": "pass",
+      "durationSeconds": 0.172
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_target_enumeration_and_refused_declarations_do_not_mutate_identity",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_untouched_target_and_reordered_same_zone_remain_valid",
+      "status": "pass",
+      "durationSeconds": 0.14
+    }
+  ],
+  "resolvedRulings": [
+    {
+      "id": "source-power-after-departure",
+      "rule": "Au calcul, une source encore sur le champ utilise ses caractéristiques modifiées actives. Si elle a quitté le champ pour le Limbo, le Vaisseau, la main, le Deck ou l'Exil, ses modificateurs sont perdus et l'effet utilise ses valeurs imprimées. Mukkabell : base 4 doublée à 8, puis départ avant résolution = 20 points ; sans départ = 40 points.",
+      "cards": [
+        "inner-deserts-012",
+        "inner-deserts-038",
+        "inner-deserts-014",
+        "9ypw4x4igfon1qi_en"
+      ],
+      "tests": [
+        "test_departure_rulings"
+      ]
+    },
+    {
+      "id": "limbo-target-roundtrip",
+      "rule": "Une carte ciblée qui quitte puis regagne le Limbo est une nouvelle entrée. Elle n'est plus la cible initiale : l'effet échoue pour cette cible ; les autres cibles indépendantes encore valides se résolvent normalement.",
+      "cards": [
+        "0coh7nrbvcvan1i_en",
+        "z2fen73ktw8pbqz_en"
+      ],
+      "tests": [
+        "test_departure_rulings",
+        "test_departure_resolution_integration"
+      ]
+    }
+  ],
+  "coverage": [
+    "Déclaration réelle de Bolbakazim et résolution après disparition de sa source.",
+    "Réponse Exile réelle puis reconnexion et deux passes de priorité via WebSocket.",
+    "Identité des objets du champ : une nouvelle instance n'hérite pas des cibles ni des modifications visant l'ancienne.",
+    "Mémoire des règles accordées par Mukkabell/Looj : main, Limbo, Deck, Exil, Cleanse et contrôleurs distincts.",
+    "Trois reconnexions réseau : activation après Exile, mémoire de contrôle et invalidation automatique de Recover. Les mutations de fixture sont distinguées des messages réels.",
+    "Puissances imprimées après départ : Mukkabell, Referen-Doom, Lombriculpop et Armored Pachywyrm.",
+    "Anciennes entrées du Limbo/Vaisseau invalidées, repositions préservées, cibles indépendantes restantes résolues, copies héritées invalidées et nouvelles sélections acceptées."
+  ],
+  "limitations": [
+    "Deux exemplaires physiques en zones privées ne disposent pas d'identifiants individuels ; le format tournoi impose des cartes uniques par deck.",
+    "Les comparaisons lorsque les deux Manifestations de référence sont absentes ne sont pas couvertes par ce lot.",
+    "Les autres mémoires et toutes les combinaisons de cartes ne sont pas certifiées par ce lot."
+  ]
+}

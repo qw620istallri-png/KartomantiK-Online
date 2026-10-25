@@ -1,0 +1,298 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "12ccf1833e0d427482cfa08bdefa638d51d3b27e758b96e925b5153b1b76e369",
+  "finishedAt": "2026-10-24T11:06:22.437792+00:00",
+  "summary": {
+    "executed": 38,
+    "passed": 38,
+    "failed": 0,
+    "skipped": 0,
+    "browserGates": 4,
+    "browserPassed": 4,
+    "boundedAuditComplete": true,
+    "fullCatalogSemanticCertification": false
+  },
+  "ruling": {
+    "id": "current-first-reference",
+    "rule": "Lorsqu'une Première Manifestation quitte la Zone de Confrontation, la Manifestation suivante selon l'ordre d'entrée sous le contrôle du même joueur devient immédiatement sa Première Manifestation. Lombriculpop et Armored Pachywyrm lisent la puissance courante de cette nouvelle Première Manifestation à la résolution ; si aucune Manifestation adverse ne reste en CZ, la référence vaut zéro, et non la puissance imprimée de la carte partie.",
+    "cards": [
+      "inner-deserts-014",
+      "9ypw4x4igfon1qi_en"
+    ],
+    "tests": [
+      "test_first_reference_audit"
+    ]
+  },
+  "tests": [
+    {
+      "testId": "test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave",
+      "status": "pass",
+      "durationSeconds": 0.75
+    },
+    {
+      "testId": "test_first_reference_audit.FirstReferenceAuditTests.test_hourglass_compares_modified_base_power_and_excludes_additive_bonuses",
+      "status": "pass",
+      "durationSeconds": 0.141
+    },
+    {
+      "testId": "test_first_reference_audit.FirstReferenceAuditTests.test_mamelath_counts_modified_bases_of_the_moved_firsts_not_printed_values_or_bonuses",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_first_reference_audit.FirstReferenceAuditTests.test_mimer_old_target_fizzles_and_new_declaration_can_target_promoted_first",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_first_reference_audit.FirstReferenceAuditTests.test_next_support_is_promoted_by_entry_order_and_its_current_power_is_read",
+      "status": "pass",
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_first_reference_audit.FirstReferenceAuditTests.test_promotion_is_public_without_replaying_entry_or_mutating_target_enumeration",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_first_reference_audit.FirstReferenceAuditTests.test_retreat_promotes_but_interzone_stalemate_and_hidden_supports_do_not_qualify",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_first_reference_audit.FirstReferenceAuditTests.test_state_destruction_promotes_without_generating_a_new_entry_trigger",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_first_reference_audit.FirstReferenceAuditTests.test_strict_base_comparison_uses_the_promoted_first_not_the_departed_one",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_first_reference_audit.FirstReferenceAuditTests.test_unrevealed_initial_selection_is_not_replaced_by_refresh",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_first_reference_integration.FirstReferenceIntegrationTests.test_exile_promotes_next_first_and_reconnect_keeps_current_reference",
+      "status": "pass",
+      "durationSeconds": 0.562
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_a_second_chain_retains_each_grant_with_its_own_controller_once",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_another_live_physical_copy_cannot_inherit_the_grant",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_cleanse_preserves_granted_memory_after_a_limbo_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_copy_does_not_inherit_the_real_cards_granted_memory",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_exiling_another_physical_copy_does_not_erase_the_live_cards_memory",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_granted_chain_abilities_survive_hand_and_limbo_visits",
+      "status": "pass",
+      "durationSeconds": 0.203
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_granted_memory_is_erased_in_deck_or_exile",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_granted_memory_keeps_original_effect_controller_after_reentry",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_looj_rewards_the_actual_winner_after_the_chained_card_changes_control",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_mimer_does_not_copy_a_reentered_instance_of_its_old_target",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_mukkabells_queued_chain_resolves_after_mukkabell_leaves",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_self_modification_does_not_attach_to_a_new_instance_of_the_source",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_source_changes_do_not_transfer_control_of_its_queued_effect",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_targeted_activation_resolves_after_source_returns_to_hand_or_is_exiled",
+      "status": "pass",
+      "durationSeconds": 0.141
+    },
+    {
+      "testId": "test_departure_resolution_integration.DepartureResolutionIntegrationTests.test_exile_response_then_reconnect_preserves_the_queued_activation",
+      "status": "pass",
+      "durationSeconds": 0.484
+    },
+    {
+      "testId": "test_departure_resolution_integration.DepartureResolutionIntegrationTests.test_reentered_limbo_card_does_not_revive_a_recover_target_after_reconnect",
+      "status": "pass",
+      "durationSeconds": 0.39
+    },
+    {
+      "testId": "test_departure_resolution_integration.DepartureResolutionIntegrationTests.test_restored_chain_memory_keeps_its_controller_through_reconnect",
+      "status": "pass",
+      "durationSeconds": 0.375
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_an_untouched_private_hand_target_can_also_be_bound_without_mutation",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_excess_power_effects_use_the_sources_printed_power_after_it_leaves",
+      "status": "pass",
+      "durationSeconds": 0.266
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_inherited_copy_targets_keep_the_old_entry_but_new_targets_can_be_selected",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_mukkabell_reads_modified_base_on_field_and_printed_base_after_departure",
+      "status": "pass",
+      "durationSeconds": 0.281
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_new_source_instance_does_not_restore_modifiers_to_the_old_effect",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_public_vessel_targets_resolve_only_the_remaining_valid_entry",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_recover_and_reforge_reject_the_old_limbo_entry_after_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.344
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_referen_reads_current_power_only_while_its_original_instance_remains",
+      "status": "pass",
+      "durationSeconds": 0.172
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_target_enumeration_and_refused_declarations_do_not_mutate_identity",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_departure_rulings.DepartureRulingTests.test_untouched_target_and_reordered_same_zone_remain_valid",
+      "status": "pass",
+      "durationSeconds": 0.125
+    }
+  ],
+  "browser": [
+    {
+      "script": "test_stalemate_totals.cjs",
+      "exitCode": 0,
+      "seconds": 5.5,
+      "stdout": "[{\"viewport\":{\"width\":1440,\"height\":1000},\"seats\":2,\"observer\":true,\"ownerTotals\":true,\"copiesScoreZero\":true,\"boardClickOpen\":true,\"refreshAndEmpty\":true,\"noOverlap\":true},{\"viewport\":{\"width\":844,\"height\":390},\"seats\":2,\"observer\":true,\"ownerTotals\":true,\"copiesScoreZero\":true,\"boardClickOpen\":true,\"refreshAndEmpty\":true,\"noOverlap\":true}]\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_rules_parity.cjs",
+      "exitCode": 0,
+      "seconds": 31.609,
+      "stdout": "Rules frontend/server parity: 609 catalog scenarios OK\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_choice_continuity.cjs",
+      "exitCode": 0,
+      "seconds": 4.86,
+      "stdout": "[{\"width\":1440,\"emptyUndoSafe\":true,\"partialPowerSurvives\":true,\"validPowerSent\":true,\"privatePickSurvives\":true,\"privateConfirmReady\":true,\"limboPickSurvives\":true,\"limboPickSent\":true,\"waitingStaysLocked\":true,\"singleAnswer\":true,\"retryUnlocked\":true,\"retrySent\":true,\"reconnectUnlocked\":true,\"handPicked\":true,\"staleHandCleared\":true,\"oldChoiceIgnored\":true,\"chabakRemainsInHand\":true,\"chabakOtherCardsSent\":true,\"lastChabakCopyReserved\":true,\"spareChabakCopyAllowed\":true,\"reorderSurvives\":true,\"errors\":[]},{\"width\":844,\"emptyUndoSafe\":true,\"partialPowerSurvives\":true,\"validPowerSent\":true,\"privatePickSurvives\":true,\"privateConfirmReady\":true,\"limboPickSurvives\":true,\"limboPickSent\":true,\"waitingStaysLocked\":true,\"singleAnswer\":true,\"retryUnlocked\":true,\"retrySent\":true,\"reconnectUnlocked\":true,\"handPicked\":true,\"staleHandCleared\":true,\"oldChoiceIgnored\":true,\"chabakRemainsInHand\":true,\"chabakOtherCardsSent\":true,\"lastChabakCopyReserved\":true,\"spareChabakCopyAllowed\":true,\"reorderSurvives\":true,\"errors\":[]}]\nChoice continuity regression: OK\n",
+      "stderr": ""
+    },
+    {
+      "script": "test_frontend.cjs",
+      "exitCode": 0,
+      "seconds": 14.203,
+      "stdout": "Frontend feature regression: OK\n",
+      "stderr": ""
+    }
+  ],
+  "beforeFix": {
+    "historical": true,
+    "methods": 6,
+    "failedAssertionsIncludingSubtests": 21,
+    "errors": 0,
+    "sourceDigestNotRecorded": true,
+    "logSha256": "496fba12a88d54ce723f1795a8229e27721af2372b1c6f1b8fa193e0fb1555dc",
+    "output": "======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='inner-deserts-014', sourceLeaves=False, destination='hand')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (50, 0)\n\nFirst differing element 0:\n0\n50\n\n- (0, 0)\n+ (50, 0)\n?  +\n\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='inner-deserts-014', sourceLeaves=False, destination='graveyard')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (50, 0)\n\nFirst differing element 0:\n0\n50\n\n- (0, 0)\n+ (50, 0)\n?  +\n\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='inner-deserts-014', sourceLeaves=False, destination='exile')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (50, 0)\n\nFirst differing element 0:\n0\n50\n\n- (0, 0)\n+ (50, 0)\n?  +\n\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='inner-deserts-014', sourceLeaves=False, destination='receptacle')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (50, 0)\n\nFirst differing element 0:\n0\n50\n\n- (0, 0)\n+ (50, 0)\n?  +\n\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='inner-deserts-014', sourceLeaves=True, destination='hand')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (25, 0)\n\nFirst differing element 0:\n0\n25\n\n- (0, 0)\n?  ^\n\n+ (25, 0)\n?  ^^\n\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='inner-deserts-014', sourceLeaves=True, destination='graveyard')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (25, 0)\n\nFirst differing element 0:\n0\n25\n\n- (0, 0)\n?  ^\n\n+ (25, 0)\n?  ^^\n\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='inner-deserts-014', sourceLeaves=True, destination='exile')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (25, 0)\n\nFirst differing element 0:\n0\n25\n\n- (0, 0)\n?  ^\n\n+ (25, 0)\n?  ^^\n\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='inner-deserts-014', sourceLeaves=True, destination='receptacle')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (25, 0)\n\nFirst differing element 0:\n0\n25\n\n- (0, 0)\n?  ^\n\n+ (25, 0)\n?  ^^\n\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='9ypw4x4igfon1qi_en', sourceLeaves=False, destination='hand')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (0, -50)\n\nFirst differing element 1:\n0\n-50\n\n- (0, 0)\n+ (0, -50)\n?     ++\n\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='9ypw4x4igfon1qi_en', sourceLeaves=False, destination='graveyard')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (0, -50)\n\nFirst differing element 1:\n0\n-50\n\n- (0, 0)\n+ (0, -50)\n?     ++\n\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='9ypw4x4igfon1qi_en', sourceLeaves=False, destination='exile')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (0, -50)\n\nFirst differing element 1:\n0\n-50\n\n- (0, 0)\n+ (0, -50)\n?     ++\n\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='9ypw4x4igfon1qi_en', sourceLeaves=False, destination='receptacle')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (0, -50)\n\nFirst differing element 1:\n0\n-50\n\n- (0, 0)\n+ (0, -50)\n?     ++\n\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='9ypw4x4igfon1qi_en', sourceLeaves=True, destination='hand')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (0, -25)\n\nFirst differing element 1:\n0\n-25\n\n- (0, 0)\n+ (0, -25)\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='9ypw4x4igfon1qi_en', sourceLeaves=True, destination='graveyard')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (0, -25)\n\nFirst differing element 1:\n0\n-25\n\n- (0, 0)\n+ (0, -25)\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='9ypw4x4igfon1qi_en', sourceLeaves=True, destination='exile')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (0, -25)\n\nFirst differing element 1:\n0\n-25\n\n- (0, 0)\n+ (0, -25)\n\n======================================================================\nFAIL: test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave (test_first_reference_audit.FirstReferenceAuditTests.test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave) (card='9ypw4x4igfon1qi_en', sourceLeaves=True, destination='receptacle')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 51, in test_empty_opponent_compares_against_zero_even_when_both_original_cards_leave\n    self.assertEqual((p1[\"score\"], p2[\"score\"]), (amount, 0) if cid == self.LOMBRIC else (0, -amount))\nAssertionError: Tuples differ: (0, 0) != (0, -25)\n\nFirst differing element 1:\n0\n-25\n\n- (0, 0)\n+ (0, -25)\n\n======================================================================\nFAIL: test_mimer_old_target_fizzles_and_new_declaration_can_target_promoted_first (test_first_reference_audit.FirstReferenceAuditTests.test_mimer_old_target_fizzles_and_new_declaration_can_target_promoted_first)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 92, in test_mimer_old_target_fizzles_and_new_declaration_can_target_promoted_first\n    self.declare(session, mine, \"copy-first-manifestation\", [self.target(next_item)])\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_departure_resolution_audit.py\", line 44, in declare\n    self.assertIsNone(error)\nAssertionError: 'This effect requires a First Manifestation.' is not None\n\n======================================================================\nFAIL: test_next_support_is_promoted_by_entry_order_and_its_current_power_is_read (test_first_reference_audit.FirstReferenceAuditTests.test_next_support_is_promoted_by_entry_order_and_its_current_power_is_read) (card='inner-deserts-014')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 63, in test_next_support_is_promoted_by_entry_order_and_its_current_power_is_read\n    self.assertEqual(session.rules_engine[\"firstManifestationItemIds\"][\"p2\"], \"next\")\nAssertionError: 'foe' != 'next'\n- foe\n+ next\n\n\n======================================================================\nFAIL: test_next_support_is_promoted_by_entry_order_and_its_current_power_is_read (test_first_reference_audit.FirstReferenceAuditTests.test_next_support_is_promoted_by_entry_order_and_its_current_power_is_read) (card='9ypw4x4igfon1qi_en')\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 63, in test_next_support_is_promoted_by_entry_order_and_its_current_power_is_read\n    self.assertEqual(session.rules_engine[\"firstManifestationItemIds\"][\"p2\"], \"next\")\nAssertionError: 'foe' != 'next'\n- foe\n+ next\n\n\n======================================================================\nFAIL: test_promotion_is_public_without_replaying_entry_or_changing_effect_controller (test_first_reference_audit.FirstReferenceAuditTests.test_promotion_is_public_without_replaying_entry_or_changing_effect_controller)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 102, in test_promotion_is_public_without_replaying_entry_or_changing_effect_controller\n    self.assertEqual(session.serialize_for(viewer, role)[\"rulesEngine\"][\"firstManifestationItemIds\"].get(\"p2\"), next_item[\"id\"])\nAssertionError: 'foe' != 'next'\n- foe\n+ next\n\n\n======================================================================\nFAIL: test_retreat_promotes_but_interzone_stalemate_and_hidden_supports_do_not_qualify (test_first_reference_audit.FirstReferenceAuditTests.test_retreat_promotes_but_interzone_stalemate_and_hidden_supports_do_not_qualify)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 77, in test_retreat_promotes_but_interzone_stalemate_and_hidden_supports_do_not_qualify\n    self.assertNotIn(\"p2\", session.rules_engine[\"firstManifestationItemIds\"])\nAssertionError: 'p2' unexpectedly found in {'p1': 'mine', 'p2': 'foe'}\n\n----------------------------------------------------------------------\nRan 6 tests in 0.981s\n\nFAILED (failures=21)\n"
+  },
+  "baseReadersBeforeFix": {
+    "historical": true,
+    "methods": 10,
+    "failedAssertionsIncludingSubtests": 2,
+    "errors": 0,
+    "sourceDigestNotRecorded": true,
+    "logSha256": "3c14125ecd32f9a656c4851c7d8806640fc8f6ba7c581e813194ca5f9ee137f0",
+    "output": "======================================================================\nFAIL: test_hourglass_compares_modified_base_power_and_excludes_additive_bonuses (test_first_reference_audit.FirstReferenceAuditTests.test_hourglass_compares_modified_base_power_and_excludes_additive_bonuses) (ownDoubles=1, otherDoubles=0, bonus=0)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 161, in test_hourglass_compares_modified_base_power_and_excludes_additive_bonuses\n    self.assertEqual(bool(session.rules_engine[\"pendingChoice\"]), expects_choice)\nAssertionError: True != False\n\n======================================================================\nFAIL: test_mamelath_counts_modified_bases_of_the_moved_firsts_not_printed_values_or_bonuses (test_first_reference_audit.FirstReferenceAuditTests.test_mamelath_counts_modified_bases_of_the_moved_firsts_not_printed_values_or_bonuses)\n----------------------------------------------------------------------\nTraceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_first_reference_audit.py\", line 149, in test_mamelath_counts_modified_bases_of_the_moved_firsts_not_printed_values_or_bonuses\n    self.assertEqual(counts, {\"p1\": 8, \"p2\": 6})\nAssertionError: {'p1': 4, 'p2': 3} != {'p1': 8, 'p2': 6}\n- {'p1': 4, 'p2': 3}\n?        ^        ^\n\n+ {'p1': 8, 'p2': 6}\n?        ^        ^\n\n\n----------------------------------------------------------------------\nRan 10 tests in 1.223s\n\nFAILED (failures=2)\n"
+  },
+  "coverage": [
+    "Lombriculpop et Armored Pachywyrm : absence adverse = puissance zéro, y compris après le départ des deux cartes initiales.",
+    "Promotion selon l'ordre d'entrée en CZ ; puissance courante de la nouvelle Première Manifestation, sans rejouer ses effets d'entrée ni modifier ses propriétés de Support.",
+    "Retrait, destruction à zéro, cartes hors CZ ou couvertes exclues ; sélection initiale couverte préservée.",
+    "Mimer : l'ancienne cible partie reste invalide ; une nouvelle activation peut viser la Première Manifestation promue. Comparaison stricte des bases et énumération sans mutation.",
+    "Mamelath crée ses jetons depuis les bases modifiées des Premières Manifestations déplacées ; Hermetic Hourglass compare aussi les bases modifiées. Les bonus additifs ne sont pas comptés comme puissance de base.",
+    "Exile déclaré réellement, quatre passes via WebSocket, reconnexion adverse et résultat de points vérifié des deux côtés. Seul l'état initial après victoire est une fixture.",
+    "Impasse : deux totaux par propriétaire, copies et jetons à zéro, noms longs, changement de siège, observateur, rafraîchissement et zone vide sur PC/mobile paysage.",
+    "Clic réel sur la bande, espace réservé aux miniatures, cartes sous les totaux et panneau dégagé des compteurs de confrontation."
+  ],
+  "limitations": [
+    "Les totaux d'Impasse affichent les valeurs imprimées par propriétaire ; ce ne sont pas des prédictions de tous les effets futurs ou des cartes temporairement verrouillées.",
+    "Les illustrations distantes sont remplacées par le dos local dans les fixtures navigateur.",
+    "Cette passe ne certifie pas toutes les clauses des 450 cartes ni toutes leurs interactions. Les campagnes générales non relancées restent historiques."
+  ],
+  "regressionEvidence": {
+    "fullPython": {
+      "file": "unit-tests.json",
+      "sourceDigest": "12ccf1833e0d427482cfa08bdefa638d51d3b27e758b96e925b5153b1b76e369",
+      "summary": {
+        "executed": 1046,
+        "passed": 1046,
+        "failed": 0,
+        "skipped": 0
+      }
+    },
+    "gitDiffCheck": "pass",
+    "uiDetector": {
+      "javascriptFindings": 0,
+      "cssPreexistingFindingsOutsideChangedRules": 6
+    }
+  }
+}

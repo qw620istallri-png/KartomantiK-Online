@@ -638,6 +638,38 @@ class InnerDesertsSemanticTests(game_tests.RealCardRulesCase):
                             for entry in session.rules_engine["suspendedCards"]))
         self.assertEqual(session.rules_manifestation_characteristics(ally)["power"], 1)
 
+    def test_drildrill_refunds_printed_cost_when_bob_replaces_destruction(self):
+        # Textual interpretation, not a new creator ruling: the refund is a
+        # separate instruction, without "if destroyed". Resolve that instruction
+        # even when BOB replaces the preceding destruction with suspension.
+        session, actor, host, action = self.fixture(131)
+        hourglass_id = "lmx5uff1z53fo0g_en"
+        session.card_rules[hourglass_id] = copy.deepcopy(batches.main.CARD_RULES[hourglass_id])
+        session.card_rules["inner-deserts-134"] = copy.deepcopy(batches.main.CARD_RULES["inner-deserts-134"])
+        hourglass = self.field_item("refund-hourglass", actor, hourglass_id, "field", controllerId="p2")
+        bob = self.field_item("refund-bob", "p2", "inner-deserts-134", counters={"power": 3})
+        session.battlefield = [host, hourglass, bob]
+        session.tokens = []
+        action["targets"] = [self.target(hourglass)]
+
+        session.apply_rules_action_result(action)
+
+        self.assertIsNone(session.find_battlefield_item(hourglass["id"]))
+        self.assertTrue(any(entry["cardId"] == hourglass_id
+                            for entry in session.rules_engine["suspendedCards"]))
+        for player in session.players.values():
+            self.assertNotIn(hourglass_id, player["zones"]["graveyard"])
+        # Hermetic Hourglass prints {B}{B}{Y}{Y}; its current controller,
+        # rather than its immutable owner, receives precisely those essences.
+        refund = {}
+        for token in session.tokens:
+            if token.get("isEssence") and token.get("ownerId") == "p2":
+                color = token["temperament"]
+                refund[color] = refund.get(color, 0) + token["counters"]["essence"]
+        self.assertEqual(refund, {"vitreous": 2, "capricious": 2})
+        self.assertFalse(any(token.get("isEssence") and token.get("ownerId") == actor
+                             for token in session.tokens))
+
 
 if __name__ == "__main__":
     import unittest

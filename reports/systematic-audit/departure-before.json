@@ -1,0 +1,60 @@
+{
+  "sourceDigest": "f3b51fface1fe3ed13fda6cf2ef61923a834c0631ad1e3f6435a10287815eb4a",
+  "finishedAt": "2026-10-24T08:56:32.514409+00:00",
+  "stage": "before-memory-fix",
+  "tests": [
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_copy_does_not_inherit_the_real_cards_granted_memory",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_granted_chain_abilities_survive_hand_and_limbo_visits",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_departure_resolution_audit.py\", line 131, in test_granted_chain_abilities_survive_hand_and_limbo_visits\n    self.assertEqual([a[\"ability\"][\"id\"] for a in self.outcome(session, item, event)], expected)\nAssertionError: Lists differ: [] != ['looj-chained-loses', 'looj-chained-loses-points']\n\nSecond list contains 2 additional elements.\nFirst extra element 0:\n'looj-chained-loses'\n\n- []\n+ ['looj-chained-loses', 'looj-chained-loses-points']\n",
+      "durationSeconds": 0.172
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_granted_memory_is_erased_in_deck_or_exile",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_granted_memory_keeps_original_effect_controller_after_reentry",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_departure_resolution_audit.py\", line 141, in test_granted_memory_keeps_original_effect_controller_after_reentry\n    self.assertEqual(len(actions), 1)\nAssertionError: 0 != 1\n",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_mimer_does_not_copy_a_reentered_instance_of_its_old_target",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_mukkabells_queued_chain_resolves_after_mukkabell_leaves",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_self_modification_does_not_attach_to_a_new_instance_of_the_source",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_source_changes_do_not_transfer_control_of_its_queued_effect",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_departure_resolution_audit.DepartureResolutionAuditTests.test_targeted_activation_resolves_after_source_returns_to_hand_or_is_exiled",
+      "status": "pass",
+      "durationSeconds": 0.125
+    }
+  ],
+  "summary": {
+    "executed": 9,
+    "passed": 7,
+    "failedMethods": 2,
+    "failureRecords": 5
+  }
+}

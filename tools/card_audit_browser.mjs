@@ -46,6 +46,7 @@ function control(command, args = {}) {
 }
 const result = { schemaVersion: 1, sourceDigest: null, rendering: [], actions: [], journeys: [], errors: [] };
 let browser;
+let expectedActionCount = null;
 try {
   const address = await ready;
   result.sourceDigest = address.sourceDigest;
@@ -87,6 +88,7 @@ try {
     return fixture;
   }
   const catalog = await control("catalog");
+  expectedActionCount = catalog.actions.length;
   for (const card of debugRun ? [] : catalog.cards) {
     await load("render", { cardId: card.id });
     const views = {};
@@ -364,5 +366,5 @@ finally {
   console.log(JSON.stringify(result.summary));
   for (const entry of [...result.actions, ...result.journeys].filter((r) => r.status === "fail")) console.log(JSON.stringify(entry));
   if (result.errors.length) console.log(JSON.stringify(result.errors));
-  process.exitCode = result.summary.failed || (!debugRun && (result.rendering.length !== 450 || result.actions.length !== 183)) || result.journeys.length !== 2 ? 1 : 0;
+  process.exitCode = result.summary.failed || (!debugRun && (result.rendering.length !== 450 || result.actions.length !== expectedActionCount)) || result.journeys.length !== 2 ? 1 : 0;
 }

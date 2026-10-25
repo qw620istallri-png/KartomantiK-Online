@@ -69,10 +69,14 @@ Le lancement ne change ni Git, ni la version du jeu. Il écrit ses preuves dans
 - `reports/systematic-audit/cards/` : une fiche par carte avec clauses, capacités,
   mécaniques, matrice et limites. `matrix.json` contient les données détaillées.
 
-Les vérifications indépendantes du texte portent actuellement sur les phrases
-explicites Support, Adamant, Float et les interdictions de PM/Tribut. Les autres
-clauses restent marquées `independent-scenario-review-required` tant qu'un oracle
-de scénario dédié n'a pas été écrit et relié à cette clause.
+Les trois revues dans `audit/semantic-reviews/` couvrent les textes des 450
+cartes et leurs 760 paragraphes imprimés, avec attentes, branches et exemples
+indépendants des capacités encodées. `tools/card_semantic_audit.py` vérifie les
+identifiants, positions, textes, empreintes et paragraphes de ces fiches.
+Cette validation documentaire ne certifie pas l'exécution de chaque clause.
+Les statuts historiques et les mentions de cartes dans les tests sont conservés
+séparément des résultats effectifs. Les compléments et leurs limites figurent
+dans `reports/systematic-audit/SEMANTIC_REVIEW.md` et `SEMANTIC_FIXES.md`.
 
 ## Couches exécutées
 
@@ -85,7 +89,7 @@ de scénario dédié n'a pas été écrit et relié à cette clause.
    effectivement exécutés. Un module réussi ne certifie pas toutes les cartes
    qui le citent.
 3. **Deux joueurs réels** : deux contextes Chrome indépendants, pages et sockets
-   du jeu. Les 450 cartes sont rendues, les 183 actions volontaires empruntent les
+   du jeu. Les 450 cartes sont rendues, les 182 actions volontaires empruntent les
    commandes et gestionnaires du client, puis les choix/Pile sont poursuivis.
    Aucun remplacement de `send` ni injection de `latestState`. Les caractères
    synthétiques des cibles de fixture sont seuls ajoutés au catalogue du client.
@@ -105,12 +109,14 @@ Les fixtures du serveur de test sont pilotées uniquement par l'entrée standard
 de son processus parent. Le port du jeu est local et temporaire. Les connexions
 des joueurs conservent le protocole et les contrôles d'autorisation normaux.
 
-Les requêtes vers les illustrations distantes sont bloquées dans ce banc local.
-La couverture de rendu concerne donc les cartes présentes dans le DOM, les
-zones et les commandes ; elle ne certifie pas le chargement des illustrations
-depuis leur hébergement. Les captures peuvent montrer des images absentes pour
-cette raison. Les gestes tactiles sont synthétisés dans les suites dédiées de
-Chrome ; aucun appareil physique ni Safari iOS n'est certifié par cette passe.
+Les requêtes vers les illustrations distantes sont bloquées dans le banc de
+jeu local. Un contrôle séparé, `node tools/card_art_audit.mjs`, charge réellement
+les 450 URLs et vérifie HTTP, type de contenu, décodage, dimensions et empreintes
+des images sans substitution. `remote-art.json` garde cette preuve et les
+empreintes de ses entrées ; il ne certifie pas l'identité artistique par examen
+visuel. Les gestes tactiles sont synthétisés dans Chrome. Les essais sur
+téléphone physique seront réalisés par le créateur, selon son choix ; aucun
+appareil physique ni Safari iOS n'est certifié ici.
 
 ## Rejouer une couche
 
@@ -121,6 +127,8 @@ python tools/card_audit_traces.py --seed 42
 python tools/run_card_audit.py --units-only
 node tools/card_audit_browser.mjs
 python tools/run_card_audit.py --ui-only
+node tools/card_art_audit.mjs
+python tools/card_semantic_audit.py --write --unit-tests reports/systematic-audit/unit-tests.json --remote-art reports/systematic-audit/remote-art.json
 python tools/run_card_audit.py --report-only
 ```
 
