@@ -117,6 +117,39 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
         return { privatePickSurvives, privateConfirmReady, limboPickSurvives, limboPickSent, waitingStaysLocked, singleAnswer, retryUnlocked, retrySent, reconnectUnlocked, handPicked, staleHandCleared, oldChoiceIgnored,
           chabakRemainsInHand, chabakOtherCardsSent, lastChabakCopyReserved, spareChabakCopyAllowed };
       });
+      const grimoire = await page.evaluate(() => {
+        currentLanguage = "fr";
+        const wills = [...cardsById.values()].filter((c) => ["ephemeral_will", "persistent_will"].includes(c.type)).slice(0, 2).map((c) => c.id);
+        latestState.players.p1.zones.hand.cards = [wills[0], wills[0], wills[1], window.__choiceCards[0]];
+        const choice = { id: "grimoire", kind: "discard_from_hand", destination: "attach_to_source", sourceCardId: "omhqwnu5tvwlzzg_en", requireTypes: ["ephemeral_will", "persistent_will"], count: 3, upTo: true };
+        window.__setChoice(choice);
+        const emptyLabel = document.querySelector("#rulesDiscardConfirm").textContent === "Ne rien poser";
+        pickHandDropCard(0, true); pickHandDropCard(1, true); pickHandDropCard(3, true);
+        for (let i = 0; i < 5; i++) window.__choiceRefresh();
+        const previewNames = [...document.querySelectorAll("[data-hand-unpick] img")].map((img) => img.alt);
+        const duplicatesAreSeparate = previewNames.length === 2 && previewNames.every((name) => name === cardName(wills[0]));
+        const oneHint = document.querySelectorAll("#rulesChoicePanel .rules-card-drop-hint").length === 1;
+        const selectedImages = [...document.querySelectorAll("#myHandTray .is-choice-selected img")];
+        const handIsGrey = selectedImages.length === 2 && selectedImages.every((img) => getComputedStyle(img).filter === "grayscale(1)" && Number(getComputedStyle(img).opacity) < .6);
+        document.querySelector('[data-hand-unpick="0"]').click();
+        const canUndo = document.querySelectorAll("[data-hand-unpick]").length === 1 && !document.querySelector('[data-hand-index="0"]').classList.contains("is-choice-selected");
+        const countedConfirm = document.querySelector("#rulesDiscardConfirm").textContent === "Confirmer la pose (1)";
+        document.querySelector("#rulesDiscardConfirm").click();
+        const correctPayload = JSON.stringify(window.__sent[0]?.cardIds) === JSON.stringify([wills[0]]);
+        document.querySelector("#rulesDiscardConfirm").click();
+        const noDuplicateAnswer = window.__sent.length === 1;
+        window.__setChoice({ ...choice, id: "grimoire-empty" });
+        document.querySelector("#rulesDiscardConfirm").click();
+        const emptyIsExplicit = JSON.stringify(window.__sent[0]?.cardIds) === "[]";
+        window.__setChoice({ ...choice, id: "grimoire-preview" });
+        pickHandDropCard(0, true); pickHandDropCard(2, true);
+        document.querySelectorAll(".ko-toast").forEach((toast) => toast.remove());
+        return { emptyLabel, duplicatesAreSeparate, oneHint, handIsGrey, canUndo, countedConfirm, correctPayload, noDuplicateAnswer, emptyIsExplicit };
+      });
+      if (process.env.SCREENSHOT_DIR) {
+        fs.mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true });
+        await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `grimoire-${viewport.width}.png`) });
+      }
       await page.evaluate(() => window.__setChoice({ id: "ponderer-refresh", kind: "deck_reorder", sourceCardId: [...cardsById.values()].find((card) => card.name === "Expansive Ponderer").id,
         groups: [{ playerId: "p1", cardIds: window.__choiceCards, extraSide: "hand", extraMin: 1, extraMax: 1 }] }));
       const first = await page.locator('[data-rules-reorder-strip="pool"] .rules-reorder-card').first().boundingBox();
@@ -131,7 +164,7 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
         fs.mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true });
         await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `choice-continuity-${viewport.width}.png`) });
       }
-      reports.push({ width: viewport.width, ...power, ...pickers, reorderSurvives, errors });
+      reports.push({ width: viewport.width, ...power, ...pickers, ...grimoire, reorderSurvives, errors });
       await page.close();
     }
     console.log(JSON.stringify(reports));

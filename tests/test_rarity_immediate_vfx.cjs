@@ -78,6 +78,22 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
       }
       check(rarity.disabledBorder === "2px", `${label}: disabled Desert restores normal card border`);
       check(rarity.restored.includes("desert-edge-mask"), `${label}: re-enabling restores Desert`);
+      const phaseAnnouncements = await page.evaluate(() => {
+        const previousState = latestState;
+        latestState = { phaseTracker: { enabled: true, advanced: true, turn: 2, index: ADVANCED_PHASES.findIndex((p) => p.id === "resolution_effects") } };
+        const event = (phaseId, turn = 2) => ({ entry: { details: { phaseId, turn } } });
+        removeRulesVfx();
+        const staleReactionSkipped = playRulesVfxPhaseBanner(event("confrontation_reaction")) === false && !document.querySelector(".rules-vfx-phase-banner");
+        const oldTurnSkipped = playRulesVfxPhaseBanner(event("resolution_effects", 1)) === false;
+        const currentShown = Boolean(playRulesVfxPhaseBanner(event("resolution_effects"))) && Boolean(document.querySelector(".rules-vfx-phase-banner"));
+        latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((p) => p.id === "end_actions");
+        playRulesVfxBatch([]);
+        const outdatedVisibleRemoved = !document.querySelector(".rules-vfx-phase-banner");
+        latestState = previousState;
+        removeRulesVfx();
+        return { staleReactionSkipped, oldTurnSkipped, currentShown, outdatedVisibleRemoved };
+      });
+      for (const [name, passed] of Object.entries(phaseAnnouncements)) check(passed, `${label}: phase announcement ${name}`);
       if (process.env.SCREENSHOT_DIR) {
         fs.mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true });
         await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `desert-enabled-${label}.png`) });

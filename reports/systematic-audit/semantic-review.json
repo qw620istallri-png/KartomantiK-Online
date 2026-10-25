@@ -12,9 +12,9 @@
       "reviewed-match": 396,
       "ruling-required": 3
     },
-    "indexedTestMethods": 139,
-    "cardsMentionedByTests": 96,
-    "indexedMethodsWithCurrentExecution": 139
+    "indexedTestMethods": 175,
+    "cardsMentionedByTests": 106,
+    "indexedMethodsWithCurrentExecution": 175
   },
   "cards": [
     {
@@ -4962,7 +4962,9 @@
         "limitation": "Static review is not executed proof. Alternative branches listed as independent oracles require execution. No full interaction/browser certification."
       },
       "reviewSource": "audit/semantic-reviews/001-150.json",
-      "testMentionIds": [],
+      "testMentionIds": [
+        "test_semantic_integration_followup.SemanticIntegrationFollowup.test_rally_can_pay_21_extra_essences_and_rejects_missing_resources_atomically"
+      ],
       "fullClauseExecutionCertified": false
     },
     {
@@ -6279,7 +6281,11 @@
         "limitation": "Static review is not executed proof. Alternative branches listed as independent oracles require execution. No full interaction/browser certification."
       },
       "reviewSource": "audit/semantic-reviews/001-150.json",
-      "testMentionIds": [],
+      "testMentionIds": [
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_all_four_delayed_tribute_cards_record_without_early_stack_or_choices",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_refrain_opponent_payment_is_only_requested_at_end",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_return_self_memories_keep_the_real_owner_of_a_foreign_tribute"
+      ],
       "fullClauseExecutionCertified": false
     },
     {
@@ -7141,7 +7147,12 @@
         "limitation": "Static review is not executed proof. Alternative branches listed as independent oracles require execution. No full interaction/browser certification."
       },
       "reviewSource": "audit/semantic-reviews/001-150.json",
-      "testMentionIds": [],
+      "testMentionIds": [
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_all_four_delayed_tribute_cards_record_without_early_stack_or_choices",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_and_coral_skull_still_remember_a_neutralized_paid_will",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_coral_skull_has_no_loss_requirement",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_and_coral_skull_do_not_remember_a_will_activation_as_a_played_will"
+      ],
       "fullClauseExecutionCertified": false
     },
     {
@@ -9410,7 +9421,9 @@
         "limitation": "Static review is not executed proof. Alternative branches listed as independent oracles require execution. No full interaction/browser certification."
       },
       "reviewSource": "audit/semantic-reviews/001-150.json",
-      "testMentionIds": [],
+      "testMentionIds": [
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_and_coral_skull_do_not_remember_a_will_activation_as_a_played_will"
+      ],
       "fullClauseExecutionCertified": false
     },
     {
@@ -11381,7 +11394,9 @@
         "limitation": "Static review is not executed proof. Alternative branches listed as independent oracles require execution. No full interaction/browser certification."
       },
       "reviewSource": "audit/semantic-reviews/001-150.json",
-      "testMentionIds": [],
+      "testMentionIds": [
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_an_actual_tribute_trigger_still_enters_the_stack_batch"
+      ],
       "fullClauseExecutionCertified": false
     },
     {
@@ -16623,7 +16638,17 @@
         "confirmedRulings": []
       },
       "reviewSource": "audit/semantic-reviews/151-300.json",
-      "testMentionIds": [],
+      "testMentionIds": [
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_tribute_only_records_memory_without_stack_action_or_choice",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_offers_return_at_end_only_after_loss_and_returns_paid_will",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_has_no_end_trigger_after_win_stalemate_or_without_a_loss",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_all_four_delayed_tribute_cards_record_without_early_stack_or_choices",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_can_be_paid_after_the_loss_and_does_not_need_the_live_result",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_decline_never_returns_the_will_or_repeats_the_offer",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_and_coral_skull_still_remember_a_neutralized_paid_will",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_missing_paid_will_skipped_end_or_previous_turn_loss_gives_no_offer",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_and_coral_skull_do_not_remember_a_will_activation_as_a_played_will"
+      ],
       "fullClauseExecutionCertified": false
     },
     {
@@ -17053,7 +17078,9 @@
         "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_jaw_normal_play_has_separate_etb_then_cleanse_retarget_and_source_lifetime",
         "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_jaw_etb_allows_opponent_response_and_can_be_canceled_separately",
         "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_jaw_direct_face_up_entry_and_token_copy_each_trigger_once",
-        "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_jaw_can_enter_without_a_manifestation_and_face_down_entry_does_not_trigger"
+        "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_jaw_can_enter_without_a_manifestation_and_face_down_entry_does_not_trigger",
+        "test_semantic_integration_followup.SemanticIntegrationFollowup.test_outcast_owner_can_accept_or_refuse_after_seeing_the_declared_target",
+        "test_semantic_integration_followup.SemanticIntegrationFollowup.test_outcast_disabled_preference_keeps_original_target_without_prompt"
       ],
       "fullClauseExecutionCertified": false
     },
@@ -18497,7 +18524,9 @@
         "confirmedRulings": []
       },
       "reviewSource": "audit/semantic-reviews/151-300.json",
-      "testMentionIds": [],
+      "testMentionIds": [
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_and_coral_skull_still_remember_a_neutralized_paid_will"
+      ],
       "fullClauseExecutionCertified": false
     },
     {
@@ -23980,6 +24009,9 @@
       },
       "reviewSource": "audit/semantic-reviews/151-300.json",
       "testMentionIds": [
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_all_four_delayed_tribute_cards_record_without_early_stack_or_choices",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_qu_lom_rolls_only_at_end_and_uses_both_parities",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_return_self_memories_keep_the_real_owner_of_a_foreign_tribute",
         "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_hogma_silences_itself_and_own_allies_but_not_opponents",
         "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_trim_and_equalize_prevent_later_power_color_and_silence_modifiers",
         "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_outcast_can_replace_a_targeted_support",
@@ -25450,7 +25482,11 @@
         "confirmedRulings": []
       },
       "reviewSource": "audit/semantic-reviews/151-300.json",
-      "testMentionIds": [],
+      "testMentionIds": [
+        "test_semantic_grimoire_sequences.GrimoireSequenceTests.test_foreign_owned_will_is_played_as_from_hand_and_returns_to_owner_limbo",
+        "test_semantic_grimoire_sequences.ConfrontationStackSequenceTests.test_strengthen_on_stack_must_resolve_before_reaction_can_advance",
+        "test_semantic_grimoire_sequences.ConfrontationStackSequenceTests.test_strengthen_after_comparison_gives_three_power_without_retroactive_win"
+      ],
       "fullClauseExecutionCertified": false
     },
     {
@@ -25878,7 +25914,9 @@
         "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_jaw_normal_play_has_separate_etb_then_cleanse_retarget_and_source_lifetime",
         "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_jaw_etb_allows_opponent_response_and_can_be_canceled_separately",
         "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_jaw_direct_face_up_entry_and_token_copy_each_trigger_once",
-        "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_jaw_can_enter_without_a_manifestation_and_face_down_entry_does_not_trigger"
+        "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_jaw_can_enter_without_a_manifestation_and_face_down_entry_does_not_trigger",
+        "test_semantic_integration_followup.SemanticIntegrationFollowup.test_outcast_owner_can_accept_or_refuse_after_seeing_the_declared_target",
+        "test_semantic_integration_followup.SemanticIntegrationFollowup.test_outcast_disabled_preference_keeps_original_target_without_prompt"
       ],
       "fullClauseExecutionCertified": false
     },
@@ -26652,6 +26690,8 @@
       },
       "reviewSource": "audit/semantic-reviews/151-300.json",
       "testMentionIds": [
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_missing_paid_will_skipped_end_or_previous_turn_loss_gives_no_offer",
+        "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_qu_lom_rolls_only_at_end_and_uses_both_parities",
         "test_semantic_batch_001_150.SemanticBatch001150.test_carcass_exiles_two_printed_bases_for_exact_five_power",
         "test_semantic_batch_001_150.SemanticBatch001150.test_chabak_owner_chooses_bottom_order_without_top_destination",
         "test_semantic_batch_151_300.SemanticBatch151To300Tests.test_karmapult_sacrifices_as_activation_cost_and_survives_source_departure",
@@ -26660,6 +26700,7 @@
         "test_semantic_batch_301_450.InnerDesertsSemanticTests.test_splendor_with_no_gems_is_exiled_without_activation",
         "test_semantic_batch_301_450.InnerDesertsSemanticTests.test_bibi_six_win_loss_score_branches",
         "test_semantic_batch_301_450.InnerDesertsSemanticTests.test_extinguish_exiles_both_limbos_including_wills",
+        "test_semantic_grimoire_sequences.GrimoireSequenceTests.test_host_leaves_exiles_each_attached_copy_to_original_owner",
         "test_tenebro_replacement_audit.TenebroReplacementAudit.test_hand_discard_accept_and_refuse_before_any_move"
       ],
       "fullClauseExecutionCertified": false
@@ -31553,7 +31594,9 @@
       },
       "reviewSource": "audit/semantic-reviews/301-450.json",
       "testMentionIds": [
-        "test_semantic_batch_301_450.InnerDesertsSemanticTests.test_denblew_counts_each_separate_opposing_draw_event"
+        "test_semantic_batch_301_450.InnerDesertsSemanticTests.test_denblew_counts_each_separate_opposing_draw_event",
+        "test_semantic_integration_followup.SemanticIntegrationFollowup.test_denblew_one_bonus_per_distinct_draw_action_including_same_flush",
+        "test_semantic_integration_followup.SemanticIntegrationFollowup.test_denblew_does_not_trigger_in_recovery_or_on_empty_draw"
       ],
       "fullClauseExecutionCertified": false
     },
@@ -36598,7 +36641,9 @@
         "reviewFindings": []
       },
       "reviewSource": "audit/semantic-reviews/301-450.json",
-      "testMentionIds": [],
+      "testMentionIds": [
+        "test_semantic_integration_followup.SemanticIntegrationFollowup.test_jesterina_chains_from_deck_without_manifestation_discard"
+      ],
       "fullClauseExecutionCertified": false
     },
     {
@@ -40833,7 +40878,10 @@
         ]
       },
       "reviewSource": "audit/semantic-reviews/301-450.json",
-      "testMentionIds": [],
+      "testMentionIds": [
+        "test_semantic_integration_followup.SemanticIntegrationFollowup.test_lunar_failure_applies_only_to_player_without_a_candidate",
+        "test_semantic_integration_followup.SemanticIntegrationFollowup.test_lunar_controller_failure_destroys_liturgy_and_only_skips_controller"
+      ],
       "fullClauseExecutionCertified": false
     },
     {
@@ -47063,7 +47111,8 @@
       },
       "reviewSource": "audit/semantic-reviews/301-450.json",
       "testMentionIds": [
-        "test_semantic_batch_301_450.InnerDesertsSemanticTests.test_balance_tied_vessel_totals_do_not_redirect_points"
+        "test_semantic_batch_301_450.InnerDesertsSemanticTests.test_balance_tied_vessel_totals_do_not_redirect_points",
+        "test_semantic_integration_followup.SemanticIntegrationFollowup.test_balance_tie_has_no_redirection_for_gain_or_loss"
       ],
       "fullClauseExecutionCertified": false
     },
@@ -47848,6 +47897,7 @@
       "reviewSource": "audit/semantic-reviews/301-450.json",
       "testMentionIds": [
         "test_semantic_batch_301_450.InnerDesertsSemanticTests.test_splendor_with_no_gems_is_exiled_without_activation",
+        "test_semantic_integration_followup.SemanticIntegrationFollowup.test_splendor_pending_counter_entry_can_resolve_before_zero_counter_check",
         "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_gem_conversion_inside_pending_payment_works_without_putting_new_effect_on_stack",
         "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_autopass_keeps_intrinsic_payment_with_white_tribute_or_gems",
         "test_stack_intrinsic_payment.StackIntrinsicPaymentObserverTests.test_read_only_roles_cannot_commit_or_convert_gems_in_a_players_pending_payment"
@@ -48639,7 +48689,7 @@
     }
   ],
   "schemaVersion": 1,
-  "generatedAt": "2026-10-25T16:58:34.613516+00:00",
+  "generatedAt": "2026-10-25T21:56:45.719093+00:00",
   "evidenceKind": "independent-static-review-registry",
   "fullSemanticCoverageCertified": false,
   "paragraphComparison": "Split CR/LF and trim paragraph-edge whitespace; entire printedText and SHA remain byte-exact UTF-8 checks.",
@@ -48656,21 +48706,351 @@
   },
   "runtimeEvidence": {
     "supplied": true,
-    "sourceDigest": "d7206b761c14f98bfb92805803e73341e06ebecf175e711c5e60197b4d50bf07",
-    "currentSourceDigest": "d7206b761c14f98bfb92805803e73341e06ebecf175e711c5e60197b4d50bf07",
+    "sourceDigest": "c987f5037f57a30c0739e9c4b6a99955be591c06d75ee828bbb688a97417eb3e",
+    "currentSourceDigest": "c987f5037f57a30c0739e9c4b6a99955be591c06d75ee828bbb688a97417eb3e",
     "fresh": true,
-    "finishedAt": "2026-10-25T16:54:50.996943+00:00",
+    "finishedAt": "2026-10-25T21:55:51.232285+00:00",
     "summaryAsRecorded": {
-      "executed": 1206,
-      "passed": 1206,
+      "executed": 1234,
+      "passed": 1234,
       "failed": 0,
       "skipped": 0
     },
     "warning": "Test/card mentions do not map or certify exact clauses. Historical findings remain historical.",
     "path": "reports\\systematic-audit\\unit-tests.json",
-    "sha256": "406ab67ab2b05327ea45fe55d08c273f0a5e5bce7bc32fa635d336973603407d"
+    "sha256": "bb18a4d9efabd8f22767d5c1899c4dce5edf205ffdcb0091e136e0e736304567"
   },
   "testMentions": [
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_tribute_only_records_memory_without_stack_action_or_choice",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 48,
+      "cardMentions": [
+        {
+          "cardId": "1a8wzhi7xhbcenj_en",
+          "matchedLiteral": "Loop, the Insistent",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.031
+      }
+    },
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_offers_return_at_end_only_after_loss_and_returns_paid_will",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 58,
+      "cardMentions": [
+        {
+          "cardId": "1a8wzhi7xhbcenj_en",
+          "matchedLiteral": "Loop, the Insistent",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.016
+      }
+    },
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_has_no_end_trigger_after_win_stalemate_or_without_a_loss",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 75,
+      "cardMentions": [
+        {
+          "cardId": "1a8wzhi7xhbcenj_en",
+          "matchedLiteral": "Loop, the Insistent",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.109
+      }
+    },
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_all_four_delayed_tribute_cards_record_without_early_stack_or_choices",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 86,
+      "cardMentions": [
+        {
+          "cardId": "qn8r98kyqqma972_en",
+          "matchedLiteral": "Coral Skull",
+          "scope": "method-string-literal"
+        },
+        {
+          "cardId": "1a8wzhi7xhbcenj_en",
+          "matchedLiteral": "Loop, the Insistent",
+          "scope": "method-string-literal"
+        },
+        {
+          "cardId": "rf5srmnqyh235tm_en",
+          "matchedLiteral": "Qu Lom, Haphazard Martyr",
+          "scope": "method-string-literal"
+        },
+        {
+          "cardId": "24pwcptuijem6tw_en",
+          "matchedLiteral": "Refrain Repeater",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.125
+      }
+    },
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_can_be_paid_after_the_loss_and_does_not_need_the_live_result",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 98,
+      "cardMentions": [
+        {
+          "cardId": "1a8wzhi7xhbcenj_en",
+          "matchedLiteral": "Loop, the Insistent",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.031
+      }
+    },
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_decline_never_returns_the_will_or_repeats_the_offer",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 107,
+      "cardMentions": [
+        {
+          "cardId": "1a8wzhi7xhbcenj_en",
+          "matchedLiteral": "Loop, the Insistent",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.016
+      }
+    },
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_and_coral_skull_still_remember_a_neutralized_paid_will",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 118,
+      "cardMentions": [
+        {
+          "cardId": "qn8r98kyqqma972_en",
+          "matchedLiteral": "Coral Skull",
+          "scope": "method-string-literal"
+        },
+        {
+          "cardId": "1a8wzhi7xhbcenj_en",
+          "matchedLiteral": "Loop, the Insistent",
+          "scope": "method-string-literal"
+        },
+        {
+          "cardId": "2y961kgs0crdict_en",
+          "matchedLiteral": "neutralize",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.063
+      }
+    },
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_missing_paid_will_skipped_end_or_previous_turn_loss_gives_no_offer",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 132,
+      "cardMentions": [
+        {
+          "cardId": "1a8wzhi7xhbcenj_en",
+          "matchedLiteral": "Loop, the Insistent",
+          "scope": "method-string-literal"
+        },
+        {
+          "cardId": "1q6crbc7nwugrgs_en",
+          "matchedLiteral": "exile",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.141
+      }
+    },
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_qu_lom_rolls_only_at_end_and_uses_both_parities",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 149,
+      "cardMentions": [
+        {
+          "cardId": "rf5srmnqyh235tm_en",
+          "matchedLiteral": "Qu Lom, Haphazard Martyr",
+          "scope": "method-string-literal"
+        },
+        {
+          "cardId": "1q6crbc7nwugrgs_en",
+          "matchedLiteral": "exile",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.062
+      }
+    },
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_refrain_opponent_payment_is_only_requested_at_end",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 163,
+      "cardMentions": [
+        {
+          "cardId": "24pwcptuijem6tw_en",
+          "matchedLiteral": "Refrain Repeater",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.078
+      }
+    },
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_coral_skull_has_no_loss_requirement",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 179,
+      "cardMentions": [
+        {
+          "cardId": "qn8r98kyqqma972_en",
+          "matchedLiteral": "Coral Skull",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.031
+      }
+    },
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_return_self_memories_keep_the_real_owner_of_a_foreign_tribute",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 186,
+      "cardMentions": [
+        {
+          "cardId": "rf5srmnqyh235tm_en",
+          "matchedLiteral": "Qu Lom, Haphazard Martyr",
+          "scope": "method-string-literal"
+        },
+        {
+          "cardId": "24pwcptuijem6tw_en",
+          "matchedLiteral": "Refrain Repeater",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.063
+      }
+    },
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_loop_and_coral_skull_do_not_remember_a_will_activation_as_a_played_will",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 205,
+      "cardMentions": [
+        {
+          "cardId": "qn8r98kyqqma972_en",
+          "matchedLiteral": "Coral Skull",
+          "scope": "method-string-literal"
+        },
+        {
+          "cardId": "1a8wzhi7xhbcenj_en",
+          "matchedLiteral": "Loop, the Insistent",
+          "scope": "method-string-literal"
+        },
+        {
+          "cardId": "ufujqhwlpmaw12y_en",
+          "matchedLiteral": "ufujqhwlpmaw12y_en",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.062
+      }
+    },
+    {
+      "testId": "test_delayed_tribute_memory.DelayedTributeMemoryTests.test_an_actual_tribute_trigger_still_enters_the_stack_batch",
+      "file": "test_delayed_tribute_memory.py",
+      "line": 222,
+      "cardMentions": [
+        {
+          "cardId": "0tcphe9viq39a5b_en",
+          "matchedLiteral": "Filth-eater",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.016
+      }
+    },
     {
       "testId": "test_semantic_batch_001_150.SemanticBatch001150.test_bottom_shuffle_clause_covers_on_and_at_wording",
       "file": "test_semantic_batch_001_150.py",
@@ -48698,7 +49078,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.219
+        "durationSeconds": 0.188
       }
     },
     {
@@ -48718,7 +49098,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.125
+        "durationSeconds": 0.094
       }
     },
     {
@@ -48738,7 +49118,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.031
       }
     },
     {
@@ -48758,7 +49138,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.062
+        "durationSeconds": 0.032
       }
     },
     {
@@ -48778,7 +49158,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.016
       }
     },
     {
@@ -48798,7 +49178,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.11
+        "durationSeconds": 0.063
       }
     },
     {
@@ -48823,7 +49203,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.062
+        "durationSeconds": 0.047
       }
     },
     {
@@ -48843,7 +49223,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.015
       }
     },
     {
@@ -48908,7 +49288,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.016
       }
     },
     {
@@ -48928,7 +49308,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.016
       }
     },
     {
@@ -48953,7 +49333,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.016
       }
     },
     {
@@ -48993,7 +49373,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.047
       }
     },
     {
@@ -49018,7 +49398,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.016
       }
     },
     {
@@ -49038,7 +49418,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.046
       }
     },
     {
@@ -49083,7 +49463,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.015
       }
     },
     {
@@ -49103,7 +49483,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.032
       }
     },
     {
@@ -49148,7 +49528,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.062
+        "durationSeconds": 0.046
       }
     },
     {
@@ -49168,7 +49548,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.109
+        "durationSeconds": 0.032
       }
     },
     {
@@ -49188,7 +49568,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.046
+        "durationSeconds": 0.031
       }
     },
     {
@@ -49208,7 +49588,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.015
       }
     },
     {
@@ -49233,7 +49613,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.063
+        "durationSeconds": 0.047
       }
     },
     {
@@ -49278,7 +49658,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.218
+        "durationSeconds": 0.14
       }
     },
     {
@@ -49318,7 +49698,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.593
+        "durationSeconds": 0.422
       }
     },
     {
@@ -49348,7 +49728,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.125
+        "durationSeconds": 0.078
       }
     },
     {
@@ -49368,7 +49748,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.015
       }
     },
     {
@@ -49388,7 +49768,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.016
       }
     },
     {
@@ -49433,7 +49813,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.063
+        "durationSeconds": 0.047
       }
     },
     {
@@ -49473,7 +49853,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.015
       }
     },
     {
@@ -49493,7 +49873,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.016
       }
     },
     {
@@ -49683,7 +50063,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.047
       }
     },
     {
@@ -49873,7 +50253,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.172
+        "durationSeconds": 0.094
       }
     },
     {
@@ -50063,7 +50443,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.063
       }
     },
     {
@@ -50268,7 +50648,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.047
       }
     },
     {
@@ -50463,7 +50843,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.062
       }
     },
     {
@@ -50658,7 +51038,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.063
       }
     },
     {
@@ -50848,7 +51228,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.156
+        "durationSeconds": 0.109
       }
     },
     {
@@ -51038,7 +51418,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.047
       }
     },
     {
@@ -51228,7 +51608,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.515
+        "durationSeconds": 0.328
       }
     },
     {
@@ -51418,7 +51798,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.516
+        "durationSeconds": 0.328
       }
     },
     {
@@ -51608,7 +51988,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.469
+        "durationSeconds": 0.313
       }
     },
     {
@@ -51798,7 +52178,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.547
+        "durationSeconds": 0.297
       }
     },
     {
@@ -51988,7 +52368,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.047
       }
     },
     {
@@ -52178,7 +52558,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.094
+        "durationSeconds": 0.047
       }
     },
     {
@@ -52373,7 +52753,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.046
       }
     },
     {
@@ -52563,7 +52943,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.047
       }
     },
     {
@@ -52753,7 +53133,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.079
+        "durationSeconds": 0.047
       }
     },
     {
@@ -52943,7 +53323,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.062
       }
     },
     {
@@ -53138,7 +53518,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.094
+        "durationSeconds": 0.047
       }
     },
     {
@@ -53328,7 +53708,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.047
       }
     },
     {
@@ -53518,7 +53898,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.094
+        "durationSeconds": 0.062
       }
     },
     {
@@ -53708,7 +54088,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.047
       }
     },
     {
@@ -53903,7 +54283,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.094
+        "durationSeconds": 0.047
       }
     },
     {
@@ -54098,7 +54478,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.047
       }
     },
     {
@@ -54293,7 +54673,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.047
       }
     },
     {
@@ -54483,7 +54863,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.094
+        "durationSeconds": 0.047
       }
     },
     {
@@ -54673,7 +55053,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.172
+        "durationSeconds": 0.109
       }
     },
     {
@@ -54863,7 +55243,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.047
       }
     },
     {
@@ -54897,7 +55277,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.047
+        "durationSeconds": 0.032
       }
     },
     {
@@ -54911,7 +55291,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.015
       }
     },
     {
@@ -54925,7 +55305,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.016
       }
     },
     {
@@ -54939,7 +55319,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.062
       }
     },
     {
@@ -54953,7 +55333,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.016
       }
     },
     {
@@ -54973,7 +55353,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.125
+        "durationSeconds": 0.063
       }
     },
     {
@@ -55001,7 +55381,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.062
       }
     },
     {
@@ -55015,7 +55395,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.047
+        "durationSeconds": 0.016
       }
     },
     {
@@ -55040,7 +55420,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.109
+        "durationSeconds": 0.063
       }
     },
     {
@@ -55060,7 +55440,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.031
       }
     },
     {
@@ -55074,7 +55454,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.016
       }
     },
     {
@@ -55088,7 +55468,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.016
       }
     },
     {
@@ -55102,7 +55482,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.063
+        "durationSeconds": 0.047
       }
     },
     {
@@ -55141,7 +55521,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.015
       }
     },
     {
@@ -55180,7 +55560,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.093
+        "durationSeconds": 0.078
       }
     },
     {
@@ -55200,7 +55580,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.016
       }
     },
     {
@@ -55214,7 +55594,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.016
       }
     },
     {
@@ -55228,7 +55608,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 1.953
+        "durationSeconds": 1.11
       }
     },
     {
@@ -55242,7 +55622,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.093
+        "durationSeconds": 0.078
       }
     },
     {
@@ -55256,7 +55636,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.11
+        "durationSeconds": 0.078
       }
     },
     {
@@ -55270,7 +55650,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.219
+        "durationSeconds": 0.156
       }
     },
     {
@@ -55284,7 +55664,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.25
+        "durationSeconds": 0.141
       }
     },
     {
@@ -55298,7 +55678,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.203
+        "durationSeconds": 0.156
       }
     },
     {
@@ -55312,7 +55692,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.094
+        "durationSeconds": 0.062
       }
     },
     {
@@ -55332,7 +55712,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.532
+        "durationSeconds": 0.359
       }
     },
     {
@@ -55352,7 +55732,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.531
+        "durationSeconds": 0.406
       }
     },
     {
@@ -55366,7 +55746,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.094
+        "durationSeconds": 0.062
       }
     },
     {
@@ -55391,7 +55771,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.234
+        "durationSeconds": 0.125
       }
     },
     {
@@ -55405,7 +55785,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.063
+        "durationSeconds": 0.016
       }
     },
     {
@@ -55419,7 +55799,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.031
       }
     },
     {
@@ -55433,7 +55813,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.109
+        "durationSeconds": 0.078
       }
     },
     {
@@ -55447,7 +55827,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.14
+        "durationSeconds": 0.062
       }
     },
     {
@@ -55461,7 +55841,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.14
+        "durationSeconds": 0.063
       }
     },
     {
@@ -55475,7 +55855,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.047
+        "durationSeconds": 0.032
       }
     },
     {
@@ -55520,7 +55900,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.203
+        "durationSeconds": 0.125
       }
     },
     {
@@ -55540,7 +55920,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.109
+        "durationSeconds": 0.062
       }
     },
     {
@@ -55560,7 +55940,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.234
+        "durationSeconds": 0.125
       }
     },
     {
@@ -55599,7 +55979,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.047
       }
     },
     {
@@ -55629,7 +56009,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.047
+        "durationSeconds": 0.016
       }
     },
     {
@@ -55649,7 +56029,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.047
+        "durationSeconds": 0.031
       }
     },
     {
@@ -55679,7 +56059,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.094
+        "durationSeconds": 0.062
       }
     },
     {
@@ -55704,7 +56084,409 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
+        "durationSeconds": 0.032
+      }
+    },
+    {
+      "testId": "test_semantic_grimoire_sequences.GrimoireSequenceTests.test_zero_one_or_duplicate_wills_are_placed_without_discard_events",
+      "file": "test_semantic_grimoire_sequences.py",
+      "line": 21,
+      "cardMentions": [],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.078
+      }
+    },
+    {
+      "testId": "test_semantic_grimoire_sequences.GrimoireSequenceTests.test_invalid_manifestation_or_extra_copy_is_atomic_and_keeps_choice",
+      "file": "test_semantic_grimoire_sequences.py",
+      "line": 35,
+      "cardMentions": [],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.015
+      }
+    },
+    {
+      "testId": "test_semantic_grimoire_sequences.GrimoireSequenceTests.test_placed_wills_are_face_up_in_both_players_views_and_keep_owner",
+      "file": "test_semantic_grimoire_sequences.py",
+      "line": 44,
+      "cardMentions": [],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
         "durationSeconds": 0.047
+      }
+    },
+    {
+      "testId": "test_semantic_grimoire_sequences.GrimoireSequenceTests.test_missing_host_keeps_hand_intact",
+      "file": "test_semantic_grimoire_sequences.py",
+      "line": 53,
+      "cardMentions": [],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.016
+      }
+    },
+    {
+      "testId": "test_semantic_grimoire_sequences.GrimoireSequenceTests.test_host_leaves_exiles_each_attached_copy_to_original_owner",
+      "file": "test_semantic_grimoire_sequences.py",
+      "line": 61,
+      "cardMentions": [
+        {
+          "cardId": "1q6crbc7nwugrgs_en",
+          "matchedLiteral": "exile",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.032
+      }
+    },
+    {
+      "testId": "test_semantic_grimoire_sequences.GrimoireSequenceTests.test_foreign_owned_will_is_played_as_from_hand_and_returns_to_owner_limbo",
+      "file": "test_semantic_grimoire_sequences.py",
+      "line": 67,
+      "cardMentions": [
+        {
+          "cardId": "lo85kdsow36bymu_en",
+          "matchedLiteral": "Strengthen",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.015
+      }
+    },
+    {
+      "testId": "test_semantic_grimoire_sequences.ConfrontationStackSequenceTests.test_strengthen_on_stack_must_resolve_before_reaction_can_advance",
+      "file": "test_semantic_grimoire_sequences.py",
+      "line": 100,
+      "cardMentions": [
+        {
+          "cardId": "lo85kdsow36bymu_en",
+          "matchedLiteral": "Strengthen",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.031
+      }
+    },
+    {
+      "testId": "test_semantic_grimoire_sequences.ConfrontationStackSequenceTests.test_strengthen_after_comparison_gives_three_power_without_retroactive_win",
+      "file": "test_semantic_grimoire_sequences.py",
+      "line": 118,
+      "cardMentions": [
+        {
+          "cardId": "lo85kdsow36bymu_en",
+          "matchedLiteral": "Strengthen",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.016
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_denblew_one_bonus_per_distinct_draw_action_including_same_flush",
+      "file": "test_semantic_integration_followup.py",
+      "line": 22,
+      "cardMentions": [
+        {
+          "cardId": "inner-deserts-026",
+          "matchedLiteral": "Denblew, the Puritan",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.015
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_denblew_does_not_trigger_in_recovery_or_on_empty_draw",
+      "file": "test_semantic_integration_followup.py",
+      "line": 36,
+      "cardMentions": [
+        {
+          "cardId": "inner-deserts-026",
+          "matchedLiteral": "Denblew, the Puritan",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.031
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_balance_tie_has_no_redirection_for_gain_or_loss",
+      "file": "test_semantic_integration_followup.py",
+      "line": 45,
+      "cardMentions": [
+        {
+          "cardId": "inner-deserts-137",
+          "matchedLiteral": "Balance of the Spirit",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.016
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_jesterina_chains_from_deck_without_manifestation_discard",
+      "file": "test_semantic_integration_followup.py",
+      "line": 55,
+      "cardMentions": [
+        {
+          "cardId": "inner-deserts-065",
+          "matchedLiteral": "Jesterina, the Decadent",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.016
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_lunar_failure_applies_only_to_player_without_a_candidate",
+      "file": "test_semantic_integration_followup.py",
+      "line": 67,
+      "cardMentions": [
+        {
+          "cardId": "inner-deserts-096",
+          "matchedLiteral": "Lunar Liturgy",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.016
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_lunar_controller_failure_destroys_liturgy_and_only_skips_controller",
+      "file": "test_semantic_integration_followup.py",
+      "line": 77,
+      "cardMentions": [
+        {
+          "cardId": "inner-deserts-096",
+          "matchedLiteral": "Lunar Liturgy",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.031
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_skipped_player_has_no_end_actions_but_opponent_keeps_them",
+      "file": "test_semantic_integration_followup.py",
+      "line": 84,
+      "cardMentions": [],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.015
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_skipped_end_triggers_are_suppressed_without_blanking_other_effects",
+      "file": "test_semantic_integration_followup.py",
+      "line": 98,
+      "cardMentions": [],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.031
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_rally_can_pay_21_extra_essences_and_rejects_missing_resources_atomically",
+      "file": "test_semantic_integration_followup.py",
+      "line": 111,
+      "cardMentions": [
+        {
+          "cardId": "5q6t7i5pzctbi8s_en",
+          "matchedLiteral": "Rally",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.016
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_splendor_pending_counter_entry_can_resolve_before_zero_counter_check",
+      "file": "test_semantic_integration_followup.py",
+      "line": 128,
+      "cardMentions": [
+        {
+          "cardId": "inner-deserts-143",
+          "matchedLiteral": "Temperamental Splendor",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.016
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_outcast_owner_can_accept_or_refuse_after_seeing_the_declared_target",
+      "file": "test_semantic_integration_followup.py",
+      "line": 138,
+      "cardMentions": [
+        {
+          "cardId": "h67753m250gg2h6_en",
+          "matchedLiteral": "Wandering Outcast",
+          "scope": "method-string-literal"
+        },
+        {
+          "cardId": "bithch9c4vi77cu_en",
+          "matchedLiteral": "Weaken",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.078
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_outcast_disabled_preference_keeps_original_target_without_prompt",
+      "file": "test_semantic_integration_followup.py",
+      "line": 168,
+      "cardMentions": [
+        {
+          "cardId": "h67753m250gg2h6_en",
+          "matchedLiteral": "Wandering Outcast",
+          "scope": "method-string-literal"
+        },
+        {
+          "cardId": "bithch9c4vi77cu_en",
+          "matchedLiteral": "Weaken",
+          "scope": "method-string-literal"
+        }
+      ],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.031
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_match_reset_clears_jurat_registration_and_per_player_phase_skips",
+      "file": "test_semantic_integration_followup.py",
+      "line": 183,
+      "cardMentions": [],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.016
+      }
+    },
+    {
+      "testId": "test_semantic_integration_followup.SemanticIntegrationFollowup.test_trim_prevents_color_support_float_persist_and_power_ignore_modifiers",
+      "file": "test_semantic_integration_followup.py",
+      "line": 198,
+      "cardMentions": [],
+      "evidenceKind": "test-mentions-only",
+      "provesWholeClause": false,
+      "execution": {
+        "recordedStatus": "pass",
+        "reportFresh": true,
+        "currentExecutionCertified": true,
+        "durationSeconds": 0.016
       }
     },
     {
@@ -55718,7 +56500,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.094
+        "durationSeconds": 0.078
       }
     },
     {
@@ -55780,7 +56562,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.016
       }
     },
     {
@@ -55808,7 +56590,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.016
       }
     },
     {
@@ -55828,7 +56610,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.016
       }
     },
     {
@@ -55842,7 +56624,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.032
       }
     },
     {
@@ -55862,7 +56644,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.031
       }
     },
     {
@@ -55882,7 +56664,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.016
       }
     },
     {
@@ -55902,7 +56684,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.156
+        "durationSeconds": 0.094
       }
     },
     {
@@ -55916,7 +56698,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.032
+        "durationSeconds": 0.016
       }
     },
     {
@@ -55930,7 +56712,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.015
       }
     },
     {
@@ -55964,7 +56746,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.157
+        "durationSeconds": 0.125
       }
     },
     {
@@ -55994,7 +56776,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.047
       }
     },
     {
@@ -56019,7 +56801,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.078
+        "durationSeconds": 0.031
       }
     },
     {
@@ -56044,7 +56826,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.141
+        "durationSeconds": 0.125
       }
     },
     {
@@ -56069,7 +56851,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.047
+        "durationSeconds": 0.015
       }
     },
     {
@@ -56119,7 +56901,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.094
+        "durationSeconds": 0.047
       }
     },
     {
@@ -56144,7 +56926,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.031
+        "durationSeconds": 0.016
       }
     },
     {
@@ -56169,7 +56951,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.047
+        "durationSeconds": 0.031
       }
     },
     {
@@ -56219,7 +57001,7 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.062
+        "durationSeconds": 0.031
       }
     },
     {
@@ -56249,13 +57031,18 @@
         "recordedStatus": "pass",
         "reportFresh": true,
         "currentExecutionCertified": true,
-        "durationSeconds": 0.109
+        "durationSeconds": 0.063
       }
     }
   ],
   "remoteArt": {
-    "inputHashesValid": true,
-    "diagnostics": [],
+    "inputHashesValid": false,
+    "diagnostics": [
+      {
+        "code": "input-hash-mismatch",
+        "path": "public/app.js"
+      }
+    ],
     "inputHashes": {
       "public/cards-data.json": "330d0d018bb52fc3e92004a7f3b28f594c9762e18f9d9623414270c61db31459",
       "public/extensions/inner-desert/cards.json": "c43fd4da44e3eabe67fa89fdf8c1c5b7af419e39b8b549837015e8d189c05d35",

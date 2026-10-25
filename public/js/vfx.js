@@ -1210,6 +1210,9 @@ const RULES_VFX_BEAT_MS = {
 };
 
 function playRulesVfxBatch(batch) {
+  $$(".rules-vfx-phase-banner").forEach((banner) => {
+    if (!rulesVfxPhaseIsCurrent({ turn: banner.dataset.turn, phaseId: banner.dataset.phaseId })) banner.remove();
+  });
   if (!batch.length || $("#gameScreen").classList.contains("hidden")) return;
   // consecutive phase steps (auto-passed ones included) collapse into one banner
   const beats = [];
@@ -1278,8 +1281,18 @@ function rulesVfxPhaseGroupId(phaseId) {
   return phase ? (phase.parent || phase.id) : phaseId || "";
 }
 
+function rulesVfxPhaseIsCurrent(details) {
+  const tracker = latestState?.phaseTracker;
+  return Boolean(tracker?.enabled
+    && Number(details.turn || 1) === Number(tracker.turn || 1)
+    && rulesVfxPhaseGroupId(details.phaseId) === currentPhaseUi().group?.id);
+}
+
 function playRulesVfxPhaseBanner(event) {
   const details = event.entry.details || {};
+  // The animation queue can lag behind auto-passed phases. A historical
+  // announcement must never tell a player they still have a Reaction window.
+  if (!rulesVfxPhaseIsCurrent(details)) return false;
   const turn = Number(details.turn || 1);
   const groupId = rulesVfxPhaseGroupId(details.phaseId);
   const key = `${turn}:${groupId}`;
@@ -1291,6 +1304,8 @@ function playRulesVfxPhaseBanner(event) {
   $$(".rules-vfx-phase-banner").forEach((element) => element.remove());
   const banner = document.createElement("div");
   banner.className = `rules-vfx-phase-banner${newTurn ? " is-new-turn" : ""}`;
+  banner.dataset.turn = String(turn);
+  banner.dataset.phaseId = details.phaseId;
   banner.setAttribute("role", "status");
   banner.innerHTML = `${newTurn ? `<small>${esc(rulesText("rulesVfxTurn", { turn }))}</small>` : ""}<strong>${esc(lines.phase)}</strong>`;
   const anchor = $("#battlefieldWrap")?.getBoundingClientRect?.();

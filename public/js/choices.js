@@ -231,7 +231,7 @@ function renderRulesChoice(force = false) {
   const choiceOpen = !choicePanel.classList.contains("hidden");
   document.body.classList.toggle("hand-drop-choice", Boolean(handDrop) && choiceOpen);
   if (handDrop && choiceOpen) {
-    const hint = document.createElement("p");
+    const hint = choicePanel.querySelector(".rules-card-drop-hint") || document.createElement("p");
     hint.className = "rules-card-drop-hint";
     hint.textContent = t("rulesDragCardToEffect");
     choicePanel.querySelector(".rules-choice-options")?.appendChild(hint);
@@ -327,6 +327,7 @@ function renderRulesChoiceContent(force = false) {
     myPlayerId, isObserver, currentLanguage, latestState?.rulesEngine?.enabled, latestState?.ended,
     latestState?.rulesEngine?.pendingChoice, pendingTriggeredPlacement,
     latestState?.players?.[myPlayerId]?.zones?.hand?.cards,
+    rulesHandDropChoice() ? [...rulesHandDropSelected(rulesHandDropChoice())] : [],
     Object.entries(latestState?.players || {}).map(([id, player]) => [id, player.name, player.seat]),
     (latestState?.battlefield || []).map((item) => [item.id, item.cardId, item.controllerId, item.ownerId, item.faceUp]),
   ]);
@@ -351,7 +352,7 @@ function renderRulesChoiceScreen() {
   const closeButton = $("#rulesChoiceCloseBtn");
   const options = $("#rulesChoiceOptions");
   options.classList.remove(
-    "has-destination-card", "has-order", "has-card-picker", "is-reveal-hand", "is-destination-screen",
+    "has-destination-card", "has-order", "has-card-picker", "is-reveal-hand", "is-destination-screen", "has-hand-selection",
   );
   panel.classList.remove("cards-screen", "destination-screen", "hand-drop", "replace-screen", "chain-screen", "player-screen", "hand-swap", "temperament-screen", "deck-reorder-screen");
   if (pendingTriggeredPlacement) {
@@ -1624,11 +1625,22 @@ function renderRulesChoiceScreen() {
     panel.classList.add("cards-screen", "hand-drop");
     closeButton.classList.add("hidden");
     const limit = Number(choice.count || 1);
-    const picked = rulesHandDropSelected(choice).length;
+    options.classList.add("has-hand-selection");
+    const selected = rulesHandDropSelected(choice);
+    const picked = selected.length;
+    const attaching = choice.destination === "attach_to_source";
+    const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
+    const previews = selected.length ? `<div class="rules-hand-selection">${selected.map((index) => `
+      <button type="button" class="rules-choice-card" data-hand-unpick="${index}" aria-label="${esc(rulesText("rulesUnselectCard", { card: cardName(hand[index]) }))}">
+        <img src="${esc(cardImage(hand[index]))}" alt="${esc(cardName(hand[index]))}" draggable="false">
+      </button>`).join("")}</div>` : "";
     // an exact count sends itself once complete: until then Confirm shows the progress, disabled
-    options.innerHTML = limit > 1 || choice.upTo
-      ? `<button type="button" class="primary" id="rulesDiscardConfirm"${!choice.upTo && picked < limit ? " disabled" : ""}>${esc(choice.upTo && !picked ? t("passPhase") : t("confirm"))}${!choice.upTo ? ` (${picked}/${limit})` : ""}</button>`
-      : "";
+    options.innerHTML = previews + (limit > 1 || choice.upTo
+      ? `<button type="button" class="primary" id="rulesDiscardConfirm"${!choice.upTo && picked < limit ? " disabled" : ""}>${esc(attaching ? picked ? rulesText("rulesConfirmPlaceWills", { count: picked }) : t("rulesPlaceNoWills") : choice.upTo && !picked ? t("passPhase") : t("confirm"))}${!choice.upTo ? ` (${picked}/${limit})` : ""}</button>`
+      : "");
+    options.querySelectorAll("[data-hand-unpick]").forEach((button) => {
+      button.onclick = () => pickHandDropCard(Number(button.dataset.handUnpick), true);
+    });
     if ($("#rulesDiscardConfirm")) $("#rulesDiscardConfirm").onclick = (event) => {
       event.currentTarget.disabled = true;
       sendHandDropSelection(choice);

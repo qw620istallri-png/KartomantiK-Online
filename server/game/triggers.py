@@ -738,6 +738,18 @@ class TriggersMixin:
             }
             if ability.get("immediate"):
                 action["immediate"] = True
+            if (event == "used_as_tribute"
+                    and (clean_result or {}).get("kind") == "create_effect_memory"
+                    and clean_result.get("memoryKind") == "return_from_limbo_end_turn"):
+                # This records the condition for a delayed End trigger. It is
+                # not a second effect to respond to while paying the Will.
+                # Loss requirements and optional returns are checked at End.
+                if (clean_result.get("attachTo") == "paid_action_source"
+                        and (not isinstance(related_action, dict)
+                             or related_action.get("kind") != "play_card")):
+                    continue  # Paying an activation does not play its source Will.
+                self.apply_rules_action_result(action)
+                continue
             if needs_target_choice:
                 # Another trigger of the same event already waits for its targets
                 # (Borombo losing while the winner also triggers): never overwrite
@@ -1213,8 +1225,10 @@ class TriggersMixin:
             if action.get("id") == simultaneous_action_id
         ), None) if simultaneous_action_id else None
         for card_id in card_ids or []:
+            tribute_owner_id = movements_by_card.get(card_id, {}).get("ownerId") or owner_id
             queued.extend(self.queue_rules_triggers(
-                card_id, owner_id, "used_as_tribute", container_id=owner_id,
+                card_id, tribute_owner_id, "used_as_tribute", container_id=tribute_owner_id,
+                controller_id=owner_id,
                 defer=True, related_action=paid_action,
                 event_source_zone=(
                     "deck"

@@ -142,13 +142,14 @@ class ActionsMixin:
                     for passive in self.rules_item_card_rules(host).get("passiveEffects") or []
                 )
                 or not any(
-                    entry.get("cardId") == card_id and entry.get("ownerId") == player_id
+                    entry.get("cardId") == card_id
                     for entry in host.get("attachedCards") or []
                 )
             ):
                 return "This Will is not placed on a card you control.", None
             if metadata.get("type") not in RULES_WILL_TYPES:
                 return "Only a Will can be played from here.", None
+            attached_entry = next(entry for entry in host["attachedCards"] if entry.get("cardId") == card_id)
         elif zone == "graveyard" and kind == "play_card" and not as_support:
             if metadata.get("type") not in RULES_WILL_TYPES:
                 return "Only a Will can be played from your Limbo this way.", None
@@ -223,7 +224,7 @@ class ActionsMixin:
             "ownerId": (
                 self.card_owner_in_zone(player_id, "hand", card_id)
                 if zone == "hand" else (
-                    (player_id if zone == "attached" else self.card_owner_in_zone(container_id, zone, card_id))
+                    (attached_entry.get("ownerId") if zone == "attached" else self.card_owner_in_zone(container_id, zone, card_id))
                         if zone in {"graveyard", "receptacle", "attached", "deck"} else (
                             suspension.get("ownerId")
                             if zone == "suspended"

@@ -215,12 +215,13 @@ class ResolutionMixin:
             "stackDepth": len(action_stack),
         }
 
-    def resolve_rules_immediate_actions(self):
+    def resolve_rules_immediate_actions(self, max_actions=None):
         resolved = []
         while (
             not self.ended and self.rules_engine["actionStack"]
             and self.rules_engine["actionStack"][-1].get("immediate")
             and not self.rules_engine.get("pendingChoice")
+            and (max_actions is None or len(resolved) < max_actions)
         ):
             result = self.resolve_rules_top_action()
             if result and result.get("status") == "resolved":

@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "version": "140.1",
+  "assetVersion": "20261025-rules-beta-140-1",
+  "sourceDigest": "c987f5037f57a30c0739e9c4b6a99955be591c06d75ee828bbb688a97417eb3e",
+  "finishedAt": "2026-10-25T21:57:21.691080+00:00",
+  "scope": "Final Python and UI regressions including delayed tribute effects",
+  "versionSynchronization": {
+    "status": "pass",
+    "assetUrls": 23,
+    "displayLabel": "beta 140.1"
+  },
+  "reports": {
+    "unit-tests": {
+      "sourceDigest": "c987f5037f57a30c0739e9c4b6a99955be591c06d75ee828bbb688a97417eb3e",
+      "summary": {
+        "executed": 1234,
+        "passed": 1234,
+        "failed": 0,
+        "skipped": 0
+      },
+      "sha256": "bb18a4d9efabd8f22767d5c1899c4dce5edf205ffdcb0091e136e0e736304567"
+    },
+    "ui-tests": {
+      "sourceDigest": "c987f5037f57a30c0739e9c4b6a99955be591c06d75ee828bbb688a97417eb3e",
+      "summary": {
+        "executed": 13,
+        "failed": 0
+      },
+      "sha256": "30f216940cf3df5e3a9123233695f97f6c8a4501ec8f62ff85dd024e561623de"
+    }
+  },
+  "fullCatalogCertification": false
+}

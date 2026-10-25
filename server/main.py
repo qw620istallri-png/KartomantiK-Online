@@ -581,6 +581,29 @@ async def record_rules_resolution(session, result, actor_id):
             if other_info["session"] is session:
                 await send_to(other_ws, reveal_payload)
 
+    # Publish each intermediate board and Stack before another automatic
+    # resolution. Offline simulations have no viewers and need no pacing.
+    if any(info["session"] is session for info in connections.values()):
+        await broadcast_state(session)
+        await asyncio.sleep(STACK_RESOLUTION_PAUSE_SECONDS)
+
+
+STACK_RESOLUTION_PAUSE_SECONDS = 1.7
+
+
+async def resolve_and_record_rules_immediates(session, actor_id):
+    count = 0
+    while True:
+        # Also call once with no immediate on top: this releases normal
+        # triggers deferred until an immediate's required choice is completed.
+        results = session.resolve_rules_immediate_actions(max_actions=1)
+        if not results:
+            break  # A replacement choice can pause before an action resolves.
+        for result in results:
+            await record_rules_resolution(session, result, actor_id)
+            count += 1
+    return count
+
 
 def log_rules_opening_sequence(session, result, caused_by_actor_id):
     opening = (result or {}).get("opening") or {}
@@ -968,10 +991,7 @@ async def record_rules_pass_result(session, result, actor_id):
                 session.rules_engine["priorityPlayerId"] = revelation_priority
             session.rules_engine["firstManifestationTriggersQueued"] = True
             log_rules_triggered_actions(session, triggered_actions, actor_id)
-            for immediate_result in session.resolve_rules_immediate_actions():
-                await record_rules_resolution(
-                    session, immediate_result, actor_id
-                )
+            await resolve_and_record_rules_immediates(session, actor_id)
             if priority_rolls:
                 session.add_log(actor_id, "rules_priority_rolled", {
                     "playerId": revelation_priority, "rolls": priority_rolls,
@@ -1049,6 +1069,18 @@ AUTO_PASS_MAX_STEPS = 60
 
 
 async def auto_advance_rules_phases(session, actor_id):
+    # A peer may send a response while the current resolution is being shown.
+    # Only one auto-pass driver may resume this session after that pause.
+    if getattr(session, "_auto_advance_running", False):
+        return 0
+    session._auto_advance_running = True
+    try:
+        return await _auto_advance_rules_phases(session, actor_id)
+    finally:
+        session._auto_advance_running = False
+
+
+async def _auto_advance_rules_phases(session, actor_id):
     """Pass priority for players with nothing to do, until someone can act."""
     steps = 0
     automatic_resolutions = 0
@@ -1058,11 +1090,9 @@ async def auto_advance_rules_phases(session, actor_id):
         stack = session.rules_engine.get("actionStack") or []
         if (not session.ended and stack and stack[-1].get("immediate")
                 and not session.rules_engine.get("pendingChoice")):
-            immediate_results = session.resolve_rules_immediate_actions()
-            for result in immediate_results:
-                await record_rules_resolution(session, result, actor_id)
+            immediate_count = await resolve_and_record_rules_immediates(session, actor_id)
             # A replacement-order choice may pause before the first resolution.
-            count = max(1, len(immediate_results))
+            count = max(1, immediate_count)
             steps += count
             automatic_resolutions += count
             continue
@@ -1578,8 +1608,7 @@ async def handle_message(ws, info, data):
         session.add_log(actor_id, "rules_choice_resolved", result)
         log_rules_triggered_actions(session, triggered_actions, actor_id)
         session.flush_rules_deferred_simultaneous_actions()
-        for immediate_result in session.resolve_rules_immediate_actions():
-            await record_rules_resolution(session, immediate_result, actor_id)
+        await resolve_and_record_rules_immediates(session, actor_id)
         session.touch()
         await broadcast_state(session)
 
@@ -1634,8 +1663,7 @@ async def handle_message(ws, info, data):
             card_id, card_owner_id, to_owner, to_zone
         )
         log_rules_triggered_actions(session, triggered_actions, actor_id)
-        for immediate_result in session.resolve_rules_immediate_actions():
-            await record_rules_resolution(session, immediate_result, actor_id)
+        await resolve_and_record_rules_immediates(session, actor_id)
         session.touch()
         await broadcast_state(session)
 
@@ -1877,8 +1905,7 @@ async def handle_message(ws, info, data):
         if triggered_actions:
             session.queue_rules_simultaneous_actions(triggered_actions)
         log_rules_triggered_actions(session, triggered_actions, actor_id)
-        for immediate_result in session.resolve_rules_immediate_actions():
-            await record_rules_resolution(session, immediate_result, actor_id)
+        await resolve_and_record_rules_immediates(session, actor_id)
         session.touch()
         await broadcast_state(session)
 
@@ -2279,8 +2306,7 @@ async def handle_message(ws, info, data):
             await broadcast_state(session)
             return
         log_rules_declared_action(session, action)
-        for immediate_result in session.resolve_rules_immediate_actions():
-            await record_rules_resolution(session, immediate_result, actor_id)
+        await resolve_and_record_rules_immediates(session, actor_id)
         session.touch()
         await broadcast_state(session)
 

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "sourceDigest": "d7206b761c14f98bfb92805803e73341e06ebecf175e711c5e60197b4d50bf07",
+  "sourceDigest": "c987f5037f57a30c0739e9c4b6a99955be591c06d75ee828bbb688a97417eb3e",
   "gates": [
     {
       "command": [
@@ -10,7 +10,7 @@
       "status": "pass",
       "exitCode": 0,
       "log": "test_rules_parity.log",
-      "durationSeconds": 50.703
+      "durationSeconds": 32.672
     },
     {
       "command": [
@@ -20,7 +20,7 @@
       "status": "pass",
       "exitCode": 0,
       "log": "test_choice_continuity.log",
-      "durationSeconds": 7.969
+      "durationSeconds": 6.719
     },
     {
       "command": [
@@ -30,7 +30,7 @@
       "status": "pass",
       "exitCode": 0,
       "log": "test_white_essence_payment.log",
-      "durationSeconds": 6.859
+      "durationSeconds": 4.453
     },
     {
       "command": [
@@ -40,7 +40,7 @@
       "status": "pass",
       "exitCode": 0,
       "log": "test_drag_cleanup.log",
-      "durationSeconds": 14.234
+      "durationSeconds": 11.187
     },
     {
       "command": [
@@ -50,7 +50,7 @@
       "status": "pass",
       "exitCode": 0,
       "log": "test_connection_lifecycle.log",
-      "durationSeconds": 6.266
+      "durationSeconds": 5.36
     },
     {
       "command": [
@@ -60,7 +60,7 @@
       "status": "pass",
       "exitCode": 0,
       "log": "test_ponderer_drag.log",
-      "durationSeconds": 12.625
+      "durationSeconds": 11.328
     },
     {
       "command": [
@@ -70,7 +70,7 @@
       "status": "pass",
       "exitCode": 0,
       "log": "test_rarity_immediate_vfx.log",
-      "durationSeconds": 12.219
+      "durationSeconds": 11.0
     },
     {
       "command": [
@@ -80,7 +80,7 @@
       "status": "pass",
       "exitCode": 0,
       "log": "test_hand_interactions.log",
-      "durationSeconds": 20.859
+      "durationSeconds": 15.25
     },
     {
       "command": [
@@ -90,7 +90,7 @@
       "status": "pass",
       "exitCode": 0,
       "log": "test_hand_space_shortcut.log",
-      "durationSeconds": 3.766
+      "durationSeconds": 2.469
     },
     {
       "command": [
@@ -100,7 +100,7 @@
       "status": "pass",
       "exitCode": 0,
       "log": "test_frontend.log",
-      "durationSeconds": 16.89
+      "durationSeconds": 14.593
     },
     {
       "command": [
@@ -110,7 +110,7 @@
       "status": "pass",
       "exitCode": 0,
       "log": "test_release_139_2.log",
-      "durationSeconds": 101.266
+      "durationSeconds": 72.125
     },
     {
       "command": [
@@ -120,7 +120,7 @@
       "status": "pass",
       "exitCode": 0,
       "log": "test_stalemate_totals.log",
-      "durationSeconds": 7.156
+      "durationSeconds": 5.625
     },
     {
       "command": [
@@ -130,7 +130,7 @@
       "status": "pass",
       "exitCode": 0,
       "log": "test_semantic_ui.log",
-      "durationSeconds": 9.125
+      "durationSeconds": 6.672
     }
   ],
   "summary": {

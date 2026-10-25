@@ -484,8 +484,7 @@ class PriorityMixin:
                 passive.get("kind") == "play_attached_wills"
                 for passive in metadata.get("passiveEffects") or []
             ) and any(
-                entry.get("ownerId") == player_id
-                and self.card_rules.get(entry.get("cardId"), {}).get("type") in RULES_WILL_TYPES
+                self.card_rules.get(entry.get("cardId"), {}).get("type") in RULES_WILL_TYPES
                 and can_play(entry.get("cardId"), self.card_rules[entry["cardId"]]["type"])
                 and self.rules_will_affordable(player_id, entry.get("cardId"))
                 for entry in item["attachedCards"]

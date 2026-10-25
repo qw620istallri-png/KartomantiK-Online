@@ -4591,12 +4591,9 @@ class AssistedRulesTests(unittest.TestCase):
         triggers = session.queue_rules_tribute_triggers(
             ["m-1"], "p1", simultaneous_action_id=paid_action["id"]
         )
-        order_choice = session.rules_engine["pendingChoice"]
-        self.assertIsNone(session.resolve_rules_choice(
-            "p1", order_choice["id"], [paid_action["id"], triggers[0]["id"]]
-        )[0])
-        session.pass_rules_priority("p2")
-        self.assertIsNone(session.pass_rules_priority("p1")[0])
+        self.assertEqual(triggers, [])
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+        self.assertEqual([action["id"] for action in session.rules_engine["actionStack"]], [paid_action["id"]])
         self.assertEqual(
             session.rules_engine["effectMemories"][0]["cardId"],
             "will-ephemeral",

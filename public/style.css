@@ -3474,6 +3474,11 @@ body:not(.rarity-effects-disabled) .rarity-desert {
 /* the hand keeps its place (absolute, at the bottom) and only rises above the dark screen */
 body.hand-drop-choice .hand-area { z-index: 90; }
 .hand-card.is-choice-selected { outline: 3px solid var(--gold, #d7ba68); outline-offset: 2px; }
+body.hand-drop-choice .hand-card.is-choice-selected img { filter: grayscale(1); opacity: .45; }
+.rules-choice-panel.hand-drop .rules-choice-options.has-hand-selection { display: flex; flex-direction: column; align-items: center; flex-wrap: nowrap; max-width: 100%; }
+.rules-hand-selection { display: flex; gap: 8px; max-width: 100%; overflow-x: auto; padding: 4px 4px 10px; }
+.rules-hand-selection .rules-choice-card { flex: 0 0 clamp(48px, 6vw, 78px); width: clamp(48px, 6vw, 78px); padding: 0; }
+.rules-choice-panel.hand-drop .rules-hand-selection { grid-column: 1 / -1; }
 
 /* destination screen: the card on the left, one card-shaped drop slot per destination on the right */
 .rules-choice-panel.destination-screen .rules-choice-source { display: none; }

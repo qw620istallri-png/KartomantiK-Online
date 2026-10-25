@@ -17,7 +17,9 @@ import re
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PATHS = ("public/cards-data.json", "public/extensions/inner-desert/cards.json")
 REVIEW_PATHS = tuple(f"audit/semantic-reviews/{name}.json" for name in ("001-150", "151-300", "301-450"))
-TEST_PATTERNS = ("test_semantic_batch_*.py", "test_tenebro_replacement_audit.py", "test_stack_intrinsic_payment.py")
+TEST_PATTERNS = ("test_semantic_batch_*.py", "test_semantic_integration_followup.py",
+                 "test_semantic_grimoire_sequences.py", "test_delayed_tribute_memory.py",
+                 "test_tenebro_replacement_audit.py", "test_stack_intrinsic_payment.py")
 STATUSES = {"reviewed-match", "reviewed-defect", "ruling-required"}
 
 

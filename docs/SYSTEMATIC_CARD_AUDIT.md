@@ -152,3 +152,12 @@ Après chaque bug confirmé : reproduire avec une graine/scénario, écrire l'at
 depuis le texte ou l'arbitrage, corriger la couche responsable, puis rejouer la
 famille et cette campagne. Ajouter progressivement les branches alternatives
 et interactions au lieu de masquer les cases non couvertes.
+
+## Suite publiée en version 140.1
+
+Le [suivi Grimoire et pile](AUDIT_GRIMOIRE_STACK_AFTER_140.md) décrit les nouvelles
+branches vérifiées, les corrections d'interface et le signalement Sermon/Tong
+qui reste à reproduire. Les [notes de version](RELEASE_140_1.md) résument les
+corrections publiées. Les résultats complets de
+matrice, traces et parcours des 450 cartes de la version 140 restent historiques ;
+les nouvelles preuves Python et UI portent leur propre empreinte de source.
