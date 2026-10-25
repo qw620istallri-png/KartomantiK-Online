@@ -44,6 +44,13 @@ class StackMixin:
                 "y": float(placement.get("y") or item.get("y") or 0),
                 "faceUp": True,
             })
+            if ((action.get("ability") or {}).get("result") or {}).get("kind") == "change_source_control":
+                chosen_controller = next((target.get("playerId") for target in action.get("targets") or []
+                                          if target.get("kind") == "player"), None)
+                if chosen_controller in self.players:
+                    # "Put in Support under any player's control" applies as it
+                    # enters, before entry triggers/watchers capture control.
+                    item["controllerId"] = chosen_controller
             if source.get("temperamentOverride") in RULES_TEMPERAMENTS:
                 item["temperamentOverride"] = source["temperamentOverride"]
             if source.get("winAsSupportDestination") == "exile":
@@ -292,6 +299,7 @@ class StackMixin:
                 {"kind": "card", "itemId": item["id"], "cardId": item["cardId"], "ownerId": item["ownerId"]}
                 for item in self.battlefield
                 if item.get("faceUp") and self.rules_item_card_rules(item).get("type") == "manifestation"
+                and self.rules_field_zone(item) != "stalemate"
                 and not (
                     definition.get("excludeSource")
                     and item.get("id") == source.get("itemId")
@@ -332,6 +340,7 @@ class StackMixin:
                 }
                 for item in self.battlefield
                 if item.get("faceUp")
+                and self.rules_field_zone(item) != "stalemate"
                 and self.rules_item_controller_id(item) == action.get("controllerId")
             ]
         elif definition.get("scope") == "friendly_manifestations_in_confrontation":
@@ -461,12 +470,15 @@ class StackMixin:
                     int(effect["value"])
                     - self.rules_tribute_extra_power_loss(action)
                 )
+            if self.rules_modifier_is_prevented(effect):
+                continue
             self.rules_engine["ongoingEffects"].append(effect)
             created.append(effect)
         self.record_rules_power_changes(powers_before)
         return created
 
     def prune_rules_ongoing_effects(self):
+        self.refresh_rules_first_manifestations()
         # BOB's cards return as soon as it leaves the CZ, even while BOB
         # remains on the field. Gobres uses a different suspension lifetime.
         for source_id in {entry.get("sourceEffectId") for entry in self.rules_engine.get("suspendedCards") or []}:
@@ -553,4 +565,5 @@ class StackMixin:
             if drill is not None and (effect.get("target") or {}).get("itemId") not in battlefield_ids:
                 # Parasitic Drill: the linked Will left the field, so the Drill is sacrificed.
                 self._rules_remove_field_item(drill, drill.get("ownerId"), "graveyard", "top")
+        self.refresh_rules_first_manifestations()
         return removed

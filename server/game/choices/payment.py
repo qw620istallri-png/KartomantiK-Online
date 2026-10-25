@@ -274,6 +274,13 @@ class PaymentChoicesMixin:
         if option not in {"pay", "decline"}:
             return "Choose whether to pay the requested Tribute.", None
         on_decline = choice.get("onDecline") or {}
+        neutralize_target = None
+        if choice.get("_neutralizeOnPay"):
+            neutralize_target = next((entry for entry in self.rules_engine["actionStack"]
+                                     if entry.get("id") == choice.get("targetActionId")), None)
+            if neutralize_target is None or not self.rules_stack_neutralize_payment(neutralize_target):
+                self.rules_engine["pendingChoice"] = None
+                return "This card is no longer on the Stack.", None
         if option == "pay":
             payment_error, payment = self.rules_action_payment(
                 player_id, "activated_effect", None, card_ids,
@@ -283,12 +290,17 @@ class PaymentChoicesMixin:
             if payment_error:
                 return payment_error, None
             self.pay_rules_tribute(player_id, payment)
-            triggered_actions = self.queue_rules_tribute_triggers(payment["cardIds"], player_id)
+            neutralized = None
+            if neutralize_target is not None:
+                neutralized = self.counter_rules_stack_action(neutralize_target, "neutralize")
+                self.rules_engine["priorityPasses"] = []
             self.rules_engine["pendingChoice"] = None
+            triggered_actions = self.queue_rules_tribute_triggers(payment["cardIds"], player_id)
             return None, {
                 "kind": "effect_payment", "status": "paid", "playerId": player_id,
                 "choiceId": choice_id, "sourceCardId": choice.get("sourceCardId"),
                 "triggeredActions": triggered_actions,
+                **({"neutralized": neutralized} if neutralized else {}),
             }
         outcome = {}
         if on_decline.get("kind") == "deck_discard":

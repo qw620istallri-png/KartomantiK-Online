@@ -15,7 +15,7 @@ class ResolutionMixin:
             contracts = groups
         else:
             minimum = max(0, int(target_rules.get("min") or 0))
-            maximum = max(minimum, int(target_rules.get("max") or minimum))
+            maximum = max(minimum, len(targets) if target_rules.get("anyNumber") else int(target_rules.get("max") or minimum))
             if not minimum <= len(targets) <= maximum:
                 return None
             contracts = [{**target_rules, "min": 1, "max": 1}] * len(targets)
@@ -168,7 +168,7 @@ class ResolutionMixin:
                         triggered_actions.extend(
                             self.queue_rules_copied_entry_triggers(effect)
                         )
-        state_actions = self.resolve_rules_state_actions(power_before_resolution)
+        state_actions = self.resolve_rules_state_actions(power_before_resolution, pending_triggers=triggered_actions)
         if state_actions["destroyed"]:
             resolved["stateActions"] = {
                 "destroyed": state_actions["destroyed"],
@@ -272,6 +272,7 @@ class ResolutionMixin:
                 entry.get("playerId") == player_id
                 and entry.get("fromZone") == "graveyard"
                 and entry.get("exileOnLeave")
+                and entry.get("anyWill")
             )
         ]
 
@@ -315,11 +316,6 @@ class ResolutionMixin:
         ):
             next_index = ADVANCED_PHASES.index("confrontation_reaction")
             rematch_started = True
-        if (
-            previous_phase_id == "resolution_move"
-            and self.rules_engine.get("skipEndPhaseTurn") == self.phase_tracker["turn"]
-        ):
-            next_index = len(sequence)
         if next_index >= len(sequence):
             next_index = 0
             expired_essence_tokens = self.expire_rules_excess_essence(

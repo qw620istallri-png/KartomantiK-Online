@@ -4,13 +4,16 @@ import time
 
 from .common import (
     ADVANCED_PHASES, NUM_SEATS, RULES_ACTION_KINDS, RULES_WILL_TYPES,
-    RULES_SUPPORT_ENTRY_RESULTS, new_id
+    RULES_SUPPORT_ENTRY_RESULTS, TRIBUTE_SYMBOL_TEMPERAMENT, new_id
 )
 
 
 from .replacements import replacement_checkpoint
 
 class PriorityMixin:
+    def rules_player_skips_end_phase(self, player_id):
+        return (self.rules_engine.get("skipEndPhaseTurns") or {}).get(player_id) == self.phase_tracker["turn"]
+
     def rules_action_timing_error(self, kind, source, as_support=False, player_id=None):
         """Reject voluntary card actions outside the rulebook response windows.
 
@@ -18,6 +21,8 @@ class PriorityMixin:
         markers.  Once a real assisted match has started, however, the server
         must not trust the client-side playable aura as its only guard.
         """
+        if self.current_phase_group() == "end" and self.rules_player_skips_end_phase(player_id):
+            return "You skip your End Phase this turn."
         started = bool(
             self.phase_tracker["turn"] > 1
             or len(self.rules_engine.get("readyPlayerIds") or []) >= NUM_SEATS
@@ -90,8 +95,16 @@ class PriorityMixin:
             or self.rules_engine.get("firstManifestationItemIds")
         )
 
-    def rules_field_ability_usable(self, item, ability, zone, phase_id):
+    def rules_field_ability_usable(self, item, ability, zone, phase_id, player_id=None):
         """Cheap check that an activated ability of a field card could be used right now."""
+        controller_id = self.rules_item_controller_id(item)
+        player_id = player_id or controller_id
+        if self.current_phase_group() == "end" and self.rules_player_skips_end_phase(player_id):
+            return False
+        if player_id != controller_id and not ability.get("anyPlayer"):
+            return False
+        if ability.get("opponentOnly") and player_id == controller_id:
+            return False
         source_zones = ability.get("sourceZones")
         if source_zones and "battlefield" not in source_zones:
             return False
@@ -109,14 +122,26 @@ class PriorityMixin:
                        if str(key).casefold() == str(counter_gate.get("name") or "").casefold())
             if not int(counter_gate.get("min") or 0) <= held <= int(counter_gate.get("max", 99)):
                 return False
-        if ability.get("requireHandCard") and not self.players[self.rules_item_controller_id(item)]["zones"]["hand"]:
+        if ability.get("requireHandCard") and not self.players[player_id]["zones"]["hand"]:
             return False
         if self.rules_ability_clearly_unusable(
-            self.rules_item_controller_id(item), ability, phase_id, item.get("cardId"),
+            player_id, ability, phase_id, item.get("cardId"), item.get("id"),
         ):
             return False
         turn = self.phase_tracker["turn"]
         if ability.get("oncePerTurnSupport") and turn in (item.get("supportUsedTurn"), item.get("supportUntilTurn")):
+            return False
+        ability_id = str(ability.get("id"))
+        use_limit = max(0, min(int(ability.get("useLimit") or 0), 99))
+        if use_limit and int((item.get("abilityUses") or {}).get(ability_id, 0)) >= use_limit:
+            return False
+        if ability.get("usePerTurn") and (item.get("abilityTurnUses") or {}).get(ability_id) == turn:
+            return False
+        if ability.get("sacrificeTokenCreatedBySource") and not any(
+            candidate.get("isTokenCard") and candidate.get("createdByItemId") == item.get("id")
+            and self.rules_item_controller_id(candidate) == player_id
+            for candidate in self.battlefield
+        ):
             return False
         removal = ability.get("removeCountersFromSource")
         if isinstance(removal, dict):
@@ -149,7 +174,9 @@ class PriorityMixin:
             )
         except Exception:  # never skip a phase because of a computation problem
             return True
-        return self.rules_requirements_affordable(player_id, requirements, card_id)
+        return self.rules_requirements_affordable(
+            player_id, requirements, card_id if not source or source.get("zone") == "hand" else None,
+        )
 
     def rules_exotic_tribute_available(self, player_id):
         """An unusual Tribute source (Limbo, Vessel, field): affordability is not computed."""
@@ -177,11 +204,19 @@ class PriorityMixin:
         """Whether Essences plus hand Manifestations can pay these Tribute requirements."""
         player = self.players[player_id]
         try:
+            hand = list(player["zones"]["hand"])
+            if exclude_card_id in hand:
+                hand.remove(exclude_card_id)
             candidates = [
-                other for other in player["zones"]["hand"]
-                if other != exclude_card_id and self.card_rules.get(other, {}).get("type") == "manifestation"
+                other for other in hand
+                if self.card_rules.get(other, {}).get("type") == "manifestation"
                 and self.card_rules.get(other, {}).get("canPayTribute", True)
-            ][:12]
+            ]
+            if len(candidates) > 12:
+                cost = "".join(f"{{{symbol}}}" * int(requirements.get(temperament, 0))
+                               for symbol, temperament in TRIBUTE_SYMBOL_TEMPERAMENT.items())
+                source = {"zone": "hand", "cardId": exclude_card_id} if exclude_card_id else None
+                return self.rules_find_tribute_payment(player_id, cost, source=source) is not None
             for allocation in self.rules_transcendent_payment_options(player_id, requirements):
                 remaining, _spent = self.rules_essence_payment_plan(
                     player_id, requirements, transcendent_payment=allocation,
@@ -189,6 +224,8 @@ class PriorityMixin:
                 if all(amount <= 0 for amount in remaining.values()):
                     return True
                 for mask in range(1, 1 << len(candidates)):
+                    if mask.bit_count() > 7:
+                        continue
                     selected = [card for index, card in enumerate(candidates) if mask & (1 << index)]
                     if self.rules_manifestations_cover(selected, remaining, player_id=player_id)[0]:
                         return True
@@ -251,11 +288,19 @@ class PriorityMixin:
             for item in self.battlefield
         )
 
-    def rules_ability_clearly_unusable(self, player_id, ability, phase_id, source_card_id=None):
+    def rules_ability_clearly_unusable(self, player_id, ability, phase_id, source_card_id=None,
+                                      source_item_id=None):
         """Cheap checks shared by auto-pass: condition, step, Essence cost and
         a required target on the field or the Stack. True only when the
         ability certainly cannot be used now."""
         ability = ability or {}
+        hand = list(self.players[player_id]["zones"]["hand"])
+        if source_item_id is None and source_card_id in hand:
+            hand.remove(source_card_id)
+        if sum(self.card_rules.get(cid, {}).get("type") == "manifestation" for cid in hand) < int(ability.get("requireHandManifestations") or 0):
+            return True
+        if ability.get("loseScore") and self.rules_points_changes_prevented():
+            return True
         condition = str(ability.get("condition") or "")
         if condition == "controller_lost_confrontation":
             if not self.rules_player_lost_confrontation_this_turn(player_id):
@@ -278,7 +323,7 @@ class PriorityMixin:
             return True
         if result_kind == "chain_from_zone" and (ability.get("result") or {}).get("zone") == "hand":
             hand = list(self.players[player_id]["zones"]["hand"])
-            if source_card_id in hand:
+            if source_item_id is None and source_card_id in hand:
                 hand.remove(source_card_id)
             if not any(card in self.rules_chain_candidates(player_id, "hand") for card in hand):
                 return True
@@ -289,7 +334,7 @@ class PriorityMixin:
             except Exception:  # never skip a phase because of a computation problem
                 requirements = None
             if requirements and not self.rules_requirements_affordable(
-                player_id, requirements, source_card_id,
+                player_id, requirements, source_card_id if source_item_id is None else None,
             ):
                 return True
         essence_cost = str(ability.get("essenceCost") or "")
@@ -301,33 +346,11 @@ class PriorityMixin:
                     return True
             except Exception:  # never skip a phase because of a computation problem
                 pass
-        target_rules = ability.get("targets") or {}
-        if int(target_rules.get("min") or 0) >= 1 and not target_rules.get("groups"):
-            kind = target_rules.get("kind")
-            if kind in {"stack_action", "stack_effect"}:
-                stack = self.rules_engine.get("actionStack") or []
-                if kind == "stack_effect":
-                    stack = [entry for entry in stack if entry.get("kind") != "play_card"]
-                if target_rules.get("controller") == "self":
-                    stack = [entry for entry in stack if entry.get("controllerId") == player_id]
-                card_types = target_rules.get("cardTypes")
-                if card_types:
-                    stack = [
-                        entry for entry in stack
-                        if self.card_rules.get((entry.get("source") or {}).get("cardId"), {}).get("type") in card_types
-                    ]
-                if not stack:
-                    return True
-            elif kind in {None, "card"} and (target_rules.get("zones") or ["battlefield"]) == ["battlefield"]:
-                if not any(
-                    self.rules_ability_targets_error(
-                        target_rules,
-                        [{"kind": "card", "itemId": item.get("id"), "cardId": item.get("cardId")}],
-                        player_id,
-                    ) is None
-                    for item in self.battlefield
-                ):
-                    return True
+        target_rules = self.rules_action_target_rules({"ability": ability}) or {}
+        if target_rules.get("groups") or int(target_rules.get("min") or 0) >= 1:
+            return self.rules_trigger_has_no_legal_target(
+                target_rules, player_id, source_item_id=source_item_id, source_card_id=source_card_id,
+            )
         return False
 
     def rules_usable_hand_ability_card_ids(self, player_id):
@@ -351,8 +374,15 @@ class PriorityMixin:
         Deliberately generous: timing and zones are checked, and Will Tributes only
         when the player clearly cannot pay them, so a phase is never skipped by mistake.
         """
+        if self.current_phase_group() == "end" and self.rules_player_skips_end_phase(player_id):
+            return False
         player = self.players[player_id]
         phase_id = self.current_phase_id()
+        if any(self.rules_stack_neutralize_payment(entry)
+               and (self.rules_exotic_tribute_available(player_id) or self.rules_requirements_affordable(
+                   player_id, self.rules_requirements_from_symbols(self.rules_stack_neutralize_payment(entry))))
+               for entry in self.rules_engine.get("actionStack") or []):
+            return True
         response = phase_id in {"confrontation_reaction", "resolution_effects", "end_actions"}
         support_locked = self.rules_support_entry_locked(player_id)
 
@@ -430,6 +460,12 @@ class PriorityMixin:
                 return True
         for item in self.battlefield:
             if self.rules_item_controller_id(item) != player_id:
+                if (item.get("faceUp") and self.rules_item_effects_active(item)
+                        and any((response or phase_id in (ability.get("phaseIds") or []))
+                                and self.rules_field_ability_usable(
+                                    item, ability, self.rules_field_zone(item), phase_id, player_id,
+                                ) for ability in self.rules_item_card_rules(item).get("activatedAbilities") or [])):
+                    return True
                 continue
             metadata = self.rules_item_card_rules(item)
             card_type = metadata.get("type")
@@ -749,7 +785,7 @@ class PriorityMixin:
                 ), None
         else:
             cost_card_id = None
-        clean_targets = self.rules_redirect_targets(player_id, clean_targets)
+        clean_targets = self.rules_redirect_targets(player_id, clean_targets, (clean_source or {}).get("cardId"))
         action = {
             "id": new_id(),
             "controllerId": player_id,

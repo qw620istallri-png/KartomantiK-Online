@@ -6,6 +6,19 @@ from ..common import new_id
 
 
 class ScoreEffectsMixin:
+    def _rules_result_move_source_to_target_vessel_score(self, action, result, player_id, player):
+        target_id = next((target.get("playerId") for target in action.get("targets") or []
+                          if target.get("kind") == "player"), None)
+        if target_id not in self.players:
+            return {"kind": result.get("kind"), "status": "target_missing"}
+        source = self.find_battlefield_item((action.get("source") or {}).get("itemId"))
+        movement = self._rules_remove_field_item_by_effect(
+            source, target_id, "receptacle", "top", reason="move",
+        ) if source is not None else None
+        delta = self.adjust_rules_score(target_id, int(result.get("value") or 0))
+        return {"kind": result.get("kind"), "status": "resolved", "playerId": target_id,
+                "delta": delta, "movement": movement}
+
     def _rules_result_score_target(self, action, result, player_id, player):
         target = next((
             entry for entry in action.get("targets") or []
@@ -33,12 +46,19 @@ class ScoreEffectsMixin:
 
     def _rules_result_score_each_opponent(self, action, result, player_id, player):
         deltas = {}
+        opponent_of = player_id
+        if result.get("opponentOfEventController"):
+            # Looj rewards the opponent of the losing card's controller,
+            # even if a different player controlled the Chain-granting effect.
+            event_controller = ((action.get("ability") or {}).get("trigger") or {}).get("eventControllerId")
+            if event_controller in self.players:
+                opponent_of = event_controller
         multiplier = (
             self.rules_score_count(result["perCount"], player_id, action)
             if result.get("perCount") else 1
         )
         for other_id in self.players:
-            if other_id != player_id:
+            if other_id != opponent_of:
                 deltas[other_id] = self.adjust_rules_score(
                     other_id, int(result.get("value") or 0) * multiplier
                 )

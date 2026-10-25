@@ -995,10 +995,11 @@
         stale.panel = panel;
         const halves = { me: [], opp: [] };
         groups.stalemate.forEach((entry) => halves[entry.side].push(entry));
+        const rowsTop = panel.t + (G.phone ? 82 : 70);
         for (const side of ["me", "opp"]) {
           const half = side === "me"
-            ? { l: panel.l + 14, r: panel.cx - 7, t: panel.t + 70, b: panel.b - 14 }
-            : { l: panel.cx + 7, r: panel.r - 14, t: panel.t + 70, b: panel.b - 14 };
+            ? { l: panel.l + 14, r: panel.cx - 7, t: rowsTop, b: panel.b - 14 }
+            : { l: panel.cx + 7, r: panel.r - 14, t: rowsTop, b: panel.b - 14 };
           const cardFit = fit(half.r - half.l, half.b - half.t - 20, halves[side].length, { maxW: clamp(G.W * 0.13, 100, 200), gap: 10 });
           gridPositions({ ...half, t: half.t + 18 }, halves[side].length, cardFit, { centerY: false })
             .forEach((rect, index) => slots.set(halves[side][index].item.id, { ...rect, zone: "stalemate", side, open: true }));
@@ -1007,12 +1008,14 @@
         const stripW = Math.min(640, (G.zcOpp.r - G.zcMe.l) * 0.96);
         const strip = { l: G.cx - stripW / 2, r: G.cx + stripW / 2, t: G.oppHandH + G.totalsH + 6, h: G.staleH - 6 };
         stale.strip = strip;
+        stale.summaryW = Math.round(clamp(stripW * 0.4, 130, 220));
+        const cardsW = Math.max(0, stripW - stale.summaryW - 84);
         const w = Math.floor((strip.h - 16) / RATIO);
-        stale.max = Math.max(1, Math.floor((stripW - 220) / (w + 4)));
+        stale.max = Math.max(1, Math.floor(cardsW / (w + 4)));
         stale.w = w;
         const shown = groups.stalemate.slice(0, stale.max);
         const totalW = shown.length * (w + 4) - 4;
-        const start = G.cx - totalW / 2;
+        const start = strip.l + stale.summaryW + 24 + (cardsW - totalW) / 2;
         groups.stalemate.forEach((entry, index) => {
           const i = Math.min(index, shown.length - 1);
           slots.set(entry.item.id, { x: start + i * (w + 4), y: strip.t + (strip.h - w * RATIO) / 2, w, zone: "stalemate", side: entry.side, strip: true, hiddenExtra: index >= shown.length });
@@ -1904,11 +1907,17 @@
     panel.classList.toggle("hidden", !has || !local.staleOpen);
     document.getElementById("gameScreen").classList.toggle("ub-stale-open", has && local.staleOpen);
     if (!has) { local.staleOpen = false; return; }
+    const playerTotal = (side) => {
+      const player = players[side];
+      const name = player?.name || "";
+      const points = stalePoints(groups.stalemate.filter((entry) => entry.side === side));
+      return `<span class="ub-stale-player" data-stale-player="${esc(player?.id || "")}" style="--pc:${player ? esc(playerColor(player.id)) : "transparent"}" title="${esc(`${name} · ${points} ${t("ubPts")}`)}"><span class="ub-stale-name">${esc(name)}</span><b>${points}</b><span>${esc(t("ubPts"))}</span></span>`;
+    };
     if (stale.strip) {
       setBox(strip, { l: stale.strip.l, r: stale.strip.r, t: stale.strip.t, b: stale.strip.t + stale.strip.h });
       const max = stale.max || 12;
       const shown = Math.min(stale.count, max);
-      strip.innerHTML = `<span class="lab">${esc(t("ubStalemate"))} · ${stale.count} · ${stalePoints(groups.stalemate)} ${esc(t("ubPts"))}</span><span class="ub-strip-gap" style="width:${shown * ((stale.w || 25) + 4)}px"></span><span class="more">${stale.count > max ? `+${stale.count - max}` : esc(t("ubEnlarge"))}</span>`;
+      strip.innerHTML = `<span class="ub-stale-summary" style="width:${stale.summaryW}px"><span class="lab">${esc(t("ubStalemate"))} · ${stale.count}</span>${playerTotal("me")}${playerTotal("opp")}</span><span class="ub-strip-gap" style="width:${shown * ((stale.w || 25) + 4)}px"></span><span class="more">${stale.count > max ? `+${stale.count - max}` : esc(t("ubEnlarge"))}</span>`;
     }
     if (stale.panel) {
       setBox(panel, stale.panel);
@@ -1916,9 +1925,9 @@
         const player = players[side];
         const entries = groups.stalemate.filter((entry) => entry.side === side);
         const n = entries.length;
-        return `<div class="ub-stale-half ${side}" style="--pc:${player ? esc(playerColor(player.id)) : "transparent"}"><h3>${esc(rulesText("ubStalemateOf", { player: player?.name || "" }))}${n ? ` <small>${stalePoints(entries)} ${esc(t("ubPts"))}</small>` : ""}</h3>${n ? "" : `<span class="ub-none">${esc(t("ubNoCard"))}</span>`}</div>`;
+        return `<div class="ub-stale-half ${side}" style="--pc:${player ? esc(playerColor(player.id)) : "transparent"}"><h3>${playerTotal(side)}</h3>${n ? "" : `<span class="ub-none">${esc(t("ubNoCard"))}</span>`}</div>`;
       };
-      panel.innerHTML = `<header><h2>${esc(t("ubStalemateTitle"))}</h2><b class="ub-stale-total">${esc(rulesText("ubStaleAtStake", { points: stalePoints(groups.stalemate) }))}</b><p>${esc(t("ubStalemateHint"))}</p></header><div class="ub-stale-rows">${half("me")}${half("opp")}</div>`;
+      panel.innerHTML = `<header><h2>${esc(t("ubStalemateTitle"))}</h2><p>${esc(t("ubStalemateHint"))}</p></header><div class="ub-stale-rows">${half("me")}${half("opp")}</div>`;
     }
   }
 
@@ -1942,9 +1951,9 @@
     });
   }
 
-  // the points waiting in the Stalemate Zone (what the next winner takes)
+  // Printed points per owner: opposing cards can be captured; copies cease to exist.
   function stalePoints(entries) {
-    return entries.reduce((total, entry) => total + (Number(cardsById.get(entry.item.cardId)?.points) || 0), 0);
+    return entries.reduce((total, entry) => total + (entry.item.isCopy || entry.item.isTokenCard ? 0 : Number(cardsById.get(entry.item.cardId)?.points) || 0), 0);
   }
 
   function pileCount(player, zone) {

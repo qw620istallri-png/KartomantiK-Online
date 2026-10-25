@@ -200,16 +200,24 @@
 .ub-stale-strip .lab { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--ub-stale-ink); white-space: nowrap; }
 .ub-stale-strip .ub-strip-gap { flex: 1; }
 .ub-stale-strip .more { font-size: 11px; color: var(--ub-muted); white-space: nowrap; }
-.ub-stale-panel { z-index: 2; border-radius: 16px; border: 1px solid rgba(160, 200, 255, .4); background: rgba(var(--ub-pn), .96); box-shadow: 0 30px 80px rgba(0, 0, 0, .6); padding: 16px; display: flex; flex-direction: column; gap: 12px; pointer-events: auto; animation: ub-stale-in 320ms var(--ub-ease); transform-origin: 50% 0; }
+.ub-stale-summary { flex: 0 0 auto; display: grid; gap: 2px; text-align: left; line-height: 12px; }
+.ub-stale-summary .lab { font-size: 10px; }
+.ub-stale-player { display: flex; align-items: center; gap: 5px; min-width: 0; font-size: 11px; font-weight: 400; letter-spacing: normal; text-transform: none; color: var(--ub-ink); }
+.ub-stale-player::before { content: ""; flex: 0 0 5px; width: 5px; height: 5px; border-radius: 50%; background: var(--pc); }
+.ub-stale-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ub-stale-player b { margin-left: auto; flex-shrink: 0; font-variant-numeric: tabular-nums; }
+.ub-stale-player > span:last-child { flex-shrink: 0; color: var(--ub-muted); }
+.ub-stale-panel { z-index: 21; border-radius: 16px; border: 1px solid rgba(160, 200, 255, .4); background: rgba(var(--ub-pn), .96); box-shadow: 0 30px 80px rgba(0, 0, 0, .6); padding: 16px; display: flex; flex-direction: column; gap: 12px; pointer-events: auto; animation: ub-stale-in 320ms var(--ub-ease); transform-origin: 50% 0; }
 @keyframes ub-stale-in { from { opacity: 0; transform: scaleY(.6) translateY(-20px); } }
-.ub-stale-panel header { display: flex; align-items: baseline; gap: 12px; }
-.ub-stale-panel h2 { margin: 0; font-family: var(--display-font, Georgia, serif); font-size: 16px; color: var(--ub-stale-ink); flex: 1; }
+.ub-stale-panel header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.ub-stale-panel h2 { margin: 0; font-family: var(--display-font, Georgia, serif); font-size: 16px; color: var(--ub-stale-ink); flex: 1 0 auto; }
 .ub-stale-panel header p { margin: 0; color: var(--ub-muted); font-size: 12px; }
-.ub-stale-rows { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.ub-stale-half { border-radius: 10px; background: color-mix(in srgb, var(--pc) 8%, transparent); border: 1px solid color-mix(in srgb, var(--pc) 30%, transparent); padding: 8px; }
+.ub-stale-rows { flex: 1; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; }
+.ub-stale-half { min-width: 0; border-radius: 10px; background: color-mix(in srgb, var(--pc) 8%, transparent); border: 1px solid color-mix(in srgb, var(--pc) 30%, transparent); padding: 8px; }
 .ub-stale-half h3 { margin: 0; font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--ub-muted); }
 .ub-stale-half .ub-none { display: block; margin-top: 12px; color: var(--ub-muted); font-size: 12px; }
 #gameScreen.ui-beta.ub-stale-open .bf-card:not(.ub-zone-stalemate) { opacity: .12; pointer-events: none; }
+#gameScreen.ui-beta.ub-stale-open :is(.ub-totals, .ub-avatar) { visibility: hidden; }
 #gameScreen.ui-beta .bf-card.ub-stale-open { z-index: 40; }
 #gameScreen.ui-beta .bf-card.ub-hidden-extra { visibility: hidden; }
 #gameScreen.ui-beta .bf-card.ub-stale-strip-card { cursor: zoom-in; }
@@ -880,8 +888,6 @@ body.hand-drop-choice #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.hand-
 }
 body.ub-hand-drawing #gameScreen.ui-beta #myHandTray { pointer-events: none; }
 #gameScreen.ui-beta:not(.hidden) ~ .card-preview, body:has(#gameScreen.ui-beta:not(.hidden)) > .card-preview { border: 0; border-radius: 14px; background: transparent; box-shadow: 0 18px 50px #000c; z-index: 420; }
-.ub-stale-panel .ub-stale-total { margin-left: auto; font: 700 15px/1 var(--display-font, Georgia, serif); color: var(--ub-gold-pale); padding: 4px 12px; border-radius: 99px; background: rgba(var(--ub-gd), .16); border: 1px solid rgba(var(--ub-gd), .4); }
-.ub-stale-half h3 small { font-size: 12px; font-weight: 600; color: var(--ub-muted); margin-left: 6px; }
 
 /* stalemated card whose destination is being chosen: lifted to the field centre */
 #gameScreen.ui-beta .bf-card.ub-stale-focus {

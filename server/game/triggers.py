@@ -107,6 +107,8 @@ class TriggersMixin:
                 clean["returnToVessel"] = True
             if result.get("players") in {"each_opponent", "all"}:
                 clean["players"] = result["players"]
+            if result.get("simultaneous"):
+                clean["simultaneous"] = True
             if isinstance(result.get("scoreCost"), (int, float)) and result["scoreCost"] < 0:
                 clean["scoreCost"] = max(-999, int(result["scoreCost"]))
             if result.get("preMove") == "first_manifestation_to_deck_bottom":
@@ -258,7 +260,10 @@ class TriggersMixin:
             target_rules = self.rules_action_target_rules({"ability": ability}) or {}
             if isinstance(target_rules.get("groups"), list):
                 target_rules = {**target_rules, "min": len(target_rules["groups"]), "max": len(target_rules["groups"])}
-            targets = clean_targets
+            # A played ability may choose a controller while a separate entry
+            # trigger has no targets (Bibi). Match the trigger queue's filtering
+            # rather than interpreting that played choice as an ETB target.
+            targets = clean_targets if int(target_rules.get("max") or target_rules.get("min") or 0) > 0 else []
             if target_rules.get("kind") == "player":
                 if target_player_id in self.players:
                     targets = [{"kind": "player", "playerId": target_player_id}]
@@ -300,6 +305,8 @@ class TriggersMixin:
         controller_id = (
             controller_id if controller_id in self.players else owner_id
         )
+        if event == "end_of_turn" and self.rules_player_skips_end_phase(controller_id):
+            return []
         if event == "enters_zone" and container_id not in self.players:
             return []
         if (
@@ -342,6 +349,8 @@ class TriggersMixin:
             if trigger_phase_ids and self.current_phase_id() not in trigger_phase_ids:
                 continue
             trigger_source_item = self.find_battlefield_item(item_id)
+            if trigger.get("supportOnly") and not (trigger_source_item or {}).get("isSupport"):
+                continue
             if (
                 trigger.get("zone")
                 and event not in {
@@ -460,12 +469,6 @@ class TriggersMixin:
                 if trigger.get("eventSourceOnly") and item_id != event_item_id:
                     continue
             if (
-                event == "manifestation_enters_field"
-                and trigger.get("eventController") == "owner"
-                and event_controller_id != owner_id
-            ):
-                continue
-            if (
                 trigger.get("eventController") == "opponent"
                 and event_controller_id == controller_id
             ):
@@ -563,7 +566,7 @@ class TriggersMixin:
             ):
                 continue
             if clean_targets:
-                clean_targets = self.rules_redirect_targets(controller_id, clean_targets)
+                clean_targets = self.rules_redirect_targets(controller_id, clean_targets, card_id)
             self.apply_rules_drill_drain(item_id)
             ongoing_definition = ability.get("ongoingEffect") or {}
             clean_ongoing_effect = None
@@ -688,6 +691,7 @@ class TriggersMixin:
                         "sourceController": str(trigger.get("sourceController") or "")[:32],
                         "eventControllerId": event_controller_id,
                         "eventItemId": event_item_id,
+                        "sourceRollDiscarded": int((trigger_source_item or {}).get("rollDiscarded") or 0),
                         "relatedActionId": (
                             related_action.get("id")
                             if isinstance(related_action, dict) else None
@@ -711,7 +715,7 @@ class TriggersMixin:
                             "controller", "fieldZone", "supportOnly", "exhaustedOnly", "maxPoints",
                             "maxPower", "minPower", "excludeEventSource", "excludeSource", "sourceOnly",
                             "fieldZonesByType", "enteredThisTurn", "enteredInterzoneThisTurn", "confrontationOutcome", "owner",
-                            "firstManifestationOnly", "counter", "minCounters",
+                            "firstManifestationOnly", "counter", "minCounters", "distinctTemperaments", "sameContainer", "distinctTargets", "anyNumber", "maxCost",
                             "limboReasons", "container", "targetsConfrontationManifestation", "groups",
                         }
                     },
@@ -1186,9 +1190,11 @@ class TriggersMixin:
     def queue_rules_battlefield_entry_triggers(self, card_id, owner_id, item_id, face_up,
                                                target_player_id=None, event_targets=None,
                                                defer=False):
-        self.restore_rules_item_memories(self.find_battlefield_item(item_id))
+        item = self.find_battlefield_item(item_id)
+        self.restore_rules_item_memories(item)
         return self.queue_rules_triggers(
-            card_id, owner_id, "enters_field", item_id=item_id, face_up=face_up,
+            card_id, item.get("ownerId") if item else owner_id, "enters_field", item_id=item_id, face_up=face_up,
+            controller_id=self.rules_item_controller_id(item) if item else owner_id,
             target_player_id=target_player_id, event_targets=event_targets,
             defer=defer,
         )
@@ -1498,8 +1504,30 @@ class TriggersMixin:
     def queue_rules_end_turn_memory_triggers(self, defer=False):
         turn = self.phase_tracker["turn"]
         queued = []
+        registrations = [entry for entry in self.rules_engine.get("turnTributeReturns") or []
+                         if entry.get("turn") == turn]
+        self.rules_engine["turnTributeReturns"] = registrations
+        for registration in registrations:
+            for entry in self.rules_engine.get("tributeLog") or []:
+                if entry.get("turn") != turn or entry.get("playerId") != registration.get("playerId"):
+                    continue
+                if any(memory.get("kind") == "return_from_limbo_end_turn"
+                       and memory.get("createdTurn") == turn
+                       and memory.get("ownerId") == entry.get("ownerId")
+                       and memory.get("cardId") == entry.get("cardId")
+                       and (memory.get("data") or {}).get("effectSourceCardId") == registration.get("sourceCardId")
+                       for memory in self.rules_engine.get("effectMemories") or []):
+                    continue
+                self.create_rules_effect_memory(
+                    entry["ownerId"], entry["cardId"], "return_from_limbo_end_turn",
+                    controller_id=registration["playerId"],
+                    source_action_id=registration.get("sourceActionId"),
+                    data={"effectSourceCardId": registration.get("sourceCardId")},
+                )
         for memory in list(self.rules_engine.get("effectMemories") or []):
             if memory.get("kind") != "return_from_limbo_end_turn":
+                continue
+            if self.rules_player_skips_end_phase(memory.get("controllerId") or memory.get("ownerId")):
                 continue
             if int(memory.get("createdTurn") or 0) != turn:
                 continue
@@ -1650,20 +1678,31 @@ class TriggersMixin:
         return queued
 
     def queue_rules_chain_outcome_triggers(self, item, event, player_id):
-        abilities = [
-            ability for ability in item.get("chainAbilities") or []
-            if (ability.get("trigger") or {}).get("event") == event
+        # Granted outcome rules are memories: they survive a Hand/Limbo visit
+        # and retain the controller of the effect which granted them. Several
+        # separate Chains may have granted rules to the same physical card.
+        memories = [] if item.get("isCopy") or item.get("isTokenCard") else [
+            memory for memory in self.rules_effect_memories_for(
+                item.get("ownerId"), item.get("cardId"), "chain_outcome_abilities"
+            ) if (memory.get("data") or {}).get("itemId") == item.get("id")
         ]
-        if not abilities:
-            return []
-        return self.queue_rules_triggers(
-            item.get("cardId"), item.get("ownerId"), event,
-            item_id=item.get("id"), face_up=True,
-            event_controller_id=player_id, defer=True,
-            controller_id=(item.get("chainSource") or {}).get("controllerId")
-            or self.rules_item_controller_id(item),
-            abilities_override=abilities,
-        )
+        groups = [((memory.get("data") or {}).get("abilities") or [], memory.get("controllerId"))
+                  for memory in memories] if memories else [
+            (item.get("chainAbilities") or [], (item.get("chainSource") or {}).get("controllerId")
+             or self.rules_item_controller_id(item))
+        ]
+        queued = []
+        for granted, controller_id in groups:
+            abilities = [ability for ability in granted
+                         if (ability.get("trigger") or {}).get("event") == event]
+            if abilities:
+                queued.extend(self.queue_rules_triggers(
+                    item.get("cardId"), item.get("ownerId"), event,
+                    item_id=item.get("id"), face_up=True,
+                    event_controller_id=player_id, defer=True,
+                    controller_id=controller_id, abilities_override=abilities,
+                ))
+        return queued
 
     def queue_rules_confrontation_win_triggers(self, defer=False):
         result = self.rules_engine.get("confrontationResult") or {}

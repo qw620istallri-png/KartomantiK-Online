@@ -2662,7 +2662,7 @@ Object.assign(ui.en, {
   rulesChoiceChabakHeading: "Put 2 Manifestations in the Stalemate Zone",
   rulesChoiceChabakText: "{card} enters Support once you choose 2 other Manifestations from your Hand.",
   rulesChoiceGiftText: "{card}: choose a Manifestation from your hand to gift, face down.",
-  rulesOutcastOn: "Wandering Outcast: swap when targeted (on)",
+  rulesOutcastOn: "Wandering Outcast: offer a swap when targeted (on)",
   rulesOutcastOff: "Wandering Outcast: swap when targeted (off)",
   rulesKarmapultAutoOn: "Karmapult: always place manifestations on it (on)",
   rulesKarmapultAutoOff: "Karmapult: always place manifestations on it (off)",
@@ -2782,7 +2782,7 @@ Object.assign(ui.fr, {
   rulesChoiceChabakHeading: "Mettre 2 Manifestations en zone d’Égalité",
   rulesChoiceChabakText: "{card} entre en Soutien quand vous avez choisi 2 autres Manifestations de votre main.",
   rulesChoiceGiftText: "{card} : choisissez une Manifestation de votre main à offrir, face cachée.",
-  rulesOutcastOn: "Wandering Outcast : échanger quand une cible est visée (activé)",
+  rulesOutcastOn: "Wandering Outcast : proposer l’échange après ciblage (activé)",
   rulesOutcastOff: "Wandering Outcast : échanger quand une cible est visée (désactivé)",
   rulesKarmapultAutoOn: "Karmapult : y poser toujours les manifestations (activé)",
   rulesKarmapultAutoOff: "Karmapult : y poser toujours les manifestations (désactivé)",
@@ -2902,7 +2902,7 @@ Object.assign(ui.it, {
   rulesChoiceChabakHeading: "Metti 2 Manifestazioni nella Zona di Stallo",
   rulesChoiceChabakText: "{card} entra in Supporto dopo che scegli 2 altre Manifestazioni dalla mano.",
   rulesChoiceGiftText: "{card}: scegli una Manifestazione dalla tua mano da regalare, coperta.",
-  rulesOutcastOn: "Wandering Outcast: scambia quando è bersagliata (attivo)",
+  rulesOutcastOn: "Wandering Outcast: proponi lo scambio quando è bersagliata (attivo)",
   rulesOutcastOff: "Wandering Outcast: scambia quando è bersagliata (disattivo)",
   rulesKarmapultAutoOn: "Karmapult: posa sempre le manifestazioni (attivo)",
   rulesKarmapultAutoOff: "Karmapult: posa sempre le manifestazioni (disattivo)",
@@ -3508,6 +3508,11 @@ function t(key) {
 
 Object.assign(ui.en, {
   rulesReplacementOrderHeading: "Order simultaneous replacements",
+  rulesPayToNeutralize: "Pay 2 Essences to neutralize",
+  rulesOutcastSwapHeading: "Swap with Wandering Outcast?", rulesOutcastSwapText: "{effect} targets {target}. {card} may swap positions with it and become the target.",
+  rulesOutcastSwapYes: "Swap positions", rulesOutcastSwapNo: "Keep the original target",
+  rulesDiscardSupportHeading: "Put this card in Support?", rulesDiscardSupportText: "{card} is being discarded. You may put it in Support instead of Limbo.",
+  rulesDiscardSupportYes: "Put in Support", rulesDiscardSupportNo: "Put in Limbo", rulesReplacement_support: "Put in Support",
   rulesChainPersistentOnlyError: "This Manifestation can only be played as a Persistent Will and cannot be Chained.",
   rulesAbilityWeaken: "−1 Power", rulesAbilityStrengthen: "+1 Power", rulesAbilitySilence: "Remove effects",
   rulesAbilityDraw: "Draw 1 card", rulesAbilityMill: "Discard the top card of the Deck",
@@ -3521,6 +3526,11 @@ Object.assign(ui.en, {
 });
 Object.assign(ui.fr, {
   rulesReplacementOrderHeading: "Ordonner les remplacements simultanés",
+  rulesPayToNeutralize: "Payer 2 essences pour neutraliser",
+  rulesOutcastSwapHeading: "Échanger avec Wandering Outcast ?", rulesOutcastSwapText: "{effect} cible {target}. {card} peut échanger sa position avec elle et devenir la cible.",
+  rulesOutcastSwapYes: "Échanger les positions", rulesOutcastSwapNo: "Garder la cible initiale",
+  rulesDiscardSupportHeading: "Placer cette carte en Soutien ?", rulesDiscardSupportText: "{card} est défaussée. Vous pouvez la placer en Soutien au lieu des Limbes.",
+  rulesDiscardSupportYes: "Placer en Soutien", rulesDiscardSupportNo: "Placer dans les Limbes", rulesReplacement_support: "Placer en Soutien",
   rulesChainPersistentOnlyError: "Cette Manifestation ne peut être jouée que comme une Volonté persistante et ne peut pas être jouée en Chain.",
   rulesAbilityWeaken: "−1 Puissance", rulesAbilityStrengthen: "+1 Puissance", rulesAbilitySilence: "Retirer les effets",
   rulesAbilityDraw: "Piocher 1 carte", rulesAbilityMill: "Défausser la carte du dessus du Deck",
@@ -3534,6 +3544,11 @@ Object.assign(ui.fr, {
 });
 Object.assign(ui.it, {
   rulesReplacementOrderHeading: "Ordina le sostituzioni simultanee",
+  rulesPayToNeutralize: "Paga 2 Essenze per neutralizzare",
+  rulesOutcastSwapHeading: "Scambiare con Wandering Outcast?", rulesOutcastSwapText: "{effect} bersaglia {target}. {card} può scambiarsi con essa e diventare il bersaglio.",
+  rulesOutcastSwapYes: "Scambia le posizioni", rulesOutcastSwapNo: "Mantieni il bersaglio originale",
+  rulesDiscardSupportHeading: "Mettere questa carta in Supporto?", rulesDiscardSupportText: "{card} viene scartata. Puoi metterla in Supporto invece del Limbo.",
+  rulesDiscardSupportYes: "Metti in Supporto", rulesDiscardSupportNo: "Metti nel Limbo", rulesReplacement_support: "Metti in Supporto",
   rulesChainPersistentOnlyError: "Questa Manifestazione può essere giocata solo come Volontà persistente e non può essere giocata in Chain.",
   rulesAbilityWeaken: "−1 Potere", rulesAbilityStrengthen: "+1 Potere", rulesAbilitySilence: "Rimuovi gli effetti",
   rulesAbilityDraw: "Pesca 1 carta", rulesAbilityMill: "Scarta la prima carta del Mazzo",

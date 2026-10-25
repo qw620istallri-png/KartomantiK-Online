@@ -6,7 +6,7 @@ Verdict : **PASS** · 0 contrôle(s) manuel(s) conservé(s).
 |---:|---|---|---|---|---|
 | 1 | Wind Sprout | ✓ (0 cap.) | ✓ (0 actions) | ✓ | PASS |
 | 2 | Sated Swineheart | ✓ (0 cap.) | ✓ (0 actions) | ✓ | PASS |
-| 3 | Merciful Pago | ✓ (0 cap.) | ✓ (0 actions) | ✓ | PASS |
+| 3 | Merciful Pago | ✓ (1 cap.) | ✓ (0 actions) | ✓ | PASS |
 | 4 | Tiptup, the Whistler | ✓ (0 cap.) | ✓ (0 actions) | ✓ | PASS |
 | 5 | Slumber Planner | ✓ (0 cap.) | ✓ (0 actions) | ✓ | PASS |
 | 6 | Tidying Torment | ✓ (0 cap.) | ✓ (0 actions) | ✓ | PASS |

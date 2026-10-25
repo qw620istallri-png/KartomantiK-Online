@@ -11,7 +11,7 @@ Verdict : **PASS** · 0 contrôle(s) manuel(s) conservé(s).
 | 135 | Shattering the Self | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 136 | Reforging Fate | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 137 | Parasitic Drill | ✓ (1 cap.) | ✓ (0 actions) | ✓ | PASS |
-| 138 | Flaying Jaw | ✓ (2 cap.) | ✓ (2 actions) | ✓ | PASS |
+| 138 | Flaying Jaw | ✓ (2 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 139 | Traumatize | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 140 | Revive | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
 

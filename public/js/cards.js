@@ -246,8 +246,12 @@ function rulesRemainingAfterManifestations(cardIds, requirements) {
   };
   const missing = (state) => Object.values(state).reduce((sum, amount) => sum + Math.max(0, amount), 0);
   let best = null;
+  const visited = new Set();
   const search = (index, state) => {
     if (best !== null && missing(best) === 0) return;
+    const key = `${index}:${Object.values(state).join(",")}`;
+    if (visited.has(key)) return;
+    visited.add(key);
     if (index === cards.length) {
       if (best === null || missing(state) < missing(best)) best = state;
       return;

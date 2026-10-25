@@ -5,6 +5,8 @@ from ..common import RULES_WILL_TYPES, RULES_TEMPERAMENTS, new_id
 
 class PowerEffectsMixin:
     def set_rules_item_temperament(self, item, temperament, action):
+        if self.rules_modifiers_prevented(item):
+            return []
         item["temperamentOverride"] = temperament
         return self.create_rules_ongoing_effects({
             **action,
@@ -68,7 +70,7 @@ class PowerEffectsMixin:
             or not reference.get("isSupport")
         ):
             return {"kind": result.get("kind"), "status": "target_missing"}
-        base = int(self.card_rules.get(reference.get("cardId"), {}).get("power") or 0)
+        base = self.rules_manifestation_base_power(reference)
         self.adjust_rules_power_counter(weakened, -base)
         return {
             "kind": result.get("kind"), "status": "weakened",
@@ -125,10 +127,15 @@ class PowerEffectsMixin:
 
     def _rules_result_restore_exhausted_targets(self, action, result, player_id, player):
         restored = []
+        temperaments = set()
         for entry in action.get("targets") or []:
             item = self.find_battlefield_item(entry.get("itemId"))
             if item is None or int(round(float(item.get("rotation") or 0))) % 180 == 0:
                 continue
+            temperament = self.rules_manifestation_characteristics(item)["temperament"]
+            if item.get("id") == (action.get("source") or {}).get("itemId") or temperament in temperaments:
+                continue
+            temperaments.add(temperament)
             item["rotation"] = 0.0
             restored.append(item["id"])
         return {"kind": result.get("kind"), "status": "restored", "itemIds": restored}
@@ -180,7 +187,7 @@ class PowerEffectsMixin:
                     "kind": "card", "itemId": item["id"],
                     "cardId": item.get("cardId"), "ownerId": item.get("ownerId"),
                 },
-                "kind": "power_set_maximum",
+                "kind": "power_set",
                 "duration": "until_end_of_turn",
                 "startedTurn": self.phase_tracker["turn"],
                 "value": int(result.get("value") or 1),
@@ -275,11 +282,11 @@ class PowerEffectsMixin:
                     "cardId": item.get("cardId"), "ownerId": item.get("ownerId"),
                 },
                 "kind": "power_set_maximum", "duration": "until_end_of_turn",
-                "startedTurn": self.phase_tracker["turn"], "value": int(value),
+                "startedTurn": self.phase_tracker["turn"], "value": int(value), "preventsModifiers": True,
             }
             effect["powerAdjustment"] = effect["value"] - self.rules_manifestation_characteristics(item)["power"]
-            self.append_rules_ongoing_effect(effect)
-            effect_ids.append(effect["id"])
+            if self.append_rules_ongoing_effect(effect):
+                effect_ids.append(effect["id"])
         return {
             "kind": result.get("kind"), "status": "set" if effect_ids else "nothing",
             "mode": result.get("mode"), "effectIds": effect_ids,
@@ -392,7 +399,7 @@ class PowerEffectsMixin:
                     "id": f'{(action.get("ability") or {}).get("id")}:weaken',
                     "ongoingEffect": {
                         "kind": "power_modifier", "value": -manifestations,
-                        "duration": "until_end_of_turn",
+                        "duration": "while_target_on_field",
                     },
                 },
             })

@@ -8,6 +8,29 @@ from .common import TRIBUTE_SYMBOL_TEMPERAMENT, RULES_WILL_TYPES, new_id
 
 
 class PaymentMixin:
+    def rules_stack_neutralize_payment(self, action):
+        if action.get("kind") != "play_card":
+            return None
+        return self.card_rules.get((action.get("source") or {}).get("cardId"), {}).get("stackNeutralizePayment")
+
+    def request_rules_stack_payment(self, player_id, action_id):
+        if (not self.rules_engine.get("enabled") or self.ended or player_id not in self.players
+                or self.rules_engine.get("pendingChoice") or self.rules_engine.get("priorityPlayerId") != player_id
+                or self.current_phase_group() == "end" and self.rules_player_skips_end_phase(player_id)
+                or any(entry.get("immediate") for entry in self.rules_engine.get("actionStack") or [])):
+            return "You cannot pay for a Stack action now.", None
+        target = next((entry for entry in self.rules_engine["actionStack"] if entry.get("id") == action_id), None)
+        payment = self.rules_stack_neutralize_payment(target or {})
+        if not payment:
+            return "This card has no payment available while on the Stack.", None
+        choice = {"id": new_id(), "kind": "effect_payment", "playerId": player_id,
+                  "payment": payment, "requirements": self.rules_requirements_from_symbols(payment),
+                  "sourceCardId": (target.get("source") or {}).get("cardId"),
+                  "targetCardId": (target.get("source") or {}).get("cardId"),
+                  "targetActionId": action_id, "_neutralizeOnPay": True, "onDecline": {}}
+        self.rules_engine["pendingChoice"] = choice
+        return None, {"kind": "choice_required", "choiceId": choice["id"], "playerId": player_id}
+
     def rules_counter_essence_sources(self, player_id):
         sources = []
         for item in self.battlefield:
@@ -28,6 +51,8 @@ class PaymentMixin:
         own_payment = choice.get("playerId") == player_id and choice.get("kind") in {
             "stack_counter_payment", "effect_memory_payment", "effect_payment", "immediate_effect_payment",
         }
+        if not own_payment and self.current_phase_group() == "end" and self.rules_player_skips_end_phase(player_id):
+            return "You skip your End Phase this turn.", None
         if not self.rules_engine["enabled"] or self.ended or not self.rules_match_started() or (
             not own_payment and (choice or self.rules_engine.get("priorityPlayerId") != player_id)
         ):
@@ -54,7 +79,7 @@ class PaymentMixin:
                 requirements[temperament] = requirements.get(temperament, 0) + 1
         return requirements
 
-    def rules_redirect_targets(self, controller_id, targets):
+    def rules_redirect_targets(self, controller_id, targets, source_card_id=None):
         """Obtrusive Mass: opponents' cards and effects target it instead."""
         redirected = []
         changed = False
@@ -74,12 +99,17 @@ class PaymentMixin:
                     and self.rules_field_zone(source) == "interzone"
                     and not source.get("outcastOff")
                     and self.rules_field_zone(item) == "confrontation"
-                    and not item.get("isSupport")
                     and self.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"
                     and not self.rules_item_is_immune(source, controller_id)
                     and not self.rules_item_is_protected(source, controller_id)
                 ), None)
-                if outcast is not None:
+                if outcast is not None and self.rules_optional_replacement_decision(
+                    f"outcast|{controller_id}|{source_card_id}|{outcast['id']}|{item['id']}", owner_id,
+                    {"purpose": "outcast_swap", "sourceCardId": outcast.get("cardId"),
+                     "relatedCardId": item.get("cardId"), "incomingCardId": source_card_id,
+                     "headingKey": "rulesOutcastSwapHeading", "textKey": "rulesOutcastSwapText",
+                     "yesKey": "rulesOutcastSwapYes", "noKey": "rulesOutcastSwapNo"}, internal_default=True,
+                ):
                     # Swap positions, then the effect targets Wandering Outcast.
                     for key in ("fieldZone", "x", "y", "stackedOn", "stackOffsetX", "stackOffsetY",
                                 "confrontationOrder", "isSupport"):
@@ -589,7 +619,7 @@ class PaymentMixin:
             "limboCount": limbo_count,
         }
 
-    def rules_find_tribute_payment(self, player_id, cost):
+    def rules_find_tribute_payment(self, player_id, cost, source=None):
         """Find a legal payment witness, including sources outside the Hand.
 
         Counter conversion is tested on an isolated session. The real payment
@@ -627,13 +657,13 @@ class PaymentMixin:
                       and session.card_rules.get(item.get("cardId"), {}).get("type") == "manifestation"]
         options = []
         for reference in references:
-            error, selected = session.rules_tribute_selection(player_id, None, [reference])
+            error, selected = session.rules_tribute_selection(player_id, source, [reference])
             if error:
                 continue
             variants = [([reference], selected["cardEntries"][0])]
             if session.card_rules.get(variants[0][1]["cardId"], {}).get("tributeSacrificePower"):
                 for sacrifice in sacrifices:
-                    error, boosted = session.rules_tribute_selection(player_id, None, [reference, sacrifice])
+                    error, boosted = session.rules_tribute_selection(player_id, source, [reference, sacrifice])
                     if not error:
                         variants.append(([reference, sacrifice], boosted["cardEntries"][0]))
             options.append(variants)
@@ -668,7 +698,7 @@ class PaymentMixin:
                 continue
 
             def search(index, chosen):
-                error, _selected = session.rules_tribute_selection(player_id, None, refs(chosen))
+                error, _selected = session.rules_tribute_selection(player_id, source, refs(chosen))
                 if error:
                     return None
                 if covers(chosen, remaining):
@@ -681,14 +711,14 @@ class PaymentMixin:
                     # A Kanopo may be needed while its extra sacrifice is not.
                     for position, (selected_refs, entry) in enumerate(minimal):
                         if len(selected_refs) > 1:
-                            error, plain = session.rules_tribute_selection(player_id, None, selected_refs[:1])
+                            error, plain = session.rules_tribute_selection(player_id, source, selected_refs[:1])
                             downgraded = list(minimal)
                             if not error:
                                 downgraded[position] = (selected_refs[:1], plain["cardEntries"][0])
                                 if covers(downgraded, remaining):
                                     minimal = downgraded
                     error, payment = session.rules_action_payment(
-                        player_id, "activated_effect", None, refs(minimal), {"tribute": cost},
+                        player_id, "activated_effect", source, refs(minimal), {"tribute": cost},
                         transcendent_payment=allocation,
                     )
                     if not error:
@@ -810,7 +840,7 @@ class PaymentMixin:
         optional_extra_count = max(0, optional_extra_count)
         if optional_extra_count and not optional_extra:
             return "This action cannot spend optional extra Essences.", None
-        if optional_extra_count > int(optional_extra.get("max") or 0):
+        if optional_extra.get("max") is not None and optional_extra_count > int(optional_extra["max"]):
             return "Too many optional extra Essences were selected.", None
         if optional_extra_count:
             optional_remaining, optional_spent = (
@@ -863,7 +893,7 @@ class PaymentMixin:
                 optional_extra_count += max(0, int(value))
                 clean_entries.append({"zone": "hand", "cardId": card_id})
                 clean_ids.append(card_id)
-            if optional_extra_count > int(optional_extra.get("max") or 0):
+            if optional_extra.get("max") is not None and optional_extra_count > int(optional_extra["max"]):
                 return "Too many optional extra Essences were selected.", None
         return None, {
             "cardIds": clean_ids,
@@ -923,7 +953,7 @@ class PaymentMixin:
             pid = pending_ids.pop(0)
             entries = self.rules_lunar_entries(pid)
             if not entries:
-                self.rules_engine["skipEndPhaseTurn"] = self.phase_tracker["turn"]
+                self.rules_engine.setdefault("skipEndPhaseTurns", {})[pid] = self.phase_tracker["turn"]
                 continue
             choice_id = new_id()
             self.rules_engine["pendingChoice"] = {
@@ -950,7 +980,7 @@ class PaymentMixin:
         head, rest = queue[0], queue[1:]
         groups = [{
             "playerId": head["playerId"], "cardIds": list(head["cardIds"]),
-            "topCount": None, "bottomCount": None,
+            "topCount": head.get("topCount"), "bottomCount": head.get("bottomCount"),
         }]
         choice = {
             "id": new_id(), "kind": "deck_reorder",
@@ -1008,11 +1038,12 @@ class PaymentMixin:
     def rules_item_zone_locked(self, item):
         return bool(item) and item.get("zoneLockTurn") == self.phase_tracker["turn"]
 
-    def rules_support_entry_locked(self, player_id):
+    def rules_support_entry_locked(self, player_id, *, put=False):
         turn = self.phase_tracker["turn"]
         return any(
             lock.get("turn") == turn
             and lock.get("playerId") in {None, player_id}
+            and (not put or not lock.get("playOnly"))
             for lock in self.rules_engine.get("supportLocks") or []
         )
 
@@ -1231,7 +1262,6 @@ class PaymentMixin:
             "sacrificedCards": [],
             "removedCounters": [],
             "reducedSourcePower": 0,
-            "reducedSourcePower": 0,
         }
         if not ability:
             return result
@@ -1240,6 +1270,30 @@ class PaymentMixin:
             raise RuntimeError("Validated activated source disappeared before paying its cost.")
         if ability.get("exhaustSource"):
             item["rotation"] = 90.0
+        if ability.get("sacrificeAttachedManifestations"):
+            if item is None:
+                raise RuntimeError("Validated attached-card source disappeared before payment.")
+            attached = list(item.get("attachedCards") or [])
+            sacrificed = [entry for entry in attached
+                if self.card_rules.get(entry.get("cardId"), {}).get("type") == "manifestation"]
+            item["attachedCards"] = [entry for entry in attached if entry not in sacrificed]
+            self.rules_sync_attached_counter(item)
+            for entry in sacrificed:
+                owner_id, card_id = entry["ownerId"], entry["cardId"]
+                replacement = self.rules_effect_move_replacement(owner_id, "attached", owner_id, "graveyard", card_id)
+                destination = "graveyard"
+                if replacement and replacement["replacementKind"] == "suspend":
+                    self.rules_engine["suspendedCards"].append({
+                        "id": new_id(), "cardId": card_id, "ownerId": owner_id,
+                        "fromContainerId": owner_id, "fromZone": "attached",
+                        "sourceEffectId": replacement["_sourceItem"]["id"],
+                    })
+                    destination = "suspended"
+                else:
+                    container_id, destination = replacement["_destination"] if replacement else (owner_id, "graveyard")
+                    self.put_zone_card(container_id, destination, card_id, owner_id,
+                        limbo_reason="sacrifice", from_zone="attached")
+                result["sacrificedCards"].append({"cardId": card_id, "ownerId": owner_id, "destination": destination})
         if ability.get("sacrificeSource"):
             sacrifice_zone = "exile" if ability.get("sacrificeDestination") == "exile" else "graveyard"
             movement = self._rules_remove_field_item(item, item["ownerId"], sacrifice_zone, "top")
@@ -1333,6 +1387,25 @@ class PaymentMixin:
                 for entry in required
             ):
                 item["supportUntilTurn"] = self.phase_tracker["turn"]
+                # Zum's five-activation condition is checked within one turn,
+                # but the resulting Support grant has no printed expiry.
+                # Keep it as a modifier so Cleanse and leaving the field still
+                # remove it, without losing it at the next turn boundary.
+                if not any(
+                    effect.get("kind") == "grant_support"
+                    and effect.get("abilityId") == "all-abilities-used-support"
+                    and effect.get("target", {}).get("itemId") == item["id"]
+                    for effect in self.rules_engine["ongoingEffects"]
+                ):
+                    self.append_rules_ongoing_effect({
+                        "id": new_id(), "abilityId": "all-abilities-used-support",
+                        "controllerId": self.rules_item_controller_id(item),
+                        "source": dict(source),
+                        "target": {"kind": "card", "itemId": item["id"],
+                                   "cardId": item.get("cardId"), "ownerId": item.get("ownerId")},
+                        "kind": "grant_support", "duration": "while_target_on_field",
+                        "startedTurn": self.phase_tracker["turn"],
+                    })
                 result["grantedSupport"] = True
         if int(ability.get("useLimit") or 0) > 0 and item is not None:
             uses = item.setdefault("abilityUses", {})

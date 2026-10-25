@@ -293,6 +293,7 @@ function clearConnectionGameInteractions() {
   pendingIncomingRequest = null;
   rulesChoiceRetry = null;
   rulesDeckReorderRetry = null;
+  resetRulesChoiceInteraction();
   closeRulesBoardFlow();
   closeRulesActionPanel();
   closeRulesActivationConfirmation();

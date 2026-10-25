@@ -7,8 +7,9 @@ from .common import new_id
 
 
 class ReplacementOrderRequired(Exception):
-    def __init__(self, key, player_id, effects):
+    def __init__(self, key, player_id, effects, choice=None):
         self.key, self.player_id, self.effects = key, player_id, effects
+        self.choice = choice or {}
 
 
 def replacement_checkpoint(shape):
@@ -17,6 +18,7 @@ def replacement_checkpoint(shape):
         def checked(self, *args, **kwargs):
             if (getattr(self, '_rules_replacement_running', False)
                     or (self.rules_engine.get('pendingChoice') or {}).get('kind') == 'replacement_order'
+                    or (self.rules_engine.get('pendingChoice') or {}).get('_optionalReplacement')
                     or not self.rules_competing_replacements_possible()):
                 return method(self, *args, **kwargs)
             # The probe is isolated and synchronous: it cannot spend a live
@@ -57,12 +59,16 @@ def replacement_checkpoint(shape):
                     '_randomState': local_state,
                     '_replacementPriority': priority,
                     '_orders': copy.deepcopy(getattr(self, '_rules_replacement_orders', {})),
+                    **conflict.choice,
                 }
                 self.rules_engine['pendingChoice'] = choice
                 self.rules_engine['priorityPlayerId'] = choice['playerId']
                 result = {'status': 'choice_required', 'kind': 'choice_required',
-                          'choiceKind': 'replacement_order', 'choiceId': choice['id'],
+                          'choiceKind': choice['kind'], 'choiceId': choice['id'],
                           'playerId': choice['playerId'], 'stackDepth': len(self.rules_engine['actionStack'])}
+                if shape in {'zone_move', 'zone_effect_move'}:
+                    owner = self.card_owner_in_zone(args[0], args[1], args[4])
+                    return (None, owner, result) if shape == 'zone_effect_move' else (None, owner)
                 return (None, result) if shape in {'choice', 'declaration', 'priority'} else result
             previous_running = getattr(self, '_rules_replacement_running', False)
             previous_priority = getattr(self, '_rules_replacement_priority', None)

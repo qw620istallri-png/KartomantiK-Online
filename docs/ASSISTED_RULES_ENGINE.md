@@ -807,7 +807,7 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 ### Lot 3 (entrées en Limbo, verrous de Support)
 
 - Nouvel évènement observé `card_entered_limbo` : déclenche `enters_limbo` et, si la raison est une défausse, `discarded` sur la carte elle-même (Zombieswing, Memento, Tombloom, Tenebro).
-- Tenebro : approximation, la carte passe par le Limbo puis remonte en Support (le remplacement de défausse n'est pas modélisé).
+- Tenebro : depuis la bêta 140, le remplacement optionnel est décidé avant l'entrée au Limbo. Accepter place directement la carte en Soutien sans événement d'entrée au Limbo ; refuser conserve la défausse normale. Les choix successifs sont collectés avant la mutation de l'opération.
 - Fintus (`destroyNextEntries`) détruit la prochaine entrée adverse sans déclencher les effets propres de la carte entrante.
 - Gorb / Wretched Arena : `lock_support_entries` ne couvre que les jeux en Support déclarés.
 - Healing Bond, Watchtower, Horned Augustus automatisés.
@@ -865,7 +865,7 @@ Filth-eater, Zozok, Pan Zuto, Flower of Evil, Shattered Memory, Compensate, Ohmo
 - Censor et Martyrize : champ de capacité `additionalCost: "exile_hand_manifestation"`. `declare_rules_action(cost_card_id=…)` valide la Manifestation de la main (étape client `cost_card`, champ `costCardId`), l'exile à la déclaration (`action.cost.revealedCard`) ; la résolution (`hand_manifestation_choice`) utilise cette carte : Censor détruit la cible si sa puissance de base est ≤ celle de la carte révélée, Martyrize pioche autant puis s'exile (`resolveSourceTo: "exile"`).
 - Rogue Tadpole : après le retour des Manifestations de l'Interzone sur le dessus des decks, chaque propriétaire ayant au moins deux cartes ordonne les siennes (choix `deck_reorder` enchaîné via `_queue`, `rules_next_deck_order_choice`).
 - Atavic Volatility : capacité activée « retirer 5 compteurs Coil » → résultat `each_player_stalemate_own_confrontation` ; chaque joueur ayant plusieurs Manifestations en Confrontation choisit la sienne (choix `pick_own_item`, un joueur après l'autre).
-- Duel Honorably : résultat `unless_opponent_payment_lock_support_entries` (choix `effect_payment` pour l'adversaire : payer {H}{H} neutralise le verrou du Support, refuser l'applique). Le paiement est demandé à la résolution, ce qui revient au même qu'un paiement pendant que la Volonté est sur la Pile puisque personne d'autre ne peut agir entre-temps.
+- Duel Honorably : depuis la bêta 140, son paiement intrinsèque est accessible pendant que la Volonté reste sur la Pile, à la priorité du payeur. Payer neutralise la carte ; refuser ne la résout pas. Sans neutralisation, sa résolution interdit les mises en Soutien jusqu'à la fin du tour. L'ancien paiement demandé à la résolution était une approximation incorrecte de cette séquence.
 
 ### Langage visuel des actions automatisées
 
@@ -915,7 +915,7 @@ Registre : 359 automatisées / 0 partielle / 91 manuelles.
 ## Lot 15 (Regurgitating Catacomb, Sandokaron, Bivalv, Swindley, Timid Brain, Brabataba, Unreachable Pillar, Quper, Tax of the Malignant, Eorthoda)
 
 - Coûts depuis la main: `sourceCost` (`discard_source`, `stalemate_source`) payé à la déclaration dans `declare_rules_action` (Bivalv, Swindley); `additionalCost: "discard_hand_will"` (Timid Brain) réutilise l'étape client `cost_card`, filtrée sur les Volontés.
-- Timid Brain: l'effet n'accorde que la permission de jouer en Soutien (phase Réaction). Le joueur joue ensuite la carte lui-même.
+- Timid Brain : depuis la bêta 140, la résolution de son effet immédiat lance effectivement son jeu normal en Soutien. Une permission interne temporaire autorise ce jeu, puis disparaît ; aucune permission différée ne reste au joueur.
 - Brabataba: passif `vessel_manifestations_as_tribute`. Références de tribut `receptacle|<cardId>`, comptées comme {T}, exilées chez leur propriétaire.
 - Unreachable Pillar: passif `vessel_protected_no_effects` (`rules_vessel_locked`). Les cartes du Vessel ne sont plus ciblables par l'adversaire et leurs déclencheurs (`beginning_of_turn`, `vessel_revelation`, `enters_zone` dans le Vessel) sont ignorés. L'effet sans cible `destroy_random_vessel_manifestations` ignore aussi le Vessel d'un adversaire protégé. Aucun autre effet sans cible ne touche un Vessel adverse aujourd'hui; un futur effet de ce type doit appeler `rules_vessel_locked`.
 - Quper: passif `sacrifice_at_power` (seuil, bonus) évalué dans `resolve_rules_state_actions`; le bonus +2 est un effet continu `power_modifier` sur les Manifestations de la Zone de Confrontation du contrôleur.
@@ -1162,7 +1162,7 @@ Relecture des 150 cartes des cinq decks de départ, texte imprimé contre `card-
 
 ## Suites de l'audit des decks de départ (beta 139.2)
 
-- Duel Honorably : seul l'adversaire paie, au moment de la résolution (décision du 2026-10-20 : l'option « un joueur » vise le multijoueur).
+- Duel Honorably : précision du créateur du 2026-10-25, tous les adversaires peuvent payer pendant sa présence sur la Pile ; le joueur qui l'a posée peut techniquement payer aussi pour neutraliser sa propre carte. Cette précision remplace l'ancienne note du 2026-10-20 et l'approximation du paiement à la résolution.
 - Entrust double réellement la Puissance de base (modificateur ordonné `base_power_double`, lu par `rules_manifestation_base_power` et `rules_manifestation_characteristics`). Deux Entrust donnent ×4. Une copie résolue ensuite remplace cette base ; un Entrust résolu après une copie double la base copiée. Jondo, The Stomper, Kiss of the Myrmillo, Ranba, Inflate the Ego et les destructions qui lisent la puissance de base utilisent cette valeur. Cleanse retire le doublement.
 - Stampeding Brood : « jusqu'à deux » ouvre le choix `token_count` (0 à N, limité aux places libres de l'Interzone). Résultat `create_support_tokens` avec `upTo`.
 - Déclencheur obligatoire sans cible légale : `rules_trigger_has_no_legal_target` vaut pour tous les événements et pour `min` > 1. L'effet n'est pas mis sur la Pile au lieu d'ouvrir un choix impossible. Echo of the Wilds redevient obligatoire.
@@ -1444,3 +1444,134 @@ Travail fait sur le PC après la beta 139, jamais publié, récupéré via la br
 - Si un lien a disparu après Cleanse ou le départ de la cible, `retarget_source_effect` le recrée depuis la capacité initiale compilée de sa source. Jaw, Nectar, Armored Husk et Altruistic Inflorescence conservent leurs coûts et leur Épuisement ; aucun lien ne revient automatiquement.
 - Le reciblage de Nectar exige maintenant `end_actions`, comme son texte et les autres Volontés de cette famille. Le registre d'automatisation est régénéré.
 - Scénarios et limites : [audit Cleanse et états après 139.42](AUDIT_CLEANSE_STATE_AFTER_139_42.md).
+
+## Concordance interface / serveur après 139.45
+
+- Les vues joueur fournissent `usableAbilityIds` pour les cartes révélées et
+  `effectTargetable` pour les cartes, joueurs, Vaisseaux et actions de Pile.
+  Les contrôles tiennent compte du joueur destinataire, des limites d'utilisation,
+  des ressources nécessaires et des protections actives. Les cartes cachées
+  ne reçoivent pas ces indications publiques.
+- Chaque action de Pile fournit aussi `retargetableItemIds`, calculé avec son
+  propre contrôleur et son contrat de ciblage. Scrambling Beacon vérifie donc
+  les deux contrats successifs sans confondre les contrôleurs.
+- Les sélections par groupes doivent rester complétables avec des cibles
+  distinctes ; les prévisualisations de paiement examinent tous les candidats
+  et réservent les exemplaires utilisés pour les coûts supplémentaires.
+- Les brouillons volontaires sont revalidés à l'affichage et avant l'envoi.
+  Un changement de phase, de priorité, de contrôle ou de capacités ne conserve
+  pas une ancienne activation ; les cibles et ressources périmées sont actualisées.
+- Résultats, cas reproduits et limites : [audit client / serveur après 139.45](AUDIT_CLIENT_SERVER_AFTER_139_45.md).
+
+## Choix de cartes et durée des malus après 139.45
+
+- Le contenu d'un écran de choix reste en place lors d'une mise à jour qui ne
+  change pas ses données d'entrée : sélections, réponses saisies et tris par
+  glissement ne sont plus réinitialisés par une simple actualisation du plateau.
+- Les réponses de ces écrans vérifient le choix et son destinataire, puis
+  restent verrouillées jusqu'à la réponse du serveur. Les erreurs et les
+  reconnexions rétablissent un choix utilisable ; les tris de Deck et de
+  destinations gardent leur reprise spécifique.
+- La répartition de Kanon n'annule plus la perte d'une autre carte si le joueur
+  clique sur un badge vide. Une sélection de main ne réutilise pas un index
+  après un changement de main ou de joueur.
+- Les malus de Kanon, Dulfer et Shattering the Self utilisent
+  `while_target_on_field`, sans expiration de fin de tour non imprimée.
+  Quorum et les autres effets explicitement temporaires gardent leur durée.
+- Reproductions, validation et limites : [audit des choix de cartes après 139.45](AUDIT_CARD_CHOICES_AFTER_139_45.md).
+# Campagne systématique des cartes et de l'interface
+
+La méthode et les commandes sont dans `docs/SYSTEMATIC_CARD_AUDIT.md`.
+`python tools/run_card_audit.py` produit les 450 fiches, la matrice de refus,
+les exécutions des tests par identifiant, les parcours de deux clients réels,
+les séquences reproductibles et le rapport `reports/systematic-audit/EXECUTIONS.md`.
+Les preuves périmées et parcours partiels sont refusés. Une référence de module,
+un porteur isolé et une déclaration UI réussie ne certifient pas tout un texte.
+
+Deux défauts reproduits par cette campagne :
+
+- Bibi pouvait être refusé après le choix de son contrôleur : le choix de sa
+  capacité jouée était réutilisé comme cible d'un effet d'entrée sans cible.
+  La validation ignore désormais ces cibles pour les déclenchements sans cible,
+  comme le faisait déjà leur mise en Pile. Les effets d'entrée ciblés continuent
+  de valider leurs cibles.
+- Bibi et Chobariki entrent directement sous le contrôle choisi, avant les
+  déclenchements et observateurs d'entrée. Le déclenchement conserve le
+  propriétaire physique et utilise le contrôleur de la carte à son entrée.
+  Bibi donné à l'adversaire fait donc piocher cet adversaire sur un résultat pair.
+- Le choix de Chabak dans la main garde un exemplaire pour son entrée en Soutien.
+  Une copie supplémentaire reste utilisable parmi les deux autres Manifestations.
+
+Régressions : `tests/test_chosen_entry_control.py` et les cas Chabak de
+`tests/test_choice_continuity.cjs`. Les arbitrages du créateur sont aussi
+conservés séparément dans `audit/rule-decisions.json`.
+
+## Audit des résultats chiffrés — après 139.45
+
+- Les effets lisant une puissance de base sur le champ utilisent les
+  caractéristiques de base actuelles, avec copies et doublements résolus,
+  sans compter les bonus additifs. Cela corrige Induce Desertion et le gain
+  de la Manifestation enchaînée par Mukkabell.
+- Un jeton générique est une Manifestation même sans `cardId` imprimé.
+  La déclaration, l'énumération des cibles et les portées d'effets utilisent
+  cette nature ; visibilité, contrôle, Protection et contraintes de type
+  continuent à être vérifiés. Le client identifie ces cibles par leur symbole
+  et leur puissance, et envoie leur identifiant physique.
+- Les décomptes des Manifestations de l'Interzone incluent les jetons génériques.
+  Les portées « actuellement sur le champ » excluent Stalemate et restent
+  figées à la résolution, sans s'étendre aux nouvelles arrivées.
+- Preuves ciblées : `tests/test_quantitative_card_audit.py` et
+  `reports/systematic-audit/NUMERIC.md`. Elles ne remplacent pas une revue
+  indépendante de toutes les clauses du catalogue.
+
+## Audit des départs et des mémoires — après 139.45
+
+- Les règles de résultat accordées à une Manifestation par Mukkabell ou Looj
+  sont désormais des mémoires `chain_outcome_abilities`. Elles survivent à la
+  main et au Limbo, restent attribuées au contrôleur de l'effet initial et ne
+  sont pas dupliquées par un rafraîchissement d'entrée. Plusieurs Enchaînements
+  conservent chacun leurs règles et leur contrôleur.
+- Deck et Exil effacent la mémoire de la carte concernée ; le départ d'un autre
+  exemplaire n'efface pas celle d'une carte encore présente sur le champ ou en
+  Stalemate. Les copies n'héritent pas des mémoires d'une vraie carte.
+- Looj récompense l'adversaire du contrôleur qui a perdu la Confrontation,
+  enregistré dans l'événement. Un changement ultérieur de contrôle ne réécrit
+  ni ce bénéficiaire, ni le contrôleur de l'effet sur la Pile.
+- Les régressions couvrent aussi Bolbakazim après Exile et reconnexion, ainsi
+  que Mimer face à une source ou une cible sortie puis revenue sous une nouvelle
+  instance du champ.
+- Arbitrages confirmés : une source partie du champ utilise sa puissance
+  imprimée ; une carte quittant puis regagnant le Limbo est une nouvelle entrée.
+  Lombriculpop et Armored Pachywyrm utilisent aussi ce repli pour leur calcul
+  d'écart de puissance.
+- Les cibles de zone déclarées conservent une `zoneEntryVersion` attribuée par
+  le serveur. Sortie et nouvelle entrée changent cette version ; une résolution
+  ou une copie de cible héritée ne peut pas récupérer la nouvelle instance.
+  Les autres cibles indépendantes valides continuent à se résoudre. Un simple
+  réordonnancement dans la même zone préserve la version.
+- L'énumération des cibles et la validation restent sans mutation ; les numéros
+  de toutes les zones ne sont pas exposés dans l'état public. Le suivi s'applique
+  aussi au Vaisseau et aux cibles de la propre main d'un joueur. Les versions
+  sont réinitialisées au début d'une nouvelle partie.
+- Preuves et limites : `reports/systematic-audit/DEPARTURES.md`.
+
+### Référence à la Première Manifestation et points d'Impasse
+
+- Après sélection initiale, une Première Manifestation qui quitte la CZ est
+  remplacée par la Manifestation face visible suivante dans l'ordre d'entrée
+  sous le contrôle du même joueur. Cette promotion ne rejoue pas les effets
+  d'entrée et conserve les propriétés acquises lors de l'arrivée en Support.
+- La table `firstManifestationItemIds` est synchronisée aux départs et au
+  nettoyage des états. Ciblage, calculs et clients consultent la même référence.
+  La sélection initiale couverte n'est pas modifiée par ce rafraîchissement.
+- Lombriculpop et Armored Pachywyrm comparent à la puissance courante de cette
+  référence. Sans Manifestation adverse en CZ, la puissance adverse vaut zéro.
+  Le repli imprimé d'une source partie reste distinct de cette référence adverse.
+- Mamelath et Hermetic Hourglass lisent la puissance de base modifiée des
+  Premières Manifestations via le calcul commun ; les bonus additifs n'entrent
+  pas dans ce décompte de base.
+- La bande et le panneau d'Impasse affichent les points imprimés par propriétaire,
+  avec nom et couleur, y compris zéro. Copies et jetons, qui disparaissent au
+  lieu d'entrer au Vaisseau, ne contribuent pas à ce total. Ce nombre ne prédit
+  pas les futurs effets ni les restrictions temporaires de récupération.
+- Preuves : `reports/systematic-audit/FIRST_REFERENCES.md`.

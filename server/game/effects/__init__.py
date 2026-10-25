@@ -7,6 +7,7 @@ Each handler receives (action, result, player_id, player) and returns what
 
 RULES_RESULT_HANDLERS = {
     "score_target": "_rules_result_score_target",
+    "move_source_to_target_vessel_score": "_rules_result_move_source_to_target_vessel_score",
     "score_each_opponent": "_rules_result_score_each_opponent",
     "score_source_container": "_rules_result_score_source_container",
     "interzone_score_and_draw": "_rules_result_interzone_score_and_draw",

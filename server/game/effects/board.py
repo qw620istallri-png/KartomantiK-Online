@@ -104,6 +104,23 @@ class BoardEffectsMixin:
             item["fieldZone"] = field_zone
         self.take_zone_card(container_id, zone, card_id)
         self.battlefield.append(item)
+        triggered = self.queue_rules_battlefield_entry_triggers(
+            card_id, owner_id, item["id"], True, defer=True,
+        )
+        triggered.extend(self.queue_rules_manifestation_entry_watchers(
+            item, defer=True, played=False,
+        ))
+        triggered.extend(self.queue_rules_persistent_will_entry_watchers(
+            item, defer=True,
+        ))
+        triggered.extend(self.queue_rules_field_zone_entry_triggers(
+            item, self.rules_field_zone(item), defer=True,
+        ))
+        if item.get("isSupport"):
+            triggered.extend(self.queue_rules_support_entry_triggers(
+                item, played=False, from_zone=zone, defer=True,
+            ))
+        self.queue_or_defer_rules_simultaneous_actions(triggered)
         return {
             "kind": result.get("kind"),
             "status": "moved",
@@ -190,10 +207,7 @@ class BoardEffectsMixin:
                 or self.rules_field_zone(first) != "confrontation"
             ):
                 continue
-            base = (
-                int(first.get("power") or 0) if first.get("isTokenCard")
-                else int(self.card_rules.get(first.get("cardId"), {}).get("power") or 0)
-            )
+            base = self.rules_manifestation_base_power(first)
             if self.rules_interzone_slot_count(pid) >= self.rules_interzone_capacity(pid):
                 anchor = self.rules_interzone_share_anchor(pid, first)
                 if anchor:
@@ -212,14 +226,15 @@ class BoardEffectsMixin:
         source = action.get("source") or {}
         created = {}
         for pid, count in counts.items():
-            created[pid] = [
+            copies = [
                 self.create_rules_token_copy(
                     source.get("cardId"), pid,
                     source_item_id=source.get("itemId"),
                     hollow=True, effects_disabled=True, generic_power=1,
-                )["id"]
+                )
                 for _index in range(count)
             ]
+            created[pid] = [copy["id"] for copy in copies if copy is not None]
         return {
             "kind": result.get("kind"),
             "status": "resolved" if counts else "nothing",
@@ -415,6 +430,7 @@ class BoardEffectsMixin:
         self.rules_engine.setdefault("supportLocks", []).append({
             "turn": self.phase_tracker["turn"],
             "playerId": player_id if result.get("scope") == "controller" else None,
+            "playOnly": bool(result.get("playOnly")),
         })
         return {"kind": result.get("kind"), "status": "locked", "scope": result.get("scope")}
 
@@ -523,6 +539,8 @@ class BoardEffectsMixin:
             item.get("cardId"), player_id,
             source_item_id=(action.get("source") or {}).get("itemId"),
         )
+        if copy is None:
+            return {"kind": result.get("kind"), "status": "entry_blocked"}
         triggered_actions = self.queue_rules_token_copy_entry_triggers(copy)
         return {
             "kind": result.get("kind"),
@@ -565,10 +583,11 @@ class BoardEffectsMixin:
             )
             for _index in range(count)
         ]
+        tokens = [token for token in tokens if token is not None]
         return {
             "kind": result.get("kind"),
             "status": "created",
-            "count": count,
+            "count": len(tokens),
             "itemIds": [item["id"] for item in tokens],
         }
 
@@ -579,6 +598,8 @@ class BoardEffectsMixin:
             generic_power=result.get("power"),
             generic_temperament=result.get("temperament"),
         )
+        if token is None:
+            return {"kind": result.get("kind"), "status": "entry_blocked"}
         return {
             "kind": result.get("kind"),
             "status": "created",
@@ -651,6 +672,31 @@ class BoardEffectsMixin:
                 "turn": self.phase_tracker["turn"],
             }
             self.rules_engine["playPermissions"].append(permission)
+            if (action.get("ability") or {}).get("id") == "timid-brain-discard-will-for-support":
+                # Timid Brain says "Play", not "gains Support". The temporary
+                # permission is used only by this normal, responseable card play.
+                previous_priority = self.rules_engine.get("priorityPlayerId")
+                self.rules_engine["priorityPlayerId"] = player_id
+                played = None
+                try:
+                    error, played = self.declare_rules_action(
+                        player_id, self.card_labels.get(source["cardId"], source["cardId"]),
+                        kind="play_card", source={"cardId": source["cardId"], "zone": "hand"},
+                        as_support=True, placement=action.get("placement"), internal=True,
+                    )
+                finally:
+                    self.rules_engine["playPermissions"] = [
+                        entry for entry in self.rules_engine["playPermissions"]
+                        if entry.get("id") != permission["id"]
+                    ]
+                    if played is None:
+                        self.rules_engine["priorityPlayerId"] = previous_priority
+                if error:
+                    return {"kind": result.get("kind"), "status": "prevented", "error": error}
+                return {
+                    "kind": result.get("kind"), "status": "played",
+                    "cardId": source["cardId"], "actionId": played["id"],
+                }
             return {
                 "kind": result.get("kind"),
                 "status": "granted",
@@ -788,6 +834,7 @@ class BoardEffectsMixin:
             )
             for _index in range(count)
         ]
+        created = [item for item in created if item is not None]
         return {
             "kind": result.get("kind"),
             "status": "created",
@@ -819,6 +866,8 @@ class BoardEffectsMixin:
                 related_card_id, player_id,
                 source_item_id=source_item.get("id"),
             )
+            if copy is None:
+                return {"kind": result.get("kind"), "status": "entry_blocked"}
             triggered_actions = self.queue_rules_token_copy_entry_triggers(copy)
             return {
                 "kind": result.get("kind"),
@@ -866,6 +915,7 @@ class BoardEffectsMixin:
             for current_id in self.players
             if current_id != event_controller_id
         ]
+        created = [item for item in created if item is not None]
         triggered_actions = []
         for created_item in created:
             triggered_actions.extend(
@@ -902,7 +952,7 @@ class BoardEffectsMixin:
 
     def _rules_result_will_becomes_support_manifestation(self, action, result, player_id, player):
         from_hand = result.get("kind") == "put_hand_will_as_support_manifestation"
-        if self.rules_support_entry_locked(player_id):
+        if self.rules_support_entry_locked(player_id, put=True):
             return {"kind": result.get("kind"), "status": "prevented"}
         if from_hand:
             target = next((
@@ -1182,6 +1232,7 @@ class BoardEffectsMixin:
             )
             for _index in range(count)
         ]
+        created = [item for item in created if item is not None]
         if result.get("permanent"):
             # "not lost at the Resolution": these tokens stay and can only go to the Interzone
             for token in created:
@@ -1344,6 +1395,8 @@ class BoardEffectsMixin:
             event_item["cardId"], action.get("controllerId") or player_id,
             source_item_id=(action.get("source") or {}).get("itemId"),
         )
+        if copy is None:
+            return {"kind": result.get("kind"), "status": "entry_blocked"}
         triggered_actions = self.queue_rules_token_copy_entry_triggers(copy)
         return {
             "kind": result.get("kind"), "status": "created",

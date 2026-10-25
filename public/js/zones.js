@@ -207,6 +207,7 @@ function pileFieldHtml(ownerId, zone, zoneData, canView, canAct, pos, score, ove
     ? (latestState?.rulesEngine?.playPermissions || []).find((permission) => (
         permission.playerId === ownerId
         && permission.fromZone === zone
+        && permission.asSupport
         && (zoneData.cards || []).includes(permission.cardId)
       ))
     : null;

@@ -2430,7 +2430,7 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertIsNone(error)
         self.assertEqual(action["targets"], [{
             "kind": "zone_card", "zone": "graveyard", "containerId": "p2",
-            "cardId": "m-3", "ownerId": "p2",
+            "cardId": "m-3", "ownerId": "p2", "zoneEntryVersion": 0,
         }])
         session.pass_rules_priority("p2")
         resolve_error, resolution = session.pass_rules_priority("p1")
@@ -3838,9 +3838,10 @@ class AssistedRulesTests(unittest.TestCase):
 
     def test_merciful_pago_winning_as_support_enters_opponent_vessel_and_scores(self):
         session, _p1, p2 = self.make_session()
+        abilities = json.loads((Path(__file__).resolve().parent.parent / "public" / "card-abilities.json").read_text(encoding="utf-8"))
         session.card_rules["pago"] = {
             "type": "manifestation", "power": 3, "temperaments": ["phlegmatic"],
-            "supportWinEffect": {"kind": "opponent_vessel_score", "value": 10},
+            "triggeredAbilities": abilities["8lion52jjnmxvko_en"],
         }
         session.card_rules["m-1"]["power"] = 1
         session.phase_tracker["index"] = session.phase_sequence().index("resolution_compare")
@@ -3856,18 +3857,26 @@ class AssistedRulesTests(unittest.TestCase):
         session.mark_rules_support_entry(pago)
         session.battlefield = [pago, loser]
         result = session.prepare_rules_confrontation_result()
-        session.phase_tracker["index"] = session.phase_sequence().index("resolution_move")
-
-        session.begin_rules_confrontation_cleanup()
-
-        resolved = result["supportResolved"][0]
-        self.assertEqual(resolved["kind"], "opponent_vessel_score")
-        self.assertEqual(resolved["cardId"], "pago")
+        session.phase_tracker["index"] = session.phase_sequence().index("resolution_effects")
+        triggered = session.queue_rules_confrontation_win_triggers(defer=True)
+        self.assertEqual(len(triggered), 1)
+        self.assertEqual(triggered[0]["kind"], "triggered_effect")
+        self.assertEqual(triggered[0]["ability"]["id"], "pago-wins-as-support")
+        self.assertEqual(triggered[0]["targets"], [{"kind": "player", "playerId": "p2"}])
+        session.rules_engine["actionStack"].extend(triggered)
+        self.assertIn(pago, session.battlefield)
+        self.assertEqual(p2["score"], 0)
+        self.assertEqual(p2["zones"]["receptacle"], [])
+        resolved = session.resolve_rules_top_action()["action"]["effectResult"]
+        self.assertEqual(resolved["kind"], "move_source_to_target_vessel_score")
         self.assertEqual(resolved["playerId"], "p2")
         self.assertEqual(resolved["delta"], 10)
         self.assertEqual(p2["score"], 10)
         self.assertEqual(p2["zones"]["receptacle"], ["pago"])
         self.assertEqual(p2["zoneOwners"]["receptacle"]["pago"], "p1")
+        session.phase_tracker["index"] = session.phase_sequence().index("resolution_move")
+        session.begin_rules_confrontation_cleanup()
+        self.assertEqual(result["supportResolved"], [])
         self.assertIsNone(session.rules_engine["pendingChoice"])
         self.assertEqual(result["status"], "complete")
 
@@ -6274,15 +6283,16 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertEqual(resolved["correct"], 3)
         self.assertEqual(resolved["cardId"], "m-5")
         self.assertEqual(p1["score"], 30)
-        self.assertIn("will-persistent", p1["zones"]["hand"])
-        permission = session.rules_engine["playPermissions"][0]
-        self.assertTrue(permission["noTribute"])
+        staged = next(item for item in session.battlefield if item.get("cardId") == "will-persistent")
+        self.assertTrue(staged["faceUp"])
+        self.assertTrue(staged["revealedFreeWill"])
+        self.assertEqual(session.rules_engine["playPermissions"], [])
         session.phase_tracker["index"] = ADVANCED_PHASES.index(
             "confrontation_reaction"
         )
         source_error, source = session.rules_action_source(
             "p1", "play_card",
-            {"cardId": "will-persistent", "zone": "hand"},
+            {"cardId": "will-persistent", "zone": "battlefield", "itemId": staged["id"]},
         )
         self.assertIsNone(source_error)
         self.assertEqual(session.rules_tribute_requirements(
@@ -7298,13 +7308,19 @@ class AssistedRulesTests(unittest.TestCase):
             "target": {"itemId": "target"},
             "source": {"cardId": "float"},
         })
-        self.assertFalse(
+        self.assertTrue(
             session.rules_item_has_float(target),
-            "remove_float remains the absolute prohibition",
+            "The later resolved grant overrides the earlier removal",
         )
+        session.rules_engine["ongoingEffects"].append({
+            "id": "remove-again", "kind": "remove_float",
+            "duration": "while_target_on_field", "target": {"itemId": "target"},
+            "source": {"cardId": "sever"},
+        })
+        self.assertFalse(session.rules_item_has_float(target))
         session.rules_engine["ongoingEffects"] = [
             effect for effect in session.rules_engine["ongoingEffects"]
-            if effect["id"] != "remove"
+            if effect["kind"] != "remove_float"
         ]
         self.assertTrue(session.rules_item_has_float(target))
 
@@ -9430,26 +9446,36 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertIsNone(error)
         self.assertEqual(session.find_battlefield_item(chained["itemId"])["controllerId"], "p2")
 
-    def test_advocate_of_catharsis_makes_every_player_chain_in_turn(self):
+    def test_advocate_of_catharsis_commits_every_choice_before_simultaneous_entry(self):
         advocate = "46id1c09q8inlkz_en"
         session, p1, p2 = self.chain_session(advocate)
         self.put(p1, "hand", ["m-1"])
         self.put(p2, "hand", ["m-2"])
         payload = session.apply_rules_action_result(self.chain_action(advocate))
         self.assertEqual(payload["playerId"], "p1")
+        initial_field_ids = [item["id"] for item in session.battlefield]
         choice = session.rules_engine["pendingChoice"]
-        session.resolve_rules_choice(
+        error, committed = session.resolve_rules_choice(
             "p1", choice["id"], ["m-1"], placement={"x": 10, "y": 10}
         )
-        self.assertIsNone(session.rules_engine["pendingChoice"])
-        session.resolve_rules_chain_sequences()
+        self.assertIsNone(error)
+        self.assertEqual(committed["status"], "committed")
+        self.assertNotIn("cardId", committed)
+        self.assertEqual([item["id"] for item in session.battlefield], initial_field_ids)
+        self.assertEqual(p1["zones"]["hand"], ["m-1"])
+        self.assertEqual(p2["zones"]["hand"], ["m-2"])
         second = session.rules_engine["pendingChoice"]
         self.assertEqual(second["playerId"], "p2")
         error, _chained = session.resolve_rules_choice(
             "p2", second["id"], ["m-2"], placement={"x": 20, "y": 20}
         )
         self.assertIsNone(error)
+        self.assertEqual(p1["zones"]["hand"], [])
         self.assertEqual(p2["zones"]["hand"], [])
+        chained = [item for item in session.battlefield if item.get("cardId") in {"m-1", "m-2"}]
+        self.assertEqual({(item["cardId"], session.rules_item_controller_id(item)) for item in chained},
+                         {("m-1", "p1"), ("m-2", "p2")})
+        self.assertTrue(all(item.get("isChained") and item.get("isSupport") for item in chained))
 
     def test_mollino_puts_the_first_manifestation_under_the_deck_before_the_chain(self):
         mollino = "inner-deserts-081"
@@ -10069,7 +10095,7 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertEqual(payload["choiceKind"], "discard_from_hand")
         self.assertEqual(session.rules_engine["pendingChoice"]["playerId"], "p2")
         session.rules_engine["pendingChoice"] = None
-        # Denblew: only draws outside the Recovery Phase, once per turn, opponents only.
+        # Denblew: every opponent draw outside Recovery grants another +1.
         session.current_phase_id = lambda: "recovery_draw"
         session.move_zone_card("p2", "deck", "p2", "hand", "m-3", "bottom")
         self.assertEqual(session.queue_rules_observed_event_triggers(defer=True), [])
@@ -10078,8 +10104,13 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         session.move_zone_card("p2", "deck", "p2", "hand", "m-8", "bottom")
         queued = session.queue_rules_observed_event_triggers(defer=True)
         self.assertEqual([q["source"]["cardId"] for q in queued], [denblew])
+        session.create_rules_ongoing_effects(queued[0])
+        self.assertEqual(self.power_of(session, "dn"), 4)
         session.move_zone_card("p2", "deck", "p2", "hand", "m-9", "bottom")
-        self.assertEqual(session.queue_rules_observed_event_triggers(defer=True), [])
+        repeated = session.queue_rules_observed_event_triggers(defer=True)
+        self.assertEqual([q["source"]["cardId"] for q in repeated], [denblew])
+        session.create_rules_ongoing_effects(repeated[0])
+        self.assertEqual(self.power_of(session, "dn"), 5)
         session.move_zone_card("p1", "deck", "p1", "hand", "m-6", "bottom")
         self.assertEqual(session.queue_rules_observed_event_triggers(defer=True), [])
 
@@ -10368,16 +10399,19 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertEqual(payload["status"], "exiled")
         self.assertIn(tombloom, p1["zones"]["exile"])
         self.assertNotIn(tombloom, p1["zones"]["graveyard"])
-        # Tenebro rises into Support when discarded.
+        # Tenebro replaces the discard destination before any Limbo entry.
+        session.card_rules[tenebro]["passiveEffects"] = [
+            ability["passiveEffect"] for ability in self.ABILITIES[tenebro]
+            if ability.get("passiveEffect")
+        ]
         self.put(p1, "hand", [tenebro])
         session.move_zone_card("p1", "hand", "p1", "graveyard", tenebro, "top")
-        queued = session.queue_rules_observed_event_triggers(defer=True)
-        self.assertEqual(len(queued), 1)
-        self.assertTrue(queued[0]["optional"])
-        session.apply_rules_action_result({
-            **queued[0], "optionalAccepted": True,
-            "ability": {"result": queued[0]["ability"]["result"]},
-        })
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["purpose"], "discard_support_replacement")
+        self.assertIn(tenebro, p1["zones"]["hand"])
+        self.assertNotIn(tenebro, p1["zones"]["graveyard"])
+        self.assertIsNone(session.resolve_rules_choice("p1", choice["id"], option="yes")[0])
+        self.assertEqual(session.queue_rules_observed_event_triggers(defer=True), [])
         support = next(i for i in session.battlefield if i["cardId"] == tenebro)
         self.assertTrue(support["isSupport"])
         self.assertNotIn(tenebro, p1["zones"]["graveyard"])
@@ -10432,6 +10466,8 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.run_ability(session, arena)
         self.assertTrue(session.rules_support_entry_locked("p2"))
         # Horned Augustus: exile up to three Limbo cards, one 1-power Support token each.
+        # This independent case does not inherit the earlier Gorb/Arena locks.
+        session.rules_engine["supportLocks"] = []
         self.put(p1, "graveyard", ["m-5", "m-6"])
         session.battlefield = []
         self.run_ability(session, augustus, [
@@ -10800,14 +10836,10 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertEqual(zones, {"a": "stalemate", "b": "stalemate", "c": "interzone"})
         self.assertTrue(session.rules_support_entry_locked("p1"))
         self.assertTrue(session.rules_support_entry_locked("p2"))
-        # Duel Honorably locks Support entries unless the opponent pays {H}{H}.
+        # Unneutralized Duel Honorably locks all Support entries on resolution.
         session.rules_engine["supportLocks"] = []
         self.run_ability(session, duel)
-        choice = session.rules_engine["pendingChoice"]
-        self.assertEqual((choice["kind"], choice["playerId"], choice["payment"]), ("effect_payment", "p2", "{H}{H}"))
-        self.assertFalse(session.rules_support_entry_locked("p2"))
-        error, result = session.resolve_rules_choice("p2", choice["id"], option="decline")
-        self.assertIsNone(error)
+        self.assertIsNone(session.rules_engine["pendingChoice"])
         self.assertTrue(session.rules_support_entry_locked("p2"))
         # Static Scuttler stalemates the winner's Confrontation Manifestations and freezes them.
         session.rules_engine["supportLocks"] = []
@@ -11352,7 +11384,7 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         session.pass_rules_priority("p1")
         self.assertEqual(p2["zones"]["hand"], ["m-4"])
         self.assertIsNone(session.find_battlefield_item("stale"))
-        # Timid Brain: discard a Will from hand to be allowed to play it in Support.
+        # Timid Brain: its immediate effect starts the actual Support play.
         session.rules_engine["priorityPlayerId"] = "p1"
         error, _action = session.declare_rules_action(
             "p1", "Timid Brain", kind="activated_effect", source={"cardId": timid, "zone": "hand"},
@@ -11374,10 +11406,9 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         self.assertTrue(action["immediate"])
         self.assertEqual(len(session.resolve_rules_immediate_actions()), 1)
         self.assertEqual(session.rules_engine["priorityPasses"], [])
-        self.assertTrue(any(
-            entry.get("cardId") == timid and entry.get("asSupport")
-            for entry in session.rules_engine["playPermissions"]
-        ))
+        self.assertNotIn(timid, p1["zones"]["hand"])
+        self.assertFalse(session.rules_engine["playPermissions"])
+        self.assertTrue(session.rules_engine["actionStack"][-1]["asSupport"])
         # Brabataba lets the Empathic Vessel pay Tribute as {T}; the paid cards are exiled.
         weaken = "weaken-will"
         session.card_rules[weaken] = {"type": "ephemeral_will", "cost": 2, "powerCost": "{R}{R}", "temperaments": ["choleric"]}
@@ -12292,7 +12323,7 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
             for effect in session.rules_engine["ongoingEffects"]
             if effect["kind"] == "lose_effects"
         }
-        self.assertEqual(affected, {"ally"})
+        self.assertEqual(affected, {"ally", "hogma"})
 
     def test_zborh_returns_from_interzone_when_its_controller_loses(self):
         zborh_id = "inner-deserts-015"
@@ -13533,7 +13564,7 @@ class LotEighteenTests(RealCardRulesCase):
         target = {"kind": "card", "itemId": "pw", "cardId": "pw", "ownerId": "p2"}
         ability = self.ability(self.DRILL, "parasitic-drill-links-a-persistent-will")
         self.assertIsNone(session.rules_ability_targets_error(ability["targets"], [target], "p1", event_item_id="drill"))
-        self.assertIsNotNone(session.rules_ability_targets_error(
+        self.assertIsNone(session.rules_ability_targets_error(
             ability["targets"], [{"kind": "card", "itemId": "drill", "cardId": self.DRILL, "ownerId": "p1"}],
             "p1", event_item_id="drill"))
         queued = session.queue_rules_triggers(
@@ -13564,6 +13595,17 @@ class LotEighteenTests(RealCardRulesCase):
         # Without the Drill no tax applies.
         session.battlefield.append(self.field_item("pw", "p2", "pw", field_zone="field", controllerId="p2"))
         self.assertEqual(session.apply_rules_drill_drain("pw"), 0)
+        # The printed target is a Persistent Will, so Drill may link to itself.
+        own_session, own_player, _opponent = self.make_session()
+        own_session.battlefield = [self.field_item("self-drill", "p1", self.DRILL, field_zone="field")]
+        self_target = {"kind": "card", "itemId": "self-drill", "cardId": self.DRILL, "ownerId": "p1"}
+        self_link = own_session.queue_rules_triggers(
+            self.DRILL, "p1", "enters_field", item_id="self-drill", face_up=True,
+            event_targets=[self_target])
+        self.assertEqual(len(self_link), 1)
+        own_session.create_rules_ongoing_effects(self_link[0])
+        self.assertEqual(own_session.apply_rules_drill_drain("self-drill"), 10)
+        self.assertEqual(own_player["score"], -10)
 
     def baranchio_offer(self, session):
         session.battlefield = [
@@ -13672,18 +13714,20 @@ class LotEighteenTests(RealCardRulesCase):
     def test_nullifying_radiance_chooses_a_temperament_and_cancels_matching_effects(self):
         session, p1, p2 = self.make_session()
         session.battlefield = [
-            self.field_item("rad", "p1", self.RADIANCE, field_zone="field", counters={"Flame": 3}),
+            self.field_item("rad", "p1", self.RADIANCE, field_zone="field"),
             self.field_item("mine", "p1", "m-1", controllerId="p1"),
             self.field_item("theirs", "p2", "m-2", controllerId="p2"),
         ]
-        payload = session.apply_rules_action_result({
-            "id": "rad-enter", "controllerId": "p1",
-            "source": {"cardId": self.RADIANCE, "itemId": "rad", "ownerId": "p1"},
-            "targets": [], "ability": self.ability(self.RADIANCE, "radiance-chooses-a-temperament"),
-        })
+        entry = session.queue_rules_battlefield_entry_triggers(self.RADIANCE, "p1", "rad", True, defer=True)
+        self.assertEqual(len(entry), 1)
+        self.assertEqual(entry[0]["ability"]["id"], "radiance-enters-with-flames")
+        session.rules_engine["actionStack"].extend(entry)
+        payload = session.resolve_rules_top_action()["action"]["effectResult"]
         self.assertEqual((payload["choiceKind"], payload["playerId"]), ("temperament_choice", "p1"))
         choice = session.rules_engine["pendingChoice"]
         self.assertIsNotNone(session.resolve_rules_choice("p1", choice["id"], option="plasma")[0])
+        self.assertIsNotNone(session.resolve_rules_choice("p1", choice["id"], option="transcendent")[0])
+        self.assertEqual(session.find_battlefield_item("rad")["counters"]["Flame"], 3)
         error, result = session.resolve_rules_choice("p1", choice["id"], option="choleric")
         self.assertIsNone(error)
         rad = session.find_battlefield_item("rad")
@@ -14716,12 +14760,15 @@ class LotTwentyFourTests(RealCardRulesCase):
         self.assertIsNone(error)
         self.assertIsNone(session.find_battlefield_item("mine"))
         self.assertEqual(kp["attachedCards"], [{"cardId": "m-1", "ownerId": "p1"}])
-        result = session.apply_rules_action_result({
+        activation = {
             "id": "k", "controllerId": "p1",
             "source": {"cardId": self.KARMAPULT, "itemId": "kp", "ownerId": "p1"},
             "targets": [{"kind": "card", "itemId": "theirs", "cardId": "m-2", "ownerId": "p2"}],
             "ability": self.ability(self.KARMAPULT, "karmapult-sacrifices-for-power-loss"),
-        })
+        }
+        paid = session.pay_rules_activation_cost(activation["source"], activation["ability"])
+        activation["cost"] = paid
+        result = session.apply_rules_action_result(activation)
         self.assertEqual((result["status"], result["count"]), ("sacrificed", 1))
         self.assertIn("m-1", p1["zones"]["graveyard"])
         self.assertNotIn("Placed", kp["counters"])
@@ -15171,7 +15218,8 @@ class LotTwentySevenTests(RealCardRulesCase):
         result = session.apply_rules_action_result({
             "id": "n", "controllerId": "p1",
             "source": {"cardId": self.NGHOUL, "zone": "graveyard", "ownerId": "p1"},
-            "targets": [], "ability": self.ability(self.NGHOUL, "nghoulong-exiles-itself-for-a-free-limbo-ephemeral-will"),
+            "targets": [{"kind": "zone_card", "zone": "graveyard", "containerId": "p1", "cardId": "cheap"}],
+            "ability": self.ability(self.NGHOUL, "nghoulong-exiles-itself-for-a-free-limbo-ephemeral-will"),
         })
         self.assertEqual(result["status"], "granted")
         self.assertEqual(result["maxCost"], 3)
@@ -15449,7 +15497,7 @@ class LotTwentySevenTests(RealCardRulesCase):
         error, _ = session.resolve_rules_choice("p2", reply["id"], option="0")
         self.assertIsNone(error, error)
         self.assertEqual(p2["zones"]["receptacle"], [])
-        self.assertIsNone(session.rules_engine.get("skipEndPhaseTurn"))
+        self.assertFalse(session.rules_engine.get("skipEndPhaseTurns"))
         self.assertIsNone(session.rules_engine["pendingChoice"])
 
     def test_lunar_liturgy_an_opponent_without_candidates_makes_the_end_phase_skipped(self):
@@ -15458,26 +15506,30 @@ class LotTwentySevenTests(RealCardRulesCase):
         self.start_lunar(session, [mine], [])
         choice = session.rules_engine["pendingChoice"]
         session.resolve_rules_choice("p1", choice["id"], option="0")
-        self.assertEqual(session.rules_engine["skipEndPhaseTurn"], session.phase_tracker["turn"])
+        self.assertEqual(session.rules_engine["skipEndPhaseTurns"], {"p2": session.phase_tracker["turn"]})
         self.assertIsNone(session.rules_engine["pendingChoice"])
 
     def test_lunar_liturgy_without_a_manifestation_destroys_itself_and_skips_the_end_phase(self):
         session, p1, p2 = self.setup_game()
         result = self.start_lunar(session, [], [])
         self.assertEqual(result["status"], "destroyed")
-        self.assertEqual(session.rules_engine["skipEndPhaseTurn"], session.phase_tracker["turn"])
+        self.assertEqual(session.rules_engine["skipEndPhaseTurns"], {"p1": session.phase_tracker["turn"]})
         self.assertIn(self.LUNAR, p1["zones"]["graveyard"])
 
-    def test_a_skipped_end_phase_goes_straight_to_the_next_turn(self):
+    def test_one_skipped_end_phase_keeps_the_other_players_end_actions(self):
         session, p1, p2 = self.setup_game()
         session.phase_tracker["index"] = ADVANCED_PHASES.index("resolution_move")
         turn = session.phase_tracker["turn"]
-        session.rules_engine["skipEndPhaseTurn"] = turn
+        session.rules_engine["skipEndPhaseTurns"] = {"p1": turn}
+        self.put(p2, "hand", ["will-r"])
+        session.card_rules["will-r"] = {"type": "persistent_will", "cost": 0, "powerCost": ""}
         session.rules_engine["priorityPlayerId"] = "p1"
         session.pass_rules_priority("p1")
         session.pass_rules_priority("p2")
-        self.assertEqual(session.phase_tracker["turn"], turn + 1)
-        self.assertIn(session.current_phase_id(), {"recovery_start", "recovery_draw"})
+        self.assertEqual(session.phase_tracker["turn"], turn)
+        self.assertEqual(session.current_phase_id(), "end_actions")
+        self.assertFalse(session.rules_player_can_act("p1"))
+        self.assertTrue(session.rules_player_can_act("p2"))
 
     def test_overwhelming_persuasion_forces_a_will_onto_the_field_that_costs_more_and_drains_points(self):
         session, p1, p2 = self.setup_game()
@@ -15752,8 +15804,12 @@ class AutoPassIgnoresUnusableCardsTests(RealCardRulesCase):
         p1["zones"]["hand"] = [self.DENY]
         session.rules_engine["actionStack"] = [{
             "id": "x", "controllerId": "p2", "kind": "play_card", "source": {"cardId": "will-x"},
+            "sourceOnStack": True,
         }]
         self.assertTrue(session.rules_player_can_act("p1"))
+        session.rules_engine["actionStack"][0]["sourceOnStack"] = False
+        session.rules_engine["actionStack"][0]["sourceRemainsOnField"] = True
+        self.assertFalse(session.rules_player_can_act("p1"))
 
 
 class StalemateIsNotOnTheFieldTests(RealCardRulesCase):

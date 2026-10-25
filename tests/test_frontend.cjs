@@ -3572,7 +3572,7 @@ function startServer() {
     }));
     await page.setViewportSize({ width: 1440, height: 1000 });
 
-    const boardFirstPlay = await page.evaluate(() => {
+    const boardFirstPlay = await page.evaluate(async () => {
       closeRulesBoardFlow();
       connectionMode = "casual";
       connectionRole = "player";
@@ -3691,9 +3691,11 @@ function startServer() {
       }, persistentDropX, persistentDropY);
       document.elementFromPoint = realElementFromPoint;
       persistentPlacement.targetStage = pendingRulesBoardFlow?.stage;
-      document.querySelector('[data-item-id="persistent-play-target"]').dispatchEvent(new PointerEvent("pointerdown", { isPrimary: true,
-        bubbles: true, cancelable: true, clientX: 770, clientY: 440,
-      }));
+      // Jaw is played without a target; its separate ETB chooses one later.
+      // Wait for the normal no-target submission animation to finish.
+      for (let attempt = 0; attempt < 100 && !window.__sent.some((payload) => payload.type === "declare_rules_action"); attempt += 1) {
+        await new Promise((resolve) => setTimeout(resolve, 20));
+      }
       persistentPlacement.payload = window.__sent.find((payload) => payload.type === "declare_rules_action");
 
       const activatedSourceId = "ufujqhwlpmaw12y_en";
@@ -3991,7 +3993,7 @@ function startServer() {
     assert(Number.isFinite(boardFirstPlay.manifestationPayload.placement.y));
     assert.equal(boardFirstPlay.persistentPlacement.stage, "payment");
     assert.equal(boardFirstPlay.persistentPlacement.sentBeforePayment, 0);
-    assert.equal(boardFirstPlay.persistentPlacement.targetStage, "target");
+    assert.equal(boardFirstPlay.persistentPlacement.targetStage, "committing");
     assert.equal(boardFirstPlay.persistentPlacement.payload.kind, "play_card");
     assert.deepEqual(boardFirstPlay.persistentPlacement.payload.source, {
       cardId: "y6g3tex9ypttk8u_en", zone: "hand", itemId: null,
@@ -3999,8 +4001,8 @@ function startServer() {
     assert(Number.isFinite(boardFirstPlay.persistentPlacement.payload.placement.x));
     assert(Number.isFinite(boardFirstPlay.persistentPlacement.payload.placement.y));
     assert.equal(boardFirstPlay.persistentPlacement.payload.paymentCardIds.length, 1);
-    assert.equal(boardFirstPlay.persistentPlacement.payload.abilityId, "flaying-jaw-power-link");
-    assert.equal(boardFirstPlay.persistentPlacement.payload.targets[0].itemId, "persistent-play-target");
+    assert.equal(boardFirstPlay.persistentPlacement.payload.abilityId, undefined);
+    assert.deepEqual(boardFirstPlay.persistentPlacement.payload.targets, []);
     assert.equal(boardFirstPlay.activationButton.visible, true);
     assert(boardFirstPlay.activationButton.size >= 38, `Activation target too small: ${boardFirstPlay.activationButton.size}`);
     assert(boardFirstPlay.activationButton.label.length > 8);

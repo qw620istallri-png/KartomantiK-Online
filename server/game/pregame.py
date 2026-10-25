@@ -351,6 +351,32 @@ class PregameMixin:
             or self.rules_existing_first_manifestation(player_id)
         )
 
+    def refresh_rules_first_manifestations(self):
+        """Promote the next CZ Manifestation without replaying entry triggers.
+
+        The simultaneous, covered selection remains locked until complete.
+        Once revealed, an absent First is a live role, not a departed item ID.
+        Support entry properties (including their eventual destination) remain.
+        """
+        if not self.rules_engine.get("enabled") or not self.rules_engine.get("firstManifestationComplete"):
+            return
+        selected = self.rules_engine["firstManifestationItemIds"]
+        for player_id in self.players:
+            current = self.find_battlefield_item(selected.get(player_id))
+            if (
+                current is not None
+                and self.rules_item_controller_id(current) == player_id
+                and self.rules_field_zone(current) == "confrontation"
+                and self.rules_item_card_rules(current).get("type") == "manifestation"
+            ):
+                continue
+            following = min(self.rules_confrontation_items(player_id),
+                key=lambda entry: int(entry.get("confrontationOrder") or 0), default=None)
+            if following is None:
+                selected.pop(player_id, None)
+            else:
+                selected[player_id] = following["id"]
+
     def register_rules_existing_first_manifestations(self):
         """Cards already in the CZ before selection occupy their controller's PM slot."""
         selected = self.rules_engine["firstManifestationItemIds"]
@@ -641,6 +667,10 @@ class PregameMixin:
                 if result.get("kind") == "final_deck_points":
                     total += int(result.get("value") or 0)
         for container in self.players.values():
+            # Unreachable Pillar removes every Vessel manifestation's effects,
+            # including effects evaluated directly for the final score.
+            if self.rules_vessel_locked(container["id"]):
+                continue
             owners = container["zoneOwners"].get("receptacle", {})
             for card_id in container["zones"]["receptacle"]:
                 if container["id"] != player_id:

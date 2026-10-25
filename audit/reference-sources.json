@@ -1,0 +1,27 @@
+{
+  "schemaVersion": 1,
+  "sources": [
+    {
+      "id": "local-rulebook",
+      "file": "kartomantik-current-rulebook.pdf",
+      "sha256": "0c445e77986c81214ad33a61435867a86b3c259bd0b25977204cdb0b4d874596",
+      "pages": 39,
+      "availability": "Private local reference; do not publish the PDF",
+      "usage": "General rules used by the existing mechanic audits; this manifest does not assert a new full-text review"
+    },
+    {
+      "id": "card-text",
+      "files": ["public/cards-data.json", "public/extensions/inner-desert/cards.json"],
+      "usage": "Current English card text; full text and individual SHA256 recorded on every contract"
+    },
+    {
+      "id": "creator-rulings",
+      "file": "audit/rule-decisions.json",
+      "usage": "Explicit creator rulings and errata confirmed in this conversation; take precedence over older text"
+    }
+  ],
+  "limitations": [
+    "No assertion that every historical erratum has been found or independently reconciled",
+    "Compiled metadata and existing tests are implementation/evidence, not independent rule authority"
+  ]
+}

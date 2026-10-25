@@ -76,7 +76,7 @@ class DecisionsChoicesMixin:
                         "kind": "card", "itemId": first["id"],
                         "cardId": first.get("cardId"), "ownerId": first.get("ownerId"),
                     },
-                    "kind": "power_modifier", "duration": "until_end_of_turn",
+                    "kind": "power_modifier", "duration": "while_target_on_field",
                     "startedTurn": self.phase_tracker["turn"],
                     "value": -int(choice.get("power") or 0),
                 })
@@ -324,7 +324,7 @@ class DecisionsChoicesMixin:
                     "ownerId": item.get("ownerId"),
                 },
                 "kind": "power_modifier",
-                "duration": "until_end_of_turn",
+                "duration": "while_target_on_field",
                 "startedTurn": self.phase_tracker["turn"],
                 "value": -1,
             }

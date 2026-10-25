@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "summary": {
     "catalogCards": 450,
-    "explicitCards": 379,
+    "explicitCards": 380,
     "explicitAbilities": 496,
     "statuses": {
       "automated": 450,
@@ -44,11 +44,15 @@
       "name": "Merciful Pago",
       "setName": "Beta",
       "status": "automated",
-      "abilityIds": [],
+      "abilityIds": [
+        "pago-wins-as-support"
+      ],
       "mechanics": [
+        "result:move_source_to_target_vessel_score",
         "support-from-hand",
         "support-from-interzone",
-        "support-win-effect:opponent_vessel_score"
+        "target:player",
+        "trigger:wins_confrontation"
       ],
       "testRefs": [
         "tests/test_game_state.py",
@@ -1716,9 +1720,8 @@
         "tenebro-rises-into-support-when-discarded"
       ],
       "mechanics": [
-        "result:limbo_source_to_support",
-        "support-win:exile",
-        "trigger:discarded"
+        "passive:discard_to_support_optional",
+        "support-win:exile"
       ],
       "testRefs": [
         "tests/test_game_state.py",
@@ -2351,7 +2354,8 @@
         "cost:tribute",
         "ongoing:power_modifier",
         "phase-window",
-        "result:retarget_source_effect"
+        "result:retarget_source_effect",
+        "trigger:enters_field"
       ],
       "testRefs": [
         "tests/test_game_state.py",
@@ -4758,7 +4762,7 @@
         "lock-support-entries-unless-opponent-pays"
       ],
       "mechanics": [
-        "result:unless_opponent_payment_lock_support_entries"
+        "result:lock_support_entries"
       ],
       "testRefs": [
         "tests/test_game_state.py",
@@ -4905,12 +4909,10 @@
       "status": "automated",
       "abilityIds": [
         "radiance-enters-with-flames",
-        "radiance-chooses-a-temperament",
         "radiance-cancels-a-matching-effect"
       ],
       "mechanics": [
         "cost:tribute",
-        "result:add_counter_source",
         "result:cancel_target_stack_effect",
         "result:choose_source_temperament",
         "target:stack_effect",
@@ -6081,6 +6083,7 @@
       ],
       "mechanics": [
         "result:exile_source_grant_limbo_will_play",
+        "target:zone_card",
         "trigger:discarded"
       ],
       "testRefs": [

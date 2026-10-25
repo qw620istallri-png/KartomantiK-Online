@@ -348,9 +348,12 @@ function renderRulesStack() {
   const stackActions = [...stack].reverse().map((action, index) => {
         const level = stack.length - index;
         const controller = rulesPlayerName(action.controllerId);
-        const details = rulesActionDetails(action);
+        let details = rulesActionDetails(action);
         const displayLabel = rulesActionDisplayLabel(action);
         const sourceCardId = action.source?.cardId;
+        const paymentButton = action.neutralizePayment && myPriority && !pendingChoice && !isObserver
+          ? `<button type="button" class="secondary" data-stack-payment="${esc(action.id)}">${esc(t("rulesPayToNeutralize"))}</button>` : "";
+        details += paymentButton;
         const sourceCard = sourceCardId
           ? `<button type="button" class="rules-stack-card" data-rules-card="${esc(sourceCardId)}" aria-label="${esc(cardName(sourceCardId))}" title="${esc(cardName(sourceCardId))}"><img src="${esc(cardImage(sourceCardId))}" alt=""></button>`
           : "";
@@ -360,6 +363,9 @@ function renderRulesStack() {
         return `<li class="${awaitingPayment ? "rules-counter-payment-target " : ""}${resolvesOnPass ? "will-resolve" : ""}" data-stack-action-id="${esc(action.id)}" style="--stack-player-color:${esc(playerColor(action.controllerId))}" title="${esc(`${controller} — ${displayLabel}`)}">${sourceCard}<div class="rules-stack-copy"><div class="rules-stack-main"><span class="rules-stack-index">${index === 0 ? esc(t("rulesStackTop")) : `#${level}`}</span><strong>${esc(displayLabel)}</strong><small>${esc(controller)}</small></div>${awaitingPayment ? `<span class="rules-stack-payment-state">${esc(t("rulesStackPaymentPending"))}</span>` : ""}${details ? `<div class="rules-stack-detail">${details}</div>` : ""}</div>${resolvesOnPass ? `<span class="rules-stack-resolve-state">${esc(t("rulesStackResolveOnPass"))}</span>` : ""}</li>`;
       }).join("");
   $("#rulesStackList").innerHTML = responseSlot + stackActions;
+  $$("#rulesStackList [data-stack-payment]").forEach((button) => {
+    button.onclick = () => send({ type: "request_rules_stack_payment", actionId: button.dataset.stackPayment });
+  });
   wireRulesStackCardRefs();
 
   const current = currentPhaseUi();

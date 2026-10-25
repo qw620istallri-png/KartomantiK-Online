@@ -7,6 +7,7 @@ from .common import (
     ALL_ZONES, SESSION_TTL_SECONDS, NUM_SEATS, new_id, validate_tournament_deck, normalize_role,
     make_player
 )
+from .replacements import replacement_checkpoint, ReplacementOrderRequired
 
 
 class ZonesMixin:
@@ -213,6 +214,15 @@ class ZonesMixin:
         return next((pid for pid in self.players if pid != player_id), None)
 
     # -- immutable card ownership ---------------------------------------
+    def rules_zone_entry_version(self, container_id, zone, card_id):
+        key = f"{container_id}:{zone}:{card_id}"
+        return self.rules_engine.get("zoneEntryVersions", {}).get(key, 0)
+
+    def bump_rules_zone_entry_version(self, container_id, zone, card_id):
+        key = f"{container_id}:{zone}:{card_id}"
+        versions = self.rules_engine.setdefault("zoneEntryVersions", {})
+        versions[key] = versions.get(key, 0) + 1
+
     def card_owner_in_zone(self, container_id, zone, card_id):
         player = self.players.get(container_id)
         if player is None:
@@ -225,6 +235,7 @@ class ZonesMixin:
             return None
         owner_id = self.card_owner_in_zone(container_id, zone, card_id)
         player["zones"][zone].remove(card_id)
+        self.bump_rules_zone_entry_version(container_id, zone, card_id)
         if zone == "graveyard" and self.rules_engine.get("enabled"):
             self.rules_engine["limboExitTurn"] = self.phase_tracker["turn"]
         if zone == "receptacle" and self.rules_engine.get("enabled"):
@@ -279,6 +290,7 @@ class ZonesMixin:
         else:
             player["zones"][zone].insert(0, card_id)
         player.setdefault("zoneOwners", {}).setdefault(zone, {})[card_id] = owner_id
+        self.bump_rules_zone_entry_version(container_id, zone, card_id)
         if (
             zone == "deck"
             and position == "bottom"
@@ -322,6 +334,7 @@ class ZonesMixin:
             return "A card declared in the Stack cannot leave your Hand before it resolves."
         return None
 
+    @replacement_checkpoint("zone_move")
     def move_zone_card(self, from_container_id, from_zone, to_container_id, to_zone, card_id, position="top",
                        limbo_reason="discard"):
         owner_id = self.card_owner_in_zone(from_container_id, from_zone, card_id)
@@ -333,12 +346,20 @@ class ZonesMixin:
         error = self.destination_error(owner_id, to_container_id, to_zone)
         if error:
             return error, owner_id
+        if (limbo_reason == "discard" and to_zone == "graveyard"
+                and self.rules_discard_support_replacement(from_container_id, from_zone, card_id)):
+            self.rules_put_discarded_card_in_support(from_container_id, from_zone, card_id)
+            return None, owner_id
+        entry_version = self.rules_zone_entry_version(from_container_id, from_zone, card_id)
         self.take_zone_card(from_container_id, from_zone, card_id)
         to_container_id, to_zone, position = self.rules_zone_move_destination(
             to_container_id, to_zone, card_id, owner_id, position,
         )
         self.put_zone_card(to_container_id, to_zone, card_id, owner_id, position,
                            limbo_reason=limbo_reason, from_zone=from_zone)
+        if (from_container_id, from_zone) == (to_container_id, to_zone):
+            # Changing order within a zone does not create a new card instance.
+            self.rules_engine["zoneEntryVersions"][f"{to_container_id}:{to_zone}:{card_id}"] = entry_version
         if (
             self.rules_engine.get("enabled")
             and to_zone == "graveyard"
@@ -358,7 +379,8 @@ class ZonesMixin:
             }
             and to_container_id in self.players
         ):
-            self.record_rules_observed_event("cards_drawn", to_container_id)
+            self.record_rules_observed_event("cards_drawn", to_container_id,
+                                             drawBatchId=getattr(self, "_rules_draw_batch_id", None))
             drawn_log = self.rules_engine.setdefault("drawnOutsideRecovery", {})
             entry = drawn_log.get(to_container_id)
             if not entry or entry.get("turn") != self.phase_tracker["turn"]:
@@ -415,13 +437,7 @@ class ZonesMixin:
                 if target_player_id in self.players else 0
             )
         if count_kind == "own_interzone_manifestations":
-            return sum(
-                1 for entry in self.battlefield
-                if self.rules_item_controller_id(entry) == player_id
-                and self.rules_field_zone(entry) == "interzone"
-                and self.card_rules.get(entry.get("cardId"), {}).get("type")
-                == "manifestation"
-            )
+            return len(self.rules_confrontation_items(player_id, ("interzone",)))
         if count_kind == "own_manifestations_in_vessels":
             return sum(
                 1
@@ -442,9 +458,10 @@ class ZonesMixin:
             source_item = self.find_battlefield_item(
                 (action.get("source") or {}).get("itemId")
             )
+            if source_item is not None:
+                return self.rules_manifestation_base_power(source_item)
             return int(self.card_rules.get(
-                (source_item or {}).get("cardId")
-                or (action.get("source") or {}).get("cardId"), {}
+                (action.get("source") or {}).get("cardId"), {}
             ).get("power") or 0)
         if count_kind == "source_current_power":
             source_item = self.find_battlefield_item(
@@ -471,12 +488,17 @@ class ZonesMixin:
                     target_player_id
                 )
             )
-            if source_item is None or first_item is None:
-                return 0
+            source_power = (
+                self.rules_manifestation_characteristics(source_item)["power"]
+                if source_item is not None else int(self.card_rules.get(
+                    (action.get("source") or {}).get("cardId"), {}
+                ).get("power") or 0)
+            )
             return max(
                 0,
-                self.rules_manifestation_characteristics(source_item)["power"]
-                - self.rules_manifestation_characteristics(first_item)["power"],
+                source_power
+                - (self.rules_manifestation_characteristics(first_item)["power"]
+                   if first_item is not None else 0),
             )
         return 0
 
@@ -549,7 +571,8 @@ class ZonesMixin:
                 "points_lost", "cards_discarded", "deck_cards_discarded", "cards_drawn",
                 "points_gained",
             }:
-                key = (event["kind"], event["playerId"])
+                key = (event["kind"], event["playerId"],
+                       event.get("drawBatchId") if event["kind"] == "cards_drawn" else None)
                 if key in seen:
                     continue
                 seen.add(key)
@@ -604,6 +627,9 @@ class ZonesMixin:
             memory for memory in self.rules_engine.get("effectMemories") or []
             if memory.get("ownerId") == owner_id
             and memory.get("cardId") == card_id
+            # Another physical copy may enter a Deck/Exile while the card
+            # carrying this memory is still on the field or in Stalemate.
+            and self.find_battlefield_item((memory.get("data") or {}).get("itemId")) is None
         ]
         if removed:
             removed_ids = {memory["id"] for memory in removed}
@@ -698,6 +724,15 @@ class ZonesMixin:
         return next(iter(self.rules_active_suspension_sources(zone)), None)
 
     def rules_competing_replacements_possible(self):
+        if any(self.rules_field_zone(item) == "interzone" and not item.get("outcastOff")
+               for item in self.rules_active_passive_sources("swap_with_targeted_confrontation_manifestation")):
+            return True
+        if self.rules_engine.get("enabled") and any(
+            self.rules_discard_support_available(pid, zone, card_id)
+            for pid, player in self.players.items() for zone in ("hand", "deck")
+            for card_id in player["zones"][zone]
+        ):
+            return True
         sources = {item['id'] for zone in ('deck', 'graveyard')
                    for item in self.rules_active_suspension_sources(zone)}
         exile_effect = any(e.get('kind') == 'exile_incoming_manifestations' for e in self.rules_engine['ongoingEffects'])
@@ -708,8 +743,49 @@ class ZonesMixin:
                 or any(i.get('returnToVesselId') and (exile_effect or marked or i.get('exileIfLeaves')
                                                      or i.get('exileInsteadOfLeaving')) for i in self.battlefield))
 
+    def rules_discard_support_available(self, container_id, zone, card_id):
+        return bool(self.rules_engine.get("enabled") and zone in {"hand", "deck"}
+                    and any(entry.get("kind") == "discard_to_support_optional"
+                            for entry in self.card_rules.get(card_id, {}).get("passiveEffects") or [])
+                    and not self.rules_support_entry_locked(container_id, put=True))
 
-    def rules_effect_move_replacement(self, owner_id, from_zone, container_id, zone, card_id, item=None, *, exclude_source_id=None):
+    def rules_discard_support_replacement(self, container_id, zone, card_id):
+        if not self.rules_discard_support_available(container_id, zone, card_id):
+            return False
+        owner_id = self.card_owner_in_zone(container_id, zone, card_id)
+        key = f"discard-support|{container_id}|{zone}|{card_id}|{self.rules_zone_entry_version(container_id, zone, card_id)}"
+        return self.rules_optional_replacement_decision(key, owner_id, {
+            "purpose": "discard_support_replacement", "sourceCardId": card_id, "relatedCardId": card_id,
+            "headingKey": "rulesDiscardSupportHeading", "textKey": "rulesDiscardSupportText",
+            "yesKey": "rulesDiscardSupportYes", "noKey": "rulesDiscardSupportNo",
+        })
+
+    def rules_optional_replacement_decision(self, key, player_id, details, *, internal_default=False):
+        supplied = getattr(self, "_rules_replacement_orders", {}).get(key)
+        if supplied:
+            return supplied == ["yes"]
+        if getattr(self, "_rules_replacement_running", False):
+            raise ReplacementOrderRequired(key, player_id, [], choice={
+                "kind": "binary_choice", "_optionalReplacement": True, **details,
+            })
+        return internal_default
+
+    def rules_put_discarded_card_in_support(self, container_id, zone, card_id):
+        owner_id = self.take_zone_card(container_id, zone, card_id)
+        item = {"id": new_id(), "ownerId": owner_id, "controllerId": owner_id,
+                "cardId": card_id, "x": 740.0,
+                "y": 800.0 if self.players[owner_id].get("seat") != 1 else 525.0,
+                "faceUp": True, "rotation": 0.0, "counters": {}, "stackedOn": None}
+        self.mark_rules_support_entry(item)
+        self.apply_rules_entering_manifestation_replacements(item)
+        self.battlefield.append(item)
+        self.record_rules_observed_event("cards_discarded", owner_id)
+        if zone == "deck":
+            self.record_rules_observed_event("deck_cards_discarded", owner_id)
+        self.queue_rules_effect_support_entry(item, from_zone=zone)
+        return item
+
+    def rules_effect_move_replacement(self, owner_id, from_zone, container_id, zone, card_id, item=None, *, exclude_source_id=None, discard=False, allow_discard_support=True):
         """Order simultaneous replacements; the first one moves the card out of its source."""
         from .replacements import ReplacementOrderRequired
         effects = []
@@ -719,6 +795,8 @@ class ZonesMixin:
             effects.append({'actionId': key, 'controllerId': controller or owner_id,
                             'cardId': source_card, 'replacementKind': kind,
                             '_destination': destination, '_sourceItem': source_item})
+        if discard and allow_discard_support and zone == "graveyard" and self.rules_discard_support_available(owner_id, from_zone, card_id):
+            add("discard-support", owner_id, card_id, "support", None)
         for affected_zone in {from_zone, zone} & {'deck', 'graveyard'}:
             for source in self.rules_active_suspension_sources(affected_zone):
                 if source['id'] == exclude_source_id:
@@ -754,22 +832,25 @@ class ZonesMixin:
                      if any(e['controllerId'] == pid for e in effects))
         signatures = {(e['replacementKind'], tuple(e['_destination'] or ()),
                        (e['_sourceItem'] or {}).get('id')) for e in group}
-        if len(signatures) <= 1:
-            return group[0]
-        key = '|'.join([owner_id, from_zone, container_id, zone, card_id,
-                        str((item or {}).get('id') or ''), *sorted(e['actionId'] for e in group)])
-        supplied = getattr(self, '_rules_replacement_orders', {}).get(key)
-        if not supplied:
-            if getattr(self, '_rules_replacement_running', False):
+        selected = group[0]
+        if len(signatures) > 1:
+            key = '|'.join([owner_id, from_zone, container_id, zone, card_id,
+                            str((item or {}).get('id') or ''), *sorted(e['actionId'] for e in group)])
+            supplied = getattr(self, '_rules_replacement_orders', {}).get(key)
+            if not supplied and getattr(self, '_rules_replacement_running', False):
                 raise ReplacementOrderRequired(key, group[0]['controllerId'], [
                     {k: v for k, v in e.items() if not k.startswith('_')} for e in group])
-            # Non-interactive internal callers retain a deterministic ordering.
-            return group[0]
-        return next(e for e in group if e['actionId'] == supplied[-1])
+            if supplied:
+                selected = next(e for e in group if e['actionId'] == supplied[-1])
+        if selected["replacementKind"] == "support" and not self.rules_discard_support_replacement(owner_id, from_zone, card_id):
+            return self.rules_effect_move_replacement(owner_id, from_zone, container_id, zone, card_id, item,
+                exclude_source_id=exclude_source_id, discard=discard, allow_discard_support=False)
+        return selected
 
     def resolve_rules_replacement_order(self, player_id, choice, card_ids):
         expected = [e['actionId'] for e in choice['actions']]
-        if not isinstance(card_ids, list) or not all(isinstance(key, str) for key in card_ids) or len(card_ids) != len(expected) or set(card_ids) != set(expected):
+        valid_optional = choice.get("_optionalReplacement") and card_ids in (["yes"], ["no"])
+        if not valid_optional and (not isinstance(card_ids, list) or not all(isinstance(key, str) for key in card_ids) or len(card_ids) != len(expected) or set(card_ids) != set(expected)):
             return 'Order every replacement exactly once.', None
         orders = {**choice['_orders'], choice['_orderKey']: list(card_ids)}
         self.rules_engine['pendingChoice'] = choice['_originalChoice']
@@ -790,6 +871,9 @@ class ZonesMixin:
             self._rules_replacement_priority = previous_priority
         if operation['shape'] == 'choice':
             return result
+        if operation['shape'] in {'zone_move', 'zone_effect_move'}:
+            error = result[0]
+            return error, {"kind": "movement_replacement", "status": "continued" if self.rules_engine.get("pendingChoice") else "completed"}
         if operation['shape'] == 'priority':
             error, passed = result
             if error:
@@ -915,7 +999,11 @@ class ZonesMixin:
             return "Cards in Hand are Immune to cards and effects.", owner_id, None
         selected = self.rules_effect_move_replacement(
             owner_id, from_zone, to_container_id or owner_id, to_zone, card_id,
+            discard=True,
         )
+        if selected and selected["replacementKind"] == "support":
+            item = self.rules_put_discarded_card_in_support(from_container_id, from_zone, card_id)
+            return None, owner_id, {"status": "support", "itemId": item["id"], "cardId": card_id}
         suspension_source = (selected or {}).get('_sourceItem')
         if selected and selected['replacementKind'] != 'suspend':
             recipient, destination = selected['_destination']
@@ -936,6 +1024,7 @@ class ZonesMixin:
             } if suspended else None)
         return None, owner_id, None
 
+    @replacement_checkpoint("zone_effect_move")
     def move_zone_card_by_effect(self, from_container_id, from_zone,
                                  to_container_id, to_zone, card_id,
                                  position="top"):

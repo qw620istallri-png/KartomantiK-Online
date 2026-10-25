@@ -208,8 +208,8 @@ def build_card_rules(cards, abilities_by_card):
                 else "graveyard"
             ),
             "shuffleWhenPutDeckBottom": (
-                "put at the bottom of the deck, shuffle it"
-                in (card.get("effect") or "").lower()
+                bool(re.search(r"put (?:at|on) the bottom of the deck, shuffle it",
+                               card.get("effect") or "", re.IGNORECASE))
             ),
             "suspensionThresholds": ({
                 "deck": 2,
@@ -367,14 +367,6 @@ def build_card_rules(cards, abilities_by_card):
                 )
                 else None
             ),
-            "supportWinEffect": (
-                {"kind": "opponent_vessel_score", "value": 10}
-                if (
-                    "wins a confrontation as Support, it enters the Empathic Vessel of a target opponent"
-                    in (card.get("effect") or "")
-                    and "that player gains 10 points" in (card.get("effect") or "")
-                ) else None
-            ),
             "continuousPowerRules": continuous_power_rules_for_card(card),
             "activatedAbilities": [
                 ability for ability in abilities_by_card.get(card["id"], [])
@@ -401,6 +393,8 @@ def build_card_rules(cards, abilities_by_card):
                 if isinstance(ability.get("passiveEffect"), dict)
                 and ability["passiveEffect"].get("kind")
             ],
+            "stackNeutralizePayment": next((ability["stackNeutralizePayment"]
+                for ability in abilities_by_card.get(card["id"], []) if ability.get("stackNeutralizePayment")), None),
         }
         for card in cards
     }
@@ -2246,6 +2240,15 @@ async def handle_message(ws, info, data):
         if error:
             return await send_error(ws, error)
         session.add_log(actor_id, "rules_choice_resolved", {**result, "kind": "counter_essence", "playerId": actor_id})
+        session.touch()
+        await broadcast_state(session)
+
+    elif msg_type == "request_rules_stack_payment":
+        if is_observer or actor_id not in session.players:
+            return await send_error(ws, "Observers cannot pay for a Stack action.")
+        error, result = session.request_rules_stack_payment(actor_id, data.get("actionId"))
+        if error:
+            return await send_error(ws, error)
         session.touch()
         await broadcast_state(session)
 

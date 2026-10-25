@@ -179,10 +179,10 @@ class StackChoicesMixin:
                 choice.get("_relatedCardId"), player_id,
                 source_item_id=source_item.get("id"),
             )
-            created_item_id = copy["id"]
+            created_item_id = copy["id"] if copy is not None else None
             self.rules_engine["pendingChoice"] = None
             copy_triggered = self.queue_rules_token_copy_entry_triggers(copy)
-            status = "accepted"
+            status = "accepted" if copy is not None else "entry_blocked"
         else:
             self.rules_engine["pendingChoice"] = None
         return None, {
@@ -214,7 +214,7 @@ class StackChoicesMixin:
             self.rules_engine["pendingChoice"] = None
             return "This triggered effect is no longer available.", None
         clean_targets = self.rules_redirect_targets(
-            action.get("controllerId") or player_id, clean_targets
+            action.get("controllerId") or player_id, clean_targets, (action.get("source") or {}).get("cardId")
         )
         action["targets"] = clean_targets
         resume_cleanup = bool(choice.get("_resumeConfrontationCleanup"))
@@ -336,6 +336,8 @@ class StackChoicesMixin:
         if option == "decline":
             if not choice.get("optional"):
                 return "This Chain effect cannot be declined.", None
+            if "_simultaneousSelections" in choice:
+                return self.commit_rules_simultaneous_chain_choice(choice, None, player_id, placement)
             self.rules_engine["pendingChoice"] = None
             self.queue_rules_chain_continuation(choice)
             return None, {
@@ -364,6 +366,8 @@ class StackChoicesMixin:
         restriction_error = self.rules_card_chain_restriction_error(player_id, card_id)
         if restriction_error:
             return restriction_error, None
+        if "_simultaneousSelections" in choice:
+            return self.commit_rules_simultaneous_chain_choice(choice, card_id, container_id, placement)
         self.rules_engine["pendingChoice"] = None
         self.queue_rules_chain_continuation(choice)
         return self.chain_rules_manifestation(

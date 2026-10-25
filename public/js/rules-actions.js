@@ -3,32 +3,75 @@
 
 // "As an additional cost ... reveal and exile a manifestation from your hand" (Censor, Martyrize)
 // or "discard a Will" (Timid Brain): without such a card in hand, the card cannot be played.
-function rulesAdditionalCostAvailableClient(draft) {
+function rulesAdditionalCostAvailableClient(draft, selected = []) {
   const kind = draft?.encodedAbility?.additionalCost;
   if (!["exile_hand_manifestation", "discard_hand_will"].includes(kind)) return true;
   const hand = [...(latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [])];
-  const sourceIndex = hand.indexOf(draft.card?.id);
+  const sourceIndex = !draft.source || draft.source.zone === "hand" ? hand.indexOf(draft.card?.id) : -1;
   if (sourceIndex >= 0) hand.splice(sourceIndex, 1);
+  for (const candidate of selected.filter((entry) => entry.zone === "hand")) {
+    const index = hand.indexOf(candidate.cardId);
+    if (index >= 0) hand.splice(index, 1);
+  }
   const costTypes = kind === "discard_hand_will" ? ["ephemeral_will", "persistent_will"] : ["manifestation"];
   return hand.some((cardId) => costTypes.includes(cardsById.get(cardId)?.type));
+}
+
+function rulesTributeSelectionAvailableClient(draft, selected, complete = true) {
+  const tributes = selected.filter((entry) => !entry.sacrifice);
+  if (tributes.length > 7) return false;
+  if (tributes.filter((entry) => entry.usesFormula).length > Number(draft.limboTributeBudget || 0)) return false;
+  const sacrifices = selected.filter((entry) => entry.sacrifice);
+  if (sacrifices.some((entry) => tributes.some((tribute) => tribute.itemId === entry.itemId))) return false;
+  if (complete && sacrifices.length > tributes.filter((entry) => rulesTributeSacrificePower(cardsById.get(entry.cardId)) !== null).length) return false;
+  return rulesAdditionalCostAvailableClient(draft, selected);
+}
+
+function rulesFindTributePaymentClient(draft, remaining) {
+  if (Object.values(remaining).every((amount) => amount <= 0)) return [];
+  const candidates = draft.manifestations;
+  const capacities = candidates.map((entry) => entry.sacrifice ? 0 : Math.max(
+    Number(rulesTributeCandidate(entry.paymentValue)?.power || 0),
+    Number(rulesTributeSacrificePower(cardsById.get(entry.cardId)) || 0),
+  ));
+  const required = Object.values(remaining).reduce((sum, amount) => sum + Math.max(0, amount), 0);
+  if (capacities.toSorted((a, b) => b - a).slice(0, 7).reduce((sum, power) => sum + power, 0) < required) return null;
+  const values = (entries) => entries.map((entry) => entry.paymentValue);
+  if (!rulesManifestationsCover(values(candidates), remaining)) return null;
+  const maxCount = Math.min(candidates.length, 7 + Math.min(7, candidates.filter((entry) => entry.sacrifice).length));
+  const search = (start, selected, count) => {
+    if (!rulesTributeSelectionAvailableClient(draft, selected, false)) return null;
+    if (selected.length === count) return rulesTributeSelectionAvailableClient(draft, selected)
+      && rulesManifestationsCover(values(selected), remaining) ? selected : null;
+    if (candidates.length - start < count - selected.length) return null;
+    const held = selected.reduce((sum, entry) => sum + capacities[candidates.indexOf(entry)], 0);
+    if (held + capacities.slice(start).sort((a, b) => b - a).slice(0, count - selected.length).reduce((sum, power) => sum + power, 0) < required) return null;
+    if (!rulesManifestationsCover(values([...selected, ...candidates.slice(start)]), remaining)) return null;
+    const seen = new Set();
+    for (let index = start; index < candidates.length; index += 1) {
+      const candidate = candidates[index];
+      if (seen.has(candidate.paymentValue)) continue;
+      seen.add(candidate.paymentValue);
+      const found = search(index + 1, [...selected, candidate], count);
+      if (found) return found;
+    }
+    return null;
+  };
+  for (let count = 1; count <= maxCount; count += 1) {
+    const found = search(0, [], count);
+    if (found) return found;
+  }
+  return null;
 }
 
 function rulesDraftCanBePaid(draft) {
   if (!draft) return false;
   if (!rulesAdditionalCostAvailableClient(draft)) return false;
   if (draft.essenceCostPayable === false) return false;
-  const candidates = draft.manifestations.slice(0, 12);
-  const combinations = 1 << candidates.length;
   const plans = (draft.essencePlan.transcendentChoice || rulesCounterEssenceSources().length) && draft.transcendentPayment === undefined
     ? rulesEssencePaymentOptions(draft.paymentRequirements, true) : [draft.essencePlan];
   for (const { remaining } of plans) {
-    if (Object.values(remaining).every((amount) => amount <= 0)) return true;
-    for (let mask = 1; mask < combinations; mask += 1) {
-      const selected = candidates
-        .filter((_candidate, index) => mask & (1 << index))
-        .map((candidate) => candidate.paymentValue);
-      if (rulesManifestationsCover(selected, remaining)) return true;
-    }
+    if (rulesFindTributePaymentClient(draft, remaining) !== null) return true;
   }
   return false;
 }
@@ -68,13 +111,18 @@ function rulesImmediateEffectPendingClient() {
   return Boolean(stack[stack.length - 1]?.immediate);
 }
 
+function rulesEndActionsSkippedClient() {
+  return String(currentPhaseUi().phase?.id || "").startsWith("end_")
+    && (latestState?.rulesEngine?.skipEndPhasePlayerIds || []).includes(myPlayerId);
+}
+
 function rulesActivatedActionDraft(item, abilityOverride = null) {
   const abilities = rulesActivatedAbilitiesForItem(item);
   const ability = abilityOverride
     || abilities[0]
     || null;
   if (
-    isObserver || rulesImmediateEffectPendingClient()
+    isObserver || latestState?.ended || rulesImmediateEffectPendingClient() || rulesEndActionsSkippedClient()
     || !item?.faceUp
     // a card without its effects (Stalemate Zone, lost effects) has nothing to activate
     || item.effectsInactive
@@ -96,6 +144,7 @@ function rulesActivatedActionDraft(item, abilityOverride = null) {
       && !ability?.phaseIds?.includes(currentPhaseUi().phase?.id))
   ) return null;
   if (!abilities.length) return null;
+  if (Array.isArray(item.usableAbilityIds) && !item.usableAbilityIds.includes(ability?.id)) return null;
   if (
     Array.isArray(ability.phaseIds)
     && ability.phaseIds.length
@@ -105,7 +154,7 @@ function rulesActivatedActionDraft(item, abilityOverride = null) {
   const draft = buildRulesActionDraft(source, ability);
   if (!draft.encodedAbility) return null;
   if (["field_becomes_first_manifestation", "interzone_becomes_first_manifestation"].includes(ability.result?.kind) && rulesFirstManifestationSlotTakenClient()) return null;
-  if (draft.encodedAbility.sourceFieldZone && item.fieldZone !== draft.encodedAbility.sourceFieldZone) return null;
+  if (draft.encodedAbility.sourceFieldZone && rulesFieldZoneClient(item) !== draft.encodedAbility.sourceFieldZone) return null;
   if (
     Array.isArray(draft.encodedAbility.sourceZones)
     && draft.encodedAbility.sourceZones.length
@@ -131,7 +180,7 @@ function rulesActivatedActionDraft(item, abilityOverride = null) {
     if (held < Number(counterCost.amount || 0)) return null;
   }
   if (!rulesDraftCanBePaid(draft)) return null;
-  if (Number(draft.targetRules?.min || 0) > draft.structuredTargets.length) return null;
+  if (!rulesDraftHasTargetsClient(draft)) return null;
   return { source, draft };
 }
 
@@ -143,6 +192,7 @@ function rulesPlayType(card) {
 }
 
 function beginRulesBoardAction(source) {
+  if (rulesEndActionsSkippedClient()) return false;
   const draft = buildRulesActionDraft(source);
   if (!draft.card || !(source.tebebe || ["ephemeral_will", "persistent_will"].includes(rulesPlayType(draft.card)))) return false;
   const playable = source.tebebe
@@ -184,11 +234,12 @@ function beginRulesHandActivatedAction(cardId, handIndex, zone = "hand", contain
     actionKind: "activated_effect",
   };
   if (containerId) source.containerId = containerId;
-  const draft = buildRulesActionDraft(source);
-  if (!draft.encodedAbility || !rulesDraftCanBePaid(draft)) {
+  const available = rulesZoneActivatedActionDraft(source);
+  if (!available) {
     showToast(t("rulesBoardEffectNotAvailable"), true);
     return false;
   }
+  const { draft } = available;
   closeRulesActionPanel();
   pendingRulesBoardFlow = {
     mode: "action",
@@ -211,6 +262,7 @@ function beginRulesHandActivatedAction(cardId, handIndex, zone = "hand", contain
 }
 
 function beginRulesBoardActivatedAction(item, abilityId = null) {
+  if (rulesEndActionsSkippedClient()) return false;
   const ability = abilityId
     ? rulesActivatedAbilitiesForItem(item).find(
         (candidate) => candidate.id === abilityId,
@@ -271,6 +323,75 @@ function rulesActionKindOptions(zone) {
     : [["activated_effect", "rulesKindActivated"], ["triggered_effect", "rulesKindTriggered"]];
 }
 
+function rulesFieldZoneClient(item) {
+  return ["field", "confrontation", "interzone", "stalemate"].includes(item?.fieldZone)
+    ? item.fieldZone
+    : Object.values(latestState?.rulesEngine?.firstManifestationItemIds || {}).includes(item?.id) ? "confrontation" : "field";
+}
+
+function rulesDraftHasTargetsClient(draft, chosenTargets = []) {
+  const groups = draft?.targetRules?.groups;
+  if (!Array.isArray(groups)) {
+    const minimum = Number(draft?.targetRules?.min || 0);
+    if (minimum > (draft?.structuredTargets?.length || 0)) return false;
+    if (!rulesDraftTargetCombinationValidClient(draft, chosenTargets)) return false;
+    const assign = (start, selected) => selected.length >= minimum || draft.structuredTargets.some((target, index) => (
+      index >= start && !selected.some((entry) => entry.key === target.key)
+      && rulesDraftTargetCombinationValidClient(draft, [...selected, target])
+      && assign(index + 1, [...selected, target])
+    ));
+    return assign(0, chosenTargets);
+  }
+  const assign = (index, selected) => index === groups.length || draft.structuredTargets.some((target) => (
+    target.targetGroupIndex === index && !selected.some((entry) => entry.key === target.key)
+    && rulesDraftTargetCombinationValidClient(draft, [...selected, target])
+    && assign(index + 1, [...selected, target])
+  ));
+  return rulesDraftTargetCombinationValidClient(draft, chosenTargets) && assign(chosenTargets.length, chosenTargets);
+}
+
+function rulesDraftTargetCombinationValidClient(draft, targets) {
+  const rules = draft.targetRules || {};
+  if (rules.sameContainer && new Set(targets.map((target) => target.containerId)).size > 1) return false;
+  if (rules.distinctTargets) {
+    const identities = targets.map((target) => target.key || target.itemId || target.id
+      || `${target.kind}:${target.containerId}:${target.zone}:${target.cardId}`);
+    if (new Set(identities).size !== identities.length) return false;
+  }
+  if (rules.distinctTemperaments) {
+    const temperaments = targets.map((target) => target.effectiveTemperament || target.temperamentOverride
+      || target.temperament || cardsById.get(target.cardId)?.temperaments?.[0] || null);
+    if (new Set(temperaments).size !== temperaments.length) return false;
+  }
+  if (Number.isFinite(draft.targetRules?.maxTotalPoints) && targets.reduce((sum, target) => sum + Number(cardsById.get(target.cardId)?.points || 0), 0) > draft.targetRules.maxTotalPoints) return false;
+  if (draft.encodedAbility?.id === "induce-desertion" && targets.length > 1
+      && battlefieldItemControllerId(targets[0]) !== battlefieldItemControllerId(targets[1])) return false;
+  if (draft.encodedAbility?.result?.kind === "retarget_stack_action" && targets.length > 1) {
+    const action = (latestState?.rulesEngine?.actionStack || []).find((entry) => entry.id === targets[0].actionId);
+    if (Array.isArray(action?.retargetableItemIds) && !action.retargetableItemIds.includes(targets[1].id)) return false;
+  }
+  return true;
+}
+
+function rulesZoneActivatedActionDraft(source, abilityOverride = null) {
+  const rules = latestState?.rulesEngine;
+  if (!rules?.enabled || latestState?.ended || isObserver || rules.pendingChoice || rulesImmediateEffectPendingClient() || rulesEndActionsSkippedClient()
+      || rules.priorityPlayerId !== myPlayerId || rules_pregame_active_client()
+      || rules_recovery_mulligan_active_client() || rulesFirstManifestationActive()) return null;
+  const containerId = source.containerId || myPlayerId;
+  const zone = latestState?.players?.[containerId]?.zones?.[source.zone];
+  if (!["hand", "receptacle"].includes(source.zone) || !(zone?.cards || []).includes(source.cardId)) return null;
+  if (source.zone === "hand" && containerId !== myPlayerId) return null;
+  if (source.zone === "receptacle" && (containerId === myPlayerId || (zone.owners?.[source.cardId] || containerId) !== myPlayerId)) return null;
+  if (source.zone === "hand" && Array.isArray(rules.usableHandAbilityCardIds) && !rules.usableHandAbilityCardIds.includes(source.cardId)) return null;
+  const ability = abilityOverride || (activatedAbilitiesByCard.get(source.cardId) || []).find((entry) => (entry.sourceZones || []).includes(source.zone));
+  if (!ability || !(ability.sourceZones || []).includes(source.zone)) return null;
+  const phaseId = currentPhaseUi().phase?.id;
+  if (!(ability.phaseIds?.length ? ability.phaseIds : ["confrontation_reaction", "resolution_effects", "end_actions"]).includes(phaseId)) return null;
+  const draft = buildRulesActionDraft(source, ability);
+  return rulesDraftCanBePaid(draft) && rulesDraftHasTargetsClient(draft) ? { source, draft } : null;
+}
+
 function rulesStructuredActionTargets(encodedAbility, context = {}) {
   // abilities may spell their target groups as targets.groups (Shattering the Self)
   if (!Array.isArray(encodedAbility?.targetGroups) && Array.isArray(encodedAbility?.targets?.groups)) {
@@ -283,7 +404,7 @@ function rulesStructuredActionTargets(encodedAbility, context = {}) {
         .map((target) => ({ ...target, targetGroupIndex }))
     ));
     return {
-      targetRules: { groups, min: groups.length, max: groups.length },
+      targetRules: { ...(encodedAbility.targets || {}), groups, min: groups.length, max: groups.length },
       noTargetRequired: groups.length === 0,
       structuredTargetKind: "grouped",
       allowedTargetZones: ["battlefield"],
@@ -291,7 +412,7 @@ function rulesStructuredActionTargets(encodedAbility, context = {}) {
     };
   }
   const targetRules = encodedAbility?.targets || null;
-  const noTargetRequired = Boolean(targetRules && Number(targetRules.max) === 0);
+  const noTargetRequired = Boolean(encodedAbility && (!targetRules || Number(targetRules.max) === 0));
   const structuredTargetKind = targetRules?.kind || "card";
   const allowsFieldCard = ["card", "card_or_stack_action"].includes(structuredTargetKind);
   const allowsStackCard = ["stack_action", "card_or_stack_action", "stack_item"].includes(structuredTargetKind);
@@ -300,28 +421,34 @@ function rulesStructuredActionTargets(encodedAbility, context = {}) {
   const maxTargetPoints = Number(targetRules?.maxPoints);
   const maxTargetPower = Number(targetRules?.maxPower);
   const minTargetPower = Number(targetRules?.minPower);
-  const fieldTargetType = (item) => item.willManifestation
+  const fieldTargetType = (item) => item.willManifestation || (item.isTokenCard && !item.isCopy)
     ? "manifestation" : cardsById.get(item.cardId)?.type;
   const targetMatchesRules = (cardId, fieldItem = null) => {
     const targetCard = cardsById.get(cardId);
     const targetType = fieldItem ? fieldTargetType(fieldItem) : targetCard?.type;
     if (allowedTargetTypes.length && !allowedTargetTypes.includes(targetType)) return false;
+    if (Number.isFinite(targetRules?.maxCost) && Number(targetCard?.cost || 0) > targetRules.maxCost) return false;
     return !Number.isFinite(maxTargetPoints) || (Number.isFinite(Number(targetCard?.points)) && Number(targetCard.points) <= maxTargetPoints);
   };
   const fieldTargets = (latestState?.battlefield || [])
     .filter(() => !noTargetRequired && allowsFieldCard && allowedTargetZones.includes("battlefield"))
-    .filter((item) => item.faceUp && item.cardId)
+    .filter((item) => item.faceUp && (item.cardId || item.isTokenCard))
+    .filter((item) => item.effectTargetable !== false)
     .filter((item) => targetMatchesRules(item.cardId, item))
     .filter((item) => {
       const controller = item.controllerId || item.ownerId;
-      if (targetRules?.sourceOnly && context.sourceItemId && item.id !== context.sourceItemId) return false;
+      if (targetRules?.sourceOnly && item.id !== context.sourceItemId) return false;
       if (targetRules?.excludeSource && item.id === context.sourceItemId) return false;
       if (targetRules?.excludeEventSource && item.id === context.eventItemId) return false;
       // same field zone as the server (rules_field_zone): a resolved persistent Will has no
       // explicit fieldZone and stands in the "field" zone, a First Manifestation in the Confrontation
-      const itemFieldZone = ["field", "confrontation", "interzone", "stalemate"].includes(item.fieldZone)
-        ? item.fieldZone
-        : Object.values(latestState?.rulesEngine?.firstManifestationItemIds || {}).includes(item.id) ? "confrontation" : "field";
+      const itemFieldZone = rulesFieldZoneClient(item);
+      const outcomeRule = targetRules?.confrontationOutcome;
+      if (["won", "lost"].includes(outcomeRule)) {
+        const outcome = latestState?.rulesEngine?.confrontationResult || {};
+        if (controller !== outcome[outcomeRule === "won" ? "winnerId" : "loserId"] || !(outcome.participantItemIds || []).includes(item.id)) return false;
+      }
+      if (targetRules?.enteredInterzoneThisTurn && (itemFieldZone !== "interzone" || Number(item.interzoneTurn) !== Number(latestState?.phaseTracker?.turn))) return false;
       if (targetRules?.controller === "self" && controller !== myPlayerId) return false;
       if (targetRules?.controller === "opponent" && controller === myPlayerId) return false;
       if (targetRules?.owner === "self" && item.ownerId !== myPlayerId) return false;
@@ -365,6 +492,8 @@ function rulesStructuredActionTargets(encodedAbility, context = {}) {
         key: `zone:${containerId}:${zone}:${cardId}:${index}`,
       })))
   )).filter((item) => targetMatchesRules(item.cardId))
+    .filter((item) => latestState?.players?.[item.containerId]?.zones?.[item.zone]?.effectTargetable !== false)
+    .filter((item) => item.zone !== "hand" || item.containerId === myPlayerId)
     .filter((item) => !targetRules?.excludeSource || item.cardId !== context.sourceCardId)
     .filter((item) => (
       targetRules?.owner === "self"
@@ -391,11 +520,13 @@ function rulesStructuredActionTargets(encodedAbility, context = {}) {
       || (latestState?.rulesEngine?.recentLimboEntries || []).some((entry) => (
         entry.ownerId === item.ownerId
         && entry.cardId === item.cardId
+        && Number(entry.turn) === Number(latestState?.phaseTracker?.turn)
         && targetRules.limboReasons.includes(entry.reason)
       ))
     ));
   const playerTargets = structuredTargetKind === "player" && !noTargetRequired
     ? Object.keys(latestState?.players || {})
+      .filter((playerId) => latestState.players[playerId].effectTargetable !== false)
       .filter((playerId) => (
         targetRules?.controller === "self"
           ? playerId === myPlayerId
@@ -417,12 +548,25 @@ function rulesStructuredActionTargets(encodedAbility, context = {}) {
           : (["activated_effect", "triggered_effect"].includes(action.kind) || action.sourceRemainsOnField) && action.source?.cardId
       ))
       .filter((action) => targetMatchesRules(action.source.cardId))
+      .filter((action) => action.effectTargetable !== false)
+      .filter((action) => !context.retargetsStackAction || !Array.isArray(action.retargetableItemIds) || action.retargetableItemIds.length > 0)
+      .filter((action) => !targetRules?.targetsFieldCard || (action.targets || []).some((target) => (
+        target.kind === "card" && (latestState?.battlefield || []).some((item) => item.id === target.itemId)
+      )))
+      .filter((action) => !targetRules?.targetsOwnFieldCard || (action.targets || []).some((target) => (
+        target.kind === "card" && (latestState?.battlefield || []).some((item) => item.id === target.itemId && battlefieldItemControllerId(item) === myPlayerId)
+      )))
+      .filter((action) => !targetRules?.effectTemperamentChosenBySource || (
+        (cardsById.get(action.source.cardId)?.temperaments || []).includes(
+          (latestState?.battlefield || []).find((item) => item.id === context.sourceItemId)?.chosenTemperament,
+        )
+      ))
       .filter((action) => !targetRules?.targetsConfrontationManifestation
         || (action.targets || []).some((target) => {
           const item = (latestState?.battlefield || []).find((candidate) => candidate.id === target.itemId);
           return target.kind === "card"
-            && item?.fieldZone === "confrontation"
-            && cardsById.get(item.cardId)?.type === "manifestation";
+            && rulesFieldZoneClient(item) === "confrontation"
+            && fieldTargetType(item) === "manifestation";
         }))
       .filter((action) => {
         if (targetRules?.controller === "self") return action.controllerId === myPlayerId;
@@ -433,6 +577,7 @@ function rulesStructuredActionTargets(encodedAbility, context = {}) {
         (effect) => (
           effect.kind === "protection"
           && effect.target?.actionId === action.id
+          && (!effect.fromOpponents || action.controllerId !== myPlayerId)
         ),
       ))
       .map((action) => ({
@@ -443,12 +588,16 @@ function rulesStructuredActionTargets(encodedAbility, context = {}) {
         controllerId: action.controllerId, key: `stack:${action.id}`,
       }))
     : [];
+  const structuredTargets = [...fieldTargets, ...publicZoneTargets, ...playerTargets, ...stackTargets];
+  const resolvedTargetRules = targetRules?.anyNumber
+    ? { ...targetRules, max: new Set(structuredTargets.map((target) => target.key)).size }
+    : targetRules;
   return {
-    targetRules,
+    targetRules: resolvedTargetRules,
     noTargetRequired,
     structuredTargetKind,
     allowedTargetZones,
-    structuredTargets: [...fieldTargets, ...publicZoneTargets, ...playerTargets, ...stackTargets],
+    structuredTargets,
   };
 }
 
@@ -478,15 +627,24 @@ function trapPlayableClient(cardId) {
   );
 }
 
-function rulesLimboPlayMode() {
+function rulesLimboPlayMode(cardId = null) {
   const turn = Number(latestState?.phaseTracker?.turn || 0);
   const phaseId = currentPhaseUi().phase?.id;
   if ((latestState?.rulesEngine?.playPermissions || []).some((permission) => (
     permission.playerId === myPlayerId
     && permission.fromZone === "graveyard"
-    && permission.noTribute && permission.exileOnLeave && permission.anyWill
+    && permission.noTribute && permission.exileOnLeave
     && Number(permission.turn || 0) === turn
     && (permission.phaseIds || []).includes(phaseId)
+    && (!cardId && permission.anyWill || (cardId ? [cardId] : latestState?.players?.[myPlayerId]?.zones?.graveyard?.cards || []).some((candidateId) => {
+      const candidate = cardsById.get(candidateId);
+      const version = latestState?.players?.[myPlayerId]?.zones?.graveyard?.entryVersions?.[candidateId];
+      return ["ephemeral_will", "persistent_will"].includes(candidate?.type)
+        && (permission.cardId === candidateId || permission.anyWill)
+        && (!permission.ephemeralOnly || candidate.type === "ephemeral_will")
+        && (permission.maxCost == null || Number(candidate.cost || 0) <= Number(permission.maxCost))
+        && (permission.zoneEntryVersion === undefined || Number(permission.zoneEntryVersion) === Number(version));
+    }))
   ))) return "free";
   const hollow = (latestState?.battlefield || []).some((item) => (
     (item.controllerId || item.ownerId) === myPlayerId
@@ -538,7 +696,7 @@ function rulesGhostHandCards() {
     if (battlefieldItemControllerId(item) !== myPlayerId) continue;
     if (item.concealedWill && ["ephemeral_will", "persistent_will"].includes(cardsById.get(item.cardId)?.type)) {
       const source = rulesFieldWillPlaySource(item);
-      ghosts.push({ cardId: item.cardId, zone: "field_play", itemId: item.id, label: t("rulesConcealedLabel"), playable: limboWillIsPlayable(item.cardId, true) && rulesDraftCanBePaid(buildRulesActionDraft(source)) });
+      ghosts.push({ cardId: item.cardId, zone: "field_play", itemId: item.id, label: item.revealedFreeWill ? cardName("inner-deserts-126").split(",")[0] : t("rulesConcealedLabel"), playable: limboWillIsPlayable(item.cardId, true) && rulesDraftCanBePaid(buildRulesActionDraft(source)) });
     } else if (
       item.faceUp
       && Number(item.playableFree) === Number(latestState.phaseTracker?.turn)
@@ -572,7 +730,7 @@ function rulesFieldWillPlaySource(item, placement = { x: item.x, y: item.y }) {
 function tebebeManifestationIsPlayable(item) {
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(item?.cardId);
-  if (!rules?.enabled || !item?.tebebeConcealed || card?.type !== "manifestation" || isObserver || rules.pendingChoice) return false;
+  if (!rules?.enabled || !item?.tebebeConcealed || card?.type !== "manifestation" || isObserver || rules.pendingChoice || rulesEndActionsSkippedClient()) return false;
   if (rules.priorityPlayerId !== myPlayerId || rulesCardPlayRestrictedClient(item.cardId)) return false;
   return ["confrontation_reaction", "end_actions"].includes(currentPhaseUi().phase?.id);
 }
@@ -582,6 +740,7 @@ function rulesLimboPermission(cardId) {
   return (latestState?.rulesEngine?.playPermissions || []).find((permission) => (
     permission.playerId === myPlayerId
     && permission.fromZone === "graveyard"
+    && permission.asSupport
     && permission.cardId === cardId
     && Number(permission.turn || 0) === Number(latestState?.phaseTracker?.turn || 0)
   )) || null;
@@ -600,9 +759,9 @@ function rulesLimboPermissionPlayable(cardId) {
 function limboWillIsPlayable(cardId, fromField = false) {
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
-  if (!rules?.enabled || !card || isObserver || rules.pendingChoice) return false;
+  if (!rules?.enabled || !card || isObserver || rules.pendingChoice || rulesEndActionsSkippedClient()) return false;
   if (!["ephemeral_will", "persistent_will"].includes(card.type)) return false;
-  if (rules.priorityPlayerId !== myPlayerId || !(fromField || rulesLimboPlayMode())) return false;
+  if (rules.priorityPlayerId !== myPlayerId || !(fromField || rulesLimboPlayMode(cardId))) return false;
   if (rulesCardPlayRestrictedClient(cardId)) return false;
   const phaseId = currentPhaseUi().phase?.id;
   if (card.type === "persistent_will") {
@@ -678,7 +837,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
     ? (source.fieldFree === false ? null : "free")
     : source.zone === "graveyard"
       && ["ephemeral_will", "persistent_will"].includes(card?.type)
-      ? rulesLimboPlayMode() : null;
+      ? rulesLimboPlayMode(source.cardId) : null;
   const isPrintedWill = (["hand", "suspended", "attached"].includes(source.zone) || Boolean(limboPlay) || Boolean(source.playFromField))
     && ["ephemeral_will", "persistent_will"].includes(rulesPlayType(card));
   const freeWillPermission = (source.zone === "hand" && source.actionKind !== "activated_effect" && card?.type === "manifestation" && rulesPlayType(card) === "persistent_will") || isPrintedWill && (latestState?.rulesEngine?.playPermissions || []).some((permission) => (
@@ -769,7 +928,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
   ].reduce((sum, amount) => sum + Number(amount || 0), 0);
   const optionalExtraEssenceMax = encodedAbility?.optionalExtraEssence
     ? Math.max(0, Math.min(
-        Number(encodedAbility.optionalExtraEssence.max || 0),
+        encodedAbility.optionalExtraEssence.max == null ? Infinity : Number(encodedAbility.optionalExtraEssence.max),
         totalEssence - mandatoryEssenceSpent,
       ))
     : 0;
@@ -826,12 +985,14 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
     for (const cardId of limboCards) {
       const manifestation = cardsById.get(cardId);
       if (manifestation?.type !== "manifestation") continue;
+      if (/^Cannot be used (?:to pay tributes|as tribute)/im.test(String(manifestation.effect || ""))) continue;
       manifestations.push({
         cardId,
         index: null,
         selectionKey: `graveyard:${cardId}:${manifestations.length}`,
         paymentValue: `graveyard|${cardId}`,
         zone: "graveyard",
+        usesFormula: !/\bcan be used as tribute from (?:the )?Limbo\./i.test(String(manifestation.effect || "")),
       });
     }
   }
@@ -937,6 +1098,7 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
   ) manifestations.length = 0;
   return {
     paymentRequirements, hasPrintedTribute, essencePlan, transcendentPayment,
+    limboTributeBudget: Number(limboSource?.counters?.Formula || 0),
     essenceCostRequirements, essenceCostPlan, essenceCostPayable,
     optionalExtraEssenceMax, extraTributeCards, remainingTemperaments, manifestations,
   };
@@ -992,13 +1154,14 @@ function buildRulesActionDraft(source, abilityOverride = undefined) {
       ),
     };
   }
-  const targetDraft = rulesStructuredActionTargets(encodedAbility, { sourceItemId: source?.itemId, sourceCardId: source?.cardId });
+  const targetDraft = rulesStructuredActionTargets(encodedAbility, { sourceItemId: source?.itemId, sourceCardId: source?.cardId, retargetsStackAction: encodedAbility?.result?.kind === "retarget_stack_action" });
   if (encodedAbility?.targets?.sourceOnly && source?.itemId) {
     targetDraft.structuredTargets = targetDraft.structuredTargets.filter(
       (target) => target.id === source.itemId,
     );
   }
   return {
+    source,
     card,
     encodedAbility,
     ...targetDraft,
@@ -1007,6 +1170,7 @@ function buildRulesActionDraft(source, abilityOverride = undefined) {
 }
 
 function openRulesActionPanel(source) {
+  if (rulesEndActionsSkippedClient()) return;
   const rules = latestState?.rulesEngine;
   const draft = buildRulesActionDraft(source);
   const { card, encodedAbility } = draft;
@@ -1075,10 +1239,10 @@ function openRulesActionPanel(source) {
           <img src="${esc(cardImage(item.cardId))}" alt="">
           <span class="rules-target-copy"><strong>${esc(cardName(item.cardId))}</strong><span>${esc(`${t("rulesStackTitle")} · ${rulesPlayerName(item.controllerId)}`)}</span></span>
         </label>`
-      : `<label class="rules-target-choice" title="${esc(cardName(item.cardId))}">
-          <input type="${targetInputType}" name="rules-action-target" value="${esc(item.key)}" data-target-kind="${esc(item.kind)}" data-item-id="${esc(item.id || "")}" data-container-id="${esc(item.containerId || "")}" data-zone="${esc(item.zone)}" data-card-id="${esc(item.cardId)}">
-          <img src="${esc(cardImage(item.cardId))}" alt="">
-          <span class="rules-target-copy"><strong>${esc(cardName(item.cardId))}</strong><span>${esc(item.kind === "zone_card" ? `${rulesPlayerName(item.containerId)} · ${t(item.zone)}` : rulesPlayerName(item.ownerId))}</span></span>
+      : `<label class="rules-target-choice" title="${esc(item.isTokenCard && !item.isCopy ? t("token") : cardName(item.cardId))}">
+          <input type="${targetInputType}" name="rules-action-target" value="${esc(item.key)}" data-target-kind="${esc(item.kind)}" data-item-id="${esc(item.id || "")}" data-container-id="${esc(item.containerId || "")}" data-zone="${esc(item.zone)}" data-card-id="${esc(item.cardId || "")}">
+          <img src="${esc(item.isTokenCard && !item.isCopy ? temperamentSymbol(item.temperament) : cardImage(item.cardId))}" alt="">
+          <span class="rules-target-copy"><strong>${esc(item.isTokenCard && !item.isCopy ? `${t("token")} · ${item.effectivePower ?? item.power}` : cardName(item.cardId))}</strong><span>${esc(item.kind === "zone_card" ? `${rulesPlayerName(item.containerId)} · ${t(item.zone)}` : rulesPlayerName(item.ownerId))}</span></span>
         </label>`).join("")
     : `<span class="rules-target-empty">${esc(t("rulesNoLegalTargets"))}</span>`;
 
@@ -1158,7 +1322,7 @@ function rulesActionContextItem(source) {
       onSelect: () => send({ type: "play_first_manifestation_trap", cardId: source.cardId }),
     };
   }
-  if (!rules?.enabled || rules.priorityPlayerId !== myPlayerId || isObserver || rulesImmediateEffectPendingClient()) return null;
+  if (!rules?.enabled || rules.priorityPlayerId !== myPlayerId || isObserver || rulesImmediateEffectPendingClient() || rulesEndActionsSkippedClient()) return null;
   if (["hand", "suspended"].includes(source.zone)) {
     const cardType = rulesPlayType(cardsById.get(source.cardId));
     const handAbility = source.zone === "hand"
@@ -1167,6 +1331,7 @@ function rulesActionContextItem(source) {
         )
       : null;
     if (handAbility) {
+      if (!rulesZoneActivatedActionDraft(source, handAbility)) return null;
       return {
         label: rulesText("rulesActivateCardEffect", { card: cardName(source.cardId) }),
         onSelect: () => beginRulesHandActivatedAction(
@@ -1174,6 +1339,7 @@ function rulesActionContextItem(source) {
         ),
       };
     }
+    if (!handCardIsPlayable(source.cardId, source)) return null;
     const phaseId = currentPhaseUi().phase?.id;
     if (cardType === "ephemeral_will" && !rulesEphemeralPhasesClient(cardsById.get(source.cardId)).includes(phaseId)) return null;
     if (

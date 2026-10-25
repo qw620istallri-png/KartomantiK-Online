@@ -156,15 +156,7 @@ function handCardHasHandAction(cardId) {
     if (!(ability.sourceZones || []).includes("hand")) return false;
     if (Array.isArray(ability.phaseIds) && !ability.phaseIds.includes(phaseId)) return false;
     // highlight only when a required target exists (Glabron needs a Manifestation in your Interzone)
-    const draft = buildRulesActionDraft({ cardId, zone: "hand" }, ability);
-    if (!draft) return true;
-    if (!rulesAdditionalCostAvailableClient(draft)) return false;
-    if (Array.isArray(draft.targetRules?.groups)) {
-      return draft.targetRules.groups.every((_group, index) => (
-        draft.structuredTargets.some((target) => target.targetGroupIndex === index)
-      ));
-    }
-    return Number(draft.targetRules?.min || 0) <= draft.structuredTargets.length;
+    return Boolean(rulesZoneActivatedActionDraft({ cardId, zone: "hand" }, ability));
   });
 }
 
@@ -174,19 +166,15 @@ function rulesPlayedAbilityTargetsAvailableClient(cardId, source = null) {
   const ability = (playedAbilitiesByCard.get(cardId) || [])[0];
   const draft = ability ? buildRulesActionDraft(source || { cardId, zone: "hand" }, ability) : null;
   if (!draft) return true;
-  if (Array.isArray(draft.targetRules?.groups)) {
-    return draft.targetRules.groups.every((_group, index) => (
-      draft.structuredTargets.some((target) => target.targetGroupIndex === index)
-    ));
-  }
-  return Number(draft.targetRules?.min || 0) <= draft.structuredTargets.length;
+  return rulesDraftHasTargetsClient(draft);
 }
 
 function handCardIsPlayable(cardId, source = null) {
+  if (typeof rulesEndActionsSkippedClient === "function" && rulesEndActionsSkippedClient()) return false;
   const canAfford = () => source ? rulesDraftCanBePaid(buildRulesActionDraft(source)) : rulesCanAffordCard(cardId);
   const rules = latestState?.rulesEngine;
   const card = cardsById.get(cardId);
-  if (!rules?.enabled || !card || isObserver || rules.pendingChoice || rulesImmediateEffectPendingClient() || handDrawLocked()) return false;
+  if (!rules?.enabled || !card || isObserver || latestState?.ended || rules.pendingChoice || rulesImmediateEffectPendingClient() || handDrawLocked()) return false;
   if (rules_pregame_active_client() || rules_recovery_mulligan_active_client()) return false;
   if (isTrapCardClient(cardId)) return trapPlayableClient(cardId);
   if (rulesFirstManifestationActive()) {

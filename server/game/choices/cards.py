@@ -474,36 +474,33 @@ class CardsChoicesMixin:
                 if error:
                     follow_up = {"kind": "chain_manifestation", "error": error}
             elif own_type in RULES_WILL_TYPES:
-                owner_id = self.card_owner_in_zone(
-                    player_id, "deck", own_card_id
-                )
-                error, _owner_id, replacement = self.move_zone_card_by_effect(
-                    player_id, "deck", owner_id, "hand",
-                    own_card_id, "bottom",
+                error, owner_id, replacement = self.rules_zone_move_replacement(
+                    player_id, "deck", "battlefield", own_card_id,
+                    to_container_id=player_id,
                 )
                 if not error and not replacement:
-                    permission = {
-                        "id": new_id(),
-                        "abilityId": "play-revealed-will-without-tribute",
-                        "playerId": player_id,
-                        "cardId": own_card_id,
-                        "fromZone": "hand",
-                        "phaseIds": [
-                            "confrontation_reaction",
-                            "resolution_effects",
-                            "end_actions",
-                        ],
-                        "asSupport": False,
-                        "noTribute": True,
-                        "turn": self.phase_tracker["turn"],
+                    self.take_zone_card(player_id, "deck", own_card_id)
+                    seat = self.players[player_id].get("seat")
+                    revealed = {
+                        "id": new_id(), "ownerId": owner_id,
+                        "controllerId": player_id, "cardId": own_card_id,
+                        "x": 740.0, "y": 800.0 if seat != 1 else 525.0,
+                        "faceUp": True, "rotation": 0.0, "counters": {},
+                        "stackedOn": None, "fieldZone": "field",
+                        # A revealed Will awaits its play action, just like a
+                        # concealed free Will. Revealing it is not playing it.
+                        "concealedWill": True, "concealedFree": True,
+                        "revealedFreeWill": True, "effectsDisabled": True,
                     }
-                    self.rules_engine["playPermissions"].append(permission)
+                    self.battlefield.append(revealed)
                     follow_up = {
                         "kind": "play_permission",
                         "cardId": own_card_id,
-                        "permissionId": permission["id"],
+                        "itemId": revealed["id"], "fromZone": "battlefield",
                         "noTribute": True,
                     }
+                elif replacement:
+                    follow_up = {"kind": "play_permission", **replacement}
         return None, {
             "kind": "guess_top_card",
             "playerId": player_id,

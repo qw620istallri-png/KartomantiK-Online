@@ -538,8 +538,7 @@ function wirePileBrowserCards(ownerId, zone) {
         { keepInBeta: true, label: t("inspect"), onSelect: () => showInspect(cardId) },
         copyCardMenuItem(cardId, ownerId, zone),
         ...(zone === "receptacle" && ownerId !== myPlayerId && cardOwnerId === myPlayerId
-          && latestState?.rulesEngine?.enabled
-          && (activatedAbilitiesByCard.get(cardId) || []).some((ability) => (ability.sourceZones || []).includes("receptacle"))
+          && rulesZoneActivatedActionDraft({ cardId, zone: "receptacle", containerId: ownerId })
           ? [{ keepInBeta: true, label: rulesText("rulesActivateCardEffect", { card: cardName(cardId) }), onSelect: () => { $("#deckBrowserCloseBtn").click(); beginRulesHandActivatedAction(cardId, null, "receptacle", ownerId); } }]
           : []),
         { separator: true },

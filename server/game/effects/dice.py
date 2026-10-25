@@ -30,6 +30,7 @@ class DiceEffectsMixin:
             )
             for _index in range(max(0, base))
         ]
+        created = [item for item in created if item is not None]
         return {
             "kind": result.get("kind"), "status": "destroyed",
             "controllerId": controller_id, "tokens": len(created),
@@ -49,8 +50,6 @@ class DiceEffectsMixin:
 
     def _rules_result_roll_discard_deck_gain_power(self, action, result, player_id, player):
         source_item = self.find_battlefield_item((action.get("source") or {}).get("itemId"))
-        if source_item is None:
-            return {"kind": result.get("kind"), "status": "source_missing"}
         if result.get("kind") == "roll_discard_deck_gain_power":
             roll = random.randint(1, 6)
             discarded = 0
@@ -63,14 +62,16 @@ class DiceEffectsMixin:
                     break
                 if not replacement:
                     discarded += 1
-            source_item["rollDiscarded"] = discarded
-            if discarded:
+            if source_item is not None:
+                source_item["rollDiscarded"] = discarded
+            if discarded and source_item is not None:
                 self.adjust_rules_power_counter(source_item, discarded)
             return {
                 "kind": result.get("kind"), "status": "resolved",
                 "roll": roll, "discarded": discarded,
             }
-        amount = int(source_item.get("rollDiscarded") or 0)
+        trigger = (action.get("ability") or {}).get("trigger") or {}
+        amount = int(trigger.get("sourceRollDiscarded", (source_item or {}).get("rollDiscarded")) or 0)
         discarded = {}
         for pid in self.players:
             if pid == player_id:
@@ -115,19 +116,14 @@ class DiceEffectsMixin:
         source_item = self.find_battlefield_item(
             (action.get("source") or {}).get("itemId")
         )
-        if source_item is None:
-            return {
-                "kind": result.get("kind"),
-                "status": "source_missing",
-            }
-        controller_id = self.rules_item_controller_id(source_item)
+        controller_id = action.get("controllerId") or player_id
         delta = self.adjust_rules_score(
             controller_id, int(result.get("value") or 0)
         )
         movement = self._rules_remove_field_item_by_effect(
             source_item, source_item.get("ownerId"), "graveyard", "top",
             reason="destroy",
-        )
+        ) if source_item is not None else {"status": "source_missing"}
         return {
             "kind": result.get("kind"),
             "status": "resolved",

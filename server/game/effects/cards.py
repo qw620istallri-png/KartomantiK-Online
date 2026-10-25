@@ -460,21 +460,38 @@ class CardsEffectsMixin:
         card_id = source.get("cardId")
         if card_id not in self.players.get(owner_id, {}).get("zones", {}).get("graveyard", []):
             return {"kind": result.get("kind"), "status": "source_missing"}
+        target = next((entry for entry in action.get("targets") or []
+                       if entry.get("kind") == "zone_card"), None)
+        target_card_id = (target or {}).get("cardId")
+        target_rules = self.card_rules.get(target_card_id, {})
+        max_cost = int(self.card_rules.get(card_id, {}).get("power") or 0)
+        if (
+            not target or target.get("zone") != "graveyard"
+            or target.get("containerId") != player_id
+            or target_card_id not in player["zones"]["graveyard"]
+            or target_rules.get("type") != "ephemeral_will"
+            or int(target_rules.get("cost") or 0) > max_cost
+            or ("zoneEntryVersion" in target and target["zoneEntryVersion"] !=
+                self.rules_zone_entry_version(player_id, "graveyard", target_card_id))
+        ):
+            return {"kind": result.get("kind"), "status": "target_missing"}
         error, _owner, _replacement = self.move_zone_card_by_effect(
             owner_id, "graveyard", owner_id, "exile", card_id, "top"
         )
-        if error:
-            return {"kind": result.get("kind"), "status": "error"}
-        max_cost = int(self.card_rules.get(card_id, {}).get("power") or 0)
+        if error or card_id not in self.players[owner_id]["zones"]["exile"]:
+            return {"kind": result.get("kind"),
+                    "status": "error" if error else (_replacement or {}).get("status", "not_exiled")}
         self.rules_engine["playPermissions"].append({
             "id": new_id(), "abilityId": (action.get("ability") or {}).get("id"),
-            "playerId": owner_id, "anyWill": True, "fromZone": "graveyard",
+            "playerId": player_id, "cardId": target_card_id, "fromZone": "graveyard",
+            "zoneEntryVersion": self.rules_zone_entry_version(player_id, "graveyard", target_card_id),
             "phaseIds": list(ADVANCED_PHASES), "asSupport": False,
             "noTribute": True, "exileOnLeave": True,
             "ephemeralOnly": True, "maxCost": max_cost,
             "turn": self.phase_tracker["turn"], "sourceCardId": card_id,
         })
-        return {"kind": result.get("kind"), "status": "granted", "playerId": owner_id, "maxCost": max_cost}
+        return {"kind": result.get("kind"), "status": "granted", "playerId": player_id,
+                "cardId": target_card_id, "maxCost": max_cost}
 
     def _rules_result_limbo_source_to_support(self, action, result, player_id, player):
         source = action.get("source") or {}
@@ -517,9 +534,10 @@ class CardsEffectsMixin:
                 source.get("cardId"), player_id, source_item_id=source.get("itemId"),
                 effects_disabled=True, generic_power=1,
                 generic_temperament="choleric",
-            )["id"]
+            )
             for _index in exiled
         ]
+        tokens = [token for token in tokens if token is not None]
         return {
             "kind": result.get("kind"),
             "status": "created" if tokens else "nothing",
@@ -950,6 +968,7 @@ class CardsEffectsMixin:
                     card_id, current_id, hollow=True,
                     effects_disabled=True,
                 ))
+        created = [item for item in created if item is not None]
         return {
             "kind": result.get("kind"),
             "status": "resolved",

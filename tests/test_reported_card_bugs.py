@@ -226,9 +226,11 @@ class CensorTests(ReportedCardRulesCase):
             ]));
         """)
         self.assertEqual(result, [False, True, False, False, True, True])
-        for function in ("handCardIsPlayable", "handCardHasHandAction", "rulesDraftCanBePaid"):
+        for function in ("handCardIsPlayable", "rulesDraftCanBePaid"):
             with self.subTest(function=function):
                 self.assertIn("rulesAdditionalCostAvailableClient(draft)", app_function(function))
+        self.assertIn("rulesZoneActivatedActionDraft", app_function("handCardHasHandAction"))
+        self.assertIn("rulesDraftCanBePaid(draft)", app_function("rulesZoneActivatedActionDraft"))
 
 
 class DestroyTests(ReportedCardRulesCase):
@@ -273,7 +275,7 @@ class DestroyTests(ReportedCardRulesCase):
         self.assertEqual(p2["zones"]["graveyard"][0], "pw")
 
     def client_targets(self, ability, battlefield, first_ids):
-        helper = app_function("rulesStructuredActionTargets")
+        helper = app_function("rulesFieldZoneClient") + "\n" + app_function("rulesStructuredActionTargets")
         return run_node(f"""
             const myPlayerId = "p1";
             const cardsById = new Map([

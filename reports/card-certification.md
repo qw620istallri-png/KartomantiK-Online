@@ -19,8 +19,8 @@ sandbox sont cohérents ; elle ne remplace pas encore un scénario dédié à so
 | Étapes de scripts exécutées | 1284 |
 | Scénarios comportementaux dédiés | 4 |
 | Cartes simples exécutées de bout en bout | 47 |
-| Cartes dont toutes les capacités sont exécutées isolément | 375 |
-| Cartes à règles statiques exécutées | 24 |
+| Cartes dont toutes les capacités sont exécutées isolément | 376 |
+| Cartes à règles statiques exécutées | 23 |
 | Preuve structurelle seulement | 0 |
 | Automatisation partielle | 0 |
 | Application manuelle | 0 |
@@ -40,7 +40,7 @@ sandbox sont cohérents ; elle ne remplace pas encore un scénario dédié à so
 | ---: | --- | --- | --- | --- | ---: | ---: | ---: | --- |
 | 1 | Wind Sprout | Beta | automated | règles génériques exécutées | 0 | 2 | 8 | OK |
 | 2 | Sated Swineheart | Beta | automated | règles génériques exécutées | 0 | 2 | 8 | OK |
-| 3 | Merciful Pago | Beta | automated | règles statiques exécutées | 0 | 1 | 4 | OK |
+| 3 | Merciful Pago | Beta | automated | capacités exécutées isolément | 1 | 1 | 4 | OK |
 | 4 | Tiptup, the Whistler | Beta | automated | règles génériques exécutées | 0 | 2 | 8 | OK |
 | 5 | Slumber Planner | Beta | automated | règles génériques exécutées | 0 | 2 | 8 | OK |
 | 6 | Tidying Torment | Beta | automated | règles génériques exécutées | 0 | 2 | 8 | OK |
@@ -325,7 +325,7 @@ sandbox sont cohérents ; elle ne remplace pas encore un scénario dédié à so
 | 285 | Ignore | Beta | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |
 | 286 | Abandon | Beta | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |
 | 287 | Purifying Ritual | Beta | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |
-| 288 | Nullifying Radiance | Beta | automated | capacités exécutées isolément | 3 | 0 | 0 | OK |
+| 288 | Nullifying Radiance | Beta | automated | capacités exécutées isolément | 2 | 0 | 0 | OK |
 | 289 | Empathic Mask | Beta | automated | capacités exécutées isolément | 5 | 0 | 0 | OK |
 | 290 | Unreachable Pillar | Beta | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |
 | 291 | Trap | Beta | automated | capacités exécutées isolément | 1 | 0 | 0 | OK |

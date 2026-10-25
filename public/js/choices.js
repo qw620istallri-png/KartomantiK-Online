@@ -1,9 +1,39 @@
 // Pending rules choice panels and screens.
 // Loaded before app.js: declarations only, nothing runs at load time.
 
+let rulesChoiceRenderKey = null;
+let rulesChoiceContentVisible = false;
+let rulesChoiceAnswerPending = null;
+
+function resetRulesChoiceInteraction() {
+  rulesChoiceRenderKey = null;
+  rulesChoiceContentVisible = false;
+  rulesChoiceAnswerPending = null;
+  handDropSelection = { choiceId: null, playerId: null, hand: null, indexes: [] };
+}
+
+function lockRulesChoiceAnswer() {
+  const choice = latestState?.rulesEngine?.pendingChoice;
+  const waiting = rulesChoiceAnswerPending?.choiceId === choice?.id && rulesChoiceAnswerPending?.playerId === myPlayerId;
+  $("#rulesChoiceOptions")?.setAttribute("aria-busy", waiting ? "true" : "false");
+  if (waiting) $$("#rulesChoiceOptions button, #rulesChoiceOptions input, #rulesChoiceOptions select, #rulesChoiceOptions textarea")
+    .forEach((control) => { control.disabled = true; });
+}
+
+function sendRulesChoiceAnswer(payload) {
+  const choice = latestState?.rulesEngine?.pendingChoice;
+  if (!latestState?.rulesEngine?.enabled || !choice || choice.id !== payload.choiceId || choice.playerId !== myPlayerId || isObserver || latestState?.ended) return false;
+  if (rulesChoiceAnswerPending?.choiceId === choice.id && rulesChoiceAnswerPending?.playerId === myPlayerId) return false;
+  rulesChoiceAnswerPending = { choiceId: choice.id, playerId: myPlayerId };
+  send(payload);
+  lockRulesChoiceAnswer();
+  return true;
+}
+
 function closeRulesChoicePanel(force = false) {
   const mandatoryChoice = latestState?.rulesEngine?.pendingChoice;
   if (mandatoryChoice?.playerId === myPlayerId && !force) return;
+  resetRulesChoiceInteraction();
   pendingTriggeredPlacement = null;
   $("#rulesChoicePanel").classList.add("hidden");
 }
@@ -104,7 +134,7 @@ function renderResolvePrompt() {
 }
 
 // Hand choices use a drop onto the effect screen; clicking a hand card only inspects it.
-let handDropSelection = { choiceId: null, indexes: [] };
+let handDropSelection = { choiceId: null, playerId: null, hand: null, indexes: [] };
 
 function rulesHandDropChoice() {
   const choice = latestState?.rulesEngine?.pendingChoice;
@@ -116,19 +146,22 @@ function rulesHandDropChoice() {
 }
 
 function rulesHandDropSelected(choice) {
-  if (handDropSelection.choiceId !== choice.id) handDropSelection = { choiceId: choice.id, indexes: [] };
+  const hand = JSON.stringify(latestState?.players?.[myPlayerId]?.zones?.hand?.cards || []);
+  if (handDropSelection.choiceId !== choice.id || handDropSelection.playerId !== myPlayerId || handDropSelection.hand !== hand)
+    handDropSelection = { choiceId: choice.id, playerId: myPlayerId, hand, indexes: [] };
   return handDropSelection.indexes;
 }
 
 function sendHandDropSelection(choice) {
   const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
   const cardIds = rulesHandDropSelected(choice).map((index) => hand[index]).filter(Boolean);
-  send({ type: "resolve_rules_choice", choiceId: choice.id, cardIds });
+  sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, cardIds });
 }
 
 function pickHandDropCard(handIndex, fromDrop = false) {
   const choice = rulesHandDropChoice();
   if (!choice) return false;
+  if (rulesChoiceAnswerPending?.choiceId === choice.id) return true;
   if (!fromDrop) return false;
   const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
   const cardId = hand[handIndex];
@@ -141,12 +174,21 @@ function pickHandDropCard(handIndex, fromDrop = false) {
   if (choice.kind === "peek_top_card") {
     // a hand card dropped on the peek screen swaps with the top card (a plain click does nothing)
     if (!fromDrop) return true;
-    send({ type: "resolve_rules_choice", choiceId: choice.id, option: "swap", cardIds: [cardId] });
+    sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: "swap", cardIds: [cardId] });
     return true;
   }
   const limit = Number(choice.count || 1);
   const selected = rulesHandDropSelected(choice);
   const position = selected.indexOf(handIndex);
+  if (
+    choice.destination === "stalemate_for_support" && cardId === choice.sourceCardId && position < 0
+    && hand.filter((id) => id === cardId).length - selected.filter((index) => hand[index] === cardId).length <= 1
+  ) {
+    // Chabak enters after the two other cards are put into Stalemate. Keep
+    // one physical copy in Hand; spare copies may still pay this choice.
+    showToast(t("rulesBoardCardNotPlayable"), true);
+    return true;
+  }
   if (position >= 0) selected.splice(position, 1);
   else if (selected.length < limit) selected.push(handIndex);
   if (!choice.upTo && selected.length === limit) sendHandDropSelection(choice);
@@ -164,9 +206,10 @@ let rulesChoiceFlipTimer = null;
 let rulesDeckReorderRetry = null;
 let rulesChoiceRetry = null;
 
-function renderRulesChoice() {
-  rulesDeckReorderRetry = null;
-  rulesChoiceRetry = null;
+function renderRulesChoice(force = false) {
+  const choice = latestState?.rulesEngine?.pendingChoice;
+  if (rulesChoiceAnswerPending && (rulesChoiceAnswerPending.choiceId !== choice?.id || rulesChoiceAnswerPending.playerId !== myPlayerId))
+    rulesChoiceAnswerPending = null;
   const waiting = rulesAnimationsBusyFor();
   if (waiting > 0 && latestState?.rulesEngine?.pendingChoice?.playerId === myPlayerId) {
     $("#rulesChoicePanel").classList.add("hidden");
@@ -176,8 +219,12 @@ function renderRulesChoice() {
   }
   renderResolvePrompt();
   renderOpponentDecidingBanner();
-  renderRulesChoiceContent();
-  if (!rulesChoiceRetry) rulesChoiceRetry = () => renderRulesChoice();
+  renderRulesChoiceContent(force);
+  if (!rulesChoiceRetry) rulesChoiceRetry = () => {
+    rulesChoiceAnswerPending = null;
+    renderRulesChoice(true);
+  };
+  lockRulesChoiceAnswer();
   syncRulesChoiceSourceCard();
   const handDrop = rulesHandDropChoice();
   const choicePanel = $("#rulesChoicePanel");
@@ -273,10 +320,27 @@ function wireCardToSlots(card, slots, onPick) {
 
 // Every rules choice uses the same effect screen: dark backdrop, no window, the source card on the left,
 // the effect text and the prompt centered, unframed choices. Specialised screens set their own layout.
-function renderRulesChoiceContent() {
+function renderRulesChoiceContent(force = false) {
+  // Keep in-progress picks, typed answers and drag order when an unrelated
+  // server update redraws the table. Changes to choice inputs still rebuild it.
+  const key = JSON.stringify([
+    myPlayerId, isObserver, currentLanguage, latestState?.rulesEngine?.enabled, latestState?.ended,
+    latestState?.rulesEngine?.pendingChoice, pendingTriggeredPlacement,
+    latestState?.players?.[myPlayerId]?.zones?.hand?.cards,
+    Object.entries(latestState?.players || {}).map(([id, player]) => [id, player.name, player.seat]),
+    (latestState?.battlefield || []).map((item) => [item.id, item.cardId, item.controllerId, item.ownerId, item.faceUp]),
+  ]);
+  if (!force && rulesChoiceRenderKey === key) {
+    $("#rulesChoicePanel").classList.toggle("hidden", !rulesChoiceContentVisible);
+    return;
+  }
+  rulesChoiceRenderKey = key;
+  rulesDeckReorderRetry = null;
+  rulesChoiceRetry = null;
   const panel = $("#rulesChoicePanel");
   panel.classList.remove("effect-screen");
   renderRulesChoiceScreen();
+  rulesChoiceContentVisible = !panel.classList.contains("hidden");
   const specialised = ["hand-drop", "destination-screen", "replace-screen"].some((name) => panel.classList.contains(name))
     || latestState?.rulesEngine?.pendingChoice?.kind === "deck_reorder" && !pendingTriggeredPlacement;
   if (!panel.classList.contains("hidden") && !specialised) panel.classList.add("cards-screen", "effect-screen");
@@ -315,7 +379,7 @@ function renderRulesChoiceScreen() {
   }
 
   const choice = latestState?.rulesEngine?.pendingChoice;
-  if (!choice || choice.playerId !== myPlayerId || isObserver) {
+  if (!latestState?.rulesEngine?.enabled || latestState?.ended || !choice || choice.playerId !== myPlayerId || isObserver) {
     panel.classList.add("hidden");
     return;
   }
@@ -355,7 +419,7 @@ function renderRulesChoiceScreen() {
         options.querySelectorAll("button").forEach((entry) => {
           entry.disabled = true;
         });
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           cardIds: [button.dataset.rulesChainCard],
@@ -374,7 +438,7 @@ function renderRulesChoiceScreen() {
         options.querySelectorAll("button").forEach((entry) => {
           entry.disabled = true;
         });
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           option: "decline",
@@ -523,7 +587,7 @@ function renderRulesChoiceScreen() {
     });
     let reorderSent = false;
     // a refused distribution can be corrected and sent again
-    rulesDeckReorderRetry = () => { reorderSent = false; showReorderProblem(); };
+    rulesDeckReorderRetry = () => { rulesChoiceAnswerPending = null; reorderSent = false; showReorderProblem(); lockRulesChoiceAnswer(); };
     rulesChoiceRetry = rulesDeckReorderRetry;
     const submitReorder = () => {
       if (reorderSent || showReorderProblem()) return;
@@ -537,7 +601,7 @@ function renderRulesChoiceScreen() {
           ...(group.extraSide ? { extra: ordered("extra") } : {}),
         };
       });
-      send({ type: "resolve_rules_choice", choiceId: choice.id, option: { groups } });
+      sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: { groups } });
     };
     if ($("#rulesDeckReorderConfirm")) $("#rulesDeckReorderConfirm").onclick = submitReorder;
     showReorderProblem();
@@ -576,7 +640,7 @@ function renderRulesChoiceScreen() {
     });
     $("#rulesGuessConfirm").onclick = (event) => {
       event.currentTarget.disabled = true;
-      send({
+      sendRulesChoiceAnswer({
         type: "resolve_rules_choice",
         choiceId: choice.id,
         option: { type: guess.type, temperament: guess.temperament, value: Number(guess.value) },
@@ -609,7 +673,7 @@ function renderRulesChoiceScreen() {
       if (peekSent) return;
       peekSent = true;
       options.querySelectorAll("button").forEach((button) => { button.disabled = true; });
-      send({ type: "resolve_rules_choice", choiceId: choice.id, option: slot.dataset.rulesPeekOption });
+      sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: slot.dataset.rulesPeekOption });
     });
     if (choice.allowSwap) panel.classList.add("hand-swap");
     panel.classList.remove("hidden");
@@ -630,7 +694,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-optional-trigger]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           option: button.dataset.rulesOptionalTrigger,
@@ -650,7 +714,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-token-count]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           option: button.dataset.rulesTokenCount,
@@ -676,7 +740,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-score-option]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           option: button.dataset.rulesScoreOption,
@@ -704,7 +768,7 @@ function renderRulesChoiceScreen() {
       });
       $("#rulesSupportOrderConfirm").onclick = (event) => {
         event.currentTarget.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           cardIds: ordered.map((item) => item.itemId),
@@ -731,7 +795,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-optional-discard]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           option: button.dataset.rulesOptionalDiscard,
@@ -758,7 +822,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-weaken-option]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({ type: "resolve_rules_choice", choiceId: choice.id, option: button.dataset.rulesWeakenOption });
+        sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: button.dataset.rulesWeakenOption });
       };
     });
     panel.classList.remove("hidden");
@@ -789,7 +853,7 @@ function renderRulesChoiceScreen() {
       const entry = declared();
       if (!entry) return;
       confirmButton.disabled = true;
-      send({ type: "resolve_rules_choice", choiceId: choice.id, option: entry.cardId });
+      sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: entry.cardId });
     };
     panel.classList.remove("hidden");
     return;
@@ -806,14 +870,14 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-temperament-option]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({ type: "resolve_rules_choice", choiceId: choice.id, option: button.dataset.rulesTemperamentOption });
+        sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: button.dataset.rulesTemperamentOption });
       };
     });
     panel.classList.remove("hidden");
     return;
   }
   if (choice.kind === "binary_choice") {
-    const params = { card: cardName(choice.sourceCardId), target: cardName(choice.relatedCardId) };
+    const params = { card: cardName(choice.sourceCardId), target: cardName(choice.relatedCardId), effect: cardName(choice.incomingCardId) };
     $("#rulesChoiceHeading").textContent = t(choice.headingKey);
     $("#rulesChoiceText").textContent = rulesText(choice.textKey, params);
     if (choice.purpose === "amphora_pick") {
@@ -837,7 +901,7 @@ function renderRulesChoiceScreen() {
       button.onclick = () => {
         $$("[data-rules-binary-option]").forEach((other) => { other.disabled = true; });
         button.classList.add("is-picked");
-        send({ type: "resolve_rules_choice", choiceId: choice.id, option: button.dataset.rulesBinaryOption });
+        sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: button.dataset.rulesBinaryOption });
       };
     });
     panel.classList.remove("hidden");
@@ -860,7 +924,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-clemency-option]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({ type: "resolve_rules_choice", choiceId: choice.id, option: button.dataset.rulesClemencyOption });
+        sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: button.dataset.rulesClemencyOption });
       };
     });
     panel.classList.remove("hidden");
@@ -883,7 +947,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-hand-limit-option]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           option: button.dataset.rulesHandLimitOption,
@@ -930,7 +994,7 @@ function renderRulesChoiceScreen() {
       ${limit > 1 ? `<button type="button" class="primary" id="rulesPrivateCardsConfirm" disabled>${esc(t("confirm"))}</button>` : ""}`;
     const sendPrivateCards = () => {
       options.querySelectorAll("button").forEach((button) => { button.disabled = true; });
-      send({
+      sendRulesChoiceAnswer({
         type: "resolve_rules_choice",
         choiceId: choice.id,
         cardIds: [...selected].map((index) => sourceCards[index]).filter(Boolean),
@@ -979,7 +1043,9 @@ function renderRulesChoiceScreen() {
         button.onclick = (event) => {
           const itemId = button.dataset.rulesPowerTarget;
           if (event.target.closest("[data-rules-power-undo]")) {
-            assigned.splice(assigned.lastIndexOf(itemId), 1);
+            const index = assigned.lastIndexOf(itemId);
+            if (index < 0) return;
+            assigned.splice(index, 1);
             paintDistribution();
             return;
           }
@@ -987,7 +1053,7 @@ function renderRulesChoiceScreen() {
           assigned.push(itemId);
           if (assigned.length < total) { paintDistribution(); return; }
           options.querySelectorAll("button").forEach((entry) => { entry.disabled = true; });
-          send({ type: "resolve_rules_choice", choiceId: choice.id, option: { itemIds: [...assigned] } });
+          sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: { itemIds: [...assigned] } });
         };
       });
     };
@@ -1013,7 +1079,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-random-target]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           itemId: button.dataset.rulesRandomTarget,
@@ -1039,7 +1105,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-skip-option]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           option: button.dataset.rulesSkipOption,
@@ -1079,7 +1145,7 @@ function renderRulesChoiceScreen() {
         </div>
       </section>`).join("");
     let relocationSent = false;
-    rulesChoiceRetry = () => { relocationSent = false; };
+    rulesChoiceRetry = () => { rulesChoiceAnswerPending = null; relocationSent = false; lockRulesChoiceAnswer(); };
     const refreshLanes = () => {
       options.querySelectorAll("[data-rules-relocation-group]").forEach((section) => {
         const interzone = section.querySelector('[data-rules-relocation-strip="interzone"]');
@@ -1098,7 +1164,7 @@ function renderRulesChoiceScreen() {
         const ids = (side) => [...section.querySelectorAll(`[data-rules-relocation-strip="${side}"] [data-rules-relocation-card]`)].map((card) => card.dataset.rulesRelocationCard);
         return { playerId: group.playerId, interzone: ids("interzone"), deckBottom: ids("deck") };
       });
-      send({ type: "resolve_rules_choice", choiceId: choice.id, option: { groups } });
+      sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: { groups } });
     };
     options.querySelectorAll("[data-rules-relocation-card]").forEach((card) => {
       card.addEventListener("pointerdown", (event) => {
@@ -1156,7 +1222,7 @@ function renderRulesChoiceScreen() {
         const cardId = choice.cardIds[Number(button.dataset.rulesSuspendCard)];
         if (!cardId) return;
         button.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           cardIds: [cardId],
@@ -1192,7 +1258,7 @@ function renderRulesChoiceScreen() {
       });
       $("#rulesSimultaneousOrderConfirm").onclick = (event) => {
         event.currentTarget.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           cardIds: ordered.map((action) => action.actionId).reverse(),
@@ -1218,7 +1284,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-persist-item]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           itemId: button.dataset.rulesPersistItem,
@@ -1244,7 +1310,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-pick-item]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           itemId: button.dataset.rulesPickItem,
@@ -1269,7 +1335,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-distribute-item]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           itemId: button.dataset.rulesDistributeItem,
@@ -1295,7 +1361,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-reveal-index]").forEach((button) => {
       button.onclick = () => {
         $$("[data-rules-reveal-index]").forEach((other) => { other.disabled = true; });
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           option: button.dataset.rulesRevealIndex,
@@ -1322,7 +1388,7 @@ function renderRulesChoiceScreen() {
     $$("[data-rules-memory-option]").forEach((button) => {
       button.onclick = () => {
         button.disabled = true;
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           option: button.dataset.rulesMemoryOption,
@@ -1363,7 +1429,7 @@ function renderRulesChoiceScreen() {
     const resolveDestination = (button) => {
       if (!button || button.disabled) return;
       $$('[data-rules-destination]').forEach((candidate) => { candidate.disabled = true; });
-      send({
+      sendRulesChoiceAnswer({
         type: "resolve_rules_choice",
         choiceId: choice.id,
         option: button.dataset.rulesDestination,
@@ -1445,7 +1511,7 @@ function renderRulesChoiceScreen() {
     const chooseItem = (itemId) => {
       if (!itemId || deck.dataset.sent) return;
       deck.dataset.sent = "1";
-      send({ type: "resolve_rules_choice", choiceId: choice.id, itemId });
+      sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, itemId });
     };
     options.querySelectorAll("[data-rules-replace-item]").forEach((card) => {
       card.addEventListener("click", () => chooseItem(card.dataset.rulesReplaceItem));
@@ -1500,7 +1566,7 @@ function renderRulesChoiceScreen() {
       </button>` : ""}`;
     $$('[data-rules-recovery-option]').forEach((button) => {
       button.onclick = () => {
-        send({
+        sendRulesChoiceAnswer({
           type: "resolve_rules_choice",
           choiceId: choice.id,
           option: button.dataset.rulesRecoveryOption,
@@ -1598,7 +1664,7 @@ function renderRulesChoiceScreen() {
     });
     confirm.onclick = () => {
       confirm.disabled = true;
-      send({
+      sendRulesChoiceAnswer({
         type: "resolve_rules_choice",
         choiceId: choice.id,
         cardIds: [...selected].map((index) => cards[index]).filter(Boolean),
@@ -1611,7 +1677,7 @@ function renderRulesChoiceScreen() {
     button.onclick = () => {
       const cardId = cards[Number(button.dataset.rulesDiscardIndex)];
       if (!cardId) return;
-      send({ type: "resolve_rules_choice", choiceId: choice.id, cardIds: [cardId] });
+      sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, cardIds: [cardId] });
       button.disabled = true;
     };
   });

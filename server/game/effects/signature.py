@@ -246,7 +246,7 @@ class SignatureEffectsMixin:
         if host is None:
             return {"kind": result.get("kind"), "status": "source_missing"}
         if not self.rules_lunar_entries(player_id):
-            self.rules_engine["skipEndPhaseTurn"] = self.phase_tracker["turn"]
+            self.rules_engine.setdefault("skipEndPhaseTurns", {})[player_id] = self.phase_tracker["turn"]
             movement = self._rules_remove_field_item_by_effect(
                 host, host.get("ownerId"), "graveyard", "top", reason="destroy",
             )
@@ -267,6 +267,7 @@ class SignatureEffectsMixin:
         count = sum(
             1 for entry in self.rules_engine.get("actionStack") or []
             if entry.get("controllerId") != player_id and entry.get("id") != action.get("id")
+            and entry.get("kind") == "play_card"
         )
         if host is None or count <= 0:
             return {"kind": result.get("kind"), "status": "nothing", "value": 0}
@@ -347,6 +348,7 @@ class SignatureEffectsMixin:
         if host is None:
             return {"kind": result.get("kind"), "status": "source_missing"}
         returned = []
+        returned_by_owner = {}
         for item in list(self.battlefield):
             if (
                 self.rules_field_zone(item) != "confrontation"
@@ -359,9 +361,22 @@ class SignatureEffectsMixin:
             )
             if movement.get("status") in {"moved", "removed_copy"}:
                 returned.append(item.get("cardId"))
+                if movement.get("status") == "moved" and movement.get("zone") == "deck":
+                    returned_by_owner.setdefault(item["ownerId"], []).append(item["cardId"])
         exiled = self._rules_remove_field_item_by_effect(
             host, host.get("ownerId"), "exile", "top", reason="exile",
         )
+        order_queue = [
+            {"playerId": owner_id, "cardIds": card_ids,
+             "topCount": 0, "bottomCount": len(card_ids)}
+            for owner_id, card_ids in returned_by_owner.items() if len(card_ids) > 1
+        ]
+        if order_queue:
+            choice = self.rules_next_deck_order_choice(
+                order_queue, (action.get("source") or {}).get("cardId"),
+            )
+            # Only ordering the bottom cards is allowed, not moving them to top.
+            choice["groups"][0].update(topCount=0, bottomCount=len(order_queue[0]["cardIds"]))
         return {"kind": result.get("kind"), "status": "returned", "cardIds": returned, "movement": exiled}
 
     def _rules_result_paciphint_swap(self, action, result, player_id, player):
@@ -461,6 +476,13 @@ class SignatureEffectsMixin:
 
     def _rules_result_return_turn_tributes_end_turn(self, action, result, player_id, player):
         turn = self.phase_tracker["turn"]
+        # Jurat covers the whole turn, including costs paid after this win
+        # effect resolves. The end-turn scanner expands this registration.
+        self.rules_engine.setdefault("turnTributeReturns", []).append({
+            "turn": turn, "playerId": player_id,
+            "sourceCardId": (action.get("source") or {}).get("cardId"),
+            "sourceActionId": action.get("id"),
+        })
         memories = []
         for entry in self.rules_engine.get("tributeLog") or []:
             if entry.get("turn") != turn or entry.get("playerId") != player_id:
@@ -468,6 +490,7 @@ class SignatureEffectsMixin:
             memory = self.create_rules_effect_memory(
                 entry["ownerId"], entry["cardId"], "return_from_limbo_end_turn",
                 controller_id=player_id, source_action_id=action.get("id"),
+                data={"effectSourceCardId": (action.get("source") or {}).get("cardId")},
             )
             if memory:
                 memories.append(entry["cardId"])
@@ -488,7 +511,7 @@ class SignatureEffectsMixin:
         ):
             return {"kind": result.get("kind"), "status": "not_winner"}
         held = []
-        for item in self.rules_confrontation_items_owned_by(target_id, ("confrontation",)):
+        for item in self.rules_confrontation_items(target_id, ("confrontation",)):
             item["holdUntilResolution"] = self.phase_tracker["turn"] + 1
             held.append(item["id"])
         return {"kind": result.get("kind"), "status": "held", "itemIds": held}

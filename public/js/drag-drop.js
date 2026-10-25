@@ -430,7 +430,7 @@ function resolveDrop(ctx, clientX, clientY) {
       && ctx.fromZone === "graveyard"
       && ctx.fromOwnerId === myPlayerId
       && ["ephemeral_will", "persistent_will"].includes(card?.type)
-      && rulesLimboPlayMode()
+      && rulesLimboPlayMode(ctx.cardId)
     ) {
       beginRulesBoardAction({
         cardId: ctx.cardId,

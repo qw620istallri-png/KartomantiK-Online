@@ -7,6 +7,21 @@ from .common import (
 
 
 class ViewMixin:
+    def rules_stack_action_for_view(self, action, viewer_id, role):
+        entry = dict(self.rules_payload_for_view(action, viewer_id, role))
+        if not self.rules_engine["enabled"] or viewer_id not in self.players:
+            return entry
+        entry["effectTargetable"] = not self.rules_stack_action_is_protected(action, viewer_id)
+        entry["neutralizePayment"] = self.rules_stack_neutralize_payment(action)
+        contract = self.rules_action_target_rules(action) or {}
+        entry["retargetableItemIds"] = [
+            target["itemId"] for target in self.rules_legal_target_candidates(
+                contract, action.get("controllerId"),
+                source_item_id=(action.get("source") or {}).get("itemId"),
+            ) if target.get("kind") == "card"
+        ] if not contract.get("groups") and int(contract.get("max") or 0) == 1 else []
+        return entry
+
     def rules_payload_for_view(self, value, viewer_id, role, private_player_id=None):
         """Filter private resolution data as well as the visible board zones."""
         if normalize_role(role) in PRIVILEGED_VIEW_ROLES:
@@ -203,9 +218,12 @@ class ViewMixin:
                     zones_view[zone] = {
                         "cards": list(cards),
                         "owners": {card_id: self.card_owner_in_zone(pid, zone, card_id) for card_id in cards},
+                        "entryVersions": {card_id: self.rules_zone_entry_version(pid, zone, card_id) for card_id in cards},
                     }
                     if zone == "hand" and revealed_indices:
                         zones_view[zone]["revealedIndices"] = revealed_indices
+                    if zone == "receptacle" and self.rules_engine["enabled"] and viewer_id in self.players:
+                        zones_view[zone]["effectTargetable"] = viewer_id == pid or not self.rules_vessel_locked(pid)
                 else:
                     zones_view[zone] = {"count": len(cards)}
                     if zone == "hand" and revealed_indices:
@@ -223,6 +241,8 @@ class ViewMixin:
                 "sideboard": list(player.get("sideboard", [])) if can_view_hidden or pid == viewer_id else {"count": len(player.get("sideboard", []))},
                 "activity": player.get("activity"),
             }
+            if self.rules_engine["enabled"] and viewer_id in self.players:
+                players_view[pid]["effectTargetable"] = pid == viewer_id or not self.rules_active_passive_sources("mutual_opponent_immunity")
 
         zone_entry_turns_view = {}
         for entry_key, entry_turn in self.rules_engine["zoneEntryTurns"].items():
@@ -292,6 +312,18 @@ class ViewMixin:
             if item.get("supportUntilTurn"):
                 entry["supportUntilTurn"] = item["supportUntilTurn"]
             controller_id = self.rules_item_controller_id(item)
+            if self.rules_engine["enabled"] and item.get("faceUp") and viewer_id in self.players:
+                entry["effectTargetable"] = not (
+                    self.rules_item_is_immune(item, viewer_id) or self.rules_item_is_protected(item, viewer_id)
+                )
+                entry["usableAbilityIds"] = [
+                    ability["id"] for ability in self.rules_item_card_rules(item).get("activatedAbilities") or []
+                    if self.rules_item_effects_active(item) and self.rules_field_ability_usable(
+                        item, ability, self.rules_field_zone(item), self.current_phase_id(), viewer_id,
+                    )
+                ]
+            if item.get("interzoneTurn") is not None:
+                entry["interzoneTurn"] = item["interzoneTurn"]
             if (
                 self.rules_engine["enabled"] and item.get("faceUp")
                 and item.get("fieldZone") == "interzone"
@@ -323,7 +355,7 @@ class ViewMixin:
                 entry["willManifestation"] = True
             if item.get("attachedCards"):
                 entry["attachedCards"] = [dict(card) for card in item["attachedCards"]]
-            for option_key in ("outcastOff", "karmapultAuto", "gummoCopy", "persuaded"):
+            for option_key in ("outcastOff", "karmapultAuto", "gummoCopy", "persuaded", "revealedFreeWill"):
                 if item.get(option_key):
                     entry[option_key] = item[option_key]
             if item.get("concealedWill") and can_peek:
@@ -379,6 +411,8 @@ class ViewMixin:
                 "autoSkipPhases": bool(self.rules_engine.get("autoSkipPhases", True)),
                 "autoSkipOffPlayerIds": list(self.rules_engine.get("autoSkipOffPlayerIds") or []),
                 "passAllPlayerIds": list(self.rules_engine.get("passAllPlayerIds") or []),
+                "skipEndPhasePlayerIds": [pid for pid, turn in (self.rules_engine.get("skipEndPhaseTurns") or {}).items()
+                                          if pid in self.players and turn == self.phase_tracker["turn"]],
                 "deckConfirmedPlayerIds": list(self.rules_engine["deckConfirmedPlayerIds"]),
                 "openingHandPlayerIds": list(self.rules_engine["openingHandPlayerIds"]),
                 "mulliganPlayerIds": list(self.rules_engine["mulliganPlayerIds"]),
@@ -419,7 +453,10 @@ class ViewMixin:
                 ),
                 "conditionalSupportHandCardIds": conditional_support_hand_card_ids,
                 "priorityPasses": list(self.rules_engine["priorityPasses"]),
-                "actionStack": self.rules_payload_for_view(self.rules_engine["actionStack"], viewer_id, role),
+                "actionStack": [
+                    self.rules_stack_action_for_view(action, viewer_id, role)
+                    for action in self.rules_engine["actionStack"]
+                ],
                 "lastResolvedAction": self.rules_payload_for_view(self.rules_engine["lastResolvedAction"], viewer_id, role),
                 "ongoingEffects": [effect for effect in self.rules_engine["ongoingEffects"]
                                    if self.rules_ongoing_effect_active(effect)],

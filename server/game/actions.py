@@ -158,7 +158,9 @@ class ActionsMixin:
                 entry for entry in self.rules_engine.get("playPermissions") or []
                 if entry.get("playerId") == player_id
                 and entry.get("fromZone") == "graveyard"
-                and entry.get("anyWill") and entry.get("exileOnLeave")
+                and (entry.get("anyWill") or entry.get("cardId") == card_id)
+                and entry.get("exileOnLeave")
+                and ("zoneEntryVersion" not in entry or entry["zoneEntryVersion"] == self.rules_zone_entry_version(container_id, zone, card_id))
                 and entry.get("turn") == self.phase_tracker["turn"]
                 and self.current_phase_id() in entry.get("phaseIds", [])
                 and (entry.get("maxCost") is None or int(metadata.get("cost") or 0) <= int(entry["maxCost"]))
@@ -314,7 +316,9 @@ class ActionsMixin:
             return None, []
         if not isinstance(targets, list):
             return "Targets must be supplied as a list.", None
-        if len(targets) > 12:
+        capacity = len(self.battlefield) + len(self.rules_engine.get("actionStack") or []) + len(self.players) + sum(
+            len(cards) for player in self.players.values() for cards in player.get("zones", {}).values())
+        if len(targets) > capacity:
             return "Too many targets were selected.", None
         clean_targets = []
         seen_targets = set()
@@ -328,7 +332,7 @@ class ActionsMixin:
                 if not item_id or target_key in seen_targets:
                     continue
                 item = self.find_battlefield_item(item_id)
-                if item is None or not item.get("faceUp") or not item.get("cardId"):
+                if item is None or not item.get("faceUp") or not (item.get("cardId") or item.get("isTokenCard")):
                     return "A selected target is no longer face up on the battlefield.", None
                 supplied_card_id = str(target.get("cardId") or "")
                 if supplied_card_id and supplied_card_id != item.get("cardId"):
@@ -350,10 +354,16 @@ class ActionsMixin:
                 container = self.players.get(container_id)
                 if container is None or card_id not in container.get("zones", {}).get(zone, []):
                     return "A selected target is no longer in the declared public zone.", None
+                entry_version = self.rules_zone_entry_version(container_id, zone, card_id)
+                if "zoneEntryVersion" in target and (
+                    type(target["zoneEntryVersion"]) is not int or target["zoneEntryVersion"] != entry_version
+                ):
+                    return "The selected card left this zone after it was targeted.", None
                 clean_targets.append({
                     "kind": "zone_card", "zone": zone, "containerId": container_id,
                     "cardId": card_id,
                     "ownerId": self.card_owner_in_zone(container_id, zone, card_id),
+                    "zoneEntryVersion": entry_version,
                 })
             elif kind == "player":
                 target_player_id = str(target.get("playerId") or "")
@@ -438,7 +448,7 @@ class ActionsMixin:
             if result.get("perCount") in RULES_SCORE_COUNTS:
                 clean["perCount"] = result["perCount"]
             return clean
-        if kind == "score_target" and isinstance(result.get("value"), (int, float)):
+        if kind in {"score_target", "move_source_to_target_vessel_score"} and isinstance(result.get("value"), (int, float)):
             clean = {
                 "kind": kind,
                 "value": max(-999, min(int(result["value"]), 999)),
@@ -453,6 +463,8 @@ class ActionsMixin:
             }
             if result.get("perCount") in RULES_SCORE_COUNTS:
                 clean["perCount"] = result["perCount"]
+            if result.get("opponentOfEventController"):
+                clean["opponentOfEventController"] = True
             return clean
         if kind == "score_source_container" and isinstance(result.get("value"), (int, float)):
             return {
@@ -628,7 +640,8 @@ class ActionsMixin:
         if kind == "optional_discard_wills_for_power":
             return {"kind": kind, "value": max(1, min(int(result.get("value") or 1), 20))}
         if kind == "lock_support_entries":
-            return {"kind": kind, "scope": "controller" if result.get("scope") == "controller" else "all"}
+            return {"kind": kind, "scope": "controller" if result.get("scope") == "controller" else "all",
+                    "playOnly": bool(result.get("playOnly"))}
         if kind == "set_field_power":
             mode = str(result.get("mode") or "")
             return {"kind": kind, "mode": mode} if mode in {"base", "lowest_base"} else None
@@ -1062,6 +1075,10 @@ class ActionsMixin:
     def rules_ability_targets_error(self, target_rules, targets, controller_id,
                                     event_item_id=None, source_item_id=None, source_card_id=None):
         target_rules = target_rules or {}
+        if target_rules.get("distinctTargets"):
+            identities = [(target.get("kind"), target.get("itemId"), target.get("containerId"), target.get("zone"), target.get("cardId")) for target in targets]
+            if len(set(identities)) != len(identities):
+                return "Choose different cards for these targets."
         groups = target_rules.get("groups")
         if isinstance(groups, list):
             if len(targets) != len(groups):
@@ -1077,9 +1094,16 @@ class ActionsMixin:
                     return error
             return None
         minimum = max(0, int(target_rules.get("min") or 0))
-        maximum = max(minimum, int(target_rules.get("max") or minimum))
+        maximum = max(minimum, len(targets) if target_rules.get("anyNumber") else int(target_rules.get("max") or minimum))
         if not minimum <= len(targets) <= maximum:
             return "Choose the required number of targets for this effect."
+        if target_rules.get("distinctTemperaments"):
+            temperaments = [self.rules_manifestation_characteristics(item)["temperament"]
+                for target in targets if (item := self.find_battlefield_item(target.get("itemId"))) is not None]
+            if len(set(temperaments)) != len(temperaments):
+                return "Choose at most one card of each temperament."
+        if target_rules.get("sameContainer") and len({target.get("containerId") for target in targets}) > 1:
+            return "Choose cards from a single player's zone."
         required_types = set(target_rules.get("cardTypes") or [])
         if target_rules.get("cardType"):
             required_types.add(target_rules["cardType"])
@@ -1091,6 +1115,8 @@ class ActionsMixin:
             if total_points > target_rules["maxTotalPoints"]:
                 return "The selected targets are worth too many points in total."
         for target in targets:
+            if isinstance(target_rules.get("maxCost"), (int, float)) and int(self.card_rules.get(target.get("cardId"), {}).get("cost") or 0) > target_rules["maxCost"]:
+                return "The selected card's Tribute cost is too high."
             target_kind = str(target_rules.get("kind") or "card")
             if target_kind == "player":
                 if target.get("kind") != "player":
@@ -1233,6 +1259,10 @@ class ActionsMixin:
                     target.get("containerId"), {}
                 ).get("zones", {}).get(target.get("zone"), []):
                     return "The targeted card is no longer in its expected zone."
+                if "zoneEntryVersion" in target and target["zoneEntryVersion"] != self.rules_zone_entry_version(
+                    target.get("containerId"), target.get("zone"), target.get("cardId")
+                ):
+                    return "The targeted card left this zone after it was targeted."
                 if target_rules.get("enteredThisTurn"):
                     entry_turn = self.rules_engine.get("zoneEntryTurns", {}).get(
                         f'{target.get("containerId")}:{target.get("zone")}:{target.get("cardId")}'
@@ -1359,8 +1389,11 @@ class ActionsMixin:
         ability = next((entry for entry in abilities if entry.get("id") == ability_id), None)
         if ability is None:
             return ("Unknown played ability." if kind == "play_card" else "Unknown activated ability."), None
+        if ability.get("reduceSourcePower") and self.rules_modifiers_prevented(source_item):
+            return "This card cannot receive the power reduction required by its cost.", None
         if (
             source.get("zone") == "battlefield"
+            and not (kind == "play_card" and source_item and source_item.get("revealedFreeWill"))
             and not self.rules_item_effects_active(
                 self.find_battlefield_item(source.get("itemId"))
             )
@@ -1552,7 +1585,7 @@ class ActionsMixin:
             "fieldZone", "supportOnly", "exhaustedOnly", "maxPoints", "maxPower", "minPower",
             "excludeEventSource", "excludeSource",
             "sourceOnly", "fieldZonesByType", "enteredThisTurn", "enteredInterzoneThisTurn", "confrontationOutcome", "owner",
-            "firstManifestationOnly",
+            "firstManifestationOnly", "distinctTemperaments", "sameContainer", "distinctTargets", "anyNumber", "maxCost",
             "counter", "minCounters", "limboReasons", "container", "maxTotalPoints", "targetsConfrontationManifestation",
             "targetsFieldCard", "targetsOwnFieldCard", "effectTemperamentChosenBySource",
         }
@@ -1569,6 +1602,7 @@ class ActionsMixin:
             "anyPlayer": bool(ability.get("anyPlayer")),
             "opponentOnly": bool(ability.get("opponentOnly")),
             "sacrificeSource": bool(ability.get("sacrificeSource")),
+            "sacrificeAttachedManifestations": bool(ability.get("sacrificeAttachedManifestations")),
             "sacrificeDestination": (
                 "exile" if ability.get("sacrificeDestination") == "exile" else None
             ),
@@ -1600,11 +1634,8 @@ class ActionsMixin:
                 "temperament": ability["optionalExtraEssence"].get(
                     "temperament"
                 ),
-                "max": max(
-                    0, min(int(
-                        ability["optionalExtraEssence"].get("max") or 0
-                    ), 20)
-                ),
+                "max": (max(0, int(ability["optionalExtraEssence"]["max"]))
+                        if ability["optionalExtraEssence"].get("max") is not None else None),
             } if (
                 isinstance(ability.get("optionalExtraEssence"), dict)
                 and ability["optionalExtraEssence"].get("temperament")

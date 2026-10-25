@@ -274,9 +274,12 @@ class CardCatalogTests(unittest.TestCase):
         self.assertFalse(wind_sprout["canBeFirstManifestation"])
         self.assertTrue(merciful_pago["supportFromInterzone"])
         self.assertTrue(merciful_pago["supportFromHand"])
-        self.assertEqual(merciful_pago["supportWinEffect"], {
-            "kind": "opponent_vessel_score", "value": 10,
-        })
+        self.assertNotIn("supportWinEffect", merciful_pago)
+        pago_triggers = merciful_pago["triggeredAbilities"]
+        self.assertEqual(len(pago_triggers), 1)
+        self.assertEqual(pago_triggers[0]["trigger"], {"event": "wins_confrontation", "supportOnly": True})
+        self.assertEqual(pago_triggers[0]["targets"], {"kind": "player", "controller": "opponent", "min": 1, "max": 1})
+        self.assertEqual(pago_triggers[0]["result"], {"kind": "move_source_to_target_vessel_score", "value": 10})
         self.assertTrue(world_spore["canBeFirstManifestation"])
         by_name = {card["name"]: rules[card["id"]] for card in cards}
         self.assertTrue(by_name["Kox, the Amoral"]["cannotEnterConfrontation"])
@@ -1221,7 +1224,7 @@ class CardCatalogTests(unittest.TestCase):
         rally = abilities["5q6t7i5pzctbi8s_en"][0]
         self.assertEqual(
             rally["optionalExtraEssence"],
-            {"temperament": "hollow", "max": 20},
+            {"temperament": "hollow", "max": None},
         )
         self.assertEqual(
             rally["result"]["kind"],

@@ -132,6 +132,11 @@ class BoardMixin:
 
     def rules_item_card_rules(self, item, visiting=None):
         metadata = self._rules_item_card_rules_base(item, visiting)
+        if isinstance(item, dict) and item.get("isTokenCard") and not item.get("isCopy"):
+            # Generic Tokens have no printed cardId, but are Manifestations
+            # for targeting and effects that enumerate Manifestations. Legacy
+            # copies also carry this flag and keep their copied card's type.
+            metadata = {**metadata, "type": "manifestation", "power": int(item.get("power") or 0)}
         manifestation = item.get("willManifestation") if isinstance(item, dict) else None
         if manifestation:
             # Rinq / Ju Lien: a Will that is a Manifestation until the Resolution.
@@ -577,10 +582,11 @@ class BoardMixin:
             effect for effect in self.rules_engine.get("ongoingEffects") or []
             if effect.get("target", {}).get("itemId") == item.get("id")
         ]
-        if any(effect.get("kind") == "remove_float" for effect in effects):
-            return False
-        if any(effect.get("kind") == "grant_float" for effect in effects):
-            return True
+        latest = next((effect for effect in reversed(effects)
+                       if effect.get("kind") in {"grant_float", "remove_float"}
+                       and self.rules_ongoing_effect_active(effect)), None)
+        if latest is not None:
+            return latest["kind"] == "grant_float"
         if self.rules_item_card_rules(item).get("float") or item.get("hasFloat"):
             return True
         return any(
@@ -805,6 +811,8 @@ class BoardMixin:
     def rules_support_from_hand_error(self, player_id, card_id):
         if not self.rules_engine["enabled"]:
             return None
+        if self.current_phase_group() == "end" and self.rules_player_skips_end_phase(player_id):
+            return "You skip your End Phase this turn."
         metadata = self.card_rules.get(card_id, {})
         if metadata.get("type") != "manifestation":
             return None

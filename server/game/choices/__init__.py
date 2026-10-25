@@ -60,6 +60,10 @@ class ChoicesMixin:
             return "This card choice is no longer available.", None
         if choice.get("kind") == "replacement_order":
             return self.resolve_rules_replacement_order(player_id, choice, card_ids)
+        if choice.get("_optionalReplacement"):
+            if option not in {"yes", "no"}:
+                return "Choose whether to apply the replacement.", None
+            return self.resolve_rules_replacement_order(player_id, choice, [option])
         handler = RULES_CHOICE_HANDLERS.get(choice.get("kind"))
         if handler is not None:
             payment_options = {"transcendent_payment": transcendent_payment} if choice.get("kind") in {

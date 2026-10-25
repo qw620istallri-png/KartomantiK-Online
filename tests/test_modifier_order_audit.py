@@ -177,7 +177,7 @@ class ModifierOrderAuditTests(game_tests.RealCardRulesCase):
 
     def test_temporary_blanking_of_a_continuous_source_suspends_its_modifier(self):
         session, _, _, mine, _ = self.started()
-        self.resolve_card(session, self.JAW)
+        self.resolve_card(session, self.JAW, ability_id="flaying-jaw-power-link")
         jaw = next(item for item in session.battlefield if item["cardId"] == self.JAW)
         self.assertEqual(session.rules_manifestation_characteristics(mine)["power"], 1)
         jaw["effectsDisabled"] = True

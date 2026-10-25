@@ -26,15 +26,38 @@ class PowerMixin:
                 self.record_rules_power_change(item, before[item["id"]])
 
     def adjust_rules_power_counter(self, item, value):
+        if self.rules_modifiers_prevented(item):
+            return
         before = self.rules_field_power_snapshot()
         counters = item.setdefault("counters", {})
         counters["power"] = int(counters.get("power") or 0) + int(value)
         self.record_rules_power_changes(before)
 
     def append_rules_ongoing_effect(self, effect):
+        if self.rules_modifier_is_prevented(effect):
+            return False
         before = self.rules_field_power_snapshot()
         self.rules_engine["ongoingEffects"].append(effect)
         self.record_rules_power_changes(before)
+        return True
+
+    def rules_modifiers_prevented(self, item):
+        return item is not None and any(
+            effect.get("preventsModifiers")
+            and effect.get("target", {}).get("itemId") == item.get("id")
+            and self.rules_ongoing_effect_active(effect)
+            for effect in self.rules_engine.get("ongoingEffects") or [])
+
+    def rules_modifier_is_prevented(self, effect):
+        kind = effect.get("kind")
+        if kind not in {"power_modifier", "base_power_double", "temperament_override", "lose_effects",
+                        "copy_power_temperament", "copy_power_effects", "protection", "immune",
+                        "power_minimum", "power_maximum", "power_set_maximum", "power_set",
+                        "control_link", "grant_support", "grant_float", "remove_float",
+                        "grant_persist", "power_ignored"}:
+            return False
+        affected = effect.get("source") if kind in {"copy_power_temperament", "copy_power_effects"} else effect.get("target")
+        return self.rules_modifiers_prevented(self.find_battlefield_item((affected or {}).get("itemId")))
 
     def rules_continuous_power_modifier(self, item):
         """Resolve printed, public power rules without creating Stack objects."""
@@ -278,10 +301,10 @@ class PowerMixin:
         power += int((item.get("counters") or {}).get("power") or 0)
         power += int((item.get("counters") or {}).get("tempCounter") or 0)
         power += sum(
-            int(effect.get("powerAdjustment") if effect.get("kind") == "power_set_maximum" else effect.get("value") or 0)
+            int(effect.get("powerAdjustment") if effect.get("kind") in {"power_set_maximum", "power_set"} else effect.get("value") or 0)
             for effect in self.rules_engine.get("ongoingEffects") or []
             if (effect.get("kind") == "power_modifier"
-                or effect.get("kind") == "power_set_maximum" and "powerAdjustment" in effect)
+                or effect.get("kind") in {"power_set_maximum", "power_set"} and "powerAdjustment" in effect)
             and effect.get("target", {}).get("itemId") == item.get("id")
             and self.rules_ongoing_effect_active(effect)
         )
@@ -330,6 +353,11 @@ class PowerMixin:
             power = max(power, int(minimum_power))
         if isinstance(maximum_power, (int, float)):
             power = min(power, int(maximum_power))
+        fixed = next((effect for effect in reversed(self.rules_engine.get("ongoingEffects") or [])
+                      if effect.get("preventsModifiers") and effect.get("target", {}).get("itemId") == item.get("id")
+                      and self.rules_ongoing_effect_active(effect)), None)
+        if fixed is not None:
+            power = int(fixed.get("value") or 0)
         return {"power": power, "temperament": temperament}
 
     def rules_is_strictly_highest_base_first(self, item):

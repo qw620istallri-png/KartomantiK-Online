@@ -10,8 +10,8 @@
     "clientPassed": 450,
     "abilities": 496,
     "carriers": 500,
-    "playerActions": 183,
-    "playerMessages": 531,
+    "playerActions": 182,
+    "playerMessages": 530,
     "genericSteps": 1265
   },
   "batches": [
@@ -93,8 +93,8 @@
           "manualReview": false,
           "server": {
             "ok": true,
-            "abilities": 0,
-            "carriers": 0,
+            "abilities": 1,
+            "carriers": 1,
             "genericScripts": 1,
             "genericSteps": 4,
             "failures": []
@@ -3066,7 +3066,7 @@
           "players": {
             "ok": true,
             "actionableAbilities": 1,
-            "messages": 1,
+            "messages": 3,
             "views": 2,
             "failures": []
           },
@@ -4403,8 +4403,8 @@
           },
           "players": {
             "ok": true,
-            "actionableAbilities": 2,
-            "messages": 6,
+            "actionableAbilities": 1,
+            "messages": 3,
             "views": 2,
             "failures": []
           },
@@ -9180,8 +9180,8 @@
           "manualReview": false,
           "server": {
             "ok": true,
-            "abilities": 3,
-            "carriers": 3,
+            "abilities": 2,
+            "carriers": 2,
             "genericScripts": 0,
             "genericSteps": 0,
             "failures": []

@@ -36,9 +36,9 @@ class RemovalEffectsMixin:
     def _rules_result_destroy_all_tokens(self, action, result, player_id, player):
         removed = []
         for item in list(self.battlefield):
-            if item.get("isTokenCard"):
-                movement = self._rules_remove_field_item(
-                    item, item.get("ownerId"), "graveyard", "top"
+            if item.get("isTokenCard") and self.rules_field_zone(item) != "stalemate":
+                movement = self._rules_remove_field_item_by_effect(
+                    item, item.get("ownerId"), "graveyard", "top", reason="destroy",
                 )
                 if movement.get("status") in {"moved", "removed_copy"}:
                     removed.append(item["id"])
@@ -77,10 +77,10 @@ class RemovalEffectsMixin:
         for item in list(self.rules_confrontation_items(player_id, ("confrontation",))):
             if item.get("id") == source_id:
                 continue
-            movement = self._rules_remove_field_item(
-                item, item.get("ownerId"), "graveyard", "top"
+            movement = self._rules_remove_field_item_by_effect(
+                item, item.get("ownerId"), "graveyard", "top", reason="sacrifice",
             )
-            if movement.get("status") == "moved":
+            if movement.get("status") == "moved" and movement.get("zone") == "graveyard":
                 limbo += 1
             if movement.get("status") in {"moved", "removed_copy"}:
                 sacrificed.append(item["id"])
@@ -139,8 +139,6 @@ class RemovalEffectsMixin:
             item, item.get("ownerId"), "graveyard", "top", reason="destroy"
         )
         self.prune_rules_ongoing_effects()
-        if movement.get("status") not in {"moved", "removed_copy"}:
-            return {"kind": result.get("kind"), "status": movement.get("status")}
         refunded = self.add_rules_excess_essence(controller_id, essences)
         return {
             "kind": result.get("kind"), "status": "destroyed",
@@ -150,22 +148,18 @@ class RemovalEffectsMixin:
         }
 
     def _rules_result_karmapult_sacrifice(self, action, result, player_id, player):
-        host = self.find_battlefield_item((action.get("source") or {}).get("itemId"))
         target = next((e for e in action.get("targets") or [] if e.get("kind") == "card"), None)
         target_item = self.find_battlefield_item((target or {}).get("itemId"))
-        if host is None or target_item is None:
+        if target_item is None:
             return {"kind": result.get("kind"), "status": "target_missing"}
-        sacrificed = [dict(entry) for entry in host.get("attachedCards") or []]
-        host["attachedCards"] = []
-        self.rules_sync_attached_counter(host)
-        for entry in sacrificed:
-            self.put_zone_card(entry["ownerId"], "graveyard", entry["cardId"], entry["ownerId"], "top")
+        sacrificed = [entry for entry in (action.get("cost") or {}).get("sacrificedCards") or []
+            if entry.get("destination") == "graveyard"]
         if sacrificed:
             self.append_rules_ongoing_effect({
                 "id": new_id(), "actionId": action.get("id"),
                 "abilityId": "karmapult-power-loss",
                 "controllerId": action.get("controllerId") or player_id,
-                "source": {"cardId": host.get("cardId"), "itemId": host["id"], "zone": "battlefield"},
+                "source": dict(action.get("source") or {}),
                 "target": {
                     "kind": "card", "itemId": target_item["id"],
                     "cardId": target_item.get("cardId"), "ownerId": target_item.get("ownerId"),
@@ -244,7 +238,6 @@ class RemovalEffectsMixin:
             if entry.get("kind") == "card"
         ]
         if result.get("kind") == "stalemate_target_grant_source_support":
-            item_ids = [item_id for item_id in item_ids if item_id != source.get("itemId")]
             if not item_ids:
                 return {"kind": result.get("kind"), "status": "target_missing"}
         if result.get("includeSource") and source.get("itemId"):
@@ -410,7 +403,7 @@ class RemovalEffectsMixin:
             "kind": result.get("kind"),
             "status": "resolved",
             "movement": movement,
-            "copyItemId": copy["id"],
+            "copyItemId": copy["id"] if copy is not None else None,
             "triggeredActions": triggered_actions,
         }
 
@@ -422,7 +415,7 @@ class RemovalEffectsMixin:
         for pid in (controller_id, opponent_id):
             first = self.find_battlefield_item(first_ids.get(pid))
             if first is not None:
-                powers[pid] = int(self.card_rules.get(first.get("cardId"), {}).get("power") or 0)
+                powers[pid] = self.rules_manifestation_base_power(first)
         if (
             controller_id not in powers or opponent_id not in powers
             or powers[controller_id] >= powers[opponent_id]

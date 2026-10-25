@@ -2,6 +2,7 @@
 
 import random
 import time
+from copy import deepcopy
 
 from .common import RULES_TEMPERAMENTS, new_id
 
@@ -79,7 +80,7 @@ class ChainMixin:
                                   shuffle_after=False, after_chain=None,
                                   chain_abilities=None, chain_controller_id=None,
                                   action_targets=None, container_id=None,
-                                  return_to_vessel=False):
+                                  return_to_vessel=False, defer_entry_triggers=False):
         container_id = container_id if container_id in self.players else player_id
         if card_id not in self.players[container_id]["zones"].get(zone, []):
             return "The selected Manifestation is no longer in the required zone.", None
@@ -133,6 +134,14 @@ class ChainMixin:
                 "controllerId": chain_controller_id or player_id,
             }
         self.battlefield.append(item)
+        if chain_abilities:
+            self.create_rules_effect_memory(
+                owner_id, card_id, "chain_outcome_abilities",
+                controller_id=chain_controller_id or player_id,
+                source_action_id=action_id,
+                data={"itemId": item["id"], "abilities": deepcopy(chain_abilities),
+                      "sourceCardId": source_card_id},
+            )
         memory = None
         if win_destination == "exile":
             memory = self.create_rules_effect_memory(
@@ -253,7 +262,7 @@ class ChainMixin:
                         "kind": "power_counter", "itemId": target_item["id"],
                         "value": base_power,
                     }
-        if triggered_actions:
+        if triggered_actions and not defer_entry_triggers:
             self.queue_rules_simultaneous_actions(triggered_actions)
         if pending_pick is not None and not self.rules_engine.get("pendingChoice"):
             self.rules_engine["pendingChoice"] = pending_pick
@@ -284,15 +293,20 @@ class ChainMixin:
         player = self.players[player_id]
         if self.rules_draw_locked(player_id):
             return drawn
-        for _index in range(min(max(0, int(count)), len(player["zones"]["deck"]))):
-            card_id = player["zones"]["deck"][0]
-            error, _owner_id, replacement = self.move_zone_card_by_effect(
-                player_id, "deck", player_id, "hand", card_id, "bottom"
-            )
-            if error:
-                break
-            if not replacement:
-                drawn.append(card_id)
+        previous_batch = getattr(self, "_rules_draw_batch_id", None)
+        self._rules_draw_batch_id = new_id()
+        try:
+            for _index in range(min(max(0, int(count)), len(player["zones"]["deck"]))):
+                card_id = player["zones"]["deck"][0]
+                error, _owner_id, replacement = self.move_zone_card_by_effect(
+                    player_id, "deck", player_id, "hand", card_id, "bottom"
+                )
+                if error:
+                    break
+                if not replacement:
+                    drawn.append(card_id)
+        finally:
+            self._rules_draw_batch_id = previous_batch
         return drawn
 
     def rules_hand_limit(self, player_id, default_limit=7):
@@ -407,6 +421,9 @@ class ChainMixin:
                                 effects_disabled=False, generic_power=None,
                                 generic_temperament=None, field_zone=None):
         metadata = self.card_rules.get(card_id, {})
+        is_manifestation = generic_power is not None or metadata.get("type") != "persistent_will"
+        if is_manifestation and field_zone != "interzone" and self.rules_support_entry_locked(controller_id, put=True):
+            return None
         seat = self.players[controller_id].get("seat")
         item = {
             "id": new_id(),
@@ -421,7 +438,7 @@ class ChainMixin:
             "stackedOn": None,
             "createdByItemId": source_item_id,
         }
-        if metadata.get("type") == "persistent_will":
+        if not is_manifestation:
             item["fieldZone"] = "field"
         else:
             # a token entering is the latest Confrontation entry (Unpredictable Loudmouth)
@@ -557,7 +574,7 @@ class ChainMixin:
         }
 
     def begin_rules_chain_sequence(self, controller_id, chain_players, result, action):
-        """Offer the Chain choice to each listed player, one after the other."""
+        """Offer Chain choices; simultaneous selections stay private until committed."""
         zone = result.get("zone")
         ready = []
         proofs = []
@@ -614,6 +631,15 @@ class ChainMixin:
             first_player_id, controller_id, result, action,
             next_players=ready[1:],
         )
+        if result.get("simultaneous"):
+            choice["_simultaneousSelections"] = []
+            choice["_simultaneousPriorityPlayerId"] = (
+                self.rules_lowest_confrontation_power_player()
+                or self.rules_engine.get("priorityPlayerId")
+            )
+            choice["_simultaneousProofs"] = proof_payload
+            # No player sees an unable player's Hand before committing either.
+            proof_payload = {}
         self.rules_engine["pendingChoice"] = choice
         payload = {
             "kind": "choice_required", "choiceId": choice["id"],
@@ -622,6 +648,65 @@ class ChainMixin:
         }
         payload.update(proof_payload)
         return payload
+
+    def commit_rules_simultaneous_chain_choice(self, choice, card_id, container_id, placement):
+        """Collect private commitments, then enter every card before queuing ETBs."""
+        selections = [*choice.get("_simultaneousSelections", [])]
+        if card_id is not None:
+            selections.append({
+                "playerId": choice["playerId"], "cardId": card_id,
+                "containerId": container_id,
+                "placement": self.clean_rules_board_position(placement),
+            })
+        remaining = list(choice.get("_nextPlayers") or [])
+        if remaining:
+            pending = self.make_rules_chain_choice(
+                remaining[0], choice["controllerId"], choice["_result"],
+                choice["_action"], next_players=remaining[1:],
+            )
+            pending["_simultaneousSelections"] = selections
+            pending["_simultaneousPriorityPlayerId"] = choice.get("_simultaneousPriorityPlayerId")
+            pending["_simultaneousProofs"] = choice.get("_simultaneousProofs") or {}
+            self.rules_engine["pendingChoice"] = pending
+            # This result is public in the action log. Never include the card.
+            return None, {
+                "kind": "chain_manifestation", "status": "committed",
+                "playerId": choice["playerId"], "sourceCardId": choice.get("sourceCardId"),
+            }
+        zone = choice["fromZone"]
+        for selection in selections:
+            candidates = self.rules_chain_candidates(selection["playerId"], zone)
+            if candidates.get(selection["cardId"]) != selection["containerId"]:
+                self.rules_engine["pendingChoice"] = None
+                return None, {"kind": "chain_manifestation", "status": "selection_missing"}
+        priority = choice.get("_simultaneousPriorityPlayerId")
+        selections.sort(key=lambda selection: selection["playerId"] != priority)
+        self.rules_engine["pendingChoice"] = None
+        triggered, chained = [], []
+        for selection in selections:
+            error, outcome = self.chain_rules_manifestation(
+                selection["playerId"], zone, selection["cardId"],
+                container_id=selection["containerId"], placement=selection["placement"],
+                win_destination=choice.get("winDestination"), action_id=choice.get("actionId"),
+                source_card_id=choice.get("sourceCardId"),
+                shuffle_after=bool(choice.get("shuffleAfter")),
+                return_to_vessel=bool(choice.get("returnToVessel")),
+                after_chain=choice.get("afterChain"), chain_abilities=choice.get("chainAbilities"),
+                chain_controller_id=choice.get("controllerId"),
+                action_targets=choice.get("_actionTargets"), defer_entry_triggers=True,
+            )
+            if error:
+                chained.append({"playerId": selection["playerId"], "status": "failed", "error": error})
+            else:
+                triggered.extend(outcome.get("triggeredActions") or [])
+                chained.append({key: value for key, value in outcome.items() if key != "triggeredActions"})
+        self.queue_or_defer_rules_simultaneous_actions(triggered, priority_player_id=priority)
+        return None, {
+            "kind": "chain_manifestation", "status": "chained",
+            "playerId": choice["playerId"], "sourceCardId": choice.get("sourceCardId"),
+            "chains": chained, "triggeredActions": triggered,
+            **(choice.get("_simultaneousProofs") or {}),
+        }
 
     def make_bloatuba_choice(self, controller_id, victim_id, revealed, source_card_id):
         """Opponent picks a revealed Manifestation to suspend, else the controller orders."""

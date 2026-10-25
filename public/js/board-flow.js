@@ -331,8 +331,11 @@ function rulesBoardOptionalExtraEssenceMax(flow) {
   const optional = flow.draft.encodedAbility?.optionalExtraEssence;
   if (!optional) return 0;
   const available = Number(flow.draft.optionalExtraEssenceMax || 0);
-  const room = Math.max(0, Number(optional.max || 0) - available);
   const selected = rulesBoardSelectedPayments(flow);
+  const selectedPower = selected.reduce((sum, reference) => (
+    sum + Number(rulesTributeCandidate(reference)?.power || 0)
+  ), 0);
+  const room = optional.max == null ? selectedPower : Math.max(0, Number(optional.max) - available);
   if (!room || !selected.length) return available;
   const requirements = { ...flow.draft.essencePlan.remaining };
   requirements[optional.temperament] = Number(requirements[optional.temperament] || 0) + room;
@@ -342,21 +345,7 @@ function rulesBoardOptionalExtraEssenceMax(flow) {
 }
 
 function rulesBoardMinimumPaymentCount(flow) {
-  const candidates = flow.draft.manifestations;
-  const remaining = flow.draft.essencePlan.remaining;
-  if (Object.values(remaining).every((amount) => amount <= 0)) return 0;
-  const capped = candidates.slice(0, 12);
-  for (let count = 1; count <= capped.length; count += 1) {
-    const limit = 1 << capped.length;
-    for (let mask = 1; mask < limit; mask += 1) {
-      let bits = 0;
-      for (let value = mask; value; value &= value - 1) bits += 1;
-      if (bits !== count) continue;
-      const ids = capped.filter((_entry, index) => mask & (1 << index)).map((entry) => entry.paymentValue);
-      if (rulesManifestationsCover(ids, remaining)) return count;
-    }
-  }
-  return Infinity;
+  return rulesFindTributePaymentClient(flow.draft, flow.draft.essencePlan.remaining)?.length ?? Infinity;
 }
 
 function updateRulesTargetArrow(event) {
@@ -376,6 +365,17 @@ function updateRulesTargetArrow(event) {
 function submitRulesBoardFlow(target = null) {
   const flow = pendingRulesBoardFlow;
   if (!flow) return;
+  if (flow.mode === "action") {
+    const selectedCount = (flow.selectedTargets || []).length;
+    const previousStage = flow.stage;
+    if (!refreshRulesBoardAction(flow)) { closeRulesBoardFlow(); return; }
+    if ((flow.selectedTargets || []).length !== selectedCount || flow.stage !== previousStage) { renderRulesBoardFlow(); return; }
+    if (target) {
+      target = flow.draft.structuredTargets.find((entry) => entry.key === target.key && entry.targetGroupIndex === target.targetGroupIndex);
+      if (!target) { renderRulesBoardFlow(); return; }
+    }
+    if (!rulesDraftTargetCombinationValidClient(flow.draft, [...(flow.selectedTargets || []), ...(target ? [target] : [])])) return;
+  }
   if (flow.mode === "stack_copy_target") {
     resolveRulesStackCopyTargets("retarget", target);
     return;
@@ -519,6 +519,8 @@ function armRulesBoardTargets(flow) {
       || target.targetGroupIndex === targetGroupIndex
     ))
     .filter((target) => !selectedKeys.has(target.key))
+    .filter((target) => rulesDraftTargetCombinationValidClient(flow.draft, [...(flow.selectedTargets || []), target]))
+    .filter((target) => !flow.draft.targetRules?.groups || rulesDraftHasTargetsClient(flow.draft, [...(flow.selectedTargets || []), target]))
     .filter((target) => !rulesBoardIngredientTarget(flow, target))
     .filter((target) => !induceDesertion || (firstTarget
       ? battlefieldItemControllerId(target) === battlefieldItemControllerId(firstTarget)
@@ -777,9 +779,14 @@ function toggleRulesBoardPayment(index) {
   );
   if (!candidate) return false;
   if (flow.selectedPaymentIndexes.has(index)) flow.selectedPaymentIndexes.delete(index);
-  else flow.selectedPaymentIndexes.add(index);
+  else {
+    const selected = flow.draft.manifestations.filter((entry) => flow.selectedPaymentIndexes.has(entry.selectionKey));
+    if (!rulesTributeSelectionAvailableClient(flow.draft, [...selected, candidate], false)) return true;
+    flow.selectedPaymentIndexes.add(index);
+  }
   const selected = rulesBoardSelectedPayments(flow);
-  const covered = rulesManifestationsCover(selected, flow.draft.essencePlan.remaining);
+  const covered = rulesTributeSelectionAvailableClient(flow.draft, flow.draft.manifestations.filter((entry) => flow.selectedPaymentIndexes.has(entry.selectionKey)))
+    && rulesManifestationsCover(selected, flow.draft.essencePlan.remaining);
   renderRulesBoardFlow();
   if (!covered) return true;
   if (flow.mode === "stack_payment") return true;
@@ -800,6 +807,65 @@ function toggleRulesBoardPayment(index) {
 let handGhostSignature = "";
 
 let rulesFlowFlipTimer = null;
+
+function refreshRulesBoardAction(flow) {
+  const rules = latestState?.rulesEngine;
+  const windowId = `${latestState?.phaseTracker?.turn}:${currentPhaseUi().phase?.id}`;
+  if (flow.actionWindow && flow.actionWindow !== windowId) return false;
+  flow.actionWindow = windowId;
+  if (!rules?.enabled || latestState?.ended || isObserver || rules.pendingChoice || rulesImmediateEffectPendingClient()
+      || rules.priorityPlayerId !== myPlayerId) return false;
+  const source = flow.source;
+  const ability = flow.draft.encodedAbility;
+  const activated = !source.playFromField && (flow.actionKind === "activated_effect" || source.actionKind === "activated_effect" || source.zone === "battlefield");
+  let draft;
+  if (activated && source.zone === "battlefield") {
+    const item = (latestState?.battlefield || []).find((entry) => entry.id === source.itemId && entry.cardId === source.cardId);
+    const currentAbility = rulesActivatedAbilitiesForItem(item).find((entry) => entry.id === ability?.id);
+    if (!item || !currentAbility) return false;
+    draft = rulesActivatedActionDraft(item, currentAbility)?.draft;
+  } else if (activated) {
+    draft = rulesZoneActivatedActionDraft(source, ability)?.draft;
+  } else {
+    const item = (latestState?.battlefield || []).find((entry) => entry.id === source.itemId);
+    const present = source.zone === "battlefield" ? item?.cardId === source.cardId && battlefieldItemControllerId(item) === myPlayerId
+      : source.zone === "attached" ? battlefieldItemControllerId(item) === myPlayerId && (item?.attachedCards || []).some((entry) => entry.cardId === source.cardId)
+      : source.zone === "suspended" ? (rules.suspendedCards || []).some((entry) => entry.id === source.suspensionId && entry.cardId === source.cardId && entry.playableByPlayerId === myPlayerId)
+      : (latestState?.players?.[myPlayerId]?.zones?.[source.zone]?.cards || []).includes(source.cardId);
+    if (!present) return false;
+    const playable = source.tebebe ? tebebeManifestationIsPlayable(item)
+      : source.playFromField ? limboWillIsPlayable(source.cardId, true)
+      : source.zone === "graveyard" ? limboWillIsPlayable(source.cardId)
+      : handCardIsPlayable(source.cardId, source);
+    if (!playable) return false;
+    draft = buildRulesActionDraft(source);
+  }
+  if (!draft) return false;
+  const targets = rulesStructuredActionTargets(draft.encodedAbility, { sourceItemId: source.itemId, sourceCardId: source.cardId, retargetsStackAction: draft.encodedAbility?.result?.kind === "retarget_stack_action" });
+  const selected = (flow.selectedTargets || []).map((target) => targets.structuredTargets.find((entry) => entry.key === target.key && entry.targetGroupIndex === target.targetGroupIndex));
+  if (selected.some((target) => !target)) {
+    flow.selectedTargets = [];
+    flow.targetsConfirmed = false;
+    if (["target", "committing"].includes(flow.stage)) flow.stage = "target";
+  } else if (flow.selectedTargets) flow.selectedTargets = selected;
+  Object.assign(flow.draft, targets);
+  const payment = rulesActionPaymentDraft(source, draft.card, draft.encodedAbility, flow.draft.transcendentPayment);
+  const paymentSignature = JSON.stringify([payment, latestState?.players?.[myPlayerId]?.zones?.hand?.cards]);
+  const paymentState = JSON.stringify([latestState?.tokens, latestState?.battlefield,
+    latestState?.players?.[myPlayerId]?.zones, rules.playPermissions, rules.tributePowerOverrides]);
+  if (flow.paymentState && flow.paymentState !== paymentState && flow.paymentSignature !== paymentSignature) {
+    flow.selectedPaymentIndexes.clear();
+    flow.extraTributeIndexes?.clear();
+    flow.costCardId = null;
+    flow.costCardIndex = null;
+    flow.targetsConfirmed = false;
+    Object.assign(flow.draft, payment);
+    flow.stage = rulesInitialActionStage(flow.draft);
+  }
+  flow.paymentState = paymentState;
+  flow.paymentSignature = paymentSignature;
+  return true;
+}
 
 function renderRulesBoardFlow() {
   const counterFlow = pendingRulesBoardFlow;
@@ -846,32 +912,7 @@ function renderRulesBoardFlow() {
     rulesFlowFlipTimer = setTimeout(() => { rulesFlowFlipTimer = null; renderRulesBoardFlow(); }, Math.min(flipWait + 30, 2500));
     return;
   }
-  const handSourceStillValid = (["hand", "graveyard"].includes(flow.source.zone)
-    && (latestState?.players?.[myPlayerId]?.zones?.[flow.source.zone]?.cards || []).includes(flow.source.cardId))
-    || (flow.source.zone === "suspended" && (latestState?.rulesEngine?.suspendedCards || []).some(entry => entry.id === flow.source.suspensionId && entry.cardId === flow.source.cardId && entry.playableByPlayerId === myPlayerId));
-  const battlefieldSource = flow.source.zone === "battlefield"
-    ? latestState?.battlefield?.find((item) => item.id === flow.source.itemId)
-    : null;
-  const battlefieldSourceStillValid = Boolean(
-    battlefieldSource
-    && battlefieldItemControllerId(battlefieldSource) === myPlayerId
-    && battlefieldSource.cardId === flow.source.cardId
-    // a Concealed card (Jigon, Tebebe) is played from the field face down
-    && (battlefieldSource.faceUp || (flow.source.playFromField && battlefieldSource.concealedWill))
-  );
-  // Grimoire: a Will placed on its host is played as if it were in the hand
-  const attachedHost = flow.source.zone === "attached"
-    ? latestState?.battlefield?.find((item) => item.id === flow.source.itemId)
-    : null;
-  const attachedSourceStillValid = Boolean(
-    attachedHost
-    && battlefieldItemControllerId(attachedHost) === myPlayerId
-    && (attachedHost.attachedCards || []).some((entry) => entry.cardId === flow.source.cardId)
-  );
-  if (flow.mode === "action" && (
-    latestState?.rulesEngine?.priorityPlayerId !== myPlayerId
-    || (!handSourceStillValid && !battlefieldSourceStillValid && !attachedSourceStillValid)
-  )) {
+  if (flow.mode === "action" && !refreshRulesBoardAction(flow)) {
     closeRulesBoardFlow();
     return;
   }
@@ -1131,7 +1172,7 @@ function renderRulesBoardFlow() {
     $("#rulesBoardEssence").classList.add("hidden");
     $("#rulesFlowInstruction").textContent = rulesText(
       "rulesOptionalExtraEssenceInstruction",
-      { max: Number(flow.draft.encodedAbility?.optionalExtraEssence?.max || max) },
+      { max },
     );
     $("#rulesFlowCost").innerHTML = `${extraCardsHtml}
       <div class="rules-flow-cost-row rules-extra-essence-row"${max > 0 ? "" : " hidden"}>

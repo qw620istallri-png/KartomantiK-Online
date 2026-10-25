@@ -6,13 +6,35 @@ from .common import NUM_SEATS, TEMPERAMENT_DOMINANCE, new_id
 
 
 class ConfrontationMixin:
-    def resolve_rules_state_actions(self, previous_powers=None):
+    def resolve_rules_state_actions(self, previous_powers=None, pending_triggers=None):
         """Destroy face-up Manifestations whose current Power is zero or less."""
+        self.refresh_rules_first_manifestations()
         previous_powers = dict(previous_powers or {})
         destroyed = []
         replacements = []
         triggered_actions = []
         threshold_exiled = []
+        pending_actions = [*self.rules_engine.get("actionStack", []), *list(pending_triggers or []),
+                           *self.rules_engine.get("deferredSimultaneousActions", []),
+                           *self.rules_engine.get("deferredAfterImmediateActions", [])]
+        for item in list(self.battlefield):
+            if not item.get("faceUp") or self.rules_field_zone(item) == "stalemate" or not self.rules_item_effects_active(item):
+                continue
+            for ability in self.rules_item_card_rules(item).get("activatedAbilities") or []:
+                counter = (ability.get("result") or {}).get("exileSourceIfNoCounter")
+                if not counter or any(str(key).casefold() == counter.casefold() and int(value or 0) > 0
+                                      for key, value in (item.get("counters") or {}).items()):
+                    continue
+                # Entry and its initialization trigger are one sequence. Do not
+                # remove a new card before its pending counter setup can resolve.
+                if any((entry.get("source") or {}).get("itemId") == item.get("id")
+                       and (((entry.get("ability") or {}).get("result") or {}).get("addCounters") or {}).get("counter") == counter
+                       for entry in pending_actions):
+                    continue
+                threshold_exiled.append(self._rules_remove_field_item_by_effect(
+                    item, item.get("ownerId"), "exile", "top", reason="exile",
+                ))
+                break
         for item in list(self.battlefield):
             if (
                 not item.get("faceUp")
@@ -37,12 +59,14 @@ class ConfrontationMixin:
             )
             movement["replacement"] = "sacrifice_at_power"
             replacements.append(movement)
-            if movement.get("status") == "moved":
+            sacrificed = (movement.get("status") == "removed_copy"
+                or movement.get("status") == "moved" and movement.get("zone") == "graveyard")
+            if movement.get("status") == "moved" and movement.get("zone") == "graveyard":
                 triggered_actions.extend(self.queue_rules_zone_entry_triggers(
                     item.get("cardId"), item.get("ownerId"),
                     item.get("ownerId"), "graveyard", defer=True,
                 ))
-            for other in self.rules_confrontation_items(controller_id):
+            for other in self.rules_confrontation_items(controller_id) if sacrificed else []:
                 self.append_rules_ongoing_effect({
                     "id": new_id(), "actionId": None,
                     "abilityId": "sacrifice-at-power-bonus",
@@ -205,6 +229,7 @@ class ConfrontationMixin:
                 position, from_field=True,
             )
         self.battlefield.remove(item)
+        self.refresh_rules_first_manifestations()
         for entry in item.pop("attachedCards", None) or []:
             self.put_zone_card(entry["ownerId"], "exile", entry["cardId"], entry["ownerId"], "top")
         for other in self.battlefield:
@@ -727,18 +752,7 @@ class ConfrontationMixin:
                 continue
             if not item.get("isSupport"):
                 continue
-            support_effect = item.get("supportWinEffect") or {}
-            if support_effect.get("kind") == "opponent_vessel_score" and loser_id in self.players:
-                movement = self._rules_remove_field_item(item, loser_id, "receptacle", "top")
-                delta = max(0, min(int(support_effect.get("value") or 0), 999))
-                delta = self.adjust_rules_score(loser_id, delta)
-                support_resolved.append({
-                    "kind": "opponent_vessel_score", "cardId": item.get("cardId"),
-                    "itemId": item.get("id"), "playerId": loser_id,
-                    "delta": delta, "score": self.players[loser_id]["score"],
-                    "movement": movement,
-                })
-            elif item.get("supportWinDestination") == "exile":
+            if item.get("supportWinDestination") == "exile":
                 support_exiled.append(self._rules_remove_field_item(
                     item, item.get("ownerId"), "exile", "top"
                 ))

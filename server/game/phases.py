@@ -104,9 +104,15 @@ class PhasesMixin:
         self.rules_engine["lastResolvedAction"] = None
         self.rules_engine["ongoingEffects"] = []
         self.rules_engine["effectMemories"] = []
+        self.rules_engine["turnTributeReturns"] = []
+        self.rules_engine["skipEndPhaseTurns"] = {}
+        self.rules_engine["supportLocks"] = []
+        self.rules_engine["tributeLog"] = []
+        self.rules_engine["drawnOutsideRecovery"] = {}
         self.rules_engine["supportEntries"] = []
         self.rules_engine["playRestrictions"] = []
         self.rules_engine["zoneEntryTurns"] = {}
+        self.rules_engine["zoneEntryVersions"] = {}
         self.rules_engine["recentLimboEntries"] = []
         self.rules_engine["handLimitEffects"] = []
         self.rules_engine["drawLocks"] = []

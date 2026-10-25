@@ -28,7 +28,10 @@ class CardScenarioBatchTests(unittest.TestCase):
         self.assertEqual(summary["clientPassed"], 450)
         self.assertEqual(summary["abilities"], 496)
         self.assertEqual(summary["carriers"], 500)
-        self.assertEqual(summary["playerActions"], 183)
+        self.assertEqual(summary["playerActions"], sum(
+            not any(ability.get(key) for key in ("trigger", "passiveEffect", "playPermission"))
+            for abilities in batches.main.CARD_ABILITIES.values() for ability in abilities
+        ))
 
     def test_batches_hold_ten_cards_and_keep_manual_cards_visible(self):
         cards = []

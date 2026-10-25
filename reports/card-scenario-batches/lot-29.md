@@ -11,7 +11,7 @@ Verdict : **PASS** · 0 contrôle(s) manuel(s) conservé(s).
 | 285 | Ignore | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 286 | Abandon | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 287 | Purifying Ritual | ✓ (1 cap.) | ✓ (0 actions) | ✓ | PASS |
-| 288 | Nullifying Radiance | ✓ (3 cap.) | ✓ (1 actions) | ✓ | PASS |
+| 288 | Nullifying Radiance | ✓ (2 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 289 | Empathic Mask | ✓ (5 cap.) | ✓ (5 actions) | ✓ | PASS |
 | 290 | Unreachable Pillar | ✓ (1 cap.) | ✓ (0 actions) | ✓ | PASS |
 
