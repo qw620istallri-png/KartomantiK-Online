@@ -179,6 +179,8 @@ class BoardEffectsMixin:
                 "kind": result.get("kind"), "status": "no_manifestation",
                 "discarded": discarded,
             }
+        if self.rules_support_entry_locked(target_id, put=True):
+            return {"kind": result.get("kind"), "status": "prevented", "discarded": discarded}
         owner_id = self.take_zone_card(target_id, "deck", found)
         seat = self.players[target_id].get("seat")
         item = {
@@ -249,13 +251,11 @@ class BoardEffectsMixin:
         item = self.find_battlefield_item((target or {}).get("itemId"))
         if item is None or self.rules_field_zone(item) != "interzone":
             return {"kind": result.get("kind"), "status": "target_missing"}
+        if self.rules_support_entry_locked(self.rules_item_controller_id(item), put=True):
+            return {"kind": result.get("kind"), "status": "prevented"}
         item["stackedOn"] = None
         self.mark_rules_support_entry(item)
-        triggered = self.queue_rules_support_entry_triggers(
-            item, played=False, from_zone="interzone", defer=True,
-        )
-        if triggered:
-            self.queue_rules_simultaneous_actions(triggered)
+        self.queue_rules_effect_support_entry(item, "interzone", enters_field=False)
         return {
             "kind": result.get("kind"), "status": "support",
             "itemId": item["id"], "cardId": item.get("cardId"),
@@ -750,6 +750,8 @@ class BoardEffectsMixin:
         )
         if owner_id is None:
             return {"kind": result.get("kind"), "status": "target_missing"}
+        if self.rules_support_entry_locked(player_id, put=True):
+            return {"kind": result.get("kind"), "status": "prevented"}
         self.take_zone_card(container_id, "receptacle", card_id)
         seat = self.players[player_id].get("seat")
         item = {
@@ -762,6 +764,7 @@ class BoardEffectsMixin:
         }
         self.mark_rules_support_entry(item)
         self.battlefield.append(item)
+        self.queue_rules_effect_support_entry(item, "receptacle")
         return {
             "kind": result.get("kind"), "status": "moved",
             "itemId": item["id"], "cardId": card_id,

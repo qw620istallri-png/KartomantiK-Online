@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "029d2ecb7ca5c83fc3fea3803f261584e890b715f8dceb007f3fcc4336507f6a",
+  "gates": [
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_rules_parity.log",
+      "durationSeconds": 32.11
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_choice_continuity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_choice_continuity.log",
+      "durationSeconds": 6.359
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_white_essence_payment.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_white_essence_payment.log",
+      "durationSeconds": 4.547
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_drag_cleanup.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_drag_cleanup.log",
+      "durationSeconds": 11.141
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_connection_lifecycle.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_connection_lifecycle.log",
+      "durationSeconds": 5.734
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_ponderer_drag.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_ponderer_drag.log",
+      "durationSeconds": 10.094
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_rarity_immediate_vfx.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_rarity_immediate_vfx.log",
+      "durationSeconds": 11.031
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_hand_interactions.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_hand_interactions.log",
+      "durationSeconds": 15.828
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_hand_space_shortcut.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_hand_space_shortcut.log",
+      "durationSeconds": 2.562
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_frontend.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_frontend.log",
+      "durationSeconds": 14.625
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_release_139_2.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_release_139_2.log",
+      "durationSeconds": 70.125
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_stalemate_totals.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_stalemate_totals.log",
+      "durationSeconds": 5.61
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_semantic_ui.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_semantic_ui.log",
+      "durationSeconds": 6.922
+    }
+  ],
+  "summary": {
+    "executed": 13,
+    "failed": 0
+  }
+}

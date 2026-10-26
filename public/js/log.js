@@ -82,6 +82,15 @@ function formatLogEntry(e, options = {}) {
   const faceState = (faceUp) => (faceUp === undefined ? "" : translateFor(faceUp ? "logFaceUp" : "logFaceDown", language));
   const viaRequest = (requestedBy) => requestedBy ? logTemplate("logRequestedBy", { requester: requestedBy }, language) : "";
   const f = (key, values = {}, markup = []) => logTemplate(key, { who, ...values }, language, new Set(html ? ["who", ...markup] : []), html);
+  const declaredNameResult = (result) => f(
+    result.status === "declared" ? "logRulesNameDeclaredCost"
+      : result.status === "matched" ? "logRulesDeclareMatched"
+      : result.status === "discarded" ? (result.mode === "search_deck" ? "logRulesDeclareSearchFound" : "logRulesDeclareMissed")
+      : result.mode === "search_deck" ? "logRulesDeclareSearchNone" : "logRulesDeclareMissed",
+    { player: ownerName(result.playerId), declared: card(result.declaredCardId),
+      card: card(result.revealedCardId || result.cardId), source: card(result.sourceCardId) },
+    ["declared", "card", "source"],
+  );
   switch (e.type) {
     case "import_deck": return f("logImportDeck", { count: d.count });
     case "rules_first_manifestation_trap_placed": return f("logRulesTrapPlaced");
@@ -175,6 +184,7 @@ function formatLogEntry(e, options = {}) {
         sourceResult = f("logRulesManualPlacement", { card: card(d.source.cardId) }, ["card"]);
       }
       let applied = "";
+      if (d.effectResult?.kind === "declare_card_name") applied = declaredNameResult(d.effectResult);
       if (d.effectResult?.kind === "score") {
         const delta = Number(d.effectResult.delta || 0);
         applied = f(delta < 0 ? "logRulesScoreLost" : "logRulesScoreApplied", {
@@ -291,13 +301,10 @@ function formatLogEntry(e, options = {}) {
         { player: ownerName(d.playerId), card: card(d.cardId) },
         ["card"],
       );
-      if (d.kind === "declare_card_name") return f(
-        d.status === "matched" ? "logRulesDeclareMatched"
-          : d.status === "discarded" ? (d.mode === "search_deck" ? "logRulesDeclareSearchFound" : "logRulesDeclareMissed")
-          : d.mode === "search_deck" ? "logRulesDeclareSearchNone" : "logRulesDeclareMissed",
-        { player: ownerName(d.playerId), declared: card(d.declaredCardId), card: card(d.revealedCardId || d.cardId) },
-        ["declared", "card"],
-      );
+      if (d.kind === "declare_card_name") return declaredNameResult(d);
+      if (d.kind === "search_deck" && d.revealed && d.cardIds?.length) return f("logRulesSearchRevealed", {
+        player: ownerName(d.playerId), cards: d.cardIds.map(card).join(", "), source: card(d.sourceCardId),
+      }, ["cards", "source"]);
       if (d.kind === "pick_own_item") return f(d.purpose === "sacrifice" ? "logRulesSacrificeItem" : "logRulesPickOwnItem", {
         player: ownerName(d.playerId),
       });

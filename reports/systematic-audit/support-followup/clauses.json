@@ -1,0 +1,369 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "1f52e2db65981db08ee88559df11725c7fcee78151f2d38ad2e66e09eaa40ba9",
+  "finishedAt": "2026-10-25T22:52:24.351347+00:00",
+  "published": false,
+  "summary": {
+    "executed": 26,
+    "passed": 26,
+    "failed": 0,
+    "skipped": 0,
+    "selectedParagraphs": 15,
+    "cardsWithSelectedClauseProof": 12,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "5h7k3m44jsn0esy_en",
+      "name": "Pan Zuto, the Beckoner",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Pan Zuto enters the Confrontation Zone, you can put a target manifestation from your Interzone into Support.",
+      "paragraphSha256": "de32f20b5c86f08be33904cf1fb77de2ff8dd39e8cccb38d2fb9e5c2174d5012",
+      "expectedBehavior": "Optional own Interzone put: CZ entry fires once, no new field entry or card play; stale targets and Pin Down prevent the move.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_pan_interzone_put_fires_first_stone_cz_entry_once_without_reentering_field",
+        "test_support_clause_audit.SupportClauseAudit.test_pan_interzone_put_does_not_repeat_seeker_field_entry_or_trigger_mazzolong",
+        "test_support_clause_audit.SupportClauseAudit.test_pan_target_still_needs_own_interzone_at_resolution",
+        "test_support_clause_audit.SupportClauseAudit.test_pan_only_triggers_when_entering_cz_and_is_optional",
+        "test_support_clause_audit.SupportClauseAudit.test_consult_and_twist_new_field_entries_trigger_blossom_but_pan_internal_move_does_not",
+        "test_support_clause_audit.SupportClauseAudit.test_pin_down_prevents_queued_puts_but_wretched_arena_allows_them"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "9c7s9dn3sa5dcko_en",
+      "name": "Consult",
+      "paragraphIndex": 0,
+      "printedParagraph": "A target player uncovers and discards cards from their deck until a manifestation is uncovered. The manifestation uncovered this way enters in Support under the control of that player.",
+      "paragraphSha256": "b48c858c8e015f0e7bc11e759f3e5a3590d18df3bdb0d30426ccfa748adc16d7",
+      "expectedBehavior": "Discard preceding Wills, put the first Manifestation under the recipient's control; field and CZ entries fire, playing does not. A blocked put leaves the Manifestation on top but retains earlier discards.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_consult_put_fires_first_stone_cz_trigger_and_not_mazzolong_play_trigger",
+        "test_support_clause_audit.SupportClauseAudit.test_consult_no_manifestation_discards_only_actual_deck_and_creates_no_support",
+        "test_support_clause_audit.SupportClauseAudit.test_consult_still_discards_prior_wills_when_support_entry_is_prevented",
+        "test_support_clause_audit.SupportClauseAudit.test_consult_checks_recipient_lock_and_old_turn_locks_expire",
+        "test_support_clause_audit.SupportClauseAudit.test_consult_and_twist_new_field_entries_trigger_blossom_but_pan_internal_move_does_not",
+        "test_support_clause_audit.SupportClauseAudit.test_pin_down_prevents_queued_puts_but_wretched_arena_allows_them"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "gu9rppos4r9ucsr_en",
+      "name": "Twist the Soul",
+      "paragraphIndex": 0,
+      "printedParagraph": "A target manifestation in your Empathic Vessel enters into Support under your control.",
+      "paragraphSha256": "b1e15cd6228648d279978c52698f655333dc0ec5aec9fa945e500bcbf63b9bfc",
+      "expectedBehavior": "Vessel put fires field and CZ entry once, not a play; Pin Down prevents extraction.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_twist_put_fires_seeker_field_entry_once_and_not_mazzolong_play_trigger",
+        "test_support_clause_audit.SupportClauseAudit.test_twist_put_fires_first_stone_cz_entry",
+        "test_support_clause_audit.SupportClauseAudit.test_consult_and_twist_new_field_entries_trigger_blossom_but_pan_internal_move_does_not",
+        "test_support_clause_audit.SupportClauseAudit.test_pin_down_prevents_queued_puts_but_wretched_arena_allows_them"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "gu9rppos4r9ucsr_en",
+      "name": "Twist the Soul",
+      "paragraphIndex": 1,
+      "printedParagraph": "If the manifestation wins the confrontation it returns to your Empathic Vessel, otherwise it returns to its owner's hand.",
+      "paragraphSha256": "35b928382c81270739bdec8ccdf1aa7978bd8cfa9449a9f1df71c3672eda5177",
+      "expectedBehavior": "Win returns to the effect controller's Vessel; loss and stalemate return to the immutable owner's hand.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_twist_outcome_returns_to_controller_vessel_on_win_and_owners_hand_otherwise"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "iuqpdn4gvjiu25v_en",
+      "name": "Stoic Snoozer",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Stoic Snoozer enters the Confrontation Zone, if you lost the confrontation the previous turn, the manifestations that enter as Support under your control get +1 power until the end of the turn.",
+      "paragraphSha256": "7221565ea8dc4c3c9ea8e903c241e317e25dca5590c567f0bed36d29cef7713c",
+      "expectedBehavior": "Only the previous turn's loss arms +1 for later Supports of the current controller; no retroactive bonus, source departure does not end it, next turn does.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_stoic_previous_turn_loss_is_required_for_future_support_bonus",
+        "test_support_clause_audit.SupportClauseAudit.test_stoic_bonus_is_prospective_control_scoped_and_expires"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "dbevnzpvngas8pg_en",
+      "name": "Jondo, the Pure Heart",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Jondo is in the Interzone, if upon Revelation its base power is higher than the base power of the First Manifestation you control, Jondo has Support until the end of the turn.",
+      "paragraphSha256": "08af3e3f78f0f4430bcf3569af24061d1a973b4bb41f2bcc740bbba3ae8bde2b",
+      "expectedBehavior": "Revelation compares base 4 strictly against own First, excluding additive bonuses; absent First, other source zones and next turn do not grant Support.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_jondo_strict_base_comparison_ignores_additive_bonuses",
+        "test_support_clause_audit.SupportClauseAudit.test_jondo_no_first_or_wrong_source_zone_does_not_grant_support"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "dbevnzpvngas8pg_en",
+      "name": "Jondo, the Pure Heart",
+      "paragraphIndex": 1,
+      "printedParagraph": "When Jondo wins a confrontation as Support, exile it.",
+      "paragraphSha256": "e421d272d56ef90ccdf67828cf914922acbcee1f726db5a326ce97ecf9a7fb1c",
+      "expectedBehavior": "Winning as Support exiles Jondo; First winner and losing Support do not take this exile destination.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_jondo_only_winning_support_is_exiled_at_confrontation_cleanup"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "h8xzt2gkg2ax241_en",
+      "name": "Mazzolong, the Log-chief",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Mazzolong is in the Interzone, whenever you play a manifestation in Support, draw a card.",
+      "paragraphSha256": "257e37eb6b7e980c6f5cbe9ddef67cb9885ff937c2ac24112796cabb04d17c31",
+      "expectedBehavior": "Own Support play including Chain and Chabak draws exactly one; put, opponent, wrong watcher zone and silenced watcher do not. Current control determines recipient.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_mazzolong_each_own_support_play_draws_one_but_put_and_other_player_do_not",
+        "test_support_clause_audit.SupportClauseAudit.test_mazzolong_chain_counts_as_play_and_draws_to_current_controller",
+        "test_support_clause_audit.SupportClauseAudit.test_mazzolong_outside_interzone_or_silenced_does_not_watch_support",
+        "test_support_clause_audit.SupportClauseAudit.test_chabak_special_support_play_triggers_mazzolong_once_after_two_cards_are_stalemated"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "k6l96o0xphpycpm_en",
+      "name": "Peropero, the Spirophant",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Peropero is on the field, play with the top card of your deck uncovered.",
+      "paragraphSha256": "8e6b4b454ed3bfa89ce8c6b0212b3aa2020edc199ccd4ae4fea1828d99ac622d",
+      "expectedBehavior": "Both seats see only the current controller's top; top updates, control changes and source departure update visibility.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_peropero_top_visibility_follows_control_and_disappears_when_source_leaves"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "k6l96o0xphpycpm_en",
+      "name": "Peropero, the Spirophant",
+      "paragraphIndex": 1,
+      "printedParagraph": "You can play the manifestations uncovered in this way as if they were in hand.",
+      "paragraphSha256": "870fce614b59b232e3475c3e0a237b2d8b53d049662dfb60eb8f6f3f1189b410",
+      "expectedBehavior": "Uncovered top Manifestation can play as hand Support; deeper card and top Will are rejected atomically; a valid declared play survives Peropero leaving.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_peropero_rejects_covered_manifestation_and_uncovered_will_atomically",
+        "test_support_clause_audit.SupportClauseAudit.test_peropero_legal_top_support_survives_source_departure_after_declaration"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-084",
+      "name": "Chabak, the Ungrateful",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Chabak is in your hand, you may put 2 Manifestations from your hand into the Stalemate Zone: Play Chabak in Support.",
+      "paragraphSha256": "a3843ff6bafa22526ca544eda1f2387980c99e1d0f64fa6fd93acd41c4c26115",
+      "expectedBehavior": "Two other hand Manifestations enter Stalemate; Chabak's special Support play draws once for Mazzolong.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_chabak_special_support_play_triggers_mazzolong_once_after_two_cards_are_stalemated"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-089",
+      "name": "Silem, the Magnetic",
+      "paragraphIndex": 2,
+      "printedParagraph": "When Silem enters the Confrontation Zone, put all Manifestations you control in the Stalemate Zone in Support under you control. Those Manifestations lose their effects until the end of the turn.",
+      "paragraphSha256": "2b29a27b8ec81a946ae23557519a67f0a0e59f8614d3076a852b58558856d097",
+      "expectedBehavior": "Stalemate cards put in Support lose effects for the turn: First Stone does not trigger, Mazzolong does not count a play, expiry restores effects without replaying entry.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_silem_put_suppresses_arriving_cards_own_triggers_and_does_not_count_as_play",
+        "test_support_clause_audit.SupportClauseAudit.test_pin_down_prevents_queued_puts_but_wretched_arena_allows_them"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-067",
+      "name": "Regurgitating Catacomb",
+      "paragraphIndex": 1,
+      "printedParagraph": "Remove a Bone Counter from Regurgitating Catacomb and Exhaust it: Put in Support under your control a target Manifestation from your Limbo discarded this turn.",
+      "paragraphSha256": "8510d04022c8ca3639833fa535f082d85968f407da0750cd08cb2211e01f54bd",
+      "expectedBehavior": "Selected already-resolving put obeys Pin Down and remains allowed under Wretched Arena; failed put keeps the Limbo card.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_pin_down_prevents_queued_puts_but_wretched_arena_allows_them"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "kmyzmxtakzhj58p_en",
+      "name": "Pin Down",
+      "paragraphIndex": 2,
+      "printedParagraph": "Players cannot put manifestations into the Confrontation Zone until the end of the turn.",
+      "paragraphSha256": "352d9fad63014c273dffedf9974e78417b7cecf4dfc880ceb76111952c46a688",
+      "expectedBehavior": "The CZ-entry prohibition also applies to these five previously queued put effects.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_pin_down_prevents_queued_puts_but_wretched_arena_allows_them"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "4phs0d8l223jk7t_en",
+      "name": "Wretched Arena",
+      "paragraphIndex": 0,
+      "printedParagraph": "Before the Revelation, you can pay {H}{H}{H}: Players cannot play manifestations in Support until the end of the turn.",
+      "paragraphSha256": "d5bb0202edddc082e376ff3fb53ec2cf11db4863652b0ded992e28416fd54b25",
+      "expectedBehavior": "Its Support play prohibition permits those five put effects; this case isolates the resolved prohibition.",
+      "testIds": [
+        "test_support_clause_audit.SupportClauseAudit.test_pin_down_prevents_queued_puts_but_wretched_arena_allows_them"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_chabak_special_support_play_triggers_mazzolong_once_after_two_cards_are_stalemated",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_consult_and_twist_new_field_entries_trigger_blossom_but_pan_internal_move_does_not",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_consult_checks_recipient_lock_and_old_turn_locks_expire",
+      "status": "pass",
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_consult_no_manifestation_discards_only_actual_deck_and_creates_no_support",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_consult_put_fires_first_stone_cz_trigger_and_not_mazzolong_play_trigger",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_consult_still_discards_prior_wills_when_support_entry_is_prevented",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_jondo_no_first_or_wrong_source_zone_does_not_grant_support",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_jondo_only_winning_support_is_exiled_at_confrontation_cleanup",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_jondo_strict_base_comparison_ignores_additive_bonuses",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_mazzolong_chain_counts_as_play_and_draws_to_current_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_mazzolong_each_own_support_play_draws_one_but_put_and_other_player_do_not",
+      "status": "pass",
+      "durationSeconds": 0.11
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_mazzolong_outside_interzone_or_silenced_does_not_watch_support",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_pan_interzone_put_does_not_repeat_seeker_field_entry_or_trigger_mazzolong",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_pan_interzone_put_fires_first_stone_cz_entry_once_without_reentering_field",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_pan_only_triggers_when_entering_cz_and_is_optional",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_pan_target_still_needs_own_interzone_at_resolution",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_peropero_legal_top_support_survives_source_departure_after_declaration",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_peropero_rejects_covered_manifestation_and_uncovered_will_atomically",
+      "status": "pass",
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_peropero_top_visibility_follows_control_and_disappears_when_source_leaves",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_pin_down_prevents_queued_puts_but_wretched_arena_allows_them",
+      "status": "pass",
+      "durationSeconds": 0.406
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_silem_put_suppresses_arriving_cards_own_triggers_and_does_not_count_as_play",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_stoic_bonus_is_prospective_control_scoped_and_expires",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_stoic_previous_turn_loss_is_required_for_future_support_bonus",
+      "status": "pass",
+      "durationSeconds": 0.187
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_twist_outcome_returns_to_controller_vessel_on_win_and_owners_hand_otherwise",
+      "status": "pass",
+      "durationSeconds": 0.11
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_twist_put_fires_first_stone_cz_entry",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_twist_put_fires_seeker_field_entry_once_and_not_mazzolong_play_trigger",
+      "status": "pass",
+      "durationSeconds": 0.031
+    }
+  ],
+  "limits": [
+    "Some effects are isolated at resolution, without declaration/payment/UI.",
+    "Support event tests explicitly inject production events; they do not certify every entry path.",
+    "Unlisted branches and interactions remain outside this batch; no global coverage percentage."
+  ]
+}

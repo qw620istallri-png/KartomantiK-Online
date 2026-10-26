@@ -13646,14 +13646,26 @@ class LotEighteenTests(RealCardRulesCase):
         self.assertEqual(session2.find_battlefield_item("their")["fieldZone"], "interzone")
         self.assertEqual((result["choiceKind"], result["playerId"]), ("chain_manifestation", "p1"))
         self.assertTrue(result["declined"])
-        # A Support lock stops the offer from being accepted, so the Chain follows.
+        # Only the opponent is locked: the offer fails but our Chain remains legal.
         session3, r1, r2 = self.make_session()
         self.put(r1, "hand", ["m-3"])
-        session3.rules_engine.setdefault("supportLocks", []).append({"turn": session3.phase_tracker["turn"], "playerId": None})
+        session3.rules_engine.setdefault("supportLocks", []).append({"turn": session3.phase_tracker["turn"], "playerId": "p2"})
         self.baranchio_offer(session3)
         error, result = session3.resolve_rules_choice("p2", session3.rules_engine["pendingChoice"]["id"], option="yes")
+        self.assertIsNone(error)
         self.assertEqual(session3.find_battlefield_item("their")["fieldZone"], "interzone")
         self.assertEqual(result["choiceKind"], "chain_manifestation")
+        # A global lock prevents both the offer and the fallback Chain play.
+        session4, s1, _s2 = self.make_session()
+        self.put(s1, "hand", ["m-3"])
+        session4.rules_engine["supportLocks"] = [{"turn": session4.phase_tracker["turn"], "playerId": None}]
+        self.baranchio_offer(session4)
+        error, result = session4.resolve_rules_choice("p2", session4.rules_engine["pendingChoice"]["id"], option="yes")
+        self.assertIsNone(error)
+        self.assertEqual(result["status"], "no_eligible_card")
+        self.assertIsNone(session4.rules_engine["pendingChoice"])
+        self.assertEqual(s1["zones"]["hand"], ["m-3"])
+        self.assertFalse(any(item.get("isChained") for item in session4.battlefield))
 
     def test_scrambling_beacon_changes_the_target_of_a_stack_effect(self):
         session, p1, p2 = self.make_session()

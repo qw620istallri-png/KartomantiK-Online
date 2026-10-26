@@ -28,6 +28,10 @@ class ActionsMixin:
         if zone == "hand":
             if card_id not in self.players[player_id]["zones"]["hand"]:
                 return "The source card is not in your Hand.", None
+            if kind == "play_card":
+                restriction_error = self.rules_card_play_restriction_error(player_id, card_id)
+                if restriction_error:
+                    return restriction_error, None
             activated_ability = next((
                 entry for entry in metadata.get("activatedAbilities") or []
                 if entry.get("id") == ability_id

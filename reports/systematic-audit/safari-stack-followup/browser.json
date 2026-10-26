@@ -1,0 +1,3579 @@
+{
+  "schemaVersion": 1,
+  "physicalDevice": false,
+  "macOSSafari": false,
+  "startedAt": "2026-10-26T09:11:04.867Z",
+  "sourceHashes": {
+    "public/style.css": "5aa831a3705e4ded8b2992ffe98cdda2cfd39e98a089ae13ec88e666c3c22fb7",
+    "public/ui-beta.css": "3ec13bd90e8d48013fc5615e1ed4b9b3e26e8379daf0405660985cd97c32ac6a",
+    "public/ui-beta.js": "07874ea773818bcea3ceedb15ad617527c4a94dae3991f8af47adb65d8f55d98",
+    "public/index.html": "626e0d1a394ae03e3a2f17c43d812776f1471157a137606dbc2cc70dd2a7b1b1",
+    "public/js/phases.js": "51d28000733711fa52d1030664c85cf56bcaf1a135edaf26c2e1ac2f207a1686",
+    "public/js/cards.js": "1030e49e0385c1f5dad384f5d9fa50c907fe6d9d144a1ff13c818307f056519d",
+    "public/js/board.js": "208f768a619de4502b0974e3dc7fac5677a74f52b741ca622f1d7c3f85c0cf11",
+    "tests/test_stack_browser_compat.cjs": "5aea325ee8503ba9d475706091e657f66223a9738fe55bac715d36e451c481de"
+  },
+  "cases": [
+    {
+      "engine": "chromium",
+      "version": "155.0.8059.85",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "flavor": "classic-assisted",
+      "profile": "local",
+      "status": "pass",
+      "metrics": [
+        {
+          "row": {
+            "left": 1000,
+            "top": 44,
+            "right": 1410,
+            "bottom": 117.53125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 50,
+            "right": 1053,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 50,
+            "right": 1053,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1000,
+            "top": 124.53125,
+            "right": 1410,
+            "bottom": 198.0625,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 130.53125,
+            "right": 1053,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 130.53125,
+            "right": 1053,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1000,
+            "top": 205.0625,
+            "right": 1410,
+            "bottom": 278.59375,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 211.0625,
+            "right": 1053,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 211.0625,
+            "right": 1053,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1000,
+            "top": 285.59375,
+            "right": 1410,
+            "bottom": 359.125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 291.59375,
+            "right": 1053,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 291.59375,
+            "right": 1053,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "version": "155.0.8059.85",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "flavor": "classic-assisted",
+      "profile": "remote-delayed-expanded",
+      "status": "pass",
+      "artUrls": [
+        "https://api.kartomantik.com/api/files/pbc_1645794944/6jz7otalrdq0q8u_en/wind_sprout_hv0xa7wq7z.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/l4suqymyd2ehsue_en/sated_swineheart_qds4tjlkvt.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/8lion52jjnmxvko_en/merciful_pago_ri59bao5h0.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/gbvulprmpw89ohr_en/tiptup_the_whistler_d7ty3klgyt.webp"
+      ],
+      "metrics": [
+        {
+          "row": {
+            "left": 1000,
+            "top": 44,
+            "right": 1410,
+            "bottom": 117.53125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 50,
+            "right": 1053,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 50,
+            "right": 1053,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1000,
+            "top": 124.53125,
+            "right": 1410,
+            "bottom": 198.0625,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 130.53125,
+            "right": 1053,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 130.53125,
+            "right": 1053,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1000,
+            "top": 205.0625,
+            "right": 1410,
+            "bottom": 278.59375,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 211.0625,
+            "right": 1053,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 211.0625,
+            "right": 1053,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1000,
+            "top": 285.59375,
+            "right": 1410,
+            "bottom": 359.125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 291.59375,
+            "right": 1053,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 291.59375,
+            "right": 1053,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "version": "155.0.8059.85",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "flavor": "beta-assisted",
+      "profile": "local",
+      "status": "pass",
+      "metrics": [
+        {
+          "row": {
+            "left": 1217,
+            "top": 180.296875,
+            "right": 1419,
+            "bottom": 253.828125,
+            "width": 202,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1229,
+            "top": 186.296875,
+            "right": 1273,
+            "bottom": 247.828125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1229,
+            "top": 186.296875,
+            "right": 1273,
+            "bottom": 247.828125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1217,
+            "top": 259.828125,
+            "right": 1419,
+            "bottom": 333.359375,
+            "width": 202,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1229,
+            "top": 265.828125,
+            "right": 1273,
+            "bottom": 327.359375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1229,
+            "top": 265.828125,
+            "right": 1273,
+            "bottom": 327.359375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1217,
+            "top": 339.359375,
+            "right": 1419,
+            "bottom": 412.890625,
+            "width": 202,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1229,
+            "top": 345.359375,
+            "right": 1273,
+            "bottom": 406.890625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1229,
+            "top": 345.359375,
+            "right": 1273,
+            "bottom": 406.890625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1217,
+            "top": 418.890625,
+            "right": 1419,
+            "bottom": 492.421875,
+            "width": 202,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1229,
+            "top": 424.890625,
+            "right": 1273,
+            "bottom": 486.421875,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1229,
+            "top": 424.890625,
+            "right": 1273,
+            "bottom": 486.421875,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ],
+      "screenshot": "chromium-beta-assisted-1440-local.png"
+    },
+    {
+      "engine": "chromium",
+      "version": "155.0.8059.85",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "flavor": "beta-assisted",
+      "profile": "remote-delayed-expanded",
+      "status": "pass",
+      "artUrls": [
+        "https://api.kartomantik.com/api/files/pbc_1645794944/6jz7otalrdq0q8u_en/wind_sprout_hv0xa7wq7z.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/l4suqymyd2ehsue_en/sated_swineheart_qds4tjlkvt.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/8lion52jjnmxvko_en/merciful_pago_ri59bao5h0.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/gbvulprmpw89ohr_en/tiptup_the_whistler_d7ty3klgyt.webp"
+      ],
+      "metrics": [
+        {
+          "row": {
+            "left": 381,
+            "top": 256,
+            "right": 1059,
+            "bottom": 329.53125,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 393,
+            "top": 262,
+            "right": 437,
+            "bottom": 323.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 393,
+            "top": 262,
+            "right": 437,
+            "bottom": 323.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 381,
+            "top": 335.53125,
+            "right": 1059,
+            "bottom": 409.0625,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 393,
+            "top": 341.53125,
+            "right": 437,
+            "bottom": 403.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 393,
+            "top": 341.53125,
+            "right": 437,
+            "bottom": 403.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 381,
+            "top": 415.0625,
+            "right": 1059,
+            "bottom": 488.59375,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 393,
+            "top": 421.0625,
+            "right": 437,
+            "bottom": 482.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 393,
+            "top": 421.0625,
+            "right": 437,
+            "bottom": 482.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 381,
+            "top": 494.59375,
+            "right": 1059,
+            "bottom": 568.125,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 393,
+            "top": 500.59375,
+            "right": 437,
+            "bottom": 562.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 393,
+            "top": 500.59375,
+            "right": 437,
+            "bottom": 562.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ],
+      "screenshot": "chromium-beta-assisted-1440-remote-delayed-expanded.png"
+    },
+    {
+      "engine": "chromium",
+      "version": "155.0.8059.85",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "flavor": "beta-manual",
+      "profile": "local",
+      "status": "pass",
+      "metrics": [
+        {
+          "row": {
+            "left": 1217,
+            "top": 171.296875,
+            "right": 1279.984375,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1217,
+            "top": 171.296875,
+            "right": 1279.984375,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1218,
+            "top": 172.296875,
+            "right": 1278.984375,
+            "bottom": 258.484375,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        },
+        {
+          "row": {
+            "left": 1287.984375,
+            "top": 171.296875,
+            "right": 1350.96875,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1287.984375,
+            "top": 171.296875,
+            "right": 1350.96875,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1288.984375,
+            "top": 172.296875,
+            "right": 1349.96875,
+            "bottom": 258.484375,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        },
+        {
+          "row": {
+            "left": 1217,
+            "top": 267.484375,
+            "right": 1279.984375,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1217,
+            "top": 267.484375,
+            "right": 1279.984375,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1218,
+            "top": 268.484375,
+            "right": 1278.984375,
+            "bottom": 354.671875,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        },
+        {
+          "row": {
+            "left": 1287.984375,
+            "top": 267.484375,
+            "right": 1350.96875,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1287.984375,
+            "top": 267.484375,
+            "right": 1350.96875,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1288.984375,
+            "top": 268.484375,
+            "right": 1349.96875,
+            "bottom": 354.671875,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "version": "155.0.8059.85",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "flavor": "beta-manual",
+      "profile": "remote-delayed-expanded",
+      "status": "pass",
+      "artUrls": [
+        "https://api.kartomantik.com/api/files/pbc_1645794944/6jz7otalrdq0q8u_en/wind_sprout_hv0xa7wq7z.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/l4suqymyd2ehsue_en/sated_swineheart_qds4tjlkvt.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/8lion52jjnmxvko_en/merciful_pago_ri59bao5h0.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/gbvulprmpw89ohr_en/tiptup_the_whistler_d7ty3klgyt.webp"
+      ],
+      "metrics": [
+        {
+          "row": {
+            "left": 381,
+            "top": 247,
+            "right": 516,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 381,
+            "top": 247,
+            "right": 516,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 383,
+            "top": 249,
+            "right": 514,
+            "bottom": 434,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        },
+        {
+          "row": {
+            "left": 524,
+            "top": 247,
+            "right": 659,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 524,
+            "top": 247,
+            "right": 659,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 526,
+            "top": 249,
+            "right": 657,
+            "bottom": 434,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        },
+        {
+          "row": {
+            "left": 667,
+            "top": 247,
+            "right": 802,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 667,
+            "top": 247,
+            "right": 802,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 669,
+            "top": 249,
+            "right": 800,
+            "bottom": 434,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        },
+        {
+          "row": {
+            "left": 810,
+            "top": 247,
+            "right": 945,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 810,
+            "top": 247,
+            "right": 945,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 812,
+            "top": 249,
+            "right": 943,
+            "bottom": 434,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "version": "155.0.8059.85",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "flavor": "classic-assisted",
+      "profile": "local",
+      "status": "pass",
+      "metrics": [
+        {
+          "row": {
+            "left": 840,
+            "top": 44,
+            "right": 1250,
+            "bottom": 117.53125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 50,
+            "right": 893,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 50,
+            "right": 893,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 840,
+            "top": 124.53125,
+            "right": 1250,
+            "bottom": 198.0625,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 130.53125,
+            "right": 893,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 130.53125,
+            "right": 893,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 840,
+            "top": 205.0625,
+            "right": 1250,
+            "bottom": 278.59375,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 211.0625,
+            "right": 893,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 211.0625,
+            "right": 893,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 840,
+            "top": 285.59375,
+            "right": 1250,
+            "bottom": 359.125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 291.59375,
+            "right": 893,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 291.59375,
+            "right": 893,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "version": "155.0.8059.85",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "flavor": "classic-assisted",
+      "profile": "remote-delayed-expanded",
+      "status": "pass",
+      "artUrls": [
+        "https://api.kartomantik.com/api/files/pbc_1645794944/6jz7otalrdq0q8u_en/wind_sprout_hv0xa7wq7z.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/l4suqymyd2ehsue_en/sated_swineheart_qds4tjlkvt.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/8lion52jjnmxvko_en/merciful_pago_ri59bao5h0.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/gbvulprmpw89ohr_en/tiptup_the_whistler_d7ty3klgyt.webp"
+      ],
+      "metrics": [
+        {
+          "row": {
+            "left": 840,
+            "top": 44,
+            "right": 1250,
+            "bottom": 117.53125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 50,
+            "right": 893,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 50,
+            "right": 893,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 840,
+            "top": 124.53125,
+            "right": 1250,
+            "bottom": 198.0625,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 130.53125,
+            "right": 893,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 130.53125,
+            "right": 893,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 840,
+            "top": 205.0625,
+            "right": 1250,
+            "bottom": 278.59375,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 211.0625,
+            "right": 893,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 211.0625,
+            "right": 893,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 840,
+            "top": 285.59375,
+            "right": 1250,
+            "bottom": 359.125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 291.59375,
+            "right": 893,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 291.59375,
+            "right": 893,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "version": "155.0.8059.85",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "flavor": "beta-assisted",
+      "profile": "local",
+      "status": "pass",
+      "metrics": [
+        {
+          "row": {
+            "left": 1082,
+            "top": 180.296875,
+            "right": 1259,
+            "bottom": 253.828125,
+            "width": 177,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1094,
+            "top": 186.296875,
+            "right": 1138,
+            "bottom": 247.828125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1094,
+            "top": 186.296875,
+            "right": 1138,
+            "bottom": 247.828125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1082,
+            "top": 259.828125,
+            "right": 1259,
+            "bottom": 333.359375,
+            "width": 177,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1094,
+            "top": 265.828125,
+            "right": 1138,
+            "bottom": 327.359375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1094,
+            "top": 265.828125,
+            "right": 1138,
+            "bottom": 327.359375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1082,
+            "top": 339.359375,
+            "right": 1259,
+            "bottom": 412.890625,
+            "width": 177,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1094,
+            "top": 345.359375,
+            "right": 1138,
+            "bottom": 406.890625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1094,
+            "top": 345.359375,
+            "right": 1138,
+            "bottom": 406.890625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1082,
+            "top": 418.890625,
+            "right": 1259,
+            "bottom": 492.421875,
+            "width": 177,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1094,
+            "top": 424.890625,
+            "right": 1138,
+            "bottom": 486.421875,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1094,
+            "top": 424.890625,
+            "right": 1138,
+            "bottom": 486.421875,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "version": "155.0.8059.85",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "flavor": "beta-assisted",
+      "profile": "remote-delayed-expanded",
+      "status": "pass",
+      "artUrls": [
+        "https://api.kartomantik.com/api/files/pbc_1645794944/6jz7otalrdq0q8u_en/wind_sprout_hv0xa7wq7z.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/l4suqymyd2ehsue_en/sated_swineheart_qds4tjlkvt.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/8lion52jjnmxvko_en/merciful_pago_ri59bao5h0.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/gbvulprmpw89ohr_en/tiptup_the_whistler_d7ty3klgyt.webp"
+      ],
+      "metrics": [
+        {
+          "row": {
+            "left": 301,
+            "top": 148,
+            "right": 979,
+            "bottom": 221.53125,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 313,
+            "top": 154,
+            "right": 357,
+            "bottom": 215.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 313,
+            "top": 154,
+            "right": 357,
+            "bottom": 215.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 301,
+            "top": 227.53125,
+            "right": 979,
+            "bottom": 301.0625,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 313,
+            "top": 233.53125,
+            "right": 357,
+            "bottom": 295.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 313,
+            "top": 233.53125,
+            "right": 357,
+            "bottom": 295.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 301,
+            "top": 307.0625,
+            "right": 979,
+            "bottom": 380.59375,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 313,
+            "top": 313.0625,
+            "right": 357,
+            "bottom": 374.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 313,
+            "top": 313.0625,
+            "right": 357,
+            "bottom": 374.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 301,
+            "top": 386.59375,
+            "right": 979,
+            "bottom": 460.125,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 313,
+            "top": 392.59375,
+            "right": 357,
+            "bottom": 454.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 313,
+            "top": 392.59375,
+            "right": 357,
+            "bottom": 454.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "version": "155.0.8059.85",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "flavor": "beta-manual",
+      "profile": "local",
+      "status": "pass",
+      "metrics": [
+        {
+          "row": {
+            "left": 1082,
+            "top": 171.296875,
+            "right": 1144.984375,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1082,
+            "top": 171.296875,
+            "right": 1144.984375,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1083,
+            "top": 172.296875,
+            "right": 1143.984375,
+            "bottom": 258.484375,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        },
+        {
+          "row": {
+            "left": 1152.984375,
+            "top": 171.296875,
+            "right": 1215.96875,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1152.984375,
+            "top": 171.296875,
+            "right": 1215.96875,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1153.984375,
+            "top": 172.296875,
+            "right": 1214.96875,
+            "bottom": 258.484375,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        },
+        {
+          "row": {
+            "left": 1082,
+            "top": 267.484375,
+            "right": 1144.984375,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1082,
+            "top": 267.484375,
+            "right": 1144.984375,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1083,
+            "top": 268.484375,
+            "right": 1143.984375,
+            "bottom": 354.671875,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        },
+        {
+          "row": {
+            "left": 1152.984375,
+            "top": 267.484375,
+            "right": 1215.96875,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1152.984375,
+            "top": 267.484375,
+            "right": 1215.96875,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1153.984375,
+            "top": 268.484375,
+            "right": 1214.96875,
+            "bottom": 354.671875,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        }
+      ]
+    },
+    {
+      "engine": "chromium",
+      "version": "155.0.8059.85",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "flavor": "beta-manual",
+      "profile": "remote-delayed-expanded",
+      "status": "pass",
+      "artUrls": [
+        "https://api.kartomantik.com/api/files/pbc_1645794944/6jz7otalrdq0q8u_en/wind_sprout_hv0xa7wq7z.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/l4suqymyd2ehsue_en/sated_swineheart_qds4tjlkvt.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/8lion52jjnmxvko_en/merciful_pago_ri59bao5h0.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/gbvulprmpw89ohr_en/tiptup_the_whistler_d7ty3klgyt.webp"
+      ],
+      "metrics": [
+        {
+          "row": {
+            "left": 301,
+            "top": 139,
+            "right": 436,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 301,
+            "top": 139,
+            "right": 436,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 303,
+            "top": 141,
+            "right": 434,
+            "bottom": 326,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        },
+        {
+          "row": {
+            "left": 444,
+            "top": 139,
+            "right": 579,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 444,
+            "top": 139,
+            "right": 579,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 446,
+            "top": 141,
+            "right": 577,
+            "bottom": 326,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        },
+        {
+          "row": {
+            "left": 587,
+            "top": 139,
+            "right": 722,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 587,
+            "top": 139,
+            "right": 722,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 589,
+            "top": 141,
+            "right": 720,
+            "bottom": 326,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        },
+        {
+          "row": {
+            "left": 730,
+            "top": 139,
+            "right": 865,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 730,
+            "top": 139,
+            "right": 865,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 732,
+            "top": 141,
+            "right": 863,
+            "bottom": 326,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "flavor": "classic-assisted",
+      "profile": "local",
+      "status": "pass",
+      "metrics": [
+        {
+          "row": {
+            "left": 1000,
+            "top": 44,
+            "right": 1410,
+            "bottom": 117.53125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 50,
+            "right": 1053,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 50,
+            "right": 1053,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1000,
+            "top": 124.53125,
+            "right": 1410,
+            "bottom": 198.0625,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 130.53125,
+            "right": 1053,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 130.53125,
+            "right": 1053,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1000,
+            "top": 205.0625,
+            "right": 1410,
+            "bottom": 278.59375,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 211.0625,
+            "right": 1053,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 211.0625,
+            "right": 1053,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1000,
+            "top": 285.59375,
+            "right": 1410,
+            "bottom": 359.125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 291.59375,
+            "right": 1053,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 291.59375,
+            "right": 1053,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "flavor": "classic-assisted",
+      "profile": "remote-delayed-expanded",
+      "status": "pass",
+      "artUrls": [
+        "https://api.kartomantik.com/api/files/pbc_1645794944/6jz7otalrdq0q8u_en/wind_sprout_hv0xa7wq7z.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/l4suqymyd2ehsue_en/sated_swineheart_qds4tjlkvt.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/8lion52jjnmxvko_en/merciful_pago_ri59bao5h0.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/gbvulprmpw89ohr_en/tiptup_the_whistler_d7ty3klgyt.webp"
+      ],
+      "metrics": [
+        {
+          "row": {
+            "left": 1000,
+            "top": 44,
+            "right": 1410,
+            "bottom": 117.53125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 50,
+            "right": 1053,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 50,
+            "right": 1053,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1000,
+            "top": 124.53125,
+            "right": 1410,
+            "bottom": 198.0625,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 130.53125,
+            "right": 1053,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 130.53125,
+            "right": 1053,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1000,
+            "top": 205.0625,
+            "right": 1410,
+            "bottom": 278.59375,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 211.0625,
+            "right": 1053,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 211.0625,
+            "right": 1053,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1000,
+            "top": 285.59375,
+            "right": 1410,
+            "bottom": 359.125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1009,
+            "top": 291.59375,
+            "right": 1053,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1009,
+            "top": 291.59375,
+            "right": 1053,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "flavor": "beta-assisted",
+      "profile": "local",
+      "status": "pass",
+      "metrics": [
+        {
+          "row": {
+            "left": 1217,
+            "top": 180.296875,
+            "right": 1419,
+            "bottom": 253.828125,
+            "width": 202,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1229,
+            "top": 186.296875,
+            "right": 1273,
+            "bottom": 247.828125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1229,
+            "top": 186.296875,
+            "right": 1273,
+            "bottom": 247.828125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1217,
+            "top": 259.828125,
+            "right": 1419,
+            "bottom": 333.359375,
+            "width": 202,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1229,
+            "top": 265.828125,
+            "right": 1273,
+            "bottom": 327.359375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1229,
+            "top": 265.828125,
+            "right": 1273,
+            "bottom": 327.359375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1217,
+            "top": 339.359375,
+            "right": 1419,
+            "bottom": 412.890625,
+            "width": 202,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1229,
+            "top": 345.359375,
+            "right": 1273,
+            "bottom": 406.890625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1229,
+            "top": 345.359375,
+            "right": 1273,
+            "bottom": 406.890625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1217,
+            "top": 418.890625,
+            "right": 1419,
+            "bottom": 492.421875,
+            "width": 202,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1229,
+            "top": 424.890625,
+            "right": 1273,
+            "bottom": 486.421875,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1229,
+            "top": 424.890625,
+            "right": 1273,
+            "bottom": 486.421875,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ],
+      "screenshot": "webkit-beta-assisted-1440-local.png"
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "flavor": "beta-assisted",
+      "profile": "remote-delayed-expanded",
+      "status": "pass",
+      "artUrls": [
+        "https://api.kartomantik.com/api/files/pbc_1645794944/6jz7otalrdq0q8u_en/wind_sprout_hv0xa7wq7z.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/l4suqymyd2ehsue_en/sated_swineheart_qds4tjlkvt.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/8lion52jjnmxvko_en/merciful_pago_ri59bao5h0.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/gbvulprmpw89ohr_en/tiptup_the_whistler_d7ty3klgyt.webp"
+      ],
+      "metrics": [
+        {
+          "row": {
+            "left": 381,
+            "top": 256,
+            "right": 1059,
+            "bottom": 329.53125,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 393,
+            "top": 262,
+            "right": 437,
+            "bottom": 323.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 393,
+            "top": 262,
+            "right": 437,
+            "bottom": 323.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 381,
+            "top": 335.53125,
+            "right": 1059,
+            "bottom": 409.0625,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 393,
+            "top": 341.53125,
+            "right": 437,
+            "bottom": 403.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 393,
+            "top": 341.53125,
+            "right": 437,
+            "bottom": 403.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 381,
+            "top": 415.0625,
+            "right": 1059,
+            "bottom": 488.59375,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 393,
+            "top": 421.0625,
+            "right": 437,
+            "bottom": 482.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 393,
+            "top": 421.0625,
+            "right": 437,
+            "bottom": 482.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 381,
+            "top": 494.59375,
+            "right": 1059,
+            "bottom": 568.125,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 393,
+            "top": 500.59375,
+            "right": 437,
+            "bottom": 562.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 393,
+            "top": 500.59375,
+            "right": 437,
+            "bottom": 562.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ],
+      "screenshot": "webkit-beta-assisted-1440-remote-delayed-expanded.png"
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "flavor": "beta-manual",
+      "profile": "local",
+      "status": "pass",
+      "metrics": [
+        {
+          "row": {
+            "left": 1217,
+            "top": 171.296875,
+            "right": 1279.984375,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1217,
+            "top": 171.296875,
+            "right": 1279.984375,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1218,
+            "top": 172.296875,
+            "right": 1278.984375,
+            "bottom": 258.484375,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        },
+        {
+          "row": {
+            "left": 1287.984375,
+            "top": 171.296875,
+            "right": 1350.96875,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1287.984375,
+            "top": 171.296875,
+            "right": 1350.96875,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1288.984375,
+            "top": 172.296875,
+            "right": 1349.96875,
+            "bottom": 258.484375,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        },
+        {
+          "row": {
+            "left": 1217,
+            "top": 267.484375,
+            "right": 1279.984375,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1217,
+            "top": 267.484375,
+            "right": 1279.984375,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1218,
+            "top": 268.484375,
+            "right": 1278.984375,
+            "bottom": 354.671875,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        },
+        {
+          "row": {
+            "left": 1287.984375,
+            "top": 267.484375,
+            "right": 1350.96875,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1287.984375,
+            "top": 267.484375,
+            "right": 1350.96875,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1288.984375,
+            "top": 268.484375,
+            "right": 1349.96875,
+            "bottom": 354.671875,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "flavor": "beta-manual",
+      "profile": "remote-delayed-expanded",
+      "status": "pass",
+      "artUrls": [
+        "https://api.kartomantik.com/api/files/pbc_1645794944/6jz7otalrdq0q8u_en/wind_sprout_hv0xa7wq7z.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/l4suqymyd2ehsue_en/sated_swineheart_qds4tjlkvt.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/8lion52jjnmxvko_en/merciful_pago_ri59bao5h0.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/gbvulprmpw89ohr_en/tiptup_the_whistler_d7ty3klgyt.webp"
+      ],
+      "metrics": [
+        {
+          "row": {
+            "left": 381,
+            "top": 247,
+            "right": 516,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 381,
+            "top": 247,
+            "right": 516,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 383,
+            "top": 249,
+            "right": 514,
+            "bottom": 434,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        },
+        {
+          "row": {
+            "left": 524,
+            "top": 247,
+            "right": 659,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 524,
+            "top": 247,
+            "right": 659,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 526,
+            "top": 249,
+            "right": 657,
+            "bottom": 434,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        },
+        {
+          "row": {
+            "left": 667,
+            "top": 247,
+            "right": 802,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 667,
+            "top": 247,
+            "right": 802,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 669,
+            "top": 249,
+            "right": 800,
+            "bottom": 434,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        },
+        {
+          "row": {
+            "left": 810,
+            "top": 247,
+            "right": 945,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 810,
+            "top": 247,
+            "right": 945,
+            "bottom": 436,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 812,
+            "top": 249,
+            "right": 943,
+            "bottom": 434,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "flavor": "classic-assisted",
+      "profile": "local",
+      "status": "pass",
+      "metrics": [
+        {
+          "row": {
+            "left": 840,
+            "top": 44,
+            "right": 1250,
+            "bottom": 117.53125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 50,
+            "right": 893,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 50,
+            "right": 893,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 840,
+            "top": 124.53125,
+            "right": 1250,
+            "bottom": 198.0625,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 130.53125,
+            "right": 893,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 130.53125,
+            "right": 893,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 840,
+            "top": 205.0625,
+            "right": 1250,
+            "bottom": 278.59375,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 211.0625,
+            "right": 893,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 211.0625,
+            "right": 893,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 840,
+            "top": 285.59375,
+            "right": 1250,
+            "bottom": 359.125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 291.59375,
+            "right": 893,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 291.59375,
+            "right": 893,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "flavor": "classic-assisted",
+      "profile": "remote-delayed-expanded",
+      "status": "pass",
+      "artUrls": [
+        "https://api.kartomantik.com/api/files/pbc_1645794944/6jz7otalrdq0q8u_en/wind_sprout_hv0xa7wq7z.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/l4suqymyd2ehsue_en/sated_swineheart_qds4tjlkvt.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/8lion52jjnmxvko_en/merciful_pago_ri59bao5h0.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/gbvulprmpw89ohr_en/tiptup_the_whistler_d7ty3klgyt.webp"
+      ],
+      "metrics": [
+        {
+          "row": {
+            "left": 840,
+            "top": 44,
+            "right": 1250,
+            "bottom": 117.53125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 50,
+            "right": 893,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 50,
+            "right": 893,
+            "bottom": 111.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 840,
+            "top": 124.53125,
+            "right": 1250,
+            "bottom": 198.0625,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 130.53125,
+            "right": 893,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 130.53125,
+            "right": 893,
+            "bottom": 192.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 840,
+            "top": 205.0625,
+            "right": 1250,
+            "bottom": 278.59375,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 211.0625,
+            "right": 893,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 211.0625,
+            "right": 893,
+            "bottom": 272.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 840,
+            "top": 285.59375,
+            "right": 1250,
+            "bottom": 359.125,
+            "width": 410,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 849,
+            "top": 291.59375,
+            "right": 893,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 849,
+            "top": 291.59375,
+            "right": 893,
+            "bottom": 353.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "flavor": "beta-assisted",
+      "profile": "local",
+      "status": "pass",
+      "metrics": [
+        {
+          "row": {
+            "left": 1082,
+            "top": 180.296875,
+            "right": 1259,
+            "bottom": 253.828125,
+            "width": 177,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1094,
+            "top": 186.296875,
+            "right": 1138,
+            "bottom": 247.828125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1094,
+            "top": 186.296875,
+            "right": 1138,
+            "bottom": 247.828125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1082,
+            "top": 259.828125,
+            "right": 1259,
+            "bottom": 333.359375,
+            "width": 177,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1094,
+            "top": 265.828125,
+            "right": 1138,
+            "bottom": 327.359375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1094,
+            "top": 265.828125,
+            "right": 1138,
+            "bottom": 327.359375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1082,
+            "top": 339.359375,
+            "right": 1259,
+            "bottom": 412.890625,
+            "width": 177,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1094,
+            "top": 345.359375,
+            "right": 1138,
+            "bottom": 406.890625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1094,
+            "top": 345.359375,
+            "right": 1138,
+            "bottom": 406.890625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 1082,
+            "top": 418.890625,
+            "right": 1259,
+            "bottom": 492.421875,
+            "width": 177,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 1094,
+            "top": 424.890625,
+            "right": 1138,
+            "bottom": 486.421875,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 1094,
+            "top": 424.890625,
+            "right": 1138,
+            "bottom": 486.421875,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "flavor": "beta-assisted",
+      "profile": "remote-delayed-expanded",
+      "status": "pass",
+      "artUrls": [
+        "https://api.kartomantik.com/api/files/pbc_1645794944/6jz7otalrdq0q8u_en/wind_sprout_hv0xa7wq7z.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/l4suqymyd2ehsue_en/sated_swineheart_qds4tjlkvt.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/8lion52jjnmxvko_en/merciful_pago_ri59bao5h0.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/gbvulprmpw89ohr_en/tiptup_the_whistler_d7ty3klgyt.webp"
+      ],
+      "metrics": [
+        {
+          "row": {
+            "left": 301,
+            "top": 148,
+            "right": 979,
+            "bottom": 221.53125,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 313,
+            "top": 154,
+            "right": 357,
+            "bottom": 215.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 313,
+            "top": 154,
+            "right": 357,
+            "bottom": 215.53125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 301,
+            "top": 227.53125,
+            "right": 979,
+            "bottom": 301.0625,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 313,
+            "top": 233.53125,
+            "right": 357,
+            "bottom": 295.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 313,
+            "top": 233.53125,
+            "right": 357,
+            "bottom": 295.0625,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 301,
+            "top": 307.0625,
+            "right": 979,
+            "bottom": 380.59375,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 313,
+            "top": 313.0625,
+            "right": 357,
+            "bottom": 374.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 313,
+            "top": 313.0625,
+            "right": 357,
+            "bottom": 374.59375,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        },
+        {
+          "row": {
+            "left": 301,
+            "top": 386.59375,
+            "right": 979,
+            "bottom": 460.125,
+            "width": 678,
+            "height": 73.53125
+          },
+          "surface": {
+            "left": 313,
+            "top": 392.59375,
+            "right": 357,
+            "bottom": 454.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "image": {
+            "left": 313,
+            "top": 392.59375,
+            "right": 357,
+            "bottom": 454.125,
+            "width": 44,
+            "height": 61.53125
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "auto",
+          "imagePosition": "static",
+          "zoom": "1"
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "flavor": "beta-manual",
+      "profile": "local",
+      "status": "pass",
+      "metrics": [
+        {
+          "row": {
+            "left": 1082,
+            "top": 171.296875,
+            "right": 1144.984375,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1082,
+            "top": 171.296875,
+            "right": 1144.984375,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1083,
+            "top": 172.296875,
+            "right": 1143.984375,
+            "bottom": 258.484375,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        },
+        {
+          "row": {
+            "left": 1152.984375,
+            "top": 171.296875,
+            "right": 1215.96875,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1152.984375,
+            "top": 171.296875,
+            "right": 1215.96875,
+            "bottom": 259.484375,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1153.984375,
+            "top": 172.296875,
+            "right": 1214.96875,
+            "bottom": 258.484375,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        },
+        {
+          "row": {
+            "left": 1082,
+            "top": 267.484375,
+            "right": 1144.984375,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1082,
+            "top": 267.484375,
+            "right": 1144.984375,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1083,
+            "top": 268.484375,
+            "right": 1143.984375,
+            "bottom": 354.671875,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        },
+        {
+          "row": {
+            "left": 1152.984375,
+            "top": 267.484375,
+            "right": 1215.96875,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "surface": {
+            "left": 1152.984375,
+            "top": 267.484375,
+            "right": 1215.96875,
+            "bottom": 355.671875,
+            "width": 62.984375,
+            "height": 88.1875
+          },
+          "image": {
+            "left": 1153.984375,
+            "top": 268.484375,
+            "right": 1214.96875,
+            "bottom": 354.671875,
+            "width": 60.984375,
+            "height": 86.1875
+          },
+          "naturalWidth": 708,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.42"
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "version": "27.2",
+      "viewport": {
+        "width": 1280,
+        "height": 720
+      },
+      "flavor": "beta-manual",
+      "profile": "remote-delayed-expanded",
+      "status": "pass",
+      "artUrls": [
+        "https://api.kartomantik.com/api/files/pbc_1645794944/6jz7otalrdq0q8u_en/wind_sprout_hv0xa7wq7z.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/l4suqymyd2ehsue_en/sated_swineheart_qds4tjlkvt.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/8lion52jjnmxvko_en/merciful_pago_ri59bao5h0.webp",
+        "https://api.kartomantik.com/api/files/pbc_1645794944/gbvulprmpw89ohr_en/tiptup_the_whistler_d7ty3klgyt.webp"
+      ],
+      "metrics": [
+        {
+          "row": {
+            "left": 301,
+            "top": 139,
+            "right": 436,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 301,
+            "top": 139,
+            "right": 436,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 303,
+            "top": 141,
+            "right": 434,
+            "bottom": 326,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        },
+        {
+          "row": {
+            "left": 444,
+            "top": 139,
+            "right": 579,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 444,
+            "top": 139,
+            "right": 579,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 446,
+            "top": 141,
+            "right": 577,
+            "bottom": 326,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        },
+        {
+          "row": {
+            "left": 587,
+            "top": 139,
+            "right": 722,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 587,
+            "top": 139,
+            "right": 722,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 589,
+            "top": 141,
+            "right": 720,
+            "bottom": 326,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        },
+        {
+          "row": {
+            "left": 730,
+            "top": 139,
+            "right": 865,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "surface": {
+            "left": 730,
+            "top": 139,
+            "right": 865,
+            "bottom": 328,
+            "width": 135,
+            "height": 189
+          },
+          "image": {
+            "left": 732,
+            "top": 141,
+            "right": 863,
+            "bottom": 326,
+            "width": 131,
+            "height": 185
+          },
+          "naturalWidth": 500,
+          "opacity": "1",
+          "visibility": "visible",
+          "display": "block",
+          "appearance": "none",
+          "imagePosition": "static",
+          "zoom": "0.9"
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "executed": 24,
+    "failed": 0
+  },
+  "finishedAt": "2026-10-26T09:11:47.400Z"
+}

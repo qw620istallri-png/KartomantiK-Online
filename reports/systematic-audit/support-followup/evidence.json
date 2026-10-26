@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "1f52e2db65981db08ee88559df11725c7fcee78151f2d38ad2e66e09eaa40ba9",
+  "finishedAt": "2026-10-25T23:03:54.514254+00:00",
+  "scope": "Local Support clause audit and current broad regression replay after 140.1",
+  "published": false,
+  "baseCommit": "c1e8409615a270038732f8fa8c2ae08db5b30ec2",
+  "summary": {
+    "clauses": {
+      "executed": 26,
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "selectedParagraphs": 15,
+      "cardsWithSelectedClauseProof": 12,
+      "fullCatalogSemanticCertification": false
+    },
+    "matrix": {
+      "cards": 450,
+      "abilities": 496,
+      "matrix": {
+        "carrier-only": 314,
+        "dedicated-path": 36,
+        "needs-family-scenario": 2826,
+        "not-applicable": 222,
+        "pass": 1562
+      },
+      "failures": 0,
+      "printedAssertions": 119,
+      "printedFailures": 0
+    },
+    "traces": {
+      "traces": 40,
+      "steps": 12175,
+      "failed": 0
+    },
+    "browser": {
+      "cards": 450,
+      "actions": 182,
+      "journeys": 2,
+      "failed": 0,
+      "unresolvedChoiceScenarios": 0
+    },
+    "unit-tests": {
+      "executed": 1270,
+      "passed": 1270,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ui-tests": {
+      "executed": 13,
+      "failed": 0
+    },
+    "remoteArt": {
+      "cards": 450,
+      "passed": 450,
+      "failed": 0,
+      "supplementalFailed": 0,
+      "identicalBodyGroups": 0,
+      "pageErrors": 0
+    }
+  },
+  "reports": {
+    "clauses.json": "562bd902d57e48138990bf2ac232ce866ac484db05f3e8583d7d272c204bd535",
+    "matrix.json": "bb0d1dbd8b1d57fba9ea73f95812d61edb3c6209d69fd76671bdde172dbe6d93",
+    "traces.json": "2aa46e938bbecc97b103cb7665e1bc29cc18071076e544e63464810fcc476afb",
+    "browser.json": "c32f8ab045d74a565feaba6e1133e17adaaab9a39c45812eda64b7b6001a8c1e",
+    "unit-tests.json": "99517eac19e052e440a4113c84cb3f9210bc9adbabe48f47403b7489f6ec38f7",
+    "ui-tests.json": "1d15d78463dcc63918b54a30c7da499ea2c3a3c322478426015487511ed4c0fc",
+    "semantic-review.json": "1bc1f1be9a43c85b8908562da736c6fc63044899b2a71ab882c18df3fe9be8a7",
+    "remote-art.json": "3529165f4ab328a70ea433665621f144a7a9f0fabc69f710b7a0751cbae0c679"
+  },
+  "fullTextSemanticCertification": false,
+  "physicalDevicesTested": false,
+  "remaining": [
+    "Independent executed oracles for all other clauses and unlisted branches.",
+    "Additional card combinations and replacement interactions beyond executed scenarios.",
+    "Visual identity of illustrations; physical phones and Safari iOS.",
+    "Exact cause of the historical Sermon/Tong incident remains unproven."
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "77930a3a630db37fb265e4423d2f90fd7c35d29dba6f078940c830018e9166d6",
+  "finishedAt": "2026-10-26T10:44:49.765082+00:00",
+  "commands": [
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_rules_parity.log",
+      "durationSeconds": 59.922
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_choice_continuity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_choice_continuity.log",
+      "durationSeconds": 7.266
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_connection_lifecycle.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_connection_lifecycle.log",
+      "durationSeconds": 6.016
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_frontend.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_frontend.log",
+      "durationSeconds": 15.765
+    }
+  ],
+  "summary": {
+    "executed": 4,
+    "failed": 0
+  }
+}

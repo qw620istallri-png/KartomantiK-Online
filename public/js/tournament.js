@@ -80,6 +80,7 @@ function localizeServerError(message) {
     "The tournament match has ended.": "tournamentMatchEnded",
     "Tournament decks are locked once the match starts.": "tournamentDecksLocked",
     "You do not have priority.": "rulesNoPriorityError",
+    "The phase or Stack has changed. Review the table and try again.": "rulesWindowChangedError",
     "Both players must join before using priority.": "rulesNeedPlayersError",
     "Describe the action before adding it to the Stack.": "rulesDescribeActionError",
     "A Persistent Will cannot be played as a response.": "rulesPersistentResponseError",

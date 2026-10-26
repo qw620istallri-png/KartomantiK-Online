@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "18eabc370ab143d1eb1e00e08453a1563f6b653832fa035bf7a0c6e17b3498bc",
+  "finishedAt": "2026-10-26T10:18:38.689858+00:00",
+  "commands": [
+    {
+      "command": [
+        "node",
+        "tests/test_deck_search_ui.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_deck_search_ui.log",
+      "durationSeconds": 10.297
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_semantic_ui.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_semantic_ui.log",
+      "durationSeconds": 7.656
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_frontend.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_frontend.log",
+      "durationSeconds": 14.828
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_choice_continuity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_choice_continuity.log",
+      "durationSeconds": 7.922
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_rules_parity.log",
+      "durationSeconds": 32.781
+    }
+  ],
+  "summary": {
+    "executed": 5,
+    "failed": 0
+  }
+}

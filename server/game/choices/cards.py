@@ -561,6 +561,21 @@ class CardsChoicesMixin:
         declared = option if isinstance(option, str) else None
         if declared not in self.card_labels:
             return "Declare the name of an existing card.", None
+        if choice.get("_declaration"):
+            self.rules_engine["pendingChoice"] = None
+            error, action = self.declare_rules_action(
+                player_id, **choice["_declaration"], declared_card_id=declared,
+            )
+            if error:
+                self.rules_engine["pendingChoice"] = choice
+                return error, None
+            if action.get("status") == "choice_required":
+                return None, action
+            return None, {
+                "kind": "declare_card_name", "mode": choice.get("mode"), "status": "declared",
+                "playerId": player_id, "declaredCardId": declared,
+                "sourceCardId": choice.get("sourceCardId"), "_declaredActions": [action],
+            }
         declared_name = self.card_labels.get(declared)
         owner_id = choice.get("targetPlayerId")
         deck = self.players[owner_id]["zones"]["deck"]
@@ -602,18 +617,28 @@ class CardsChoicesMixin:
                 **payload,
                 "status": "discarded" if not error and not replacement else "unmoved",
             }
+        return None, self.rules_resolve_declared_deck_search(
+            player_id, owner_id, declared, choice.get("sourceCardId")
+        )
+
+    def rules_resolve_declared_deck_search(self, player_id, owner_id, declared, source_card_id):
+        deck = self.players[owner_id]["zones"]["deck"]
+        declared_name = self.card_labels[declared]
+        payload = {"kind": "declare_card_name", "mode": "search_deck",
+                   "playerId": player_id, "targetPlayerId": owner_id,
+                   "declaredCardId": declared, "sourceCardId": source_card_id}
         found = next((
             card_id for card_id in deck
             if self.card_labels.get(card_id) == declared_name
         ), None)
         if found is None:
             random.shuffle(deck)
-            return None, {**payload, "status": "not_found"}
+            return {**payload, "status": "not_found"}
         error, _owner, replacement = self.move_zone_card_by_effect(
             owner_id, "deck", owner_id, "graveyard", found, "top",
         )
         random.shuffle(self.players[owner_id]["zones"]["deck"])
-        return None, {
+        return {
             **payload, "cardId": found,
             "status": "discarded" if not error and not replacement else "unmoved",
         }
@@ -788,11 +813,14 @@ class CardsChoicesMixin:
                 )
                 if error:
                     return error, None
+            if choice.get("revealSelected"):
+                self.mark_hand_revealed(player_id, selected)
             random.shuffle(self.players[player_id]["zones"]["deck"])
             self.rules_engine["pendingChoice"] = None
             return None, {
                 "kind": "search_deck", "playerId": player_id,
                 "count": len(selected), "cardIds": selected, "choiceId": choice_id,
+                "revealed": bool(choice.get("revealSelected")),
                 "actionId": choice.get("actionId"),
                 "controllerId": choice.get("controllerId"),
                 "sourceCardId": choice.get("sourceCardId"),

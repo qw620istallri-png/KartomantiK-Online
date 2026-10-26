@@ -100,6 +100,8 @@ class ChainMixin:
                 container_id, zone, card_id,
                 source_effect_id=suspension_source.get("id"),
             )
+            if not error and shuffle_after:
+                random.shuffle(self.players[player_id]["zones"]["deck"])
             return error, {
                 "kind": "chain_manifestation",
                 "status": "suspended",
@@ -134,6 +136,12 @@ class ChainMixin:
                 "controllerId": chain_controller_id or player_id,
             }
         self.battlefield.append(item)
+        if return_to_vessel and zone == "receptacle":
+            self.create_rules_effect_memory(
+                owner_id, card_id, "return_to_vessel_on_effect_exit",
+                controller_id=player_id, source_action_id=action_id,
+                data={"itemId": item["id"], "containerId": container_id},
+            )
         if chain_abilities:
             self.create_rules_effect_memory(
                 owner_id, card_id, "chain_outcome_abilities",
@@ -143,9 +151,11 @@ class ChainMixin:
                       "sourceCardId": source_card_id},
             )
         memory = None
-        if win_destination == "exile":
+        if win_destination in {"exile", "opponent_receptacle"}:
             memory = self.create_rules_effect_memory(
-                owner_id, card_id, "win_destination_exile",
+                owner_id, card_id,
+                "win_destination_exile" if win_destination == "exile"
+                else "win_destination_opponent_vessel",
                 controller_id=player_id,
                 source_action_id=action_id,
                 data={"itemId": item["id"]},
@@ -596,6 +606,8 @@ class ChainMixin:
             if eligible:
                 ready.append(chain_player_id)
             else:
+                if result.get("shuffleAfter"):
+                    random.shuffle(member["zones"]["deck"])
                 proofs.append(chain_player_id)
         forced = [
             pid for pid in proofs
@@ -756,6 +768,9 @@ class ChainMixin:
         self.mark_rules_support_entry(item)
         self.battlefield.append(item)
         triggered = self.queue_rules_battlefield_entry_triggers(card_id, owner_id, item["id"], True, defer=True)
+        triggered.extend(self.queue_rules_support_entry_triggers(
+            item, played=True, from_zone="hand", defer=True,
+        ))
         triggered.extend(self.queue_rules_field_zone_entry_triggers(item, "confrontation", defer=True))
         triggered.extend(self.queue_rules_manifestation_entry_watchers(item, defer=True))
         if triggered:

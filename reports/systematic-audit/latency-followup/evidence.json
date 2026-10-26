@@ -1,0 +1,81 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "029d2ecb7ca5c83fc3fea3803f261584e890b715f8dceb007f3fcc4336507f6a",
+  "finishedAt": "2026-10-25T22:30:41.409855+00:00",
+  "scope": "Local post-140.1 latency and reconnection audit",
+  "published": false,
+  "baseCommit": "c1e8409615a270038732f8fa8c2ae08db5b30ec2",
+  "unit": {
+    "executed": 1244,
+    "passed": 1244,
+    "failed": 0,
+    "skipped": 0
+  },
+  "ui": {
+    "executed": 13,
+    "failed": 0
+  },
+  "reports": {
+    "unit-tests.json": "304ec4edbb14eb66f3d7d695ad9e2555b991d9af0040fac0b9172773a013a4cb",
+    "ui-tests.json": "dc6741f0ea1eee5982910ed08ab98f7c5c9de23da509eea256753537925139a5"
+  },
+  "networkScenarios": [
+    {
+      "testId": "test_latency_stack_sequences.LatencyStackSequences.test_a_changed_stack_top_rejects_the_old_pass_without_resolving_either_card",
+      "status": "pass",
+      "durationSeconds": 0.297
+    },
+    {
+      "testId": "test_latency_stack_sequences.LatencyStackSequences.test_a_rejected_old_choice_cannot_drive_automatic_phase_changes",
+      "status": "pass",
+      "durationSeconds": 0.281
+    },
+    {
+      "testId": "test_latency_stack_sequences.LatencyStackSequences.test_cancelling_a_gone_memory_really_resumes_the_suspended_stack",
+      "status": "pass",
+      "durationSeconds": 0.312
+    },
+    {
+      "testId": "test_latency_stack_sequences.LatencyStackSequences.test_immediate_sequence_blocks_responses_until_normal_stack_resumes",
+      "status": "pass",
+      "durationSeconds": 0.344
+    },
+    {
+      "testId": "test_latency_stack_sequences.LatencyStackSequences.test_late_pass_for_a_removed_stack_top_cannot_confirm_end_of_reaction",
+      "status": "pass",
+      "durationSeconds": 0.469
+    },
+    {
+      "testId": "test_latency_stack_sequences.LatencyStackSequences.test_late_reaction_will_is_not_silently_played_after_comparison",
+      "status": "pass",
+      "durationSeconds": 0.312
+    },
+    {
+      "testId": "test_latency_stack_sequences.LatencyStackSequences.test_old_turn_and_malformed_contexts_do_not_pass_priority",
+      "status": "pass",
+      "durationSeconds": 0.719
+    },
+    {
+      "testId": "test_latency_stack_sequences.LatencyStackSequences.test_other_seat_can_add_a_response_during_the_resolution_pause",
+      "status": "pass",
+      "durationSeconds": 0.375
+    },
+    {
+      "testId": "test_latency_stack_sequences.LatencyStackSequences.test_reconnection_restores_a_required_choice_and_resumes_exactly_once",
+      "status": "pass",
+      "durationSeconds": 0.469
+    },
+    {
+      "testId": "test_latency_stack_sequences.LatencyStackSequences.test_two_seats_observe_every_resolution_without_advancing_reaction",
+      "status": "pass",
+      "durationSeconds": 0.344
+    }
+  ],
+  "allCardSemanticCertification": false,
+  "physicalDevicesTested": false,
+  "limitations": [
+    "Legacy clients without rulesContext remain accepted; context protection requires updated client and server.",
+    "The exact cause of the reported Sermon/Tong incident remains unproven.",
+    "Network scenarios synchronize resolutions with barriers and do not measure real animation duration."
+  ]
+}

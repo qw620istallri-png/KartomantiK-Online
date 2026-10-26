@@ -1,0 +1,982 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "a30b9b6cc148e9a206afca0d555e1c58ad87029b4fd30eacd2e7634bc20b05d1",
+  "published": false,
+  "finishedAt": "2026-10-26T10:36:31.249957+00:00",
+  "summary": {
+    "executed": 13,
+    "passed": 8,
+    "failed": 5,
+    "skipped": 0
+  },
+  "tests": [
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='recovery_start')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='recovery_draw')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='recovery_end')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='confrontation_choose')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='confrontation_before_revelation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='confrontation_reveal')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='confrontation_immediate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='confrontation_entry')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='resolution_compare')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='resolution_effects')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='resolution_move')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='end_actions')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='end_triggers')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_all_fifteen_steps_resolve_stack_before_any_phase_or_turn_change (phase='end_expire')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='5liq0tcj7m9ebqr_en', ability='spend-petals-for-power', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='w3jt07uuk00nmaj_en', ability='reduce-all-confrontation-power', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='s6mezxrq1zp2958_en', ability='schedule-rematch-after-resolution', phase='resolution_compare')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='b4yyd5uut0ga9df_en', ability='enter-under-opponent-control-with-burn', phase='end_actions')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='b4yyd5uut0ga9df_en', ability='pass-control-with-more-burn', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='0ujeinffs84nrvq_en', ability='exchange-interzone-control', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='zk76fhtep0wm3hh_en', ability='exchange-confrontation-control-until-resolution', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='7gd19pmexrjlrap_en', ability='nectar-disable-target', phase='end_actions')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='7gd19pmexrjlrap_en', ability='nectar-retarget-disable', phase='end_actions')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-091', ability='embottle-disable-card', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-043', ability='obscure-card-until-end-turn', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='3bq6ahxkf9435k5_en', ability='vexing-thorn-disable-target', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-022', ability='any-player-destroy-psychowall', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='whwfrjzl6flgww9_en', ability='protect-friendly-field-until-end-turn', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-146', ability='protect-field-card-until-end-turn', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-094', ability='immediate-shuffle-hands-draw-four', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-115', ability='immediate-exile-all-limbos', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-116', ability='immediate-end-confrontation-unless-payment', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='ryg8e3lgopl6z52_en', ability='draw-three-cards', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='zni76s4aabicqag_en', ability='discard-one-then-draw-two', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='q6rha5kz42bkxle_en', ability='copy-target-will-on-stack', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='obn1uv72ewxv3y5_en', ability='oppress-power-modifier', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='lo85kdsow36bymu_en', ability='strengthen-power-modifier', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='bithch9c4vi77cu_en', ability='weaken-power-modifier', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='ztunjt1msq1ofsv_en', ability='accentuate-power-modifier', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='xav48hincrnl32d_en', ability='banish-to-deck-bottom', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='ek1bng9r7vhriwt_en', ability='defer-to-deck-top', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='1q6crbc7nwugrgs_en', ability='exile-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='jy05w4j8zcuvezq_en', ability='disfigure-destroy-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='dey791sghwx2ee3_en', ability='destroy-random-vessel-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='5x4aca4v6w9ma1f_en', ability='destroy-vessel-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='2y961kgs0crdict_en', ability='neutralize-stack-card', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='g0mtnp4zbhwj7cb_en', ability='deny-stack-card-unless-paid', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='ey6fuk5gguasrb0_en', ability='ignore-stack-effect-unless-paid', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='y6g3tex9ypttk8u_en', ability='flaying-jaw-retarget', phase='end_actions')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='ufujqhwlpmaw12y_en', ability='ignore-support-power', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='pwsjhnw4vpvqgkv_en', ability='copy-first-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='pgvrly9397pua77_en', ability='reduce-manifestation-power', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='fwccphp46678238_en', ability='grant-persist-until-end-of-turn', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='az5wblp5x1div9e_en', ability='gain-persist-until-end-of-turn', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='ng6w09m6mrjq3xc_en', ability='sacrifice-field-power-loss', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-047', ability='reorder-top-three-of-each-deck', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-024', ability='split-recent-limbo-cards-between-deck-ends', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='02y2r5cvbw1mauv_en', ability='sacrifice-created-token-for-power-loss', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='lk1xxhvwvrie2r2_en', ability='capture-stalemate-and-create-support-copy', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-072', ability='exile-limbos-create-hollow-copies', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-118', ability='reduce-cost-and-set-first-power', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-138', ability='destroy-one-or-two-support-manifestations', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-140', ability='exile-by-essence-total', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='odqcx9kkqe029se_en', ability='roll-mutation-table', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-127', ability='enter-under-chosen-control', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-147', ability='grant-float', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-033', ability='sacrifice-to-grant-friendly-interzone-float', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-045', ability='move-abstraction-counter', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-150', ability='remove-float-from-all-field-manifestations', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='0kcy08a6jd7ez7k_en', ability='lose-ten-to-gain-support', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-010', ability='sacrifice-to-return-supports', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-011', ability='enter-under-chosen-control', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-011', ability='pay-phlegmatic-essence-for-support', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-058', ability='sacrifice-to-reanimate-recent-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-080', ability='sacrifice-to-resolve-controlled-stack-item', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-105', ability='sacrifice-to-empower-first', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-107', ability='sacrifice-to-destroy-power-four', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-125', ability='exhaust-to-change-points', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-125', ability='exhaust-sacrifice-to-prevent-point-changes', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='f2cj2wys3jhbzci_en', ability='destroy-field-will-or-interzone-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='0coh7nrbvcvan1i_en', ability='return-limbo-card-to-hand', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='uin3dxt3bc50z6q_en', ability='revive-limbo-manifestation-to-interzone', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='u9blfiufeef8djr_en', ability='put-hand-manifestation-in-interzone', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='72zvsiuky5ytolh_en', ability='copy-friendly-manifestation-in-support', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='nzyipkk7u6vrd4a_en', ability='grant-interzone-support-until-end-turn', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-145', ability='remove-target-modifiers', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='5q6t7i5pzctbi8s_en', ability='rally-extra-essence-tokens', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='z2fen73ktw8pbqz_en', ability='reforging-fate-support-from-limbo', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='31k2b7hz7ockvvn_en', ability='score-per-target-player-confrontation-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='nupb1i59d98g3md_en', ability='destroy-confrontation-winners', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='4naoqbqz6ebozj5_en', ability='destroy-manifestations-that-entered-support', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='erkwir53va9m8gm_en', ability='spend-unions-for-support-tokens', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='265f4wdooq43pjn_en', ability='spend-controls-to-bounce-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='a058t24med4h5nx_en', ability='spend-fatigues-to-make-opponent-discard', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='rqvzo3iji2a1l65_en', ability='spend-coils-to-stalemate-own-manifestations', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='m2l3v60n0iakrm2_en', ability='spend-violence-to-shrink-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='8xi4zh0ekdl42me_en', ability='score-per-interzone-manifestation-then-draw-per-free-space', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='mv2vad6gwrfbi1l_en', ability='help-lose-points-then-chain', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='zd6h16he0m4kuwb_en', ability='claim-recent-opponent-limbo-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='xeeg6rdiy9xeew5_en', ability='stalemate-recent-opponent-vessel-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-095', ability='stalemate-recent-limbo-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='knnq85hihrxuafj_en', ability='abandon-return-target-player-support', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='343xggqp4a0zfw1_en', ability='manipulate-recent-opponent-interzone-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='ud9clfoj2c6x96o_en', ability='entrust-double-base-power', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='9yylrq6xancbn0m_en', ability='glimpse-the-omens', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='k7dq8ye448xwj54_en', ability='shattering-the-self', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='ynp0apjx1risrpt_en', ability='deviate-destroy-loser', phase='resolution_compare')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='yk0ic6ev7465bxo_en', ability='repress-the-self', phase='resolution_compare')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='bc3esblt60j7at5_en', ability='incite-to-sacrifice', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='f18fccv1k2co206_en', ability='deny-fate', phase='confrontation_before_revelation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='pekwxpsy3c0ro3l_en', ability='urolong-raises-limbo-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='2oka6j26ibu19l9_en', ability='pigon-return-support-card', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-046', ability='pass-judgment', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-019', ability='dissolve-and-coagulate', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-021', ability='convert-the-pain', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-068', ability='eviscerate-morality', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-148', ability='induce-desertion', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-109', ability='rah-kio-swat-tokens', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='2xqczn7vzkm5n50_en', ability='volcano-exile', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='9c7s9dn3sa5dcko_en', ability='consult', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='gpxqooqq57loyb8_en', ability='reviving-cage', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='8g5pn3mukkuniog_en', ability='armored-husk-retarget', phase='end_actions')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='pqi88s5ytyfnalf_en', ability='humiliate', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-044', ability='veer-the-will', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-131', ability='drildrill-destroys-persistent-will', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-142', ability='flower-of-evil-burst', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-136', ability='shattered-memory-exile-limbo-card', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-136', ability='shattered-memory-sacrifice-for-essence', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-149', ability='compensate', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-071', ability='walk-the-oblivion', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='4phs0d8l223jk7t_en', ability='wretched-arena-locks-support-entries', phase='confrontation_before_revelation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-108', ability='horned-augustus-exiles-limbo-for-tokens', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-141', ability='explosive-rancor-exiles-confrontation-and-stalemate', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-119', ability='drain-the-substance-removes-excess-essence', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='op83bq67vaf368q_en', ability='censor-exiles-hand-manifestation-to-destroy', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='3gqrmx5jegwz8kb_en', ability='martyrize-exiles-hand-manifestation-to-draw', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='cnqaie6oq458qgq_en', ability='recall-searches-after-loss', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='fwh3yrkvg9n09vg_en', ability='nullify-removes-effects-unless-payment', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='2hszv736kwwmi7n_en', ability='spend-grudges-for-support', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='03jzw541k0af8x3_en', ability='lose-points-for-power', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='kmyzmxtakzhj58p_en', ability='stalemate-confrontation-and-lock', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='dly528oj65qnznh_en', ability='lock-support-entries-unless-opponent-pays', phase='confrontation_before_revelation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='t42gc95tma8uhzm_en', ability='trim-field-to-base-power', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='qahv0guk18jyo6i_en', ability='equalize-field-to-lowest-base', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='vt3extxbwd6gybn_en', ability='inflorescence-retarget-support', phase='end_actions')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='x15xumjqqhrnrds_en', ability='glabron-stalemates-own-interzone-card-for-support', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='67009ud077sgz7b_en', ability='everspring-spend-tears-to-exile-vessel', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='282b0n6ldnzdp0p_en', ability='zum-weaken', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='282b0n6ldnzdp0p_en', ability='zum-silence', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='282b0n6ldnzdp0p_en', ability='zum-strengthen', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='282b0n6ldnzdp0p_en', ability='zum-draw', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='282b0n6ldnzdp0p_en', ability='zum-mill', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='gu9rppos4r9ucsr_en', ability='twist-the-soul', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='n0natbzt0nfylml_en', ability='shymon-lock-opponent-draws', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='5r7g2e0r6q17lur_en', ability='traumatize', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='goxjkkrwos0lhx4_en', ability='damage-distribute-weakness', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-037', ability='tut-look-at-top-three', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-042', ability='ababash-look-at-top-three', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-067', ability='catacomb-raise-discarded-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-114', ability='sandokaron-banner-power', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-114', ability='sandokaron-banner-essence', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-029', ability='bivalv-discard-to-protect', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-077', ability='swindley-stalemate-to-return', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='5zgq2zcogt4g4d0_en', ability='timid-brain-discard-will-for-support', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='w8364ml7m6erl8s_en', ability='opponent-silences-gorte', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='7yu566ip7zuqdoc_en', ability='malaleuco-copy-will', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='7yu566ip7zuqdoc_en', ability='malaleuco-to-interzone', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='1ixfmjkfewc0o42_en', ability='mask-becomes-choleric', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='1ixfmjkfewc0o42_en', ability='mask-becomes-vitreous', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='1ixfmjkfewc0o42_en', ability='mask-becomes-phlegmatic', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='1ixfmjkfewc0o42_en', ability='mask-becomes-capricious', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='1ixfmjkfewc0o42_en', ability='mask-becomes-melancholic', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-070', ability='cradle-destroy-vessel-card', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-066', ability='mejik-declare-and-discard', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-039', ability='denegath-returns-first-then-chains', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='fdnhc537c4xu2wo_en', ability='ranba-abduct-weak-support', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='36l7iw5m5hk1pmr_en', ability='nullify-reason-exile-incoming', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='z2gm0fc6fxlnsb1_en', ability='beacon-changes-a-target', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='yca1lsjic3cktj1_en', ability='radiance-cancels-a-matching-effect', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='b5ge92hr33pdwc7_en', ability='rinq-persistent-will-becomes-support', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='0r7k88v71vvx7kk_en', ability='suspend-judgment-hold-winner', phase='resolution_compare')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='dq529rojumn98fp_en', ability='gnarlipuff-return-interzone-manifestation', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='e049wxg2j24nczl_en', ability='karmapult-sacrifices-for-power-loss', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='hcgvp7lbadlng1h_en', ability='gummo-becomes-first-manifestation', phase='recovery_end')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-062', ability='gigabonblade-gains-persist', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-121', ability='donmo-restores-exhausted-cards', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-100', ability='juggernut-charges-into-confrontation', phase='recovery_end')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-093', ability='mechanism-one-shuffle', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-093', ability='mechanism-two-peek-and-swap', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-093', ability='mechanism-three-bottom-a-card', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-018', ability='paciphint-sacrifices-an-ally-to-ignore-a-power', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-084', ability='chabak-plays-in-support-for-two-manifestations', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-048', ability='wish-upon-the-stars-exchanges-vessel-manifestations', phase='confrontation_reaction')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_catalogue_accepted_declarations_are_never_mistaken_for_no_action (card='inner-deserts-090', ability='pescojolero-trades-stalemate-manifestations-for-a-vessel-one', phase='confrontation_reaction')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 4.532
+    },
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_concurrent_driver_cannot_resolve_a_second_card_during_first_publication",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_end_overflow_choices_finish_before_new_turn_and_recovery",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_end_skip_is_individual_and_other_player_keeps_their_action",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='discard_from_hand', immediate=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='discard_from_hand', immediate=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='declare_card_name', immediate=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='declare_card_name', immediate=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='replacement_order', immediate=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='replacement_order', immediate=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='simultaneous_stack_order', immediate=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='simultaneous_stack_order', immediate=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='trigger_targets', immediate=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='trigger_targets', immediate=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='effect_payment', immediate=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='effect_payment', immediate=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='hand_overflow', immediate=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='hand_overflow', immediate=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='confrontation_destination', immediate=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='confrontation_destination', immediate=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='optional_stack_action', immediate=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_every_required_choice_blocks_normal_and_immediate_auto_resolution (kind='optional_stack_action', immediate=False)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_first_manifestation_and_recovery_mulligan_block_phase_skipping",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_first_manifestation_and_recovery_mulligan_block_phase_skipping (phase='confrontation_choose')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_first_manifestation_and_recovery_mulligan_block_phase_skipping (phase='recovery_draw')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_large_finite_normal_stacks_finish_without_a_new_player_message",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_auto_phase_audit.py\", line 60, in test_large_finite_normal_stacks_finish_without_a_new_player_message\n    self.assertEqual(s.rules_engine[\"actionStack\"], [])\nAssertionError: Lists differ: [{'id': 'effect-0', 'label': 'effect-0', '[6195 chars]1}}}] != []\n\nFirst list contains 31 additional elements.\nFirst extra element 0:\n{'id': 'effect-0', 'label': 'effect-0', 'kind': 'triggered_effect', 'controllerId': 'p1', 'source': {}, 'targets': [], 'immediate': False, 'ability': {'result': {'kind': 'score_owner', 'value': 1}}}\n\nDiff is 7208 characters long. Set self.maxDiff to None to see it.\n",
+      "subtests": [
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_large_finite_normal_stacks_finish_without_a_new_player_message (count=32)",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_auto_phase_audit.py\", line 60, in test_large_finite_normal_stacks_finish_without_a_new_player_message\n    self.assertEqual(s.rules_engine[\"actionStack\"], [])\nAssertionError: Lists differ: [{'id': 'effect-0', 'label': 'effect-0', '[353 chars]1}}}] != []\n\nFirst list contains 2 additional elements.\nFirst extra element 0:\n{'id': 'effect-0', 'label': 'effect-0', 'kind': 'triggered_effect', 'controllerId': 'p1', 'source': {}, 'targets': [], 'immediate': False, 'ability': {'result': {'kind': 'score_owner', 'value': 1}}}\n\n+ []\n- [{'ability': {'result': {'kind': 'score_owner', 'value': 1}},\n-   'controllerId': 'p1',\n-   'id': 'effect-0',\n-   'immediate': False,\n-   'kind': 'triggered_effect',\n-   'label': 'effect-0',\n-   'source': {},\n-   'targets': []},\n-  {'ability': {'result': {'kind': 'score_owner', 'value': 1}},\n-   'controllerId': 'p1',\n-   'id': 'effect-1',\n-   'immediate': False,\n-   'kind': 'triggered_effect',\n-   'label': 'effect-1',\n-   'source': {},\n-   'targets': []}]\n"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_large_finite_normal_stacks_finish_without_a_new_player_message (count=61)",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_auto_phase_audit.py\", line 60, in test_large_finite_normal_stacks_finish_without_a_new_player_message\n    self.assertEqual(s.rules_engine[\"actionStack\"], [])\nAssertionError: Lists differ: [{'id': 'effect-0', 'label': 'effect-0', '[6195 chars]1}}}] != []\n\nFirst list contains 31 additional elements.\nFirst extra element 0:\n{'id': 'effect-0', 'label': 'effect-0', 'kind': 'triggered_effect', 'controllerId': 'p1', 'source': {}, 'targets': [], 'immediate': False, 'ability': {'result': {'kind': 'score_owner', 'value': 1}}}\n\nDiff is 7208 characters long. Set self.maxDiff to None to see it.\n"
+        }
+      ],
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_large_invalid_target_stack_finishes_without_skipping_the_phase",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\base_events.py\", line 691, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_auto_phase_audit.py\", line 71, in test_large_invalid_target_stack_finishes_without_skipping_the_phase\n    self.assertEqual(s.rules_engine[\"actionStack\"], [])\nAssertionError: Lists differ: [{'id': 'effect-0', 'label': 'effect-0', '[1518 chars]'}}}] != []\n\nFirst list contains 5 additional elements.\nFirst extra element 0:\n{'id': 'effect-0', 'label': 'effect-0', 'kind': 'triggered_effect', 'controllerId': 'p1', 'source': {}, 'targets': [{'kind': 'card', 'itemId': 'gone', 'cardId': 'm-1'}], 'immediate': False, 'ability': {'result': {'kind': 'score_owner', 'value': 1}, 'targets': {'min': 1, 'max': 1, 'cardType': 'manifestation'}}}\n\nDiff is 1805 characters long. Set self.maxDiff to None to see it.\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_large_stack_stops_at_choice_then_resumes_the_remaining_cards",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\base_events.py\", line 691, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_auto_phase_audit.py\", line 110, in test_large_stack_stops_at_choice_then_resumes_the_remaining_cards\n    self.assertEqual(len(s.rules_engine[\"actionStack\"]), 32)\nAssertionError: 35 != 32\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_manual_or_disabled_phase_tracker_never_auto_resolves_immediates",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_auto_phase_audit.py\", line 86, in test_manual_or_disabled_phase_tracker_never_auto_resolves_immediates\n    self.assertEqual(await main.auto_advance_rules_phases(s, \"p1\"), 0)\nAssertionError: 1 != 0\n",
+      "subtests": [
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_manual_or_disabled_phase_tracker_never_auto_resolves_immediates (disabled='rules')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_auto_phase_audit.py\", line 86, in test_manual_or_disabled_phase_tracker_never_auto_resolves_immediates\n    self.assertEqual(await main.auto_advance_rules_phases(s, \"p1\"), 0)\nAssertionError: 1 != 0\n"
+        },
+        {
+          "testId": "test_auto_phase_audit.AutoPhaseAudit.test_manual_or_disabled_phase_tracker_never_auto_resolves_immediates (disabled='phases')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_auto_phase_audit.py\", line 86, in test_manual_or_disabled_phase_tracker_never_auto_resolves_immediates\n    self.assertEqual(await main.auto_advance_rules_phases(s, \"p1\"), 0)\nAssertionError: 1 != 0\n"
+        }
+      ],
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_newly_available_response_stops_a_large_stack_after_budget_boundary",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\base_events.py\", line 691, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_auto_phase_audit.py\", line 154, in test_newly_available_response_stops_a_large_stack_after_budget_boundary\n    self.assertEqual(len(s.rules_engine[\"actionStack\"]), 2)\nAssertionError: 3 != 2\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_stopping_pass_all_restores_response_window_after_one_resolution",
+      "status": "pass",
+      "durationSeconds": 0.031
+    }
+  ],
+  "limits": [
+    "Fifteen-step scheduling with synthetic score effects does not certify every card trigger.",
+    "Availability differential checks prepared declaration fixtures, not all possible states or print clauses.",
+    "Pacing tests use deterministic gates and spy the configured pause; not a real latency/load benchmark.",
+    "No physical-device or full-catalog browser certification."
+  ]
+}

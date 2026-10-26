@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "aad3d2b69320c67e84136e284b6d9a180f17b1f15c4997a3553844f3023d56c7",
+  "scope": "four relevant UI gates, not the complete thirteen-suite UI campaign",
+  "gates": [
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_rules_parity.log",
+      "durationSeconds": 39.812
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_choice_continuity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_choice_continuity.log",
+      "durationSeconds": 6.875
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_connection_lifecycle.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_connection_lifecycle.log",
+      "durationSeconds": 6.11
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_semantic_ui.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_semantic_ui.log",
+      "durationSeconds": 7.515
+    }
+  ],
+  "summary": {
+    "executed": 4,
+    "failed": 0
+  }
+}

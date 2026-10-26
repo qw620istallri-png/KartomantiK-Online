@@ -738,6 +738,8 @@ class BoardMixin:
         return result
 
     def rules_support_from_hand_available(self, player_id, card_id):
+        if self.rules_card_play_restriction_error(player_id, card_id):
+            return False
         metadata = self.card_rules.get(card_id, {})
         if metadata.get("supportFromHand"):
             return True
@@ -795,6 +797,8 @@ class BoardMixin:
     def rules_card_chain_restriction_error(self, player_id, card_id):
         if self.card_rules.get(card_id, {}).get("playAsPersistentWill"):
             return "This Manifestation can only be played as a Persistent Will and cannot be Chained."
+        if self.rules_support_entry_locked(player_id):
+            return "Manifestations cannot be put in Support until the end of the turn."
         return self.rules_card_play_restriction_error(player_id, card_id)
 
     def prune_rules_play_restrictions(self):

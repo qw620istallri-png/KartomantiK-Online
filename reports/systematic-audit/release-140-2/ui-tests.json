@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "114bbd11c8b3f56f4ad010655ebb9923b8f63e1b52a0f9789c9113b1516b9980",
+  "finishedAt": "2026-10-26T11:16:06.544566+00:00",
+  "executions": [
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_rules_parity.log",
+      "durationSeconds": 42.937
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_choice_continuity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_choice_continuity.log",
+      "durationSeconds": 8.094
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_white_essence_payment.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_white_essence_payment.log",
+      "durationSeconds": 5.156
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_drag_cleanup.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_drag_cleanup.log",
+      "durationSeconds": 12.594
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_connection_lifecycle.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_connection_lifecycle.log",
+      "durationSeconds": 6.797
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_ponderer_drag.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_ponderer_drag.log",
+      "durationSeconds": 11.765
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_rarity_immediate_vfx.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_rarity_immediate_vfx.log",
+      "durationSeconds": 11.516
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_hand_interactions.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_hand_interactions.log",
+      "durationSeconds": 18.172
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_hand_space_shortcut.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_hand_space_shortcut.log",
+      "durationSeconds": 2.719
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_frontend.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_frontend.log",
+      "durationSeconds": 15.859
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_release_139_2.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_release_139_2.log",
+      "durationSeconds": 89.203
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_stalemate_totals.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_stalemate_totals.log",
+      "durationSeconds": 6.625
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_semantic_ui.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_semantic_ui.log",
+      "durationSeconds": 8.5
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_deck_search_ui.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_deck_search_ui.log",
+      "durationSeconds": 10.797
+    }
+  ]
+}

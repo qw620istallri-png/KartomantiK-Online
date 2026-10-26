@@ -707,6 +707,11 @@ class PowerEffectsMixin:
         target_id = (target or {}).get("playerId") or player_id
         if target_id not in self.players:
             return {"kind": result.get("kind"), "status": "target_missing"}
+        declared = (action.get("cost") or {}).get("declaredCardId")
+        if result.get("kind") == "declare_name_search_deck" and declared in self.card_labels:
+            return self.rules_resolve_declared_deck_search(
+                player_id, target_id, declared, (action.get("source") or {}).get("cardId")
+            )
         choice_id = new_id()
         self.rules_engine["pendingChoice"] = {
             "id": choice_id, "kind": "declare_card_name", "playerId": player_id,

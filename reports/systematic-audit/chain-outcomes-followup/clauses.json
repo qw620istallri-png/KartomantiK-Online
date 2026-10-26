@@ -1,0 +1,583 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "aad3d2b69320c67e84136e284b6d9a180f17b1f15c4997a3553844f3023d56c7",
+  "finishedAt": "2026-10-26T08:24:03.065310+00:00",
+  "published": false,
+  "summary": {
+    "executed": 31,
+    "passed": 31,
+    "failed": 0,
+    "skipped": 0,
+    "networkScenarios": 2,
+    "selectedParagraphs": 15,
+    "cardsWithSelectedClauseProof": 8,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "xf03zroy4tigefr_en",
+      "name": "Urocione, the Anarchist",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Urocione enters the field, you can Chain from your hand.",
+      "paragraphSha256": "1905c4930544c4ec47a0858efd2710dd9cc55d4cacb32efd4a8d3c91c8a9c405",
+      "expectedBehavior": "Private hand Chain may be declined; no unusable empty choice; reconnect preserves it and only its controller can answer.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_private_choice_can_be_declined_without_spending_or_moving",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_no_chainable_hand_does_not_request_an_empty_choice",
+        "test_chain_outcome_integration.ChainOutcomeIntegration.test_urocione_reconnect_keeps_private_choice_and_foreign_owner_victory_destination"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "xf03zroy4tigefr_en",
+      "name": "Urocione, the Anarchist",
+      "paragraphIndex": 1,
+      "printedParagraph": "If the Chained manifestation wins the confrontation, its owner puts it in the Empathic Vessel of an opponent of their choice as if it had lost.",
+      "paragraphSha256": "c674a90bfc5dd18e84ca5dbdac805cacf7fb996172d603c622150e54dad69bc9",
+      "expectedBehavior": "Victory sends the card to the immutable owner's opponent; memory survives Cleanse, source departure and non-Deck/Exile visits, without spreading to another live copy. Stalemate does not trigger victory.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_winner_goes_to_opponent_of_immutable_owner",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_victory_memory_survives_cleanse_and_source_departure",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_snapshot_win_does_not_change_after_later_control_change",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_is_forgotten_after_deck_or_exile",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_does_not_attach_to_another_copy_still_in_hand",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_stalemate_does_not_apply_victory_destination",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_applies_after_reentry_as_first_and_while_original_effects_are_lost",
+        "test_chain_outcome_integration.ChainOutcomeIntegration.test_urocione_reconnect_keeps_private_choice_and_foreign_owner_victory_destination"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "bf94i4ttvl7r4mt_en",
+      "name": "Lady of the Humps",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Lady of the Humps enters the field, search your deck for a manifestation and Chain it, then shuffle the deck.",
+      "paragraphSha256": "f1693ddf6cd91c4fce8b510ffc08a830fa6ff621278b3566832d9537a1874d58",
+      "expectedBehavior": "Mandatory legal Deck selection; final shuffle once on successful Chain, failed search or suspended Chain; rejected/replayed answers cannot shuffle again.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_search_is_mandatory_and_shuffles_only_after_a_valid_selection",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_failed_search_still_shuffles_deck_without_revealing_it",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_suspension_replaces_chain_but_does_not_skip_final_shuffle",
+        "test_chain_outcome_integration.ChainOutcomeIntegration.test_lady_rejected_choice_retry_and_replay_shuffle_exactly_once"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "bf94i4ttvl7r4mt_en",
+      "name": "Lady of the Humps",
+      "paragraphIndex": 1,
+      "printedParagraph": "If the Chained manifestation wins the confrontation, exile it.",
+      "paragraphSha256": "b579dbdb5a733d7231faf74f012c98dbb08da41342bf91a902e3f38f169cb1f3",
+      "expectedBehavior": "Only winning Chain is exiled to its immutable owner's Exile, including after Cleanse/source departure; defeat and stalemate are not wins.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_win_exiles_foreign_owned_chain_after_cleanse_and_host_departure",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_nonwinning_chain_is_not_exiled"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ydijk2x1ne8w93g_en",
+      "name": "Mind Parasite",
+      "paragraphIndex": 0,
+      "printedParagraph": "When the Mind Parasite enters the Confrontation Zone, you can Chain from Limbo.",
+      "paragraphSha256": "be110dec9a5e97f254d57505f228fafb6eec1b6dc4edaecf91da31c12b9fe990",
+      "expectedBehavior": "Valid Limbo selection through its CZ entry trigger; other entry/payment branches are not asserted here.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_mind_parasite_exile_memory_survives_source_departure"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ydijk2x1ne8w93g_en",
+      "name": "Mind Parasite",
+      "paragraphIndex": 1,
+      "printedParagraph": "If the Chained manifestation wins the confrontation, exile it.",
+      "paragraphSha256": "b579dbdb5a733d7231faf74f012c98dbb08da41342bf91a902e3f38f169cb1f3",
+      "expectedBehavior": "Winning selected Chain is still exiled after Mind Parasite leaves.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_mind_parasite_exile_memory_survives_source_departure"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "mv2vad6gwrfbi1l_en",
+      "name": "Help!",
+      "paragraphIndex": 0,
+      "printedParagraph": "Lose 10 points, then Chain from your hand.",
+      "paragraphSha256": "df8ff3575f157b1e994b21cb6b096561f2aaaa88296e71a3a916da459882265d",
+      "expectedBehavior": "Resolution loses exactly ten points even without a Chainable card; with a Manifestation it starts the required hand choice. Declaration/tribute is isolated out.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_loses_exactly_ten_even_without_a_chainable_hand"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "mv2vad6gwrfbi1l_en",
+      "name": "Help!",
+      "paragraphIndex": 1,
+      "printedParagraph": "If the Chained manifestation wins the confrontation, exile it.",
+      "paragraphSha256": "b579dbdb5a733d7231faf74f012c98dbb08da41342bf91a902e3f38f169cb1f3",
+      "expectedBehavior": "Real declaration, tribute and Stack resolution put the Will in Limbo exactly once; its winning Chained card is exiled and the score cost remains exactly ten.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_winning_chain_is_exiled_without_exiling_the_source_will_again"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-036",
+      "name": "Looj, Cautious Agitator",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Looj enters the field, Chain from your hand.",
+      "paragraphSha256": "1241ff9553d9528d36f80db5736e45e59d9818453646cfdd315637e4e56b3bbd",
+      "expectedBehavior": "Valid hand Chain through field entry; no-eligible and decline branches are outside this paragraph's selected proof.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_looj_loss_returns_to_owner_and_scores_printed_five_for_actual_winning_opponent"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-036",
+      "name": "Looj, Cautious Agitator",
+      "paragraphIndex": 1,
+      "printedParagraph": "If the Chained Manifestation loses the Confrontation, that Manifestation returns to its owner's hand and the winning opponent gains points equal to its point value.",
+      "paragraphSha256": "d1f29d722aeb1ae2d4a97fac2bd5d01691404b1a21301e1dc3478df07af4a1d7",
+      "expectedBehavior": "Losing Wind Sprout returns to its owner's hand and gives its printed five points to the winner; both orders of the two outcome effects work after source departure.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_looj_loss_returns_to_owner_and_scores_printed_five_for_actual_winning_opponent"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-061",
+      "name": "Dol, the Aching",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Dol enters the field, you may Chain a target Manifestation you own from an Empathic Vessel.",
+      "paragraphSha256": "c3b4615821d5f21ba376796e84f44dc9284d4b5ab1c928dfd494083bb79ad5d8",
+      "expectedBehavior": "May Chain owned cards from either Vessel, while cards owned by the opponent stay excluded.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_can_chain_owned_cards_from_either_vessel_but_not_opponents_cards"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-061",
+      "name": "Dol, the Aching",
+      "paragraphIndex": 1,
+      "printedParagraph": "If the Chained Manifestation wins the Confrontation, exile it.",
+      "paragraphSha256": "2a9618448326fed0cb1ae1a0271b091143af25193eea07f7ff8783293967ff34",
+      "expectedBehavior": "Normal winning-card exile is not replaced by the rule for leaving due to cards/effects.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_win_exile_is_not_replaced_by_its_effect_exit_rule"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-061",
+      "name": "Dol, the Aching",
+      "paragraphIndex": 2,
+      "printedParagraph": "If the Chained Manifestation would leave the Confrontation Zone due to cards or effects, it returns to the Empathic Vessel from which it was moved instead.",
+      "paragraphSha256": "67e0eac04374cff8df5cd2b08ebbcba82ae19cc3d6b885bfa0bfe99bb97efb29",
+      "expectedBehavior": "Effect exit returns to the original Vessel, even after source departure, Cleanse and non-Deck/Exile visits. Memory is erased by Deck/Exile and does not spread to another live copy.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_effect_exit_returns_to_original_vessel_even_after_source_departure",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_return_memory_survives_vessel_hand_and_a_later_field_entry",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_return_memory_is_not_a_modifier_removed_by_cleanse",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_return_memory_is_forgotten_at_deck_or_exile",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_return_memory_does_not_apply_to_another_copy_on_field"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "kmyzmxtakzhj58p_en",
+      "name": "Pin Down",
+      "paragraphIndex": 2,
+      "printedParagraph": "Players cannot put manifestations into the Confrontation Zone until the end of the turn.",
+      "paragraphSha256": "352d9fad63014c273dffedf9974e78417b7cecf4dfc880ceb76111952c46a688",
+      "expectedBehavior": "Chain is a Support play: candidates and direct/queued Chain respect the lock, player scope and expiry.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_previously_queued_urocione_cannot_chain_after_a_support_play_lock",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_lock_only_applies_to_its_player_and_current_turn"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "4phs0d8l223jk7t_en",
+      "name": "Wretched Arena",
+      "paragraphIndex": 0,
+      "printedParagraph": "Before the Revelation, you can pay {H}{H}{H}: Players cannot play manifestations in Support until the end of the turn.",
+      "paragraphSha256": "d5bb0202edddc082e376ff3fb53ec2cf11db4863652b0ded992e28416fd54b25",
+      "expectedBehavior": "Unlike a put, Chain is a Support play and is prevented by this resolved prohibition.",
+      "testIds": [
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_previously_queued_urocione_cannot_chain_after_a_support_play_lock",
+        "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_lock_only_applies_to_its_player_and_current_turn"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_lock_only_applies_to_its_player_and_current_turn",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_lock_only_applies_to_its_player_and_current_turn (player='p1', turn=2)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_lock_only_applies_to_its_player_and_current_turn (player='p2', turn=2)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_lock_only_applies_to_its_player_and_current_turn (player='p1', turn=1)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Pin Down', zone='hand')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Pin Down', zone='deck')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Pin Down', zone='graveyard')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Pin Down', zone='receptacle')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Wretched Arena', zone='hand')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Wretched Arena', zone='deck')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Wretched Arena', zone='graveyard')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Wretched Arena', zone='receptacle')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.187
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_can_chain_owned_cards_from_either_vessel_but_not_opponents_cards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_can_chain_owned_cards_from_either_vessel_but_not_opponents_cards (container='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_can_chain_owned_cards_from_either_vessel_but_not_opponents_cards (container='p2')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_effect_exit_returns_to_original_vessel_even_after_source_departure",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_effect_exit_returns_to_original_vessel_even_after_source_departure (container='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_effect_exit_returns_to_original_vessel_even_after_source_departure (container='p2')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_return_memory_does_not_apply_to_another_copy_on_field",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_return_memory_is_forgotten_at_deck_or_exile",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_return_memory_is_forgotten_at_deck_or_exile (zone='deck')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_return_memory_is_forgotten_at_deck_or_exile (zone='exile')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_return_memory_is_not_a_modifier_removed_by_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_return_memory_survives_vessel_hand_and_a_later_field_entry",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_win_exile_is_not_replaced_by_its_effect_exit_rule",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_loses_exactly_ten_even_without_a_chainable_hand",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_loses_exactly_ten_even_without_a_chainable_hand (hand=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_loses_exactly_ten_even_without_a_chainable_hand (hand=['w2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_loses_exactly_ten_even_without_a_chainable_hand (hand=['m3'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_winning_chain_is_exiled_without_exiling_the_source_will_again",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_failed_search_still_shuffles_deck_without_revealing_it",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_failed_search_still_shuffles_deck_without_revealing_it (deck=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_failed_search_still_shuffles_deck_without_revealing_it (deck=['w2', 'pw3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_failed_search_still_shuffles_deck_without_revealing_it (deck=['nlbgn1ranlrd09r_en', 'w2'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_nonwinning_chain_is_not_exiled",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_nonwinning_chain_is_not_exiled (stalemate=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_nonwinning_chain_is_not_exiled (stalemate=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_search_is_mandatory_and_shuffles_only_after_a_valid_selection",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_suspension_replaces_chain_but_does_not_skip_final_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_win_exiles_foreign_owned_chain_after_cleanse_and_host_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_looj_loss_returns_to_owner_and_scores_printed_five_for_actual_winning_opponent",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_looj_loss_returns_to_owner_and_scores_printed_five_for_actual_winning_opponent (reverse_order=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_looj_loss_returns_to_owner_and_scores_printed_five_for_actual_winning_opponent (reverse_order=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_mind_parasite_exile_memory_survives_source_departure",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_previously_queued_urocione_cannot_chain_after_a_support_play_lock",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_previously_queued_urocione_cannot_chain_after_a_support_play_lock (lock='Pin Down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_previously_queued_urocione_cannot_chain_after_a_support_play_lock (lock='Wretched Arena')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_applies_after_reentry_as_first_and_while_original_effects_are_lost",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_does_not_attach_to_another_copy_still_in_hand",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_is_forgotten_after_deck_or_exile",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_is_forgotten_after_deck_or_exile (zone='deck')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_is_forgotten_after_deck_or_exile (zone='exile')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry (zone='hand')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry (zone='graveyard')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry (zone='receptacle')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_no_chainable_hand_does_not_request_an_empty_choice",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_no_chainable_hand_does_not_request_an_empty_choice (hand=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_no_chainable_hand_does_not_request_an_empty_choice (hand=['w2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_no_chainable_hand_does_not_request_an_empty_choice (hand=['nlbgn1ranlrd09r_en'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_private_choice_can_be_declined_without_spending_or_moving",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_snapshot_win_does_not_change_after_later_control_change",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_stalemate_does_not_apply_victory_destination",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_victory_memory_survives_cleanse_and_source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_winner_goes_to_opponent_of_immutable_owner",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_winner_goes_to_opponent_of_immutable_owner (owner='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_winner_goes_to_opponent_of_immutable_owner (owner='p2')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_chain_outcome_integration.ChainOutcomeIntegration.test_lady_rejected_choice_retry_and_replay_shuffle_exactly_once",
+      "status": "pass",
+      "durationSeconds": 0.422
+    },
+    {
+      "testId": "test_chain_outcome_integration.ChainOutcomeIntegration.test_urocione_reconnect_keeps_private_choice_and_foreign_owner_victory_destination",
+      "status": "pass",
+      "durationSeconds": 0.562
+    }
+  ],
+  "limits": [
+    "Selected printed branches only; competing simultaneous memories are not certified.",
+    "Some resolution tests isolate declaration, payment and comparison.",
+    "The two live WebSocket tests hold automatic phase driving; its separate latency tests remain applicable.",
+    "Two-player destination only; no multiplayer owner-opponent selection UI.",
+    "No new physical-device, illustration or broad 450-card browser certification from this batch."
+  ]
+}

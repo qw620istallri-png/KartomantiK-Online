@@ -647,6 +647,12 @@ class ZonesMixin:
             data = memory.get("data") or {}
             if data.get("itemId") and self.find_battlefield_item(data["itemId"]) is None:
                 data["itemId"] = item["id"]
+            if (
+                data.get("itemId") == item.get("id")
+                and memory.get("kind") == "return_to_vessel_on_effect_exit"
+                and data.get("containerId") in self.players
+            ):
+                item["returnToVesselId"] = data["containerId"]
 
     def rules_effect_memories_for(self, owner_id, card_id, kind=None):
         return [

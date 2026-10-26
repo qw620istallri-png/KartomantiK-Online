@@ -262,6 +262,7 @@ function rulesActionDetails(action) {
   }
   if (action.cost?.excessEssence?.length) details.push(`${esc(t("rulesExcessShort"))}: ${rulesEssenceEntriesText(action.cost.excessEssence)}`);
   if (action.cost?.sourceExhausted) details.push(esc(t("rulesSourceExhaustedShort")));
+  if (action.cost?.declaredCardId) details.push(`${esc(t("rulesDeclaredNameShort"))}: ${rulesActionCardRef(action.cost.declaredCardId)}`);
   if (action.cost?.sourceSacrificed) details.push(esc(t("rulesSourceSacrificedShort")));
   return details.join(" · ");
 }

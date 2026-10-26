@@ -9,7 +9,9 @@ import assert from "node:assert/strict";
 import { chromium } from "playwright";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const out = path.join(root, "reports/systematic-audit");
+const out = process.env.KKO_CARD_AUDIT_OUTPUT
+  ? path.resolve(root, process.env.KKO_CARD_AUDIT_OUTPUT)
+  : path.join(root, "reports/systematic-audit");
 fs.mkdirSync(out, { recursive: true });
 const server = spawn(process.env.PYTHON || "python", ["-B", "tools/card_audit_server.py"], {
   cwd: root, windowsHide: true, env: process.env, stdio: ["pipe", "pipe", "pipe"],

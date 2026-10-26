@@ -1,0 +1,275 @@
+{
+  "sourceDigest": "25d81f2f952efaf3ddb8c21c08ac2ea19bf814b554038f5f21f315d9c8c20670",
+  "stage": "before production corrections",
+  "tests": [
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 241, in test_chain_play_locks_filter_candidates_and_prevent_direct_mutation\n    self.assertEqual(s.rules_chain_candidates(\"p1\", zone), {})\nAssertionError: {'m3': 'p1'} != {}\n- {'m3': 'p1'}\n+ {}\n",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Pin Down', zone='hand')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 241, in test_chain_play_locks_filter_candidates_and_prevent_direct_mutation\n    self.assertEqual(s.rules_chain_candidates(\"p1\", zone), {})\nAssertionError: {'m3': 'p1'} != {}\n- {'m3': 'p1'}\n+ {}\n"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Pin Down', zone='deck')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 241, in test_chain_play_locks_filter_candidates_and_prevent_direct_mutation\n    self.assertEqual(s.rules_chain_candidates(\"p1\", zone), {})\nAssertionError: {'m3': 'p1'} != {}\n- {'m3': 'p1'}\n+ {}\n"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Pin Down', zone='graveyard')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 241, in test_chain_play_locks_filter_candidates_and_prevent_direct_mutation\n    self.assertEqual(s.rules_chain_candidates(\"p1\", zone), {})\nAssertionError: {'m3': 'p1'} != {}\n- {'m3': 'p1'}\n+ {}\n"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Pin Down', zone='receptacle')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 241, in test_chain_play_locks_filter_candidates_and_prevent_direct_mutation\n    self.assertEqual(s.rules_chain_candidates(\"p1\", zone), {})\nAssertionError: {'m3': 'p1'} != {}\n- {'m3': 'p1'}\n+ {}\n"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Wretched Arena', zone='hand')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 241, in test_chain_play_locks_filter_candidates_and_prevent_direct_mutation\n    self.assertEqual(s.rules_chain_candidates(\"p1\", zone), {})\nAssertionError: {'m3': 'p1'} != {}\n- {'m3': 'p1'}\n+ {}\n"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Wretched Arena', zone='deck')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 241, in test_chain_play_locks_filter_candidates_and_prevent_direct_mutation\n    self.assertEqual(s.rules_chain_candidates(\"p1\", zone), {})\nAssertionError: {'m3': 'p1'} != {}\n- {'m3': 'p1'}\n+ {}\n"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Wretched Arena', zone='graveyard')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 241, in test_chain_play_locks_filter_candidates_and_prevent_direct_mutation\n    self.assertEqual(s.rules_chain_candidates(\"p1\", zone), {})\nAssertionError: {'m3': 'p1'} != {}\n- {'m3': 'p1'}\n+ {}\n"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Wretched Arena', zone='receptacle')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 241, in test_chain_play_locks_filter_candidates_and_prevent_direct_mutation\n    self.assertEqual(s.rules_chain_candidates(\"p1\", zone), {})\nAssertionError: {'m3': 'p1'} != {}\n- {'m3': 'p1'}\n+ {}\n"
+        }
+      ],
+      "durationSeconds": 0.219
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_loses_exactly_ten_even_without_a_chainable_hand",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_loses_exactly_ten_even_without_a_chainable_hand (hand=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_loses_exactly_ten_even_without_a_chainable_hand (hand=['w2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_loses_exactly_ten_even_without_a_chainable_hand (hand=['m3'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_winning_chain_is_exiled_without_exiling_the_source_will_again",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_failed_search_still_shuffles_deck_without_revealing_it",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 189, in test_lady_failed_search_still_shuffles_deck_without_revealing_it\n    self.assertEqual(shuffle.call_count, 1)\nAssertionError: 0 != 1\n",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_failed_search_still_shuffles_deck_without_revealing_it (deck=[])",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 189, in test_lady_failed_search_still_shuffles_deck_without_revealing_it\n    self.assertEqual(shuffle.call_count, 1)\nAssertionError: 0 != 1\n"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_failed_search_still_shuffles_deck_without_revealing_it (deck=['w2', 'pw3'])",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 189, in test_lady_failed_search_still_shuffles_deck_without_revealing_it\n    self.assertEqual(shuffle.call_count, 1)\nAssertionError: 0 != 1\n"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_failed_search_still_shuffles_deck_without_revealing_it (deck=['nlbgn1ranlrd09r_en', 'w2'])",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 189, in test_lady_failed_search_still_shuffles_deck_without_revealing_it\n    self.assertEqual(shuffle.call_count, 1)\nAssertionError: 0 != 1\n"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_nonwinning_chain_is_not_exiled",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_nonwinning_chain_is_not_exiled (stalemate=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_nonwinning_chain_is_not_exiled (stalemate=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_search_is_mandatory_and_shuffles_only_after_a_valid_selection",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_suspension_replaces_chain_but_does_not_skip_final_shuffle",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 202, in test_lady_suspension_replaces_chain_but_does_not_skip_final_shuffle\n    self.assertEqual(shuffle.call_count, 1)\nAssertionError: 0 != 1\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_win_exiles_foreign_owned_chain_after_cleanse_and_host_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_looj_loss_returns_to_owner_and_scores_printed_five_for_actual_winning_opponent",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_looj_loss_returns_to_owner_and_scores_printed_five_for_actual_winning_opponent (reverse_order=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_looj_loss_returns_to_owner_and_scores_printed_five_for_actual_winning_opponent (reverse_order=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_mind_parasite_exile_memory_survives_source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_previously_queued_urocione_cannot_chain_after_a_support_play_lock",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 256, in test_previously_queued_urocione_cannot_chain_after_a_support_play_lock\n    self.assertIsNone(s.rules_engine[\"pendingChoice\"])\nAssertionError: {'id': 'c51592ed9c08', 'kind': 'chain_manifestation', 'playerId': 'p1', 'fromZone': 'hand', 'optional': True, 'winDestination': 'opponent_receptacle', 'shuffleAfter': False, 'returnToVessel': False, 'afterChain': None, 'chainAbilities': None, 'actionId': 'e1a88aa71bb5', 'controllerId': 'p1', 'sourceCardId': 'xf03zroy4tigefr_en', '_actionTargets': [], '_cardIds': ['m3'], '_nextPlayers': [], '_result': {'kind': 'chain_from_zone', 'zone': 'hand', 'optional': True, 'winDestination': 'opponent_receptacle'}, '_action': {'id': 'e1a88aa71bb5', 'controllerId': 'p1', 'source': {'cardId': 'xf03zroy4tigefr_en', 'zone': 'battlefield', 'itemId': 'host', 'cardType': 'manifestation', 'ownerId': 'p1', 'containerId': None}, 'targets': [], 'optionalAccepted': True}} is not None\n",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_previously_queued_urocione_cannot_chain_after_a_support_play_lock (lock='Pin Down')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 256, in test_previously_queued_urocione_cannot_chain_after_a_support_play_lock\n    self.assertIsNone(s.rules_engine[\"pendingChoice\"])\nAssertionError: {'id': '925b9e125829', 'kind': 'chain_manifestation', 'playerId': 'p1', 'fromZone': 'hand', 'optional': True, 'winDestination': 'opponent_receptacle', 'shuffleAfter': False, 'returnToVessel': False, 'afterChain': None, 'chainAbilities': None, 'actionId': '1a8a62d831d9', 'controllerId': 'p1', 'sourceCardId': 'xf03zroy4tigefr_en', '_actionTargets': [], '_cardIds': ['m3'], '_nextPlayers': [], '_result': {'kind': 'chain_from_zone', 'zone': 'hand', 'optional': True, 'winDestination': 'opponent_receptacle'}, '_action': {'id': '1a8a62d831d9', 'controllerId': 'p1', 'source': {'cardId': 'xf03zroy4tigefr_en', 'zone': 'battlefield', 'itemId': 'host', 'cardType': 'manifestation', 'ownerId': 'p1', 'containerId': None}, 'targets': [], 'optionalAccepted': True}} is not None\n"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_previously_queued_urocione_cannot_chain_after_a_support_play_lock (lock='Wretched Arena')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 256, in test_previously_queued_urocione_cannot_chain_after_a_support_play_lock\n    self.assertIsNone(s.rules_engine[\"pendingChoice\"])\nAssertionError: {'id': 'c51592ed9c08', 'kind': 'chain_manifestation', 'playerId': 'p1', 'fromZone': 'hand', 'optional': True, 'winDestination': 'opponent_receptacle', 'shuffleAfter': False, 'returnToVessel': False, 'afterChain': None, 'chainAbilities': None, 'actionId': 'e1a88aa71bb5', 'controllerId': 'p1', 'sourceCardId': 'xf03zroy4tigefr_en', '_actionTargets': [], '_cardIds': ['m3'], '_nextPlayers': [], '_result': {'kind': 'chain_from_zone', 'zone': 'hand', 'optional': True, 'winDestination': 'opponent_receptacle'}, '_action': {'id': 'e1a88aa71bb5', 'controllerId': 'p1', 'source': {'cardId': 'xf03zroy4tigefr_en', 'zone': 'battlefield', 'itemId': 'host', 'cardType': 'manifestation', 'ownerId': 'p1', 'containerId': None}, 'targets': [], 'optionalAccepted': True}} is not None\n"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_does_not_attach_to_another_copy_still_in_hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_is_forgotten_after_deck_or_exile",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_is_forgotten_after_deck_or_exile (zone='deck')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_is_forgotten_after_deck_or_exile (zone='exile')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 128, in test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry\n    self.assertIn(\"m3\", s.players[\"p2\"][\"zones\"][\"receptacle\"])\nAssertionError: 'm3' not found in []\n",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry (zone='hand')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 128, in test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry\n    self.assertIn(\"m3\", s.players[\"p2\"][\"zones\"][\"receptacle\"])\nAssertionError: 'm3' not found in []\n"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry (zone='graveyard')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 128, in test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry\n    self.assertIn(\"m3\", s.players[\"p2\"][\"zones\"][\"receptacle\"])\nAssertionError: 'm3' not found in []\n"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry (zone='receptacle')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 128, in test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry\n    self.assertIn(\"m3\", s.players[\"p2\"][\"zones\"][\"receptacle\"])\nAssertionError: 'm3' not found in []\n"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_no_chainable_hand_does_not_request_an_empty_choice",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_no_chainable_hand_does_not_request_an_empty_choice (hand=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_no_chainable_hand_does_not_request_an_empty_choice (hand=['w2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_no_chainable_hand_does_not_request_an_empty_choice (hand=['nlbgn1ranlrd09r_en'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_private_choice_can_be_declined_without_spending_or_moving",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_snapshot_win_does_not_change_after_later_control_change",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_stalemate_does_not_apply_victory_destination",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_victory_memory_survives_cleanse_and_source_departure",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 105, in test_urocione_victory_memory_survives_cleanse_and_source_departure\n    self.assertIsNone(s.find_battlefield_item(item[\"id\"]))\nAssertionError: {'id': '849a0e12198b', 'ownerId': 'p1', 'controllerId': 'p1', 'cardId': 'm3', 'x': 795.0, 'y': 670.0, 'faceUp': True, 'rotation': 0.0, 'counters': {}, 'rarity': None, 'stackedOn': None, 'isChained': True, 'isSupport': True, 'fieldZone': 'confrontation', 'confrontationOrder': 1, 'supportUsedTurn': 2} is not None\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_winner_goes_to_opponent_of_immutable_owner",
+      "status": "fail",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_winner_goes_to_opponent_of_immutable_owner (owner='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_winner_goes_to_opponent_of_immutable_owner (owner='p2')",
+          "status": "fail",
+          "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 93, in test_urocione_winner_goes_to_opponent_of_immutable_owner\n    self.assertIn(\"m3\", s.players[destination][\"zones\"][\"receptacle\"])\nAssertionError: 'm3' not found in []\n"
+        }
+      ],
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 93, in test_urocione_winner_goes_to_opponent_of_immutable_owner\n    self.assertIn(\"m3\", s.players[destination][\"zones\"][\"receptacle\"])\nAssertionError: 'm3' not found in []\n",
+      "durationSeconds": 0.047
+    }
+  ],
+  "summary": {
+    "executed": 20,
+    "failedMethods": 7,
+    "failedSubtests": 17
+  }
+}

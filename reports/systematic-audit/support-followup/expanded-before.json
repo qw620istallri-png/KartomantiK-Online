@@ -1,0 +1,117 @@
+{
+  "stage": "after entry fix, before special play correction",
+  "sourceDigest": "b0b08aad2d7e3934ed7d2bc878ef24fcf19a914b7d3183c7d4a5fb800b411d19",
+  "tests": [
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_chabak_special_support_play_triggers_mazzolong_once_after_two_cards_are_stalemated",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_clause_audit.py\", line 175, in test_chabak_special_support_play_triggers_mazzolong_once_after_two_cards_are_stalemated\n    self.assertEqual(len(s.rules_engine[\"actionStack\"]), 1)\nAssertionError: 0 != 1\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_consult_and_twist_new_field_entries_trigger_blossom_but_pan_internal_move_does_not",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_consult_no_manifestation_discards_only_actual_deck_and_creates_no_support",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_consult_put_fires_first_stone_cz_trigger_and_not_mazzolong_play_trigger",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_jondo_no_first_or_wrong_source_zone_does_not_grant_support",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_jondo_only_winning_support_is_exiled_at_confrontation_cleanup",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_jondo_strict_base_comparison_ignores_additive_bonuses",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_mazzolong_chain_counts_as_play_and_draws_to_current_controller",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_mazzolong_each_own_support_play_draws_one_but_put_and_other_player_do_not",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_mazzolong_outside_interzone_or_silenced_does_not_watch_support",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_pan_interzone_put_does_not_repeat_seeker_field_entry_or_trigger_mazzolong",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_pan_interzone_put_fires_first_stone_cz_entry_once_without_reentering_field",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_pan_only_triggers_when_entering_cz_and_is_optional",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_pan_target_still_needs_own_interzone_at_resolution",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_peropero_legal_top_support_survives_source_departure_after_declaration",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_peropero_rejects_covered_manifestation_and_uncovered_will_atomically",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_peropero_top_visibility_follows_control_and_disappears_when_source_leaves",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_silem_put_suppresses_arriving_cards_own_triggers_and_does_not_count_as_play",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_stoic_bonus_is_prospective_control_scoped_and_expires",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_stoic_previous_turn_loss_is_required_for_future_support_bonus",
+      "status": "pass",
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_twist_put_fires_first_stone_cz_entry",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_twist_put_fires_seeker_field_entry_once_and_not_mazzolong_play_trigger",
+      "status": "pass",
+      "durationSeconds": 0.015
+    }
+  ]
+}

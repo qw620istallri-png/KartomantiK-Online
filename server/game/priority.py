@@ -644,7 +644,8 @@ class PriorityMixin:
                              targets=None, cost_note=None, payment_card_ids=None, ability_id=None,
                              placement=None, as_support=False,
                              extra_essence_count=0, cost_card_id=None, internal=False,
-                             extra_payment_card_ids=None, transcendent_payment=None):
+                             extra_payment_card_ids=None, transcendent_payment=None,
+                             declared_card_id=None):
         if not self.rules_engine["enabled"]:
             return "Assisted rules are not active.", None
         if self.ended or player_id not in self.players:
@@ -784,6 +785,33 @@ class PriorityMixin:
                 ), None
         else:
             cost_card_id = None
+        if (kind == "activated_effect" and clean_ability
+                and (clean_ability.get("result") or {}).get("kind") == "declare_name_search_deck"):
+            if declared_card_id is None:
+                # Mejik declares the name before the colon, as part of the cost.
+                # Finish that declaration before paying or offering a response.
+                choice = {
+                    "id": new_id(), "kind": "declare_card_name", "mode": "search_deck",
+                    "playerId": player_id, "sourceCardId": clean_source["cardId"],
+                    "sourceItemId": clean_source.get("itemId"),
+                    "targetPlayerId": clean_targets[0]["playerId"],
+                    "declarationCost": True,
+                    "_declaration": {
+                        "label": clean_label, "kind": kind, "source": clean_source,
+                        "target": clean_target, "targets": clean_targets,
+                        "cost_note": clean_cost_note, "payment_card_ids": payment_card_ids,
+                        "ability_id": str(ability_id or ""), "placement": placement,
+                        "as_support": as_support, "extra_essence_count": extra_essence_count,
+                        "cost_card_id": cost_card_id, "internal": internal,
+                        "extra_payment_card_ids": extra_payment_card_ids,
+                        "transcendent_payment": transcendent_payment,
+                    },
+                }
+                self.rules_engine["pendingChoice"] = choice
+                return None, {"status": "choice_required", "kind": "choice_required",
+                              "choiceKind": choice["kind"], "choiceId": choice["id"], "playerId": player_id}
+            if not isinstance(declared_card_id, str) or declared_card_id not in self.card_labels:
+                return "Declare the name of an existing card.", None
         clean_targets = self.rules_redirect_targets(player_id, clean_targets, (clean_source or {}).get("cardId"))
         action = {
             "id": new_id(),
@@ -816,6 +844,8 @@ class PriorityMixin:
         }
         if as_support:
             action["asSupport"] = True
+        if declared_card_id is not None:
+            action["cost"]["declaredCardId"] = declared_card_id
         if clean_ability and clean_ability.get("immediate"):
             action["immediate"] = True
         clean_placement = self.clean_rules_action_placement(

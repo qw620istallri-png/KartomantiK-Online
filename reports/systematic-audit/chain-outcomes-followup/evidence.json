@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "aad3d2b69320c67e84136e284b6d9a180f17b1f15c4997a3553844f3023d56c7",
+  "finishedAt": "2026-10-26T08:29:22.889986+00:00",
+  "scope": "Local selected Chain clauses and relevant regressions after 140.1",
+  "published": false,
+  "baseCommit": "c1e8409615a270038732f8fa8c2ae08db5b30ec2",
+  "summary": {
+    "clauses": {
+      "executed": 31,
+      "passed": 31,
+      "failed": 0,
+      "skipped": 0,
+      "networkScenarios": 2,
+      "selectedParagraphs": 15,
+      "cardsWithSelectedClauseProof": 8,
+      "fullCatalogSemanticCertification": false
+    },
+    "unit-tests": {
+      "executed": 1301,
+      "passed": 1301,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ui-tests": {
+      "executed": 4,
+      "failed": 0
+    }
+  },
+  "baranchioRegressionTest": "test_game_state.LotEighteenTests.test_baranchio_lets_the_opponent_take_support_or_lets_you_chain",
+  "reports": {
+    "clauses.json": "02b34e856ed6aabf2f5f8da37cae0291ba1e1f549908a84d4ee608586d92bff5",
+    "unit-tests.json": "526002a520401d9363d86134ace1c0298669676de883957887d2abe295f81658",
+    "ui-tests.json": "cd919f303e22246f850eea03277d95d23a02758b947100443f365edb841c9972",
+    "semantic-review.json": "74f83f18621359a37b3791d598c86f4f007c7257b64632c17e1aef3b28486948",
+    "before.json": "bfb2e811ae7c5cd8cabb2341fc96f02a628f63dc16a022baef8d092e9d4d9f4a",
+    "related-before.json": "026533e8abe02b6a7fb30124eb424b547c89862aaf7faa188cf6fd3cb6cbb335",
+    "regression-before.json": "23b9b9cd5320cb95c4f019f86d0fbd4e02e4db72a35ef2115b93e2679a571c2c"
+  },
+  "fullTextSemanticCertification": false,
+  "fullCatalogBrowserReplayed": false,
+  "physicalDevicesTested": false,
+  "remaining": [
+    "Other unlisted card clauses and alternative branches need independent executed expectations.",
+    "Simultaneous conflicting memories and duplicate cards moving through hidden zones remain outside this batch.",
+    "No new broad 450-card browser, matrix, remote-art or physical-device execution in this batch."
+  ]
+}

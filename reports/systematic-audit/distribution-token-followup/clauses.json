@@ -1,0 +1,285 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "e7ff61ad97354a3dc0c1b40f09dcdb98e09b53c2724b286571ea2505e0c6d605",
+  "published": false,
+  "finishedAt": "2026-10-26T09:10:35.894906+00:00",
+  "summary": {
+    "executed": 19,
+    "passed": 19,
+    "failed": 0,
+    "skipped": 0,
+    "selectedParagraphs": 2,
+    "cardsWithSelectedClauseProof": 2,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "6b4f3yh4tk4091p_en",
+      "name": "Echo of the Wilds",
+      "paragraphIndex": 0,
+      "printedParagraph": "If Echo of the Wilds loses the confrontation, distribute a total of +3 power among any number of target manifestations in your Interzone.",
+      "paragraphSha256": "f280f29f46acb1870af88bc6768d7e316279152f4a302b848000adb06f473a48",
+      "expectedBehavior": "Only a losing participant triggers, with legal own Interzone targets. One/two/three targets receive +3, chosen +2/+1, or +1 each. Selection precedes Stack resolution. Modifier persists through next turn/source departure, but not Cleanse/target field exit.",
+      "testIds": [
+        "test_distribution_token_clauses.DistributionTokenClauses.test_echo_one_target_receives_all_three_without_a_choice",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_echo_two_targets_player_chooses_which_receives_two",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_echo_three_targets_each_receive_one",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_echo_invalid_extra_target_and_wrong_player_do_not_mutate_choice",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_echo_modifier_survives_next_turn_and_source_departure",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_echo_cleanse_and_field_exit_remove_the_modifier",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_echo_targets_require_controller_interzone_and_one_to_three_cards",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_echo_only_defeat_of_a_participant_triggers",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_echo_loss_target_selection_enters_stack_before_power_is_applied",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_echo_no_legal_interzone_target_does_not_request_a_choice",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_echo_disappeared_target_does_not_receive_a_modifier"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "je9rwgrjwk97oes_en",
+      "name": "Stampeding Brood",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Stampeding Brood enters the Empathic Vessel of an opponent, the owner of this card puts up to two tokens with 1 power {G} and Support in their Interzone. Those tokens are not lost at the Resolution.",
+      "paragraphSha256": "df6d3b39708f7658d8cdd4ab0d128f46a0f06c7718f8d13afaa0ea6987d388cb",
+      "expectedBehavior": "Opponent Vessel entry triggers for the immutable owner; own Vessel/other zones do not. Owner chooses zero/one/two within available slots. Tokens have one green power and Support in owner's Interzone and survive Resolution/next turn there. Invalid, opposing and replayed answers cannot mutate the choice or duplicate tokens.",
+      "testIds": [
+        "test_distribution_token_clauses.DistributionTokenClauses.test_brood_zero_one_two_are_real_choices_with_exact_characteristics",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_brood_available_spaces_limit_choice_without_overflow",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_brood_invalid_count_and_wrong_player_leave_state_unchanged",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_brood_tokens_belong_to_owner_not_vessel_container",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_brood_own_vessel_and_other_zones_do_not_trigger",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_brood_interzone_tokens_survive_resolution_and_next_turn",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_brood_token_choice_cannot_be_replayed",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_brood_interzone_creation_does_not_bypass_support_prohibition_into_cz"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_available_spaces_limit_choice_without_overflow",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_available_spaces_limit_choice_without_overflow (occupied=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_available_spaces_limit_choice_without_overflow (occupied=2)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_available_spaces_limit_choice_without_overflow (occupied=3)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_interzone_creation_does_not_bypass_support_prohibition_into_cz",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_interzone_tokens_survive_resolution_and_next_turn",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_invalid_count_and_wrong_player_leave_state_unchanged",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_invalid_count_and_wrong_player_leave_state_unchanged (player='p1', option='3')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_invalid_count_and_wrong_player_leave_state_unchanged (player='p1', option='-1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_invalid_count_and_wrong_player_leave_state_unchanged (player='p2', option='1')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_own_vessel_and_other_zones_do_not_trigger",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_own_vessel_and_other_zones_do_not_trigger (container='p1', zone='receptacle')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_own_vessel_and_other_zones_do_not_trigger (container='p2', zone='graveyard')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_own_vessel_and_other_zones_do_not_trigger (container='p2', zone='hand')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_token_choice_cannot_be_replayed",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_tokens_belong_to_owner_not_vessel_container",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_zero_one_two_are_real_choices_with_exact_characteristics",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_zero_one_two_are_real_choices_with_exact_characteristics (count=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_zero_one_two_are_real_choices_with_exact_characteristics (count=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_zero_one_two_are_real_choices_with_exact_characteristics (count=2)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_cleanse_and_field_exit_remove_the_modifier",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_cleanse_and_field_exit_remove_the_modifier (removal='cleanse')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_cleanse_and_field_exit_remove_the_modifier (removal='leave')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_disappeared_target_does_not_receive_a_modifier",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_invalid_extra_target_and_wrong_player_do_not_mutate_choice",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_invalid_extra_target_and_wrong_player_do_not_mutate_choice (player='p1', item='missing')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_invalid_extra_target_and_wrong_player_do_not_mutate_choice (player='p2', item='target-0')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_loss_target_selection_enters_stack_before_power_is_applied",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_modifier_survives_next_turn_and_source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_no_legal_interzone_target_does_not_request_a_choice",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_one_target_receives_all_three_without_a_choice",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_only_defeat_of_a_participant_triggers",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_only_defeat_of_a_participant_triggers (outcome='loss', participant=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_only_defeat_of_a_participant_triggers (outcome='win', participant=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_only_defeat_of_a_participant_triggers (outcome='stalemate', participant=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_only_defeat_of_a_participant_triggers (outcome='loss', participant=False)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_targets_require_controller_interzone_and_one_to_three_cards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_targets_require_controller_interzone_and_one_to_three_cards (targets=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_targets_require_controller_interzone_and_one_to_three_cards (targets=[{'kind': 'card', 'itemId': 'enemy', 'cardId': 'm3', 'ownerId': 'p2', 'controllerId': 'p2'}])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_targets_require_controller_interzone_and_one_to_three_cards (targets=[{'kind': 'card', 'itemId': 'cz', 'cardId': 'm4', 'ownerId': 'p1', 'controllerId': 'p1'}])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_targets_require_controller_interzone_and_one_to_three_cards (targets=[{'kind': 'card', 'itemId': 'own', 'cardId': 'm2', 'ownerId': 'p1', 'controllerId': 'p1'}, {'kind': 'card', 'itemId': 'own', 'cardId': 'm2', 'ownerId': 'p1', 'controllerId': 'p1'}, {'kind': 'card', 'itemId': 'own', 'cardId': 'm2', 'ownerId': 'p1', 'controllerId': 'p1'}, {'kind': 'card', 'itemId': 'own', 'cardId': 'm2', 'ownerId': 'p1', 'controllerId': 'p1'}])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_three_targets_each_receive_one",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_two_targets_player_chooses_which_receives_two",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_two_targets_player_chooses_which_receives_two (extra=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_two_targets_player_chooses_which_receives_two (extra=1)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.046
+    }
+  ],
+  "limits": [
+    "Selected branches only; some cases isolate resolution or supply the confrontation outcome.",
+    "No new two-seat network or full-catalog browser campaign in this batch.",
+    "Brood persistence is checked in the Interzone; later CZ loss/stalemate interactions remain unasserted.",
+    "WebKit Windows is not macOS Safari certification."
+  ]
+}

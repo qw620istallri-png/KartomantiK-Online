@@ -1,0 +1,453 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "f6ecd1f810192d3ceced5e2194610f97d4f72a6f3eb0b5d1c868ecc44ee6d412",
+  "published": false,
+  "finishedAt": "2026-10-26T11:02:45.124918+00:00",
+  "summary": {
+    "executed": 24,
+    "passed": 24,
+    "failed": 0,
+    "skipped": 0,
+    "selectedParagraphs": 6,
+    "cardsWithSelectedClauseProof": 4,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "2oka6j26ibu19l9_en",
+      "name": "Pigon, the Apprentice",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as it is on the field, you can exhaust Pigon and pay {H}{H}: A target manifestation in Support returns to its owner's hand and cannot be played until the end of the turn.",
+      "paragraphSha256": "29b70f9ea1de7c5dba42d31b50db96231ac520f3f0c188f1a092865cb065ad78",
+      "expectedBehavior": "Pay two hollow and exhaust before responses; only Support targets, owner-based return at resolution, no refund if target disappears. Returned copy cannot be played/Chained this turn; other hand copies and hand activations remain available.",
+      "testIds": [
+        "test_bounce_replay_clauses.BounceReplayClauses.test_single_returns_owner_and_restricts_only_after_resolution",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_foreign_control_returns_to_owner_and_locks_owner_not_controller",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_bypass_lock_through_stack_declaration",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_be_chained_from_hand",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_another_hand_copy_can_play_once_without_unlocking_returned_copy",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_next_turn_expires_lock_and_play_has_printed_power_without_old_bonus",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_source_departure_and_cleanse_do_not_remove_replay_lock",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_invalidated_target_does_not_create_a_replay_lock",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_locked_hand_card_is_not_reported_as_a_playable_support",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_pigon_pays_two_and_exhausts_before_opponent_response",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_pigon_cannot_target_non_support_or_activate_while_exhausted",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_pigon_failed_resolution_does_not_refund_paid_cost",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_restriction_does_not_forbid_discard_activation_from_hand",
+        "test_bounce_replay_integration.BounceReplayIntegration.test_pigon_return_reconnect_rejects_stack_replay_but_next_turn_accepts"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "m3it0ajngl4nlo3_en",
+      "name": "Chiff and Chaff",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as an opponent has put a manifestation into Support from their Interzone, Chiff and Chaff has Support from hand.",
+      "paragraphSha256": "ac444cdb8081e78ec2ec49772e20da1aaefc603e15f238e55650778d97276f3b",
+      "expectedBehavior": "Current recorded opponent Interzone Support entry permits hand Support; own entry or opponent hand entry alone does not. Cross-turn scope is not asserted.",
+      "testIds": [
+        "test_bounce_replay_clauses.BounceReplayClauses.test_chiff_support_condition_needs_opponent_interzone_entry"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "m3it0ajngl4nlo3_en",
+      "name": "Chiff and Chaff",
+      "paragraphIndex": 1,
+      "printedParagraph": "When Chiff and Chaff enters Support, a target manifestation in Support controlled by an opponent returns to its owner's hand and cannot be played until the end of the turn.",
+      "paragraphSha256": "8dbcb862e5d958cc39eb7d0073c0b86fe1f1fade7caf4fe5897e4f21173d2d38",
+      "expectedBehavior": "Own Support entry queues an opponent Support return; another card's entry never triggers it. Return and replay prohibition follow the owner and leave another unbound hand copy usable.",
+      "testIds": [
+        "test_bounce_replay_clauses.BounceReplayClauses.test_single_returns_owner_and_restricts_only_after_resolution",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_foreign_control_returns_to_owner_and_locks_owner_not_controller",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_bypass_lock_through_stack_declaration",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_be_chained_from_hand",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_another_hand_copy_can_play_once_without_unlocking_returned_copy",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_next_turn_expires_lock_and_play_has_printed_power_without_old_bonus",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_source_departure_and_cleanse_do_not_remove_replay_lock",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_invalidated_target_does_not_create_a_replay_lock",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_locked_hand_card_is_not_reported_as_a_playable_support",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_chiff_real_support_entry_queues_return_without_moving_target_early",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_chiff_does_not_trigger_when_another_players_or_own_other_card_enters_support",
+        "test_bounce_replay_integration.BounceReplayIntegration.test_unrestricted_copy_can_play_without_triggering_chiff_again_or_unlocking_returned_copy"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "265f4wdooq43pjn_en",
+      "name": "Atavic Introspection",
+      "paragraphIndex": 2,
+      "printedParagraph": "Remove 5 Control counters: A target manifestation on the field returns to its owner's hand, it cannot be played until the end of the turn.",
+      "paragraphSha256": "073d97e69f5e346625f4e2793de9db451af616c01d88fc73750eefd7f30c550c",
+      "expectedBehavior": "Spend exactly five Control counters before responses; fewer than five is refused atomically. Return any field Manifestation to its owner, with the same current-turn play restriction and copy/expiry rules.",
+      "testIds": [
+        "test_bounce_replay_clauses.BounceReplayClauses.test_single_returns_owner_and_restricts_only_after_resolution",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_foreign_control_returns_to_owner_and_locks_owner_not_controller",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_bypass_lock_through_stack_declaration",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_be_chained_from_hand",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_another_hand_copy_can_play_once_without_unlocking_returned_copy",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_next_turn_expires_lock_and_play_has_printed_power_without_old_bonus",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_source_departure_and_cleanse_do_not_remove_replay_lock",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_invalidated_target_does_not_create_a_replay_lock",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_locked_hand_card_is_not_reported_as_a_playable_support",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_atavic_spends_exactly_five_counters_before_resolving"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "knnq85hihrxuafj_en",
+      "name": "Abandon",
+      "paragraphIndex": 0,
+      "printedParagraph": "All manifestations in Support controlled by a target player return to their respective owners' hands.",
+      "paragraphSha256": "4f6e3fc5e1d644e420c0b0be0a2d0405f0dd3920794c784f5f2d3f414d8c9343",
+      "expectedBehavior": "Only the chosen player's CZ Supports return, each to its own owner. Opponent Adamant prevents return, but own Adamant does not. Tokens do not become real hand cards and empty sets require no choice.",
+      "testIds": [
+        "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_returns_only_target_players_cz_supports_to_each_owner",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_adamant_only_prevents_opponents_return_and_creates_no_lock",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_empty_supports_does_not_request_choice_or_create_locks",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_token_return_creates_neither_hand_card_nor_lock"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "knnq85hihrxuafj_en",
+      "name": "Abandon",
+      "paragraphIndex": 1,
+      "printedParagraph": "Those manifestations cannot be played until the end of the turn.",
+      "paragraphSha256": "ca6e6ed36414db8c90e283107b8cfd69db31e07f35c550b5454399274453fa5b",
+      "expectedBehavior": "Each actually returned copy is locked this turn; two returned copies remain locked when an unrelated third copy is played. Prevented/token returns create no lock.",
+      "testIds": [
+        "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_duplicate_returned_copies_all_locked_but_third_copy_available",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_adamant_only_prevents_opponents_return_and_creates_no_lock",
+        "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_token_return_creates_neither_hand_card_nor_lock"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_adamant_only_prevents_opponents_return_and_creates_no_lock",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_adamant_only_prevents_opponents_return_and_creates_no_lock (target='p2')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_adamant_only_prevents_opponents_return_and_creates_no_lock (target='p1')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_duplicate_returned_copies_all_locked_but_third_copy_available",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_empty_supports_does_not_request_choice_or_create_locks",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_returns_only_target_players_cz_supports_to_each_owner",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_abandon_token_return_creates_neither_hand_card_nor_lock",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_another_hand_copy_can_play_once_without_unlocking_returned_copy",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_another_hand_copy_can_play_once_without_unlocking_returned_copy (card='Pigon, the Apprentice')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_another_hand_copy_can_play_once_without_unlocking_returned_copy (card='Chiff and Chaff')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_another_hand_copy_can_play_once_without_unlocking_returned_copy (card='Atavic Introspection')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_atavic_spends_exactly_five_counters_before_resolving",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_atavic_spends_exactly_five_counters_before_resolving (counters=4)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_atavic_spends_exactly_five_counters_before_resolving (counters=6)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_chiff_does_not_trigger_when_another_players_or_own_other_card_enters_support",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_chiff_does_not_trigger_when_another_players_or_own_other_card_enters_support (entrant='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_chiff_does_not_trigger_when_another_players_or_own_other_card_enters_support (entrant='p2')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_chiff_real_support_entry_queues_return_without_moving_target_early",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_chiff_support_condition_needs_opponent_interzone_entry",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_chiff_support_condition_needs_opponent_interzone_entry (actor='p2', origin='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_chiff_support_condition_needs_opponent_interzone_entry (actor='p1', origin='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_chiff_support_condition_needs_opponent_interzone_entry (actor='p2', origin='hand')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_foreign_control_returns_to_owner_and_locks_owner_not_controller",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_foreign_control_returns_to_owner_and_locks_owner_not_controller (card='Pigon, the Apprentice')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_foreign_control_returns_to_owner_and_locks_owner_not_controller (card='Chiff and Chaff')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_foreign_control_returns_to_owner_and_locks_owner_not_controller (card='Atavic Introspection')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_invalidated_target_does_not_create_a_replay_lock",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_invalidated_target_does_not_create_a_replay_lock (card='Pigon, the Apprentice', invalidation='missing')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_invalidated_target_does_not_create_a_replay_lock (card='Pigon, the Apprentice', invalidation='protected')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_invalidated_target_does_not_create_a_replay_lock (card='Chiff and Chaff', invalidation='missing')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_invalidated_target_does_not_create_a_replay_lock (card='Chiff and Chaff', invalidation='protected')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_invalidated_target_does_not_create_a_replay_lock (card='Atavic Introspection', invalidation='missing')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_invalidated_target_does_not_create_a_replay_lock (card='Atavic Introspection', invalidation='protected')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.141
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_locked_hand_card_is_not_reported_as_a_playable_support",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_locked_hand_card_is_not_reported_as_a_playable_support (card='Pigon, the Apprentice')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_locked_hand_card_is_not_reported_as_a_playable_support (card='Chiff and Chaff')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_locked_hand_card_is_not_reported_as_a_playable_support (card='Atavic Introspection')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_next_turn_expires_lock_and_play_has_printed_power_without_old_bonus",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_next_turn_expires_lock_and_play_has_printed_power_without_old_bonus (card='Pigon, the Apprentice')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_next_turn_expires_lock_and_play_has_printed_power_without_old_bonus (card='Chiff and Chaff')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_next_turn_expires_lock_and_play_has_printed_power_without_old_bonus (card='Atavic Introspection')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_pigon_cannot_target_non_support_or_activate_while_exhausted",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_pigon_cannot_target_non_support_or_activate_while_exhausted (support=False, rotation=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_pigon_cannot_target_non_support_or_activate_while_exhausted (support=True, rotation=90)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_pigon_failed_resolution_does_not_refund_paid_cost",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_pigon_pays_two_and_exhausts_before_opponent_response",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_restriction_does_not_forbid_discard_activation_from_hand",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_be_chained_from_hand",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_be_chained_from_hand (card='Pigon, the Apprentice')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_be_chained_from_hand (card='Chiff and Chaff')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_be_chained_from_hand (card='Atavic Introspection')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_bypass_lock_through_stack_declaration",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_bypass_lock_through_stack_declaration (card='Pigon, the Apprentice')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_bypass_lock_through_stack_declaration (card='Chiff and Chaff')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_returned_card_cannot_bypass_lock_through_stack_declaration (card='Atavic Introspection')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_single_returns_owner_and_restricts_only_after_resolution",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_single_returns_owner_and_restricts_only_after_resolution (card='Pigon, the Apprentice')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_single_returns_owner_and_restricts_only_after_resolution (card='Chiff and Chaff')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_single_returns_owner_and_restricts_only_after_resolution (card='Atavic Introspection')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_source_departure_and_cleanse_do_not_remove_replay_lock",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_source_departure_and_cleanse_do_not_remove_replay_lock (card='Pigon, the Apprentice')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_source_departure_and_cleanse_do_not_remove_replay_lock (card='Chiff and Chaff')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_bounce_replay_clauses.BounceReplayClauses.test_source_departure_and_cleanse_do_not_remove_replay_lock (card='Atavic Introspection')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.079
+    },
+    {
+      "testId": "test_bounce_replay_integration.BounceReplayIntegration.test_pigon_return_reconnect_rejects_stack_replay_but_next_turn_accepts",
+      "status": "pass",
+      "durationSeconds": 3.796
+    },
+    {
+      "testId": "test_bounce_replay_integration.BounceReplayIntegration.test_unrestricted_copy_can_play_without_triggering_chiff_again_or_unlocking_returned_copy",
+      "status": "pass",
+      "durationSeconds": 3.828
+    }
+  ],
+  "limits": [
+    "Selected branches only; some resolutions isolate costs/declaration.",
+    "Hidden-zone copy identity, Deck/Exile memory reset and arbitrary non-Hand Chain sources are outside this batch.",
+    "Chiff's condition is checked with current-turn recorded entries; its cross-turn scope is not certified.",
+    "The nine enters_support definitions are inspected; only selected Chiff branches are independently executed here."
+  ]
+}

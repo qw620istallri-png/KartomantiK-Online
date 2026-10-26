@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "77930a3a630db37fb265e4423d2f90fd7c35d29dba6f078940c830018e9166d6",
+  "finishedAt": "2026-10-26T10:47:58.762692+00:00",
+  "published": false,
+  "version": "140.1",
+  "summary": {
+    "targeted": {
+      "executed": 59,
+      "passed": 59,
+      "failed": 0,
+      "skipped": 0
+    },
+    "python": {
+      "executed": 1364,
+      "passed": 1364,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ui": {
+      "executed": 4,
+      "failed": 0
+    },
+    "newTests": 19,
+    "newLiveNetworkScenarios": 3,
+    "phaseStepsExercised": 15
+  },
+  "artifacts": {
+    "sequences.json": "4a146d617618479951a0adbadee019dd048052dac5c06bb4ee6e5c134cdcfb5b",
+    "unit-tests.json": "69cf83638b67aca0c8434a3eaef03791612bbcfa01787af69bc742981460744f",
+    "ui-tests.json": "2477b70d80c34e76ade08ae61514146ad52a68b17aec279f1357c55ffc3736f2",
+    "before.json": "4ae75f7af95aaeb0f6acd2e3061eccc23ff9a97bf8cb946e45e7134691ac1ead",
+    "boundary-before.json": "19f519b5685337359f6051d79f6fcc643b893dfd5aa89e43f90b0123a6f14297",
+    "observations.json": "0aad14c2296ba660014c4a19b56c4a822d2771fb29c6c9dde0e9e9776947b662"
+  },
+  "limits": [
+    "Fifteen-step scheduling with synthetic score effects does not certify every card trigger.",
+    "Availability differential checks prepared declaration fixtures, not all possible states or print clauses.",
+    "Pacing tests use deterministic gates and spy the configured pause; not a real latency/load benchmark.",
+    "No physical-device or full-catalog browser certification.",
+    "Nearby latency proofs are rerun; no new full-catalog browser/matrix/traces/remote-art campaign."
+  ]
+}

@@ -832,7 +832,8 @@ function renderRulesChoiceScreen() {
   if (choice.kind === "declare_card_name") {
     $("#rulesChoiceHeading").textContent = t("rulesDeclareNameHeading");
     $("#rulesChoiceText").textContent = rulesText(
-      choice.mode === "search_deck" ? "rulesDeclareNameSearchText" : "rulesDeclareNameTopText",
+      choice.declarationCost ? "rulesDeclareNameCostText"
+        : choice.mode === "search_deck" ? "rulesDeclareNameSearchText" : "rulesDeclareNameTopText",
       { card: cardName(choice.sourceCardId), player: rulesPlayerName(choice.targetPlayerId) },
     );
     const names = new Map();
@@ -1608,7 +1609,9 @@ function renderRulesChoiceScreen() {
   );
   if (!destinationKeys) $("#rulesChoiceText").textContent = rulesText(
     searching
-      ? "rulesChoiceSearchText"
+      ? (choice.revealSelected
+        ? (choice.upTo ? "rulesChoiceSearchRevealUpToText" : "rulesChoiceSearchRevealText")
+        : "rulesChoiceSearchText")
       : handWill
         ? "rulesChoiceHandWillText"
       : handManifestation

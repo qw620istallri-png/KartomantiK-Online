@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "version": "140.2",
+  "assetVersion": "20261026-rules-beta-140-2",
+  "sourceDigest": "114bbd11c8b3f56f4ad010655ebb9923b8f63e1b52a0f9789c9113b1516b9980",
+  "finishedAt": "2026-10-26T11:16:56.648569+00:00",
+  "scope": "Release regression for all local card, priority and UI fixes since 140.1",
+  "publicationRequested": true,
+  "validationStatus": "pass",
+  "summary": {
+    "python": {
+      "executed": 1388,
+      "passed": 1388,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ui": {
+      "executed": 14,
+      "failed": 0
+    },
+    "versionSynchronization": {
+      "status": "pass",
+      "assetUrls": 23,
+      "displayLabel": "beta 140.2"
+    }
+  },
+  "artifacts": {
+    "unit-tests.json": "55554665f6643584d6bf2e7857f06ac6bca3c3d88d9fa2595f7de5256ab26d7e",
+    "ui-tests.json": "710a0e691bd48622ef037332301f69e7cd2d3bbb56c39806e53f373f94741fa3",
+    "versions.json": "8594ed6be3fd9780af68b00d815b9c6a9d798a5d04588236177405b63ac7abb4"
+  },
+  "fullCatalogCertification": false,
+  "limits": [
+    "Previous card-clause, browser, remote-art and trace campaigns retain their historical source digests.",
+    "No new physical-device or Safari Mac certification; reported Safari Mac Stack issue remains unverified."
+  ]
+}

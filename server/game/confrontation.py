@@ -723,6 +723,28 @@ class ConfrontationMixin:
                     item, item.get("ownerId"), "exile", "top"
                 ))
                 continue
+            win_vessel_memory = next((
+                memory for memory in self.rules_effect_memories_for(
+                    item.get("ownerId"), item.get("cardId"),
+                    "win_destination_opponent_vessel",
+                )
+                if (memory.get("data") or {}).get("itemId") == item.get("id")
+            ), None)
+            if win_vessel_memory or (
+                item.get("isSupport")
+                and item.get("supportWinDestination") == "opponent_receptacle"
+            ):
+                # Urocione names an opponent of the immutable owner, not the
+                # loser or an opponent of the card's current controller.
+                destination_id = self.other_rules_player_id(item.get("ownerId"))
+                if destination_id in self.players:
+                    movement = self._rules_remove_field_item(item, destination_id, "receptacle", "top")
+                    support_resolved.append({
+                        "kind": "opponent_vessel", "cardId": item.get("cardId"),
+                        "itemId": item.get("id"), "playerId": destination_id,
+                        "movement": movement,
+                    })
+                    continue
             if (
                 loser_id in self.players
                 and self.rules_item_effects_active(item)
@@ -756,13 +778,6 @@ class ConfrontationMixin:
                 support_exiled.append(self._rules_remove_field_item(
                     item, item.get("ownerId"), "exile", "top"
                 ))
-            elif item.get("supportWinDestination") == "opponent_receptacle" and loser_id in self.players:
-                movement = self._rules_remove_field_item(item, loser_id, "receptacle", "top")
-                support_resolved.append({
-                    "kind": "opponent_vessel", "cardId": item.get("cardId"),
-                    "itemId": item.get("id"), "playerId": loser_id,
-                    "movement": movement,
-                })
         # Loss destinations are also card effects and follow the actual outcome.
         for item in list(self.rules_confrontation_items()):
             if item.get("id") in rematch_item_ids or self.rules_item_zone_locked(item):

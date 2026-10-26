@@ -108,6 +108,46 @@ const { chromium } = require("playwright");
     assert.deepEqual(reset.afterDisconnect, { flow: false, grace: false });
     assert.deepEqual(reset.staleSends, []);
     assert.deepEqual(vfx, { before: 1, holds: 0, delayed: 0 });
+    const commandContext = await page.evaluate(() => {
+      window.__fixture();
+      const current = ws;
+      current.sent.length = 0;
+      const original = { type: "pass_priority", passed: true };
+      send(original);
+      const empty = current.sent.at(-1).rulesContext;
+      latestState.rulesEngine.actionStack = [{ id: "visible-top", controllerId: "p2" }];
+      send({ type: "declare_rules_action", label: "Context probe" });
+      const stacked = current.sent.at(-1).rulesContext;
+      const retained = { turn: 1, phaseId: "confrontation_reaction", topActionId: "old" };
+      send({ type: "pass_priority", rulesContext: retained });
+      const oldIntentRetained = JSON.stringify(current.sent.at(-1).rulesContext) === JSON.stringify(retained);
+      send({ type: "set_rules_pass_all", enabled: false });
+      const persistentSettingUnstamped = !current.sent.at(-1).rulesContext;
+      latestState.rulesEngine.enabled = false;
+      send({ type: "pass_phase", passed: true });
+      const manualUnstamped = !current.sent.at(-1).rulesContext;
+      window.__fixture();
+      const cid = "inner-deserts-094";
+      latestState.players.p1.zones.hand = { cards: [cid], count: 1, owners: { [cid]: "p1" } };
+      latestState.tokens = [{ id: "white", ownerId: "p1", temperament: "transcendent", isEssence: true, counters: { essence: 20 } }];
+      beginRulesBoardAction({ cardId: cid, zone: "hand" });
+      const hadFlow = Boolean(pendingRulesBoardFlow);
+      const messages = [];
+      for (const language of ["en", "fr", "it"]) {
+        currentLanguage = language;
+        messages.push(localizeServerError("The phase or Stack has changed. Review the table and try again."));
+      }
+      currentLanguage = "fr";
+      handleServerMessage({ type: "error", code: "rules_context_changed", message: "The phase or Stack has changed. Review the table and try again." });
+      return { empty, stacked, oldIntentRetained, persistentSettingUnstamped, manualUnstamped,
+        originalUnchanged: !Object.hasOwn(original, "rulesContext"),
+        rejectedFlowClosed: hadFlow && !pendingRulesBoardFlow, messages };
+    });
+    assert.deepEqual(commandContext.empty, { turn: 2, phaseId: "end_actions", topActionId: null });
+    assert.deepEqual(commandContext.stacked, { turn: 2, phaseId: "end_actions", topActionId: "visible-top" });
+    for (const name of ["oldIntentRetained", "persistentSettingUnstamped", "manualUnstamped", "originalUnchanged", "rejectedFlowClosed"]) assert.equal(commandContext[name], true, name);
+    assert.equal(new Set(commandContext.messages).size, 3);
+    assert.ok(commandContext.messages[1].includes("La phase ou la pile a changé"));
     const suspended = await page.evaluate(async () => {
       clearConnectionGameInteractions();
       window.__fixture();

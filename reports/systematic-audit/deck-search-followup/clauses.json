@@ -1,0 +1,350 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "18eabc370ab143d1eb1e00e08453a1563f6b653832fa035bf7a0c6e17b3498bc",
+  "published": false,
+  "finishedAt": "2026-10-26T10:17:02.569943+00:00",
+  "summary": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0,
+    "skipped": 0,
+    "selectedParagraphs": 4,
+    "cardsWithSelectedClauseProof": 4,
+    "networkScenarios": 2,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "xzaw511oz4g4km9_en",
+      "name": "Hermeto, the Observer",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Hermeto enters an opponent's Empathic Vessel, the owner of this card can search for up to two cards in their deck. They show them and add them to their hand, then shuffle their deck.",
+      "paragraphSha256": "614a1b2b71d1c7dc9a3c6211e5173b4117ba22c7621bd658debe16c8e3dbc9de",
+      "expectedBehavior": "Only opponent Vessel entry triggers for the immutable owner. Owner may select zero/one/two, reveal only selected cards, add them to hand, then shuffle once. Empty/single-card Decks and atomic refusals are checked.",
+      "testIds": [
+        "test_deck_search_clause_audit.DeckSearchClauses.test_search_empty_deck_still_executes_final_shuffle_without_empty_choice",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_search_candidates_private_but_selected_cards_are_revealed",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_search_invalid_and_opposing_answers_do_not_move_or_shuffle",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_concealed_search_results_remain_private",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_hermeto_zero_one_two_selection_moves_exact_cards_then_shuffles_once",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_search_duplicate_or_excess_cards_are_rejected_atomically",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_hermeto_entry_uses_immutable_owner_and_only_opponent_vessel",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_hermeto_single_card_deck_caps_the_choice_at_one",
+        "test_deck_search_integration.DeckSearchIntegration.test_hermeto_reconnect_keeps_search_private_then_reveals_selected_card_to_peer"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "cnqaie6oq458qgq_en",
+      "name": "Recall",
+      "paragraphIndex": 0,
+      "printedParagraph": "If you lost the confrontation this turn, search your deck for a card. Reveal it and put it into your hand, then shuffle your deck.",
+      "paragraphSha256": "b9cb9332f3d8665b17c79515422ce7edb044e6f7721f734965a1c7c15e47e6c5",
+      "expectedBehavior": "Only a current-turn loss permits declaration. Available search requires exactly one card, publicly revealed, then shuffle; replay cannot move or shuffle again.",
+      "testIds": [
+        "test_deck_search_clause_audit.DeckSearchClauses.test_search_empty_deck_still_executes_final_shuffle_without_empty_choice",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_search_candidates_private_but_selected_cards_are_revealed",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_search_invalid_and_opposing_answers_do_not_move_or_shuffle",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_concealed_search_results_remain_private",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_recall_requires_current_turn_loss_before_declaration",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_recall_search_requires_exactly_one_card_when_available",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_search_replay_cannot_move_or_shuffle_again",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_recall_real_play_resolves_before_search_and_goes_to_limbo_once"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-066",
+      "name": "Mejik, the Labyrinther",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Mejik is in the Interzone, you may Exhaust it and declare a card name: Search a target player's deck for a card with the same name. That player discards that card, then shuffles their deck.",
+      "paragraphSha256": "a8cf43372ddc33de84ecd6afd9b2b0a8eb250b66781d01314eff3a9e3cd25728",
+      "expectedBehavior": "Unexhausted Interzone source declares a name as activation cost before opponent priority. Resolution uses that locked name even after source departure, discards from either target's Deck and shuffles once even on a failed search.",
+      "testIds": [
+        "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_name_and_exhaustion_are_committed_before_opponent_priority",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_declared_name_resolves_once_after_source_departure",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_failed_search_still_shuffles_only_target_deck",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_invalid_name_and_wrong_player_preserve_unpaid_declaration",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_only_interzone_unexhausted_source_can_start_declaration",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_pending_cost_blocks_responses_and_replay_cannot_activate_twice",
+        "test_deck_search_integration.DeckSearchIntegration.test_mejik_protocol_commits_name_before_peer_can_react_and_resolves_without_second_choice"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-032",
+      "name": "Poopom, the Hydromancer",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Poopom enters the field, declare a card name, then uncover the top card of your deck. If the name of the uncovered card is the same as the declared one, Poopom gets +4 power until the end of the turn, otherwise Discard that card.",
+      "paragraphSha256": "358d40c3b426fe0177e9a2c76d9fa66cbec016ff779b193bb282c5ae3aceb105",
+      "expectedBehavior": "Real field entry asks for a name. Match by printed name keeps the top card there and gives exactly +4 until turn end. Mismatch reveals/discards only that card without drawing; source departure still permits reveal/discard; invalid name is atomic.",
+      "testIds": [
+        "test_deck_search_clause_audit.DeckSearchClauses.test_poopom_matching_card_stays_on_top_and_gives_exact_four_until_turn_end",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_poopom_wrong_name_discards_exactly_top_card_without_drawing",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_poopom_name_comparison_is_by_name_not_catalogue_id",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_poopom_source_departure_does_not_prevent_reveal_and_discard",
+        "test_deck_search_clause_audit.DeckSearchClauses.test_poopom_invalid_name_does_not_reveal_or_change_the_deck"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_concealed_search_results_remain_private",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_hermeto_entry_uses_immutable_owner_and_only_opponent_vessel",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_hermeto_entry_uses_immutable_owner_and_only_opponent_vessel (owner='p1', container='p2', zone='receptacle')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_hermeto_entry_uses_immutable_owner_and_only_opponent_vessel (owner='p2', container='p1', zone='receptacle')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_hermeto_entry_uses_immutable_owner_and_only_opponent_vessel (owner='p1', container='p1', zone='receptacle')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_hermeto_entry_uses_immutable_owner_and_only_opponent_vessel (owner='p1', container='p2', zone='graveyard')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_hermeto_single_card_deck_caps_the_choice_at_one",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_hermeto_zero_one_two_selection_moves_exact_cards_then_shuffles_once",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_hermeto_zero_one_two_selection_moves_exact_cards_then_shuffles_once (count=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_hermeto_zero_one_two_selection_moves_exact_cards_then_shuffles_once (count=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_hermeto_zero_one_two_selection_moves_exact_cards_then_shuffles_once (count=2)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_declared_name_resolves_once_after_source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_failed_search_still_shuffles_only_target_deck",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_failed_search_still_shuffles_only_target_deck (target='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_failed_search_still_shuffles_only_target_deck (target='p2')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_invalid_name_and_wrong_player_preserve_unpaid_declaration",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_invalid_name_and_wrong_player_preserve_unpaid_declaration (player='p1', card='absent')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_invalid_name_and_wrong_player_preserve_unpaid_declaration (player='p2', card='bithch9c4vi77cu_en')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_name_and_exhaustion_are_committed_before_opponent_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_only_interzone_unexhausted_source_can_start_declaration",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_only_interzone_unexhausted_source_can_start_declaration (zone='confrontation', rotation=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_only_interzone_unexhausted_source_can_start_declaration (zone='interzone', rotation=90)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_mejik_pending_cost_blocks_responses_and_replay_cannot_activate_twice",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_poopom_invalid_name_does_not_reveal_or_change_the_deck",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_poopom_matching_card_stays_on_top_and_gives_exact_four_until_turn_end",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_poopom_name_comparison_is_by_name_not_catalogue_id",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_poopom_source_departure_does_not_prevent_reveal_and_discard",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_poopom_wrong_name_discards_exactly_top_card_without_drawing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_recall_real_play_resolves_before_search_and_goes_to_limbo_once",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_recall_requires_current_turn_loss_before_declaration",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_recall_requires_current_turn_loss_before_declaration (turn=2, loser='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_recall_requires_current_turn_loss_before_declaration (turn=1, loser='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_recall_requires_current_turn_loss_before_declaration (turn=2, loser='p2')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_recall_search_requires_exactly_one_card_when_available",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_candidates_private_but_selected_cards_are_revealed",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_candidates_private_but_selected_cards_are_revealed (card='Hermeto, the Observer')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_candidates_private_but_selected_cards_are_revealed (card='Recall')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_duplicate_or_excess_cards_are_rejected_atomically",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_duplicate_or_excess_cards_are_rejected_atomically (cards=['6jz7otalrdq0q8u_en', '6jz7otalrdq0q8u_en'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_duplicate_or_excess_cards_are_rejected_atomically (cards=['6jz7otalrdq0q8u_en', 'bithch9c4vi77cu_en', 'inner-deserts-145'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_empty_deck_still_executes_final_shuffle_without_empty_choice",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_empty_deck_still_executes_final_shuffle_without_empty_choice (card='Hermeto, the Observer')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_empty_deck_still_executes_final_shuffle_without_empty_choice (card='Recall')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_invalid_and_opposing_answers_do_not_move_or_shuffle",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_invalid_and_opposing_answers_do_not_move_or_shuffle (card='Hermeto, the Observer', cards=['absent'], player='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_invalid_and_opposing_answers_do_not_move_or_shuffle (card='Hermeto, the Observer', cards=[], player='p2')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_invalid_and_opposing_answers_do_not_move_or_shuffle (card='Recall', cards=['absent'], player='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_invalid_and_opposing_answers_do_not_move_or_shuffle (card='Recall', cards=[], player='p2')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.11
+    },
+    {
+      "testId": "test_deck_search_clause_audit.DeckSearchClauses.test_search_replay_cannot_move_or_shuffle_again",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_deck_search_integration.DeckSearchIntegration.test_hermeto_reconnect_keeps_search_private_then_reveals_selected_card_to_peer",
+      "status": "pass",
+      "durationSeconds": 0.563
+    },
+    {
+      "testId": "test_deck_search_integration.DeckSearchIntegration.test_mejik_protocol_commits_name_before_peer_can_react_and_resolves_without_second_choice",
+      "status": "pass",
+      "durationSeconds": 2.047
+    }
+  ],
+  "limits": [
+    "Selected branches only; some cases isolate resolution or prepare the confrontation outcome.",
+    "No full-catalog or physical-device certification from this batch."
+  ]
+}

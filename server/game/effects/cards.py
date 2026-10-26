@@ -346,12 +346,14 @@ class CardsEffectsMixin:
     def _rules_result_search_deck_to_hand(self, action, result, player_id, player):
         deck = list(player["zones"]["deck"])
         if not deck:
+            random.shuffle(player["zones"]["deck"])
             return {"kind": result.get("kind"), "status": "no_cards"}
         count = min(int(result.get("count") or 1), len(deck))
         choice_id = new_id()
         self.rules_engine["pendingChoice"] = {
             "id": choice_id, "kind": "discard_from_hand",
             "playerId": player_id, "count": count, "upTo": bool(result.get("upTo")),
+            "revealSelected": True,
             "candidateCardIds": sorted(deck),
             "actionId": action.get("id"),
             "controllerId": action.get("controllerId"),
@@ -579,6 +581,8 @@ class CardsEffectsMixin:
         }
 
     def _rules_result_play_limbo_target_as_support(self, action, result, player_id, player):
+        if self.rules_support_entry_locked(player_id, put=True):
+            return {"kind": result.get("kind"), "status": "prevented"}
         target = next((
             entry for entry in action.get("targets") or []
             if entry.get("kind") == "zone_card"

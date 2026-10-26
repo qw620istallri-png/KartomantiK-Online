@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "f6ecd1f810192d3ceced5e2194610f97d4f72a6f3eb0b5d1c868ecc44ee6d412",
+  "finishedAt": "2026-10-26T11:07:35.295029+00:00",
+  "published": false,
+  "version": "140.1",
+  "summary": {
+    "targeted": {
+      "executed": 24,
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0,
+      "selectedParagraphs": 6,
+      "cardsWithSelectedClauseProof": 4,
+      "fullCatalogSemanticCertification": false
+    },
+    "python": {
+      "executed": 1388,
+      "passed": 1388,
+      "failed": 0,
+      "skipped": 0
+    },
+    "ui": {
+      "executed": 4,
+      "failed": 0
+    },
+    "newTests": 24,
+    "newLiveNetworkScenarios": 2
+  },
+  "artifacts": {
+    "before.json": "e98776f09f582e49b2a9bc2b1dcc7913bb9f13e6cdd49c3ea5bc21d6e6f4068a",
+    "clauses.json": "4f42bcfb62aebff26225cd5e0be1c13cda4e97a6f9c711bfadf3d23510cb96c7",
+    "unit-tests.json": "5ed6f20aa84e6dec45ed3d25f16133c3082efee16cd4832fb2aff9afaba73d75",
+    "ui-tests.json": "1a737d4f40b9f61738c74c90e10db91307122e8a58715f971687c9de3070bb82"
+  },
+  "limits": [
+    "Selected branches only; some resolutions isolate costs/declaration.",
+    "Hidden-zone copy identity, Deck/Exile memory reset and arbitrary non-Hand Chain sources are outside this batch.",
+    "Chiff's condition is checked with current-turn recorded entries; its cross-turn scope is not certified.",
+    "The nine enters_support definitions are inspected; only selected Chiff branches are independently executed here.",
+    "Automatic phase driving is isolated in the two protocol cases; turn expiry uses an explicit turn fixture.",
+    "No new full-catalog browser, matrix, traces, remote-art or physical-device campaign; Safari Mac remains unverified."
+  ]
+}

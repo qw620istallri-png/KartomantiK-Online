@@ -1,0 +1,12 @@
+{
+  "stage": "before put lock correction",
+  "sourceDigest": "c244c16d88f95695c6b3654560b93bd7f8849e173ec9495331594d75ec584db1",
+  "tests": [
+    {
+      "testId": "test_support_clause_audit.SupportClauseAudit.test_pin_down_prevents_queued_puts_but_wretched_arena_allows_them",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_clause_audit.py\", line 203, in test_pin_down_prevents_queued_puts_but_wretched_arena_allows_them\n    self.assertEqual(len(arrivals), int(lock == \"Wretched Arena\"))\nAssertionError: 1 != 0\n",
+      "durationSeconds": 0.234
+    }
+  ]
+}

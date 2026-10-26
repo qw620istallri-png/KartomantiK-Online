@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "18eabc370ab143d1eb1e00e08453a1563f6b653832fa035bf7a0c6e17b3498bc",
+  "finishedAt": "2026-10-26T10:27:44.163425+00:00",
+  "published": false,
+  "version": "140.1",
+  "summary": {
+    "python": {
+      "executed": 1345,
+      "passed": 1345,
+      "failed": 0,
+      "skipped": 0
+    },
+    "selectedClauses": {
+      "executed": 25,
+      "passed": 25,
+      "failed": 0,
+      "skipped": 0,
+      "selectedParagraphs": 4,
+      "cardsWithSelectedClauseProof": 4,
+      "networkScenarios": 2,
+      "fullCatalogSemanticCertification": false
+    },
+    "uiSuites": {
+      "executed": 5,
+      "failed": 0
+    },
+    "browserConfigurations": {
+      "executed": 6,
+      "failed": 0
+    }
+  },
+  "artifacts": {
+    "reports/systematic-audit/deck-search-followup/unit-tests.json": "8e4226ada550aa4e9a13aff1c8387280f6067901a391a992d0556c17cb322045",
+    "reports/systematic-audit/deck-search-followup/clauses.json": "8de29a7f2c6900b4b134709731e76670011179c5a6fbfe9dbb574b429235bdaa",
+    "reports/systematic-audit/deck-search-followup/ui-tests.json": "b3a6c96801801967012b8c7878ce70e0606911bd74870099f645059c9df9f159",
+    "reports/systematic-audit/deck-search-followup/browser.json": "a6ddec2aa8f0572ee66fc92038d4a4679505ceac3d2fbe4963073b49ee2ad8ea",
+    "reports/systematic-audit/deck-search-followup/before.json": "1d735e81ca026e7c5d9501144b6a256ef6faa6234fa468e8c4d9eee28dd5731b",
+    "reports/systematic-audit/deck-search-followup/regression-before.json": "5ff887ebfa81b57cc16211cf5368bc827b1910d24a2909971eaa7225a7a28312",
+    "reports/card-scenario-batches.json": "42daef3cb8ca4fb24135ccfebd578afcd8f639aedb5ac9a8d9d83e2c1856fef1",
+    "reports/card-scenario-batches.md": "8e14f47e89deb34309ef7a668caf2475980aa95a45226f3847dbdb8094f6dd8d"
+  },
+  "limits": [
+    "Four selected paragraphs only, not full-catalog certification.",
+    "Network scenarios hold automatic phase driving to isolate transport.",
+    "Current generated scenario reports reuse historical broad browser results; no new 450-card browser campaign.",
+    "No physical devices or real Safari Mac; its reported issue remains open."
+  ]
+}

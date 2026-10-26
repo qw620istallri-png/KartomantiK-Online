@@ -96,6 +96,8 @@ class RemovalEffectsMixin:
         }
 
     def _rules_result_stalemate_to_support_disabled(self, action, result, player_id, player):
+        if self.rules_support_entry_locked(player_id, put=True):
+            return {"kind": result.get("kind"), "status": "prevented"}
         moved = []
         for item in list(self.rules_confrontation_items(player_id, ("stalemate",))):
             item["stackedOn"] = None

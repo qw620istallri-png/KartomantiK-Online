@@ -581,7 +581,8 @@ function handleServerMessage(msg) {
       showToast(localizeServerError(msg.message), true);
     }
     console.warn("Server error:", msg.message);
-    releaseRulesBoardFlowAfterError();
+    if (msg.code === "rules_context_changed") closeRulesBoardFlow();
+    else releaseRulesBoardFlowAfterError();
     if (rulesChoiceRetry) rulesChoiceRetry();
     // a refused destination leaves the other destinations usable (drag or click)
     $$("#rulesChoicePanel [data-rules-destination]:disabled").forEach((button) => { button.disabled = false; });
@@ -753,6 +754,16 @@ function showScryPopup(cardIds) {
 // ---------------------------------------------------------------- actions (send)
 
 function send(payload) {
+  if (latestState?.rulesEngine?.enabled && !isObserver
+      && ["declare_rules_action", "pass_priority", "pass_phase"].includes(payload.type)
+      && !("rulesContext" in payload)) {
+    const stack = latestState.rulesEngine.actionStack || [];
+    payload = { ...payload, rulesContext: {
+      turn: Number(latestState.phaseTracker?.turn || 1),
+      phaseId: currentPhaseUi().phase?.id,
+      topActionId: stack.length ? stack[stack.length - 1].id : null,
+    } };
+  }
   if (ws && ws.readyState === WebSocket.OPEN) ws.send(JSON.stringify(payload));
 }
 

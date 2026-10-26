@@ -1313,14 +1313,23 @@ class TriggersMixin:
                 self.queue_rules_simultaneous_actions(queued)
         return queued
 
-    def queue_rules_effect_support_entry(self, item, from_zone=None):
-        """Queue enter-the-field triggers for a face-up Support put in play by an effect."""
-        triggered = self.queue_rules_battlefield_entry_triggers(
-            item["cardId"], item["ownerId"], item["id"], True, defer=True,
-        )
+    def queue_rules_effect_support_entry(self, item, from_zone=None, *, enters_field=True):
+        """A put enters the CZ; only a card arriving from outside also enters the field."""
+        triggered = []
+        if enters_field:
+            triggered.extend(self.queue_rules_battlefield_entry_triggers(
+                item["cardId"], item["ownerId"], item["id"], True, defer=True,
+            ))
         triggered.extend(self.queue_rules_support_entry_triggers(
             item, played=False, from_zone=from_zone, defer=True,
         ))
+        triggered.extend(self.queue_rules_field_zone_entry_triggers(
+            item, "confrontation", defer=True,
+        ))
+        if enters_field:
+            triggered.extend(self.queue_rules_manifestation_entry_watchers(
+                item, played=False, defer=True,
+            ))
         if triggered:
             self.queue_rules_simultaneous_actions(triggered)
         return triggered

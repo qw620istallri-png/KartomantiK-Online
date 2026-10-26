@@ -161,3 +161,92 @@ qui reste à reproduire. Les [notes de version](RELEASE_140_1.md) résument les
 corrections publiées. Les résultats complets de
 matrice, traces et parcours des 450 cartes de la version 140 restent historiques ;
 les nouvelles preuves Python et UI portent leur propre empreinte de source.
+
+## Suite locale sur la latence et les reconnexions
+
+L'[audit des séquences réseau](AUDIT_LATENCY_AFTER_140_1.md) ajoute dix scénarios
+à deux connexions et corrige les commandes périmées ainsi que l'avance
+automatique consécutive à un simple refus. Les preuves locales sont séparées
+dans `reports/systematic-audit/latency-followup/` ; la publication 140.1 n'est
+pas modifiée par ces nouveaux résultats.
+
+## Suite locale des clauses de Soutien
+
+L'[audit des clauses et interactions de Soutien](AUDIT_SUPPORT_CLAUSES_AFTER_140_1.md)
+ajoute 26 méthodes avec des attentes explicites pour 15 paragraphes de 12 cartes.
+Il corrige les déclenchements omis après certaines mises en Soutien, la pioche de
+Mazzolong après le jeu spécial de Chabak et le contournement de Pin Down par cinq
+mises en jeu déjà en attente. Les associations de clauses et leurs résultats
+sont conservés dans `reports/systematic-audit/support-followup/clauses.json`.
+Les branches absentes de ce registre ne sont pas déclarées couvertes.
+
+La campagne générale a été rejouée sur ces sources : 1 270 tests Python, 13 suites
+UI, 450 rendus et 182 actions navigateur, 40 traces / 12 175 étapes, ainsi que la
+matrice complète et les 450 illustrations distantes, sans échec. Le
+[rapport courant et ses limites](../reports/systematic-audit/support-followup/EXECUTIONS.md)
+conserve cette preuve séparément des campagnes historiques. La couverture
+sémantique de chaque clause et de toutes ses branches reste incomplète.
+
+## Suite locale des enchaînements et de leurs conséquences
+
+L'[audit des conséquences d'Enchaînement](AUDIT_CHAIN_OUTCOMES_AFTER_140_1.md)
+ajoute 31 tests, dont deux scénarios réseau, pour 15 paragraphes sélectionnés de
+huit cartes. Il corrige les destinations et mémoires d'Urocione, le mélange de
+Lady of the Humps quand Chain n'aboutit pas, les interdictions de Chain et la
+mémoire du Vaisseau d'origine de Dol. Les preuves explicites sont dans
+`reports/systematic-audit/chain-outcomes-followup/clauses.json`.
+Les preuves générales de la passe Soutien précédente restent historiques ; les
+branches non associées à des assertions ne deviennent pas couvertes par ce lot.
+
+La preuve finale de cette passe comprend 1 301 tests Python sans échec ni test
+ignoré et quatre suites UI ciblées réussies. Le
+[rapport des enchaînements](../reports/systematic-audit/chain-outcomes-followup/EXECUTIONS.md)
+distingue ces exécutions actuelles des campagnes générales précédentes.
+
+## Suite locale WebKit, distribution et jetons
+
+L'[audit de pile WebKit et de clauses chiffrées](AUDIT_STACK_WEBKIT_AND_DISTRIBUTION_AFTER_140_1.md)
+ajoute 24 scénarios de pile dans Chrome/WebKit et 19 tests de branches pour
+Echo of the Wilds et Stampeding Brood. Le défaut signalé dans la pile sur Safari
+Mac reste non reproduit : WebKit Windows ne certifie pas ce navigateur réel.
+Les preuves nouvelles sont séparées dans `safari-stack-followup/` et
+`distribution-token-followup/`. Aucun correctif spéculatif ni publication.
+
+## Suite locale des recherches et déclarations de noms
+
+L'[audit des recherches de Deck](AUDIT_DECK_SEARCH_AFTER_140_1.md) ajoute 25 tests
+de clauses pour Hermeto, Recall, Mejik et Poopom, dont deux scénarios réseau.
+Il corrige la révélation omise après recherche et le nom de Mejik choisi trop
+tard. Six configurations navigateur couvrent les choix et journaux dans trois
+langues sur PC et mobile paysage. Les preuves, les échecs avant correction et
+les limites sont conservés dans `reports/systematic-audit/deck-search-followup/`.
+
+## Suite locale du passage automatique et des phases
+
+L'[audit de l'auto-skip et des phases](AUDIT_AUTO_PHASES_AFTER_140_1.md) ajoute
+19 tests et rejoue 59 scénarios ciblés. Il corrige l'arrêt des longues piles à
+la limite de 60 opérations ainsi que la reprise des phases vides lorsque la
+dernière carte tombe exactement sur cette limite. Il ajoute un garde-fou pour
+les états manuels/inactifs et vérifie les choix, les réponses, les quinze étapes
+et la publication de chaque résolution. Les preuves avant/après sont dans
+`reports/systematic-audit/auto-phase-followup/`.
+
+## Suite locale des retours en main et interdictions de rejouer
+
+L'[audit des retours et du rejeu](AUDIT_BOUNCE_REPLAY_AFTER_140_1.md) ajoute
+24 méthodes pour six paragraphes sélectionnés de Pigon, Chiff and Chaff,
+Atavic Introspection et Abandon. Il ferme le contournement du verrou par
+déclaration sur la pile, aligne la disponibilité pour le passage automatique
+et limite le déclenchement de Chiff à sa propre entrée en Soutien. Deux
+scénarios réseau vérifient la reconnexion et les copies identiques.
+Les preuves avant/après et leurs limites sont séparées dans
+`reports/systematic-audit/bounce-replay-followup/`.
+
+## Publication 140.2
+
+Les suites locales depuis 140.1 sont intégrées à la
+[version 140.2](RELEASE_140_2.md). La validation de publication rejoue
+1 388 tests Python et 14 suites UI, tous réussis, avec les versions du client
+et du service worker synchronisées. Les preuves de publication sont séparées
+dans `reports/systematic-audit/release-140-2/` ; les empreintes des campagnes
+précédentes restent historiques et ne certifient pas toutes les branches.

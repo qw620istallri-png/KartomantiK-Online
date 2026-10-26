@@ -20,6 +20,6 @@ reports/KKO_NORMAL_SERVER_MAT_VFX_*.png
 
 # Systematic audit: keep coverage/evidence, omit transient diagnostics and captures
 reports/systematic-audit/*-debug.json
-reports/systematic-audit/browser-progress.json
-reports/systematic-audit/*.log
-reports/systematic-audit/*.png
+reports/systematic-audit/**/browser-progress.json
+reports/systematic-audit/**/*.log
+reports/systematic-audit/**/*.png

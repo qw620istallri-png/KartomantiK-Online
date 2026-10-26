@@ -870,6 +870,7 @@ async def send_error(ws, message, code=None):
     if code:
         payload["code"] = code
     await send_to(ws, payload)
+    return False  # Validation failures must never drive automatic game progress.
 
 
 # ---------------------------------------------------------------- action handlers
@@ -1075,7 +1076,20 @@ async def auto_advance_rules_phases(session, actor_id):
         return 0
     session._auto_advance_running = True
     try:
-        return await _auto_advance_rules_phases(session, actor_id)
+        total_steps = 0
+        while session.rules_engine.get("enabled") and session.phase_tracker.get("enabled"):
+            batch_steps = await _auto_advance_rules_phases(session, actor_id)
+            total_steps += batch_steps
+            if (batch_steps < AUTO_PASS_MAX_STEPS or session.ended
+                    or session.rules_engine.get("pendingChoice")):
+                break
+            if (not session.rules_engine.get("actionStack")
+                    and session.rules_auto_pass_player() is None):
+                break
+            # The budget is a cooperative yield, not a request for another
+            # player message. Keep one driver and recheck responses next batch.
+            await asyncio.sleep(0)
+        return total_steps
     finally:
         session._auto_advance_running = False
 
@@ -1120,6 +1134,20 @@ async def _auto_advance_rules_phases(session, actor_id):
     return steps
 
 
+RULES_CONTEXT_MESSAGE_TYPES = {"declare_rules_action", "pass_priority", "pass_phase"}
+
+
+def rules_command_context_matches(session, context):
+    if (not isinstance(context, dict)
+            or not {"turn", "phaseId", "topActionId"}.issubset(context)
+            or type(context.get("turn")) is not int):
+        return False
+    stack = session.rules_engine.get("actionStack") or []
+    return (context["turn"] == session.phase_tracker["turn"]
+            and context["phaseId"] == session.current_phase_id()
+            and context["topActionId"] == (stack[-1]["id"] if stack else None))
+
+
 async def handle_message(ws, info, data):
     session = info["session"]
     actor_id = info["playerId"]
@@ -1134,6 +1162,13 @@ async def handle_message(ws, info, data):
         "chat_message", "leave_session", "request_log", "reset_board",
     }:
         return await send_error(ws, "The game has already ended.")
+
+    if (role == "player" and session.rules_engine.get("enabled")
+            and msg_type in RULES_CONTEXT_MESSAGE_TYPES and "rulesContext" in data
+            and not rules_command_context_matches(session, data["rulesContext"])):
+        await send_error(ws, "The phase or Stack has changed. Review the table and try again.", code="rules_context_changed")
+        await broadcast_state(session)
+        return False  # A rejected old intent must not start another auto-pass loop.
 
     if session.mode == "tournament" and role == "player":
         lobby_messages = {"import_deck", "set_activity", "chat_message", "leave_session", "request_log"}
@@ -1597,7 +1632,8 @@ async def handle_message(ws, info, data):
             if current_choice_id != previous_choice_id:
                 session.touch()
                 await broadcast_state(session)
-            return
+                return  # A real cancellation can resume the suspended sequence.
+            return False
         for declared in result.pop("_declaredActions", []):
             log_rules_declared_action(session, declared)
         for completed in result.pop("_resolvedActions", []):
@@ -2820,10 +2856,10 @@ async def handler(ws):
                 # allow re-join (e.g. reconnect flow) to refresh player info
                 await handle_join(ws, data)
                 continue
-            await handle_message(ws, info, data)
+            handled = await handle_message(ws, info, data)
             session = info["session"]
             if (
-                data.get("type") in AUTO_PASS_MESSAGE_TYPES
+                handled is not False and data.get("type") in AUTO_PASS_MESSAGE_TYPES
                 and session.rules_engine.get("enabled")
                 and await auto_advance_rules_phases(session, info["playerId"])
             ):

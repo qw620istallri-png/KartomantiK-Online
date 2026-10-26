@@ -1,0 +1,39 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "e7ff61ad97354a3dc0c1b40f09dcdb98e09b53c2724b286571ea2505e0c6d605",
+  "finishedAt": "2026-10-26T09:15:48.611694+00:00",
+  "published": false,
+  "version": "140.1",
+  "newProductionFixes": 0,
+  "summary": {
+    "python": {
+      "executed": 1320,
+      "passed": 1320,
+      "failed": 0,
+      "skipped": 0
+    },
+    "selectedClauses": {
+      "executed": 19,
+      "passed": 19,
+      "failed": 0,
+      "skipped": 0,
+      "selectedParagraphs": 2,
+      "cardsWithSelectedClauseProof": 2,
+      "fullCatalogSemanticCertification": false
+    },
+    "stackBrowser": {
+      "executed": 24,
+      "failed": 0
+    }
+  },
+  "artifacts": {
+    "reports/systematic-audit/distribution-token-followup/clauses.json": "bd46bd461cfcbcfa4c895331f4e3f58bddbdac01a626a5b2ace073d23e32a033",
+    "reports/systematic-audit/distribution-token-followup/unit-tests.json": "701e83a1b69bb129404a5728a1cdba470db7e8e58ee13f95718e735c0497bd5a",
+    "reports/systematic-audit/safari-stack-followup/browser.json": "a53ae0f4f371cc1a3f889fc3608a7fba6617cde00fe0b768a25f8175901f29b3"
+  },
+  "limits": [
+    "Safari Mac issue remains unreplicated; WebKit 27.2 Windows is not Safari Mac.",
+    "Two selected card paragraphs only; full 450-card semantic certification remains incomplete.",
+    "No fresh full-catalog browser, matrix, traces or physical-device campaign in this batch."
+  ]
+}

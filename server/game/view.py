@@ -45,7 +45,7 @@ class ViewMixin:
                                      if key not in {"top", "bottom", "extra"}}
                                     for group in result.get("groups") or []]
             if (kind in {"peek_top_card", "deck_bottom_from_hand"}
-                    or kind == "search_deck" and not value.get("interzone")
+                    or kind == "search_deck" and not value.get("interzone") and not value.get("revealed")
                     or kind == "suspend_hand_will" and (viewer_id is None or viewer_id != value.get("playableByPlayerId"))):
                 result.pop("cardId", None)
                 result.pop("cardIds", None)

@@ -1,0 +1,393 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "1f52e2db65981db08ee88559df11725c7fcee78151f2d38ad2e66e09eaa40ba9",
+  "seeds": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "summary": {
+    "traces": 40,
+    "steps": 12175,
+    "failed": 0
+  },
+  "traces": [
+    {
+      "seed": 0,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 0,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 84,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 1,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 1,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 69,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 2,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 2,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 78,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 3,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 3,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 69,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 4,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 4,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 90,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 5,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 5,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 72,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 6,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 6,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 84,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 7,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 7,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 72,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 8,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 8,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 75,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 9,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 9,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 78,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 10,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 10,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 93,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 11,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 11,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 78,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 12,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 12,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 78,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 13,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 13,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 66,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 14,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 14,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 81,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 15,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 15,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 84,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 16,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 16,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 84,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 17,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 17,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 87,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 18,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 18,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 81,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    },
+    {
+      "seed": 19,
+      "family": "zone-ownership-suspend",
+      "status": "pass",
+      "steps": 530,
+      "cards": 450
+    },
+    {
+      "seed": 19,
+      "family": "stack-cost-power-cleanse-expiry",
+      "status": "pass",
+      "steps": 72,
+      "cards": [
+        "bithch9c4vi77cu_en",
+        "obn1uv72ewxv3y5_en",
+        "inner-deserts-145"
+      ]
+    }
+  ]
+}

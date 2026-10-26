@@ -1,0 +1,15 @@
+{
+  "sourceDigest": "8004f5fa1b3820cd9cd06e4331dd55e5fa4365d21f914b95d1b04ef329333801",
+  "summary": {
+    "executed": 1,
+    "failed": 1
+  },
+  "tests": [
+    {
+      "testId": "test_auto_phase_audit.AutoPhaseAudit.test_empty_stack_at_exact_budget_boundary_still_advances_skippable_phases",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\runners.py\", line 118, in run\n    return self._loop.run_until_complete(task)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\AppData\\Local\\Programs\\Python\\Python312\\Lib\\asyncio\\base_events.py\", line 691, in run_until_complete\n    return future.result()\n           ^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_auto_phase_audit.py\", line 84, in test_empty_stack_at_exact_budget_boundary_still_advances_skippable_phases\n    self.assertEqual(s.phase_tracker[\"turn\"], 3)\nAssertionError: 2 != 3\n",
+      "durationSeconds": 0.031
+    }
+  ]
+}

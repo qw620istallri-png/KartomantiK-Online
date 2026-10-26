@@ -1,0 +1,306 @@
+{
+  "sourceDigest": "b1204f9ba509ce49deea357784a1038ccb6868574263c8021026ac5a9a8ef3be",
+  "stage": "after initial corrections; before Dol memory correction",
+  "tests": [
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_lock_only_applies_to_its_player_and_current_turn",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_lock_only_applies_to_its_player_and_current_turn (player='p1', turn=2)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_lock_only_applies_to_its_player_and_current_turn (player='p2', turn=2)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_lock_only_applies_to_its_player_and_current_turn (player='p1', turn=1)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Pin Down', zone='hand')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Pin Down', zone='deck')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Pin Down', zone='graveyard')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Pin Down', zone='receptacle')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Wretched Arena', zone='hand')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Wretched Arena', zone='deck')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Wretched Arena', zone='graveyard')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_chain_play_locks_filter_candidates_and_prevent_direct_mutation (lock='Wretched Arena', zone='receptacle')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.188
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_can_chain_owned_cards_from_either_vessel_but_not_opponents_cards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_can_chain_owned_cards_from_either_vessel_but_not_opponents_cards (container='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_can_chain_owned_cards_from_either_vessel_but_not_opponents_cards (container='p2')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_effect_exit_returns_to_original_vessel_even_after_source_departure",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_effect_exit_returns_to_original_vessel_even_after_source_departure (container='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_effect_exit_returns_to_original_vessel_even_after_source_departure (container='p2')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_return_memory_survives_vessel_hand_and_a_later_field_entry",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_chain_outcome_clause_audit.py\", line 370, in test_dol_return_memory_survives_vessel_hand_and_a_later_field_entry\n    self.assertEqual((result[\"zone\"], result[\"containerId\"]), (\"receptacle\", \"p2\"))\nAssertionError: Tuples differ: ('graveyard', 'p1') != ('receptacle', 'p2')\n\nFirst differing element 0:\n'graveyard'\n'receptacle'\n\n- ('graveyard', 'p1')\n+ ('receptacle', 'p2')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_dol_win_exile_is_not_replaced_by_its_effect_exit_rule",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_loses_exactly_ten_even_without_a_chainable_hand",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_loses_exactly_ten_even_without_a_chainable_hand (hand=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_loses_exactly_ten_even_without_a_chainable_hand (hand=['w2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_loses_exactly_ten_even_without_a_chainable_hand (hand=['m3'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_help_winning_chain_is_exiled_without_exiling_the_source_will_again",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_failed_search_still_shuffles_deck_without_revealing_it",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_failed_search_still_shuffles_deck_without_revealing_it (deck=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_failed_search_still_shuffles_deck_without_revealing_it (deck=['w2', 'pw3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_failed_search_still_shuffles_deck_without_revealing_it (deck=['nlbgn1ranlrd09r_en', 'w2'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_nonwinning_chain_is_not_exiled",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_nonwinning_chain_is_not_exiled (stalemate=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_nonwinning_chain_is_not_exiled (stalemate=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_search_is_mandatory_and_shuffles_only_after_a_valid_selection",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_suspension_replaces_chain_but_does_not_skip_final_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_lady_win_exiles_foreign_owned_chain_after_cleanse_and_host_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_looj_loss_returns_to_owner_and_scores_printed_five_for_actual_winning_opponent",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_looj_loss_returns_to_owner_and_scores_printed_five_for_actual_winning_opponent (reverse_order=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_looj_loss_returns_to_owner_and_scores_printed_five_for_actual_winning_opponent (reverse_order=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_mind_parasite_exile_memory_survives_source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_previously_queued_urocione_cannot_chain_after_a_support_play_lock",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_previously_queued_urocione_cannot_chain_after_a_support_play_lock (lock='Pin Down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_previously_queued_urocione_cannot_chain_after_a_support_play_lock (lock='Wretched Arena')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_does_not_attach_to_another_copy_still_in_hand",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_is_forgotten_after_deck_or_exile",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_is_forgotten_after_deck_or_exile (zone='deck')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_is_forgotten_after_deck_or_exile (zone='exile')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry (zone='hand')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry (zone='graveyard')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_memory_survives_hand_limbo_and_vessel_then_new_entry (zone='receptacle')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_no_chainable_hand_does_not_request_an_empty_choice",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_no_chainable_hand_does_not_request_an_empty_choice (hand=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_no_chainable_hand_does_not_request_an_empty_choice (hand=['w2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_no_chainable_hand_does_not_request_an_empty_choice (hand=['nlbgn1ranlrd09r_en'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_private_choice_can_be_declined_without_spending_or_moving",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_snapshot_win_does_not_change_after_later_control_change",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_stalemate_does_not_apply_victory_destination",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_victory_memory_survives_cleanse_and_source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_winner_goes_to_opponent_of_immutable_owner",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_winner_goes_to_opponent_of_immutable_owner (owner='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_chain_outcome_clause_audit.ChainOutcomeClauseAudit.test_urocione_winner_goes_to_opponent_of_immutable_owner (owner='p2')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    }
+  ]
+}

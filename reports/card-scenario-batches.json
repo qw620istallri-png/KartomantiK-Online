@@ -11,7 +11,7 @@
     "abilities": 496,
     "carriers": 500,
     "playerActions": 182,
-    "playerMessages": 530,
+    "playerMessages": 528,
     "genericSteps": 1265
   },
   "batches": [
@@ -11679,7 +11679,7 @@
           "players": {
             "ok": true,
             "actionableAbilities": 1,
-            "messages": 3,
+            "messages": 1,
             "views": 2,
             "failures": []
           },
