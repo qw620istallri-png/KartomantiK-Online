@@ -9219,6 +9219,9 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         session.pass_rules_priority("p1")
         choice = session.rules_engine["pendingChoice"]
         self.assertEqual((choice["kind"], choice["playerId"]), ("discard_from_hand", "p2"))
+        self.assertNotIn("m-8", p1["zones"]["hand"])
+        error, _ = session.resolve_rules_choice("p2", choice["id"], card_ids=["m-5"])
+        self.assertIsNone(error)
         self.assertIn("m-8", p1["zones"]["hand"])
 
     def test_atavic_volatility_disables_a_target_each_turn_after_ten_coils(self):

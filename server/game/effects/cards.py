@@ -1150,12 +1150,7 @@ class CardsEffectsMixin:
         }
 
     def _rules_result_discard_hand_each_opponent(self, action, result, player_id, player):
-        if int(result.get("drawOwner") or 0):
-            self.request_rules_draw(
-                player_id, int(result["drawOwner"]),
-                source_controller_id=action.get("controllerId"),
-            )
-        return self.apply_rules_action_result({
+        payload = self.apply_rules_action_result({
             **action,
             "targets": [{
                 "kind": "player",
@@ -1169,6 +1164,20 @@ class CardsEffectsMixin:
                 },
             },
         })
+        draw_count = int(result.get("drawOwner") or 0)
+        if draw_count:
+            continuation = {"playerId": player_id, "count": draw_count,
+                            "sourceControllerId": action.get("controllerId")}
+            if (payload or {}).get("kind") == "choice_required":
+                # The opponent must finish discarding before the controller draws.
+                # Keep the continuation on that choice, independent of the source.
+                self.rules_engine["pendingChoice"]["_ownerDrawAfterDiscard"] = continuation
+            else:
+                draw_result = self.request_rules_draw(player_id, draw_count,
+                    source_controller_id=action.get("controllerId"))
+                if payload is not None:
+                    payload["ownerDraw"] = draw_result
+        return payload
 
     def _rules_result_draw_owner(self, action, result, player_id, player):
         if (

@@ -250,3 +250,23 @@ Les suites locales depuis 140.1 sont intégrées à la
 et du service worker synchronisées. Les preuves de publication sont séparées
 dans `reports/systematic-audit/release-140-2/` ; les empreintes des campagnes
 précédentes restent historiques et ne certifient pas toutes les branches.
+
+## Publication 140.3 et suite locale des Atavic
+
+La [version 140.3](RELEASE_140_3.md) publie le réglage visible de création et le
+transport incrémental. Les preuves de publication sont séparées dans
+`reports/systematic-audit/release-140-3/` ; les comparaisons de trafic restent
+des fixtures locales, sans prévision de facture Render.
+
+La [passe Atavic suivante](AUDIT_ATAVIC_END_AFTER_140_3.md) ajoute 22 méthodes
+pour cinq paragraphes sélectionnés de deux cartes, dont deux parcours réseau.
+Elle corrige la pioche trop précoce d'Atavic Oppression et le choix de Kanon
+écrasé. Les branches de marqueurs, refus, seuils et choix de fin de tour sont
+documentées dans `reports/systematic-audit/atavic-end-followup/`.
+
+L'[arbitrage de ciblage d'Introspection](AUDIT_ATAVIC_LIMBO_AFTER_140_3.md)
+autorise deux cartes dans un seul des deux Limbos et confirme le Deck du
+propriétaire comme destination. Neuf nouvelles méthodes et six configurations
+navigateur complètent cette branche. Les preuves sont séparées dans
+`reports/systematic-audit/atavic-limbo-followup/` ; les autres branches non
+exécutées ne sont pas déclarées couvertes.

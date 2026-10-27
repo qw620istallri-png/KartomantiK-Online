@@ -459,9 +459,11 @@ function renderRulesChoiceScreen() {
   }
   closeButton.classList.add("hidden");
   if (choice.kind === "deck_reorder") {
-    $("#rulesChoiceHeading").textContent = t("rulesDeckReorderHeading");
-    $("#rulesChoiceText").textContent = rulesText("rulesDeckReorderText", {
+    const limboGroup = choice.groups?.length === 1 && choice.groups[0].fromZone === "graveyard" ? choice.groups[0] : null;
+    $("#rulesChoiceHeading").textContent = t(limboGroup ? "rulesLimboReorderHeading" : "rulesDeckReorderHeading");
+    $("#rulesChoiceText").textContent = rulesText(limboGroup ? "rulesLimboReorderText" : "rulesDeckReorderText", {
       card: cardName(choice.sourceCardId),
+      player: limboGroup ? rulesPlayerName(limboGroup.playerId) : "",
     });
     // Drag and drop: each group has a lane per destination (top / bottom / extra);
     // dragging a card inside a lane reorders it, dragging it to another lane moves it.
@@ -487,6 +489,7 @@ function renderRulesChoiceScreen() {
     options.innerHTML = `
       ${(choice.groups || []).map((group) => `
         <section class="rules-reorder-group" data-rules-reorder-group="${esc(group.playerId)}">
+          ${group.fromZone === "graveyard" ? `<strong>${esc(rulesText("rulesLimboDeckOwner", { player: rulesPlayerName(group.playerId) }))}</strong>` : ""}
           <div class="rules-reorder-strip rules-reorder-pool" data-rules-reorder-strip="pool">
             ${(group.cardIds || []).map((cardId, index) => initialSide(group, index) === "pool" ? cardMarkup(cardId) : "").join("")}
           </div>

@@ -1,0 +1,452 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "fc2166076381f76a3e0470b4cdaa53e407306c504e64415f1105079a0f39cfd8",
+  "finishedAt": "2026-10-27T11:08:59.450947+00:00",
+  "published": false,
+  "summary": {
+    "executed": 20,
+    "passed": 18,
+    "failed": 2,
+    "skipped": 0,
+    "selectedParagraphs": 5,
+    "cardsWithSelectedClauseProof": 2
+  },
+  "clauses": [
+    {
+      "cardId": "265f4wdooq43pjn_en",
+      "name": "Atavic Introspection",
+      "paragraphIndex": 1,
+      "printedParagraph": "Whenever you play a {B} card, put a Control counter on the Atavic Introspection.",
+      "paragraphSha256": "7f26d71b743a4bdb605dfeee7b149b6f0644f1ce9010fb1026a6d45b707b7140",
+      "expectedBehavior": "Each own blue play adds exactly one Control; two events add two. Wrong colors, opponent plays, activated effects, put events and inactive sources do not count; current controller governs ownership of the effect.",
+      "testIds": [
+        "test_atavic_end_clauses.AtavicEndClauses.test_matching_plays_add_one_counter_per_distinct_event",
+        "test_atavic_end_clauses.AtavicEndClauses.test_wrong_color_opponent_play_and_activation_do_not_count",
+        "test_atavic_end_clauses.AtavicEndClauses.test_counter_follows_current_controller_not_immutable_owner",
+        "test_atavic_end_clauses.AtavicEndClauses.test_face_down_or_blanked_source_does_not_collect",
+        "test_atavic_end_clauses.AtavicEndClauses.test_putting_a_manifestation_on_field_is_not_a_play_event"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "265f4wdooq43pjn_en",
+      "name": "Atavic Introspection",
+      "paragraphIndex": 3,
+      "printedParagraph": "As long as there are 10 or more Control counters on the Atavic Introspection, at the end of the turn you can choose 2 cards in the Limbo and put one on the top and one on the bottom of your deck.",
+      "paragraphSha256": "05c2d6b0ba4bd3dfd73345137858c3c0894484d089580fc1b4db59975ba6ec4f",
+      "expectedBehavior": "Ten counters enable an optional End effect without spending counters. Require two available cards; refuse empty/impossible choices, put exactly one on top and one on bottom in the chosen order, no shuffle; validate orders atomically and retain effect after source departure.",
+      "testIds": [
+        "test_atavic_end_clauses.AtavicEndClauses.test_end_trigger_needs_ten_and_does_not_spend_counters",
+        "test_atavic_end_clauses.AtavicEndClauses.test_skipped_end_phase_suppresses_only_its_controller",
+        "test_atavic_end_clauses.AtavicEndClauses.test_declining_end_effect_does_not_move_cards_or_spend_counters",
+        "test_atavic_end_clauses.AtavicEndClauses.test_introspection_does_not_offer_with_fewer_than_two_cards",
+        "test_atavic_end_clauses.AtavicEndClauses.test_introspection_places_exact_top_and_bottom_in_either_order",
+        "test_atavic_end_clauses.AtavicEndClauses.test_introspection_invalid_orders_and_wrong_player_are_atomic",
+        "test_atavic_end_clauses.AtavicEndClauses.test_introspection_effect_survives_source_departure_after_targets"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "a058t24med4h5nx_en",
+      "name": "Atavic Oppression",
+      "paragraphIndex": 1,
+      "printedParagraph": "Whenever you play a {P} card, put a Fatigue counter on Atavic Oppression.",
+      "paragraphSha256": "1dae16df94735cdcafe507fd686194e69524945d272d239e4f300262acbe9c10",
+      "expectedBehavior": "Each own purple play adds exactly one Fatigue; event/controller and inactive-source exclusions match the printed condition.",
+      "testIds": [
+        "test_atavic_end_clauses.AtavicEndClauses.test_matching_plays_add_one_counter_per_distinct_event",
+        "test_atavic_end_clauses.AtavicEndClauses.test_wrong_color_opponent_play_and_activation_do_not_count",
+        "test_atavic_end_clauses.AtavicEndClauses.test_counter_follows_current_controller_not_immutable_owner",
+        "test_atavic_end_clauses.AtavicEndClauses.test_face_down_or_blanked_source_does_not_collect",
+        "test_atavic_end_clauses.AtavicEndClauses.test_putting_a_manifestation_on_field_is_not_a_play_event"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "a058t24med4h5nx_en",
+      "name": "Atavic Oppression",
+      "paragraphIndex": 2,
+      "printedParagraph": "Remove 5 Fatigue counters: Each opponent discards a card from their hand and you draw a card.",
+      "paragraphSha256": "4c8d6b1854f4345d98decc91a36be2626a3e06ec109dea86658277a9e708c547",
+      "expectedBehavior": "Five counters are paid before responses. Opponent discards first, then controller draws one, including if no discard was possible. Source departure does not cancel the effect; invalid/repeated choices cannot draw. Kanon's draw replacement remains available after the discard.",
+      "testIds": [
+        "test_atavic_end_clauses.AtavicEndClauses.test_oppression_activation_pays_five_before_responses",
+        "test_atavic_end_clauses.AtavicEndClauses.test_oppression_discards_before_owner_draws",
+        "test_atavic_end_clauses.AtavicEndClauses.test_oppression_draw_still_happens_when_opponent_cannot_discard",
+        "test_atavic_end_clauses.AtavicEndClauses.test_oppression_source_departure_and_duplicate_choice_do_not_cancel_or_redraw",
+        "test_atavic_end_clauses.AtavicEndClauses.test_oppression_invalid_discard_cannot_draw_or_change_the_pending_choice",
+        "test_atavic_end_clauses.AtavicEndClauses.test_oppression_preserves_kanon_draw_replacement_after_discard"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "a058t24med4h5nx_en",
+      "name": "Atavic Oppression",
+      "paragraphIndex": 3,
+      "printedParagraph": "As long as there are 10 or more Fatigue counters on Atavic Oppression, at the end of the turn you can discard up to two cards from your hand.",
+      "paragraphSha256": "c159f019b03143839273f1a6b64f0022981529baa765e5fb8fb616796582c91e",
+      "expectedBehavior": "Ten Fatigue enable optional End discard of zero, one or two available hand cards, without consuming counters; empty hand requires no offer; own skipped End suppresses the effect.",
+      "testIds": [
+        "test_atavic_end_clauses.AtavicEndClauses.test_end_trigger_needs_ten_and_does_not_spend_counters",
+        "test_atavic_end_clauses.AtavicEndClauses.test_skipped_end_phase_suppresses_only_its_controller",
+        "test_atavic_end_clauses.AtavicEndClauses.test_declining_end_effect_does_not_move_cards_or_spend_counters",
+        "test_atavic_end_clauses.AtavicEndClauses.test_oppression_optional_discard_accepts_zero_one_or_two",
+        "test_atavic_end_clauses.AtavicEndClauses.test_oppression_empty_hand_has_no_end_offer"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_counter_follows_current_controller_not_immutable_owner",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_counter_follows_current_controller_not_immutable_owner (card='Atavic Introspection')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_counter_follows_current_controller_not_immutable_owner (card='Atavic Oppression')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_declining_end_effect_does_not_move_cards_or_spend_counters",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_declining_end_effect_does_not_move_cards_or_spend_counters (card='Atavic Introspection')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_declining_end_effect_does_not_move_cards_or_spend_counters (card='Atavic Oppression')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_end_trigger_needs_ten_and_does_not_spend_counters",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_end_trigger_needs_ten_and_does_not_spend_counters (card='Atavic Introspection', amount=9)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_end_trigger_needs_ten_and_does_not_spend_counters (card='Atavic Introspection', amount=10)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_end_trigger_needs_ten_and_does_not_spend_counters (card='Atavic Introspection', amount=15)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_end_trigger_needs_ten_and_does_not_spend_counters (card='Atavic Oppression', amount=9)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_end_trigger_needs_ten_and_does_not_spend_counters (card='Atavic Oppression', amount=10)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_end_trigger_needs_ten_and_does_not_spend_counters (card='Atavic Oppression', amount=15)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.141
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_face_down_or_blanked_source_does_not_collect",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_face_down_or_blanked_source_does_not_collect (card='Atavic Introspection', blank=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_face_down_or_blanked_source_does_not_collect (card='Atavic Introspection', blank=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_face_down_or_blanked_source_does_not_collect (card='Atavic Oppression', blank=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_face_down_or_blanked_source_does_not_collect (card='Atavic Oppression', blank=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_does_not_offer_with_fewer_than_two_cards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_does_not_offer_with_fewer_than_two_cards (cards=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_does_not_offer_with_fewer_than_two_cards (cards=['m2'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_effect_survives_source_departure_after_targets",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_invalid_orders_and_wrong_player_are_atomic",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_invalid_orders_and_wrong_player_are_atomic (option={'top': ['m2', 'w2'], 'bottom': []}, player='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_invalid_orders_and_wrong_player_are_atomic (option={'top': ['m2'], 'bottom': ['m2']}, player='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_invalid_orders_and_wrong_player_are_atomic (option={'top': ['m2'], 'bottom': ['m4']}, player='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_invalid_orders_and_wrong_player_are_atomic (option={'top': ['m2'], 'bottom': ['w2']}, player='p2')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_places_exact_top_and_bottom_in_either_order",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_places_exact_top_and_bottom_in_either_order (cards=('m2', 'w2'), reverse=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_places_exact_top_and_bottom_in_either_order (cards=('m2', 'w2'), reverse=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_places_exact_top_and_bottom_in_either_order (cards=('xzh48oy0ramirce_en', 'pw3'), reverse=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_introspection_places_exact_top_and_bottom_in_either_order (cards=('xzh48oy0ramirce_en', 'pw3'), reverse=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_matching_plays_add_one_counter_per_distinct_event",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_matching_plays_add_one_counter_per_distinct_event (card='Atavic Introspection')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_matching_plays_add_one_counter_per_distinct_event (card='Atavic Oppression')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_activation_pays_five_before_responses",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_activation_pays_five_before_responses (amount=4)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_activation_pays_five_before_responses (amount=5)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_activation_pays_five_before_responses (amount=11)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_discards_before_owner_draws",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_atavic_end_clauses.py\", line 243, in test_oppression_discards_before_owner_draws\n    self.assertEqual(s.players[\"p1\"][\"zones\"][\"hand\"], [], \"The opponent discards before the owner draws\")\nAssertionError: Lists differ: ['m4'] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n'm4'\n\n- ['m4']\n+ [] : The opponent discards before the owner draws\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_draw_still_happens_when_opponent_cannot_discard",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_draw_still_happens_when_opponent_cannot_discard (immune=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_draw_still_happens_when_opponent_cannot_discard (immune=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_empty_hand_has_no_end_offer",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_invalid_discard_cannot_draw_or_change_the_pending_choice",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_invalid_discard_cannot_draw_or_change_the_pending_choice (player='p1', cards=['m2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_invalid_discard_cannot_draw_or_change_the_pending_choice (player='p2', cards=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_invalid_discard_cannot_draw_or_change_the_pending_choice (player='p2', cards=['m3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_invalid_discard_cannot_draw_or_change_the_pending_choice (player='p2', cards=['m2', 'm2'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_optional_discard_accepts_zero_one_or_two",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_optional_discard_accepts_zero_one_or_two (hand=['m2'], count=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_optional_discard_accepts_zero_one_or_two (hand=['m2'], count=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_optional_discard_accepts_zero_one_or_two (hand=['m2', 'm3', 'm4'], count=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_optional_discard_accepts_zero_one_or_two (hand=['m2', 'm3', 'm4'], count=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_optional_discard_accepts_zero_one_or_two (hand=['m2', 'm3', 'm4'], count=2)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_preserves_kanon_draw_replacement_after_discard",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_atavic_end_clauses.py\", line 309, in test_oppression_preserves_kanon_draw_replacement_after_discard\n    self.assertIsNotNone(follow, \"Kanon's replacement must survive the discard continuation\")\nAssertionError: unexpectedly None : Kanon's replacement must survive the discard continuation\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_oppression_source_departure_and_duplicate_choice_do_not_cancel_or_redraw",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_putting_a_manifestation_on_field_is_not_a_play_event",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_putting_a_manifestation_on_field_is_not_a_play_event (card='Atavic Introspection')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_putting_a_manifestation_on_field_is_not_a_play_event (card='Atavic Oppression')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_skipped_end_phase_suppresses_only_its_controller",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_skipped_end_phase_suppresses_only_its_controller (card='Atavic Introspection', skipped='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_skipped_end_phase_suppresses_only_its_controller (card='Atavic Introspection', skipped='p2')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_skipped_end_phase_suppresses_only_its_controller (card='Atavic Oppression', skipped='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_skipped_end_phase_suppresses_only_its_controller (card='Atavic Oppression', skipped='p2')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_atavic_end_clauses.AtavicEndClauses.test_wrong_color_opponent_play_and_activation_do_not_count",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_wrong_color_opponent_play_and_activation_do_not_count (card='Atavic Introspection', played='choleric', player='p1', kind='play_card')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_wrong_color_opponent_play_and_activation_do_not_count (card='Atavic Introspection', played='vitreous', player='p2', kind='play_card')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_wrong_color_opponent_play_and_activation_do_not_count (card='Atavic Introspection', played='vitreous', player='p1', kind='activated_effect')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_wrong_color_opponent_play_and_activation_do_not_count (card='Atavic Oppression', played='choleric', player='p1', kind='play_card')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_wrong_color_opponent_play_and_activation_do_not_count (card='Atavic Oppression', played='melancholic', player='p2', kind='play_card')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_atavic_end_clauses.AtavicEndClauses.test_wrong_color_opponent_play_and_activation_do_not_count (card='Atavic Oppression', played='melancholic', player='p1', kind='activated_effect')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.14
+    }
+  ],
+  "limits": [
+    "Counter stimuli isolate play events from declaration; activated Oppression uses actual declaration and payment.",
+    "Only own-Limbo branches are tested; scope across other Limbos awaits a ruling.",
+    "Identical-copy selection and partial target invalidation placement are outside this batch.",
+    "No certification of other printed paragraphs, all combinations or physical browsers."
+  ]
+}

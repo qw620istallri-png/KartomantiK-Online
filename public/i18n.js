@@ -2610,6 +2610,9 @@ Object.assign(ui.it, {
 
 Object.assign(ui.en, {
   rulesDeckReorderHeading: "Reorder revealed Deck cards",
+  rulesLimboReorderHeading: "Place the chosen Limbo cards",
+  rulesLimboReorderText: "{card} resolved. Place the chosen cards from {player}’s Limbo on the top or bottom of that player’s Deck.",
+  rulesLimboDeckOwner: "{player}’s Limbo → their Deck",
   rulesDeckReorderText: "{card} resolved. Choose which revealed cards stay on top or move to the bottom, and set their order.",
   rulesDeckTop: "Top of Deck",
   rulesDeckOrder: "Order",
@@ -2733,6 +2736,9 @@ Object.assign(ui.en, {
 
 Object.assign(ui.fr, {
   rulesDeckReorderHeading: "Réordonner les cartes révélées des Decks",
+  rulesLimboReorderHeading: "Placer les cartes choisies au Limbo",
+  rulesLimboReorderText: "{card} est résolue. Répartissez les cartes choisies dans le Limbo de {player} au-dessus ou au-dessous de son Deck.",
+  rulesLimboDeckOwner: "Limbo de {player} → son Deck",
   rulesDeckReorderText: "{card} est résolue. Choisissez les cartes révélées qui restent au-dessus ou vont sous le Deck, puis leur ordre.",
   rulesDeckTop: "Dessus du Deck",
   rulesDeckOrder: "Ordre",
@@ -2856,6 +2862,9 @@ Object.assign(ui.fr, {
 
 Object.assign(ui.it, {
   rulesDeckReorderHeading: "Riordina le carte rivelate dei Deck",
+  rulesLimboReorderHeading: "Disponi le carte scelte nel Limbo",
+  rulesLimboReorderText: "{card} si è risolta. Metti le carte scelte nel Limbo di {player} in cima o in fondo al suo Deck.",
+  rulesLimboDeckOwner: "Limbo di {player} → suo Deck",
   rulesDeckReorderText: "{card} si è risolta. Scegli quali carte rivelate restano in cima o vanno in fondo e impostane l'ordine.",
   rulesDeckTop: "Cima del Deck",
   rulesDeckOrder: "Ordine",

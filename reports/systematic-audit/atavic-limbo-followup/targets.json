@@ -1,0 +1,40 @@
+{
+  "sourceDigest": "eee831c9370601165a815919fe3bbd9b3130c26e9d3bfb60aad6da7850ef020e",
+  "scope": "Target selection only; destination ruling pending",
+  "tests": [
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_mixed_limbo_target_submission_is_rejected_atomically",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_mixing_is_disallowed_by_target_rules_even_with_many_cards",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_one_card_per_limbo_is_not_an_available_pair",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_opponent_limbo_alone_offers_the_trigger",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_single_available_limbo_does_not_force_the_other_one",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_two_cards_in_either_single_limbo_are_legal",
+      "status": "pass",
+      "durationSeconds": 0.047
+    }
+  ],
+  "summary": {
+    "executed": 6,
+    "failed": 0
+  }
+}

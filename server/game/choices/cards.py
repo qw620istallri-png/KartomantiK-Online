@@ -1204,6 +1204,13 @@ class CardsChoicesMixin:
                 break
             drawn += 1
         self.rules_engine["pendingChoice"] = None
+        owner_draw = None
+        continuation = choice.get("_ownerDrawAfterDiscard")
+        if continuation:
+            owner_draw = self.request_rules_draw(
+                continuation["playerId"], continuation["count"],
+                source_controller_id=continuation.get("sourceControllerId"),
+            )
         return None, {
             "kind": "discard_then_draw" if requested_draw else "discard",
             "playerId": player_id,
@@ -1218,4 +1225,5 @@ class CardsChoicesMixin:
             **({"weakened": weakened} if weakened else {}),
             **({"powerGain": power_gain} if power_gain else {}),
             **({"pointsLost": points_lost} if points_lost else {}),
+            **({"ownerDraw": owner_draw} if owner_draw is not None else {}),
         }

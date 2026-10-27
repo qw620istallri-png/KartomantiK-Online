@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "17a8386d34a48af6cad6c891c51f7020c5ea7832bfa79bbb0af7c7c0da5a55f1",
+  "finishedAt": "2026-10-27T13:38:48.227130+00:00",
+  "published": false,
+  "baseCommit": "7088430dc8a0b1170030a57f661cd821b6f96924",
+  "summary": {
+    "targeted": {
+      "executed": 9,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0,
+      "networkScenarios": 1
+    },
+    "python": {
+      "executed": 1440,
+      "passed": 1440,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuites": 7,
+    "browserSuites": 6,
+    "javascriptTransportSuites": 1,
+    "choiceUi": {
+      "configurations": 6,
+      "ownerCases": 12,
+      "failed": 0
+    }
+  },
+  "artifacts": {
+    "ruling.json": "649b4862274a305a467a9f304473735c9bc71bf6c548a2207b1d39e3ec67a19c",
+    "unit-tests.json": "c8856dd4fbfbd072a477f567e381e772c3bfd462f48780e660b632f9e0a270a6",
+    "ui-tests.json": "4444760901c05bc5db615ed10898de73857f4d8c64c080ab8579a31d82027117",
+    "before.json": "494424a74569222ae1fbb82d59f2ce0228430c22e810cef964e3b5d939c4aae4",
+    "targets.json": "3b6c2ba02e3e2b26fb14e43953791fa4d94d0fafee22fed47e4b27b73fa5ffcd",
+    "browser-before.json": "87832f81dda12afc906e044a49ce02b5c2024d70bf4b52ab8e7beb087083bd4a",
+    "browser.json": "266abdf9f396955c963dae7ebaadaff6a797e66c09fb538ae19ac7ed431532a6"
+  },
+  "browserProvenance": "browser.json is produced by the test_atavic_limbo_ui.cjs gate; it has no individual source digest. ui-tests.json checks source digest before and after the suite.",
+  "historicalProofs": [
+    "before.json",
+    "targets.json",
+    "browser-before.json"
+  ],
+  "limits": [
+    "Phase trigger is prepared explicitly in the protocol case; auto phase driving is isolated.",
+    "Identical copies and partial invalidation placement remain outside this batch.",
+    "No new full-catalog browser, remote-art or real physical-device/Safari Mac certification."
+  ]
+}

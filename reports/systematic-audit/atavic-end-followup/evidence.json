@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "6ad64abb9a7a4bc0e601102adfbcb289636540a469a994df2b0eef7731784a74",
+  "finishedAt": "2026-10-27T11:17:05.689315+00:00",
+  "published": false,
+  "baseCommit": "7088430dc8a0b1170030a57f661cd821b6f96924",
+  "summary": {
+    "targeted": {
+      "executed": 22,
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0,
+      "selectedParagraphs": 5,
+      "cardsWithSelectedClauseProof": 2
+    },
+    "python": {
+      "executed": 1431,
+      "passed": 1431,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuites": 5,
+    "browserSuites": 4,
+    "javascriptTransportSuites": 1,
+    "networkScenarios": 2
+  },
+  "artifacts": {
+    "clauses.json": "5f0c8573e9417267ae7b4a436337dae5d16a8149e32112c09b3e1314434b9e99",
+    "unit-tests.json": "ba613b317d4427340844d058704ae778aaf7c8c27cd8cba8b24ee72e4109b300",
+    "ui-tests.json": "5fb16e725ea7dfc92ca6b81364ddbe5576477968b01c1aaaaf865da401464099",
+    "before.json": "84fa446387f665b9a06a98ac4f497257fd357ecaf3f70d654d8385ddc0f8ae5a"
+  },
+  "limits": [
+    "Counter stimuli isolate play events from declaration; activated Oppression uses actual declaration and payment.",
+    "Only own-Limbo branches are tested; scope across other Limbos awaits a ruling.",
+    "Identical-copy selection and partial target invalidation placement are outside this batch.",
+    "No certification of other printed paragraphs, all combinations or physical browsers.",
+    "No new full-catalog browser/matrix/traces or real Safari Mac/physical-device certification."
+  ]
+}

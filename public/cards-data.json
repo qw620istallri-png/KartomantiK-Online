@@ -4220,7 +4220,7 @@
       },
       "fr": {
         "name": "Introspection Atavique",
-        "effect": "Cette carte est 💧 et peut être jouée avant la Révélation.\nÀ chaque fois que vous jouez une carte 💧, placez un marqueur Contrôle sur Introspection Atavique.\nRetirez 5 marqueurs Contrôle : une Manifestation ciblée sur le champ retourne dans la main de son propriétaire, elle ne peut pas être jouée jusqu'à la fin du tour.\nTant qu'il y a 10 marqueurs Contrôle ou plus sur Introspection Atavique, à la fin du tour vous pouvez choisir 2 cartes dans vos Limbes et en placer une sur le dessus et une au fond de votre Deck.",
+        "effect": "Cette carte est 💧 et peut être jouée avant la Révélation.\nÀ chaque fois que vous jouez une carte 💧, placez un marqueur Contrôle sur Introspection Atavique.\nRetirez 5 marqueurs Contrôle : une Manifestation ciblée sur le champ retourne dans la main de son propriétaire, elle ne peut pas être jouée jusqu'à la fin du tour.\nTant qu'il y a 10 marqueurs Contrôle ou plus sur Introspection Atavique, à la fin du tour vous pouvez choisir 2 cartes dans un même Limbo et en placer une sur le dessus et une au fond de votre Deck.",
         "typeLabel": "Volonté Persistante",
         "subType": "",
         "color": "Vitreux",

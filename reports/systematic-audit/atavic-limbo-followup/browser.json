@@ -1,0 +1,83 @@
+{
+  "engine": "chromium",
+  "physicalDevice": false,
+  "summary": {
+    "configurations": 6,
+    "ownerCases": 12,
+    "failed": 0
+  },
+  "cases": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "fr",
+      "owners": [
+        "p1",
+        "p2"
+      ],
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "en",
+      "owners": [
+        "p1",
+        "p2"
+      ],
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "it",
+      "owners": [
+        "p1",
+        "p2"
+      ],
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "fr",
+      "owners": [
+        "p1",
+        "p2"
+      ],
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "en",
+      "owners": [
+        "p1",
+        "p2"
+      ],
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "it",
+      "owners": [
+        "p1",
+        "p2"
+      ],
+      "passed": true
+    }
+  ]
+}

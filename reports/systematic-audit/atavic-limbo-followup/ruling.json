@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "17a8386d34a48af6cad6c891c51f7020c5ea7832bfa79bbb0af7c7c0da5a55f1",
+  "finishedAt": "2026-10-27T13:32:21.682545+00:00",
+  "published": false,
+  "summary": {
+    "executed": 9,
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "networkScenarios": 1
+  },
+  "cardId": "265f4wdooq43pjn_en",
+  "paragraphIndex": 3,
+  "printedParagraph": "As long as there are 10 or more Control counters on the Atavic Introspection, at the end of the turn you can choose 2 cards in the Limbo and put one on the top and one on the bottom of your deck.",
+  "paragraphSha256": "05c2d6b0ba4bd3dfd73345137858c3c0894484d089580fc1b4db59975ba6ec4f",
+  "ruling": {
+    "id": "atavic-introspection-single-limbo",
+    "rule": "Atavic Introspection peut choisir deux cartes dans le Limbo de son contrôleur ou dans celui de l'adversaire, mais les deux doivent provenir d'un seul et même Limbo. Elles rejoignent le Deck de leur propriétaire d'origine, même si le texte dit « your deck ». Deck, Main, Limbo et Exil n'accueillent que les cartes de leur propriétaire ; le Vaisseau Empatique est la seule zone personnelle destinée aux cartes adverses.",
+    "cardNames": [
+      "Atavic Introspection"
+    ],
+    "tests": [
+      "test_atavic_limbo_ruling",
+      "test_atavic_limbo_integration"
+    ]
+  },
+  "expectedBehavior": "Select exactly two cards from either single Limbo, never a mixture. The controller chooses the top/bottom order, but both cards return to their original owner's Deck. Other player's Deck contents remain private.",
+  "testIds": [
+    "test_atavic_limbo_ruling.AtavicLimboRuling.test_changed_controller_chooses_but_does_not_receive_foreign_cards",
+    "test_atavic_limbo_ruling.AtavicLimboRuling.test_mixed_limbo_target_submission_is_rejected_atomically",
+    "test_atavic_limbo_ruling.AtavicLimboRuling.test_mixing_is_disallowed_by_target_rules_even_with_many_cards",
+    "test_atavic_limbo_ruling.AtavicLimboRuling.test_one_card_per_limbo_is_not_an_available_pair",
+    "test_atavic_limbo_ruling.AtavicLimboRuling.test_opponent_limbo_alone_offers_the_trigger",
+    "test_atavic_limbo_ruling.AtavicLimboRuling.test_selected_cards_go_to_the_original_owners_deck_in_both_cases",
+    "test_atavic_limbo_ruling.AtavicLimboRuling.test_single_available_limbo_does_not_force_the_other_one",
+    "test_atavic_limbo_ruling.AtavicLimboRuling.test_two_cards_in_either_single_limbo_are_legal",
+    "test_atavic_limbo_integration.AtavicLimboIntegration.test_opponent_limbo_reconnect_and_owner_deck_with_mixed_targets_rejected"
+  ],
+  "tests": [
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_changed_controller_chooses_but_does_not_receive_foreign_cards",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_mixed_limbo_target_submission_is_rejected_atomically",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_mixing_is_disallowed_by_target_rules_even_with_many_cards",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_one_card_per_limbo_is_not_an_available_pair",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_opponent_limbo_alone_offers_the_trigger",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_selected_cards_go_to_the_original_owners_deck_in_both_cases",
+      "status": "pass",
+      "durationSeconds": 0.11
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_single_available_limbo_does_not_force_the_other_one",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_two_cards_in_either_single_limbo_are_legal",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_atavic_limbo_integration.AtavicLimboIntegration.test_opponent_limbo_reconnect_and_owner_deck_with_mixed_targets_rejected",
+      "status": "pass",
+      "durationSeconds": 2.063
+    }
+  ],
+  "allBranchesCertified": false,
+  "limits": [
+    "Phase trigger is prepared explicitly in the protocol case; auto phase driving is isolated.",
+    "Identical copies and partial invalidation placement remain outside this batch.",
+    "No new full-catalog browser, remote-art or real physical-device/Safari Mac certification."
+  ]
+}

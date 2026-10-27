@@ -1,0 +1,42 @@
+{
+  "sourceDigest": "a692eb1c27a157d2ea9203c56882adef4f296070e506cc9047e6d783a529f2fd",
+  "tests": [
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_mixed_limbo_target_submission_is_rejected_atomically",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_mixing_is_disallowed_by_target_rules_even_with_many_cards",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_one_card_per_limbo_is_not_an_available_pair",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_opponent_limbo_alone_offers_the_trigger",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_atavic_limbo_ruling.py\", line 31, in test_opponent_limbo_alone_offers_the_trigger\n    self.assertIsNotNone(s.rules_engine[\"pendingChoice\"])\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_single_available_limbo_does_not_force_the_other_one",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_atavic_limbo_ruling.py\", line 65, in test_single_available_limbo_does_not_force_the_other_one\n    self.assertIsNotNone(s.rules_engine[\"pendingChoice\"])\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_atavic_limbo_ruling.AtavicLimboRuling.test_two_cards_in_either_single_limbo_are_legal",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_atavic_limbo_ruling.py\", line 41, in test_two_cards_in_either_single_limbo_are_legal\n    self.choose(s, targets=self.refs(player, cards))\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_atavic_end_clauses.py\", line 47, in choose\n    self.assertIsNone(error)\nAssertionError: 'This effect requires a card in your own zone.' is not None\n",
+      "durationSeconds": 0.046
+    }
+  ],
+  "summary": {
+    "executed": 6,
+    "failed": 3
+  }
+}

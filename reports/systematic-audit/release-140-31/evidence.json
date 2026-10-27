@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "version": "140.31",
+  "sourceDigest": "03f3447fdf03f02048d6a76319fd6748f99f14e72efa8872a71a97730cd35baf",
+  "finishedAt": "2026-10-27T14:03:18.029649+00:00",
+  "publicationRequested": true,
+  "summary": {
+    "python": {
+      "executed": 1440,
+      "passed": 1440,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuites": 7,
+    "browserSuites": 6,
+    "javascriptTransportSuites": 1,
+    "versionSynchronization": {
+      "sourceDigest": "03f3447fdf03f02048d6a76319fd6748f99f14e72efa8872a71a97730cd35baf",
+      "status": "pass",
+      "assetVersion": "20261027-rules-beta-140-31",
+      "assetUrls": 23,
+      "displayLabel": "beta 140.31"
+    }
+  },
+  "artifacts": {
+    "unit-tests.json": "f12d1170280006d1f8be2affca19e3f391cbd69e4d3fc09da3249ef6f60d54db",
+    "ui-tests.json": "9e3ed5c978ec511521c9d9403b928195e34cec419f8cc121c8bbf144f0cd004e",
+    "versions.json": "f249f525727b25cf12ddcede4294a6c82794a4b630f7e30cad32343a1802793d"
+  },
+  "limits": [
+    "No full-catalog clause or physical-device certification.",
+    "VFX development is outside this release scope."
+  ]
+}
