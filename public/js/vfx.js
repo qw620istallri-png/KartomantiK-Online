@@ -1584,6 +1584,7 @@ function playRulesVfxEventInner(event) {
       if (triggerRect?.width && !rulesVfxReducedMotion()) {
         const triggerTemperament = cardsById.get(entry.details?.source?.cardId)?.colorKey || "capricious";
         playRulesVfxFlight("essence", { x: triggerRect.left + triggerRect.width / 2, y: triggerRect.top + triggerRect.height / 2 }, rulesVfxStackNoticeTarget(), { temperament: triggerTemperament, index: 0 });
+        playVfxCardElement(entry.details?.source?.cardId, entry.details?.source?.itemId, { envelope: "effect", duration: 1300, grow: 1.9 });
         spawnVfxParticles({ x: triggerRect.left + triggerRect.width / 2, y: triggerRect.top + triggerRect.height / 2 }, triggerTemperament, { count: 6, spread: 26, direction: "out" });
       }
       playRulesVfxStackPulse("triggered");
@@ -1598,6 +1599,10 @@ function playRulesVfxEventInner(event) {
         return;
       }
       if (!entry.details?.immediate) playRulesVfxResolveReveal(entry);
+      // a card on the field that does its effect shows its element
+      if (rulesVfxFindBattlefieldItem(entry.details?.source?.itemId)) {
+        playVfxCardElement(entry.details.source.cardId, entry.details.source.itemId, { envelope: "effect", duration: 1300, grow: 1.9 });
+      }
       playRulesVfxStackPulse("resolved");
       playRulesVfxImpact(target, t("rulesVfxResolved"), "resolved");
       if (entry.details?.effectResult?.kind === "resolve_top_deck_by_type" && entry.details.effectResult.cardId) {

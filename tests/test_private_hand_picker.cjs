@@ -7,7 +7,10 @@ const { chromium } = require('playwright');
 const root = path.resolve(__dirname, '..');
 const out = path.join(root, 'reports/systematic-audit/private-hand-followup');
 const assetVersion = fs.readFileSync(path.join(root, 'public/app.js'), 'utf8').match(/STATIC_ASSET_VERSION = "([^"]+)"/)[1];
-const expectedLabel = 'beta ' + assetVersion.match(/beta-(\d+(?:-\d+)*)/)[1].replaceAll('-', '.');
+const versionParts = assetVersion.match(/beta-(\d+(?:-\d+)*)/)[1].split('-');
+// a release without a fix number reads "141.0", like the app label
+if (versionParts.length === 1) versionParts.push('0');
+const expectedLabel = 'beta ' + versionParts.join('.');
 
 (async () => {
   fs.mkdirSync(out, { recursive: true });

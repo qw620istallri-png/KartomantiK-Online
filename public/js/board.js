@@ -1410,6 +1410,7 @@ function renderBattlefield() {
       const arrivalCard = cardsById.get(item.cardId);
       playCardImpactRing(el, cardImpactTier(item), arrivalCard?.glow || "#f1d377", false, arrivalDelay + Math.round(arrivalDuration * 0.8));
     }
+    if (item.faceUp) playVfxBoardElement(el, item, previousLayout, { flipped: flippedUp, arriving: !previousLayout && el.classList.contains("bf-arrive") });
     wireRulesEffectMarker(el, ongoingEffects);
     wireRulesActivateMarker(el, item);
     bindRarityPointer(el.querySelector(".bf-card-face.ko-rarity-card"), false, el);
