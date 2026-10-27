@@ -4926,7 +4926,7 @@
     {
       "id": "extortionist-womb-hand-or-tokens",
       "trigger": {
-        "event": "revelation"
+        "event": "reaction"
       },
       "result": {
         "kind": "extortionist_womb"

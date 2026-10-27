@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "b56c9308ef4064f74410bb1c19bf37447e174c741573686fd05d8883774c35d8",
+  "gates": [
+    {
+      "command": [
+        "node",
+        "tests/test_kanon_picker.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_kanon_picker.log",
+      "durationSeconds": 7.547
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_choice_continuity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_choice_continuity.log",
+      "durationSeconds": 7.062
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_frontend.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_frontend.log",
+      "durationSeconds": 14.75
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_connection_lifecycle.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_connection_lifecycle.log",
+      "durationSeconds": 6.032
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_rules_parity.log",
+      "durationSeconds": 46.328
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_state_transport.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_state_transport.log",
+      "durationSeconds": 0.187
+    }
+  ],
+  "summary": {
+    "executed": 6,
+    "failed": 0
+  }
+}

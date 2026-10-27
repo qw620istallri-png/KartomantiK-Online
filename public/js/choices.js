@@ -1351,18 +1351,27 @@ function renderRulesChoiceScreen() {
     return;
   }
   if (choice.kind === "reveal_hand_discard") {
-    const pickKey = { womb: "rulesWombPick", bloatuba: "rulesBloatubaPick", gummo: "rulesGummoPick", wish: "rulesWishPick", pescojolero: "rulesPescoPick", lunar: "rulesLunarPick" }[choice.purpose];
+    const pickKey = { womb: "rulesWombPick", bloatuba: "rulesBloatubaPick", gummo: "rulesGummoPick", wish: "rulesWishPick", pescojolero: "rulesPescoPick", lunar: "rulesLunarPick", gorlok: "rulesGorlokPick" }[choice.purpose];
     $("#rulesChoiceHeading").textContent = t(pickKey ? `${pickKey}Heading` : "rulesRevealDiscardHeading");
     $("#rulesChoiceText").textContent = rulesText(pickKey ? `${pickKey}Text` : "rulesRevealDiscardText", {
       player: rulesPlayerName(choice.targetPlayerId),
     });
     options.classList.add("has-card-picker", "is-reveal-hand");
     panel.classList.add("cards-screen");
-    options.innerHTML = (choice.cardIds || []).map((cardId, index) => `
-      <button type="button" class="rules-choice-card" data-rules-reveal-index="${index}" title="${esc(cardName(cardId))}">
+    const pickIndices = new Map();
+    (choice.cardIds || []).forEach((cardId, index) => {
+      if (!pickIndices.has(cardId)) pickIndices.set(cardId, []);
+      pickIndices.get(cardId).push(index);
+    });
+    const shownCards = choice.purpose === "womb" ? (choice.revealedHandCardIds || choice.cardIds || []) : (choice.cardIds || []);
+    options.innerHTML = shownCards.map((cardId) => {
+      const index = pickIndices.get(cardId)?.shift();
+      return `
+      <button type="button" class="rules-choice-card" ${index === undefined ? 'disabled aria-disabled="true"' : `data-rules-reveal-index="${index}"`} title="${esc(cardName(cardId))}">
         <img src="${esc(cardImage(cardId))}" alt="">
         <span>${esc(cardName(cardId))}</span>
-      </button>`).join("");
+      </button>`;
+    }).join("");
     $$("[data-rules-reveal-index]").forEach((button) => {
       button.onclick = () => {
         $$("[data-rules-reveal-index]").forEach((other) => { other.disabled = true; });

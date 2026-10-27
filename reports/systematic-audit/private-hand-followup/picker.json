@@ -1,0 +1,95 @@
+{
+  "engine": "chromium",
+  "physicalDevice": false,
+  "summary": {
+    "configurations": 6,
+    "scenarios": 12,
+    "failed": 0
+  },
+  "cases": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "fr",
+      "versionLabel": "beta 140.32",
+      "heading": "Quelle manifestation Chaîner ?",
+      "traumaHeading": "Choisir une carte à défausser",
+      "fullHand": 4,
+      "wombEligible": 2,
+      "scenarios": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "en",
+      "versionLabel": "beta 140.32",
+      "heading": "Chain which manifestation?",
+      "traumaHeading": "Choose a card to discard",
+      "fullHand": 4,
+      "wombEligible": 2,
+      "scenarios": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "it",
+      "versionLabel": "beta 140.32",
+      "heading": "Quale manifestazione concatenare?",
+      "traumaHeading": "Scegli una carta da scartare",
+      "fullHand": 4,
+      "wombEligible": 2,
+      "scenarios": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "fr",
+      "versionLabel": "beta 140.32",
+      "heading": "Quelle manifestation Chaîner ?",
+      "traumaHeading": "Choisir une carte à défausser",
+      "fullHand": 4,
+      "wombEligible": 2,
+      "scenarios": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "en",
+      "versionLabel": "beta 140.32",
+      "heading": "Chain which manifestation?",
+      "traumaHeading": "Choose a card to discard",
+      "fullHand": 4,
+      "wombEligible": 2,
+      "scenarios": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "it",
+      "versionLabel": "beta 140.32",
+      "heading": "Quale manifestazione concatenare?",
+      "traumaHeading": "Scegli una carta da scartare",
+      "fullHand": 4,
+      "wombEligible": 2,
+      "scenarios": 2,
+      "passed": true
+    }
+  ]
+}

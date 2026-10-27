@@ -270,3 +270,40 @@ propriétaire comme destination. Neuf nouvelles méthodes et six configurations
 navigateur complètent cette branche. Les preuves sont séparées dans
 `reports/systematic-audit/atavic-limbo-followup/` ; les autres branches non
 exécutées ne sont pas déclarées couvertes.
+
+## Publication 140.31 et suite locale des défausses/pioches
+
+La [version 140.31](RELEASE_140_31.md) publie ces corrections Atavic. La
+[passe suivante](AUDIT_DISCARD_DRAW_AFTER_140_31.md) ajoute 24 méthodes pour
+trois paragraphes sélectionnés de Pray the Ether, Alchemical Press et
+Martyrize. Elle corrige les pioches qui contournaient les restrictions ou
+Kanon, ainsi que les offres impossibles de Press sous immunité de Main.
+Deux parcours réseau vérifient les choix après reconnexion et les quantités
+exactes. Les preuves avant/après sont séparées dans
+`reports/systematic-audit/discard-draw-followup/`. Cette suite reste locale,
+sans nouvelle publication et sans modification des VFX.
+
+L'[audit des événements de Kanon](AUDIT_KANON_EVENTS_AFTER_140_31.md) ajoute
+25 méthodes pour neuf paragraphes sélectionnés de huit cartes. Il corrige
+les événements de pioche/défausse omis, les remplacements contournés, l'ordre
+défausse puis pioche et la sélection d'exemplaires identiques. Deux parcours
+réseau et six configurations du sélecteur navigateur complètent les preuves
+dans `reports/systematic-audit/kanon-events-followup/`. Les événements multiples
+ou retardés de Gorlok restent une branche distincte à auditer.
+
+La [passe Gorlok](AUDIT_GORLOK_DRAW_AFTER_140_31.md) étend ensuite ce même
+paragraphe avec 26 méthodes, dont trois parcours réseau. Elle sépare les groupes
+de pioche retardés, suit les exemplaires en Main, conserve l'effet après le
+départ de la source et corrige le libellé d'exil. Six configurations navigateur
+vérifient le choix. Les preuves sont dans
+`reports/systematic-audit/gorlok-draw-followup/` ; ce paragraphe déjà sélectionné
+dans le lot Kanon n'est pas compté une seconde fois comme une nouvelle clause.
+
+La [passe Traumatize/Womb](AUDIT_PRIVATE_HAND_AFTER_140_31.md) ajoute 23 méthodes,
+dont trois parcours réseau, pour leurs deux paragraphes imprimés. Elle corrige
+les remplacements et immunités contournés, les exemplaires sélectionnés, le
+déclenchement de Womb en Réaction et la confidentialité des choix/journaux.
+Six configurations navigateur vérifient douze scénarios de sélection. Ces quatre
+lots locaux sont intégrés à la [publication 140.32](RELEASE_140_32.md), avec une
+validation séparée dans `reports/systematic-audit/release-140-32/`. Les autres
+sélecteurs et les combinaisons non exécutées restent à couvrir.

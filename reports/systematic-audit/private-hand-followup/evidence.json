@@ -1,0 +1,55 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "3fa678948f677fe9f06b2610e7d7ae4e05033cf93fe31ecfcbb4891349320b57",
+  "baseCommit": "62d169ca0b4f36d193bf710c4fab571576704c1c",
+  "finishedAt": "2026-10-27T18:30:13.361396+00:00",
+  "published": false,
+  "sharedRegressionEvidence": "../release-140-32/evidence.json",
+  "summary": {
+    "targeted": {
+      "executed": 23,
+      "passed": 23,
+      "failed": 0,
+      "skipped": 0,
+      "selectedParagraphs": 2,
+      "cardsWithSelectedClauseProof": 2,
+      "networkScenarios": 3
+    },
+    "python": {
+      "executed": 1538,
+      "passed": 1538,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuites": 9,
+    "browserSuites": 8,
+    "javascriptTransportSuites": 1,
+    "pickerUi": {
+      "configurations": 6,
+      "scenarios": 12,
+      "failed": 0
+    }
+  },
+  "artifacts": {
+    "clauses.json": "b8be0cccb914436798b3ee57357ecfc7ab4d9e2a8eecbca0adb6ce5ddacaec52",
+    "before.json": "21359528450145b0e729e29a62a465c25e162e67523c435e2940620c1f29b2e1",
+    "picker.json": "2775400c6ededb9f47e58cd88f621e20afb6b1000ad8d6157901f8cde186e32c",
+    "picker-1440.png": "cb3ff8937dbd9e1a342344d488305f3bc09c66b5cd13ba460acea3482109e119",
+    "picker-844.png": "99f47f80a405138a1b75a0e0d3d93f72e666b9728dae51da3f760c089cc67068"
+  },
+  "sharedRegressionArtifacts": {
+    "unit-tests.json": "c53c89a8f134393694f3a4299acd52ea679306968f06e48b7587e519bdfc0b86",
+    "ui-tests.json": "2ecae3481a3a9dcf0613a86d97a59d88147e2163334ebc4c4c0d0736f4cd0bb9"
+  },
+  "historicalProofs": [
+    "before.json"
+  ],
+  "browserProvenance": "picker.json and PNGs are produced by test_private_hand_picker.cjs, recorded in the release UI gates with the same source digest. Local card backs replace remote art.",
+  "limits": [
+    "Traumatize uses actual declaration/payment; Womb result branches isolate its shipped effect, with timing checked through actual event queues.",
+    "Network cases isolate automatic phase driving; they certify the choice protocol and private reveal delivery, not all phase scheduling.",
+    "Late hand mutations are stale-answer checks, not legal response windows during an effect.",
+    "Other hand/vessel selectors, all replacement combinations, physical browsers, remote art and VFX are outside this batch.",
+    "The spectator tournament codes and ended-log state are explicit fixtures, not complete tournament/endgame journeys."
+  ]
+}

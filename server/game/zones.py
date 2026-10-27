@@ -229,12 +229,58 @@ class ZonesMixin:
             return None
         return player.get("zoneOwners", {}).get(zone, {}).get(card_id, container_id)
 
+    def rules_hand_card_entries(self, player_id):
+        """Private occurrence identities; identical hand cards remain distinct."""
+        hand = self.players[player_id]["zones"]["hand"]
+        by_player = self.rules_engine.setdefault("_handEntries", {})
+        entries = by_player.get(player_id)
+        if entries is None or [entry["cardId"] for entry in entries] != hand:
+            # Explicit fixtures/manual resets can replace an entire hand.
+            entries = [{"id": new_id(), "cardId": cid} for cid in hand]
+            by_player[player_id] = entries
+        return entries
+
+    def rules_surviving_drawn_hand_cards(self, player_id, cards):
+        current = {entry["id"]: entry["cardId"] for entry in self.rules_hand_card_entries(player_id)}
+        return [card for card in cards if current.get(card.get("handEntryId")) == card.get("cardId")]
+
+    def rules_reorder_hand_entries(self, player_id, entries):
+        """A permutation changes positions, not the identities of hand cards."""
+        remaining = {}
+        for entry in entries:
+            remaining.setdefault(entry["cardId"], []).append(entry)
+        self.rules_engine["_handEntries"][player_id] = [
+            remaining[cid].pop(0) for cid in self.players[player_id]["zones"]["hand"]
+        ]
+
+    def move_rules_drawn_hand_card_to_exile(self, player_id, card):
+        return self.move_rules_hand_card_by_effect(player_id, card, "exile")
+
+    def move_rules_hand_card_by_effect(self, player_id, card, destination):
+        if not self.rules_surviving_drawn_hand_cards(player_id, [card]):
+            return "That drawn card is no longer in the Hand.", None, None
+        previous = getattr(self, "_rules_hand_pick", None)
+        self._rules_hand_pick = (player_id, card["handEntryId"])
+        try:
+            return self.move_zone_card_by_effect(player_id, "hand", player_id, destination, card["cardId"], "top")
+        finally:
+            self._rules_hand_pick = previous
+
     def take_zone_card(self, container_id, zone, card_id):
         player = self.players.get(container_id)
         if player is None or card_id not in player["zones"][zone]:
             return None
         owner_id = self.card_owner_in_zone(container_id, zone, card_id)
-        player["zones"][zone].remove(card_id)
+        if zone == "hand" and self.rules_engine.get("enabled"):
+            entries = self.rules_hand_card_entries(container_id)
+            selected = getattr(self, "_rules_hand_pick", None)
+            index = next((i for i, entry in enumerate(entries)
+                          if selected == (container_id, entry["id"]) and entry["cardId"] == card_id),
+                         player["zones"][zone].index(card_id))
+            entries.pop(index)
+            player["zones"][zone].pop(index)
+        else:
+            player["zones"][zone].remove(card_id)
         self.bump_rules_zone_entry_version(container_id, zone, card_id)
         if zone == "graveyard" and self.rules_engine.get("enabled"):
             self.rules_engine["limboExitTurn"] = self.phase_tracker["turn"]
@@ -285,10 +331,15 @@ class ZonesMixin:
             # in the Vessel or the exile.
             if zone in {"exile", "receptacle"}:
                 marked_cards.remove(card_id)
+        hand_entries = self.rules_hand_card_entries(container_id) if zone == "hand" and self.rules_engine.get("enabled") else None
         if position == "bottom":
             player["zones"][zone].append(card_id)
+            if hand_entries is not None:
+                hand_entries.append({"id": new_id(), "cardId": card_id})
         else:
             player["zones"][zone].insert(0, card_id)
+            if hand_entries is not None:
+                hand_entries.insert(0, {"id": new_id(), "cardId": card_id})
         player.setdefault("zoneOwners", {}).setdefault(zone, {})[card_id] = owner_id
         self.bump_rules_zone_entry_version(container_id, zone, card_id)
         if (
@@ -351,6 +402,9 @@ class ZonesMixin:
             self.rules_put_discarded_card_in_support(from_container_id, from_zone, card_id)
             return None, owner_id
         entry_version = self.rules_zone_entry_version(from_container_id, from_zone, card_id)
+        hand_entries = list(self.rules_hand_card_entries(from_container_id)) if (
+            self.rules_engine.get("enabled") and from_zone == to_zone == "hand" and from_container_id == to_container_id
+        ) else None
         self.take_zone_card(from_container_id, from_zone, card_id)
         to_container_id, to_zone, position = self.rules_zone_move_destination(
             to_container_id, to_zone, card_id, owner_id, position,
@@ -360,6 +414,8 @@ class ZonesMixin:
         if (from_container_id, from_zone) == (to_container_id, to_zone):
             # Changing order within a zone does not create a new card instance.
             self.rules_engine["zoneEntryVersions"][f"{to_container_id}:{to_zone}:{card_id}"] = entry_version
+            if hand_entries is not None:
+                self.rules_reorder_hand_entries(to_container_id, hand_entries)
         if (
             self.rules_engine.get("enabled")
             and to_zone == "graveyard"
@@ -380,7 +436,8 @@ class ZonesMixin:
             and to_container_id in self.players
         ):
             self.record_rules_observed_event("cards_drawn", to_container_id,
-                                             drawBatchId=getattr(self, "_rules_draw_batch_id", None))
+                drawBatchId=getattr(self, "_rules_draw_batch_id", None), cardId=card_id,
+                handEntryId=self.rules_hand_card_entries(to_container_id)[-1]["id"])
             drawn_log = self.rules_engine.setdefault("drawnOutsideRecovery", {})
             entry = drawn_log.get(to_container_id)
             if not entry or entry.get("turn") != self.phase_tracker["turn"]:
@@ -566,7 +623,18 @@ class ZonesMixin:
         self.rules_engine["observedEvents"] = []
         grouped = []
         seen = set()
+        draw_groups = {}
         for event in events:
+            if event["kind"] == "cards_drawn":
+                key = (event["playerId"], event.get("drawBatchId"))
+                if key not in draw_groups:
+                    draw_groups[key] = {**event, "_drawnCards": []}
+                    grouped.append(draw_groups[key])
+                if event.get("cardId") and event.get("handEntryId"):
+                    draw_groups[key]["_drawnCards"].append({
+                        "cardId": event["cardId"], "handEntryId": event["handEntryId"],
+                    })
+                continue
             if event["kind"] in {
                 "points_lost", "cards_discarded", "deck_cards_discarded", "cards_drawn",
                 "points_gained",
@@ -594,12 +662,17 @@ class ZonesMixin:
             for source in list(self.battlefield):
                 if not self.rules_item_effects_active(source):
                     continue
-                queued.extend(self.queue_rules_triggers(
+                actions = self.queue_rules_triggers(
                     source.get("cardId"), source.get("ownerId"), event["kind"],
                     item_id=source.get("id"), face_up=True,
                     event_controller_id=event["playerId"], defer=defer,
                     controller_id=self.rules_item_controller_id(source),
-                ))
+                )
+                for action in actions:
+                    if event["kind"] == "cards_drawn" and ((action.get("ability") or {}).get("result") or {}).get("kind") == "gorlok_peek":
+                        action["_drawEvent"] = {"playerId": event["playerId"],
+                            "cards": [dict(card) for card in event["_drawnCards"]]}
+                queued.extend(actions)
         return queued
 
     def create_rules_effect_memory(self, owner_id, card_id, kind, *,

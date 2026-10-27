@@ -1,6 +1,7 @@
 """Pending choices that pick, reveal, reorder or discard cards."""
 
 import random
+from collections import Counter
 
 from ..common import RULES_WILL_TYPES, new_id
 
@@ -67,6 +68,8 @@ class CardsChoicesMixin:
             }
 
         if choice.get("kind") == "reveal_hand_discard":
+            if choice.get("purpose") in {None, "gorlok", "womb"} and (isinstance(option, bool) or not isinstance(option, (int, str))):
+                return "Choose a card from the revealed hand.", None
             try:
                 index = int(option)
             except (TypeError, ValueError):
@@ -74,8 +77,22 @@ class CardsChoicesMixin:
             target_id = choice.get("targetPlayerId")
             hand = self.players[target_id]["zones"][{"bloatuba": "deck", "gummo": "receptacle", "wish": "receptacle", "pescojolero": "receptacle"}.get(choice.get("purpose"), "hand")] if target_id in self.players else []
             card_ids = choice.get("cardIds") or []
-            if not 0 <= index < len(card_ids) or card_ids[index] not in hand:
+            if not 0 <= index < len(card_ids):
                 return "Choose a card from the revealed hand.", None
+            if choice.get("purpose") == "womb":
+                survivors = self.rules_surviving_drawn_hand_cards(target_id, choice.get("_handCards") or [])
+                if self.rules_hand_is_immune(target_id, player_id) or not any(
+                    self.rules_card_chain_restriction_error(target_id, c["cardId"]) is None for c in survivors
+                ):
+                    self.rules_engine["pendingChoice"] = None
+                    return None, self.rules_womb_fallback(choice, shown=True)
+            if card_ids[index] not in hand:
+                return "Choose a card from the revealed hand.", None
+            selected_hand_card = None
+            if "_handCards" in choice:
+                selected_hand_card = choice["_handCards"][index]
+                if not self.rules_surviving_drawn_hand_cards(target_id, [selected_hand_card]):
+                    return "That selected card is no longer in the Hand.", None
             card_id = card_ids[index]
             if choice.get("purpose") == "gummo":
                 host = self.find_battlefield_item(choice.get("sourceItemId"))
@@ -112,8 +129,11 @@ class CardsChoicesMixin:
                     "cardIds": [mine_id, card_id], "sourceCardId": choice.get("sourceCardId"),
                 }
             if choice.get("purpose") == "gorlok":
-                error, _owner_id, _replacement = self.move_zone_card_by_effect(
-                    target_id, "hand", target_id, "exile", card_id, "top",
+                drawn_cards = choice.get("_drawnCards") or []
+                if not 0 <= index < len(drawn_cards):
+                    return "That drawn card is no longer in the Hand.", None
+                error, _owner_id, _replacement = self.move_rules_drawn_hand_card_to_exile(
+                    target_id, drawn_cards[index],
                 )
                 if error:
                     return error, None
@@ -152,16 +172,29 @@ class CardsChoicesMixin:
                     "remaining": remaining,
                 }
             if choice.get("purpose") == "womb":
+                restriction = self.rules_card_chain_restriction_error(target_id, card_id)
+                if restriction:
+                    return restriction, None
                 self.rules_engine["pendingChoice"] = None
-                return self.chain_rules_manifestation(
-                    target_id, "hand", card_id,
-                    action_id=choice.get("actionId"),
-                    source_card_id=choice.get("sourceCardId"),
-                    chain_controller_id=player_id,
-                )
-            error, _owner_id = self.move_zone_card(
-                target_id, "hand", target_id, "graveyard", card_id, "top"
-            )
+                previous = getattr(self, "_rules_hand_pick", None)
+                self._rules_hand_pick = (target_id, selected_hand_card["handEntryId"]) if selected_hand_card else None
+                try:
+                    error, chained = self.chain_rules_manifestation(
+                        target_id, "hand", card_id,
+                        action_id=choice.get("actionId"), source_card_id=choice.get("sourceCardId"),
+                        chain_controller_id=player_id,
+                    )
+                finally:
+                    self._rules_hand_pick = previous
+                if error:
+                    self.rules_engine["pendingChoice"] = choice
+                return error, chained
+            if self.rules_hand_is_immune(target_id, choice.get("controllerId") or player_id):
+                return "The selected Hand is Immune to this effect.", None
+            if selected_hand_card:
+                error, _owner_id, replacement = self.move_rules_hand_card_by_effect(target_id, selected_hand_card, "graveyard")
+            else:
+                error, _owner_id, replacement = self.move_zone_card_by_effect(target_id, "hand", target_id, "graveyard", card_id, "top")
             if error:
                 return error, None
             self.rules_engine["pendingChoice"] = None
@@ -169,6 +202,7 @@ class CardsChoicesMixin:
                 "kind": "reveal_hand_discard", "playerId": player_id,
                 "targetPlayerId": target_id, "cardId": card_id,
                 "sourceCardId": choice.get("sourceCardId"),
+                **({"movement": replacement} if replacement else {}),
             }
 
     def _rules_choice_pick_own_item(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets):
@@ -540,6 +574,10 @@ class CardsChoicesMixin:
                 "playerId": player_id,
                 "sourceCardId": choice.get("sourceCardId"),
             }
+        if not self.players[player_id]["zones"]["hand"] or self.rules_hand_is_immune(player_id, player_id):
+            self.rules_engine["pendingChoice"] = None
+            return None, {"kind": "optional_discard_draw", "status": "unavailable",
+                          "playerId": player_id, "sourceCardId": choice.get("sourceCardId")}
         next_choice = {
             "id": new_id(),
             "kind": "discard_from_hand",
@@ -680,28 +718,53 @@ class CardsChoicesMixin:
 
     def _rules_choice_draw_replacement(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets):
         offered = list(choice.get("_cardIds") or [])
-        if not isinstance(card_ids, list) or len(card_ids) != int(
+        if not isinstance(card_ids, list) or not all(isinstance(cid, str) for cid in card_ids) or len(card_ids) != int(
             choice.get("count") or 0
         ):
             return "Choose the required cards to discard.", None
-        if len(set(card_ids)) != len(card_ids) or not set(card_ids) <= set(offered):
+        selected_counts = Counter(card_ids)
+        if selected_counts - Counter(offered):
             return "Choose only the inspected draw cards.", None
         deck = self.players[player_id]["zones"]["deck"]
         if deck[:len(offered)] != offered:
             self.rules_engine["pendingChoice"] = None
             return "The inspected draw cards are no longer available.", None
-        drawn_ids = [card_id for card_id in offered if card_id not in card_ids]
+        to_discard, to_draw = [], []
         for card_id in offered:
-            owner_id = self.card_owner_in_zone(player_id, "deck", card_id)
-            self.take_zone_card(player_id, "deck", card_id)
-            self.put_zone_card(
-                player_id,
-                "graveyard" if card_id in card_ids else "hand",
-                card_id, owner_id, "top" if card_id in card_ids else "bottom",
+            if selected_counts[card_id]:
+                to_discard.append(card_id)
+                selected_counts[card_id] -= 1
+            else:
+                to_draw.append(card_id)
+        # These are real discards followed by one draw event, including all
+        # movement replacements and observers. Identical copies keep their
+        # quantities instead of turning an ID membership test into a mass move.
+        discarded_ids = []
+        for card_id in to_discard:
+            error, _owner, replacement = self.move_zone_card_by_effect(
+                player_id, "deck", player_id, "graveyard", card_id, "top",
             )
+            if error:
+                return error, None
+            if not replacement or replacement.get("status") == "support":
+                discarded_ids.append(card_id)
+        drawn_ids = []
+        previous_batch = getattr(self, "_rules_draw_batch_id", None)
+        self._rules_draw_batch_id = new_id()
+        try:
+            for card_id in to_draw:
+                error, _owner, replacement = self.move_zone_card_by_effect(
+                    player_id, "deck", player_id, "hand", card_id, "bottom",
+                )
+                if error:
+                    return error, None
+                if not replacement:
+                    drawn_ids.append(card_id)
+        finally:
+            self._rules_draw_batch_id = previous_batch
         will_count = sum(
             self.card_rules.get(card_id, {}).get("type") in RULES_WILL_TYPES
-            for card_id in card_ids
+            for card_id in discarded_ids
         )
         self.rules_engine["pendingChoice"] = None
         follow_up = None
@@ -729,7 +792,7 @@ class CardsChoicesMixin:
         return None, {
             "kind": "draw_replacement",
             "playerId": player_id,
-            "discardedCardIds": list(card_ids),
+            "discardedCardIds": discarded_ids,
             "drawnCardIds": drawn_ids,
             "willCount": will_count,
             "followUpChoiceId": follow_up.get("id") if follow_up else None,
@@ -1191,19 +1254,16 @@ class CardsChoicesMixin:
             points_lost = -self.adjust_rules_score(
                 player_id, -int(choice["lossPerRemaining"]) * remaining
             ) if remaining else 0
-        drawn = 0
         requested_draw = max(0, min(int(choice.get("drawAfter") or 0), 50))
         if choice.get("drawByBasePower") and selected:
             requested_draw = max(0, min(int(self.card_rules.get(selected[0], {}).get("power") or 0), 50))
-        for _index in range(min(requested_draw, len(self.players[player_id]["zones"]["deck"]))):
-            card_id = self.players[player_id]["zones"]["deck"][0]
-            error, _owner_id = self.move_zone_card(
-                player_id, "deck", player_id, "hand", card_id, "bottom"
-            )
-            if error:
-                break
-            drawn += 1
+        # Complete the discard before requesting a draw: a replacement may
+        # create the next choice, which must survive this continuation.
         self.rules_engine["pendingChoice"] = None
+        draw_request = self.request_rules_draw(
+            player_id, requested_draw, source_controller_id=choice.get("controllerId"),
+        ) if requested_draw else None
+        drawn = int(draw_request.get("count") or 0) if draw_request and draw_request.get("kind") == "draw" else 0
         owner_draw = None
         continuation = choice.get("_ownerDrawAfterDiscard")
         if continuation:
@@ -1226,4 +1286,5 @@ class CardsChoicesMixin:
             **({"powerGain": power_gain} if power_gain else {}),
             **({"pointsLost": points_lost} if points_lost else {}),
             **({"ownerDraw": owner_draw} if owner_draw is not None else {}),
+            **({"drawRequest": draw_request} if draw_request and draw_request.get("kind") == "choice_required" else {}),
         }

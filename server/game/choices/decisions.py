@@ -4,6 +4,17 @@ from ..common import new_id
 
 
 class DecisionsChoicesMixin:
+    def rules_womb_fallback(self, choice, shown=False):
+        controller_id = choice.get("controllerId")
+        tokens = self.apply_rules_action_result({
+            "id": choice.get("actionId") or new_id(), "controllerId": controller_id,
+            "source": {"cardId": choice.get("sourceCardId"), "ownerId": controller_id},
+            "targets": [], "ability": {"result": {
+                "kind": "create_support_tokens", "count": 2, "power": 2, "temperament": "hollow",
+            }},
+        })
+        return {"kind": "womb_show", "status": "tokens", "shown": shown, "tokens": tokens}
+
     def _rules_choice_score_delta_choice(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets):
         if option not in choice.get("options", []):
             return "Choose whether the target gains or loses Points.", None
@@ -127,36 +138,34 @@ class DecisionsChoicesMixin:
             self.rules_engine["pendingChoice"] = None
             controller_id = choice.get("controllerId")
             hand = list(self.players[player_id]["zones"]["hand"])
+            show_hand = option == "yes" and not self.rules_hand_is_immune(player_id, controller_id)
+            proof = {
+                "handProof": hand, "handProofPlayerId": player_id,
+                "shownToPlayerIds": [controller_id, player_id],
+            } if show_hand else {}
             chainable = [
                 c for c in hand
                 if self.card_rules.get(c, {}).get("type") == "manifestation"
                 and self.rules_card_chain_restriction_error(player_id, c) is None
-            ] if option == "yes" and not self.rules_hands_are_immune() else []
+            ] if show_hand else []
             if not chainable:
-                tokens = self.apply_rules_action_result({
-                    "id": choice.get("actionId") or new_id(), "controllerId": controller_id,
-                    "source": {"cardId": choice.get("sourceCardId"), "ownerId": controller_id},
-                    "targets": [],
-                    "ability": {"result": {
-                        "kind": "create_support_tokens", "count": 2, "power": 2,
-                        "temperament": "hollow",
-                    }},
-                })
-                return None, {
-                    "kind": "womb_show", "status": "tokens",
-                    "shown": option == "yes", "tokens": tokens,
-                    "handProof": hand if option == "yes" else [],
-                }
+                return None, {**self.rules_womb_fallback(choice, shown=show_hand), **proof,
+                    **({"_privateHandReveal": {"playerId": player_id,
+                        "viewerIds": [controller_id, player_id], "cardIds": hand}} if show_hand else {})}
             new_choice_id = new_id()
             self.rules_engine["pendingChoice"] = {
                 "id": new_choice_id, "kind": "reveal_hand_discard", "purpose": "womb",
                 "playerId": controller_id, "targetPlayerId": player_id,
                 "cardIds": chainable,
+                "revealedHandCardIds": hand,
+                "_handCards": [{"cardId": entry["cardId"], "handEntryId": entry["id"]}
+                               for entry in self.rules_hand_card_entries(player_id) if entry["cardId"] in chainable],
+                "controllerId": controller_id,
                 "sourceCardId": choice.get("sourceCardId"),
                 "actionId": choice.get("actionId"),
             }
             return None, {
-                "kind": "womb_show", "status": "shown", "handProof": hand,
+                "kind": "womb_show", "status": "shown", **proof,
                 "choiceId": new_choice_id,
             }
 

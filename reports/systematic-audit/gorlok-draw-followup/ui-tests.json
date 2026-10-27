@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "d19a01c109cc7c31afebb684dc5cf4d45b98e73032449300f7848ae76f0545f1",
+  "gates": [
+    {
+      "command": [
+        "node",
+        "tests/test_gorlok_picker.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_gorlok_picker.log",
+      "durationSeconds": 9.375
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_choice_continuity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_choice_continuity.log",
+      "durationSeconds": 5.969
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_frontend.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_frontend.log",
+      "durationSeconds": 14.61
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_connection_lifecycle.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_connection_lifecycle.log",
+      "durationSeconds": 5.843
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_rules_parity.log",
+      "durationSeconds": 39.047
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_state_transport.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_state_transport.log",
+      "durationSeconds": 0.141
+    }
+  ],
+  "summary": {
+    "executed": 6,
+    "failed": 0
+  }
+}

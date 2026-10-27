@@ -4139,7 +4139,7 @@
       ],
       "mechanics": [
         "result:extortionist_womb",
-        "trigger:revelation"
+        "trigger:reaction"
       ],
       "testRefs": [
         "tests/test_game_state.py",

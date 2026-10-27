@@ -1,0 +1,241 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "33950510e6a1cbce08a16391f71f100676f035af5101f5b24a02870fb7218ecf",
+  "finishedAt": "2026-10-27T14:48:50.023466+00:00",
+  "published": false,
+  "summary": {
+    "executed": 22,
+    "passed": 11,
+    "failed": 11,
+    "skipped": 0,
+    "selectedParagraphs": 1,
+    "cardsWithSelectedClauseProof": 1
+  },
+  "clauses": [
+    {
+      "cardId": "inner-deserts-082",
+      "name": "Gorlok, the Blinded Indiscreet",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Gorlok is in the Interzone, whenever an opponent draws one or more cards outside of the Recovery Phase, that opponent shows the drawn cards to you. Choose and Exile one card among them, then Gorlok gets -1 power for each card the opponent showed to you this way.",
+      "paragraphSha256": "ff6767c13b406b5974dba3354dd944ab8328d29c8397d659d0898dcb1189584c",
+      "expectedBehavior": "Each opponent draw outside Recovery creates its own immutable group of drawn hand instances. Resolve surviving instances only, in Stack order, without consuming another trigger's group. Show those cards, exile exactly one and apply power loss equal to the number shown to the original source still present. Effect survives source departure; exclude immune hands, invalid and repeated answers and private draw identities before resolution.",
+      "testIds": [
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_all_drawn_cards_leave_effect_resolves_without_choice_or_power_loss",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_departure_and_return_to_hand_invalidates_original_drawn_instance",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_draw_before_gorlok_enters_is_not_part_of_its_later_event",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_draw_snapshot_stays_private_until_effect_resolution",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_duplicate_answer_cannot_exile_or_reduce_power_again",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_identical_drawn_copies_count_twice_but_only_one_is_exiled",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_immune_hand_prevents_reveal_exile_and_power_loss",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_invalid_indices_and_wrong_player_are_atomic",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_late_hand_immunity_rejects_exile_without_partial_power_loss",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_new_draw_while_first_effect_waits_does_not_change_first_snapshot",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_no_trigger_for_own_recovery_empty_or_locked_draw",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_no_trigger_outside_interzone_face_down_or_silenced",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_old_identical_hand_copy_leaves_but_drawn_copy_remains_valid",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_one_drawn_card_leaves_before_resolution_only_remaining_is_shown",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_pending_choice_rejects_returned_card_even_with_same_card_id",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_single_draw_shows_exact_cards_exiles_one_and_loses_shown_count",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_source_controller_change_keeps_original_effect_controller",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_source_departure_does_not_cancel_exile_of_drawn_cards",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_source_return_does_not_apply_old_power_loss_to_new_instance",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_two_draw_events_same_flush_keep_separate_lifo_choices",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_two_gorloks_each_keep_the_same_event_and_remaining_cards",
+        "test_gorlok_draw_clauses.GorlokDrawClauses.test_two_identical_draw_events_exile_the_selected_instance_only"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_all_drawn_cards_leave_effect_resolves_without_choice_or_power_loss",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_departure_and_return_to_hand_invalidates_original_drawn_instance",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_gorlok_draw_clauses.py\", line 164, in test_departure_and_return_to_hand_invalidates_original_drawn_instance\n    self.assertEqual(self.shown(s), [\"m3\"])\nAssertionError: Lists differ: ['m2', 'm3'] != ['m3']\n\nFirst differing element 0:\n'm2'\n'm3'\n\nFirst list contains 1 additional elements.\nFirst extra element 1:\n'm3'\n\n- ['m2', 'm3']\n+ ['m3']\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_draw_before_gorlok_enters_is_not_part_of_its_later_event",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_gorlok_draw_clauses.py\", line 91, in test_draw_before_gorlok_enters_is_not_part_of_its_later_event\n    self.assertEqual(self.shown(s), [\"m3\"])\nAssertionError: Lists differ: ['m2', 'm3'] != ['m3']\n\nFirst differing element 0:\n'm2'\n'm3'\n\nFirst list contains 1 additional elements.\nFirst extra element 1:\n'm3'\n\n- ['m2', 'm3']\n+ ['m3']\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_draw_snapshot_stays_private_until_effect_resolution",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_duplicate_answer_cannot_exile_or_reduce_power_again",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_identical_drawn_copies_count_twice_but_only_one_is_exiled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_immune_hand_prevents_reveal_exile_and_power_loss",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_gorlok_draw_clauses.py\", line 204, in test_immune_hand_prevents_reveal_exile_and_power_loss\n    self.assertIsNone(s.rules_engine[\"pendingChoice\"])\nAssertionError: {'id': 'e0ca3b5aea62', 'kind': 'reveal_hand_discard', 'purpose': 'gorlok', 'playerId': 'p1', 'targetPlayerId': 'p2', 'cardIds': ['m2', 'm3'], 'sourceCardId': 'inner-deserts-082', 'sourceItemId': 'gorlok', 'actionId': 'e2884d82938e', 'controllerId': 'p1'} is not None\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_invalid_indices_and_wrong_player_are_atomic",
+      "status": "fail",
+      "subtests": [
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_invalid_indices_and_wrong_player_are_atomic (actor='p2', option='0')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_invalid_indices_and_wrong_player_are_atomic (actor='p1', option='-1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_invalid_indices_and_wrong_player_are_atomic (actor='p1', option='2')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_invalid_indices_and_wrong_player_are_atomic (actor='p1', option='bad')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_invalid_indices_and_wrong_player_are_atomic (actor='p1', option={})",
+          "status": "pass"
+        },
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_invalid_indices_and_wrong_player_are_atomic (actor='p1', option=0.5)",
+          "status": "fail"
+        },
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_invalid_indices_and_wrong_player_are_atomic (actor='p1', option=True)",
+          "status": "fail"
+        }
+      ],
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_gorlok_draw_clauses.py\", line 240, in test_invalid_indices_and_wrong_player_are_atomic\n    self.assertIsNotNone(s.resolve_rules_choice(actor, choice[\"id\"], option=option)[0])\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.156
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_late_hand_immunity_rejects_exile_without_partial_power_loss",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_new_draw_while_first_effect_waits_does_not_change_first_snapshot",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_gorlok_draw_clauses.py\", line 79, in test_new_draw_while_first_effect_waits_does_not_change_first_snapshot\n    self.assertEqual(self.shown(s), [\"m2\"])\nAssertionError: Lists differ: ['m2', 'm3', 'm4'] != ['m2']\n\nFirst list contains 2 additional elements.\nFirst extra element 1:\n'm3'\n\n- ['m2', 'm3', 'm4']\n+ ['m2']\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_no_trigger_for_own_recovery_empty_or_locked_draw",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_no_trigger_for_own_recovery_empty_or_locked_draw (excluded='own')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_no_trigger_for_own_recovery_empty_or_locked_draw (excluded='recovery')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_no_trigger_for_own_recovery_empty_or_locked_draw (excluded='empty')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_no_trigger_for_own_recovery_empty_or_locked_draw (excluded='locked')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_no_trigger_outside_interzone_face_down_or_silenced",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_no_trigger_outside_interzone_face_down_or_silenced (excluded='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_no_trigger_outside_interzone_face_down_or_silenced (excluded='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_no_trigger_outside_interzone_face_down_or_silenced (excluded='silenced')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_old_identical_hand_copy_leaves_but_drawn_copy_remains_valid",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_one_drawn_card_leaves_before_resolution_only_remaining_is_shown",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_pending_choice_rejects_returned_card_even_with_same_card_id",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_gorlok_draw_clauses.py\", line 226, in test_pending_choice_rejects_returned_card_even_with_same_card_id\n    self.assertIsNotNone(s.resolve_rules_choice(\"p1\", choice[\"id\"], option=\"0\")[0])\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_single_draw_shows_exact_cards_exiles_one_and_loses_shown_count",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_source_controller_change_keeps_original_effect_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_source_departure_does_not_cancel_exile_of_drawn_cards",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_gorlok_draw_clauses.py\", line 113, in test_source_departure_does_not_cancel_exile_of_drawn_cards\n    self.assertEqual(self.shown(s), [\"m2\", \"m3\"])\n                     ^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_gorlok_draw_clauses.py\", line 37, in shown\n    self.assertIsNotNone(s.rules_engine[\"pendingChoice\"])\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_source_return_does_not_apply_old_power_loss_to_new_instance",
+      "status": "error",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_gorlok_draw_clauses.py\", line 125, in test_source_return_does_not_apply_old_power_loss_to_new_instance\n    self.choose(s, option=\"0\")\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_atavic_end_clauses.py\", line 46, in choose\n    error, result = s.resolve_rules_choice(choice[\"playerId\"], choice[\"id\"], **kwargs)\n                                           ~~~~~~^^^^^^^^^^^^\nTypeError: 'NoneType' object is not subscriptable\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_two_draw_events_same_flush_keep_separate_lifo_choices",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_gorlok_draw_clauses.py\", line 66, in test_two_draw_events_same_flush_keep_separate_lifo_choices\n    self.assertEqual(self.shown(s), [\"m3\", \"m4\"])\nAssertionError: Lists differ: ['m2', 'm3', 'm4'] != ['m3', 'm4']\n\nFirst differing element 0:\n'm2'\n'm3'\n\nFirst list contains 1 additional elements.\nFirst extra element 2:\n'm4'\n\n- ['m2', 'm3', 'm4']\n?  ------\n\n+ ['m3', 'm4']\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_two_gorloks_each_keep_the_same_event_and_remaining_cards",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_gorlok_draw_clauses.py\", line 103, in test_two_gorloks_each_keep_the_same_event_and_remaining_cards\n    self.assertEqual(self.shown(s), [\"m3\"])\n                     ^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_gorlok_draw_clauses.py\", line 37, in shown\n    self.assertIsNotNone(s.rules_engine[\"pendingChoice\"])\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_gorlok_draw_clauses.GorlokDrawClauses.test_two_identical_draw_events_exile_the_selected_instance_only",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_gorlok_draw_clauses.py\", line 190, in test_two_identical_draw_events_exile_the_selected_instance_only\n    self.assertEqual(self.shown(s), [\"m2\"])\nAssertionError: Lists differ: ['m2', 'm2'] != ['m2']\n\nFirst list contains 1 additional elements.\nFirst extra element 1:\n'm2'\n\n- ['m2', 'm2']\n+ ['m2']\n",
+      "durationSeconds": 0.016
+    }
+  ],
+  "limits": [
+    "Draw stimuli are explicit shared-engine requests, not every possible printed draw source.",
+    "Network tests isolate automatic phase driving; no certification of full scheduling or VFX.",
+    "Unexpected hand changes during an already-open choice are rejection checks, not legal interruption windows inside an effect.",
+    "Physical devices, Safari Mac, remote illustrations and all card combinations remain outside this lot."
+  ]
+}

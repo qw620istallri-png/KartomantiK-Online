@@ -1,0 +1,82 @@
+{
+  "engine": "chromium",
+  "physicalDevice": false,
+  "summary": {
+    "configurations": 6,
+    "failed": 0
+  },
+  "cases": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "fr",
+      "heading": "Exiler une carte piochée",
+      "shown": 3,
+      "totalHand": 5,
+      "chosenIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "en",
+      "heading": "Exile a drawn card",
+      "shown": 3,
+      "totalHand": 5,
+      "chosenIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "it",
+      "heading": "Esilia una carta pescata",
+      "shown": 3,
+      "totalHand": 5,
+      "chosenIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "fr",
+      "heading": "Exiler une carte piochée",
+      "shown": 3,
+      "totalHand": 5,
+      "chosenIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "en",
+      "heading": "Exile a drawn card",
+      "shown": 3,
+      "totalHand": 5,
+      "chosenIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "it",
+      "heading": "Esilia una carta pescata",
+      "shown": 3,
+      "totalHand": 5,
+      "chosenIndex": 1,
+      "passed": true
+    }
+  ]
+}

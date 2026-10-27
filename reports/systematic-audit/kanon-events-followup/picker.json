@@ -1,0 +1,70 @@
+{
+  "engine": "chromium",
+  "physicalDevice": false,
+  "summary": {
+    "configurations": 6,
+    "failed": 0
+  },
+  "cases": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "fr",
+      "identicalCards": 4,
+      "chosen": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "en",
+      "identicalCards": 4,
+      "chosen": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "it",
+      "identicalCards": 4,
+      "chosen": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "fr",
+      "identicalCards": 4,
+      "chosen": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "en",
+      "identicalCards": 4,
+      "chosen": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "it",
+      "identicalCards": 4,
+      "chosen": 2,
+      "passed": true
+    }
+  ]
+}

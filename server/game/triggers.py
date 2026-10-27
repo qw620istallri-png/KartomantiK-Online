@@ -936,7 +936,9 @@ class TriggersMixin:
         source = action.get("source") or {}
         if kind == "choose_hand_will_as_support_manifestation" and self.rules_support_entry_locked(player_id):
             return False
-        if kind in {"optional_discard_then_draw", "optional_discard_up_to"}:
+        if kind == "optional_discard_then_draw":
+            return bool(hand) and not self.rules_hand_is_immune(player_id, player_id)
+        if kind == "optional_discard_up_to":
             return bool(hand)
         if kind in {
             "optional_discard_wills_for_power", "choose_hand_will_as_support_manifestation",

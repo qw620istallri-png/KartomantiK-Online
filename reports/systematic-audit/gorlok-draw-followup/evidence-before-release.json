@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "d19a01c109cc7c31afebb684dc5cf4d45b98e73032449300f7848ae76f0545f1",
+  "baseCommit": "62d169ca0b4f36d193bf710c4fab571576704c1c",
+  "prerequisiteLocalBatches": [
+    "../discard-draw-followup/evidence.json",
+    "../kanon-events-followup/evidence.json"
+  ],
+  "finishedAt": "2026-10-27T15:06:29.784558+00:00",
+  "published": false,
+  "summary": {
+    "targeted": {
+      "executed": 26,
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "selectedParagraphs": 1,
+      "cardsWithSelectedClauseProof": 1,
+      "networkScenarios": 3
+    },
+    "python": {
+      "executed": 1515,
+      "passed": 1515,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuites": 6,
+    "browserSuites": 5,
+    "javascriptTransportSuites": 1,
+    "pickerUi": {
+      "configurations": 6,
+      "failed": 0
+    },
+    "paragraphAlreadySelectedInKanonBatch": true,
+    "newUniqueParagraphsClaimed": 0
+  },
+  "artifacts": {
+    "clauses.json": "44a0a27740226e2bb1948745f9c20b1a08cc57c66f23a502f92e244dce2c7d7a",
+    "unit-tests.json": "58a39dd63d0f67b0d2e5cd7185e382e7150441b018bf7e0641b605b9f286bfbe",
+    "ui-tests.json": "fb2ff24ce8ee7afa0945b26805a418eff08bf6be145aefa77dbf31e41429923b",
+    "before.json": "b31915ee972dd2201162f68307520835df405f90fad961c27186bfeb29b70a93",
+    "unit-before-control.json": "0922a7a223b44901468302922baa54004d1fac5ec593404f77203d850ec3aad2",
+    "picker.json": "4aa7a31362e595a93f0e3a9111214644ce5b91d374b7d5d04a45dc6ef798280d",
+    "picker-1440.png": "d3caadd29e285c6cb18348a1eeb85b30bcc692e7793e58a55df2a8fbf07cbcdf",
+    "picker-844.png": "4ae63b40048a7ed2140062fa8d15b00af52a85a67188b12a28f07411cfdf4c27"
+  },
+  "historicalProofs": [
+    "before.json",
+    "unit-before-control.json"
+  ],
+  "historicalControlNote": "The first full regression passed before strengthening the own-draw fixture with a nonempty own Deck. Final clause, unit and UI proofs all use the strengthened fixture source digest.",
+  "browserProvenance": "picker.json and PNGs are produced by test_gorlok_picker.cjs; ui-tests.json records the command and verifies the unchanged source digest. Local card backs substitute for remote illustrations.",
+  "limits": [
+    "Draw stimuli are explicit shared-engine requests, not every possible printed draw source.",
+    "Network tests isolate automatic phase driving; no certification of full scheduling or VFX.",
+    "Unexpected hand changes during an already-open choice are rejection checks, not legal interruption windows inside an effect.",
+    "Physical devices, Safari Mac, remote illustrations and all card combinations remain outside this lot.",
+    "Automatic cancellation when every card becomes invalid during an already-open choice is not certified.",
+    "Reconnect is within the same live server process; process restart persistence is not certified.",
+    "Previous audit and release evidence keeps historical source digests. No publication, styles or VFX changes."
+  ]
+}

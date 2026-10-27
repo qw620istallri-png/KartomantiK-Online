@@ -1,0 +1,100 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "3fa678948f677fe9f06b2610e7d7ae4e05033cf93fe31ecfcbb4891349320b57",
+  "gates": [
+    {
+      "command": [
+        "node",
+        "tests/test_private_hand_picker.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_private_hand_picker.log",
+      "durationSeconds": 12.188
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_gorlok_picker.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_gorlok_picker.log",
+      "durationSeconds": 9.797
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_kanon_picker.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_kanon_picker.log",
+      "durationSeconds": 7.703
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_choice_continuity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_choice_continuity.log",
+      "durationSeconds": 6.75
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_frontend.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_frontend.log",
+      "durationSeconds": 15.141
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_connection_lifecycle.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_connection_lifecycle.log",
+      "durationSeconds": 6.0
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_rules_parity.log",
+      "durationSeconds": 42.859
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_semantic_ui.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_semantic_ui.log",
+      "durationSeconds": 6.953
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_state_transport.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_state_transport.log",
+      "durationSeconds": 0.141
+    }
+  ],
+  "summary": {
+    "executed": 9,
+    "failed": 0
+  }
+}

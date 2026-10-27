@@ -1,0 +1,349 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "4715ec2998524dbb599c6ca1cb3fbd72fd6fc448117eac1d8c4b9c2208bda6d2",
+  "finishedAt": "2026-10-27T14:13:26.017794+00:00",
+  "published": false,
+  "summary": {
+    "executed": 22,
+    "passed": 15,
+    "failed": 7,
+    "skipped": 0,
+    "selectedParagraphs": 3,
+    "cardsWithSelectedClauseProof": 3
+  },
+  "clauses": [
+    {
+      "cardId": "zni76s4aabicqag_en",
+      "name": "Pray the Ether",
+      "paragraphIndex": 0,
+      "printedParagraph": "Discard a card from your hand. If you do, draw 2 cards.",
+      "paragraphSha256": "d3b14697ddc3dca2d9ed8ba3ac4cf8218934c48b3abbc635d66ddf6c5a3d3a8e",
+      "expectedBehavior": "Discard exactly one available hand card before requesting two draws; empty hand cannot pay. Respect draw locks, opponent Kanon, Recovery exclusions, one event per batch and independent nested discard/draw sequences.",
+      "testIds": [
+        "test_discard_draw_clauses.DiscardDrawClauses.test_normal_draw_count_and_discard_before_draw",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_empty_hand_cannot_pay_discard_and_draws_nothing",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_draw_lock_is_respected_after_discard",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_kanon_replaces_the_post_discard_draw",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_kanon_does_not_replace_its_controller_own_draws",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_recovery_draw_fixture_ignores_nonrecovery_lock_and_kanon",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_invalid_discard_is_atomic_and_does_not_draw",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_multi_card_draw_is_one_denblew_event",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_press_then_pray_each_draws_after_its_own_discard",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_other_players_draw_lock_does_not_block_own_draw",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_draw_lock_prevents_kanon_offering_a_replacement"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ze99bj8uw2oisfx_en",
+      "name": "Alchemical Press",
+      "paragraphIndex": 2,
+      "printedParagraph": "Whenever you play a Will, you can discard a card. If you do, draw a card.",
+      "paragraphSha256": "36025cf0762fdd01880a263022d8904368960fff8de154320e6468a7a1d2f748",
+      "expectedBehavior": "An own Will play offers an optional discard, then one draw; decline or unavailable/immune hand cannot force a choice. Recheck at resolution and legacy acceptance; pending effect survives source departure and cannot draw twice. Common draw restrictions apply.",
+      "testIds": [
+        "test_discard_draw_clauses.DiscardDrawClauses.test_normal_draw_count_and_discard_before_draw",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_empty_hand_cannot_pay_discard_and_draws_nothing",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_draw_lock_is_respected_after_discard",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_kanon_replaces_the_post_discard_draw",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_kanon_does_not_replace_its_controller_own_draws",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_recovery_draw_fixture_ignores_nonrecovery_lock_and_kanon",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_invalid_discard_is_atomic_and_does_not_draw",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_multi_card_draw_is_one_denblew_event",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_press_then_pray_each_draws_after_its_own_discard",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_other_players_draw_lock_does_not_block_own_draw",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_draw_lock_prevents_kanon_offering_a_replacement",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_press_can_decline_without_discarding_or_drawing",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_press_empty_hand_does_not_offer_a_pointless_trigger",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_press_immune_hand_does_not_offer_an_unpayable_trigger",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_press_late_hand_immunity_does_not_open_an_impossible_choice",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_press_late_empty_hand_does_not_open_an_impossible_choice",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_press_source_departure_and_duplicate_choice_draw_only_once",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_press_legacy_accept_rechecks_discard_availability"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "3gqrmx5jegwz8kb_en",
+      "name": "Martyrize",
+      "paragraphIndex": 0,
+      "printedParagraph": "As an additional cost to play this Will, reveal and exile a manifestation from your hand. Draw a number of cards equal to the base power of the revealed manifestation, then exile this Will.",
+      "paragraphSha256": "0b64465f209508d38bc41a62d098ffaa128a274cdf4f8bac678462fa211798cf",
+      "expectedBehavior": "Reveal and exile a hand Manifestation as an additional cost before responses. Request draws equal to its base power, honor draw locks and opponent Kanon; replacement does not refund the donor or prevent the Will's exile. Reject a non-Manifestation atomically.",
+      "testIds": [
+        "test_discard_draw_clauses.DiscardDrawClauses.test_martyrize_pays_reveal_exile_before_responses_then_draws_base_power",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_martyrize_respects_draw_lock_without_refunding_cost",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_martyrize_kanon_keeps_paid_cost_and_replaces_three_draws",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_martyrize_invalid_additional_card_is_rejected_atomically",
+        "test_discard_draw_clauses.DiscardDrawClauses.test_draw_lock_prevents_kanon_offering_a_replacement"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_draw_lock_is_respected_after_discard",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_draw_clauses.py\", line 82, in test_draw_lock_is_respected_after_discard\n    self.assertEqual(s.players[\"p1\"][\"zones\"][\"hand\"], [])\nAssertionError: Lists differ: ['m2'] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n'm2'\n\n- ['m2']\n+ []\n",
+      "subtests": [
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_draw_lock_is_respected_after_discard (card='Pray the Ether')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_draw_lock_is_respected_after_discard (card='Alchemical Press')",
+          "status": "fail"
+        }
+      ],
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_draw_lock_prevents_kanon_offering_a_replacement",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_draw_clauses.py\", line 286, in test_draw_lock_prevents_kanon_offering_a_replacement\n    self.assertEqual(s.players[\"p1\"][\"zones\"][\"hand\"], [])\nAssertionError: Lists differ: ['m2'] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n'm2'\n\n- ['m2']\n+ []\n",
+      "subtests": [
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_draw_lock_prevents_kanon_offering_a_replacement (card='Pray the Ether')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_draw_lock_prevents_kanon_offering_a_replacement (card='Alchemical Press')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_draw_lock_prevents_kanon_offering_a_replacement (card='Martyrize')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_empty_hand_cannot_pay_discard_and_draws_nothing",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_empty_hand_cannot_pay_discard_and_draws_nothing (card='Pray the Ether')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_empty_hand_cannot_pay_discard_and_draws_nothing (card='Alchemical Press')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_invalid_discard_is_atomic_and_does_not_draw",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_invalid_discard_is_atomic_and_does_not_draw (card='Pray the Ether', actor='p2', cards=['w2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_invalid_discard_is_atomic_and_does_not_draw (card='Pray the Ether', actor='p1', cards=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_invalid_discard_is_atomic_and_does_not_draw (card='Pray the Ether', actor='p1', cards=['m4'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_invalid_discard_is_atomic_and_does_not_draw (card='Pray the Ether', actor='p1', cards=['w2', 'w2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_invalid_discard_is_atomic_and_does_not_draw (card='Alchemical Press', actor='p2', cards=['w2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_invalid_discard_is_atomic_and_does_not_draw (card='Alchemical Press', actor='p1', cards=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_invalid_discard_is_atomic_and_does_not_draw (card='Alchemical Press', actor='p1', cards=['m4'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_invalid_discard_is_atomic_and_does_not_draw (card='Alchemical Press', actor='p1', cards=['w2', 'w2'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.156
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_kanon_does_not_replace_its_controller_own_draws",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_kanon_does_not_replace_its_controller_own_draws (card='Pray the Ether')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_kanon_does_not_replace_its_controller_own_draws (card='Alchemical Press')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_kanon_replaces_the_post_discard_draw",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_draw_clauses.py\", line 93, in test_kanon_replaces_the_post_discard_draw\n    self.assertIsNotNone(choice)\nAssertionError: unexpectedly None\n",
+      "subtests": [
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_kanon_replaces_the_post_discard_draw (card='Pray the Ether')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_kanon_replaces_the_post_discard_draw (card='Alchemical Press')",
+          "status": "fail"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_martyrize_invalid_additional_card_is_rejected_atomically",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_martyrize_kanon_keeps_paid_cost_and_replaces_three_draws",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_draw_clauses.py\", line 153, in test_martyrize_kanon_keeps_paid_cost_and_replaces_three_draws\n    self.assertIsNotNone(choice)\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_martyrize_pays_reveal_exile_before_responses_then_draws_base_power",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_martyrize_respects_draw_lock_without_refunding_cost",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_multi_card_draw_is_one_denblew_event",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_multi_card_draw_is_one_denblew_event (card='Pray the Ether')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_multi_card_draw_is_one_denblew_event (card='Alchemical Press')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_normal_draw_count_and_discard_before_draw",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_normal_draw_count_and_discard_before_draw (card='Pray the Ether')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_normal_draw_count_and_discard_before_draw (card='Alchemical Press')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_other_players_draw_lock_does_not_block_own_draw",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_other_players_draw_lock_does_not_block_own_draw (card='Pray the Ether')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_other_players_draw_lock_does_not_block_own_draw (card='Alchemical Press')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_press_can_decline_without_discarding_or_drawing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_press_empty_hand_does_not_offer_a_pointless_trigger",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_press_immune_hand_does_not_offer_an_unpayable_trigger",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_draw_clauses.py\", line 195, in test_press_immune_hand_does_not_offer_an_unpayable_trigger\n    self.assertIsNone(s.rules_engine[\"pendingChoice\"])\nAssertionError: {'id': 'f081076d1629', 'kind': 'optional_stack_action', 'playerId': 'p1', 'sourceCardId': 'ze99bj8uw2oisfx_en', 'actionId': '895e5a561209', 'label': 'ze99bj8uw2oisfx_en — triggered effect', 'options': ['accept', 'decline'], '_action': {'id': '895e5a561209', 'controllerId': 'p1', 'label': 'ze99bj8uw2oisfx_en — triggered effect', 'kind': 'triggered_effect', 'optional': True, 'source': {'cardId': 'ze99bj8uw2oisfx_en', 'zone': 'battlefield', 'itemId': 'press', 'cardType': 'persistent_will', 'ownerId': 'p1', 'containerId': None}, 'target': None, 'targets': [], 'ability': {'id': 'discard-to-draw-after-will', 'trigger': {'event': 'will_played', 'zone': 'field', 'container': '', 'visibility': '', 'sourceZone': '', 'enteredFromZone': '', 'eventSourceOnly': False, 'played': False, 'firstWillOfTurn': False, 'phaseIds': [], 'eventController': 'owner', 'sourceController': '', 'eventControllerId': 'p1', 'eventItemId': None, 'sourceRollDiscarded': 0, 'relatedActionId': None, 'relatedCardId': None, 'relatedOwnerId': None}, 'result': {'kind': 'optional_discard_then_draw', 'draw': 1}, 'ongoingEffect': None, 'targets': {}}, 'cost': {'note': None, 'tributeCardIds': [], 'tributeRequirements': {}, 'essenceSpent': [], 'excessEssence': [], 'tributeValidated': False, 'tributePaid': False, 'sourceExhausted': False, 'sourceSacrificed': False, 'sacrificedCards': []}, 'phaseId': 'confrontation_reaction', 'turn': 2, 'createdAt': 1793110405.7218552}, '_actions': [{'id': '895e5a561209', 'controllerId': 'p1', 'label': 'ze99bj8uw2oisfx_en — triggered effect', 'kind': 'triggered_effect', 'optional': True, 'source': {'cardId': 'ze99bj8uw2oisfx_en', 'zone': 'battlefield', 'itemId': 'press', 'cardType': 'persistent_will', 'ownerId': 'p1', 'containerId': None}, 'target': None, 'targets': [], 'ability': {'id': 'discard-to-draw-after-will', 'trigger': {'event': 'will_played', 'zone': 'field', 'container': '', 'visibility': '', 'sourceZone': '', 'enteredFromZone': '', 'eventSourceOnly': False, 'played': False, 'firstWillOfTurn': False, 'phaseIds': [], 'eventController': 'owner', 'sourceController': '', 'eventControllerId': 'p1', 'eventItemId': None, 'sourceRollDiscarded': 0, 'relatedActionId': None, 'relatedCardId': None, 'relatedOwnerId': None}, 'result': {'kind': 'optional_discard_then_draw', 'draw': 1}, 'ongoingEffect': None, 'targets': {}}, 'cost': {'note': None, 'tributeCardIds': [], 'tributeRequirements': {}, 'essenceSpent': [], 'excessEssence': [], 'tributeValidated': False, 'tributePaid': False, 'sourceExhausted': False, 'sourceSacrificed': False, 'sacrificedCards': []}, 'phaseId': 'confrontation_reaction', 'turn': 2, 'createdAt': 1793110405.7218552}], '_nextIndex': 1, '_acceptedActions': [], '_priorityPlayerId': 'p1'} is not None\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_press_late_empty_hand_does_not_open_an_impossible_choice",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_press_late_hand_immunity_does_not_open_an_impossible_choice",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_draw_clauses.py\", line 201, in test_press_late_hand_immunity_does_not_open_an_impossible_choice\n    self.assertIsNone(s.rules_engine[\"pendingChoice\"])\nAssertionError: {'id': 'e718b0cb2c68', 'kind': 'discard_from_hand', 'playerId': 'p1', 'count': 1, 'drawAfter': 1, 'actionId': 'semantic-action', 'controllerId': 'p1', 'sourceCardId': 'ze99bj8uw2oisfx_en'} is not None\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_press_legacy_accept_rechecks_discard_availability",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_draw_clauses.py\", line 301, in test_press_legacy_accept_rechecks_discard_availability\n    self.assertIsNone(s.rules_engine[\"pendingChoice\"])\nAssertionError: {'id': '82c7bb7fb47b', 'kind': 'discard_from_hand', 'playerId': 'p1', 'count': 1, 'drawAfter': 1, 'sourceCardId': 'ze99bj8uw2oisfx_en'} is not None\n",
+      "subtests": [
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_press_legacy_accept_rechecks_discard_availability (unavailable='empty')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_press_legacy_accept_rechecks_discard_availability (unavailable='immune')",
+          "status": "fail"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_press_source_departure_and_duplicate_choice_draw_only_once",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_press_then_pray_each_draws_after_its_own_discard",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_recovery_draw_fixture_ignores_nonrecovery_lock_and_kanon",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_recovery_draw_fixture_ignores_nonrecovery_lock_and_kanon (card='Pray the Ether')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_discard_draw_clauses.DiscardDrawClauses.test_recovery_draw_fixture_ignores_nonrecovery_lock_and_kanon (card='Alchemical Press')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.031
+    }
+  ],
+  "limits": [
+    "Press unit cases isolate its triggered action; the combined Pray case explicitly queues paid/play events as the server does.",
+    "Network tests isolate automatic phase driving; they do not certify scheduling or VFX.",
+    "Recovery timing is an explicit fixture, not legal play or phase traversal of these cards.",
+    "Other Press paragraphs, all card combinations, identical copies, physical devices and Safari are not certified."
+  ]
+}

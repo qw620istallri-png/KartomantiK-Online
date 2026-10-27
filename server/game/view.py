@@ -35,6 +35,8 @@ class ViewMixin:
         visible = viewer_id is not None and viewer_id == private_player_id
         result = {key: self.rules_payload_for_view(entry, viewer_id, role, private_player_id)
                   for key, entry in value.items() if not key.startswith("_")}
+        if value.get("shownToPlayerIds") is not None and viewer_id not in value["shownToPlayerIds"]:
+            result.pop("handProof", None)
         if not visible:
             for key in ("drawn", "drawnCards", "drawnCardIds"):
                 if isinstance(result.get(key), list):
@@ -185,6 +187,12 @@ class ViewMixin:
                 ability_id = (action.get("ability") or {}).get("id")
                 if ability_id:
                     pending_choice_view["sourceAbilityId"] = ability_id
+        if (pending_choice_view and pending_choice.get("kind") == "reveal_hand_discard"
+                and (pending_choice.get("purpose") in {"womb", "gorlok"} or "_handCards" in pending_choice)
+                and viewer_id not in {pending_choice.get("playerId"), pending_choice.get("targetPlayerId")}
+                and not can_view_hidden):
+            pending_choice_view.pop("cardIds", None)
+            pending_choice_view.pop("revealedHandCardIds", None)
         if (
             pending_choice_view
             and pending_choice.get("kind") in {

@@ -14542,7 +14542,8 @@ class LotTwentyThreeTests(RealCardRulesCase):
     def reveal_womb(self):
         session, p1, p2 = self.setup_game()
         session.battlefield = [self.item("womb", "p1", self.WOMB, "field")]
-        session.queue_rules_revelation_triggers()
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        session.queue_rules_reaction_triggers()
         session.pass_rules_priority("p2")
         session.pass_rules_priority("p1")
         return session, p1, p2
@@ -15399,11 +15400,7 @@ class LotTwentySevenTests(RealCardRulesCase):
         self.assertEqual(len(drawn), 2)
         queued = session.queue_rules_observed_event_triggers(defer=True)
         self.assertEqual([a["source"]["cardId"] for a in queued], [self.GORLOK])
-        result = session.apply_rules_action_result({
-            "id": "g", "controllerId": "p1",
-            "source": {"cardId": self.GORLOK, "itemId": "gorlok", "ownerId": "p1"},
-            "targets": [], "ability": self.ability(self.GORLOK, "gorlok-inspects-and-exiles-an-opponents-drawn-card"),
-        })
+        result = session.apply_rules_action_result(queued[0])
         self.assertEqual(result["choiceKind"], "reveal_hand_discard")
         choice = session.rules_engine["pendingChoice"]
         self.assertEqual(sorted(choice["cardIds"]), sorted(drawn))

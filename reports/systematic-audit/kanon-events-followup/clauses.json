@@ -1,0 +1,400 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "b56c9308ef4064f74410bb1c19bf37447e174c741573686fd05d8883774c35d8",
+  "finishedAt": "2026-10-27T14:30:35.242383+00:00",
+  "published": false,
+  "summary": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0,
+    "skipped": 0,
+    "selectedParagraphs": 9,
+    "cardsWithSelectedClauseProof": 8
+  },
+  "clauses": [
+    {
+      "cardId": "inner-deserts-064",
+      "name": "Kanon, the Deathdealer",
+      "paragraphIndex": 1,
+      "printedParagraph": "As long as Kanon is on the field, whenever an opponent would draw cards outside of the Recovery Phase, they choose half of them rounded up instead. That player discards the chosen cards, then draws the rest.",
+      "paragraphSha256": "bf65698bbddaa5b2a2806d85d368ae3a7ac3b561a08a4c61bb6d2538a2be73d5",
+      "expectedBehavior": "Inspect without moving cards; discard half rounded up, accounting for identical copies, before drawing the rest. Honor movement replacements and emit actual draw/discard events once per batch. Reject malformed, stale and repeated choices without extra moves.",
+      "testIds": [
+        "test_kanon_event_clauses.KanonEventClauses.test_half_rounded_up_and_short_deck_quantities",
+        "test_kanon_event_clauses.KanonEventClauses.test_inspection_does_not_move_cards_before_confirmation",
+        "test_kanon_event_clauses.KanonEventClauses.test_invalid_choices_are_atomic_including_malformed_ids",
+        "test_kanon_event_clauses.KanonEventClauses.test_identical_copies_are_selected_by_quantity",
+        "test_kanon_event_clauses.KanonEventClauses.test_discards_all_chosen_cards_before_drawing_the_rest",
+        "test_kanon_event_clauses.KanonEventClauses.test_draw_records_only_kept_cards_and_one_batch",
+        "test_kanon_event_clauses.KanonEventClauses.test_suspension_replaces_movements_without_draw_discard_or_will_penalty",
+        "test_kanon_event_clauses.KanonEventClauses.test_source_departure_does_not_cancel_already_created_replacement",
+        "test_kanon_event_clauses.KanonEventClauses.test_repeated_answer_cannot_move_or_trigger_again",
+        "test_kanon_event_clauses.KanonEventClauses.test_stale_inspected_deck_is_cancelled_without_moving_cards",
+        "test_kanon_events_integration.KanonEventsIntegration.test_kanon_duplicate_copies_reconnect_and_denblew_exact_bonus",
+        "test_kanon_events_integration.KanonEventsIntegration.test_tenebro_replacement_reconnect_keeps_the_whole_draw_atomic"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-064",
+      "name": "Kanon, the Deathdealer",
+      "paragraphIndex": 2,
+      "printedParagraph": "For each Will discarded this way, a target Manifestation on the field controlled by an opponent gets -1 power.",
+      "paragraphSha256": "583ec263974ffcdd33ff9a04c2f852e212643e16b7e1f579a7fa7f6023508c63",
+      "expectedBehavior": "Only Wills actually discarded cause one permanent -1 each, distributed among legal opposing field Manifestations, including repeated targets. No prompt without a legal target; suspension causes no discard penalty.",
+      "testIds": [
+        "test_kanon_event_clauses.KanonEventClauses.test_discarded_wills_allow_split_or_repeated_target_and_exact_power_loss",
+        "test_kanon_event_clauses.KanonEventClauses.test_no_will_penalty_choice_without_a_legal_target",
+        "test_kanon_event_clauses.KanonEventClauses.test_suspension_replaces_movements_without_draw_discard_or_will_penalty"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-026",
+      "name": "Denblew, the Puritan",
+      "paragraphIndex": 2,
+      "printedParagraph": "As long as Denblew is on the field, if an opponent draws one or more cards during the turn outside of the Recovery Phase, Denblew gets +1 power until the end of the turn.",
+      "paragraphSha256": "e2371f959acf65c053048f78672b76d3bd37c776ed485966fe3e9f15a3751760",
+      "expectedBehavior": "One +1 for each distinct opponent draw event after Kanon, regardless of cards in that event. Normal/replaced and two replaced draws remain distinct in one flush. No trigger for own draws, zero draws or inactive sources.",
+      "testIds": [
+        "test_kanon_event_clauses.KanonEventClauses.test_denblew_gets_one_bonus_for_multi_card_kept_draw",
+        "test_kanon_event_clauses.KanonEventClauses.test_denblew_sees_two_distinct_replaced_draws_before_flush",
+        "test_kanon_event_clauses.KanonEventClauses.test_denblew_separates_normal_and_replaced_draw_batches",
+        "test_kanon_event_clauses.KanonEventClauses.test_denblew_no_bonus_when_no_cards_are_drawn_or_own_player_draws",
+        "test_kanon_event_clauses.KanonEventClauses.test_inactive_watchers_do_not_trigger"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-056",
+      "name": "Makaboon",
+      "paragraphIndex": 1,
+      "printedParagraph": "As long as Makaboon is on the field, whenever a player discards one or more cards from their deck, in addition that player discards a card from their hand.",
+      "paragraphSha256": "ac159e2eb5c725171681f3d3972d1e6194c59fb8b804fda5bf46939d4336b88b",
+      "expectedBehavior": "Kanon's deck-discard batch triggers exactly one additional hand discard for that player. Empty hand does not block; the hand discard does not retrigger Makaboon.",
+      "testIds": [
+        "test_kanon_event_clauses.KanonEventClauses.test_makaboon_discards_one_extra_from_hand_per_deck_discard_batch",
+        "test_kanon_event_clauses.KanonEventClauses.test_makaboon_empty_hand_does_not_open_an_impossible_choice"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "874751ghrblya5j_en",
+      "name": "Pale Entity",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Pale Entity is in the Interzone, whenever a player loses points or discards one or more cards, you gain 5 points.",
+      "paragraphSha256": "0a46cd8fbe439d5a25a7f744144a25e2e00d3ff4e19f42e06bfc6ea2a08d0d6b",
+      "expectedBehavior": "Two Kanon discards in one batch trigger one +5 score gain while Pale Entity is in the Interzone.",
+      "testIds": [
+        "test_kanon_event_clauses.KanonEventClauses.test_discard_score_watchers_trigger_once_for_two_discards"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "d6jip43i66i34xk_en",
+      "name": "Forfog, the Hanged",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Forfog is in the Interzone, whenever an opponent discards one or more cards, they lose 5 points.",
+      "paragraphSha256": "b10038f8c1849aa5b3f30e69b06848e509f45718d5132dc65ea169abd5da3723",
+      "expectedBehavior": "Two Kanon discards by an opponent in one batch trigger one -5 score loss while Forfog is in the Interzone.",
+      "testIds": [
+        "test_kanon_event_clauses.KanonEventClauses.test_discard_score_watchers_trigger_once_for_two_discards"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-050",
+      "name": "Tombloom",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Tombloom is discarded, exile it. A target Manifestation on the field gets -2 power until the end of the turn.",
+      "paragraphSha256": "d45640785ca0a7d27c65ad6d510d55a39ec9a73a666f9b4951262bb2e054c2ac",
+      "expectedBehavior": "Kanon's discard enters Limbo from the Deck with discard provenance, triggering Tombloom once; resolution exiles it and applies exactly -2 to the chosen Manifestation.",
+      "testIds": [
+        "test_kanon_event_clauses.KanonEventClauses.test_tombloom_discard_trigger_exiles_source_and_weakens_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "kl0n8mt9m1fwly0_en",
+      "name": "Tenebro, Night Assailant",
+      "paragraphIndex": 0,
+      "printedParagraph": "If Tenebro is discarded, you can put it in Support instead of putting it in Limbo.",
+      "paragraphSha256": "bc518fb9bae512db7898b9c693fd3daddcf03c11743da88347bdd609d4854269",
+      "expectedBehavior": "The player may replace Kanon's discard with entry as Support. Ask before any partial movement; acceptance and decline both complete the remaining draw and emit one discard event.",
+      "testIds": [
+        "test_kanon_event_clauses.KanonEventClauses.test_tenebro_optional_replacement_is_offered_without_partial_movement"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-082",
+      "name": "Gorlok, the Blinded Indiscreet",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Gorlok is in the Interzone, whenever an opponent draws one or more cards outside of the Recovery Phase, that opponent shows the drawn cards to you. Choose and Exile one card among them, then Gorlok gets -1 power for each card the opponent showed to you this way.",
+      "paragraphSha256": "ff6767c13b406b5974dba3354dd944ab8328d29c8397d659d0898dcb1189584c",
+      "expectedBehavior": "For one isolated Kanon draw event, show only retained drawn cards, exile one and reduce Gorlok's power by exactly the number shown.",
+      "testIds": [
+        "test_kanon_event_clauses.KanonEventClauses.test_gorlok_single_event_shows_only_kept_cards_then_exiles_one"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_denblew_gets_one_bonus_for_multi_card_kept_draw",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_denblew_no_bonus_when_no_cards_are_drawn_or_own_player_draws",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_denblew_no_bonus_when_no_cards_are_drawn_or_own_player_draws (owner='p1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_denblew_no_bonus_when_no_cards_are_drawn_or_own_player_draws (owner='p2')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_denblew_sees_two_distinct_replaced_draws_before_flush",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_denblew_separates_normal_and_replaced_draw_batches",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_discard_score_watchers_trigger_once_for_two_discards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_discard_score_watchers_trigger_once_for_two_discards (card='Pale Entity')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_discard_score_watchers_trigger_once_for_two_discards (card='Forfog, the Hanged')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_discarded_wills_allow_split_or_repeated_target_and_exact_power_loss",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_discarded_wills_allow_split_or_repeated_target_and_exact_power_loss (targets=['a', 'a'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_discarded_wills_allow_split_or_repeated_target_and_exact_power_loss (targets=['a', 'b'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_discards_all_chosen_cards_before_drawing_the_rest",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_draw_records_only_kept_cards_and_one_batch",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_gorlok_single_event_shows_only_kept_cards_then_exiles_one",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_half_rounded_up_and_short_deck_quantities",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_half_rounded_up_and_short_deck_quantities (deck=['m2'], count=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_half_rounded_up_and_short_deck_quantities (deck=['m2', 'm3'], count=2)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_half_rounded_up_and_short_deck_quantities (deck=['m2', 'm3', 'm4'], count=3)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_half_rounded_up_and_short_deck_quantities (deck=['m2', 'm3', 'm4'], count=8)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.079
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_identical_copies_are_selected_by_quantity",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_identical_copies_are_selected_by_quantity (deck=['m2', 'm2', 'm2', 'm2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_identical_copies_are_selected_by_quantity (deck=['m2', 'm2', 'm3', 'm4'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_inactive_watchers_do_not_trigger",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_inactive_watchers_do_not_trigger (inactive='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_inactive_watchers_do_not_trigger (inactive='silenced')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_inspection_does_not_move_cards_before_confirmation",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_invalid_choices_are_atomic_including_malformed_ids",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_invalid_choices_are_atomic_including_malformed_ids (actor='p2', cards=['m2', 'm3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_invalid_choices_are_atomic_including_malformed_ids (actor='p1', cards=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_invalid_choices_are_atomic_including_malformed_ids (actor='p1', cards=['m2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_invalid_choices_are_atomic_including_malformed_ids (actor='p1', cards=['m2', 'absent'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_invalid_choices_are_atomic_including_malformed_ids (actor='p1', cards=['m2', 'm2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_invalid_choices_are_atomic_including_malformed_ids (actor='p1', cards=[{}, 'm2'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.14
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_makaboon_discards_one_extra_from_hand_per_deck_discard_batch",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_makaboon_empty_hand_does_not_open_an_impossible_choice",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_no_will_penalty_choice_without_a_legal_target",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_no_will_penalty_choice_without_a_legal_target (absent='missing')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_no_will_penalty_choice_without_a_legal_target (absent='protected')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_repeated_answer_cannot_move_or_trigger_again",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_source_departure_does_not_cancel_already_created_replacement",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_stale_inspected_deck_is_cancelled_without_moving_cards",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_suspension_replaces_movements_without_draw_discard_or_will_penalty",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_tenebro_optional_replacement_is_offered_without_partial_movement",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_tenebro_optional_replacement_is_offered_without_partial_movement (option='yes')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_kanon_event_clauses.KanonEventClauses.test_tenebro_optional_replacement_is_offered_without_partial_movement (option='no')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_kanon_event_clauses.KanonEventClauses.test_tombloom_discard_trigger_exiles_source_and_weakens_target",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_kanon_events_integration.KanonEventsIntegration.test_kanon_duplicate_copies_reconnect_and_denblew_exact_bonus",
+      "status": "pass",
+      "durationSeconds": 2.297
+    },
+    {
+      "testId": "test_kanon_events_integration.KanonEventsIntegration.test_tenebro_replacement_reconnect_keeps_the_whole_draw_atomic",
+      "status": "pass",
+      "durationSeconds": 0.656
+    }
+  ],
+  "limits": [
+    "Draw requests are explicit fixtures; most observer effects are resolved in isolation. Tombloom uses the actual target-choice/Stack path.",
+    "Network fixtures seed an inspected draw and isolate automatic phase driving; reconnect and choices use actual sockets.",
+    "Gorlok is tested for a single draw event; concurrent/delayed events, stale hand copies and its full text remain outside this batch.",
+    "Tenebro's victory exile and other printed paragraphs are not certified.",
+    "BOB coverage uses one Deck-suspension source, not competing replacements, all thresholds or release.",
+    "No new real-device, Safari, remote-art, full-catalog UI or VFX certification."
+  ]
+}

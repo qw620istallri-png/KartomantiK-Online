@@ -1,0 +1,308 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "16eff618f448cb9fe94492c3448a00214fbaea683f9ec4f1818d8ee9b42a9c47",
+  "finishedAt": "2026-10-27T15:30:33.595903+00:00",
+  "published": false,
+  "summary": {
+    "executed": 20,
+    "passed": 9,
+    "failed": 11,
+    "skipped": 0,
+    "selectedParagraphs": 2,
+    "cardsWithSelectedClauseProof": 2
+  },
+  "clauses": [
+    {
+      "cardId": "5r7g2e0r6q17lur_en",
+      "name": "Traumatize",
+      "paragraphIndex": 0,
+      "printedParagraph": "Lose 5 points, then a target player shows you their hand. Choose a card inside it, that player discards that card.",
+      "paragraphSha256": "c47225398e524391548157a11034f8a42048322db9c2c5b88dd53b3eb7b4bb9e",
+      "expectedBehavior": "Pay the printed essence cost at declaration, then lose five points when resolving. Show the chosen player’s hand and discard exactly the selected instance, respecting hand immunity and movement replacements. Empty/immune hands do not skip the five-point loss. Validate responses atomically; keep hand information private to the involved players and privileged observers.",
+      "testIds": [
+        "test_private_hand_clauses.PrivateHandClauses.test_selecting_identical_second_copy_preserves_the_first_instance",
+        "test_private_hand_clauses.PrivateHandClauses.test_returned_hand_card_is_not_an_old_selection",
+        "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation",
+        "test_private_hand_clauses.PrivateHandClauses.test_duplicate_reply_neither_pays_again_nor_chains_again",
+        "test_private_hand_clauses.PrivateHandClauses.test_private_hand_choices_hide_card_lists_from_spectators_but_not_the_players",
+        "test_private_hand_clauses.PrivateHandClauses.test_traumatize_pays_essence_before_response_but_loses_points_at_resolution",
+        "test_private_hand_clauses.PrivateHandClauses.test_traumatize_empty_or_immune_hand_still_loses_five_without_choice",
+        "test_private_hand_clauses.PrivateHandClauses.test_traumatize_can_choose_self_and_own_ritual_does_not_prevent_discard",
+        "test_private_hand_clauses.PrivateHandClauses.test_traumatize_late_hand_immunity_rejects_discard_atomically",
+        "test_private_hand_clauses.PrivateHandClauses.test_traumatize_discard_respects_bob_limbo_suspension",
+        "test_private_hand_clauses.PrivateHandClauses.test_traumatize_tenebro_discard_offers_atomic_optional_support"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "3diq2d6oy35zoey_en",
+      "name": "Extortionist Womb",
+      "paragraphIndex": 0,
+      "printedParagraph": "After the Revelation, a target opponent can show you their hand. If they do, choose a manifestation inside it, the opponent Chains that manifestation. If the opponent does not show you their hand or if they cannot Chain, put 2 tokens with 2 power {H} in Support.",
+      "paragraphSha256": "0bfb5310af45fe4217292b849cc44a9e0f53984f8d44c602f2598fde743c1632",
+      "expectedBehavior": "Trigger as a normal Stack effect at Reaction after Revelation. The opponent may refuse; refusal or inability to Chain creates two hollow power-two Support tokens. If they accept, show their entire non-immune hand privately and let the effect controller choose a legal Manifestation for the opponent to Chain. Preserve selected instances, fallback conditions and the effect after source departure.",
+      "testIds": [
+        "test_private_hand_clauses.PrivateHandClauses.test_selecting_identical_second_copy_preserves_the_first_instance",
+        "test_private_hand_clauses.PrivateHandClauses.test_returned_hand_card_is_not_an_old_selection",
+        "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation",
+        "test_private_hand_clauses.PrivateHandClauses.test_duplicate_reply_neither_pays_again_nor_chains_again",
+        "test_private_hand_clauses.PrivateHandClauses.test_private_hand_choices_hide_card_lists_from_spectators_but_not_the_players",
+        "test_private_hand_clauses.PrivateHandClauses.test_womb_triggers_in_reaction_after_revelation_and_waits_on_stack",
+        "test_private_hand_clauses.PrivateHandClauses.test_womb_refusal_produces_exact_two_power_two_hollow_supports",
+        "test_private_hand_clauses.PrivateHandClauses.test_womb_yes_shows_the_whole_hand_but_only_manifestations_are_selectable",
+        "test_private_hand_clauses.PrivateHandClauses.test_womb_no_chainable_manifestation_or_empty_hand_uses_fallback",
+        "test_private_hand_clauses.PrivateHandClauses.test_womb_protected_hand_is_not_shown_and_cannot_be_chained",
+        "test_private_hand_clauses.PrivateHandClauses.test_womb_support_lock_after_show_uses_fallback_without_losing_choice_to_an_error",
+        "test_private_hand_clauses.PrivateHandClauses.test_womb_late_hand_immunity_uses_fallback_without_chain",
+        "test_private_hand_clauses.PrivateHandClauses.test_womb_source_departure_does_not_cancel_either_branch",
+        "test_private_hand_clauses.PrivateHandClauses.test_womb_private_hand_proof_is_redacted_in_spectator_logs"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_duplicate_reply_neither_pays_again_nor_chains_again",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_duplicate_reply_neither_pays_again_nor_chains_again (card='Traumatize')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_duplicate_reply_neither_pays_again_nor_chains_again (card='Extortionist Womb')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation",
+      "status": "fail",
+      "subtests": [
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation (card='Traumatize', actor='p2', option='0')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation (card='Traumatize', actor='p1', option='-1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation (card='Traumatize', actor='p1', option='2')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation (card='Traumatize', actor='p1', option={})",
+          "status": "pass"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation (card='Traumatize', actor='p1', option=True)",
+          "status": "fail"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation (card='Traumatize', actor='p1', option=0.5)",
+          "status": "fail"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation (card='Extortionist Womb', actor='p2', option='0')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation (card='Extortionist Womb', actor='p1', option='-1')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation (card='Extortionist Womb', actor='p1', option='2')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation (card='Extortionist Womb', actor='p1', option={})",
+          "status": "pass"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation (card='Extortionist Womb', actor='p1', option=True)",
+          "status": "fail"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_indices_and_wrong_actor_are_rejected_without_mutation (card='Extortionist Womb', actor='p1', option=0.5)",
+          "status": "fail"
+        }
+      ],
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_private_hand_clauses.py\", line 159, in test_indices_and_wrong_actor_are_rejected_without_mutation\n    self.assertIsNotNone(s.resolve_rules_choice(actor, choice[\"id\"], option=option)[0])\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.265
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_private_hand_choices_hide_card_lists_from_spectators_but_not_the_players",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_private_hand_clauses.py\", line 261, in test_private_hand_choices_hide_card_lists_from_spectators_but_not_the_players\n    self.assertNotIn(\"cardIds\", spectator[\"rulesEngine\"][\"pendingChoice\"])\nAssertionError: 'cardIds' unexpectedly found in {'id': '9bd47262d54e', 'kind': 'reveal_hand_discard', 'purpose': 'womb', 'playerId': 'p1', 'targetPlayerId': 'p2', 'cardIds': ['m2', 'm3'], 'sourceCardId': '3diq2d6oy35zoey_en', 'actionId': 'semantic-action', 'sourceAbilityId': 'extortionist-womb-hand-or-tokens'}\n",
+      "subtests": [
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_private_hand_choices_hide_card_lists_from_spectators_but_not_the_players (card='Traumatize')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_private_hand_choices_hide_card_lists_from_spectators_but_not_the_players (card='Extortionist Womb')",
+          "status": "fail"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_returned_hand_card_is_not_an_old_selection",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_private_hand_clauses.py\", line 148, in test_returned_hand_card_is_not_an_old_selection\n    self.assertIsNotNone(s.resolve_rules_choice(\"p1\", choice[\"id\"], option=\"0\")[0])\nAssertionError: unexpectedly None\n",
+      "subtests": [
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_returned_hand_card_is_not_an_old_selection (card='Traumatize')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_returned_hand_card_is_not_an_old_selection (card='Extortionist Womb')",
+          "status": "fail"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_selecting_identical_second_copy_preserves_the_first_instance",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_private_hand_clauses.py\", line 138, in test_selecting_identical_second_copy_preserves_the_first_instance\n    self.assertIsNone(s.rules_engine[\"pendingChoice\"], \"The drawn copy was selected, so Gorlok has no surviving drawn card\")\nAssertionError: {'id': 'af4e2c072dbb', 'kind': 'reveal_hand_discard', 'purpose': 'gorlok', 'playerId': 'p1', 'targetPlayerId': 'p2', 'cardIds': ['m2'], '_drawnCards': [{'cardId': 'm2', 'handEntryId': '6dae04415970'}], 'sourceCardId': 'inner-deserts-082', 'sourceItemId': 'gorlok', 'actionId': '7dfe58a96850', 'controllerId': 'p1'} is not None : The drawn copy was selected, so Gorlok has no surviving drawn card\n",
+      "subtests": [
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_selecting_identical_second_copy_preserves_the_first_instance (card='Traumatize')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_selecting_identical_second_copy_preserves_the_first_instance (card='Extortionist Womb')",
+          "status": "fail"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_traumatize_can_choose_self_and_own_ritual_does_not_prevent_discard",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_traumatize_discard_respects_bob_limbo_suspension",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_private_hand_clauses.py\", line 106, in test_traumatize_discard_respects_bob_limbo_suspension\n    self.assertEqual(s.players[\"p2\"][\"zones\"][\"graveyard\"], [])\nAssertionError: Lists differ: ['m2'] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n'm2'\n\n- ['m2']\n+ []\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_traumatize_empty_or_immune_hand_still_loses_five_without_choice",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_traumatize_empty_or_immune_hand_still_loses_five_without_choice (case='empty')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_traumatize_empty_or_immune_hand_still_loses_five_without_choice (case='immune')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_traumatize_late_hand_immunity_rejects_discard_atomically",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_private_hand_clauses.py\", line 99, in test_traumatize_late_hand_immunity_rejects_discard_atomically\n    self.assertIsNotNone(s.resolve_rules_choice(\"p1\", choice[\"id\"], option=\"0\")[0])\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_traumatize_pays_essence_before_response_but_loses_points_at_resolution",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_traumatize_tenebro_discard_offers_atomic_optional_support",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_late_hand_immunity_uses_fallback_without_chain",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_private_hand_clauses.py\", line 237, in test_womb_late_hand_immunity_uses_fallback_without_chain\n    self.tokens(s)\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_private_hand_clauses.py\", line 50, in tokens\n    self.assertEqual(len(items), 2)\nAssertionError: 0 != 2\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_no_chainable_manifestation_or_empty_hand_uses_fallback",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_no_chainable_manifestation_or_empty_hand_uses_fallback (hand=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_no_chainable_manifestation_or_empty_hand_uses_fallback (hand=['w2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_no_chainable_manifestation_or_empty_hand_uses_fallback (hand=['nlbgn1ranlrd09r_en', 'inner-deserts-100'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_private_hand_proof_is_redacted_in_spectator_logs",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_private_hand_clauses.py\", line 272, in test_womb_private_hand_proof_is_redacted_in_spectator_logs\n    self.assertNotIn(\"handProof\", s.serialize_log(\"spectator\", \"spectator\")[\"entries\"][-1][\"details\"])\nAssertionError: 'handProof' unexpectedly found in {'kind': 'womb_show', 'status': 'shown', 'handProof': ['m2', 'w2'], 'choiceId': 'ebc7a9d29cb3'}\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_protected_hand_is_not_shown_and_cannot_be_chained",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_private_hand_clauses.py\", line 220, in test_womb_protected_hand_is_not_shown_and_cannot_be_chained\n    self.tokens(s)\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_private_hand_clauses.py\", line 50, in tokens\n    self.assertEqual(len(items), 2)\nAssertionError: 0 != 2\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_refusal_produces_exact_two_power_two_hollow_supports",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_source_departure_does_not_cancel_either_branch",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_source_departure_does_not_cancel_either_branch (option='yes')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_source_departure_does_not_cancel_either_branch (option='no')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_support_lock_after_show_uses_fallback_without_losing_choice_to_an_error",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_private_hand_clauses.py\", line 228, in test_womb_support_lock_after_show_uses_fallback_without_losing_choice_to_an_error\n    self.choose(s, option=\"0\")\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_atavic_end_clauses.py\", line 47, in choose\n    self.assertIsNone(error)\nAssertionError: 'Manifestations cannot be put in Support until the end of the turn.' is not None\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_triggers_in_reaction_after_revelation_and_waits_on_stack",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_private_hand_clauses.py\", line 175, in test_womb_triggers_in_reaction_after_revelation_and_waits_on_stack\n    self.assertEqual(s.queue_rules_revelation_triggers(defer=True), [])\nAssertionError: Lists differ: [{'id': 'b87f948f78a6', 'controllerId': 'p[1139 chars]578}] != []\n\nFirst list contains 1 additional elements.\nFirst extra element 0:\n{'id': 'b87f948f78a6', 'controllerId': 'p1', 'label': '3diq2d6oy35zoey_en — triggered effect', 'kind': 'triggered_effect', 'optional': False, 'source': {'cardId': '3diq2d6oy35zoey_en', 'zone': 'battlefield', 'itemId': 'womb', 'cardType': 'persistent_will', 'ownerId': 'p1', 'containerId': None}, 'target': None, 'targets': [], 'ability': {'id': 'extortionist-womb-hand-or-tokens', 'trigger': {'event': 'revelation', 'zone': None, 'container': '', 'visibility': '', 'sourceZone': '', 'enteredFromZone': '', 'eventSourceOnly': False, 'played': False, 'firstWillOfTurn': False, 'phaseIds': [], 'eventController': '', 'sourceController': '', 'eventControllerId': 'p1', 'eventItemId': None, 'sourceRollDiscarded': 0, 'relatedActionId': None, 'relatedCardId': None, 'relatedOwnerId': None}, 'result': {'kind': 'extortionist_womb'}, 'ongoingEffect': None, 'targets': {}}, 'cost': {'note': None, 'tributeCardIds': [], 'tributeRequirements': {}, 'essenceSpent': [], 'excessEssence': [], 'tributeValidated': False, 'tributePaid': False, 'sourceExhausted': False, 'sourceSacrificed': False, 'sacrificedCards': []}, 'phaseId': 'confrontation_reaction', 'turn': 2, 'createdAt': 1793115033.4328578}\n\nDiff is 1974 characters long. Set self.maxDiff to None to see it.\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_private_hand_clauses.PrivateHandClauses.test_womb_yes_shows_the_whole_hand_but_only_manifestations_are_selectable",
+      "status": "pass",
+      "durationSeconds": 0.016
+    }
+  ],
+  "limits": [
+    "Traumatize uses actual declaration/payment; Womb result branches isolate its shipped effect, with timing checked through actual event queues.",
+    "Network cases isolate automatic phase driving; they certify the choice protocol and private reveal delivery, not all phase scheduling.",
+    "Late hand mutations are stale-answer checks, not legal response windows during an effect.",
+    "Other hand/vessel selectors, all replacement combinations, physical browsers, remote art and VFX are outside this batch."
+  ]
+}

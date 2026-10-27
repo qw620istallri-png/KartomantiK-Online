@@ -380,8 +380,11 @@ class ChainMixin:
         self.rules_engine["pendingChoice"] = choice
         return choice
 
-    def request_rules_draw(self, player_id, count, source_controller_id=None):
+    def request_rules_draw(self, player_id, count, source_controller_id=None, *, include_drawn=False):
         requested = max(0, min(int(count), 50))
+        if self.rules_draw_locked(player_id):
+            return {"kind": "draw", "playerId": player_id, "count": 0,
+                    **({"drawn": []} if include_drawn else {})}
         replacement_source = next((
             source for source in self.rules_active_passive_sources(
                 "replace_opponent_nonrecovery_draw"
@@ -424,6 +427,7 @@ class ChainMixin:
             "kind": "draw",
             "playerId": player_id,
             "count": len(drawn),
+            **({"drawn": drawn} if include_drawn else {}),
         }
 
     def create_rules_token_copy(self, card_id, controller_id, *,

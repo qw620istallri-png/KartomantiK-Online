@@ -389,7 +389,13 @@ class CardsEffectsMixin:
                 else:
                     payload["destroyed"] = None
             if result.get("drawByBasePower"):
-                payload["drawn"] = self.draw_rules_cards(player_id, int(revealed.get("power") or 0))
+                draw_request = self.request_rules_draw(
+                    player_id, int(revealed.get("power") or 0),
+                    source_controller_id=action.get("controllerId"), include_drawn=True,
+                )
+                payload["drawn"] = draw_request.pop("drawn", [])
+                if draw_request.get("kind") == "choice_required":
+                    payload["drawRequest"] = draw_request
             return payload
         if result.get("kind") == "hand_manifestation_choice":
             hand = player["zones"]["hand"]
@@ -434,20 +440,22 @@ class CardsEffectsMixin:
         }
 
     def _rules_result_gorlok_peek(self, action, result, player_id, player):
-        host = self.find_battlefield_item((action.get("source") or {}).get("itemId"))
-        opponent_id = self.other_rules_player_id(player_id)
-        entry = (self.rules_engine.get("drawnOutsideRecovery") or {}).get(opponent_id) or {}
-        hand = self.players[opponent_id]["zones"]["hand"]
-        shown = [c for c in entry.get("cardIds") or [] if c in hand] if entry.get("turn") == self.phase_tracker["turn"] else []
-        if host is None or not shown:
+        draw_event = action.get("_drawEvent") or {}
+        opponent_id = draw_event.get("playerId")
+        if opponent_id not in self.players or opponent_id == player_id:
             return {"kind": result.get("kind"), "status": "nothing_shown"}
-        self.rules_engine["drawnOutsideRecovery"].pop(opponent_id, None)
+        if self.rules_hand_is_immune(opponent_id, player_id):
+            return {"kind": result.get("kind"), "status": "prevented_immunity"}
+        cards = self.rules_surviving_drawn_hand_cards(opponent_id, draw_event.get("cards") or [])
+        if not cards:
+            return {"kind": result.get("kind"), "status": "nothing_shown"}
         choice_id = new_id()
         self.rules_engine["pendingChoice"] = {
             "id": choice_id, "kind": "reveal_hand_discard", "purpose": "gorlok",
-            "playerId": player_id, "targetPlayerId": opponent_id, "cardIds": shown,
+            "playerId": player_id, "targetPlayerId": opponent_id,
+            "cardIds": [card["cardId"] for card in cards], "_drawnCards": cards,
             "sourceCardId": (action.get("source") or {}).get("cardId"),
-            "sourceItemId": host["id"],
+            "sourceItemId": (action.get("source") or {}).get("itemId"),
             "actionId": action.get("id"), "controllerId": action.get("controllerId"),
         }
         return {
@@ -681,7 +689,10 @@ class CardsEffectsMixin:
             "id": new_id(), "kind": "reveal_hand_discard",
             "playerId": player_id, "targetPlayerId": target_id,
             "cardIds": hand,
+            "_handCards": [{"cardId": entry["cardId"], "handEntryId": entry["id"]}
+                           for entry in self.rules_hand_card_entries(target_id)],
             "sourceCardId": (action.get("source") or {}).get("cardId"),
+            "controllerId": player_id,
         }
         self.rules_engine["pendingChoice"] = choice
         return {
@@ -1065,6 +1076,8 @@ class CardsEffectsMixin:
         }
 
     def _rules_result_optional_discard_then_draw(self, action, result, player_id, player):
+        if self.rules_hand_is_immune(player_id, action.get("controllerId")):
+            return {"kind": result.get("kind"), "status": "immune"}
         if not player["zones"]["hand"]:
             return {
                 "kind": result.get("kind"),

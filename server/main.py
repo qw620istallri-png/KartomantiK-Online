@@ -540,6 +540,19 @@ def log_rules_declared_action(session, action):
     log_rules_triggered_actions(session, triggered_actions, actor_id)
 
 
+async def send_rules_private_hand_reveal(session, result):
+    proof = result.pop("_privateHandReveal", None)
+    if not proof:
+        return
+    payload = {"type": "reveal", "ownerId": proof["playerId"], "zone": "hand", "cards": proof["cardIds"]}
+    for other_ws, other_info in list(connections.items()):
+        role = other_info.get("role", "observer" if other_info.get("isObserver") else "player")
+        if other_info["session"] is session and (
+            other_info.get("playerId") in proof["viewerIds"] or role in {"observer", "judge"}
+        ):
+            await send_to(other_ws, payload)
+
+
 async def record_rules_resolution(session, result, actor_id):
     resolved = result["action"]
     session.add_log(actor_id, "rules_action_resolved", {
@@ -1533,7 +1546,10 @@ async def handle_message(ws, info, data):
             return await send_error(ws, "You cannot act on this zone.")
 
         if msg_type == "shuffle":
+            hand_entries = list(session.rules_hand_card_entries(owner_id)) if zone == "hand" and session.rules_engine.get("enabled") else None
             random.shuffle(player["zones"][zone])
+            if hand_entries is not None:
+                session.rules_reorder_hand_entries(owner_id, hand_entries)
             session.add_log(actor_id, "shuffle", {"ownerId": owner_id, "zone": zone})
             resolved_search = session.resolve_search(actor_id, owner_id, zone)
             if resolved_search:
@@ -1543,7 +1559,10 @@ async def handle_message(ws, info, data):
             current = player["zones"][zone]
             if sorted(order) != sorted(current):
                 return await send_error(ws, "Reorder must be a permutation of the current zone.")
+            hand_entries = list(session.rules_hand_card_entries(owner_id)) if zone == "hand" and session.rules_engine.get("enabled") else None
             player["zones"][zone] = order
+            if hand_entries is not None:
+                session.rules_reorder_hand_entries(owner_id, hand_entries)
             session.add_log(actor_id, "reorder", {"ownerId": owner_id, "zone": zone})
         session.touch()
         await broadcast_state(session)
@@ -1660,6 +1679,7 @@ async def handle_message(ws, info, data):
                 await broadcast_state(session)
                 return  # A real cancellation can resume the suspended sequence.
             return False
+        await send_rules_private_hand_reveal(session, result)
         for declared in result.pop("_declaredActions", []):
             log_rules_declared_action(session, declared)
         for completed in result.pop("_resolvedActions", []):
