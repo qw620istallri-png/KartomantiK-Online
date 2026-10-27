@@ -23,3 +23,4 @@ reports/systematic-audit/*-debug.json
 reports/systematic-audit/**/browser-progress.json
 reports/systematic-audit/**/*.log
 reports/systematic-audit/**/*.png
+reports/network-usage/*.log

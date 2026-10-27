@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "794c798229fcb34f1d93780d78ebb6fc9c078932cbe8edd20ef4377bb2020500",
+  "finishedAt": "2026-10-27T10:53:55.512503+00:00",
+  "published": false,
+  "versionUnchanged": "140.2",
+  "summary": {
+    "python": {
+      "executed": 1409,
+      "passed": 1409,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuites": 15,
+    "browserSuites": 14,
+    "javascriptTransportSuites": 1,
+    "newPythonTests": 21,
+    "liveBrowser": {
+      "cards": 0,
+      "actions": 2,
+      "journeys": 2,
+      "failed": 0,
+      "unresolvedChoiceScenarios": 0
+    },
+    "canonicalStateComparisons": 1078
+  },
+  "artifacts": {
+    "benchmark.json": "94a9f6ad8f36a6c9bf4932c3d7f81d103e33c84023b45ebeed12b9ae0d8a95b6",
+    "browser.json": "cf22be97194f353897ff8bb13e9e0beda6115e344ebbc16a30e84658f62a98d3",
+    "unit-tests.json": "d54a6279590b94f493887452acaa1d354cb5a7d2f44a1da4014677f595add53f",
+    "ui-tests.json": "6226e38f15bccf19dc7081a1c1fc9beff2bac88cc77add8dbe11c7e5afac78dc",
+    "targeted-tests.json": "cf90731a8c499c4dbbcee9eb86de72faf37b697c017179c4c5bdbabb1ef7fb24",
+    "before.json": "4cceec487cf2ce5744847ca06dd4a62c2371d3c5b6876b17b8e31c718313ec5c",
+    "deck-search-browser.json": "bc285ecbe18a2cca3f139ac892cce810ae9c3b6260f2f4838186751a0594b76c"
+  },
+  "limits": [
+    "Synthetic local fixtures, not captured production traffic or a monthly forecast.",
+    "Compressed frame encoding uses the installed library defaults (12-bit windows, context takeover, memLevel 5); excludes TLS/TCP/keepalives.",
+    "Production metrics count UTF-8 JSON bytes before compression; Render's meter remains authoritative.",
+    "Browser action sample is focused, not a new full-catalog certification.",
+    "Old clients retain full states; deployment and client refresh are needed for production savings.",
+    "No Render dashboard/API access or production traffic capture was used."
+  ],
+  "supplementalBrowserProof": {
+    "file": "deck-search-browser.json",
+    "associatedGate": "test_deck_search_ui.cjs",
+    "individualSourceDigestRecorded": false,
+    "provenance": "Generated during ui-tests.json execution, whose source digest is checked before and after all gates."
+  }
+}

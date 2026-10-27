@@ -1,0 +1,104 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "794c798229fcb34f1d93780d78ebb6fc9c078932cbe8edd20ef4377bb2020500",
+  "rendering": [],
+  "actions": [
+    {
+      "cardId": "2oka6j26ibu19l9_en",
+      "abilityId": "pigon-return-support-card",
+      "status": "pass",
+      "driver": "production-UI-handlers-and-DOM-events",
+      "trace": [
+        "DOM-pointer-target",
+        "pass:p1:1"
+      ],
+      "sent": {
+        "type": "declare_rules_action",
+        "label": "Effet de Pigon, l'Épigone",
+        "kind": "activated_effect",
+        "source": {
+          "cardId": "2oka6j26ibu19l9_en",
+          "zone": "battlefield",
+          "itemId": "source"
+        },
+        "target": "",
+        "targets": [
+          {
+            "kind": "card",
+            "itemId": "scenario-field-item-0",
+            "cardId": "scenario-field-0"
+          }
+        ],
+        "costNote": "",
+        "paymentCardIds": [],
+        "extraEssenceCount": 0,
+        "abilityId": "pigon-return-support-card",
+        "rulesContext": {
+          "turn": 2,
+          "phaseId": "confrontation_reaction",
+          "topActionId": null
+        }
+      },
+      "resolution": "completed-no-pending-choice"
+    },
+    {
+      "cardId": "inner-deserts-100",
+      "abilityId": "juggernut-charges-into-confrontation",
+      "status": "pass",
+      "driver": "production-UI-handlers-and-DOM-events",
+      "trace": [
+        "committing",
+        "pass:p1:1"
+      ],
+      "sent": {
+        "type": "declare_rules_action",
+        "label": "Effet de Juggernut, l’Écrasant",
+        "kind": "activated_effect",
+        "source": {
+          "cardId": "inner-deserts-100",
+          "zone": "battlefield",
+          "itemId": "source"
+        },
+        "target": "",
+        "targets": [],
+        "costNote": "",
+        "paymentCardIds": [],
+        "extraEssenceCount": 0,
+        "abilityId": "juggernut-charges-into-confrontation",
+        "rulesContext": {
+          "turn": 2,
+          "phaseId": "recovery_end",
+          "topActionId": null
+        }
+      },
+      "resolution": "completed-no-pending-choice"
+    }
+  ],
+  "journeys": [
+    {
+      "name": "Suspend / private choice / reconnect / duplicate",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "status": "pass"
+    },
+    {
+      "name": "Suspend / private choice / reconnect / duplicate",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "status": "pass"
+    }
+  ],
+  "errors": [],
+  "summary": {
+    "cards": 0,
+    "actions": 2,
+    "journeys": 2,
+    "failed": 0,
+    "unresolvedChoiceScenarios": 0
+  },
+  "scope": "focused-debug-run"
+}

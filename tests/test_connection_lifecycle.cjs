@@ -64,6 +64,30 @@ const { chromium } = require("playwright");
       return { extraJoin, staleState, staleClose };
     });
 
+    const transport = await page.evaluate(() => {
+      window.__fixture();
+      connectAndJoin({ code: "PATCHED", name: "P1" });
+      const current = ws;
+      current.onopen();
+      const capability = current.sent.at(-1).stateDeltaVersion;
+      const first = JSON.parse(JSON.stringify(latestState));
+      current.onmessage({ data: JSON.stringify({ ...first, stateRevision: 1 }) });
+      const seen = [];
+      for (const [revision, score] of [[2, 1], [3, 2]]) {
+        current.onmessage({ data: JSON.stringify({ type: "state_patch", baseRevision: revision - 1, stateRevision: revision,
+          ops: [{ op: "set", path: ["players", "p1", "score"], value: score }] }) });
+        seen.push(latestState.players.p1.score);
+      }
+      current.onmessage({ data: JSON.stringify({ type: "state_patch", baseRevision: 1, stateRevision: 2, ops: [] }) });
+      current.onmessage({ data: JSON.stringify({ type: "state_patch", baseRevision: 1, stateRevision: 2, ops: [] }) });
+      const requests = current.sent.filter(m => m.type === "request_state").length;
+      const unchangedDuringGap = latestState.players.p1.score;
+      current.onmessage({ data: JSON.stringify({ ...first, stateRevision: 20 }) });
+      const recovered = latestState.players.p1.score;
+      return { capability, seen, requests, unchangedDuringGap, recovered };
+    });
+    assert.deepEqual(transport, { capability: 1, seen: [1, 2], requests: 1, unchangedDuringGap: 2, recovered: 0 });
+
     const reset = await page.evaluate(async () => {
       window.__fixture();
       const cid = "inner-deserts-094";

@@ -1,0 +1,115 @@
+{
+  "sourceDigest": "794c798229fcb34f1d93780d78ebb6fc9c078932cbe8edd20ef4377bb2020500",
+  "summary": {
+    "executed": 21,
+    "failed": 0,
+    "skipped": 0
+  },
+  "tests": [
+    {
+      "testId": "test_state_transport.StateTransportConcurrencyTests.test_closed_send_does_not_advance_reference_or_revision",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_state_transport.StateTransportConcurrencyTests.test_old_queued_view_cannot_follow_a_join_to_another_role",
+      "status": "pass",
+      "durationSeconds": 0.079
+    },
+    {
+      "testId": "test_state_transport.StateTransportConcurrencyTests.test_overlapping_broadcasts_commit_in_send_order",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_state_transport.StateTransportTests.test_deletions_arrays_null_and_json_types_are_preserved",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_state_transport.StateTransportTests.test_first_state_is_complete_then_exact_nested_diff",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_state_transport.StateTransportTests.test_journal_reset_and_changed_visibility_replace_the_tail",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_state_transport.StateTransportTests.test_journal_tail_adds_only_new_entries_and_preserves_thirty_in_order",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_state_transport.StateTransportTests.test_larger_patch_falls_back_to_complete_state",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_state_transport.StateTransportTests.test_metrics_measure_utf8_bytes_and_never_payload_content",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_state_transport.StateTransportTests.test_old_clients_keep_ordinary_complete_states",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_state_transport.StateTransportTests.test_prepare_does_not_commit_before_a_successful_send",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_state_transport.StateTransportTests.test_python_tuple_and_numeric_keys_follow_the_actual_json_shape",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_state_transport.StateTransportTests.test_snapshots_do_not_alias_live_engine_lists",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_state_transport.StateTransportTests.test_unchanged_broadcast_is_skipped_but_forced_snapshot_is_not",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_state_transport.StateTransportTests.test_untrusted_action_labels_cannot_grow_metrics_without_bound",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_state_transport_integration.StateTransportIntegration.test_mixed_versions_receive_exact_role_filtered_state_without_private_patch_leaks",
+      "status": "pass",
+      "durationSeconds": 0.5
+    },
+    {
+      "testId": "test_state_transport_integration.StateTransportIntegration.test_new_and_old_clients_observe_each_of_thirty_three_resolutions",
+      "status": "pass",
+      "durationSeconds": 1.671
+    },
+    {
+      "testId": "test_state_transport_integration.StateTransportIntegration.test_reconnect_and_role_change_start_new_full_private_baselines",
+      "status": "pass",
+      "durationSeconds": 0.516
+    },
+    {
+      "testId": "test_state_transport_integration.StateTransportIntegration.test_resync_is_full_even_unchanged_then_diffs_resume",
+      "status": "pass",
+      "durationSeconds": 0.344
+    },
+    {
+      "testId": "test_state_transport_integration.StateTransportIntegration.test_server_rollback_and_unsupported_versions_keep_complete_states",
+      "status": "pass",
+      "durationSeconds": 0.5
+    },
+    {
+      "testId": "test_state_transport_integration.StateTransportIntegration.test_tournament_spectators_do_not_receive_private_snapshots_or_patches",
+      "status": "pass",
+      "durationSeconds": 0.61
+    }
+  ]
+}

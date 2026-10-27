@@ -21,6 +21,7 @@ from websockets.asyncio.server import serve
 from websockets.http11 import Response
 from websockets.datastructures import Headers
 from websockets.exceptions import ConnectionClosed
+from state_transport import StateStream, TrafficMetrics, message_cause
 
 try:
     import sandbox  # local card sandbox: kept on the developer's machine, out of git
@@ -37,6 +38,7 @@ mimetypes.add_type("application/manifest+json", ".webmanifest")
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 log = logging.getLogger("kartomantik-online")
+WS_TRAFFIC = TrafficMetrics(log)
 
 PUBLIC_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "public"))
 HAND_LIMIT = 7
@@ -828,7 +830,7 @@ def encode_message(payload):
     return json.dumps(payload, separators=(",", ":"), ensure_ascii=False, allow_nan=False)
 
 
-async def broadcast_state(session):
+async def broadcast_state(session, *, force_ws=None):
     session.rules_auto_layout()
     stale = []
     role_counts = {
@@ -846,12 +848,23 @@ async def broadcast_state(session):
     for ws, info in list(connections.items()):
         if info["session"] is not session:
             continue
+        view_scope = (info["playerId"], info.get("role", "player"))
         payload = session.serialize_for(info["playerId"], info.get("role", "player"))
         payload["observerCount"] = sum(role_counts.values())
         payload["roleCounts"] = role_counts
         payload["roleParticipants"] = role_participants if info.get("role") in {"organizer", "judge"} else {}
+        stream = info.setdefault("_state_stream", StateStream())
         try:
-            await ws.send(encode_message(payload))
+            async with stream.lock:
+                # A queued broadcast from an old seat/session must not follow its new join.
+                if (connections.get(ws) is not info or info["session"] is not session
+                        or (info["playerId"], info.get("role", "player")) != view_scope):
+                    continue
+                wire, snapshot, revision, kind, baseline_bytes = stream.prepare(payload, force_full=ws is force_ws)
+                if wire is not None:
+                    await ws.send(wire)
+                    stream.commit(snapshot, revision)
+                WS_TRAFFIC.record(kind, len(wire.encode("utf-8")) if wire is not None else 0, baseline_bytes)
         except ConnectionClosed:
             stale.append(ws)
     for ws in stale:
@@ -860,7 +873,17 @@ async def broadcast_state(session):
 
 async def send_to(ws, payload):
     try:
-        await ws.send(encode_message(payload))
+        wire = encode_message(payload)
+        info = connections.get(ws)
+        if info:
+            stream = info.setdefault("_state_stream", StateStream())
+            async with stream.lock:
+                if payload.get("type") == "joined":
+                    stream.reset()
+                await ws.send(wire)
+        else:
+            await ws.send(wire)
+        WS_TRAFFIC.record("otherMessage", len(wire.encode("utf-8")))
     except ConnectionClosed:
         connections.pop(ws, None)
 
@@ -1151,6 +1174,9 @@ def rules_command_context_matches(session, context):
 async def handle_message(ws, info, data):
     session = info["session"]
     actor_id = info["playerId"]
+    if data.get("type") == "request_state":
+        await broadcast_state(session, force_ws=ws)
+        return False
     role = info.get("role", "observer" if info.get("isObserver") else "player")
     is_observer = role != "player"
     msg_type = data.get("type")
@@ -2700,18 +2726,22 @@ async def handle_join(ws, data):
         if getattr(session, "sandbox", None) and client_id == getattr(session, "sandbox_me", None):
             session.players[sandbox.OPPONENT_ID]["connected"] = True  # the tester plays both seats
 
+    previous_stream = (connections.get(ws) or {}).get("_state_stream")
+    delta_enabled = type(data.get("stateDeltaVersion")) is int and data["stateDeltaVersion"] == 1 and os.environ.get("KKO_STATE_DELTAS", "1") != "0"
     connections[ws] = {
         "session": session,
         "playerId": player_id,
         "displayName": name,
         "role": role,
         "isObserver": is_observer,
+        "_state_stream": StateStream(delta_enabled, previous_stream.lock if previous_stream else None),
     }
     session.add_log(player_id, "role_joined", {"role": role, "seat": seat}, actor_name=name)
     session.touch()
 
     await send_to(ws, {
         "type": "joined",
+        "stateDeltaVersion": 1 if delta_enabled else 0,
         "playerId": player_id,
         "isObserver": is_observer,
         "role": role,
@@ -2840,6 +2870,7 @@ async def handler(ws):
             if not isinstance(data, dict):
                 await send_error(ws, "Invalid message.")
                 continue
+            message_cause.set(str(data.get("type") or "unknown"))
             try:
                 validate_client_numerics(data)
             except InvalidClientValue:

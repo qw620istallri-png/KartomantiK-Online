@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "version": "140.3",
+  "assetVersion": "20261027-rules-beta-140-3",
+  "sourceDigest": "67c314f5dc54bbdceb73e8f2a457cbc638289d1be18e98824453aa4b9aa6cb8b",
+  "finishedAt": "2026-10-27T11:02:13.127908+00:00",
+  "publicationRequested": true,
+  "validationStatus": "pass",
+  "summary": {
+    "python": {
+      "executed": 1409,
+      "passed": 1409,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuites": 15,
+    "browserSuites": 14,
+    "javascriptTransportSuites": 1,
+    "versionSynchronization": {
+      "sourceDigest": "67c314f5dc54bbdceb73e8f2a457cbc638289d1be18e98824453aa4b9aa6cb8b",
+      "status": "pass",
+      "assetVersion": "20261027-rules-beta-140-3",
+      "assetUrls": 23,
+      "displayLabel": "beta 140.3"
+    }
+  },
+  "artifacts": {
+    "unit-tests.json": "f6b9f415c44a1b7ea552f66c3a360b9d6811aafca86be6f1f4fa390d2c3b9ec0",
+    "ui-tests.json": "8d9ff916d0ccab663ecdca0df39cf976afa482529cfcdee2bf1efe87a19c5087",
+    "versions.json": "c2b9ea4d642984090653152af97cbfa401fe2455aacd8f4f66837bd59521a563",
+    "deck-search-browser.json": "99df89122f839cf532900abb7a28db73c44c857155a6e7e1d8ec1e01b794ca72"
+  },
+  "limits": [
+    "Earlier network benchmarks retain their pre-release source digest; synthetic savings are not a Render billing forecast.",
+    "No new full-catalog or real Safari Mac certification."
+  ]
+}

@@ -51,6 +51,7 @@ function paintStaticText() {
   $("#createName").placeholder = t("namePlaceholder");
   $("#joinName").placeholder = t("namePlaceholder");
   $("#createBtn").textContent = t("createButton");
+  $("#createRulesBetaLabel").textContent = t("rulesBetaCreateLabel");
   $("#rulesBetaLabel").textContent = t("rulesBetaLabel");
   $("#rulesBetaHint").textContent = t("rulesBetaHint");
   $("#banListToggleLabel").textContent = t("banListToggleLabel");
@@ -198,6 +199,10 @@ function setStatus(message, kind = "") {
 }
 
 function initJoinScreen() {
+  const rulesInputs = [$("#rulesBetaInput"), $("#createRulesBetaInput")];
+  rulesInputs.forEach((input) => {
+    input.onchange = () => rulesInputs.forEach((other) => { other.checked = input.checked; });
+  });
   $("#tournamentToggleBtn").onclick = () => {
     const options = $("#tournamentLauncherOptions");
     const expanded = options.classList.toggle("hidden") === false;
@@ -310,6 +315,66 @@ function clearConnectionGameInteractions() {
   window.uiBeta?.resetTransient();
 }
 
+// Transport state is private to one socket and separate from mutable UI state.
+// A patch never reaches rendering until its whole revision is reconstructed.
+function createStateReceiver(requestSnapshot) {
+  let baseline = null, revision = null, resyncPending = false;
+  const copy = (value) => JSON.parse(JSON.stringify(value));
+  const resync = () => {
+    if (!resyncPending) { resyncPending = true; requestSnapshot(); }
+    return null;
+  };
+  return (message) => {
+    if (!message || typeof message !== "object") return resync();
+    if (message.type === "joined") {
+      baseline = null; revision = null; resyncPending = false;
+      return message;
+    }
+    if (message.type === "state") {
+      if (!("stateRevision" in message)) {
+        baseline = null; revision = null; resyncPending = false;
+        return message; // Older servers and the rollback path use ordinary states.
+      }
+      if (!Number.isSafeInteger(message.stateRevision) || message.stateRevision < 1) return resync();
+      baseline = copy(message);
+      delete baseline.stateRevision;
+      revision = message.stateRevision;
+      resyncPending = false;
+      return copy(baseline);
+    }
+    if (message.type !== "state_patch") return message;
+    if (resyncPending) return null;
+    if (!baseline || message.baseRevision !== revision || message.stateRevision !== revision + 1
+        || !Number.isSafeInteger(message.stateRevision) || !Array.isArray(message.ops)) return resync();
+    const next = copy(baseline);
+    try {
+      for (const op of message.ops) {
+        if (!Array.isArray(op.path) || !op.path.length || !op.path.every((key) => typeof key === "string")) throw new Error("path");
+        let parent = next;
+        for (const key of op.path.slice(0, -1)) {
+          if (!parent || typeof parent !== "object" || Array.isArray(parent) || !Object.hasOwn(parent, key)) throw new Error("parent");
+          parent = parent[key];
+        }
+        if (!parent || typeof parent !== "object" || Array.isArray(parent)) throw new Error("parent");
+        const key = op.path[op.path.length - 1];
+        if (op.op === "set" && Object.hasOwn(op, "value")) {
+          // Define an own data property, including for unusual player IDs.
+          Object.defineProperty(parent, key, { value: copy(op.value), enumerable: true, configurable: true, writable: true });
+        } else if (op.op === "delete" && Object.hasOwn(parent, key)) {
+          delete parent[key];
+        } else if (op.op === "log_tail" && op.path.length === 1 && key === "recentLog"
+            && Array.isArray(parent[key]) && Array.isArray(op.append)
+            && Number.isSafeInteger(op.drop) && op.drop >= 0 && op.drop <= parent[key].length) {
+          parent[key] = parent[key].slice(op.drop).concat(copy(op.append));
+        } else throw new Error("operation");
+      }
+    } catch (error) { return resync(); }
+    if (next.type !== "state") return resync();
+    baseline = next; revision = message.stateRevision;
+    return copy(baseline);
+  };
+}
+
 function connectAndJoin(joinPayload) {
   clearConnectionGameInteractions();
   const previous = ws;
@@ -329,11 +394,20 @@ function connectAndJoin(joinPayload) {
   const proto = location.protocol === "https:" ? "wss:" : "ws:";
   const socket = new WebSocket(`${proto}//${location.host}/ws`);
   ws = socket;
+  const receiveState = createStateReceiver(() => {
+    if (ws === socket && socket.readyState === WebSocket.OPEN) socket.send(JSON.stringify({ type: "request_state" }));
+  });
   socket.onopen = () => {
     if (ws !== socket) return;
-    socket.send(JSON.stringify({ type: "join", createNew, createTournament, rulesBeta, banListEnabled, deckPolicy: joinPayload.deckPolicy, code: joinedCode, name: joinedName, clientId, sandbox: joinPayload.sandbox }));
+    socket.send(JSON.stringify({ type: "join", stateDeltaVersion: 1, createNew, createTournament, rulesBeta, banListEnabled, deckPolicy: joinPayload.deckPolicy, code: joinedCode, name: joinedName, clientId, sandbox: joinPayload.sandbox }));
   };
-  socket.onmessage = (event) => { if (ws === socket) handleServerMessage(JSON.parse(event.data)); };
+  socket.onmessage = (event) => {
+    if (ws !== socket) return;
+    let incoming;
+    try { incoming = JSON.parse(event.data); } catch (error) { receiveState(null); return; }
+    const message = receiveState(incoming);
+    if (message) handleServerMessage(message);
+  };
   socket.onclose = () => {
     if (ws !== socket || intentionalClose) return;
     clearConnectionGameInteractions();

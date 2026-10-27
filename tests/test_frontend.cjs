@@ -235,14 +235,26 @@ function startServer() {
       let rulesBetaPayload = null;
       const originalConnectAndJoin = connectAndJoin;
       connectAndJoin = (payload) => { rulesBetaPayload = payload; };
-      document.querySelector("#rulesBetaInput").checked = true;
+      const visibleRules = document.querySelector("#createRulesBetaInput");
+      const defaultUnchecked = !visibleRules.checked && !document.querySelector("#rulesBetaInput").checked;
       document.querySelector("#createName").value = "Beta tester";
       document.querySelector("#createBtn").click();
+      const manualPayload = rulesBetaPayload;
+      visibleRules.click();
+      document.querySelector("#createBtn").click();
       const casualPayload = rulesBetaPayload;
+      document.querySelector("#rulesBetaInput").click();
+      const menuDisablesVisible = !visibleRules.checked;
+      document.querySelector("#rulesBetaInput").click();
       document.querySelector("#createTournamentBtn").click();
       const tournamentPayload = rulesBetaPayload;
       connectAndJoin = originalConnectAndJoin;
       const rulesBetaCreate = {
+        defaultUnchecked,
+        manualPayload,
+        menuDisablesVisible,
+        visibleChecked: visibleRules.checked,
+        insideCreatePane: visibleRules.closest("#createPane") !== null,
         casualPayload,
         tournamentPayload,
         insideTournamentLauncher: document.querySelector("#rulesBetaInput").closest("#tournamentLauncherOptions") !== null,
@@ -3882,6 +3894,11 @@ function startServer() {
     assert.equal(innerDesertImport.bob.name, "BOB");
     assert.equal(innerDesertImport.bob.points, 50);
     assert(result.handLabels.includes(result.copyText));
+    assert.equal(result.rulesBetaCreate.defaultUnchecked, true);
+    assert.equal(result.rulesBetaCreate.manualPayload.rulesBeta, false);
+    assert.equal(result.rulesBetaCreate.menuDisablesVisible, true);
+    assert.equal(result.rulesBetaCreate.visibleChecked, true);
+    assert.equal(result.rulesBetaCreate.insideCreatePane, true);
     assert.equal(result.rulesBetaCreate.casualPayload.rulesBeta, true);
     assert.equal(result.rulesBetaCreate.casualPayload.createNew, true);
     assert.equal(result.rulesBetaCreate.tournamentPayload.rulesBeta, true);

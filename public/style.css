@@ -142,6 +142,14 @@ input, textarea, select {
 .tabs button.active { background: var(--gold); border-color: var(--gold-deep); color: var(--carbon); }
 .field { display: grid; gap: 4px; margin-bottom: 12px; }
 .field label { font-size: 14px; font-weight: 700; text-transform: uppercase; color: var(--muted); }
+.create-actions { display: flex; align-items: center; gap: 12px; }
+.create-actions > button { min-height: 44px; flex: none; }
+.create-rules-option {
+  display: flex; align-items: center; gap: 8px; min-height: 44px; min-width: 0;
+  color: var(--muted); font-size: 14px; line-height: 1.35; cursor: pointer;
+}
+.create-rules-option input { flex: none; width: 18px; height: 18px; margin: 0; accent-color: var(--ritual); }
+.create-rules-option:focus-within { outline: 2px solid var(--ritual); outline-offset: 3px; }
 .rules-beta-option {
   display: grid; grid-template-columns: 20px 1fr; align-items: start; gap: 10px;
   margin: 2px 0 14px; padding: 10px 12px; background: #eee4cb; border: 1px solid #9c8756; border-radius: 8px;

@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "794c798229fcb34f1d93780d78ebb6fc9c078932cbe8edd20ef4377bb2020500",
+  "published": false,
+  "cases": [
+    {
+      "scenario": "mixed",
+      "canonicalStatesCompared": 202,
+      "fullFrames": 202,
+      "incrementalFrames": 162,
+      "fullJsonBytes": 2845436,
+      "incrementalJsonBytes": 145342,
+      "jsonReductionPercent": 94.89,
+      "fullLocalCompressedFrameBytes": 453205,
+      "incrementalLocalCompressedFrameBytes": 9753,
+      "localCompressedFrameReductionPercent": 97.85
+    },
+    {
+      "scenario": "manual",
+      "canonicalStatesCompared": 202,
+      "fullFrames": 202,
+      "incrementalFrames": 162,
+      "fullJsonBytes": 2612038,
+      "incrementalJsonBytes": 100730,
+      "jsonReductionPercent": 96.14,
+      "fullLocalCompressedFrameBytes": 433571,
+      "incrementalLocalCompressedFrameBytes": 8420,
+      "localCompressedFrameReductionPercent": 98.06
+    },
+    {
+      "scenario": "journal",
+      "canonicalStatesCompared": 202,
+      "fullFrames": 202,
+      "incrementalFrames": 202,
+      "fullJsonBytes": 2738950,
+      "incrementalJsonBytes": 89886,
+      "jsonReductionPercent": 96.72,
+      "fullLocalCompressedFrameBytes": 467593,
+      "incrementalLocalCompressedFrameBytes": 10707,
+      "localCompressedFrameReductionPercent": 97.71
+    },
+    {
+      "scenario": "deck",
+      "canonicalStatesCompared": 202,
+      "fullFrames": 202,
+      "incrementalFrames": 102,
+      "fullJsonBytes": 2917688,
+      "incrementalJsonBytes": 105610,
+      "jsonReductionPercent": 96.38,
+      "fullLocalCompressedFrameBytes": 431376,
+      "incrementalLocalCompressedFrameBytes": 7595,
+      "localCompressedFrameReductionPercent": 98.24
+    },
+    {
+      "scenario": "unchanged",
+      "canonicalStatesCompared": 202,
+      "fullFrames": 202,
+      "incrementalFrames": 2,
+      "fullJsonBytes": 2917688,
+      "incrementalJsonBytes": 28924,
+      "jsonReductionPercent": 99.01,
+      "fullLocalCompressedFrameBytes": 431113,
+      "incrementalLocalCompressedFrameBytes": 4333,
+      "localCompressedFrameReductionPercent": 98.99
+    },
+    {
+      "scenario": "stack",
+      "canonicalStatesCompared": 68,
+      "fullFrames": 68,
+      "incrementalFrames": 68,
+      "fullJsonBytes": 1255578,
+      "incrementalJsonBytes": 360790,
+      "jsonReductionPercent": 71.27,
+      "fullLocalCompressedFrameBytes": 175271,
+      "incrementalLocalCompressedFrameBytes": 24630,
+      "localCompressedFrameReductionPercent": 85.95
+    }
+  ],
+  "clientParity": "Server/client trace parity: 1078 states OK\nState transport client regression: OK",
+  "limits": [
+    "Synthetic local fixtures, not captured production traffic or a monthly forecast.",
+    "Compressed frame encoding uses the installed library defaults (12-bit windows, context takeover, memLevel 5); excludes TLS/TCP/keepalives.",
+    "Production metrics count UTF-8 JSON bytes before compression; Render's meter remains authoritative."
+  ]
+}

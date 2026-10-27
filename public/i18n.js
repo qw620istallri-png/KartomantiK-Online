@@ -762,6 +762,7 @@ Object.assign(ui.it, {
 
 Object.assign(ui.en, {
   rulesBetaLabel: "Assisted rules — Beta",
+  rulesBetaCreateLabel: "Automatic rules (beta)",
   rulesBetaHint: "Enable before creating a casual or tournament game. Adds detailed phases, server-managed priority and Stack order, and assisted card effects.",
   banListToggleLabel: "Enable ban list",
   banListToggleHint: "Apply and customize banned cards and restricted groups in a casual game too.",
@@ -1244,6 +1245,7 @@ Object.assign(ui.en, {
 });
 Object.assign(ui.fr, {
   rulesBetaLabel: "Règles assistées — Bêta",
+  rulesBetaCreateLabel: "Règles automatisées (bêta)",
   rulesBetaHint: "À activer avant de créer une partie amicale ou un tournoi. Ajoute les phases détaillées, la priorité, l’ordre de la Stack et des effets de cartes assistés.",
   edit: "Modifier",
   banListToggleLabel: "Activer la ban list",
@@ -1727,6 +1729,7 @@ Object.assign(ui.fr, {
 });
 Object.assign(ui.it, {
   rulesBetaLabel: "Regole assistite — Beta",
+  rulesBetaCreateLabel: "Regole automatiche (beta)",
   rulesBetaHint: "Attiva prima di creare una partita amichevole o un torneo. Aggiunge fasi dettagliate, priorità, ordine della Pila ed effetti di carte assistiti.",
   edit: "Modifica",
   banListToggleLabel: "Attiva lista vietata",
