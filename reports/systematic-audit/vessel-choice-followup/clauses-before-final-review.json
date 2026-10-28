@@ -1,0 +1,435 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "69a06d4ad331bc1ebba359d83e6f30b5fa8c2650d1a2db53bd0b00f59e4d8c7e",
+  "finishedAt": "2026-10-28T09:48:12.133848+00:00",
+  "published": false,
+  "summary": {
+    "executed": 28,
+    "passed": 28,
+    "failed": 0,
+    "skipped": 0,
+    "selectedParagraphs": 3,
+    "cardsWithSelectedClauseProof": 3
+  },
+  "clauses": [
+    {
+      "cardId": "hcgvp7lbadlng1h_en",
+      "name": "Gummo",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Gummo is in the Interzone, at the end of the turn you may choose a manifestation in your Empathic Vessel. If you do, Gummo copies its base power and gains its effects in addition to its own until this effect is reused.",
+      "paragraphSha256": "37c77d9b3db4a133bcde9f8dfe7c8f04bd0bd6aa6ae73fd60cf464339d7cc1da",
+      "expectedBehavior": "Copy base power and gain effects in addition to its own from a chosen Vessel instance while in the Interzone; preserve existing bonuses, optionality and the copy after the chosen card leaves. Only the first printed paragraph is selected.",
+      "testIds": [
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_control_change_keeps_the_resolving_effects_controller",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_copies_base_and_effects_once_preserving_own_effects_and_bonus",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_decline_empty_or_source_departure_has_no_choice",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_departure_during_choice_cannot_copy_a_new_instance",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_only_offers_the_end_trigger_from_interzone",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_missing_interzone_source_card_cannot_create_a_phantom",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_removed_duplicate_cannot_select_the_remaining_copy",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_returned_vessel_card_is_not_an_old_selection",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_selected_second_duplicate_moves_that_occurrence_only",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_successful_answer_cannot_be_replayed",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_surviving_identical_vessel_copy_remains_selectable",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_vessel_instance_ids_are_not_sent_to_players_or_spectators",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_vessel_reorder_does_not_create_new_instances",
+        "test_vessel_choice_integration.VesselChoiceIntegration.test_gummo_reorder_shuffle_and_reconnect_keep_original_candidates"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-048",
+      "name": "Wish Upon the Stars",
+      "paragraphIndex": 0,
+      "printedParagraph": "Choose a Manifestation in your Empathic Vessel. Its owner chooses a Manifestation you own in their Empathic Vessel with points equal to or greater than the one you chose. If they can do so, those Manifestations return to the top of their owners' decks.",
+      "paragraphSha256": "57d0720e4d1959547249de59b9c346585e85775bb088b9526716991ee2591ea3",
+      "expectedBehavior": "The initial card owner chooses an eligible caster-owned Manifestation of equal or greater points in their Vessel. Return both to their owners’ Deck tops using effect movements and replacements, only while both original instances remain.",
+      "testIds": [
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_missing_interzone_source_card_cannot_create_a_phantom",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_removed_duplicate_cannot_select_the_remaining_copy",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_returned_vessel_card_is_not_an_old_selection",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_selected_second_duplicate_moves_that_occurrence_only",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_successful_answer_cannot_be_replayed",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_surviving_identical_vessel_copy_remains_selectable",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_vessel_instance_ids_are_not_sent_to_players_or_spectators",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_vessel_reorder_does_not_create_new_instances",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_wish_accepts_equal_points_and_excludes_lower_or_wrong_owner",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_wish_deck_suspension_replaces_both_returns",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_wish_initial_card_roundtrip_cannot_exchange_a_new_entry",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_wish_no_eligible_answer_moves_neither_card",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_wish_owner_chooses_equal_or_greater_points_and_returns_to_owners",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_wish_records_both_departures_for_observers",
+        "test_vessel_choice_integration.VesselChoiceIntegration.test_wish_reconnect_owner_selects_second_copy_and_cannot_repeat"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-090",
+      "name": "Pescojolero, the Ringing King",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Pescojolero is on the field, you may Exhaust it: Put one or more target Manifestations from the Stalemate Zone into the Empathic Vessel of an opponent who is not their owner. Then put a target Manifestation with a point value equal to or less than the combined points of those Manifestations from that player's Empathic Vessel into your Interzone.",
+      "paragraphSha256": "7c1ceef5ddf6bff8115e8ca60777683ab1be7dd85a2331f0743f185bd148fb61",
+      "expectedBehavior": "Give the valid Stalemate Manifestations first, then put an eligible original Vessel instance worth at most the transferred points into your Interzone without Chain or tribute. Preserve immutable owner and current controller.",
+      "testIds": [
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_missing_interzone_source_card_cannot_create_a_phantom",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_pesco_counts_only_gifts_actually_transferred_and_sums_their_points",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_pesco_full_interzone_keeps_the_card_in_vessel_and_keeps_the_gifts",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_pesco_gifts_first_and_takes_without_chaining_or_paying",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_pesco_put_entry_triggers_for_controller_without_playing_or_chaining",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_pesco_source_departure_does_not_cancel_placing_the_card",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_removed_duplicate_cannot_select_the_remaining_copy",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_returned_vessel_card_is_not_an_old_selection",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_selected_second_duplicate_moves_that_occurrence_only",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_successful_answer_cannot_be_replayed",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_surviving_identical_vessel_copy_remains_selectable",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_vessel_instance_ids_are_not_sent_to_players_or_spectators",
+        "test_vessel_choice_clauses.VesselChoiceClauses.test_vessel_reorder_does_not_create_new_instances",
+        "test_vessel_choice_integration.VesselChoiceIntegration.test_pesco_reconnect_rejects_stale_copy_then_takes_survivor"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_control_change_keeps_the_resolving_effects_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_copies_base_and_effects_once_preserving_own_effects_and_bonus",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_decline_empty_or_source_departure_has_no_choice",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_decline_empty_or_source_departure_has_no_choice (case='decline')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_decline_empty_or_source_departure_has_no_choice (case='empty')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_decline_empty_or_source_departure_has_no_choice (case='departed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_departure_during_choice_cannot_copy_a_new_instance",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_only_offers_the_end_trigger_from_interzone",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_only_offers_the_end_trigger_from_interzone (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_only_offers_the_end_trigger_from_interzone (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_gummo_only_offers_the_end_trigger_from_interzone (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.11
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='gummo', option=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='gummo', option=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='gummo', option=0.5)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='gummo', option=-1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='gummo', option='99')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='gummo', option={})",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='gummo', option=None)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='wish', option=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='wish', option=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='wish', option=0.5)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='wish', option=-1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='wish', option='99')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='wish', option={})",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='wish', option=None)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='pescojolero', option=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='pescojolero', option=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='pescojolero', option=0.5)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='pescojolero', option=-1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='pescojolero', option='99')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='pescojolero', option={})",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_indices_and_wrong_actor_are_rejected_atomically (purpose='pescojolero', option=None)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.765
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_missing_interzone_source_card_cannot_create_a_phantom",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_pesco_counts_only_gifts_actually_transferred_and_sums_their_points",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_pesco_counts_only_gifts_actually_transferred_and_sums_their_points (lost=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_pesco_counts_only_gifts_actually_transferred_and_sums_their_points (lost=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_pesco_full_interzone_keeps_the_card_in_vessel_and_keeps_the_gifts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_pesco_gifts_first_and_takes_without_chaining_or_paying",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_pesco_put_entry_triggers_for_controller_without_playing_or_chaining",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_pesco_source_departure_does_not_cancel_placing_the_card",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_removed_duplicate_cannot_select_the_remaining_copy",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_removed_duplicate_cannot_select_the_remaining_copy (purpose='gummo')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_removed_duplicate_cannot_select_the_remaining_copy (purpose='wish')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_removed_duplicate_cannot_select_the_remaining_copy (purpose='pescojolero')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_returned_vessel_card_is_not_an_old_selection",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_returned_vessel_card_is_not_an_old_selection (purpose='gummo')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_returned_vessel_card_is_not_an_old_selection (purpose='wish')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_returned_vessel_card_is_not_an_old_selection (purpose='pescojolero')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_selected_second_duplicate_moves_that_occurrence_only",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_selected_second_duplicate_moves_that_occurrence_only (purpose='wish')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_selected_second_duplicate_moves_that_occurrence_only (purpose='pescojolero')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_successful_answer_cannot_be_replayed",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_successful_answer_cannot_be_replayed (purpose='gummo')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_successful_answer_cannot_be_replayed (purpose='wish')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_successful_answer_cannot_be_replayed (purpose='pescojolero')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.141
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_surviving_identical_vessel_copy_remains_selectable",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_surviving_identical_vessel_copy_remains_selectable (purpose='gummo')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_surviving_identical_vessel_copy_remains_selectable (purpose='wish')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_surviving_identical_vessel_copy_remains_selectable (purpose='pescojolero')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_vessel_instance_ids_are_not_sent_to_players_or_spectators",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_vessel_reorder_does_not_create_new_instances",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_wish_accepts_equal_points_and_excludes_lower_or_wrong_owner",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_wish_deck_suspension_replaces_both_returns",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_wish_initial_card_roundtrip_cannot_exchange_a_new_entry",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_wish_no_eligible_answer_moves_neither_card",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_wish_owner_chooses_equal_or_greater_points_and_returns_to_owners",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_wish_records_both_departures_for_observers",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_vessel_choice_integration.VesselChoiceIntegration.test_gummo_reorder_shuffle_and_reconnect_keep_original_candidates",
+      "status": "pass",
+      "durationSeconds": 0.734
+    },
+    {
+      "testId": "test_vessel_choice_integration.VesselChoiceIntegration.test_pesco_reconnect_rejects_stale_copy_then_takes_survivor",
+      "status": "pass",
+      "durationSeconds": 0.641
+    },
+    {
+      "testId": "test_vessel_choice_integration.VesselChoiceIntegration.test_wish_reconnect_owner_selects_second_copy_and_cannot_repeat",
+      "status": "pass",
+      "durationSeconds": 0.562
+    }
+  ],
+  "limits": [
+    "Resolution fixtures isolate the selected paragraphs; they do not certify all abilities or full phase scheduling.",
+    "Late mutations test stale answers, not legal responses inside an effect.",
+    "Other Vessel selectors, all replacement combinations, remote art, physical devices and Safari are outside this batch."
+  ]
+}

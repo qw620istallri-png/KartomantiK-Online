@@ -106,7 +106,9 @@ class PrivateHandClauses(unittest.TestCase):
         self.choose(s, option="0")
         self.assertEqual(s.players["p2"]["zones"]["graveyard"], [])
         self.assertEqual([c["cardId"] for c in s.rules_engine["suspendedCards"]], ["m2"])
-        self.assertFalse(any(e["kind"] == "cards_discarded" for e in s.rules_engine.get("observedEvents") or []))
+        # A replaced discard still happened (creator ruling, 2026-10-28).
+        self.assertEqual(sum(e["kind"] == "cards_discarded" for e in s.rules_engine.get("observedEvents") or []),1)
+        self.assertFalse(any(e.get("cardId")=="m2" and e.get("ownerId")=="p2" for e in s.rules_engine["recentLimboEntries"]))
 
     def test_traumatize_tenebro_discard_offers_atomic_optional_support(self):
         card = self.cid("Tenebro, Night Assailant")

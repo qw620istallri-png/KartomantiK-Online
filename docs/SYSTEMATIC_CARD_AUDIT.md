@@ -307,3 +307,130 @@ Six configurations navigateur vérifient douze scénarios de sélection. Ces qua
 lots locaux sont intégrés à la [publication 140.32](RELEASE_140_32.md), avec une
 validation séparée dans `reports/systematic-audit/release-140-32/`. Les autres
 sélecteurs et les combinaisons non exécutées restent à couvrir.
+
+## Suite locale après 141 : Vaisseau et Interzone
+
+La [passe des choix du Vaisseau](AUDIT_VESSEL_CHOICES_AFTER_141.md) ajoute
+28 méthodes, dont trois parcours WebSocket, pour trois paragraphes sélectionnés
+de Gummo, Wish Upon the Stars et Pescojolero. Elle distingue les exemplaires,
+refuse les anciennes entrées et les réponses invalides, conserve les remplacements
+des retours de Wish et rétablit les effets d'entrée des cartes amenées en
+Interzone. Six configurations Chrome vérifient 18 scénarios de sélecteur.
+Les preuves sont séparées dans `reports/systematic-audit/vessel-choice-followup/`.
+Ce lot reste local, sans publication ni modification des VFX. Ses limites et les
+corrections de préparation des premiers tests sont explicites dans le rapport.
+
+La [passe Bloatuba/Ponderer](AUDIT_DECK_SEQUENCES_AFTER_141.md) ajoute ensuite
+26 méthodes, dont trois parcours réseau, pour leurs deux paragraphes sélectionnés.
+Elle corrige les doublons des répartitions, les positions retirées par Bloatuba,
+les choix périmés, la suspension de ses sorties du Deck et les métadonnées
+effacées par un simple changement d'ordre. Dissect sert d'interaction au
+répartiteur commun, sans certification supplémentaire de toute sa carte.
+Six configurations Chrome rejouent 18 scénarios. Les preuves sont séparées dans
+`reports/systematic-audit/deck-sequence-followup/`. La limite du suivi par
+identifiant/version du Deck est documentée ; le lot reste local, sans push.
+
+## Couverture par familles d'effets
+
+Le [premier banc par familles](AUDIT_EFFECT_FAMILIES_AFTER_141.md) vérifie en lot
+23 clauses de puissance de 21 cartes, avec des attentes manuelles indépendantes
+des capacités du moteur. Il exécute 291 scénarios de famille, onze parcours
+WebSocket et cinq contrôles du banc. Les contrats et les résultats sont reliés
+par effet ; une capacité candidate sans contrat n'est pas déclarée couverte.
+Les preuves sont dans `reports/systematic-audit/power-family-followup/`.
+
+Le [compteur strict](../reports/systematic-audit/coverage-status.json) déduplique
+les cartes des lots numériques et des lots à clauses explicites, en exigeant
+que tous leurs tests liés aient réussi dans la suite complète courante. La
+commande `tools/card_coverage_status.py --units <preuve complète> --write`
+refuse une preuve périmée ou échouée. Ce compteur ne transforme pas la couverture
+de clauses sélectionnées en certification exhaustive de cartes.
+
+Le [deuxième lot, consacré aux points](AUDIT_POINT_FAMILY_AFTER_141.md), vérifie
+23 effets fixes de 19 cartes : destinataire exact, scores négatifs, blocages,
+conditions de déclenchement et redirections de Balance. Ses 292 méthodes
+comprennent 285 scénarios de famille, six parcours WebSocket et un contrôle
+des attentes. Seize scénarios emploient des producteurs réels d'événements ;
+Cannon et Zam-za ajoutent deux scénarios avec paiement et choix d'ordre sur
+la pile. Les parties non liées aux points des effets composés restent
+explicitement hors de ces preuves lorsqu'elles ne sont pas testées.
+Treize cartes s'ajoutent au registre, qui atteint 100/450 (22,2 %) avec au
+moins une clause sélectionnée vérifiée. Les preuves sont séparées dans
+`reports/systematic-audit/score-family-followup/`. Aucun push ni changement VFX.
+
+Le [troisième lot, consacré aux points proportionnels](AUDIT_SCALED_POINTS_AFTER_141.md),
+renforce ensuite six clauses déjà comptées : Floating Dancer, Plea, Agrupol,
+Donmo, Lombriculpop et Armored Pachywyrm. Il ajoute 113 scénarios de famille,
+six parcours WebSocket et un contrôle des coefficients attendus. Les changements
+du décompte avant résolution, jetons/copies, propriétaire/contrôleur, orientations
+d'épuisement et remplacements de Première Manifestation ont leurs cas propres.
+Le compteur reste à 100/450 : cette passe ajoute des branches vérifiées,
+sans compter deux fois les mêmes cartes. Les preuves sont séparées dans
+`reports/systematic-audit/scaled-score-followup/`. Aucun push ni changement VFX.
+
+Le [lot des effets composés et cibles invalidées](AUDIT_COMPOUND_TARGETS_AFTER_141.md)
+ajoute 112 scénarios et 14 parcours WebSocket pour 13 clauses sélectionnées.
+Il corrige Paciphint : perdre sa deuxième cible ne doit pas supprimer le
+déplacement encore légal de l'allié sous son Deck. Les échanges et transferts
+qui exigent deux cibles restent complets ou sans effet ; toutes les cibles
+choisies invalidées continuent de faire échouer l'effet entier. La reproduction
+conserve quatre échecs avant correction. Neuf cartes s'ajoutent au registre
+strict, qui atteint 109/450 (24,2 %), avec au moins une clause vérifiée par carte.
+Les preuves sont dans `reports/systematic-audit/compound-target-followup/`.
+Aucun push ni changement VFX.
+
+Le [lot des pioches et défausses fixes](AUDIT_DRAW_DISCARD_FAMILY_AFTER_141.md)
+vérifie ensuite 15 clauses de 13 cartes, avec 162 scénarios et 16 parcours
+WebSocket. Il corrige les défausses choisies de Main qui contournaient la
+suspension de BOB et le choix d'ordre BOB/exil. La reproduction conserve dix
+échecs avant correction. Les quantités, doublons, ressources limitées,
+blocages, immunités, acteurs de choix et remplacements sont vérifiés selon
+leur applicabilité. Neuf cartes s'ajoutent au registre strict : 118/450
+(26,2 %), avec au moins une clause sélectionnée vérifiée par carte. Les preuves
+sont dans `reports/systematic-audit/draw-family-followup/`. Aucun push ni VFX modifié.
+
+Le [lot des mélanges de Main suivis de pioche](AUDIT_SHUFFLE_DRAW_AFTER_141.md)
+vérifie Deny Fate et Pontificate Heresy : 37 scénarios et cinq parcours WebSocket,
+avec reconnexion et contrôles de confidentialité. Il corrige les contournements
+de Kanon, des blocages de pioche et de Purifying Ritual, l'ordre mélange/pioche
+des deux joueurs, les événements de pioche groupés et le résultat privé de
+Deny Fate. Dix échecs sont conservés avant correction. Les choix consécutifs de
+Kanon doivent être terminés avant la pioche restante. Les preuves sont dans
+`reports/systematic-audit/shuffle-draw-followup/`. Les suites conditionnelles
+« si vous le faites » restent distinctes et attendent une précision de règle.
+Aucun push ni changement VFX.
+
+La [passe des défausses remplacées suivies de pioche](AUDIT_CONDITIONAL_DISCARD_AFTER_141.md)
+ferme ensuite ces précisions : Suspension ou Exil ne suppriment pas la condition
+de défausse accomplie ; l'errata Bêta de Press impose défausse puis pioche.
+Les règles sont enregistrées dans `audit/rule-decisions.json`. Le comportement
+actuel respecte déjà ces branches. Les 70 scénarios et six parcours WebSocket
+renforcent deux cartes déjà comptées, sans nouvelle correction du moteur ni
+incrément artificiel du nombre de cartes. Les preuves sont séparées dans
+`reports/systematic-audit/conditional-discard-followup/`. Aucun push ni VFX modifié.
+
+La [passe des observateurs de défausse](AUDIT_DISCARD_OBSERVERS_AFTER_141.md)
+vérifie huit clauses avec 168 scénarios et dix parcours WebSocket. L'arbitrage
+du créateur maintient les événements de défausse depuis Main/Deck après un
+remplacement par Suspension ou Exil. Le suivi commun est corrigé, ainsi que
+le comptage des Volontés défaussées par Kanon. Otranth reste lié aux seules
+arrivées réelles au Limbo. La reproduction conserve 50 échecs avant correction.
+Les preuves sont séparées dans `reports/systematic-audit/discard-observer-followup/`.
+Les déclenchements propres aux cartes défaussées et les instructions multiples
+avant une même collecte restent distincts. Aucun push ni changement VFX.
+
+La [passe des effets propres après défausse](AUDIT_SELF_DISCARD_141_1.md)
+vérifie ensuite Tombloom et Nghoul-ong : 33 scénarios et quatre parcours réseau.
+L'effet retrouve sa propre occurrence en Suspension et peut l'exiler. Les
+départs/réentrées et autres copies ne sont pas confondus. La permission gratuite
+exige un exil réellement accompli. La reproduction conserve 15 échecs sur
+28 tests avant correction. Les preuves sont dans
+`reports/systematic-audit/self-discard-followup/`. Les validations de la version
+141.1 et du bouton d'installation mobile sont consignées séparément.
+
+La [validation finale de 141.1](RELEASE_141_1.md) réexécute 2 948 tests Python
+distincts et quatre suites client, toutes réussies. Le registre strict atteint
+122/450 (27,1 %), avec au moins une clause sélectionnée vérifiée par carte,
+sans certification exhaustive. Le bouton d'installation Android et son guide
+sont vérifiés sur 14 contrôles, avec rendu mobile émulé dans Chrome ; aucun
+téléphone physique ni Safari réel n'est certifié.

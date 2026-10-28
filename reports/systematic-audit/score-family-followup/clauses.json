@@ -1,0 +1,2506 @@
+{
+  "schemaVersion": 1,
+  "family": "fixed-point-change",
+  "sourceDigest": "bc8e55305a69c25aec9b9b112473dc8a9ef65a664420648b45f3e1bfa8f952da",
+  "finishedAt": "2026-10-28T11:36:04.144785+00:00",
+  "published": false,
+  "summary": {
+    "executed": 292,
+    "passed": 292,
+    "failed": 0,
+    "skipped": 0,
+    "cardsWithSelectedClauseProof": 19,
+    "selectedClauses": 23,
+    "familyScenarios": 285,
+    "networkScenarios": 6,
+    "auditInfrastructureTests": 1
+  },
+  "clauses": [
+    {
+      "cardId": "skh6d780jne193w_en",
+      "name": "Spontaneous Incubator",
+      "abilityId": "gain-points-at-beginning-of-turn",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Spontaneous Incubator is in the Interzone, at the beginning of the turn you gain 10 points.",
+      "printedTextSha256": "382e0467cbdf263b54fc8e090ebaee94dbf7647db4e1e11e0d2bde185e59c3db",
+      "independentOracle": {
+        "expectedDelta": 10,
+        "recipient": "controller",
+        "sourceZone": "interzone",
+        "event": "beginning_of_turn",
+        "eventRelation": "any"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": true,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_incubator__exact",
+        "test_score_family.ScoreFamily.test_incubator__negative_score",
+        "test_score_family.ScoreFamily.test_incubator__twice",
+        "test_score_family.ScoreFamily.test_incubator__prevention",
+        "test_score_family.ScoreFamily.test_incubator__wrong_event",
+        "test_score_family.ScoreFamily.test_incubator__balance_tie",
+        "test_score_family.ScoreFamily.test_incubator__balance_redirect",
+        "test_score_family.ScoreFamily.test_incubator__controller",
+        "test_score_family.ScoreFamily.test_incubator__hidden",
+        "test_score_family.ScoreFamily.test_incubator__disabled",
+        "test_score_family.ScoreFamily.test_incubator__source_departure",
+        "test_score_family.ScoreFamily.test_incubator__wrong_zone",
+        "test_score_family.ScoreFamily.test_incubator__producer",
+        "test_score_family_integration.ScoreFamilyIntegration.test_incubator__websocket_resolution"
+      ],
+      "scenarioCount": 14,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "aumzs91roqg77y1_en",
+      "name": "Graceful Petal",
+      "abilityId": "gain-points-in-opponent-vessel",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Graceful Petal enters the Empathic Vessel of an opponent, the owner of this card gains 20 points.",
+      "printedTextSha256": "5ea6511d80fca154dfe8b7ec0215624a3422b86662da5e65cdf793c616f5b36d",
+      "independentOracle": {
+        "expectedDelta": 20,
+        "recipient": "owner",
+        "sourceZone": "receptacle",
+        "event": "enters_zone",
+        "eventRelation": "any"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": false,
+      "websocketScenario": true,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_petal__exact",
+        "test_score_family.ScoreFamily.test_petal__negative_score",
+        "test_score_family.ScoreFamily.test_petal__twice",
+        "test_score_family.ScoreFamily.test_petal__prevention",
+        "test_score_family.ScoreFamily.test_petal__wrong_event",
+        "test_score_family.ScoreFamily.test_petal__balance_tie",
+        "test_score_family.ScoreFamily.test_petal__balance_redirect",
+        "test_score_family.ScoreFamily.test_petal__own_vessel",
+        "test_score_family_integration.ScoreFamilyIntegration.test_petal__websocket_resolution"
+      ],
+      "scenarioCount": 9,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "de3meyzl13rpqo5_en",
+      "name": "Half Han, the Renegade",
+      "abilityId": "lose-points-on-enter-field",
+      "paragraphIndex": 1,
+      "printedParagraph": "When Half Han enters the field, lose 20 points.",
+      "printedTextSha256": "1e48d78013137e6a14106e4f3c28bf2fea6ca71ecd088de130f749729ff01fad",
+      "independentOracle": {
+        "expectedDelta": -20,
+        "recipient": "controller",
+        "sourceZone": "confrontation",
+        "event": "enters_field",
+        "eventRelation": "any"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": false,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_half_han__exact",
+        "test_score_family.ScoreFamily.test_half_han__negative_score",
+        "test_score_family.ScoreFamily.test_half_han__twice",
+        "test_score_family.ScoreFamily.test_half_han__prevention",
+        "test_score_family.ScoreFamily.test_half_han__wrong_event",
+        "test_score_family.ScoreFamily.test_half_han__balance_tie",
+        "test_score_family.ScoreFamily.test_half_han__balance_redirect",
+        "test_score_family.ScoreFamily.test_half_han__controller",
+        "test_score_family.ScoreFamily.test_half_han__hidden",
+        "test_score_family.ScoreFamily.test_half_han__disabled",
+        "test_score_family.ScoreFamily.test_half_han__source_departure"
+      ],
+      "scenarioCount": 11,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "5hpmlq50blbf3y6_en",
+      "name": "Will-punishing Cannon",
+      "abilityId": "will-controller-loses-five",
+      "paragraphIndex": 0,
+      "printedParagraph": "Whenever a Will is played, the controller of that Will loses 5 points.",
+      "printedTextSha256": "17cb4719100d5fc718bf321f0c70e5bd71996298d5061d9b3cb4ab972d89ee59",
+      "independentOracle": {
+        "expectedDelta": -5,
+        "recipient": "event",
+        "sourceZone": "field",
+        "event": "will_played",
+        "eventRelation": "any"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": true,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_cannon__exact",
+        "test_score_family.ScoreFamily.test_cannon__negative_score",
+        "test_score_family.ScoreFamily.test_cannon__twice",
+        "test_score_family.ScoreFamily.test_cannon__prevention",
+        "test_score_family.ScoreFamily.test_cannon__wrong_event",
+        "test_score_family.ScoreFamily.test_cannon__balance_tie",
+        "test_score_family.ScoreFamily.test_cannon__balance_redirect",
+        "test_score_family.ScoreFamily.test_cannon__event_player",
+        "test_score_family.ScoreFamily.test_cannon__controller",
+        "test_score_family.ScoreFamily.test_cannon__hidden",
+        "test_score_family.ScoreFamily.test_cannon__disabled",
+        "test_score_family.ScoreFamily.test_cannon__source_departure",
+        "test_score_family.ScoreFamily.test_cannon__paid_producer",
+        "test_score_family_integration.ScoreFamilyIntegration.test_cannon__websocket_resolution"
+      ],
+      "scenarioCount": 14,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "874751ghrblya5j_en",
+      "name": "Pale Entity",
+      "abilityId": "gain-when-player-discards",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Pale Entity is in the Interzone, whenever a player loses points or discards one or more cards, you gain 5 points.",
+      "printedTextSha256": "0a46cd8fbe439d5a25a7f744144a25e2e00d3ff4e19f42e06bfc6ea2a08d0d6b",
+      "independentOracle": {
+        "expectedDelta": 5,
+        "recipient": "controller",
+        "sourceZone": "interzone",
+        "event": "cards_discarded",
+        "eventRelation": "any"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_pale_discard__exact",
+        "test_score_family.ScoreFamily.test_pale_discard__negative_score",
+        "test_score_family.ScoreFamily.test_pale_discard__twice",
+        "test_score_family.ScoreFamily.test_pale_discard__prevention",
+        "test_score_family.ScoreFamily.test_pale_discard__wrong_event",
+        "test_score_family.ScoreFamily.test_pale_discard__balance_tie",
+        "test_score_family.ScoreFamily.test_pale_discard__balance_redirect",
+        "test_score_family.ScoreFamily.test_pale_discard__event_player",
+        "test_score_family.ScoreFamily.test_pale_discard__controller",
+        "test_score_family.ScoreFamily.test_pale_discard__hidden",
+        "test_score_family.ScoreFamily.test_pale_discard__disabled",
+        "test_score_family.ScoreFamily.test_pale_discard__source_departure",
+        "test_score_family.ScoreFamily.test_pale_discard__wrong_zone",
+        "test_score_family.ScoreFamily.test_pale_discard__producer"
+      ],
+      "scenarioCount": 14,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "874751ghrblya5j_en",
+      "name": "Pale Entity",
+      "abilityId": "gain-when-player-loses-points",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Pale Entity is in the Interzone, whenever a player loses points or discards one or more cards, you gain 5 points.",
+      "printedTextSha256": "0a46cd8fbe439d5a25a7f744144a25e2e00d3ff4e19f42e06bfc6ea2a08d0d6b",
+      "independentOracle": {
+        "expectedDelta": 5,
+        "recipient": "controller",
+        "sourceZone": "interzone",
+        "event": "points_lost",
+        "eventRelation": "any"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_pale_loss__exact",
+        "test_score_family.ScoreFamily.test_pale_loss__negative_score",
+        "test_score_family.ScoreFamily.test_pale_loss__twice",
+        "test_score_family.ScoreFamily.test_pale_loss__prevention",
+        "test_score_family.ScoreFamily.test_pale_loss__wrong_event",
+        "test_score_family.ScoreFamily.test_pale_loss__balance_tie",
+        "test_score_family.ScoreFamily.test_pale_loss__balance_redirect",
+        "test_score_family.ScoreFamily.test_pale_loss__event_player",
+        "test_score_family.ScoreFamily.test_pale_loss__controller",
+        "test_score_family.ScoreFamily.test_pale_loss__hidden",
+        "test_score_family.ScoreFamily.test_pale_loss__disabled",
+        "test_score_family.ScoreFamily.test_pale_loss__source_departure",
+        "test_score_family.ScoreFamily.test_pale_loss__wrong_zone",
+        "test_score_family.ScoreFamily.test_pale_loss__producer"
+      ],
+      "scenarioCount": 14,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "mwby5hp16qdnjpj_en",
+      "name": "Conflux of Catastrophe",
+      "abilityId": "gain-when-opponent-manifestation-destroyed",
+      "paragraphIndex": 1,
+      "printedParagraph": "Whenever a manifestation on the field controlled by an opponent is destroyed, you gain 5 points.",
+      "printedTextSha256": "8dc5e74904707783595ae34d180eb4c13d111df060148d70d9f625a1da97bfe1",
+      "independentOracle": {
+        "expectedDelta": 5,
+        "recipient": "controller",
+        "sourceZone": "field",
+        "event": "manifestation_destroyed",
+        "eventRelation": "opponent"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": false,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_conflux__exact",
+        "test_score_family.ScoreFamily.test_conflux__negative_score",
+        "test_score_family.ScoreFamily.test_conflux__twice",
+        "test_score_family.ScoreFamily.test_conflux__prevention",
+        "test_score_family.ScoreFamily.test_conflux__wrong_event",
+        "test_score_family.ScoreFamily.test_conflux__balance_tie",
+        "test_score_family.ScoreFamily.test_conflux__balance_redirect",
+        "test_score_family.ScoreFamily.test_conflux__event_player",
+        "test_score_family.ScoreFamily.test_conflux__controller",
+        "test_score_family.ScoreFamily.test_conflux__hidden",
+        "test_score_family.ScoreFamily.test_conflux__disabled",
+        "test_score_family.ScoreFamily.test_conflux__source_departure"
+      ],
+      "scenarioCount": 12,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "i6oj7gtnkfd1jja_en",
+      "name": "Compensating Orchard",
+      "abilityId": "gain-when-own-manifestation-enters-opponent-vessel",
+      "paragraphIndex": 0,
+      "printedParagraph": "Whenever a manifestation of which you are the owner enters an opponent's Empathic Vessel, you gain 5 points.",
+      "printedTextSha256": "95f802aeaa6ff2e8d9b4a182158aca4ae4e52ef80772108b96bbe1bea59c88af",
+      "independentOracle": {
+        "expectedDelta": 5,
+        "recipient": "controller",
+        "sourceZone": "field",
+        "event": "manifestation_enters_opponent_vessel",
+        "eventRelation": "self"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_orchard__exact",
+        "test_score_family.ScoreFamily.test_orchard__negative_score",
+        "test_score_family.ScoreFamily.test_orchard__twice",
+        "test_score_family.ScoreFamily.test_orchard__prevention",
+        "test_score_family.ScoreFamily.test_orchard__wrong_event",
+        "test_score_family.ScoreFamily.test_orchard__balance_tie",
+        "test_score_family.ScoreFamily.test_orchard__balance_redirect",
+        "test_score_family.ScoreFamily.test_orchard__event_player",
+        "test_score_family.ScoreFamily.test_orchard__controller",
+        "test_score_family.ScoreFamily.test_orchard__hidden",
+        "test_score_family.ScoreFamily.test_orchard__disabled",
+        "test_score_family.ScoreFamily.test_orchard__source_departure",
+        "test_score_family.ScoreFamily.test_orchard__producer"
+      ],
+      "scenarioCount": 13,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "erkwir53va9m8gm_en",
+      "name": "Atavic Welcome",
+      "abilityId": "gain-points-when-support-enters-with-ten-unions",
+      "paragraphIndex": 3,
+      "printedParagraph": "As long as there are 10 or more Union counters on Atavic Welcome, whenever a manifestation enters Support under your control you gain 5 points.",
+      "printedTextSha256": "8febd9bcc7ba6cc9a505c64cb5f02d14d3a7ea0d272bb5d6c49fe07cb029e319",
+      "independentOracle": {
+        "expectedDelta": 5,
+        "recipient": "controller",
+        "sourceZone": "field",
+        "event": "enters_support",
+        "eventRelation": "self"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_welcome__exact",
+        "test_score_family.ScoreFamily.test_welcome__negative_score",
+        "test_score_family.ScoreFamily.test_welcome__twice",
+        "test_score_family.ScoreFamily.test_welcome__prevention",
+        "test_score_family.ScoreFamily.test_welcome__wrong_event",
+        "test_score_family.ScoreFamily.test_welcome__balance_tie",
+        "test_score_family.ScoreFamily.test_welcome__balance_redirect",
+        "test_score_family.ScoreFamily.test_welcome__event_player",
+        "test_score_family.ScoreFamily.test_welcome__controller",
+        "test_score_family.ScoreFamily.test_welcome__hidden",
+        "test_score_family.ScoreFamily.test_welcome__disabled",
+        "test_score_family.ScoreFamily.test_welcome__source_departure",
+        "test_score_family.ScoreFamily.test_welcome__counter_threshold",
+        "test_score_family.ScoreFamily.test_welcome__producer"
+      ],
+      "scenarioCount": 14,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "m2l3v60n0iakrm2_en",
+      "name": "Atavic Fury",
+      "abilityId": "gain-points-on-win-with-ten-violence",
+      "paragraphIndex": 3,
+      "printedParagraph": "As long as there are 10 or more Violence counters on Atavic Fury, whenever you win a confrontation, you gain 10 points.",
+      "printedTextSha256": "c15aef844c8e4561ce52d7b30cbf09f799fb65607778885f69211a74a3493061",
+      "independentOracle": {
+        "expectedDelta": 10,
+        "recipient": "controller",
+        "sourceZone": "field",
+        "event": "player_wins_confrontation",
+        "eventRelation": "self"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_fury__exact",
+        "test_score_family.ScoreFamily.test_fury__negative_score",
+        "test_score_family.ScoreFamily.test_fury__twice",
+        "test_score_family.ScoreFamily.test_fury__prevention",
+        "test_score_family.ScoreFamily.test_fury__wrong_event",
+        "test_score_family.ScoreFamily.test_fury__balance_tie",
+        "test_score_family.ScoreFamily.test_fury__balance_redirect",
+        "test_score_family.ScoreFamily.test_fury__event_player",
+        "test_score_family.ScoreFamily.test_fury__controller",
+        "test_score_family.ScoreFamily.test_fury__hidden",
+        "test_score_family.ScoreFamily.test_fury__disabled",
+        "test_score_family.ScoreFamily.test_fury__source_departure",
+        "test_score_family.ScoreFamily.test_fury__counter_threshold",
+        "test_score_family.ScoreFamily.test_fury__producer"
+      ],
+      "scenarioCount": 14,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "d6jip43i66i34xk_en",
+      "name": "Forfog, the Hanged",
+      "abilityId": "opponent-loses-five-when-it-discards",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Forfog is in the Interzone, whenever an opponent discards one or more cards, they lose 5 points.",
+      "printedTextSha256": "b10038f8c1849aa5b3f30e69b06848e509f45718d5132dc65ea169abd5da3723",
+      "independentOracle": {
+        "expectedDelta": -5,
+        "recipient": "event",
+        "sourceZone": "interzone",
+        "event": "cards_discarded",
+        "eventRelation": "opponent"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_forfog__exact",
+        "test_score_family.ScoreFamily.test_forfog__negative_score",
+        "test_score_family.ScoreFamily.test_forfog__twice",
+        "test_score_family.ScoreFamily.test_forfog__prevention",
+        "test_score_family.ScoreFamily.test_forfog__wrong_event",
+        "test_score_family.ScoreFamily.test_forfog__balance_tie",
+        "test_score_family.ScoreFamily.test_forfog__balance_redirect",
+        "test_score_family.ScoreFamily.test_forfog__event_player",
+        "test_score_family.ScoreFamily.test_forfog__controller",
+        "test_score_family.ScoreFamily.test_forfog__hidden",
+        "test_score_family.ScoreFamily.test_forfog__disabled",
+        "test_score_family.ScoreFamily.test_forfog__source_departure",
+        "test_score_family.ScoreFamily.test_forfog__wrong_zone",
+        "test_score_family.ScoreFamily.test_forfog__producer"
+      ],
+      "scenarioCount": 14,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "16hmmz3fw32r27q_en",
+      "name": "Shuk, the Bile-filled",
+      "abilityId": "others-lose-five-when-you-lose-points",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Shuk is in the Interzone, whenever you lose points, every other player loses 5 points.",
+      "printedTextSha256": "c509acfebffcfa57fd04c3f8124df8d7257b2d2ce3f82f2d1f0ffec857d61c2e",
+      "independentOracle": {
+        "expectedDelta": -5,
+        "recipient": "opponent",
+        "sourceZone": "interzone",
+        "event": "points_lost",
+        "eventRelation": "self"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_shuk__exact",
+        "test_score_family.ScoreFamily.test_shuk__negative_score",
+        "test_score_family.ScoreFamily.test_shuk__twice",
+        "test_score_family.ScoreFamily.test_shuk__prevention",
+        "test_score_family.ScoreFamily.test_shuk__wrong_event",
+        "test_score_family.ScoreFamily.test_shuk__balance_tie",
+        "test_score_family.ScoreFamily.test_shuk__balance_redirect",
+        "test_score_family.ScoreFamily.test_shuk__event_player",
+        "test_score_family.ScoreFamily.test_shuk__controller",
+        "test_score_family.ScoreFamily.test_shuk__hidden",
+        "test_score_family.ScoreFamily.test_shuk__disabled",
+        "test_score_family.ScoreFamily.test_shuk__source_departure",
+        "test_score_family.ScoreFamily.test_shuk__wrong_zone",
+        "test_score_family.ScoreFamily.test_shuk__producer"
+      ],
+      "scenarioCount": 14,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "wfxxi0znaojxiti_en",
+      "name": "Soul-borer",
+      "abilityId": "vessel-owner-loses-five-each-turn",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as the Soul-Borer is in an opponent's Empathic Vessel, at the beginning of each turn that player loses 5 points.",
+      "printedTextSha256": "bfac4f7d103c4605522bd6a8c20220915c320f98b9964e6304b9c89fc8164300",
+      "independentOracle": {
+        "expectedDelta": -5,
+        "recipient": "container",
+        "sourceZone": "receptacle",
+        "event": "beginning_of_turn",
+        "eventRelation": "any"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": true,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_soul_borer__exact",
+        "test_score_family.ScoreFamily.test_soul_borer__negative_score",
+        "test_score_family.ScoreFamily.test_soul_borer__twice",
+        "test_score_family.ScoreFamily.test_soul_borer__prevention",
+        "test_score_family.ScoreFamily.test_soul_borer__wrong_event",
+        "test_score_family.ScoreFamily.test_soul_borer__balance_tie",
+        "test_score_family.ScoreFamily.test_soul_borer__balance_redirect",
+        "test_score_family.ScoreFamily.test_soul_borer__own_vessel",
+        "test_score_family.ScoreFamily.test_soul_borer__producer",
+        "test_score_family_integration.ScoreFamilyIntegration.test_soul_borer__websocket_resolution"
+      ],
+      "scenarioCount": 10,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-016",
+      "name": "Linoleus, the Verdant",
+      "abilityId": "linoleus-doubles-down-on-point-gains",
+      "paragraphIndex": 1,
+      "printedParagraph": "As long as Linoleus is on the field, whenever you gain Points due to other cards or effects, you gain 5 Points and another target manifestation you control on the field gains +1 power.",
+      "printedTextSha256": "0f7ef4e4b7f6e709f6d2197d406e81045e79ccf10a97a2bef714457f15544ac3",
+      "independentOracle": {
+        "expectedDelta": 5,
+        "recipient": "controller",
+        "sourceZone": "confrontation",
+        "event": "points_gained",
+        "eventRelation": "self"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": true,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_linoleus__exact",
+        "test_score_family.ScoreFamily.test_linoleus__negative_score",
+        "test_score_family.ScoreFamily.test_linoleus__twice",
+        "test_score_family.ScoreFamily.test_linoleus__prevention",
+        "test_score_family.ScoreFamily.test_linoleus__wrong_event",
+        "test_score_family.ScoreFamily.test_linoleus__balance_tie",
+        "test_score_family.ScoreFamily.test_linoleus__balance_redirect",
+        "test_score_family.ScoreFamily.test_linoleus__event_player",
+        "test_score_family.ScoreFamily.test_linoleus__controller",
+        "test_score_family.ScoreFamily.test_linoleus__hidden",
+        "test_score_family.ScoreFamily.test_linoleus__disabled",
+        "test_score_family.ScoreFamily.test_linoleus__source_departure",
+        "test_score_family.ScoreFamily.test_linoleus__optional_target",
+        "test_score_family.ScoreFamily.test_linoleus__producer",
+        "test_score_family_integration.ScoreFamilyIntegration.test_linoleus__websocket_resolution"
+      ],
+      "scenarioCount": 15,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-132",
+      "name": "Losers' Chariot",
+      "abilityId": "losers-chariot-gives-winner-points",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Losers' Chariot loses a Confrontation, put it into your Interzone. Then the player who won that Confrontation gains 15 Points.",
+      "printedTextSha256": "29521becf6fdae614805ca22abead3accb8c9ffd2ad113bd958f4cbc89101ac3",
+      "independentOracle": {
+        "expectedDelta": 15,
+        "recipient": "opponent",
+        "sourceZone": "confrontation",
+        "event": "loses_confrontation",
+        "eventRelation": "self"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": false,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_chariot_winner__exact",
+        "test_score_family.ScoreFamily.test_chariot_winner__negative_score",
+        "test_score_family.ScoreFamily.test_chariot_winner__twice",
+        "test_score_family.ScoreFamily.test_chariot_winner__prevention",
+        "test_score_family.ScoreFamily.test_chariot_winner__wrong_event",
+        "test_score_family.ScoreFamily.test_chariot_winner__balance_tie",
+        "test_score_family.ScoreFamily.test_chariot_winner__balance_redirect",
+        "test_score_family.ScoreFamily.test_chariot_winner__controller",
+        "test_score_family.ScoreFamily.test_chariot_winner__hidden",
+        "test_score_family.ScoreFamily.test_chariot_winner__disabled",
+        "test_score_family.ScoreFamily.test_chariot_winner__source_departure"
+      ],
+      "scenarioCount": 11,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-132",
+      "name": "Losers' Chariot",
+      "abilityId": "losers-chariot-consoles-its-controller",
+      "paragraphIndex": 1,
+      "printedParagraph": "As long as Losers' Chariot is in the Interzone, whenever you lose a Confrontation, you gain 10 Points.",
+      "printedTextSha256": "29521becf6fdae614805ca22abead3accb8c9ffd2ad113bd958f4cbc89101ac3",
+      "independentOracle": {
+        "expectedDelta": 10,
+        "recipient": "controller",
+        "sourceZone": "interzone",
+        "event": "player_loses_confrontation",
+        "eventRelation": "self"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_chariot_loser__exact",
+        "test_score_family.ScoreFamily.test_chariot_loser__negative_score",
+        "test_score_family.ScoreFamily.test_chariot_loser__twice",
+        "test_score_family.ScoreFamily.test_chariot_loser__prevention",
+        "test_score_family.ScoreFamily.test_chariot_loser__wrong_event",
+        "test_score_family.ScoreFamily.test_chariot_loser__balance_tie",
+        "test_score_family.ScoreFamily.test_chariot_loser__balance_redirect",
+        "test_score_family.ScoreFamily.test_chariot_loser__event_player",
+        "test_score_family.ScoreFamily.test_chariot_loser__controller",
+        "test_score_family.ScoreFamily.test_chariot_loser__hidden",
+        "test_score_family.ScoreFamily.test_chariot_loser__disabled",
+        "test_score_family.ScoreFamily.test_chariot_loser__source_departure",
+        "test_score_family.ScoreFamily.test_chariot_loser__wrong_zone",
+        "test_score_family.ScoreFamily.test_chariot_loser__producer"
+      ],
+      "scenarioCount": 14,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "40lqhpf5xr5v5sk_en",
+      "name": "Kox, the Amoral",
+      "abilityId": "kox-gifts-opponents-on-entering-field",
+      "paragraphIndex": 2,
+      "printedParagraph": "If KOX enters the field or the Limbo, each opponent gains 50 points.",
+      "printedTextSha256": "c9753b17a473f8dbfb72a6bc748efd731c2f3afb76b2ddacabf3e9bc83e5133d",
+      "independentOracle": {
+        "expectedDelta": 50,
+        "recipient": "opponent",
+        "sourceZone": "interzone",
+        "event": "enters_field",
+        "eventRelation": "any"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": false,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_kox_field__exact",
+        "test_score_family.ScoreFamily.test_kox_field__negative_score",
+        "test_score_family.ScoreFamily.test_kox_field__twice",
+        "test_score_family.ScoreFamily.test_kox_field__prevention",
+        "test_score_family.ScoreFamily.test_kox_field__wrong_event",
+        "test_score_family.ScoreFamily.test_kox_field__balance_tie",
+        "test_score_family.ScoreFamily.test_kox_field__balance_redirect",
+        "test_score_family.ScoreFamily.test_kox_field__controller",
+        "test_score_family.ScoreFamily.test_kox_field__hidden",
+        "test_score_family.ScoreFamily.test_kox_field__disabled",
+        "test_score_family.ScoreFamily.test_kox_field__source_departure"
+      ],
+      "scenarioCount": 11,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "40lqhpf5xr5v5sk_en",
+      "name": "Kox, the Amoral",
+      "abilityId": "kox-gifts-opponents-on-entering-limbo",
+      "paragraphIndex": 2,
+      "printedParagraph": "If KOX enters the field or the Limbo, each opponent gains 50 points.",
+      "printedTextSha256": "c9753b17a473f8dbfb72a6bc748efd731c2f3afb76b2ddacabf3e9bc83e5133d",
+      "independentOracle": {
+        "expectedDelta": 50,
+        "recipient": "opponent",
+        "sourceZone": "graveyard",
+        "event": "enters_limbo",
+        "eventRelation": "any"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": true,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_kox_limbo__exact",
+        "test_score_family.ScoreFamily.test_kox_limbo__negative_score",
+        "test_score_family.ScoreFamily.test_kox_limbo__twice",
+        "test_score_family.ScoreFamily.test_kox_limbo__prevention",
+        "test_score_family.ScoreFamily.test_kox_limbo__wrong_event",
+        "test_score_family.ScoreFamily.test_kox_limbo__balance_tie",
+        "test_score_family.ScoreFamily.test_kox_limbo__balance_redirect",
+        "test_score_family.ScoreFamily.test_kox_limbo__producer",
+        "test_score_family_integration.ScoreFamilyIntegration.test_kox_limbo__websocket_resolution"
+      ],
+      "scenarioCount": 9,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "tvjlvc3vj3r2zws_en",
+      "name": "Otranth, the Bloodthirsty",
+      "abilityId": "otranth-costs-points-in-interzone",
+      "paragraphIndex": 1,
+      "printedParagraph": "At the beginning of each turn, if Otranth is in the Interzone, lose 10 points and restore the Shackle counters on it.",
+      "printedTextSha256": "c905f4e98ab8ebc172f13d83066e221cd80045b5bb6204d88954025843adf42b",
+      "independentOracle": {
+        "expectedDelta": -10,
+        "recipient": "controller",
+        "sourceZone": "interzone",
+        "event": "beginning_of_turn",
+        "eventRelation": "any"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_otranth__exact",
+        "test_score_family.ScoreFamily.test_otranth__negative_score",
+        "test_score_family.ScoreFamily.test_otranth__twice",
+        "test_score_family.ScoreFamily.test_otranth__prevention",
+        "test_score_family.ScoreFamily.test_otranth__wrong_event",
+        "test_score_family.ScoreFamily.test_otranth__balance_tie",
+        "test_score_family.ScoreFamily.test_otranth__balance_redirect",
+        "test_score_family.ScoreFamily.test_otranth__controller",
+        "test_score_family.ScoreFamily.test_otranth__hidden",
+        "test_score_family.ScoreFamily.test_otranth__disabled",
+        "test_score_family.ScoreFamily.test_otranth__source_departure",
+        "test_score_family.ScoreFamily.test_otranth__wrong_zone",
+        "test_score_family.ScoreFamily.test_otranth__producer"
+      ],
+      "scenarioCount": 13,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "kae4oy2v7jtkgn2_en",
+      "name": "Imgurd, Flame Craver",
+      "abilityId": "imgurd-gains-points-when-power-is-lost",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Imgurd is on the field, whenever a manifestation on the field loses power due to cards or effects, you gain 5 points.",
+      "printedTextSha256": "47d62309529067e860694fb91ef8ad57cb6c83763eb675dcf33a4c0c8a7bbd5e",
+      "independentOracle": {
+        "expectedDelta": 5,
+        "recipient": "controller",
+        "sourceZone": "confrontation",
+        "event": "power_lost",
+        "eventRelation": "any"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_imgurd__exact",
+        "test_score_family.ScoreFamily.test_imgurd__negative_score",
+        "test_score_family.ScoreFamily.test_imgurd__twice",
+        "test_score_family.ScoreFamily.test_imgurd__prevention",
+        "test_score_family.ScoreFamily.test_imgurd__wrong_event",
+        "test_score_family.ScoreFamily.test_imgurd__balance_tie",
+        "test_score_family.ScoreFamily.test_imgurd__balance_redirect",
+        "test_score_family.ScoreFamily.test_imgurd__event_player",
+        "test_score_family.ScoreFamily.test_imgurd__controller",
+        "test_score_family.ScoreFamily.test_imgurd__hidden",
+        "test_score_family.ScoreFamily.test_imgurd__disabled",
+        "test_score_family.ScoreFamily.test_imgurd__source_departure",
+        "test_score_family.ScoreFamily.test_imgurd__producer"
+      ],
+      "scenarioCount": 13,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-003",
+      "name": "Zam-za, the Prosperous",
+      "abilityId": "zam-za-gives-opponents-points-as-tribute",
+      "paragraphIndex": 0,
+      "printedParagraph": "If Zam-za is used as tribute, it is considered to have a base power of 🌿🌿🌿🌿. When Zam-za is used as tribute, all opponents gain 5 Points.",
+      "printedTextSha256": "b7c8f6c8b1649638b24c2161a5dd9d257804400eae53fdf6abcbccd9e12133b4",
+      "independentOracle": {
+        "expectedDelta": 5,
+        "recipient": "opponent",
+        "sourceZone": "graveyard",
+        "event": "used_as_tribute",
+        "eventRelation": "self"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_zam_za__exact",
+        "test_score_family.ScoreFamily.test_zam_za__negative_score",
+        "test_score_family.ScoreFamily.test_zam_za__twice",
+        "test_score_family.ScoreFamily.test_zam_za__prevention",
+        "test_score_family.ScoreFamily.test_zam_za__wrong_event",
+        "test_score_family.ScoreFamily.test_zam_za__balance_tie",
+        "test_score_family.ScoreFamily.test_zam_za__balance_redirect",
+        "test_score_family.ScoreFamily.test_zam_za__paid_producer"
+      ],
+      "scenarioCount": 8,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "kw78e3qfnqw6sms_en",
+      "name": "Katun, the Inconsistent",
+      "abilityId": "katun-gains-five",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Katun is in the Interzone, whenever a manifestation leaves the field, a Limbo, an Empathic Vessel or the Stalemate Zone due to cards or effects, you gain 5 points.",
+      "printedTextSha256": "f253d163a4aaef5044117a14ba095e403ee33f894ec3a725c7e40bc4cdaa12b6",
+      "independentOracle": {
+        "expectedDelta": 5,
+        "recipient": "controller",
+        "sourceZone": "interzone",
+        "event": "manifestation_left_by_effect",
+        "eventRelation": "any"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_katun_five__exact",
+        "test_score_family.ScoreFamily.test_katun_five__negative_score",
+        "test_score_family.ScoreFamily.test_katun_five__twice",
+        "test_score_family.ScoreFamily.test_katun_five__prevention",
+        "test_score_family.ScoreFamily.test_katun_five__wrong_event",
+        "test_score_family.ScoreFamily.test_katun_five__balance_tie",
+        "test_score_family.ScoreFamily.test_katun_five__balance_redirect",
+        "test_score_family.ScoreFamily.test_katun_five__event_player",
+        "test_score_family.ScoreFamily.test_katun_five__controller",
+        "test_score_family.ScoreFamily.test_katun_five__hidden",
+        "test_score_family.ScoreFamily.test_katun_five__disabled",
+        "test_score_family.ScoreFamily.test_katun_five__source_departure",
+        "test_score_family.ScoreFamily.test_katun_five__wrong_zone",
+        "test_score_family.ScoreFamily.test_katun_five__history",
+        "test_score_family.ScoreFamily.test_katun_five__producer"
+      ],
+      "scenarioCount": 15,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "kw78e3qfnqw6sms_en",
+      "name": "Katun, the Inconsistent",
+      "abilityId": "katun-gains-ten-after-vessel",
+      "paragraphIndex": 1,
+      "printedParagraph": "If Katun has left an Empathic Vessel during the course of the game, instead whenever you trigger its effects you gain 10 points.",
+      "printedTextSha256": "f253d163a4aaef5044117a14ba095e403ee33f894ec3a725c7e40bc4cdaa12b6",
+      "independentOracle": {
+        "expectedDelta": 10,
+        "recipient": "controller",
+        "sourceZone": "interzone",
+        "event": "manifestation_left_by_effect",
+        "eventRelation": "any"
+      },
+      "validationStage": "event-queue-and-resolution",
+      "producerScenario": true,
+      "websocketScenario": false,
+      "testIds": [
+        "test_score_family.ScoreFamily.test_katun_ten__exact",
+        "test_score_family.ScoreFamily.test_katun_ten__negative_score",
+        "test_score_family.ScoreFamily.test_katun_ten__twice",
+        "test_score_family.ScoreFamily.test_katun_ten__prevention",
+        "test_score_family.ScoreFamily.test_katun_ten__wrong_event",
+        "test_score_family.ScoreFamily.test_katun_ten__balance_tie",
+        "test_score_family.ScoreFamily.test_katun_ten__balance_redirect",
+        "test_score_family.ScoreFamily.test_katun_ten__event_player",
+        "test_score_family.ScoreFamily.test_katun_ten__controller",
+        "test_score_family.ScoreFamily.test_katun_ten__hidden",
+        "test_score_family.ScoreFamily.test_katun_ten__disabled",
+        "test_score_family.ScoreFamily.test_katun_ten__source_departure",
+        "test_score_family.ScoreFamily.test_katun_ten__wrong_zone",
+        "test_score_family.ScoreFamily.test_katun_ten__history",
+        "test_score_family.ScoreFamily.test_katun_ten__producer"
+      ],
+      "scenarioCount": 15,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "infrastructureTestIds": [
+    "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed"
+  ],
+  "tests": [
+    {
+      "testId": "test_score_family.ScoreFamily.test_cannon__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_cannon__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_cannon__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_cannon__disabled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_cannon__event_player",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_cannon__exact",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_cannon__hidden",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_cannon__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_cannon__paid_producer",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_score_family.ScoreFamily.test_cannon__paid_producer (trigger_first=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamily.test_cannon__paid_producer (trigger_first=False)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_cannon__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_cannon__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_cannon__twice",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_cannon__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__event_player",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__exact",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__hidden",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__producer",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__twice",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_loser__wrong_zone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_winner__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_winner__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_winner__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_winner__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_winner__exact",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_winner__hidden",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_winner__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_winner__prevention",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_winner__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_winner__twice",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_chariot_winner__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_conflux__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_conflux__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_conflux__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_conflux__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_conflux__event_player",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_conflux__exact",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_conflux__hidden",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_conflux__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_conflux__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_conflux__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_conflux__twice",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_conflux__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__event_player",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__exact",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__hidden",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__prevention",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__producer",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__twice",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_forfog__wrong_zone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__counter_threshold",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_score_family.ScoreFamily.test_fury__counter_threshold (amount=9)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamily.test_fury__counter_threshold (amount=10)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamily.test_fury__counter_threshold (amount=11)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__event_player",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__exact",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__hidden",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__producer",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__twice",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_fury__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_half_han__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_half_han__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_half_han__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_half_han__disabled",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_half_han__exact",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_half_han__hidden",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_half_han__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_half_han__prevention",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_half_han__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_half_han__twice",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_half_han__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_imgurd__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_imgurd__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_imgurd__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_imgurd__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_imgurd__event_player",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_imgurd__exact",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_imgurd__hidden",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_imgurd__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_imgurd__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_imgurd__producer",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_imgurd__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_imgurd__twice",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_imgurd__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_incubator__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_incubator__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_incubator__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_incubator__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_incubator__exact",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_incubator__hidden",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_incubator__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_incubator__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_incubator__producer",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_incubator__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_incubator__twice",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_incubator__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_incubator__wrong_zone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__disabled",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__event_player",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__exact",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__hidden",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__history",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__producer",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__twice",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_five__wrong_zone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__disabled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__event_player",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__exact",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__hidden",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__history",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__producer",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__twice",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_katun_ten__wrong_zone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_field__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_field__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_field__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_field__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_field__exact",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_field__hidden",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_field__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_field__prevention",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_field__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_field__twice",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_field__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_limbo__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_limbo__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_limbo__exact",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_limbo__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_limbo__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_limbo__producer",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_limbo__twice",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_kox_limbo__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__event_player",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__exact",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__hidden",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__optional_target",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__prevention",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__producer",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__twice",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_linoleus__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_orchard__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_orchard__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_orchard__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_orchard__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_orchard__event_player",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_orchard__exact",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_orchard__hidden",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_orchard__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_orchard__prevention",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_orchard__producer",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_orchard__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_orchard__twice",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_orchard__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_otranth__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_otranth__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_otranth__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_otranth__disabled",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_otranth__exact",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_otranth__hidden",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_otranth__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_otranth__prevention",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_otranth__producer",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_otranth__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_otranth__twice",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_otranth__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_otranth__wrong_zone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__controller",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__event_player",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__exact",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__hidden",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__prevention",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__producer",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__twice",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_discard__wrong_zone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__event_player",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__exact",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__hidden",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__prevention",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__producer",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__twice",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_pale_loss__wrong_zone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_petal__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_petal__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_petal__exact",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_petal__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_petal__own_vessel",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_petal__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_petal__twice",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_petal__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__disabled",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__event_player",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__exact",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__hidden",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__prevention",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__producer",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__twice",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_shuk__wrong_zone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_soul_borer__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_soul_borer__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_soul_borer__exact",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_soul_borer__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_soul_borer__own_vessel",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_soul_borer__prevention",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_soul_borer__producer",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_soul_borer__twice",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_soul_borer__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__counter_threshold",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_score_family.ScoreFamily.test_welcome__counter_threshold (amount=9)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamily.test_welcome__counter_threshold (amount=10)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamily.test_welcome__counter_threshold (amount=11)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__disabled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__event_player",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__exact",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__hidden",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__producer",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__twice",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_welcome__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_zam_za__balance_redirect",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_zam_za__balance_tie",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_zam_za__exact",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_zam_za__negative_score",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_zam_za__paid_producer",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_score_family.ScoreFamily.test_zam_za__paid_producer (trigger_first=True)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamily.test_zam_za__paid_producer (trigger_first=False)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_zam_za__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_zam_za__twice",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_score_family.ScoreFamily.test_zam_za__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='incubator')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='petal')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='half_han')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='cannon')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='pale_discard')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='pale_loss')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='conflux')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='orchard')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='welcome')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='fury')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='forfog')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='shuk')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='soul_borer')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='linoleus')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='chariot_winner')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='chariot_loser')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='kox_field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='kox_limbo')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='otranth')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='imgurd')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='zam_za')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='katun_five')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_score_family.ScoreFamilyOracleSensitivity.test_each_handwritten_delta_is_observed (contract='katun_ten')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.5
+    },
+    {
+      "testId": "test_score_family_integration.ScoreFamilyIntegration.test_cannon__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.032
+    },
+    {
+      "testId": "test_score_family_integration.ScoreFamilyIntegration.test_incubator__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.0
+    },
+    {
+      "testId": "test_score_family_integration.ScoreFamilyIntegration.test_kox_limbo__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.031
+    },
+    {
+      "testId": "test_score_family_integration.ScoreFamilyIntegration.test_linoleus__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 1.985
+    },
+    {
+      "testId": "test_score_family_integration.ScoreFamilyIntegration.test_petal__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.063
+    },
+    {
+      "testId": "test_score_family_integration.ScoreFamilyIntegration.test_soul_borer__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.062
+    }
+  ],
+  "candidateInventory": {
+    "source": "ability metadata; grouping only, not proof",
+    "effects": 29,
+    "cards": 25,
+    "withoutIndependentContract": [
+      {
+        "cardId": "fr1414jedqssttr_en",
+        "name": "Floating Dancer",
+        "abilityId": "score-per-interzone-manifestation-on-win",
+        "scaled": true,
+        "hasIndependentContract": false
+      },
+      {
+        "cardId": "31k2b7hz7ockvvn_en",
+        "name": "Plea for Generosity",
+        "abilityId": "score-per-target-player-confrontation-manifestation",
+        "scaled": true,
+        "hasIndependentContract": false
+      },
+      {
+        "cardId": "j2a7x783j5ql0ab_en",
+        "name": "Agrupol, Ponderer of Fields",
+        "abilityId": "gain-per-owned-vessel-manifestation",
+        "scaled": true,
+        "hasIndependentContract": false
+      },
+      {
+        "cardId": "inner-deserts-014",
+        "name": "Lombriculpop",
+        "abilityId": "gain-per-excess-power-over-opponent-first",
+        "scaled": true,
+        "hasIndependentContract": false
+      },
+      {
+        "cardId": "9ypw4x4igfon1qi_en",
+        "name": "Armored Pachywyrm",
+        "abilityId": "opponent-loses-per-excess-power-over-its-first",
+        "scaled": true,
+        "hasIndependentContract": false
+      },
+      {
+        "cardId": "inner-deserts-121",
+        "name": "Donmo, the Truth-Bender",
+        "abilityId": "donmo-gives-opponents-points-for-exhausted",
+        "scaled": true,
+        "hasIndependentContract": false
+      }
+    ]
+  },
+  "limits": [
+    "Only the selected fixed-point clauses and explicit branches are certified.",
+    "The generic matrix supplies explicit event stimuli, not whole-match event production.",
+    "Sixteen producer scenarios use actual turn/confrontation builders, score adjustments, discards, field moves or power counters; each filters the selected ability. Simultaneous ordering is isolated there.",
+    "Cannon and Zam-za additionally use paid Strengthen declarations, the production trigger wrapper and both legal Stack orders.",
+    "Otranth counter restoration and Chariot movement are not proved by their score-only rows; other clauses on these cards remain outside this batch.",
+    "Linoleus is tested with a valid optional target and with no target; late-invalid compound targets require a separate audit.",
+    "Scaled point effects remain inventoried, not counted as new proof.",
+    "No new browser, physical-device, Safari or illustration certification is implied."
+  ]
+}

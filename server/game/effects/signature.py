@@ -316,6 +316,7 @@ class SignatureEffectsMixin:
         self.rules_engine["pendingChoice"] = {
             "id": choice_id, "kind": "reveal_hand_discard", "purpose": "pescojolero",
             "playerId": player_id, "targetPlayerId": opponent_id, "cardIds": candidates,
+            "_vesselCards": [dict(entry) for entry in self.rules_vessel_card_entries(opponent_id) if entry["cardId"] in candidates],
             "sourceCardId": (action.get("source") or {}).get("cardId"),
             "actionId": action.get("id"), "controllerId": action.get("controllerId"),
         }
@@ -380,11 +381,14 @@ class SignatureEffectsMixin:
         return {"kind": result.get("kind"), "status": "returned", "cardIds": returned, "movement": exiled}
 
     def _rules_result_paciphint_swap(self, action, result, player_id, player):
-        cards = [entry for entry in action.get("targets") or [] if entry.get("kind") == "card"]
+        # Group positions preserve donor / ignored Manifestation roles. The
+        # second step depends on the first, but losing its target must not
+        # suppress the still-legal instruction to put the donor under its Deck.
+        cards = action.get("targets") or []
         if len(cards) != 2:
             return {"kind": result.get("kind"), "status": "target_missing"}
-        mine = self.find_battlefield_item(cards[0].get("itemId"))
-        other = self.find_battlefield_item(cards[1].get("itemId"))
+        mine = self.find_battlefield_item(cards[0].get("itemId")) if cards[0].get("kind") == "card" else None
+        other = self.find_battlefield_item(cards[1].get("itemId")) if cards[1].get("kind") == "card" else None
         if mine is None or self.rules_item_controller_id(mine) != player_id:
             return {"kind": result.get("kind"), "status": "target_missing"}
         movement = self._rules_remove_field_item_by_effect(

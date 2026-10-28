@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "1b7a65e57a730228e696e59680e49225e0ea8656afc2d900c5ff9a5bb3e7227e",
+  "finishedAt": "2026-10-28T21:08:19.916091+00:00",
+  "validatedBeforeAuthorizedPush": true,
+  "summary": {
+    "family": {
+      "executed": 37,
+      "passed": 37,
+      "failed": 0,
+      "skipped": 0,
+      "selectedClauses": 2,
+      "cardsWithSelectedClauseProof": 2,
+      "familyScenarios": 33,
+      "networkScenarios": 4
+    },
+    "python": {
+      "executed": 2948,
+      "passed": 2948,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuitesPassed": 4,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 122,
+      "percentageWithSelectedClauseProof": 27.1,
+      "cardsOutsideThisStrictRegister": 328,
+      "fullCatalogSemanticCertification": false
+    },
+    "newUniqueCards": 1,
+    "reproducedFailuresFixed": 15
+  },
+  "fixedRegressionTestIds": [
+    "test_self_discard.SelfDiscard.test_nghoul__deck_suspend",
+    "test_self_discard.SelfDiscard.test_nghoul__invalid_old_suspension",
+    "test_self_discard.SelfDiscard.test_nghoul__play_permission",
+    "test_self_discard.SelfDiscard.test_nghoul__second_copy_remains",
+    "test_self_discard.SelfDiscard.test_nghoul__source_returned",
+    "test_self_discard.SelfDiscard.test_nghoul__suspend",
+    "test_self_discard.SelfDiscard.test_nghoul__two_suspended",
+    "test_self_discard.SelfDiscard.test_tombloom__deck_suspend",
+    "test_self_discard.SelfDiscard.test_tombloom__exile",
+    "test_self_discard.SelfDiscard.test_tombloom__invalid_old_suspension",
+    "test_self_discard.SelfDiscard.test_tombloom__second_copy_remains",
+    "test_self_discard.SelfDiscard.test_tombloom__source_exile_replaced_by_suspend",
+    "test_self_discard.SelfDiscard.test_tombloom__source_returned",
+    "test_self_discard.SelfDiscard.test_tombloom__suspend",
+    "test_self_discard.SelfDiscard.test_tombloom__two_suspended"
+  ],
+  "unitEvidence": "reports/systematic-audit/release-141-1/unit-tests.json",
+  "unitEvidenceSha256": "9e78f945168b0db4105798283889226b28bea7cd1902d56b1f482e86f2e1ddb9",
+  "productionChanges": [
+    {
+      "file": "server/game/zones.py",
+      "beforeSha256": "17dcb6ee0179298132b0d36457a7b1a1083d9a37e08544acad1778404a7ed62e",
+      "afterSha256": "b261498039f01704a1dadfaa3facbb40bced1be6562e7f9c5eb022a839b090c8"
+    },
+    {
+      "file": "server/game/triggers.py",
+      "beforeSha256": "0de08e76d46c0680d5e17fa5a382f4c52dabee6275c37f9045cc8adf4b755dc5",
+      "afterSha256": "e9848989d3c4cee060776e58e89e1c6c96934186549438485ae20283dfd17768"
+    },
+    {
+      "file": "server/game/effects/cards.py",
+      "beforeSha256": "b1f17a7fb5ab817489d96b68513d484c4ef1ead4d2cdda09379c6291b9548b2e",
+      "afterSha256": "49e486970582fb00e558f7fcf9056104ca440b8689756fa1ca68fe6bf063db9c"
+    }
+  ],
+  "rulingId": "self-discard-exile-from-suspension",
+  "rulingManifestSha256": "193b643ab08e8553607dd7dbbae85a9a5981b736e4e90f64ae773c4276fa4b15",
+  "oracleManifestSha256": "1c4c0f9b1a9b06a93d3c9dfd32bb833d1547974586abce90021683b070242df1",
+  "artifacts": {
+    "before.json": "54e0b9b1a740f30bb25c324211af6eeaef89b3c326ad85beaab3689b04a4cd78",
+    "clauses.json": "f658909f1fdf0a687e22791204cda1cf0fe0d9a3fd8179d758fd4e2224d6bac2",
+    "clauses.log": "1c802d79c690f8efa0dc35e879781450b933321cc534cc827358ae38c42d31c2",
+    "coverage-before.json": "4ffae85a59b20be02e85cabed2e8311732f4501ddcf678c7fadad618558daac5",
+    "development.log": "3feae7af3ef1adfcaf4ba9230c7e41d53274f52cbb8bf591975257cfeb51293a",
+    "inspection.json": "cb0c692a5f4b2ee94684fe19f8900346e62555e7bdc4b3b07d6812abc1f49ba1"
+  },
+  "coverageRegistrySha256": "619d16a49d72e430926180c20dd11df34aa12157e5d88e7a005300ffbef1d4e5",
+  "limits": [
+    "Two selected clauses and executed branches, not complete card/match certification.",
+    "Unit sources, Nullify resolved state, BOB and duplicate occurrences are controlled fixtures. Reentry/source departure interventions are occurrence controls, not complete opponent-response journeys.",
+    "Four network journeys use actual Pray declarations and discard choices, then a self-discard choice and live-server reconnect. The successful Nghoul journey plays Ponder through the granted free permission and checks its exile on leaving the Stack.",
+    "Private Limbo/Exile occurrence ledgers preserve identical copies and same-zone reorder. Existing in-flight legacy actions without an occurrence snapshot retain their former Limbo fallback; no process restart is certified.",
+    "Automatic phase driving is isolated. No new card UI, physical-device, Safari or illustration certification."
+  ]
+}

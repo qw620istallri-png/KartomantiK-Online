@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "family": "conditional-discard-replacement",
+  "contracts": [
+    {
+      "key": "pray",
+      "cardId": "zni76s4aabicqag_en",
+      "name": "Pray the Ether",
+      "abilityId": "discard-one-then-draw-two",
+      "paragraphIndex": 0,
+      "printedParagraph": "Discard a card from your hand. If you do, draw 2 cards.",
+      "printedTextSha256": "d3b14697ddc3dca2d9ed8ba3ac4cf8218934c48b3abbc635d66ddf6c5a3d3a8e",
+      "expectedDraw": 2,
+      "discardCount": 1,
+      "discardReplacementSatisfiesCondition": true,
+      "sequence": "discard-then-draw",
+      "authority": "User rulings 2026-10-28: replacement fulfills hand discard; Beta errata takes precedence; Press discards before drawing."
+    },
+    {
+      "key": "press",
+      "cardId": "ze99bj8uw2oisfx_en",
+      "name": "Alchemical Press",
+      "abilityId": "discard-to-draw-after-will",
+      "paragraphIndex": 2,
+      "printedParagraph": "Whenever you play a Will, you can discard a card. If you do, draw a card.",
+      "printedTextSha256": "8b8231871cff365c725ccd885595f37d4e7f8ac34b9cd75e667113172c41cb7b",
+      "expectedDraw": 1,
+      "discardCount": 1,
+      "discardReplacementSatisfiesCondition": true,
+      "sequence": "discard-then-draw",
+      "authority": "User rulings 2026-10-28: replacement fulfills hand discard; Beta errata takes precedence; Press discards before drawing."
+    }
+  ]
+}

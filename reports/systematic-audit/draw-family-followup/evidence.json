@@ -1,0 +1,112 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-28T15:51:51.189103+00:00",
+  "sourceDigest": "c2978a4e88d131ef5810ef85c7de68ce7556ec2ca3069a4bfcdee71ad2ce2b61",
+  "published": false,
+  "summary": {
+    "family": {
+      "executed": 178,
+      "passed": 178,
+      "failed": 0,
+      "skipped": 0,
+      "cardsWithSelectedClauseProof": 13,
+      "selectedClauses": 15,
+      "familyScenarios": 162,
+      "networkScenarios": 16
+    },
+    "python": {
+      "executed": 2615,
+      "passed": 2615,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuitesPassed": 3,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 118,
+      "percentageWithSelectedClauseProof": 26.2,
+      "cardsOutsideThisStrictRegister": 332,
+      "fullCatalogSemanticCertification": false
+    },
+    "newUniqueCards": 9,
+    "reproducedFailuresFixed": 10
+  },
+  "newCards": [
+    {
+      "cardId": "tzizek39tj8rqq5_en",
+      "name": "Callus, the Thought-stirrer"
+    },
+    {
+      "cardId": "7e2ppf4rfgkdfms_en",
+      "name": "Dark Apparition"
+    },
+    {
+      "cardId": "0tcphe9viq39a5b_en",
+      "name": "Filth-eater"
+    },
+    {
+      "cardId": "inner-deserts-139",
+      "name": "Hermetic Threshold"
+    },
+    {
+      "cardId": "fvk7w9y8xidbuwa_en",
+      "name": "Keen-eyed Seeker"
+    },
+    {
+      "cardId": "ghb6i1uoiqq12o2_en",
+      "name": "Pluff"
+    },
+    {
+      "cardId": "ryg8e3lgopl6z52_en",
+      "name": "Ponder"
+    },
+    {
+      "cardId": "yy29lowj25q1z5y_en",
+      "name": "Reliable Ammonite"
+    },
+    {
+      "cardId": "cny6n2v2tap5jnm_en",
+      "name": "Wheel of Retribution"
+    }
+  ],
+  "fixedRegressionTestIds": [
+    "test_draw_discard_family.DrawDiscardFamily.test_apparition__bob",
+    "test_draw_discard_family.DrawDiscardFamily.test_apparition__competing_replacements",
+    "test_draw_discard_family.DrawDiscardFamily.test_filth__bob",
+    "test_draw_discard_family.DrawDiscardFamily.test_filth__competing_replacements",
+    "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bob",
+    "test_draw_discard_family.DrawDiscardFamily.test_makaboon__competing_replacements",
+    "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bob",
+    "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__competing_replacements",
+    "test_draw_discard_family.DrawDiscardFamily.test_wheel__bob",
+    "test_draw_discard_family.DrawDiscardFamily.test_wheel__competing_replacements"
+  ],
+  "productionChange": {
+    "file": "server/game/choices/cards.py",
+    "handler": "_resolve_rules_discard_choice",
+    "beforeSha256": "8b42e3bed5ddfe96b7daf9e12937daf08a5b685c59a422c17cae85a2f550312f",
+    "afterSha256": "9ea03569f45e9d56fe7d98cb8c44ad3ac11d39424874950404530315b0f68895"
+  },
+  "artifacts": {
+    "before.json": "dd3e89c57ef00cf35eb0f237a7ce0c2008fe72a28947a786efa15d3370021735",
+    "clauses.json": "b455fd5616e426aa70d54724914da68fc3452f39ecc1ce6020c9c33cc7a492b2",
+    "coverage-before.json": "b2c5e83dfbfbf7ce3c4b260809c47069bb0bff8eaa2be7d97ce9e69f43ef2381",
+    "test_frontend.log": "14010ce473f2079d5ccc164eddfa9bd1c74212f88326d374799251fb39fc1def",
+    "test_rules_parity.log": "47cae38a9917913d5d7f052a09376ca4b576f96cd01afd690c0398b66a684c61",
+    "test_state_transport.log": "2d979b9d1f36555d1dcff3c211aaf80259ef9f836106266b5719c253e0323408",
+    "ui-tests.json": "b67650f3d089c642b02b69dcc7c5f86d737b35909a6034a0f8c311704acd9110",
+    "unit-tests.json": "45e94bbdb69173632e8052b7faf2433997caa63b711d6cebb443e66c026cbcd5"
+  },
+  "coverageRegistrySha256": "f51768e8d5556b08895598e9d28b00ca69149b7afc86a8892c36278b9bbf5496",
+  "oracleManifestSha256": "1b2d97ecc985d3b3d9f05857ade016b571debbaf14743342d0753d42818c1f97",
+  "limits": [
+    "Fifteen selected fixed-quantity clauses, not all abilities or interactions of the thirteen cards.",
+    "Trigger stimuli are explicit and use production queues. Five additional producer cases use actual Support/Will/deck-discard paths; tribute-producing declarations and complete matches are not certified.",
+    "Ponder and Zum use real declarations, exact paid essences and resolution. Other Zum abilities and the all-five Support condition are outside this batch.",
+    "Pidue covers only its vitreous draw and melancholic discard branches. Its other temperaments remain outside this batch.",
+    "Kanon replacement checks use Manifestations as discarded cards, so the Will-discard power-distribution follow-up is not certified by this batch.",
+    "BOB/Quasimillenary ordering is tested on simple single hand-discard effects. Discard-then-draw conditional continuations, exiling costs, shuffles and larger sequential effects require separate proofs.",
+    "The network journeys use controlled event/replacement fixtures and actual choice/priority messages; auto-phase driving is isolated.",
+    "No new card UI, physical-device, Safari or illustration certification is implied."
+  ]
+}

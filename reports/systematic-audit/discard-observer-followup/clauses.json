@@ -1,0 +1,1288 @@
+{
+  "schemaVersion": 1,
+  "family": "discard-observers-under-replacement",
+  "sourceDigest": "c3901379bbb5006f0a16a6ae9598aa15d5618d5180a6f0a4997b78871f894d81",
+  "finishedAt": "2026-10-28T20:29:55.918352+00:00",
+  "published": false,
+  "summary": {
+    "executed": 178,
+    "passed": 178,
+    "failed": 0,
+    "skipped": 0,
+    "cardsWithSelectedClauseProof": 8,
+    "selectedClauses": 8,
+    "familyScenarios": 168,
+    "networkScenarios": 10
+  },
+  "clauses": [
+    {
+      "cardId": "d6jip43i66i34xk_en",
+      "name": "Forfog, the Hanged",
+      "abilityId": "opponent-loses-five-when-it-discards",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Forfog is in the Interzone, whenever an opponent discards one or more cards, they lose 5 points.",
+      "printedTextSha256": "b10038f8c1849aa5b3f30e69b06848e509f45718d5132dc65ea169abd5da3723",
+      "independentOracle": {
+        "kind": "score_event_player",
+        "event": "cards_discarded",
+        "eventRelation": "opponent",
+        "expectedDelta": -5,
+        "sourceZone": "interzone",
+        "duration": null
+      },
+      "validationStage": "movement-producer-observed-event-target-choice-and-exact-resolution",
+      "testIds": [
+        "test_discard_observers.DiscardObservers.test_forfog__hand__limbo",
+        "test_discard_observers.DiscardObservers.test_forfog__deck__limbo",
+        "test_discard_observers.DiscardObservers.test_forfog__deck_batch",
+        "test_discard_observers.DiscardObservers.test_forfog__deck_batch__suspend",
+        "test_discard_observers.DiscardObservers.test_forfog__deck_batch__exile",
+        "test_discard_observers.DiscardObservers.test_forfog__hand__exile",
+        "test_discard_observers.DiscardObservers.test_forfog__deck__exile",
+        "test_discard_observers.DiscardObservers.test_forfog__hand__suspend",
+        "test_discard_observers.DiscardObservers.test_forfog__deck__suspend",
+        "test_discard_observers.DiscardObservers.test_forfog__deck__order_exile",
+        "test_discard_observers.DiscardObservers.test_forfog__hand__order_suspend",
+        "test_discard_observers.DiscardObservers.test_forfog__hand__support_yes",
+        "test_discard_observers.DiscardObservers.test_forfog__deck__support_no",
+        "test_discard_observers.DiscardObservers.test_forfog__own_player",
+        "test_discard_observers.DiscardObservers.test_forfog__controller_changed",
+        "test_discard_observers.DiscardObservers.test_forfog__face_down",
+        "test_discard_observers.DiscardObservers.test_forfog__silenced",
+        "test_discard_observers.DiscardObservers.test_forfog__stalemate",
+        "test_discard_observers.DiscardObservers.test_forfog__will_card",
+        "test_discard_observers.DiscardObservers.test_forfog__suspended_draw",
+        "test_discard_observers.DiscardObservers.test_forfog__suspended_shuffle",
+        "test_discard_observers.DiscardObservers.test_forfog__tribute",
+        "test_discard_observers.DiscardObservers.test_forfog__failed_move",
+        "test_discard_observer_integration.DiscardObserverIntegration.test_forfog__websocket_suspend",
+        "test_discard_observer_integration.DiscardObserverIntegration.test_forfog__websocket_order_exile"
+      ],
+      "scenarioCount": 25,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "fknxa83uens94ju_en",
+      "name": "Ehgog, the Livid",
+      "abilityId": "shrink-opponent-manifestation-on-any-discard",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Ehgog is in the Interzone, whenever a player discards one or more cards, a target manifestation on the field controlled by an opponent gets -1 power until the end of the turn.",
+      "printedTextSha256": "d8ddd7e5349d27753bd48ef37a72ccb22667811e2a2c69d6b646c4de4d46bbc6",
+      "independentOracle": {
+        "kind": "power",
+        "event": "cards_discarded",
+        "eventRelation": "any",
+        "expectedDelta": -1,
+        "sourceZone": "interzone",
+        "duration": "until_end_of_turn"
+      },
+      "validationStage": "movement-producer-observed-event-target-choice-and-exact-resolution",
+      "testIds": [
+        "test_discard_observers.DiscardObservers.test_ehgog__hand__limbo",
+        "test_discard_observers.DiscardObservers.test_ehgog__deck__limbo",
+        "test_discard_observers.DiscardObservers.test_ehgog__deck_batch",
+        "test_discard_observers.DiscardObservers.test_ehgog__deck_batch__suspend",
+        "test_discard_observers.DiscardObservers.test_ehgog__deck_batch__exile",
+        "test_discard_observers.DiscardObservers.test_ehgog__hand__exile",
+        "test_discard_observers.DiscardObservers.test_ehgog__deck__exile",
+        "test_discard_observers.DiscardObservers.test_ehgog__hand__suspend",
+        "test_discard_observers.DiscardObservers.test_ehgog__deck__suspend",
+        "test_discard_observers.DiscardObservers.test_ehgog__deck__order_exile",
+        "test_discard_observers.DiscardObservers.test_ehgog__hand__order_suspend",
+        "test_discard_observers.DiscardObservers.test_ehgog__hand__support_yes",
+        "test_discard_observers.DiscardObservers.test_ehgog__deck__support_no",
+        "test_discard_observers.DiscardObservers.test_ehgog__own_player",
+        "test_discard_observers.DiscardObservers.test_ehgog__controller_changed",
+        "test_discard_observers.DiscardObservers.test_ehgog__face_down",
+        "test_discard_observers.DiscardObservers.test_ehgog__silenced",
+        "test_discard_observers.DiscardObservers.test_ehgog__stalemate",
+        "test_discard_observers.DiscardObservers.test_ehgog__will_card",
+        "test_discard_observers.DiscardObservers.test_ehgog__suspended_draw",
+        "test_discard_observers.DiscardObservers.test_ehgog__suspended_shuffle",
+        "test_discard_observers.DiscardObservers.test_ehgog__tribute",
+        "test_discard_observers.DiscardObservers.test_ehgog__failed_move",
+        "test_discard_observer_integration.DiscardObserverIntegration.test_ehgog__websocket_suspend"
+      ],
+      "scenarioCount": 24,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "874751ghrblya5j_en",
+      "name": "Pale Entity",
+      "abilityId": "gain-when-player-discards",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Pale Entity is in the Interzone, whenever a player loses points or discards one or more cards, you gain 5 points.",
+      "printedTextSha256": "0a46cd8fbe439d5a25a7f744144a25e2e00d3ff4e19f42e06bfc6ea2a08d0d6b",
+      "independentOracle": {
+        "kind": "score_controller",
+        "event": "cards_discarded",
+        "eventRelation": "any",
+        "expectedDelta": 5,
+        "sourceZone": "interzone",
+        "duration": null
+      },
+      "validationStage": "movement-producer-observed-event-target-choice-and-exact-resolution",
+      "testIds": [
+        "test_discard_observers.DiscardObservers.test_pale__hand__limbo",
+        "test_discard_observers.DiscardObservers.test_pale__deck__limbo",
+        "test_discard_observers.DiscardObservers.test_pale__deck_batch",
+        "test_discard_observers.DiscardObservers.test_pale__deck_batch__suspend",
+        "test_discard_observers.DiscardObservers.test_pale__deck_batch__exile",
+        "test_discard_observers.DiscardObservers.test_pale__hand__exile",
+        "test_discard_observers.DiscardObservers.test_pale__deck__exile",
+        "test_discard_observers.DiscardObservers.test_pale__hand__suspend",
+        "test_discard_observers.DiscardObservers.test_pale__deck__suspend",
+        "test_discard_observers.DiscardObservers.test_pale__deck__order_exile",
+        "test_discard_observers.DiscardObservers.test_pale__hand__order_suspend",
+        "test_discard_observers.DiscardObservers.test_pale__hand__support_yes",
+        "test_discard_observers.DiscardObservers.test_pale__deck__support_no",
+        "test_discard_observers.DiscardObservers.test_pale__own_player",
+        "test_discard_observers.DiscardObservers.test_pale__controller_changed",
+        "test_discard_observers.DiscardObservers.test_pale__face_down",
+        "test_discard_observers.DiscardObservers.test_pale__silenced",
+        "test_discard_observers.DiscardObservers.test_pale__stalemate",
+        "test_discard_observers.DiscardObservers.test_pale__will_card",
+        "test_discard_observers.DiscardObservers.test_pale__suspended_draw",
+        "test_discard_observers.DiscardObservers.test_pale__suspended_shuffle",
+        "test_discard_observers.DiscardObservers.test_pale__tribute",
+        "test_discard_observers.DiscardObservers.test_pale__failed_move",
+        "test_discard_observer_integration.DiscardObserverIntegration.test_pale__websocket_suspend"
+      ],
+      "scenarioCount": 24,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "mwby5hp16qdnjpj_en",
+      "name": "Conflux of Catastrophe",
+      "abilityId": "shrink-opponent-manifestation-on-discard",
+      "paragraphIndex": 0,
+      "printedParagraph": "Whenever a player discards one or more cards, a target manifestation on the field controlled by an opponent gets -1 power.",
+      "printedTextSha256": "8dc5e74904707783595ae34d180eb4c13d111df060148d70d9f625a1da97bfe1",
+      "independentOracle": {
+        "kind": "power",
+        "event": "cards_discarded",
+        "eventRelation": "any",
+        "expectedDelta": -1,
+        "sourceZone": "field",
+        "duration": "while_target_on_field"
+      },
+      "validationStage": "movement-producer-observed-event-target-choice-and-exact-resolution",
+      "testIds": [
+        "test_discard_observers.DiscardObservers.test_conflux__hand__limbo",
+        "test_discard_observers.DiscardObservers.test_conflux__deck__limbo",
+        "test_discard_observers.DiscardObservers.test_conflux__deck_batch",
+        "test_discard_observers.DiscardObservers.test_conflux__deck_batch__suspend",
+        "test_discard_observers.DiscardObservers.test_conflux__deck_batch__exile",
+        "test_discard_observers.DiscardObservers.test_conflux__hand__exile",
+        "test_discard_observers.DiscardObservers.test_conflux__deck__exile",
+        "test_discard_observers.DiscardObservers.test_conflux__hand__suspend",
+        "test_discard_observers.DiscardObservers.test_conflux__deck__suspend",
+        "test_discard_observers.DiscardObservers.test_conflux__deck__order_exile",
+        "test_discard_observers.DiscardObservers.test_conflux__hand__order_suspend",
+        "test_discard_observers.DiscardObservers.test_conflux__hand__support_yes",
+        "test_discard_observers.DiscardObservers.test_conflux__deck__support_no",
+        "test_discard_observers.DiscardObservers.test_conflux__own_player",
+        "test_discard_observers.DiscardObservers.test_conflux__controller_changed",
+        "test_discard_observers.DiscardObservers.test_conflux__face_down",
+        "test_discard_observers.DiscardObservers.test_conflux__silenced",
+        "test_discard_observers.DiscardObservers.test_conflux__stalemate",
+        "test_discard_observers.DiscardObservers.test_conflux__will_card",
+        "test_discard_observers.DiscardObservers.test_conflux__suspended_draw",
+        "test_discard_observers.DiscardObservers.test_conflux__suspended_shuffle",
+        "test_discard_observers.DiscardObservers.test_conflux__tribute",
+        "test_discard_observers.DiscardObservers.test_conflux__failed_move",
+        "test_discard_observer_integration.DiscardObserverIntegration.test_conflux__websocket_suspend"
+      ],
+      "scenarioCount": 24,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "kmvhsfddh84cpq6_en",
+      "name": "Buddhan the Transcended",
+      "abilityId": "buddhan-quiet-cards-discarded",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Buddhan the Transcended enters the field, put 3 Quiet counters on it and, as long as it is on the field, if due to cards or effects a manifestation loses power, a player discards cards or loses points, remove a Quiet counter from Buddhan the Transcended. When there are no Quiet counters on Buddhan the Transcended, it becomes of {H} temperament and gains: At the beginning of the turn, each player exiles a random manifestation from their Empathic Vessel.",
+      "printedTextSha256": "bacef5d4787a8efe7bf0c0090dccef4b70ab64a4e0fac13529bd084bce34e7a7",
+      "independentOracle": {
+        "kind": "quiet",
+        "event": "cards_discarded",
+        "eventRelation": "any",
+        "expectedDelta": -1,
+        "sourceZone": "confrontation",
+        "duration": null
+      },
+      "validationStage": "movement-producer-observed-event-target-choice-and-exact-resolution",
+      "testIds": [
+        "test_discard_observers.DiscardObservers.test_buddhan__hand__limbo",
+        "test_discard_observers.DiscardObservers.test_buddhan__deck__limbo",
+        "test_discard_observers.DiscardObservers.test_buddhan__deck_batch",
+        "test_discard_observers.DiscardObservers.test_buddhan__deck_batch__suspend",
+        "test_discard_observers.DiscardObservers.test_buddhan__deck_batch__exile",
+        "test_discard_observers.DiscardObservers.test_buddhan__hand__exile",
+        "test_discard_observers.DiscardObservers.test_buddhan__deck__exile",
+        "test_discard_observers.DiscardObservers.test_buddhan__hand__suspend",
+        "test_discard_observers.DiscardObservers.test_buddhan__deck__suspend",
+        "test_discard_observers.DiscardObservers.test_buddhan__deck__order_exile",
+        "test_discard_observers.DiscardObservers.test_buddhan__hand__order_suspend",
+        "test_discard_observers.DiscardObservers.test_buddhan__hand__support_yes",
+        "test_discard_observers.DiscardObservers.test_buddhan__deck__support_no",
+        "test_discard_observers.DiscardObservers.test_buddhan__own_player",
+        "test_discard_observers.DiscardObservers.test_buddhan__controller_changed",
+        "test_discard_observers.DiscardObservers.test_buddhan__face_down",
+        "test_discard_observers.DiscardObservers.test_buddhan__silenced",
+        "test_discard_observers.DiscardObservers.test_buddhan__stalemate",
+        "test_discard_observers.DiscardObservers.test_buddhan__will_card",
+        "test_discard_observers.DiscardObservers.test_buddhan__suspended_draw",
+        "test_discard_observers.DiscardObservers.test_buddhan__suspended_shuffle",
+        "test_discard_observers.DiscardObservers.test_buddhan__tribute",
+        "test_discard_observers.DiscardObservers.test_buddhan__failed_move",
+        "test_discard_observer_integration.DiscardObserverIntegration.test_buddhan__websocket_suspend"
+      ],
+      "scenarioCount": 24,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-056",
+      "name": "Makaboon",
+      "abilityId": "makaboon-extra-hand-discard",
+      "paragraphIndex": 1,
+      "printedParagraph": "As long as Makaboon is on the field, whenever a player discards one or more cards from their deck, in addition that player discards a card from their hand.",
+      "printedTextSha256": "dd19e761ab80ab9e01f25a1e2abf8b6d52db9b595ebe0a6d0adcf2c1152e5e85",
+      "independentOracle": {
+        "kind": "hand_discard",
+        "event": "deck_cards_discarded",
+        "eventRelation": "any",
+        "expectedDelta": 1,
+        "sourceZone": "confrontation",
+        "duration": null
+      },
+      "validationStage": "movement-producer-observed-event-target-choice-and-exact-resolution",
+      "testIds": [
+        "test_discard_observers.DiscardObservers.test_makaboon__hand__limbo",
+        "test_discard_observers.DiscardObservers.test_makaboon__deck__limbo",
+        "test_discard_observers.DiscardObservers.test_makaboon__deck_batch",
+        "test_discard_observers.DiscardObservers.test_makaboon__deck_batch__suspend",
+        "test_discard_observers.DiscardObservers.test_makaboon__deck_batch__exile",
+        "test_discard_observers.DiscardObservers.test_makaboon__hand__exile",
+        "test_discard_observers.DiscardObservers.test_makaboon__deck__exile",
+        "test_discard_observers.DiscardObservers.test_makaboon__hand__suspend",
+        "test_discard_observers.DiscardObservers.test_makaboon__deck__suspend",
+        "test_discard_observers.DiscardObservers.test_makaboon__deck__order_exile",
+        "test_discard_observers.DiscardObservers.test_makaboon__hand__order_suspend",
+        "test_discard_observers.DiscardObservers.test_makaboon__hand__support_yes",
+        "test_discard_observers.DiscardObservers.test_makaboon__deck__support_no",
+        "test_discard_observers.DiscardObservers.test_makaboon__own_player",
+        "test_discard_observers.DiscardObservers.test_makaboon__controller_changed",
+        "test_discard_observers.DiscardObservers.test_makaboon__face_down",
+        "test_discard_observers.DiscardObservers.test_makaboon__silenced",
+        "test_discard_observers.DiscardObservers.test_makaboon__stalemate",
+        "test_discard_observers.DiscardObservers.test_makaboon__will_card",
+        "test_discard_observers.DiscardObservers.test_makaboon__suspended_draw",
+        "test_discard_observers.DiscardObservers.test_makaboon__suspended_shuffle",
+        "test_discard_observers.DiscardObservers.test_makaboon__tribute",
+        "test_discard_observers.DiscardObservers.test_makaboon__failed_move",
+        "test_discard_observer_integration.DiscardObserverIntegration.test_makaboon__websocket_suspend"
+      ],
+      "scenarioCount": 24,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "tvjlvc3vj3r2zws_en",
+      "name": "Otranth, the Bloodthirsty",
+      "abilityId": "otranth-loses-shackle-when-manifestation-enters-limbo",
+      "paragraphIndex": 0,
+      "printedParagraph": "Otranth enters the field with 2 Shackle counters on it. Whenever a manifestation enters a Limbo, remove 1 Shackle counter from Otranth and, as long as there are no Shackle counters on it, it has Support.",
+      "printedTextSha256": "c905f4e98ab8ebc172f13d83066e221cd80045b5bb6204d88954025843adf42b",
+      "independentOracle": {
+        "kind": "shackle",
+        "event": "manifestation_entered_limbo",
+        "eventRelation": "any",
+        "expectedDelta": -1,
+        "sourceZone": "interzone",
+        "duration": null
+      },
+      "validationStage": "movement-producer-observed-event-target-choice-and-exact-resolution",
+      "testIds": [
+        "test_discard_observers.DiscardObservers.test_otranth__hand__limbo",
+        "test_discard_observers.DiscardObservers.test_otranth__deck__limbo",
+        "test_discard_observers.DiscardObservers.test_otranth__deck_batch",
+        "test_discard_observers.DiscardObservers.test_otranth__deck_batch__suspend",
+        "test_discard_observers.DiscardObservers.test_otranth__deck_batch__exile",
+        "test_discard_observers.DiscardObservers.test_otranth__hand__exile",
+        "test_discard_observers.DiscardObservers.test_otranth__deck__exile",
+        "test_discard_observers.DiscardObservers.test_otranth__hand__suspend",
+        "test_discard_observers.DiscardObservers.test_otranth__deck__suspend",
+        "test_discard_observers.DiscardObservers.test_otranth__deck__order_exile",
+        "test_discard_observers.DiscardObservers.test_otranth__hand__order_suspend",
+        "test_discard_observers.DiscardObservers.test_otranth__hand__support_yes",
+        "test_discard_observers.DiscardObservers.test_otranth__deck__support_no",
+        "test_discard_observers.DiscardObservers.test_otranth__own_player",
+        "test_discard_observers.DiscardObservers.test_otranth__controller_changed",
+        "test_discard_observers.DiscardObservers.test_otranth__face_down",
+        "test_discard_observers.DiscardObservers.test_otranth__silenced",
+        "test_discard_observers.DiscardObservers.test_otranth__stalemate",
+        "test_discard_observers.DiscardObservers.test_otranth__will_card",
+        "test_discard_observers.DiscardObservers.test_otranth__suspended_draw",
+        "test_discard_observers.DiscardObservers.test_otranth__suspended_shuffle",
+        "test_discard_observers.DiscardObservers.test_otranth__tribute",
+        "test_discard_observers.DiscardObservers.test_otranth__failed_move",
+        "test_discard_observer_integration.DiscardObserverIntegration.test_otranth__websocket_suspend",
+        "test_discard_observer_integration.DiscardObserverIntegration.test_otranth__websocket_limbo"
+      ],
+      "scenarioCount": 25,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-064",
+      "name": "Kanon, the Deathdealer",
+      "abilityId": "replace-opponent-nonrecovery-draw",
+      "paragraphIndex": 2,
+      "printedParagraph": "For each Will discarded this way, a target Manifestation on the field controlled by an opponent gets -1 power.",
+      "printedTextSha256": "6b577e00bbdfa3dcf7e5d7b991720324b99e551dcc51ef81498884a15b43212e",
+      "independentOracle": {
+        "kind": "discarded_will_penalty",
+        "event": "replacement_discard",
+        "eventRelation": "opponent",
+        "expectedDelta": -1,
+        "sourceZone": "confrontation",
+        "duration": "while_target_on_field"
+      },
+      "validationStage": "movement-producer-observed-event-target-choice-and-exact-resolution",
+      "testIds": [
+        "test_discard_observers.DiscardObservers.test_kanon__limbo",
+        "test_discard_observers.DiscardObservers.test_kanon__exile",
+        "test_discard_observers.DiscardObservers.test_kanon__suspend",
+        "test_discard_observers.DiscardObservers.test_kanon__order_exile",
+        "test_discard_observers.DiscardObservers.test_kanon__order_suspend",
+        "test_discard_observers.DiscardObservers.test_kanon__suspend__no_will",
+        "test_discard_observers.DiscardObservers.test_kanon__exile__source_departure",
+        "test_discard_observer_integration.DiscardObserverIntegration.test_kanon__websocket_order_exile"
+      ],
+      "scenarioCount": 8,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck__exile",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck__order_exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck__suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck_batch__exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck_batch__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__face_down",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__hand__exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__hand__order_suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__hand__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__own_player",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__silenced",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__tribute",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__will_card",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck__exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck__order_exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck_batch__exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck_batch__suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__face_down",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__hand__exile",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__hand__order_suspend",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__hand__suspend",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__own_player",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__silenced",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__tribute",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__will_card",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck__exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck__order_exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck__suspend",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck_batch__exile",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck_batch__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__face_down",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__hand__exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__hand__order_suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__hand__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__own_player",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__silenced",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__tribute",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__will_card",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck__exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck__order_exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck__suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck_batch__exile",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck_batch__suspend",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__face_down",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__hand__exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__hand__order_suspend",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__hand__suspend",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__own_player",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__silenced",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__tribute",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__will_card",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__exile__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__order_exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__order_suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__suspend__no_will",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck__exile",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck__order_exile",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck__suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck_batch__exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck_batch__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__face_down",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__hand__exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__hand__order_suspend",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__hand__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__own_player",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__silenced",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__tribute",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__will_card",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck__exile",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck__order_exile",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck__suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck_batch__exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck_batch__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__face_down",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__hand__exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__hand__order_suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__hand__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__own_player",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__silenced",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__tribute",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__will_card",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck__exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck__order_exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck_batch__exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck_batch__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__face_down",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__hand__exile",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__hand__order_suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__hand__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__own_player",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__silenced",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__tribute",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__will_card",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observer_integration.DiscardObserverIntegration.test_buddhan__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 3.797
+    },
+    {
+      "testId": "test_discard_observer_integration.DiscardObserverIntegration.test_conflux__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 3.813
+    },
+    {
+      "testId": "test_discard_observer_integration.DiscardObserverIntegration.test_ehgog__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 3.828
+    },
+    {
+      "testId": "test_discard_observer_integration.DiscardObserverIntegration.test_forfog__websocket_order_exile",
+      "status": "pass",
+      "durationSeconds": 4.031
+    },
+    {
+      "testId": "test_discard_observer_integration.DiscardObserverIntegration.test_forfog__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 3.907
+    },
+    {
+      "testId": "test_discard_observer_integration.DiscardObserverIntegration.test_kanon__websocket_order_exile",
+      "status": "pass",
+      "durationSeconds": 2.516
+    },
+    {
+      "testId": "test_discard_observer_integration.DiscardObserverIntegration.test_makaboon__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 3.906
+    },
+    {
+      "testId": "test_discard_observer_integration.DiscardObserverIntegration.test_otranth__websocket_limbo",
+      "status": "pass",
+      "durationSeconds": 3.844
+    },
+    {
+      "testId": "test_discard_observer_integration.DiscardObserverIntegration.test_otranth__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.047
+    },
+    {
+      "testId": "test_discard_observer_integration.DiscardObserverIntegration.test_pale__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 3.86
+    }
+  ],
+  "rulingId": "replaced-discard-observers",
+  "supersededHistoricalInterpretation": {
+    "testId": "test_kanon_event_clauses.KanonEventClauses.test_suspension_replaces_movements_without_draw_discard_or_will_penalty",
+    "note": "Historical test ID retained for evidence identity; assertions now require discard events and Will penalties. The older report describes the previous interpretation, superseded by the explicit 2026-10-28 ruling."
+  },
+  "limits": [
+    "Eight selected clauses and their executed branches; not all abilities or combinations of these cards.",
+    "Ordinary movement methods and the multi-card discard result produce actual events. No synthetic cards_discarded stimulus is used to prove replaced discard watchers.",
+    "Replacement sources are explicit fixtures. Most network roots are controlled Pluff entry-trigger actions, not a complete Pluff play or entry journey. Kanon uses an actual Ponder declaration and payment.",
+    "The two network Otranth cases distinguish actual Limbo entry from suspension. Self-discard triggers such as Tombloom or Nghoul-ong outside Limbo remain a separate audit.",
+    "Group counts are checked for one multi-card discard action. Multiple separate discard instructions before one event flush are outside this batch.",
+    "Kanon keeps its existing public discardedCardIds list restricted to ordinary Limbo/Support movements; the Will penalty now counts all successful discards without exposing private suspended/exiled identities.",
+    "Network checks use delta and legacy clients, live-server reconnect, choices and priority passes; automatic phase driving is isolated.",
+    "No new card UI, Safari, physical-device, process-restart or illustration certification."
+  ]
+}

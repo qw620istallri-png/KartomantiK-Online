@@ -1,0 +1,181 @@
+{
+  "sourceDigest": "1d1cb1380a61a312fc323ab355b920275a84829e1e3283a3423f0a3f8a891fa4",
+  "productionHashes": {
+    "server/game/effects/cards.py": "e028782fd443b387f74f254dd31c81729ba84f41a87d27ccbaafcef3bde7e0ab",
+    "server/game/chain.py": "12adcc29a604e397b461b0834ef97178416e8c45582e2c3a1c17696bc99868ad",
+    "server/game/choices/__init__.py": "bca9ddda2dd7d70f4897cd73451d409befd2b32f62813037bf5eee5243f3cad9",
+    "server/game/view.py": "94966cb2c8732813df8566313042bd970df028c9368fb74cbb172c4359580412"
+  },
+  "summary": {
+    "executed": 31,
+    "passed": 21,
+    "failed": 10
+  },
+  "tests": [
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_deny__batches",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_deny__bob",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_deny__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_deny__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_deny__empty",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_deny__hand_immunity",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_deny__kanon",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 224, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 126, in check_kanon\n    choice=s.rules_engine['pendingChoice'];self.assertIsNotNone(choice)\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_deny__normal",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_deny__other_actor",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_deny__own_hand_protection",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_deny__private_results",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 224, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 196, in check_private_results\n    self.assertNotIn(cid,encoded)\nAssertionError: 'secret-p1-hand-1' unexpectedly found in '{\"kind\": \"shuffle_hand_into_deck_and_draw\", \"status\": \"done\", \"draw\": [\"secret-p1-hand-1\", \"secret-p1-hand-0\", \"secret-p1-deck-0\", \"secret-p1-deck-1\", \"secret-p1-deck-2\", \"secret-p1-deck-3\", \"secret-p1-deck-4\"]}'\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_deny__short_pool",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_deny__timing",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__batches",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 224, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 181, in check_batches\n    self.assertTrue(events[0]['drawBatchId'])\nAssertionError: None is not true\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__bob",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__draw_lock",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 224, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 102, in check_draw_lock\n    for pid in self.affected(row):self.assertEqual(len(s.players[pid]['zones']['hand']),0 if pid==locked else row['expectedDraw'])\n                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 4 != 0\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__empty",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__hand_immunity",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__immediate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__kanon",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 224, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 126, in check_kanon\n    choice=s.rules_engine['pendingChoice'];self.assertIsNotNone(choice)\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__kanon_followup",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 224, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 150, in check_kanon_followup\n    choice=s.rules_engine['pendingChoice'];self.assertIsNotNone(choice)\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__opponent_lock",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 224, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 104, in check_opponent_lock\n    def check_opponent_lock(self,row):self.check_draw_lock(row,'p2')\n                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 102, in check_draw_lock\n    for pid in self.affected(row):self.assertEqual(len(s.players[pid]['zones']['hand']),0 if pid==locked else row['expectedDraw'])\n                                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 4 != 0\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__order",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 224, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 187, in check_order\n    self.assertEqual(zones[:4],['hand']*4)\nAssertionError: Lists differ: ['hand', 'hand', 'deck', 'deck'] != ['hand', 'hand', 'hand', 'hand']\n\nFirst differing element 2:\n'deck'\n'hand'\n\n- ['hand', 'hand', 'deck', 'deck']\n?                    ---     ---\n\n+ ['hand', 'hand', 'hand', 'hand']\n?                   +++     +++\n\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__other_actor",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__own_hand_protection",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__private_results",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__protected_opponent_hand",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 224, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 165, in check_protected_opponent_hand\n    self.assertEqual(s.players['p2']['zones']['hand'][:2],original)\nAssertionError: Lists differ: ['secret-p2-deck-0', 'secret-p2-deck-1'] != ['secret-p2-hand-0', 'secret-p2-hand-1']\n\nFirst differing element 0:\n'secret-p2-deck-0'\n'secret-p2-hand-0'\n\n- ['secret-p2-deck-0', 'secret-p2-deck-1']\n?              ---                 ---\n\n+ ['secret-p2-hand-0', 'secret-p2-hand-1']\n?             +++                 +++\n\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__short_pool",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_shuffle_draw.ShuffleDraw.test_pontificate__two_kanons",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 224, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_shuffle_draw.py\", line 138, in check_two_kanons\n    choice=s.rules_engine['pendingChoice'];self.assertIsNotNone(choice)\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.016
+    }
+  ]
+}

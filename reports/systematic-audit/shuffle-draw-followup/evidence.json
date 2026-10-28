@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-28T16:10:14.387519+00:00",
+  "sourceDigest": "db91ce74e53f756177fd3bfb6b55387c5915f90e673e15f07c7b14c618ce1f39",
+  "published": false,
+  "summary": {
+    "family": {
+      "executed": 42,
+      "passed": 42,
+      "failed": 0,
+      "skipped": 0,
+      "cardsWithSelectedClauseProof": 2,
+      "selectedClauses": 2,
+      "familyScenarios": 37,
+      "networkScenarios": 5
+    },
+    "python": {
+      "executed": 2657,
+      "passed": 2657,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuitesPassed": 3,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 120,
+      "percentageWithSelectedClauseProof": 26.7,
+      "cardsOutsideThisStrictRegister": 330,
+      "fullCatalogSemanticCertification": false
+    },
+    "newUniqueCards": 2,
+    "reproducedFailuresFixed": 10
+  },
+  "newCards": [
+    {
+      "cardId": "f18fccv1k2co206_en",
+      "name": "Deny Fate"
+    },
+    {
+      "cardId": "inner-deserts-094",
+      "name": "Pontificate Heresy"
+    }
+  ],
+  "fixedRegressionTestIds": [
+    "test_shuffle_draw.ShuffleDraw.test_deny__kanon",
+    "test_shuffle_draw.ShuffleDraw.test_deny__private_results",
+    "test_shuffle_draw.ShuffleDraw.test_pontificate__batches",
+    "test_shuffle_draw.ShuffleDraw.test_pontificate__draw_lock",
+    "test_shuffle_draw.ShuffleDraw.test_pontificate__kanon",
+    "test_shuffle_draw.ShuffleDraw.test_pontificate__kanon_followup",
+    "test_shuffle_draw.ShuffleDraw.test_pontificate__opponent_lock",
+    "test_shuffle_draw.ShuffleDraw.test_pontificate__order",
+    "test_shuffle_draw.ShuffleDraw.test_pontificate__protected_opponent_hand",
+    "test_shuffle_draw.ShuffleDraw.test_pontificate__two_kanons"
+  ],
+  "productionChanges": [
+    {
+      "file": "server/game/effects/cards.py",
+      "beforeSha256": "e028782fd443b387f74f254dd31c81729ba84f41a87d27ccbaafcef3bde7e0ab",
+      "afterSha256": "b1f17a7fb5ab817489d96b68513d484c4ef1ead4d2cdda09379c6291b9548b2e"
+    },
+    {
+      "file": "server/game/chain.py",
+      "beforeSha256": "12adcc29a604e397b461b0834ef97178416e8c45582e2c3a1c17696bc99868ad",
+      "afterSha256": "e77085347e101c0779e70729652532179cececc7e689117bd144d156578501c1"
+    },
+    {
+      "file": "server/game/choices/__init__.py",
+      "beforeSha256": "bca9ddda2dd7d70f4897cd73451d409befd2b32f62813037bf5eee5243f3cad9",
+      "afterSha256": "f33cc31fedd9de2ee934705007a4ea261d3f16d1264713f6faaa1504bc19e9a6"
+    },
+    {
+      "file": "server/game/view.py",
+      "beforeSha256": "94966cb2c8732813df8566313042bd970df028c9368fb74cbb172c4359580412",
+      "afterSha256": "2bc21fd6226c6c8b52a93e4e171d118ac01f2498932edf5b2f63a444ce7b57a5"
+    }
+  ],
+  "artifacts": {
+    "before.json": "0daee8c2602147106d66474f1a2155e0fea838b8a5af142472f4d87ee8f2c5c9",
+    "clauses.json": "02f567e9812fe65705934cffe7b075c314bfa0ef274158d085a32e19a26663f2",
+    "coverage-before.json": "f51768e8d5556b08895598e9d28b00ca69149b7afc86a8892c36278b9bbf5496",
+    "test_frontend.log": "14010ce473f2079d5ccc164eddfa9bd1c74212f88326d374799251fb39fc1def",
+    "test_rules_parity.log": "47cae38a9917913d5d7f052a09376ca4b576f96cd01afd690c0398b66a684c61",
+    "test_state_transport.log": "2d979b9d1f36555d1dcff3c211aaf80259ef9f836106266b5719c253e0323408",
+    "ui-tests.json": "d31444d5aa7458eb1b9bff197016d6267c3b0869796e4509e45efb81f2cdd35c",
+    "unit-tests.json": "300c74eb6cdc32ae4ef7a8c3c71dd30b64235e1827ec8e08939254f6b239adb2"
+  },
+  "coverageRegistrySha256": "6eb944d4855a819d6850286e2381f96980382ea9dd9b7f5c0fc380541bbec3ac",
+  "oracleManifestSha256": "9b16cebe0e15a5dafa08fd5867a60631d89291478ba424ab9df1c86a79a0f7bd",
+  "limits": [
+    "Two selected shuffle/draw clauses, not every interaction of the two cards.",
+    "Shuffles are held deterministic for exact order and conservation assertions; randomness quality is not assessed.",
+    "Kanon, both players with Kanon, its Will-discard power distribution, draw locks, BOB, Purifying Ritual and competing suspension/exile are exercised in controlled states.",
+    "Network tests cover a delta client and a legacy client, reconnect and invalid/replayed confirmations. Automatic phase driving is isolated; phase stability during these choices is asserted.",
+    "Conditional discard-then-draw semantics under replacement remain pending a user ruling and are not certified here.",
+    "No new UI, Safari, physical-device or illustration certification is implied."
+  ]
+}

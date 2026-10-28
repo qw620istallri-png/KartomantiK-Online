@@ -1,0 +1,57 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-28T15:02:05.413774+00:00",
+  "sourceDigest": "63368879dbcf7d6a657f58b1759d445aaef48a3351f2a5146993fb3a8c0de2fe",
+  "published": false,
+  "summary": {
+    "family": {
+      "executed": 120,
+      "passed": 120,
+      "failed": 0,
+      "skipped": 0,
+      "cardsWithSelectedClauseProof": 6,
+      "selectedClauses": 6,
+      "familyScenarios": 113,
+      "networkScenarios": 6,
+      "auditInfrastructureTests": 1
+    },
+    "python": {
+      "executed": 2311,
+      "passed": 2311,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuitesPassed": 3,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 100,
+      "percentageWithSelectedClauseProof": 22.2,
+      "cardsOutsideThisStrictRegister": 350,
+      "fullCatalogSemanticCertification": false
+    },
+    "newUniqueCards": 0,
+    "cardsWithStrengthenedProof": 6
+  },
+  "artifacts": {
+    "clauses.json": "521964e0c5bd9940af0eb17b968e846eae6edad835109f89db8fdcaee3277cc3",
+    "coverage-before.json": "d6dbfac63c8381ad5dc920c974aa367adf07fb4720af995c40b744e96802334b",
+    "test_frontend.log": "14010ce473f2079d5ccc164eddfa9bd1c74212f88326d374799251fb39fc1def",
+    "test_rules_parity.log": "47cae38a9917913d5d7f052a09376ca4b576f96cd01afd690c0398b66a684c61",
+    "test_state_transport.log": "2d979b9d1f36555d1dcff3c211aaf80259ef9f836106266b5719c253e0323408",
+    "ui-tests.json": "5340c1f45c5360571e00a7ebe8fa421bb27e66e981b65c93ade7b93ff95138e7",
+    "unit-tests.json": "ccdc2a97a59345402445815d8eb363ee514ab45003052e01b4003de6de4387a2"
+  },
+  "coverageRegistrySha256": "0ee220112955a7c93f8ae57fb54c8efcc08a441fec794e7711de18cb6bff988b",
+  "oracleManifestSha256": "9186341e3d3bdf70508a4970cc76cca13a4c2e306cfda99d0cd6aa7644dc831d",
+  "limits": [
+    "Six selected printed point clauses only; every branch of each card remains uncertified.",
+    "Population changes are explicit controlled fixtures; separate producer cases exercise the real confrontation-outcome and End trigger builders, not a complete match.",
+    "Plea uses real declarations, green essence payment and resolution; other cards use normal triggered effects on the Stack.",
+    "The six WebSocket cases modify the counted fixture while the action waits, then pass actual priority and verify both clients against the precise resolved action ID. Auto-phase driving is isolated.",
+    "Donmo tests exhaustion on the field, both upright orientations, Will/token/copy inclusion and current control. Exhausted Stalemate/covered/attached card counting is outside this batch.",
+    "Agrupol tests only legal opponent-Vessel populations, including duplicates and reset animation; its bottom-Deck shuffle is not certified.",
+    "Donmo activation and tribute prohibition are outside the selected score clause.",
+    "All six cards already have selected-clause evidence; the unique-card counter must not increase.",
+    "No new browser/card UI, physical device, Safari or illustration certification is implied."
+  ]
+}

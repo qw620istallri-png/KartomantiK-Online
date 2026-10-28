@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "version": "141.1",
+  "sourceDigest": "1b7a65e57a730228e696e59680e49225e0ea8656afc2d900c5ff9a5bb3e7227e",
+  "finishedAt": "2026-10-28T21:08:19.935359+00:00",
+  "publicationStatus": "validated-before-authorized-push",
+  "summary": {
+    "python": {
+      "executed": 2948,
+      "passed": 2948,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuitesPassed": 4,
+    "mobileInstallChecks": {
+      "executed": 14,
+      "passed": 14,
+      "failed": 0
+    },
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 122,
+      "percentageWithSelectedClauseProof": 27.1,
+      "cardsOutsideThisStrictRegister": 328,
+      "fullCatalogSemanticCertification": false
+    }
+  },
+  "artifacts": {
+    "test_frontend.log": "14010ce473f2079d5ccc164eddfa9bd1c74212f88326d374799251fb39fc1def",
+    "test_pwa_install.log": "5b72ed9edb549a1aad156f1438617cc4a00fbd94539df953fdcfaf84773d1fb5",
+    "test_rules_parity.log": "47cae38a9917913d5d7f052a09376ca4b576f96cd01afd690c0398b66a684c61",
+    "test_state_transport.log": "2d979b9d1f36555d1dcff3c211aaf80259ef9f836106266b5719c253e0323408",
+    "ui-tests.json": "e09839abc2d2525d34f22f0d17c3d2b141d80fcc5814d38b97da92e42f0aeb6b",
+    "unit-tests.json": "9e78f945168b0db4105798283889226b28bea7cd1902d56b1f482e86f2e1ddb9"
+  },
+  "selfDiscardEvidenceSha256": "bcef133135fc993949f96a36ed2143091c532c71cef4d3c00ad2a6592d4a2cff",
+  "mobileInstallEvidenceSha256": "c790d9c76d192d9f022ba7f7a2d1047cc0bca649cd26ce8ebcf3bfe917e9c73b",
+  "coverageRegistrySha256": "619d16a49d72e430926180c20dd11df34aa12157e5d88e7a005300ffbef1d4e5",
+  "limits": [
+    "Strict registry covers selected clauses, not complete semantic certification of the full catalog.",
+    "Mobile views use emulated agents in Chrome and simulated install events; no physical phone or real Safari.",
+    "Earlier audit snapshots retain their historical source digests; the final unit run reexecutes their current test IDs."
+  ]
+}

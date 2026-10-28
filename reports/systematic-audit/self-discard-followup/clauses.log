@@ -1,0 +1,50 @@
+.................................2026-10-28 21:56:39,366 INFO <Server sockets=(<asyncio.TransportSocket fd=632, family=2, type=1, proto=6, laddr=('127.0.0.1', 52987)>,)> is serving
+2026-10-28 21:56:39,366 INFO server listening on 127.0.0.1:52987
+2026-10-28 21:56:39,404 INFO connection open
+2026-10-28 21:56:39,436 INFO Session created: player=QXYHZ2 observer=DMLDAE
+2026-10-28 21:56:39,484 INFO connection open
+2026-10-28 21:56:41,417 INFO connection closed
+2026-10-28 21:56:41,463 INFO connection open
+2026-10-28 21:56:43,441 INFO connection closed
+2026-10-28 21:56:43,472 INFO connection closed
+2026-10-28 21:56:43,480 INFO server closing
+2026-10-28 21:56:45,109 INFO server closed
+.2026-10-28 21:56:45,143 INFO <Server sockets=(<asyncio.TransportSocket fd=684, family=2, type=1, proto=6, laddr=('127.0.0.1', 52993)>,)> is serving
+2026-10-28 21:56:45,143 INFO server listening on 127.0.0.1:52993
+2026-10-28 21:56:45,178 INFO connection open
+2026-10-28 21:56:45,205 INFO Session created: player=MYKX3J observer=DAG65B
+2026-10-28 21:56:45,255 INFO connection open
+2026-10-28 21:56:47,189 INFO connection closed
+2026-10-28 21:56:47,236 INFO connection open
+2026-10-28 21:56:47,437 INFO connection closed
+2026-10-28 21:56:47,469 INFO connection closed
+2026-10-28 21:56:47,478 INFO server closing
+2026-10-28 21:56:49,127 INFO server closed
+.2026-10-28 21:56:49,179 INFO <Server sockets=(<asyncio.TransportSocket fd=508, family=2, type=1, proto=6, laddr=('127.0.0.1', 52345)>,)> is serving
+2026-10-28 21:56:49,181 INFO server listening on 127.0.0.1:52345
+2026-10-28 21:56:49,225 INFO connection open
+2026-10-28 21:56:49,256 INFO Session created: player=BTXJCA observer=HWWVAM
+2026-10-28 21:56:49,308 INFO connection open
+2026-10-28 21:56:51,234 INFO connection closed
+2026-10-28 21:56:51,284 INFO connection open
+2026-10-28 21:56:51,470 INFO connection closed
+2026-10-28 21:56:51,503 INFO connection closed
+2026-10-28 21:56:51,513 INFO server closing
+2026-10-28 21:56:53,146 INFO server closed
+.2026-10-28 21:56:53,182 INFO <Server sockets=(<asyncio.TransportSocket fd=600, family=2, type=1, proto=6, laddr=('127.0.0.1', 52353)>,)> is serving
+2026-10-28 21:56:53,182 INFO server listening on 127.0.0.1:52353
+2026-10-28 21:56:53,217 INFO connection open
+2026-10-28 21:56:53,241 INFO Session created: player=44ZTTL observer=X7W6GN
+2026-10-28 21:56:53,287 INFO connection open
+2026-10-28 21:56:55,220 INFO connection closed
+2026-10-28 21:56:55,264 INFO connection open
+2026-10-28 21:56:55,437 INFO connection closed
+2026-10-28 21:56:55,466 INFO connection closed
+2026-10-28 21:56:55,475 INFO server closing
+2026-10-28 21:56:57,110 INFO server closed
+.
+----------------------------------------------------------------------
+Ran 37 tests in 18.493s
+
+OK
+{"executed": 37, "passed": 37, "failed": 0, "skipped": 0, "selectedClauses": 2, "cardsWithSelectedClauseProof": 2, "familyScenarios": 33, "networkScenarios": 4}

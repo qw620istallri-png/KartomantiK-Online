@@ -229,6 +229,38 @@ class ZonesMixin:
             return None
         return player.get("zoneOwners", {}).get(zone, {}).get(card_id, container_id)
 
+    def rules_vessel_card_entries(self, player_id):
+        """Keep identical Vessel occurrences distinct across an open choice."""
+        cards = self.players[player_id]["zones"]["receptacle"]
+        by_player = self.rules_engine.setdefault("_vesselEntries", {})
+        entries = by_player.get(player_id)
+        if entries is None or [entry["cardId"] for entry in entries] != cards:
+            entries = [{"id": new_id(), "cardId": cid} for cid in cards]
+            by_player[player_id] = entries
+        return entries
+
+    def rules_vessel_entry_present(self, player_id, entry):
+        return any(current == entry for current in self.rules_vessel_card_entries(player_id))
+
+    def rules_reorder_vessel_entries(self, player_id, entries):
+        remaining = {}
+        for entry in entries:
+            remaining.setdefault(entry["cardId"], []).append(entry)
+        self.rules_engine["_vesselEntries"][player_id] = [
+            remaining[cid].pop(0) for cid in self.players[player_id]["zones"]["receptacle"]
+        ]
+
+    def move_rules_vessel_card_by_effect(self, player_id, entry, destination):
+        if not self.rules_vessel_entry_present(player_id, entry):
+            return "That selected card is no longer in the Empathic Vessel.", None, None
+        previous = getattr(self, "_rules_vessel_pick", None)
+        self._rules_vessel_pick = (player_id, entry["id"])
+        try:
+            owner_id = self.card_owner_in_zone(player_id, "receptacle", entry["cardId"])
+            return self.move_zone_card_by_effect(player_id, "receptacle", owner_id, destination, entry["cardId"], "top")
+        finally:
+            self._rules_vessel_pick = previous
+
     def rules_hand_card_entries(self, player_id):
         """Private occurrence identities; identical hand cards remain distinct."""
         hand = self.players[player_id]["zones"]["hand"]
@@ -266,18 +298,47 @@ class ZonesMixin:
         finally:
             self._rules_hand_pick = previous
 
+    def rules_offboard_card_entries(self, container_id, zone):
+        """Keep Limbo/Exile occurrences distinct, including identical copies."""
+        cards = self.players[container_id]["zones"][zone]
+        zones = self.rules_engine.setdefault("_offboardEntries", {}).setdefault(container_id, {})
+        entries = zones.get(zone)
+        if entries is None or [e["cardId"] for e in entries] != cards:
+            entries = [{"id": new_id(), "cardId": cid} for cid in cards]
+            zones[zone] = entries
+        return entries
+
     def take_zone_card(self, container_id, zone, card_id):
         player = self.players.get(container_id)
         if player is None or card_id not in player["zones"][zone]:
             return None
         owner_id = self.card_owner_in_zone(container_id, zone, card_id)
-        if zone == "hand" and self.rules_engine.get("enabled"):
-            entries = self.rules_hand_card_entries(container_id)
-            selected = getattr(self, "_rules_hand_pick", None)
+        if zone in {"hand", "receptacle"} and self.rules_engine.get("enabled"):
+            entries = (self.rules_hand_card_entries(container_id) if zone == "hand"
+                       else self.rules_vessel_card_entries(container_id))
+            selected = getattr(self, "_rules_hand_pick" if zone == "hand" else "_rules_vessel_pick", None)
             index = next((i for i, entry in enumerate(entries)
                           if selected == (container_id, entry["id"]) and entry["cardId"] == card_id),
                          player["zones"][zone].index(card_id))
             entries.pop(index)
+            player["zones"][zone].pop(index)
+        elif zone in {"graveyard", "exile"} and self.rules_engine.get("enabled"):
+            entries = self.rules_offboard_card_entries(container_id, zone)
+            selected = getattr(self, "_rules_offboard_pick", None)
+            if selected and selected[:2] == (container_id, zone):
+                index = next((i for i, e in enumerate(entries) if e["id"] == selected[2] and e["cardId"] == card_id), None)
+                if index is None:
+                    return None
+            else:
+                index = player["zones"][zone].index(card_id)
+            entries.pop(index)
+            player["zones"][zone].pop(index)
+        elif zone == "deck" and getattr(self, "_rules_deck_pick", None) is not None:
+            selected_container, index = self._rules_deck_pick
+            if (selected_container != container_id or type(index) is not int
+                    or not 0 <= index < len(player["zones"][zone])
+                    or player["zones"][zone][index] != card_id):
+                return None
             player["zones"][zone].pop(index)
         else:
             player["zones"][zone].remove(card_id)
@@ -331,15 +392,20 @@ class ZonesMixin:
             # in the Vessel or the exile.
             if zone in {"exile", "receptacle"}:
                 marked_cards.remove(card_id)
-        hand_entries = self.rules_hand_card_entries(container_id) if zone == "hand" and self.rules_engine.get("enabled") else None
+        zone_entries = None
+        if zone in {"hand", "receptacle"} and self.rules_engine.get("enabled"):
+            zone_entries = (self.rules_hand_card_entries(container_id) if zone == "hand"
+                            else self.rules_vessel_card_entries(container_id))
+        elif zone in {"graveyard", "exile"} and self.rules_engine.get("enabled"):
+            zone_entries = self.rules_offboard_card_entries(container_id, zone)
         if position == "bottom":
             player["zones"][zone].append(card_id)
-            if hand_entries is not None:
-                hand_entries.append({"id": new_id(), "cardId": card_id})
+            if zone_entries is not None:
+                zone_entries.append({"id": new_id(), "cardId": card_id})
         else:
             player["zones"][zone].insert(0, card_id)
-            if hand_entries is not None:
-                hand_entries.insert(0, {"id": new_id(), "cardId": card_id})
+            if zone_entries is not None:
+                zone_entries.insert(0, {"id": new_id(), "cardId": card_id})
         player.setdefault("zoneOwners", {}).setdefault(zone, {})[card_id] = owner_id
         self.bump_rules_zone_entry_version(container_id, zone, card_id)
         if (
@@ -388,6 +454,7 @@ class ZonesMixin:
     @replacement_checkpoint("zone_move")
     def move_zone_card(self, from_container_id, from_zone, to_container_id, to_zone, card_id, position="top",
                        limbo_reason="discard"):
+        intended_zone = to_zone
         owner_id = self.card_owner_in_zone(from_container_id, from_zone, card_id)
         if owner_id is None or card_id not in self.players[from_container_id]["zones"][from_zone]:
             return "Card not found in source zone.", None
@@ -405,6 +472,13 @@ class ZonesMixin:
         hand_entries = list(self.rules_hand_card_entries(from_container_id)) if (
             self.rules_engine.get("enabled") and from_zone == to_zone == "hand" and from_container_id == to_container_id
         ) else None
+        vessel_entries = list(self.rules_vessel_card_entries(from_container_id)) if (
+            self.rules_engine.get("enabled") and from_zone == to_zone == "receptacle" and from_container_id == to_container_id
+        ) else None
+        offboard_entries = list(self.rules_offboard_card_entries(from_container_id, from_zone)) if (
+            self.rules_engine.get("enabled") and from_zone == to_zone and from_zone in {"graveyard", "exile"} and from_container_id == to_container_id
+        ) else None
+        offboard_pick = getattr(self, "_rules_offboard_pick", None)
         self.take_zone_card(from_container_id, from_zone, card_id)
         to_container_id, to_zone, position = self.rules_zone_move_destination(
             to_container_id, to_zone, card_id, owner_id, position,
@@ -416,16 +490,23 @@ class ZonesMixin:
             self.rules_engine["zoneEntryVersions"][f"{to_container_id}:{to_zone}:{card_id}"] = entry_version
             if hand_entries is not None:
                 self.rules_reorder_hand_entries(to_container_id, hand_entries)
+            if vessel_entries is not None:
+                self.rules_reorder_vessel_entries(to_container_id, vessel_entries)
+            if offboard_entries is not None:
+                picked = next(e for e in offboard_entries if e["cardId"] == card_id and (
+                    not offboard_pick or offboard_pick[:2] != (from_container_id, from_zone) or e["id"] == offboard_pick[2]))
+                offboard_entries.remove(picked)
+                offboard_entries.insert(0, picked) if position != "bottom" else offboard_entries.append(picked)
+                self.rules_engine["_offboardEntries"][to_container_id][to_zone] = offboard_entries
         if (
             self.rules_engine.get("enabled")
-            and to_zone == "graveyard"
+            and intended_zone == "graveyard"
             and from_zone in {"hand", "deck"}
         ):
             # Only a discard is a discard: a Tribute moved from the Hand is not
             if limbo_reason == "discard":
-                self.record_rules_observed_event("cards_discarded", owner_id)
-                if from_zone == "deck":
-                    self.record_rules_observed_event("deck_cards_discarded", owner_id)
+                self._rules_record_replaced_discard(owner_id, from_zone, intended_zone,
+                    card_id=card_id, destination=to_zone, position=position)
         if (
             self.rules_engine.get("enabled")
             and from_zone == "deck" and to_zone == "hand"
@@ -647,10 +728,18 @@ class ZonesMixin:
             grouped.append(event)
         queued = []
         for event in grouped:
+            if event["kind"] == "card_discarded":
+                source = event["_source"]
+                queued.extend(self.queue_rules_triggers(
+                    event["cardId"], event["playerId"], "discarded", zone=source["zone"],
+                    face_up=True, event_controller_id=event["playerId"], defer=defer,
+                    controller_id=event["playerId"], discard_source=source,
+                ))
+                continue
             if event["kind"] == "card_entered_limbo":
                 card_id = event.get("cardId")
                 event_names = ["enters_limbo"]
-                if event.get("reason") == "discard":
+                if event.get("reason") == "discard" and not event.get("_selfDiscardRecorded"):
                     event_names.append("discarded")
                 for event_name in event_names:
                     queued.extend(self.queue_rules_triggers(
@@ -858,9 +947,8 @@ class ZonesMixin:
         self.mark_rules_support_entry(item)
         self.apply_rules_entering_manifestation_replacements(item)
         self.battlefield.append(item)
-        self.record_rules_observed_event("cards_discarded", owner_id)
-        if zone == "deck":
-            self.record_rules_observed_event("deck_cards_discarded", owner_id)
+        self._rules_record_replaced_discard(owner_id, zone, "graveyard", card_id=card_id,
+            destination="battlefield", item_id=item["id"])
         self.queue_rules_effect_support_entry(item, from_zone=zone)
         return item
 
@@ -1067,6 +1155,34 @@ class ZonesMixin:
             )
         return expired
 
+    def _rules_record_replaced_discard(self, owner_id, from_zone, intended_zone, *,
+                                      card_id=None, destination=None, position="top",
+                                      suspension_id=None, item_id=None):
+        if intended_zone == "graveyard" and from_zone in {"hand", "deck"}:
+            self.record_rules_observed_event("cards_discarded", owner_id)
+            if from_zone == "deck":
+                self.record_rules_observed_event("deck_cards_discarded", owner_id)
+            if not self.rules_engine.get("enabled") or not any(
+                (ability.get("trigger") or {}).get("event") == "discarded"
+                for ability in self.card_rules.get(card_id, {}).get("triggeredAbilities") or []
+            ):
+                return
+            source = {"cardId": card_id, "ownerId": owner_id, "containerId": owner_id, "zone": destination}
+            if destination in {"graveyard", "exile"}:
+                entries = self.rules_offboard_card_entries(owner_id, destination)
+                entry = entries[-1] if position == "bottom" else entries[0]
+                source["entryId"] = entry["id"]
+            if suspension_id:
+                source["suspensionId"] = suspension_id
+            if item_id:
+                source["itemId"] = item_id
+            if destination == "graveyard":
+                for event in reversed(self.rules_engine.get("observedEvents") or []):
+                    if event["kind"] == "card_entered_limbo" and event.get("cardId") == card_id and event["playerId"] == owner_id:
+                        event["_selfDiscardRecorded"] = True
+                        break
+            self.record_rules_observed_event("card_discarded", owner_id, cardId=card_id, _source=source)
+
     def rules_zone_move_replacement(self, from_container_id, from_zone, to_zone, card_id, to_container_id=None):
         """Apply replacements before an effect extracts a card from its zone."""
         owner_id = self.card_owner_in_zone(
@@ -1087,6 +1203,9 @@ class ZonesMixin:
         if selected and selected['replacementKind'] != 'suspend':
             recipient, destination = selected['_destination']
             error, _owner = self.move_zone_card(from_container_id, from_zone, recipient, destination, card_id)
+            if not error:
+                self._rules_record_replaced_discard(owner_id, from_zone, to_zone,
+                    card_id=card_id, destination=destination)
             return error, owner_id, ({'status': 'exiled', 'cardId': card_id, 'ownerId': owner_id,
                                       'fromZone': from_zone, 'destination': destination} if not error else None)
         if suspension_source:
@@ -1094,6 +1213,9 @@ class ZonesMixin:
                 from_container_id, from_zone, card_id,
                 source_effect_id=suspension_source.get("id"),
             )
+            if not error and suspended:
+                self._rules_record_replaced_discard(owner_id, from_zone, to_zone,
+                    card_id=card_id, destination="suspended", suspension_id=suspended["id"])
             return error, owner_id, ({
                 "status": "suspended",
                 "suspensionId": suspended.get("id"),

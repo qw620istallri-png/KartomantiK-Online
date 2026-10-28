@@ -110,6 +110,7 @@ class PhasesMixin:
         self.rules_engine["tributeLog"] = []
         self.rules_engine["drawnOutsideRecovery"] = {}
         self.rules_engine["_handEntries"] = {}
+        self.rules_engine["_vesselEntries"] = {}
         self.rules_engine["supportEntries"] = []
         self.rules_engine["playRestrictions"] = []
         self.rules_engine["zoneEntryTurns"] = {}

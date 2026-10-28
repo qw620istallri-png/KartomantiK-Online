@@ -1,0 +1,576 @@
+{
+  "sourceDigest": "773544b0cbbca1ddba77c4de9bb3dbb0b13a1abe14b331cbbff93ff025edc255",
+  "note": "Corrected fixture/oracles; production Paciphint handler still unmodified. Color symbols and Psychowall scope corrected in the bench before this reproduction.",
+  "productionFileSha256": "8deea6692cba89720595782fc8b385b5e6b13732b4d06def4f5285128797e358",
+  "summary": {
+    "executed": 112,
+    "passed": 108,
+    "failed": 4
+  },
+  "tests": [
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_dominate__all_invalid",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_dominate__invalid_0_missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_dominate__invalid_0_protected",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_dominate__invalid_0_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_dominate__invalid_0_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_dominate__invalid_1_missing",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_dominate__invalid_1_protected",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_dominate__invalid_1_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_dominate__invalid_1_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_dominate__valid",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_incite__all_invalid",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_incite__invalid_0_missing",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_incite__invalid_0_protected",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_incite__invalid_0_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_incite__invalid_0_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_incite__valid",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_induce__all_invalid",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_induce__invalid_0_missing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_induce__invalid_0_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_induce__invalid_0_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_induce__invalid_0_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_induce__invalid_1_missing",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_induce__invalid_1_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_induce__invalid_1_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_induce__invalid_1_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_induce__valid",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_invert__all_invalid",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_invert__invalid_0_missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_invert__invalid_0_protected",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_invert__invalid_0_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_invert__invalid_0_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_invert__invalid_1_missing",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_invert__invalid_1_protected",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_invert__invalid_1_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_invert__invalid_1_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_invert__valid",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_kaos__all_invalid",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_kaos__invalid_0_missing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_kaos__invalid_0_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_kaos__invalid_0_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_kaos__invalid_0_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_kaos__invalid_1_missing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_kaos__invalid_1_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_kaos__invalid_1_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_kaos__invalid_1_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_kaos__valid",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_karma__all_invalid",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_karma__invalid_0_missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_karma__invalid_0_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_karma__invalid_0_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_karma__invalid_0_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_karma__invalid_1_missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_karma__invalid_1_protected",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_karma__invalid_1_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_karma__invalid_1_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_karma__valid",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_linoleus__all_invalid",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_linoleus__invalid_0_missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_linoleus__invalid_0_protected",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_linoleus__invalid_0_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_linoleus__invalid_0_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_linoleus__linoleus_no_target",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_linoleus__valid",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_multicastigate__all_invalid",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_multicastigate__invalid_0_missing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_multicastigate__invalid_0_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_multicastigate__invalid_0_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_multicastigate__invalid_0_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_multicastigate__invalid_1_missing",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_multicastigate__invalid_1_protected",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_multicastigate__invalid_1_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_multicastigate__invalid_1_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_multicastigate__valid",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_paciphint__all_invalid",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_paciphint__invalid_0_missing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_paciphint__invalid_0_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_paciphint__invalid_0_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_paciphint__invalid_0_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_paciphint__invalid_1_missing",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_compound_targets.py\", line 209, in run\n    else: self.exercise(row,(index,),how)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_compound_targets.py\", line 174, in exercise\n    self.verify(s,row,targets,valid,before)\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_compound_targets.py\", line 133, in verify\n    self.assertEqual(s.players['p1']['zones']['deck'].count('m4'),1 if 0 in legal else 0)\nAssertionError: 0 != 1\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_paciphint__invalid_1_protected",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_compound_targets.py\", line 209, in run\n    else: self.exercise(row,(index,),how)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_compound_targets.py\", line 174, in exercise\n    self.verify(s,row,targets,valid,before)\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_compound_targets.py\", line 133, in verify\n    self.assertEqual(s.players['p1']['zones']['deck'].count('m4'),1 if 0 in legal else 0)\nAssertionError: 0 != 1\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_paciphint__invalid_1_roundtrip",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_compound_targets.py\", line 209, in run\n    else: self.exercise(row,(index,),how)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_compound_targets.py\", line 174, in exercise\n    self.verify(s,row,targets,valid,before)\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_compound_targets.py\", line 133, in verify\n    self.assertEqual(s.players['p1']['zones']['deck'].count('m4'),1 if 0 in legal else 0)\nAssertionError: 0 != 1\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_paciphint__invalid_1_stalemate",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_compound_targets.py\", line 209, in run\n    else: self.exercise(row,(index,),how)\n          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_compound_targets.py\", line 174, in exercise\n    self.verify(s,row,targets,valid,before)\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_compound_targets.py\", line 133, in verify\n    self.assertEqual(s.players['p1']['zones']['deck'].count('m4'),1 if 0 in legal else 0)\nAssertionError: 0 != 1\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_paciphint__valid",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_shattering__all_invalid",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_shattering__invalid_0_immune",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_shattering__invalid_1_missing",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_shattering__invalid_1_protected",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_shattering__invalid_1_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_shattering__invalid_1_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_shattering__valid",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_stormmace__all_invalid",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_stormmace__invalid_0_missing",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_stormmace__invalid_0_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_stormmace__invalid_0_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_stormmace__invalid_0_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_stormmace__valid",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tombloom__all_invalid",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tombloom__invalid_0_missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tombloom__invalid_0_protected",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tombloom__invalid_0_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tombloom__invalid_0_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tombloom__valid",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tower__all_invalid",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tower__invalid_0_missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tower__invalid_0_protected",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tower__invalid_0_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tower__invalid_0_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tower__invalid_1_missing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tower__invalid_1_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tower__invalid_1_roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tower__invalid_1_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_compound_targets.CompoundTargets.test_tower__valid",
+      "status": "pass",
+      "durationSeconds": 0.031
+    }
+  ]
+}

@@ -1,0 +1,189 @@
+{
+  "schemaVersion": 1,
+  "family": "compound-target-resolution",
+  "contracts": [
+    {
+      "key": "linoleus",
+      "cardId": "inner-deserts-016",
+      "name": "Linoleus, the Verdant",
+      "paragraphIndex": 1,
+      "printedText": "Adamant.\nAs long as Linoleus is on the field, whenever you gain Points due to other cards or effects, you gain 5 Points and another target manifestation you control on the field gains +1 power.",
+      "printedTextSha256": "0f7ef4e4b7f6e709f6d2197d406e81045e79ccf10a97a2bef714457f15544ac3",
+      "printedParagraph": "As long as Linoleus is on the field, whenever you gain Points due to other cards or effects, you gain 5 Points and another target manifestation you control on the field gains +1 power.",
+      "abilityId": "linoleus-doubles-down-on-point-gains",
+      "mode": "event",
+      "event": "points_gained",
+      "essenceCost": {}
+    },
+    {
+      "key": "tombloom",
+      "cardId": "inner-deserts-050",
+      "name": "Tombloom",
+      "paragraphIndex": 0,
+      "printedText": "When Tombloom is discarded, exile it. A target Manifestation on the field gets -2 power until the end of the turn.",
+      "printedTextSha256": "d45640785ca0a7d27c65ad6d510d55a39ec9a73a666f9b4951262bb2e054c2ac",
+      "printedParagraph": "When Tombloom is discarded, exile it. A target Manifestation on the field gets -2 power until the end of the turn.",
+      "abilityId": "tombloom-exiles-itself-and-weakens",
+      "mode": "event",
+      "event": "discarded",
+      "essenceCost": {}
+    },
+    {
+      "key": "incite",
+      "cardId": "bc3esblt60j7at5_en",
+      "name": "Incite to Sacrifice",
+      "paragraphIndex": 1,
+      "printedText": "You can play this card only during the Reaction.\r\nA target manifestation in the Confrontation Zone gets +6 power.\r\nIf that manifestation wins the confrontation, exile it.",
+      "printedTextSha256": "c5ca9cee1380a085192a7b66d98f6294b68fea20fdef46582cd3d97575713288",
+      "printedParagraph": "A target manifestation in the Confrontation Zone gets +6 power.",
+      "abilityId": "incite-to-sacrifice",
+      "mode": "play",
+      "event": null,
+      "essenceCost": {
+        "choleric": 3
+      }
+    },
+    {
+      "key": "stormmace",
+      "cardId": "inner-deserts-105",
+      "name": "Stormmace",
+      "paragraphIndex": 1,
+      "printedText": "Support from hand; Float.\nAs long as Stormmace is in the Interzone, you may Sacrifice it: The First Manifestation you control gets +2 power and gains Protection from cards and effects controlled by opponents until the end of the turn.",
+      "printedTextSha256": "04e47dea80d39ccdfa608474f99072c3428892be460c8881739a4b9cb1088ebe",
+      "printedParagraph": "As long as Stormmace is in the Interzone, you may Sacrifice it: The First Manifestation you control gets +2 power and gains Protection from cards and effects controlled by opponents until the end of the turn.",
+      "abilityId": "sacrifice-to-empower-first",
+      "mode": "activate",
+      "event": null,
+      "essenceCost": {}
+    },
+    {
+      "key": "kaos",
+      "cardId": "b0amfkmb3xewx7x_en",
+      "name": "Kaos Bro",
+      "paragraphIndex": 2,
+      "printedText": "Support from hand.\r\nCannot be played as First Manifestation.\r\nWhen Kaos Bro is about to enter the Confrontation Zone, choose a card on the field controlled by each player. Roll a D6 for each one of those cards and, if you roll a 1 or a 6, destroy that card.",
+      "printedTextSha256": "9ba54b1120a3483674ecec031f1648136b5ffde3d5454a1032a2e81d5f2613e0",
+      "printedParagraph": "When Kaos Bro is about to enter the Confrontation Zone, choose a card on the field controlled by each player. Roll a D6 for each one of those cards and, if you roll a 1 or a 6, destroy that card.",
+      "abilityId": "kaos-bro-roll-destroy-one-card-per-player",
+      "mode": "event",
+      "event": "enters_field_zone",
+      "essenceCost": {}
+    },
+    {
+      "key": "karma",
+      "cardId": "9d2y8uy9ut7omyo_en",
+      "name": "Karma Bro",
+      "paragraphIndex": 2,
+      "printedText": "Support from hand.\r\nCannot be played as First Manifestation.\r\nWhen Karma Bro is about to enter the Confrontation Zone, choose a card on the field controlled by each player. Roll a D6 for each one of those cards. You gain 10 points for each 1 or 6 you get from the rolls.",
+      "printedTextSha256": "190afb5d0d6b0da136043c66a6f80d0e522e9763cff147383bf960bbe4e9d630",
+      "printedParagraph": "When Karma Bro is about to enter the Confrontation Zone, choose a card on the field controlled by each player. Roll a D6 for each one of those cards. You gain 10 points for each 1 or 6 you get from the rolls.",
+      "abilityId": "karma-bro-roll-points-one-card-per-player",
+      "mode": "event",
+      "event": "enters_field_zone",
+      "essenceCost": {}
+    },
+    {
+      "key": "shattering",
+      "cardId": "k7dq8ye448xwj54_en",
+      "name": "Shattering the Self",
+      "paragraphIndex": 0,
+      "printedText": "A target player discards 3 cards from the top of the deck, then a target manifestation on the field controlled by an opponent gets -1 power for each manifestation discarded this way.",
+      "printedTextSha256": "863dbe45e53b4ea2aefd10b7f90b1cac9d4eae2aa6c42ef40b0e64c5d10e211b",
+      "printedParagraph": "A target player discards 3 cards from the top of the deck, then a target manifestation on the field controlled by an opponent gets -1 power for each manifestation discarded this way.",
+      "abilityId": "shattering-the-self",
+      "mode": "play",
+      "event": null,
+      "essenceCost": {
+        "melancholic": 2
+      }
+    },
+    {
+      "key": "paciphint",
+      "cardId": "inner-deserts-018",
+      "name": "Paciphint, the Pious",
+      "paragraphIndex": 1,
+      "printedText": "Paciphint enters the field with 2 Flower Counters on it.\nAs long as Paciphint is on the field, during Reaction you may remove 1 Flower Counter: Put a manifestation on the field you control other than Paciphint on the bottom of its owner's deck. If you do, the power of a target manifestation in the Confrontation Zone is not considered for the resolution of the confrontation.\nAs long as Paciphint is in the Interzone, whenever you lose a confrontation, put 1 Flower Counter on it.",
+      "printedTextSha256": "c1a02bd526fb56a5b8bf175f00c624b1827c7dcb1268967c73ba9ec689c27f93",
+      "printedParagraph": "As long as Paciphint is on the field, during Reaction you may remove 1 Flower Counter: Put a manifestation on the field you control other than Paciphint on the bottom of its owner's deck. If you do, the power of a target manifestation in the Confrontation Zone is not considered for the resolution of the confrontation.",
+      "abilityId": "paciphint-sacrifices-an-ally-to-ignore-a-power",
+      "mode": "activate",
+      "event": null,
+      "essenceCost": {}
+    },
+    {
+      "key": "tower",
+      "cardId": "inner-deserts-045",
+      "name": "Hyperuranic Tower",
+      "paragraphIndex": 1,
+      "printedText": "When Hyperuranic Tower enters the field, put 3 Abstraction counters on it.\nPay 💧: Move an Abstraction counter from a target card you control to a target Manifestation on the field.\nManifestations you control with one or more Abstraction counters gain Float.\nManifestations with Float you control on the field get +1 power.",
+      "printedTextSha256": "02351a97bc2f8dad6bab425922051762da92445dea72a9f645fc0504fe04bfc0",
+      "printedParagraph": "Pay 💧: Move an Abstraction counter from a target card you control to a target Manifestation on the field.",
+      "abilityId": "move-abstraction-counter",
+      "mode": "activate",
+      "event": null,
+      "essenceCost": {
+        "vitreous": 1
+      }
+    },
+    {
+      "key": "dominate",
+      "cardId": "zk76fhtep0wm3hh_en",
+      "name": "Dominate the Aspects",
+      "paragraphIndex": 0,
+      "printedText": "Exchange the control of a target manifestation you control in the Confrontation Zone with a target manifestation controlled by an opponent in the Confrontation Zone.\r\nAt the Resolution, every manifestation on the field exchanged this way is put on the bottom of its owner's deck.",
+      "printedTextSha256": "0b58c7ca0862fa371871b6b9716f4a9caf0ce0f3563f4ada1ab1f9d7cc91d14e",
+      "printedParagraph": "Exchange the control of a target manifestation you control in the Confrontation Zone with a target manifestation controlled by an opponent in the Confrontation Zone.",
+      "abilityId": "exchange-confrontation-control-until-resolution",
+      "mode": "play",
+      "event": null,
+      "essenceCost": {
+        "vitreous": 3
+      }
+    },
+    {
+      "key": "invert",
+      "cardId": "0ujeinffs84nrvq_en",
+      "name": "Invert Emotions",
+      "paragraphIndex": 0,
+      "printedText": "Exchange control of a target manifestation in an opponent's Interzone and a target manifestation in your Interzone.",
+      "printedTextSha256": "b7d62bac879bba14f5a6571a367e665437a0ea363a93ed82ba651f0c34fa6ec4",
+      "printedParagraph": "Exchange control of a target manifestation in an opponent's Interzone and a target manifestation in your Interzone.",
+      "abilityId": "exchange-interzone-control",
+      "mode": "play",
+      "event": null,
+      "essenceCost": {
+        "capricious": 3
+      }
+    },
+    {
+      "key": "induce",
+      "cardId": "inner-deserts-148",
+      "name": "Induce Desertion",
+      "paragraphIndex": 0,
+      "printedText": "A target Manifestation in the Confrontation Zone loses power equal to the base power of another target Manifestation in Support under the control of the same player.",
+      "printedTextSha256": "467e641a1a2a122e8e5b0e39e4983001d7ef5d4b9e81a66d3fd7c51aa481188e",
+      "printedParagraph": "A target Manifestation in the Confrontation Zone loses power equal to the base power of another target Manifestation in Support under the control of the same player.",
+      "abilityId": "induce-desertion",
+      "mode": "play",
+      "event": null,
+      "essenceCost": {
+        "hollow": 2
+      }
+    },
+    {
+      "key": "multicastigate",
+      "cardId": "inner-deserts-138",
+      "name": "Multicastigate",
+      "paragraphIndex": 0,
+      "printedText": "You may pay 3 extra 🔘 essences to play this Will.\nDestroy a target Manifestation in Support.\nIf you paid the extra essences, Destroy 2 target Manifestations in Support instead.",
+      "printedTextSha256": "95eb28faba55a52b04419ed08defd179a72b79190832e62887ff52f8629f49dd",
+      "printedParagraph": "You may pay 3 extra 🔘 essences to play this Will.",
+      "abilityId": "destroy-one-or-two-support-manifestations",
+      "mode": "play",
+      "event": null,
+      "essenceCost": {
+        "hollow": 5
+      }
+    }
+  ]
+}

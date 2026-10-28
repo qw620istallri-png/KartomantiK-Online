@@ -1,0 +1,109 @@
+{
+  "sourceDigest": "c3901379bbb5006f0a16a6ae9598aa15d5618d5180a6f0a4997b78871f894d81",
+  "inspectedAt": "2026-10-28T20:31:47.047194+00:00",
+  "countsAsClauseProof": false,
+  "runtimeModified": false,
+  "notes": [
+    "Read-only next-audit inspection, not a completed card certification.",
+    "Nullify uses a controlled resolved state built from its shipped ongoing effect; BOB is a controlled field fixture.",
+    "The creator clarification about exiling a self-discard source from Suspension remains pending."
+  ],
+  "cases": [
+    {
+      "cardId": "inner-deserts-050",
+      "name": "Tombloom",
+      "mode": "limbo",
+      "replacementStatus": null,
+      "observedKinds": [
+        "card_entered_limbo",
+        "manifestation_entered_limbo",
+        "cards_discarded"
+      ],
+      "queuedAbilityIds": [],
+      "pendingChoiceKind": "trigger_targets",
+      "pendingChoiceSource": "inner-deserts-050",
+      "sourceInLimbo": true,
+      "sourceInExile": false,
+      "sourceSuspended": false
+    },
+    {
+      "cardId": "inner-deserts-050",
+      "name": "Tombloom",
+      "mode": "nullify_exile",
+      "replacementStatus": "exiled",
+      "observedKinds": [
+        "cards_discarded"
+      ],
+      "queuedAbilityIds": [],
+      "pendingChoiceKind": null,
+      "pendingChoiceSource": null,
+      "sourceInLimbo": false,
+      "sourceInExile": true,
+      "sourceSuspended": false
+    },
+    {
+      "cardId": "inner-deserts-050",
+      "name": "Tombloom",
+      "mode": "bob_suspend",
+      "replacementStatus": "suspended",
+      "observedKinds": [
+        "cards_discarded"
+      ],
+      "queuedAbilityIds": [],
+      "pendingChoiceKind": null,
+      "pendingChoiceSource": null,
+      "sourceInLimbo": false,
+      "sourceInExile": false,
+      "sourceSuspended": true
+    },
+    {
+      "cardId": "inner-deserts-055",
+      "name": "Nghoul-ong, the Tormented",
+      "mode": "limbo",
+      "replacementStatus": null,
+      "observedKinds": [
+        "card_entered_limbo",
+        "manifestation_entered_limbo",
+        "cards_discarded"
+      ],
+      "queuedAbilityIds": [
+        "nghoulong-exiles-itself-for-a-free-limbo-ephemeral-will"
+      ],
+      "pendingChoiceKind": null,
+      "pendingChoiceSource": null,
+      "sourceInLimbo": true,
+      "sourceInExile": false,
+      "sourceSuspended": false
+    },
+    {
+      "cardId": "inner-deserts-055",
+      "name": "Nghoul-ong, the Tormented",
+      "mode": "nullify_exile",
+      "replacementStatus": "exiled",
+      "observedKinds": [
+        "cards_discarded"
+      ],
+      "queuedAbilityIds": [],
+      "pendingChoiceKind": null,
+      "pendingChoiceSource": null,
+      "sourceInLimbo": false,
+      "sourceInExile": true,
+      "sourceSuspended": false
+    },
+    {
+      "cardId": "inner-deserts-055",
+      "name": "Nghoul-ong, the Tormented",
+      "mode": "bob_suspend",
+      "replacementStatus": "suspended",
+      "observedKinds": [
+        "cards_discarded"
+      ],
+      "queuedAbilityIds": [],
+      "pendingChoiceKind": null,
+      "pendingChoiceSource": null,
+      "sourceInLimbo": false,
+      "sourceInExile": false,
+      "sourceSuspended": true
+    }
+  ]
+}

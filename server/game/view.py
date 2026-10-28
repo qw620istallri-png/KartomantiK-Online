@@ -42,6 +42,8 @@ class ViewMixin:
                 if isinstance(result.get(key), list):
                     result[key] = {"count": len(result[key])}
             kind = value.get("kind")
+            if kind == "shuffle_hand_into_deck_and_draw" and isinstance(result.get("draw"), list):
+                result["draw"] = {"count": len(result["draw"])}
             if kind in {"deck_reorder", "reorder_top_decks"}:
                 result["groups"] = [{key: entry for key, entry in group.items()
                                      if key not in {"top", "bottom", "extra"}}
@@ -176,6 +178,11 @@ class ViewMixin:
             }
             if pending_choice else None
         )
+        if pending_choice_view and "groups" in pending_choice_view:
+            pending_choice_view["groups"] = [
+                {key: value for key, value in group.items() if not key.startswith("_")}
+                for group in pending_choice_view["groups"]
+            ]
         if pending_choice_view and pending_choice.get("sourceCardId"):
             # Choices keep private action data server-side, but the public
             # ability id lets the UI identify one branch of a multi-effect card.

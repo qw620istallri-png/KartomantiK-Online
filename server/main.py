@@ -1547,9 +1547,12 @@ async def handle_message(ws, info, data):
 
         if msg_type == "shuffle":
             hand_entries = list(session.rules_hand_card_entries(owner_id)) if zone == "hand" and session.rules_engine.get("enabled") else None
+            vessel_entries = list(session.rules_vessel_card_entries(owner_id)) if zone == "receptacle" and session.rules_engine.get("enabled") else None
             random.shuffle(player["zones"][zone])
             if hand_entries is not None:
                 session.rules_reorder_hand_entries(owner_id, hand_entries)
+            if vessel_entries is not None:
+                session.rules_reorder_vessel_entries(owner_id, vessel_entries)
             session.add_log(actor_id, "shuffle", {"ownerId": owner_id, "zone": zone})
             resolved_search = session.resolve_search(actor_id, owner_id, zone)
             if resolved_search:
@@ -1560,9 +1563,12 @@ async def handle_message(ws, info, data):
             if sorted(order) != sorted(current):
                 return await send_error(ws, "Reorder must be a permutation of the current zone.")
             hand_entries = list(session.rules_hand_card_entries(owner_id)) if zone == "hand" and session.rules_engine.get("enabled") else None
+            vessel_entries = list(session.rules_vessel_card_entries(owner_id)) if zone == "receptacle" and session.rules_engine.get("enabled") else None
             player["zones"][zone] = order
             if hand_entries is not None:
                 session.rules_reorder_hand_entries(owner_id, hand_entries)
+            if vessel_entries is not None:
+                session.rules_reorder_vessel_entries(owner_id, vessel_entries)
             session.add_log(actor_id, "reorder", {"ownerId": owner_id, "zone": zone})
         session.touch()
         await broadcast_state(session)

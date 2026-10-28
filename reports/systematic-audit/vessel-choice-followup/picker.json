@@ -1,0 +1,245 @@
+{
+  "engine": "chromium",
+  "physicalDevice": false,
+  "summary": {
+    "configurations": 6,
+    "scenarios": 18,
+    "failed": 0
+  },
+  "cases": [
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "fr",
+      "purpose": "gummo",
+      "actor": "p1",
+      "heading": "Gummo",
+      "candidateCount": 3,
+      "selectedIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "fr",
+      "purpose": "wish",
+      "actor": "p2",
+      "heading": "Choisir la Manifestation à renvoyer",
+      "candidateCount": 3,
+      "selectedIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "fr",
+      "purpose": "pescojolero",
+      "actor": "p1",
+      "heading": "Prendre une Manifestation dans votre Interzone",
+      "candidateCount": 4,
+      "selectedIndex": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "en",
+      "purpose": "gummo",
+      "actor": "p1",
+      "heading": "Gummo",
+      "candidateCount": 3,
+      "selectedIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "en",
+      "purpose": "wish",
+      "actor": "p2",
+      "heading": "Choose the Manifestation to return",
+      "candidateCount": 3,
+      "selectedIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "en",
+      "purpose": "pescojolero",
+      "actor": "p1",
+      "heading": "Take a Manifestation into your Interzone",
+      "candidateCount": 4,
+      "selectedIndex": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "it",
+      "purpose": "gummo",
+      "actor": "p1",
+      "heading": "Gummo",
+      "candidateCount": 3,
+      "selectedIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "it",
+      "purpose": "wish",
+      "actor": "p2",
+      "heading": "Scegli la Manifestazione da restituire",
+      "candidateCount": 3,
+      "selectedIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "language": "it",
+      "purpose": "pescojolero",
+      "actor": "p1",
+      "heading": "Prendi una Manifestazione nella tua Interzona",
+      "candidateCount": 4,
+      "selectedIndex": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "fr",
+      "purpose": "gummo",
+      "actor": "p1",
+      "heading": "Gummo",
+      "candidateCount": 3,
+      "selectedIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "fr",
+      "purpose": "wish",
+      "actor": "p2",
+      "heading": "Choisir la Manifestation à renvoyer",
+      "candidateCount": 3,
+      "selectedIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "fr",
+      "purpose": "pescojolero",
+      "actor": "p1",
+      "heading": "Prendre une Manifestation dans votre Interzone",
+      "candidateCount": 4,
+      "selectedIndex": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "en",
+      "purpose": "gummo",
+      "actor": "p1",
+      "heading": "Gummo",
+      "candidateCount": 3,
+      "selectedIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "en",
+      "purpose": "wish",
+      "actor": "p2",
+      "heading": "Choose the Manifestation to return",
+      "candidateCount": 3,
+      "selectedIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "en",
+      "purpose": "pescojolero",
+      "actor": "p1",
+      "heading": "Take a Manifestation into your Interzone",
+      "candidateCount": 4,
+      "selectedIndex": 2,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "it",
+      "purpose": "gummo",
+      "actor": "p1",
+      "heading": "Gummo",
+      "candidateCount": 3,
+      "selectedIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "it",
+      "purpose": "wish",
+      "actor": "p2",
+      "heading": "Scegli la Manifestazione da restituire",
+      "candidateCount": 3,
+      "selectedIndex": 1,
+      "passed": true
+    },
+    {
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "language": "it",
+      "purpose": "pescojolero",
+      "actor": "p1",
+      "heading": "Prendi una Manifestazione nella tua Interzona",
+      "candidateCount": 4,
+      "selectedIndex": 2,
+      "passed": true
+    }
+  ]
+}

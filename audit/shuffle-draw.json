@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "family": "shuffle-then-draw",
+  "contracts": [
+    {
+      "key": "deny",
+      "cardId": "f18fccv1k2co206_en",
+      "name": "Deny Fate",
+      "abilityId": "deny-fate",
+      "printedText": "You may play this Will only before the Revelation. Shuffle your hand into the deck and draw 7 cards.",
+      "printedTextSha256": "f7a2443c68235d2aa270654d435ba4e6f68afc2714aa39bb3b62cef2fb892438",
+      "printedParagraph": "You may play this Will only before the Revelation. Shuffle your hand into the deck and draw 7 cards.",
+      "paragraphIndex": 0,
+      "expectedDraw": 7,
+      "allPlayers": false,
+      "essenceCost": {}
+    },
+    {
+      "key": "pontificate",
+      "cardId": "inner-deserts-094",
+      "name": "Pontificate Heresy",
+      "abilityId": "immediate-shuffle-hands-draw-four",
+      "printedText": "Immediate Effect - All players shuffle their hand into their deck, then each player draws 4 cards.",
+      "printedTextSha256": "b38d2be61e46249ab3a0b9c2c1f38cc6747aeaf3565c6496ea512f5e64cde49f",
+      "printedParagraph": "Immediate Effect - All players shuffle their hand into their deck, then each player draws 4 cards.",
+      "paragraphIndex": 0,
+      "expectedDraw": 4,
+      "allPlayers": true,
+      "essenceCost": {
+        "capricious": 2
+      }
+    }
+  ]
+}

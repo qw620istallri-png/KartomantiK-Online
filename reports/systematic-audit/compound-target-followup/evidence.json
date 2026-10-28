@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-28T15:24:49.568812+00:00",
+  "sourceDigest": "184f4a3a5f5b7cab86d7d00b447e552c1a5b037f48bbdb99aef4eb0bb9976ad1",
+  "published": false,
+  "summary": {
+    "family": {
+      "executed": 126,
+      "passed": 126,
+      "failed": 0,
+      "skipped": 0,
+      "cardsWithSelectedClauseProof": 13,
+      "selectedClauses": 13,
+      "familyScenarios": 112,
+      "networkScenarios": 14
+    },
+    "python": {
+      "executed": 2437,
+      "passed": 2437,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuitesPassed": 3,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 109,
+      "percentageWithSelectedClauseProof": 24.2,
+      "cardsOutsideThisStrictRegister": 341,
+      "fullCatalogSemanticCertification": false
+    },
+    "newUniqueCards": 9,
+    "reproducedFailuresFixed": 4
+  },
+  "newCards": [
+    {
+      "cardId": "zk76fhtep0wm3hh_en",
+      "name": "Dominate the Aspects"
+    },
+    {
+      "cardId": "inner-deserts-045",
+      "name": "Hyperuranic Tower"
+    },
+    {
+      "cardId": "0ujeinffs84nrvq_en",
+      "name": "Invert Emotions"
+    },
+    {
+      "cardId": "b0amfkmb3xewx7x_en",
+      "name": "Kaos Bro"
+    },
+    {
+      "cardId": "9d2y8uy9ut7omyo_en",
+      "name": "Karma Bro"
+    },
+    {
+      "cardId": "inner-deserts-138",
+      "name": "Multicastigate"
+    },
+    {
+      "cardId": "inner-deserts-018",
+      "name": "Paciphint, the Pious"
+    },
+    {
+      "cardId": "k7dq8ye448xwj54_en",
+      "name": "Shattering the Self"
+    },
+    {
+      "cardId": "inner-deserts-105",
+      "name": "Stormmace"
+    }
+  ],
+  "fixedRegressionTestIds": [
+    "test_compound_targets.CompoundTargets.test_paciphint__invalid_1_missing",
+    "test_compound_targets.CompoundTargets.test_paciphint__invalid_1_protected",
+    "test_compound_targets.CompoundTargets.test_paciphint__invalid_1_roundtrip",
+    "test_compound_targets.CompoundTargets.test_paciphint__invalid_1_stalemate"
+  ],
+  "productionChange": {
+    "file": "server/game/effects/signature.py",
+    "handler": "_rules_result_paciphint_swap",
+    "beforeSha256": "8deea6692cba89720595782fc8b385b5e6b13732b4d06def4f5285128797e358",
+    "afterSha256": "c6723bf66ce647b4e4237f6eda346dfc1b8441559ecd68a200fe82ec9be42f77"
+  },
+  "artifacts": {
+    "before.json": "f4adb5ae247a25e85c20b954a60f85877e26960c0ffe76e8d520b89c6b9d843c",
+    "clauses.json": "a28a4e635a4266ac9aa512bd4632f2299303c2e08ccce37f479ff4ad6cfa23f0",
+    "coverage-before.json": "0ee220112955a7c93f8ae57fb54c8efcc08a441fec794e7711de18cb6bff988b",
+    "test_frontend.log": "14010ce473f2079d5ccc164eddfa9bd1c74212f88326d374799251fb39fc1def",
+    "test_rules_parity.log": "47cae38a9917913d5d7f052a09376ca4b576f96cd01afd690c0398b66a684c61",
+    "test_state_transport.log": "2d979b9d1f36555d1dcff3c211aaf80259ef9f836106266b5719c253e0323408",
+    "ui-tests.json": "9d7216ae3978a2534506231e27590ee93b60d68a55c6f7f285447f7ed4fde5d5",
+    "unit-tests.json": "ca296bd902dbaf367bb6251c2a74bd81a34725292226bec2d001ce055c512272"
+  },
+  "coverageRegistrySha256": "b2c5e83dfbfbf7ce3c4b260809c47069bb0bff8eaa2be7d97ce9e69f43ef2381",
+  "oracleManifestSha256": "12ae287a5e83866671544f627909f892a90e45d0f7da5cba41c30abef58c497b",
+  "limits": [
+    "Selected compound/grouped target clauses only, not every ability or interaction of each card.",
+    "Triggered effects use explicit stimuli and production queues; their full producer actions are not covered by this batch.",
+    "Played/activated abilities use real declarations and costs. The first ally selection timing of Paciphint is inherited from the existing declaration contract, not independently certified here.",
+    "Invalidation is a controlled fixture. WebSocket journeys isolate auto-phase driving and pass real priority; they do not independently certify automatic invalid-target resolution.",
+    "Bro die outcomes are fixed at 1; all other random outcomes require separate cases.",
+    "Psychowall invalidates both the opponent player and their field card; the bench does not invent a legal opponent field target under that immunity.",
+    "Paciphint replacements of its donor movement, tokens as donors and attached-card cases remain outside this batch.",
+    "Scrambling Beacon retargeting and other compound handlers are not certified by this bounded group.",
+    "No new card UI, physical-device, Safari or illustration certification is implied."
+  ]
+}

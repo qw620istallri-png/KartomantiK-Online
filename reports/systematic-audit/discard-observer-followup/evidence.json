@@ -1,0 +1,137 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-28T20:38:07.633640+00:00",
+  "sourceDigest": "c3901379bbb5006f0a16a6ae9598aa15d5618d5180a6f0a4997b78871f894d81",
+  "published": false,
+  "summary": {
+    "family": {
+      "executed": 178,
+      "passed": 178,
+      "failed": 0,
+      "skipped": 0,
+      "cardsWithSelectedClauseProof": 8,
+      "selectedClauses": 8,
+      "familyScenarios": 168,
+      "networkScenarios": 10
+    },
+    "python": {
+      "executed": 2911,
+      "passed": 2911,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuitesPassed": 3,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 121,
+      "percentageWithSelectedClauseProof": 26.9,
+      "cardsOutsideThisStrictRegister": 329,
+      "fullCatalogSemanticCertification": false
+    },
+    "newUniqueCards": 1,
+    "reproducedFailuresFixed": 50
+  },
+  "newCards": [
+    {
+      "cardId": "kmvhsfddh84cpq6_en",
+      "name": "Buddhan the Transcended"
+    }
+  ],
+  "fixedRegressionTestIds": [
+    "test_discard_observers.DiscardObservers.test_buddhan__deck__exile",
+    "test_discard_observers.DiscardObservers.test_buddhan__deck__order_exile",
+    "test_discard_observers.DiscardObservers.test_buddhan__deck__suspend",
+    "test_discard_observers.DiscardObservers.test_buddhan__deck_batch__exile",
+    "test_discard_observers.DiscardObservers.test_buddhan__deck_batch__suspend",
+    "test_discard_observers.DiscardObservers.test_buddhan__hand__exile",
+    "test_discard_observers.DiscardObservers.test_buddhan__hand__order_suspend",
+    "test_discard_observers.DiscardObservers.test_buddhan__hand__suspend",
+    "test_discard_observers.DiscardObservers.test_conflux__deck__exile",
+    "test_discard_observers.DiscardObservers.test_conflux__deck__order_exile",
+    "test_discard_observers.DiscardObservers.test_conflux__deck__suspend",
+    "test_discard_observers.DiscardObservers.test_conflux__deck_batch__exile",
+    "test_discard_observers.DiscardObservers.test_conflux__deck_batch__suspend",
+    "test_discard_observers.DiscardObservers.test_conflux__hand__exile",
+    "test_discard_observers.DiscardObservers.test_conflux__hand__order_suspend",
+    "test_discard_observers.DiscardObservers.test_conflux__hand__suspend",
+    "test_discard_observers.DiscardObservers.test_ehgog__deck__exile",
+    "test_discard_observers.DiscardObservers.test_ehgog__deck__order_exile",
+    "test_discard_observers.DiscardObservers.test_ehgog__deck__suspend",
+    "test_discard_observers.DiscardObservers.test_ehgog__deck_batch__exile",
+    "test_discard_observers.DiscardObservers.test_ehgog__deck_batch__suspend",
+    "test_discard_observers.DiscardObservers.test_ehgog__hand__exile",
+    "test_discard_observers.DiscardObservers.test_ehgog__hand__order_suspend",
+    "test_discard_observers.DiscardObservers.test_ehgog__hand__suspend",
+    "test_discard_observers.DiscardObservers.test_forfog__deck__exile",
+    "test_discard_observers.DiscardObservers.test_forfog__deck__order_exile",
+    "test_discard_observers.DiscardObservers.test_forfog__deck__suspend",
+    "test_discard_observers.DiscardObservers.test_forfog__deck_batch__exile",
+    "test_discard_observers.DiscardObservers.test_forfog__deck_batch__suspend",
+    "test_discard_observers.DiscardObservers.test_forfog__hand__exile",
+    "test_discard_observers.DiscardObservers.test_forfog__hand__order_suspend",
+    "test_discard_observers.DiscardObservers.test_forfog__hand__suspend",
+    "test_discard_observers.DiscardObservers.test_kanon__exile",
+    "test_discard_observers.DiscardObservers.test_kanon__exile__source_departure",
+    "test_discard_observers.DiscardObservers.test_kanon__order_exile",
+    "test_discard_observers.DiscardObservers.test_kanon__order_suspend",
+    "test_discard_observers.DiscardObservers.test_kanon__suspend",
+    "test_discard_observers.DiscardObservers.test_makaboon__deck__exile",
+    "test_discard_observers.DiscardObservers.test_makaboon__deck__order_exile",
+    "test_discard_observers.DiscardObservers.test_makaboon__deck__suspend",
+    "test_discard_observers.DiscardObservers.test_makaboon__deck_batch__exile",
+    "test_discard_observers.DiscardObservers.test_makaboon__deck_batch__suspend",
+    "test_discard_observers.DiscardObservers.test_pale__deck__exile",
+    "test_discard_observers.DiscardObservers.test_pale__deck__order_exile",
+    "test_discard_observers.DiscardObservers.test_pale__deck__suspend",
+    "test_discard_observers.DiscardObservers.test_pale__deck_batch__exile",
+    "test_discard_observers.DiscardObservers.test_pale__deck_batch__suspend",
+    "test_discard_observers.DiscardObservers.test_pale__hand__exile",
+    "test_discard_observers.DiscardObservers.test_pale__hand__order_suspend",
+    "test_discard_observers.DiscardObservers.test_pale__hand__suspend"
+  ],
+  "productionChanges": [
+    {
+      "file": "server/game/zones.py",
+      "beforeSha256": "8ec506532a8b3c59c2c0194b0f41157423432a10f4fbabe022aaedbedfa00ff5",
+      "afterSha256": "17dcb6ee0179298132b0d36457a7b1a1083d9a37e08544acad1778404a7ed62e"
+    },
+    {
+      "file": "server/game/choices/cards.py",
+      "beforeSha256": "9ea03569f45e9d56fe7d98cb8c44ad3ac11d39424874950404530315b0f68895",
+      "afterSha256": "0c55583169c536ca7ed294183d9ddb4829dea9002fedcd2289b453952ec41245"
+    }
+  ],
+  "rulingId": "replaced-discard-observers",
+  "rulingManifestSha256": "7477a94a7b7adfc89272c916861f38e3f30769055ede29f285cafab85fe71045",
+  "supersededHistoricalInterpretation": {
+    "testId": "test_kanon_event_clauses.KanonEventClauses.test_suspension_replaces_movements_without_draw_discard_or_will_penalty",
+    "note": "Historical test ID retained for evidence identity; assertions now require discard events and Will penalties. The older report describes the previous interpretation, superseded by the explicit 2026-10-28 ruling."
+  },
+  "legacyTraumatizeAssertionUpdated": "test_private_hand_clauses.PrivateHandClauses.test_traumatize_discard_respects_bob_limbo_suspension",
+  "artifacts": {
+    "before.json": "d9a3532077c2f13ae6af0c7bc3633c2cf6dcb657f03b98cbede720148dfb6283",
+    "clauses.json": "66e9f64938553c0a754b28788d7da6e62033d06a03f1cbfa13c685ad64bbbaeb",
+    "clauses.log": "5a7a660ad482260779cfd7dc08d9e5c095544fab19f1fd776854d25afbb6f7dd",
+    "coverage-before.json": "d614a23635ec22a670c715c1ec1ba211c3e7c58a6d12576775485df866f96db1",
+    "full-before-legacy-ruling-update.json": "cf5de0632c3408b5faf06f6063f92b75f78374c46c04df3d0e46b013fc9fd4c3",
+    "network-development.log": "788fb671d60ea0a5e2d7a09e6405984d212470319051cad07de5e4171f875d1c",
+    "test_frontend.log": "14010ce473f2079d5ccc164eddfa9bd1c74212f88326d374799251fb39fc1def",
+    "test_rules_parity.log": "47cae38a9917913d5d7f052a09376ca4b576f96cd01afd690c0398b66a684c61",
+    "test_state_transport.log": "2d979b9d1f36555d1dcff3c211aaf80259ef9f836106266b5719c253e0323408",
+    "ui-tests.json": "77fc2eeaa204366d41b0aa1c0fa5bd26384010bc5f658dfc2cdc95058150b313",
+    "unit-tests.json": "73efa7412d294198ed4469741d8cbddf71f2b7c7592609306d63de422a2468c4"
+  },
+  "coverageRegistrySha256": "4ffae85a59b20be02e85cabed2e8311732f4501ddcf678c7fadad618558daac5",
+  "oracleManifestSha256": "ee703595ce34388025d22ed369db23fca65364ce3571bc47f65a83a85b65c772",
+  "limits": [
+    "Eight selected clauses and their executed branches; not all abilities or combinations of these cards.",
+    "Ordinary movement methods and the multi-card discard result produce actual events. No synthetic cards_discarded stimulus is used to prove replaced discard watchers.",
+    "Replacement sources are explicit fixtures. Most network roots are controlled Pluff entry-trigger actions, not a complete Pluff play or entry journey. Kanon uses an actual Ponder declaration and payment.",
+    "The two network Otranth cases distinguish actual Limbo entry from suspension. Self-discard triggers such as Tombloom or Nghoul-ong outside Limbo remain a separate audit.",
+    "Group counts are checked for one multi-card discard action. Multiple separate discard instructions before one event flush are outside this batch.",
+    "Kanon keeps its existing public discardedCardIds list restricted to ordinary Limbo/Support movements; the Will penalty now counts all successful discards without exposing private suspended/exiled identities.",
+    "Network checks use delta and legacy clients, live-server reconnect, choices and priority passes; automatic phase driving is isolated.",
+    "No new card UI, Safari, physical-device, process-restart or illustration certification.",
+    "Exile profiles directly set Quasimillenary marks, including on Deck cards. These are replacement-path controls, not proof of reachability of that combination in an automated match."
+  ]
+}

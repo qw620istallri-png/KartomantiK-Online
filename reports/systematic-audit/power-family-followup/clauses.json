@@ -1,0 +1,2989 @@
+{
+  "schemaVersion": 1,
+  "family": "fixed-power-change",
+  "sourceDigest": "abc621db2fb2e4418957619ba989c5f6b9a28f31d2a0ad16418b7d2b1cd9bd55",
+  "finishedAt": "2026-10-28T11:18:41.105840+00:00",
+  "published": false,
+  "summary": {
+    "executed": 307,
+    "passed": 307,
+    "failed": 0,
+    "skipped": 0,
+    "cardsWithSelectedClauseProof": 21,
+    "selectedParagraphs": 23,
+    "familyScenarios": 291,
+    "networkScenarios": 11,
+    "auditInfrastructureTests": 5
+  },
+  "clauses": [
+    {
+      "cardId": "6xfwhr4h38wvm4u_en",
+      "name": "Flower Tender",
+      "abilityId": "boost-low-power-on-support-entry",
+      "paragraphIndex": 1,
+      "printedParagraph": "When Flower Tender enters the Confrontation Zone, another target manifestation with power 2 or less in the Confrontation Zone gets +2 power until the end of the turn.",
+      "printedTextSha256": "71802474432416601e0b15fde0163bb2155ac3ce99093d852e8c658968f74a5c",
+      "independentOracle": {
+        "expectedDelta": 2,
+        "lifetime": "turn",
+        "targetRelation": "any",
+        "targetZone": "confrontation",
+        "targetBase": 2,
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__normal",
+        "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__existing_bonus",
+        "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__duration",
+        "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__cleanse",
+        "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__leave_reset",
+        "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__target_gone",
+        "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__target_stalemate",
+        "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__token",
+        "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__invalid_contract",
+        "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__target_protected",
+        "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__source_gone",
+        "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__trigger_guards"
+      ],
+      "scenarioCount": 12,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "obn1uv72ewxv3y5_en",
+      "name": "Oppress",
+      "abilityId": "oppress-power-modifier",
+      "paragraphIndex": 0,
+      "printedParagraph": "A target manifestation on the field gets -3 power until the end of the turn.",
+      "printedTextSha256": "9d136115822443fe3a753ff74156b6d5a1f886ae6e3832e5e6b150e6a2ad37c5",
+      "independentOracle": {
+        "expectedDelta": -3,
+        "lifetime": "turn",
+        "targetRelation": "any",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {
+          "choleric": 2
+        }
+      },
+      "validationStage": "declaration-payment-and-resolution-plus-websocket",
+      "testIds": [
+        "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__normal",
+        "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__existing_bonus",
+        "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__duration",
+        "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__cleanse",
+        "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__leave_reset",
+        "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__target_gone",
+        "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__target_stalemate",
+        "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__token",
+        "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__invalid_contract",
+        "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__target_protected",
+        "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__wrong_priority",
+        "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__unpaid",
+        "test_power_family_integration.PowerFamilyIntegration.test_oppress__oppress_power_modifier__websocket_resolution"
+      ],
+      "scenarioCount": 13,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "lo85kdsow36bymu_en",
+      "name": "Strengthen",
+      "abilityId": "strengthen-power-modifier",
+      "paragraphIndex": 0,
+      "printedParagraph": "A target manifestation on the field gets +3 power until the end of the turn.",
+      "printedTextSha256": "7f1b016c556f9177796ed7aae26f0069e59db2ce3d58c6af05a6b65bb02bd583",
+      "independentOracle": {
+        "expectedDelta": 3,
+        "lifetime": "turn",
+        "targetRelation": "any",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {
+          "hollow": 1
+        }
+      },
+      "validationStage": "declaration-payment-and-resolution-plus-websocket",
+      "testIds": [
+        "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__normal",
+        "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__existing_bonus",
+        "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__duration",
+        "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__cleanse",
+        "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__leave_reset",
+        "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__target_gone",
+        "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__target_stalemate",
+        "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__token",
+        "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__invalid_contract",
+        "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__target_protected",
+        "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__wrong_priority",
+        "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__unpaid",
+        "test_power_family_integration.PowerFamilyIntegration.test_strengthen__strengthen_power_modifier__websocket_resolution"
+      ],
+      "scenarioCount": 13,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "bithch9c4vi77cu_en",
+      "name": "Weaken",
+      "abilityId": "weaken-power-modifier",
+      "paragraphIndex": 0,
+      "printedParagraph": "A target manifestation on the field gets -1 power until the end of the turn.",
+      "printedTextSha256": "b1b2272655ed5a6a54befcf205583428ffbea68a4a9067bc07c02c923c66bd5f",
+      "independentOracle": {
+        "expectedDelta": -1,
+        "lifetime": "turn",
+        "targetRelation": "any",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "declaration-payment-and-resolution-plus-websocket",
+      "testIds": [
+        "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__normal",
+        "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__existing_bonus",
+        "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__duration",
+        "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__cleanse",
+        "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__leave_reset",
+        "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__target_gone",
+        "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__target_stalemate",
+        "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__token",
+        "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__invalid_contract",
+        "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__target_protected",
+        "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__wrong_priority",
+        "test_power_family_integration.PowerFamilyIntegration.test_weaken__weaken_power_modifier__websocket_resolution"
+      ],
+      "scenarioCount": 12,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ztunjt1msq1ofsv_en",
+      "name": "Accentuate",
+      "abilityId": "accentuate-power-modifier",
+      "paragraphIndex": 0,
+      "printedParagraph": "A target manifestation on the field gets +1 power until the end of the turn.",
+      "printedTextSha256": "45b15eb4f18e6576c2874f4ec2785aa3a9e72b8b2770850c483299af605bf079",
+      "independentOracle": {
+        "expectedDelta": 1,
+        "lifetime": "turn",
+        "targetRelation": "any",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "declaration-payment-and-resolution-plus-websocket",
+      "testIds": [
+        "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__normal",
+        "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__existing_bonus",
+        "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__duration",
+        "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__cleanse",
+        "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__leave_reset",
+        "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__target_gone",
+        "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__target_stalemate",
+        "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__token",
+        "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__invalid_contract",
+        "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__target_protected",
+        "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__wrong_priority",
+        "test_power_family_integration.PowerFamilyIntegration.test_accentuate__accentuate_power_modifier__websocket_resolution"
+      ],
+      "scenarioCount": 12,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "pgvrly9397pua77_en",
+      "name": "Bolbakazim, the Cursed",
+      "abilityId": "reduce-manifestation-power",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as it is on the field, you may exhaust Bolbakazim and pay {H}{H}: A target manifestation on the field gets -2 power until the end of the turn.",
+      "printedTextSha256": "37496754347200c6b008900ea8a114e4731c02e72a36a976b50c86af40a53bb3",
+      "independentOracle": {
+        "expectedDelta": -2,
+        "lifetime": "turn",
+        "targetRelation": "any",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {
+          "hollow": 2
+        }
+      },
+      "validationStage": "declaration-payment-and-resolution-plus-websocket",
+      "testIds": [
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__normal",
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__existing_bonus",
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__duration",
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__cleanse",
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__leave_reset",
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__target_gone",
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__target_stalemate",
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__token",
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__invalid_contract",
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__target_protected",
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__source_gone",
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__wrong_priority",
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__unpaid",
+        "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__source_states",
+        "test_power_family_integration.PowerFamilyIntegration.test_bolbakazim_the_cursed__reduce_manifestation_power__websocket_resolution"
+      ],
+      "scenarioCount": 15,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "m2l3v60n0iakrm2_en",
+      "name": "Atavic Fury",
+      "abilityId": "spend-violence-to-shrink-manifestation",
+      "paragraphIndex": 2,
+      "printedParagraph": "Remove 5 Violence counters: A target manifestation on the field gets -2 power.",
+      "printedTextSha256": "c15aef844c8e4561ce52d7b30cbf09f799fb65607778885f69211a74a3493061",
+      "independentOracle": {
+        "expectedDelta": -2,
+        "lifetime": "field",
+        "targetRelation": "any",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "declaration-payment-and-resolution-plus-websocket",
+      "testIds": [
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__normal",
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__existing_bonus",
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__duration",
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__cleanse",
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__leave_reset",
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__target_gone",
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__target_stalemate",
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__token",
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__invalid_contract",
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__target_protected",
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__source_gone",
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__wrong_priority",
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__unpaid",
+        "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__source_states",
+        "test_power_family_integration.PowerFamilyIntegration.test_atavic_fury__spend_violence_to_shrink_manifestation__websocket_resolution"
+      ],
+      "scenarioCount": 15,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "fknxa83uens94ju_en",
+      "name": "Ehgog, the Livid",
+      "abilityId": "shrink-opponent-manifestation-on-any-discard",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Ehgog is in the Interzone, whenever a player discards one or more cards, a target manifestation on the field controlled by an opponent gets -1 power until the end of the turn.",
+      "printedTextSha256": "d8ddd7e5349d27753bd48ef37a72ccb22667811e2a2c69d6b646c4de4d46bbc6",
+      "independentOracle": {
+        "expectedDelta": -1,
+        "lifetime": "turn",
+        "targetRelation": "opponent",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__normal",
+        "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__existing_bonus",
+        "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__duration",
+        "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__cleanse",
+        "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__leave_reset",
+        "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__target_gone",
+        "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__target_stalemate",
+        "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__token",
+        "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__invalid_contract",
+        "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__target_protected",
+        "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__source_gone",
+        "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__target_controller",
+        "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__trigger_guards"
+      ],
+      "scenarioCount": 13,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "mwby5hp16qdnjpj_en",
+      "name": "Conflux of Catastrophe",
+      "abilityId": "shrink-opponent-manifestation-on-discard",
+      "paragraphIndex": 0,
+      "printedParagraph": "Whenever a player discards one or more cards, a target manifestation on the field controlled by an opponent gets -1 power.",
+      "printedTextSha256": "8dc5e74904707783595ae34d180eb4c13d111df060148d70d9f625a1da97bfe1",
+      "independentOracle": {
+        "expectedDelta": -1,
+        "lifetime": "field",
+        "targetRelation": "opponent",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__normal",
+        "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__existing_bonus",
+        "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__duration",
+        "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__cleanse",
+        "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__leave_reset",
+        "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__target_gone",
+        "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__target_stalemate",
+        "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__token",
+        "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__invalid_contract",
+        "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__target_protected",
+        "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__source_gone",
+        "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__target_controller",
+        "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__trigger_guards"
+      ],
+      "scenarioCount": 13,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "bx0uyxxb3c6pas2_en",
+      "name": "Ohmom, the Azure",
+      "abilityId": "ohmom-boosts-on-own-will",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Ohmom is in the Interzone, whenever you play a Will, a target manifestation on the field gets +1 power.",
+      "printedTextSha256": "3a7f75bd5869d92997537d25a3d3758c7a84afef0c6a6755f2f68448a81d2317",
+      "independentOracle": {
+        "expectedDelta": 1,
+        "lifetime": "field",
+        "targetRelation": "any",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__normal",
+        "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__existing_bonus",
+        "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__duration",
+        "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__cleanse",
+        "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__leave_reset",
+        "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__target_gone",
+        "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__target_stalemate",
+        "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__token",
+        "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__invalid_contract",
+        "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__target_protected",
+        "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__source_gone",
+        "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__trigger_guards"
+      ],
+      "scenarioCount": 12,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "tm9kt43d14h9ub1_en",
+      "name": "Watchtower",
+      "abilityId": "watchtower-weakens-on-own-will",
+      "paragraphIndex": 0,
+      "printedParagraph": "Whenever you play a Will, a target manifestation on the field under the control of an opponent gets -1 power.",
+      "printedTextSha256": "57f0c8ba42fddaaaff33b7cf9445cac7b8c438215fa0c024fc63257a13cf6e4f",
+      "independentOracle": {
+        "expectedDelta": -1,
+        "lifetime": "field",
+        "targetRelation": "opponent",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__normal",
+        "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__existing_bonus",
+        "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__duration",
+        "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__cleanse",
+        "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__leave_reset",
+        "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__target_gone",
+        "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__target_stalemate",
+        "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__token",
+        "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__invalid_contract",
+        "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__target_protected",
+        "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__source_gone",
+        "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__target_controller",
+        "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__trigger_guards"
+      ],
+      "scenarioCount": 13,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-101",
+      "name": "Sticky Fasces-fly",
+      "abilityId": "fasces-fly-wins-weaken-interzone",
+      "paragraphIndex": 1,
+      "printedParagraph": "When Sticky Fasces-fly wins a confrontation, a target manifestation in your Interzone gets -2 power.",
+      "printedTextSha256": "c4d6444ebb059b0113a29034c0d75a7ace269a2ce8c1d418dfde2c132a967ce3",
+      "independentOracle": {
+        "expectedDelta": -2,
+        "lifetime": "field",
+        "targetRelation": "self",
+        "targetZone": "interzone",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__normal",
+        "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__existing_bonus",
+        "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__duration",
+        "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__cleanse",
+        "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__leave_reset",
+        "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__target_gone",
+        "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__target_stalemate",
+        "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__token",
+        "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__invalid_contract",
+        "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__target_protected",
+        "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__source_gone",
+        "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__target_controller",
+        "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__trigger_guards"
+      ],
+      "scenarioCount": 13,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-016",
+      "name": "Linoleus, the Verdant",
+      "abilityId": "linoleus-doubles-down-on-point-gains",
+      "paragraphIndex": 1,
+      "printedParagraph": "As long as Linoleus is on the field, whenever you gain Points due to other cards or effects, you gain 5 Points and another target manifestation you control on the field gains +1 power.",
+      "printedTextSha256": "0f7ef4e4b7f6e709f6d2197d406e81045e79ccf10a97a2bef714457f15544ac3",
+      "independentOracle": {
+        "expectedDelta": 1,
+        "lifetime": "field",
+        "targetRelation": "self",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__normal",
+        "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__existing_bonus",
+        "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__duration",
+        "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__cleanse",
+        "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__leave_reset",
+        "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__target_gone",
+        "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__target_stalemate",
+        "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__token",
+        "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__invalid_contract",
+        "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__target_protected",
+        "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__source_gone",
+        "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__target_controller",
+        "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__trigger_guards"
+      ],
+      "scenarioCount": 13,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-050",
+      "name": "Tombloom",
+      "abilityId": "tombloom-exiles-itself-and-weakens",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Tombloom is discarded, exile it. A target Manifestation on the field gets -2 power until the end of the turn.",
+      "printedTextSha256": "d45640785ca0a7d27c65ad6d510d55a39ec9a73a666f9b4951262bb2e054c2ac",
+      "independentOracle": {
+        "expectedDelta": -2,
+        "lifetime": "turn",
+        "targetRelation": "any",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__normal",
+        "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__existing_bonus",
+        "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__duration",
+        "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__cleanse",
+        "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__leave_reset",
+        "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__target_gone",
+        "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__target_stalemate",
+        "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__token",
+        "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__invalid_contract",
+        "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__target_protected",
+        "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__source_gone"
+      ],
+      "scenarioCount": 11,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "03jzw541k0af8x3_en",
+      "name": "Thornmaster",
+      "abilityId": "lose-points-for-power",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Thornmaster is on the field, you may lose 5 points: Thornmaster gets +1 power. You may use this effect up to 5 times.",
+      "printedTextSha256": "0db2072e04a072a4b43d84a95545890ad6163fe0841af9b42f13144f93c59e1e",
+      "independentOracle": {
+        "expectedDelta": 1,
+        "lifetime": "field",
+        "targetRelation": "source",
+        "targetZone": "field",
+        "targetBase": 2,
+        "essenceCost": {}
+      },
+      "validationStage": "declaration-payment-and-resolution-plus-websocket",
+      "testIds": [
+        "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__normal",
+        "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__existing_bonus",
+        "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__duration",
+        "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__cleanse",
+        "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__leave_reset",
+        "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__target_gone",
+        "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__target_stalemate",
+        "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__wrong_priority",
+        "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__use_limit",
+        "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__source_states",
+        "test_power_family_integration.PowerFamilyIntegration.test_thornmaster__lose_points_for_power__websocket_resolution"
+      ],
+      "scenarioCount": 11,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "282b0n6ldnzdp0p_en",
+      "name": "Zum, the Manifold",
+      "abilityId": "zum-weaken",
+      "paragraphIndex": 1,
+      "printedParagraph": "{R}: A target manifestation on the field gets -1 power until the end of the turn;",
+      "printedTextSha256": "724a803c22d243ef6c7c0c03cb6eab4ca23a701da254d51d5e8a2c2f2330b9ed",
+      "independentOracle": {
+        "expectedDelta": -1,
+        "lifetime": "turn",
+        "targetRelation": "any",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {
+          "choleric": 1
+        }
+      },
+      "validationStage": "declaration-payment-and-resolution-plus-websocket",
+      "testIds": [
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__normal",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__existing_bonus",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__duration",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__cleanse",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__leave_reset",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__target_gone",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__target_stalemate",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__token",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__invalid_contract",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__target_protected",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__source_gone",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__wrong_priority",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__unpaid",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__use_limit",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__source_states",
+        "test_power_family_integration.PowerFamilyIntegration.test_zum_the_manifold__zum_weaken__websocket_resolution"
+      ],
+      "scenarioCount": 16,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "282b0n6ldnzdp0p_en",
+      "name": "Zum, the Manifold",
+      "abilityId": "zum-strengthen",
+      "paragraphIndex": 3,
+      "printedParagraph": "{G}: A target manifestation on the field gets +1 power until the end of the turn;",
+      "printedTextSha256": "724a803c22d243ef6c7c0c03cb6eab4ca23a701da254d51d5e8a2c2f2330b9ed",
+      "independentOracle": {
+        "expectedDelta": 1,
+        "lifetime": "turn",
+        "targetRelation": "any",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {
+          "phlegmatic": 1
+        }
+      },
+      "validationStage": "declaration-payment-and-resolution-plus-websocket",
+      "testIds": [
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__normal",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__existing_bonus",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__duration",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__cleanse",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__leave_reset",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__target_gone",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__target_stalemate",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__token",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__invalid_contract",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__target_protected",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__source_gone",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__wrong_priority",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__unpaid",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__use_limit",
+        "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__source_states",
+        "test_power_family_integration.PowerFamilyIntegration.test_zum_the_manifold__zum_strengthen__websocket_resolution"
+      ],
+      "scenarioCount": 16,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-114",
+      "name": "Sandokaron, Banners Bearer",
+      "abilityId": "sandokaron-banner-power",
+      "paragraphIndex": 3,
+      "printedParagraph": "•  A target manifestation on the field gets +3 power;",
+      "printedTextSha256": "f1b49853353d6b618e200868cf8b52f2e9e6b3530a8f5b6c498b3cb5badeb15e",
+      "independentOracle": {
+        "expectedDelta": 3,
+        "lifetime": "field",
+        "targetRelation": "any",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "declaration-payment-and-resolution-plus-websocket",
+      "testIds": [
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__normal",
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__existing_bonus",
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__duration",
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__cleanse",
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__leave_reset",
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__target_gone",
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__target_stalemate",
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__token",
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__invalid_contract",
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__target_protected",
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__source_gone",
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__wrong_priority",
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__unpaid",
+        "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__source_states",
+        "test_power_family_integration.PowerFamilyIntegration.test_sandokaron_banners_bearer__sandokaron_banner_power__websocket_resolution"
+      ],
+      "scenarioCount": 15,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-129",
+      "name": "Powerful Pidue",
+      "abilityId": "pidue-choleric-weakens",
+      "paragraphIndex": 1,
+      "printedParagraph": "If 🔥, a target Manifestation on the field gets -1 power until the end of the turn.",
+      "printedTextSha256": "93315386815ed99aaab30d63cc1bd7454edcbceac8308749eb12d6e5fe1167cc",
+      "independentOracle": {
+        "expectedDelta": -1,
+        "lifetime": "turn",
+        "targetRelation": "any",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__normal",
+        "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__existing_bonus",
+        "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__duration",
+        "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__cleanse",
+        "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__leave_reset",
+        "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__target_gone",
+        "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__target_stalemate",
+        "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__token",
+        "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__invalid_contract",
+        "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__target_protected",
+        "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__source_gone",
+        "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__trigger_guards"
+      ],
+      "scenarioCount": 12,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "xzb2jwtkunq5tys_en",
+      "name": "Guart, the Slinger",
+      "abilityId": "guart-answers-opponent-power-gain",
+      "paragraphIndex": 1,
+      "printedParagraph": "• Whenever the power of a manifestation on the field controlled by an opponent increases, a target manifestation on the field you control gets +1 power until the end of the turn.",
+      "printedTextSha256": "a4fb134b521bb9dce45b23233450dcd69be0861c93a2f486846620c4e71ead0d",
+      "independentOracle": {
+        "expectedDelta": 1,
+        "lifetime": "turn",
+        "targetRelation": "self",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__normal",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__existing_bonus",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__duration",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__cleanse",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__leave_reset",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__target_gone",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__target_stalemate",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__token",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__invalid_contract",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__target_protected",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__source_gone",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__target_controller",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__trigger_guards"
+      ],
+      "scenarioCount": 13,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "xzb2jwtkunq5tys_en",
+      "name": "Guart, the Slinger",
+      "abilityId": "guart-answers-own-power-loss",
+      "paragraphIndex": 2,
+      "printedParagraph": "• Whenever a manifestation on the field you control loses power due to a card or effect, a target manifestation on the field controlled by an opponent gets -1 power until the end of the turn.",
+      "printedTextSha256": "a4fb134b521bb9dce45b23233450dcd69be0861c93a2f486846620c4e71ead0d",
+      "independentOracle": {
+        "expectedDelta": -1,
+        "lifetime": "turn",
+        "targetRelation": "opponent",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__normal",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__existing_bonus",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__duration",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__cleanse",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__leave_reset",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__target_gone",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__target_stalemate",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__token",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__invalid_contract",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__target_protected",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__source_gone",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__target_controller",
+        "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__trigger_guards"
+      ],
+      "scenarioCount": 13,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "y6g3tex9ypttk8u_en",
+      "name": "Flaying Jaw",
+      "abilityId": "flaying-jaw-power-link",
+      "paragraphIndex": 1,
+      "printedParagraph": "That manifestation gets -2 power.",
+      "printedTextSha256": "45f6c49b1c2e3acc0c541e28358dcf9ed866920755d9f14d9e98a0315a155fc8",
+      "independentOracle": {
+        "expectedDelta": -2,
+        "lifetime": "linked",
+        "targetRelation": "any",
+        "targetZone": "field",
+        "targetBase": 20,
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__normal",
+        "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__existing_bonus",
+        "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__duration",
+        "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__cleanse",
+        "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__leave_reset",
+        "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__target_gone",
+        "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__target_stalemate",
+        "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__token",
+        "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__invalid_contract",
+        "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__target_protected",
+        "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__source_gone",
+        "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__trigger_guards"
+      ],
+      "scenarioCount": 12,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "bc3esblt60j7at5_en",
+      "name": "Incite to Sacrifice",
+      "abilityId": "incite-to-sacrifice",
+      "paragraphIndex": 1,
+      "printedParagraph": "A target manifestation in the Confrontation Zone gets +6 power.",
+      "printedTextSha256": "c5ca9cee1380a085192a7b66d98f6294b68fea20fdef46582cd3d97575713288",
+      "independentOracle": {
+        "expectedDelta": 6,
+        "lifetime": "field",
+        "targetRelation": "any",
+        "targetZone": "confrontation",
+        "targetBase": 20,
+        "essenceCost": {
+          "choleric": 3
+        }
+      },
+      "validationStage": "declaration-payment-and-resolution-plus-websocket",
+      "testIds": [
+        "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__normal",
+        "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__existing_bonus",
+        "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__duration",
+        "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__cleanse",
+        "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__leave_reset",
+        "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__target_gone",
+        "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__target_stalemate",
+        "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__token",
+        "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__invalid_contract",
+        "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__target_protected",
+        "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__wrong_priority",
+        "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__unpaid",
+        "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__phase",
+        "test_power_family_integration.PowerFamilyIntegration.test_incite_to_sacrifice__incite_to_sacrifice__websocket_resolution"
+      ],
+      "scenarioCount": 14,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "infrastructureTestIds": [
+    "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect",
+    "test_coverage_status.CoverageStatus.test_a_report_with_failures_cannot_add_covered_cards",
+    "test_coverage_status.CoverageStatus.test_changed_printed_text_requires_review_even_with_passing_tests",
+    "test_coverage_status.CoverageStatus.test_duplicate_clauses_and_reports_count_the_card_once",
+    "test_coverage_status.CoverageStatus.test_interaction_only_cards_and_failed_or_missing_tests_are_not_counted"
+  ],
+  "tests": [
+    {
+      "testId": "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__duration",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__invalid_contract (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__normal",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__token",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_accentuate__accentuate_power_modifier__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__duration",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__invalid_contract (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__source_states",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__source_states (source='covered')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__source_states (source='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__source_states (source='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__source_states (source='other_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__unpaid",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_atavic_fury__spend_violence_to_shrink_manifestation__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__duration",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__invalid_contract (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__source_states",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__source_states (source='covered')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__source_states (source='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__source_states (source='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__source_states (source='other_controller')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__source_states (source='already_exhausted')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__token",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__unpaid",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_bolbakazim_the_cursed__reduce_manifestation_power__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__duration",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__invalid_contract (invalid='will')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__invalid_contract (invalid='other_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__target_controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__token",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_conflux_of_catastrophe__shrink_opponent_manifestation_on_discard__trigger_guards (guard='face_down')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__duration",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__invalid_contract (invalid='will')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__invalid_contract (invalid='other_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__target_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__token",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__trigger_guards (guard='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_ehgog_the_livid__shrink_opponent_manifestation_on_any_discard__trigger_guards (guard='source_zone')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__duration",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__invalid_contract (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__normal",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_flaying_jaw__flaying_jaw_power_link__trigger_guards (guard='face_down')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__duration",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__invalid_contract (invalid='will')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__invalid_contract (invalid='other_zone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__invalid_contract (invalid='too_powerful')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__invalid_contract (invalid='source')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.14
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__normal",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_flower_tender__boost_low_power_on_support_entry__trigger_guards (guard='face_down')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__duration",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__invalid_contract (invalid='will')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__invalid_contract (invalid='other_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__normal",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__target_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__trigger_guards (guard='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_opponent_power_gain__trigger_guards (guard='event_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__duration",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__invalid_contract (invalid='will')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__invalid_contract (invalid='other_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__normal",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__target_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__trigger_guards (guard='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_guart_the_slinger__guart_answers_own_power_loss__trigger_guards (guard='event_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__duration",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__invalid_contract (invalid='will')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__invalid_contract (invalid='other_zone')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__phase",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__token",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__unpaid",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_incite_to_sacrifice__incite_to_sacrifice__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__duration",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__invalid_contract (invalid='will')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__invalid_contract (invalid='other_controller')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__invalid_contract (invalid='source')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__normal",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__target_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__trigger_guards (guard='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_linoleus_the_verdant__linoleus_doubles_down_on_point_gains__trigger_guards (guard='event_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__duration",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__invalid_contract (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__trigger_guards (guard='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__trigger_guards (guard='source_zone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_ohmom_the_azure__ohmom_boosts_on_own_will__trigger_guards (guard='event_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.11
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__duration",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__invalid_contract (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__normal",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__unpaid",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_oppress__oppress_power_modifier__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__duration",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__invalid_contract (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__trigger_guards (guard='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__trigger_guards (guard='event_controller')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__trigger_guards (guard='non_red_stimulus')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_powerful_pidue__pidue_choleric_weakens__trigger_guards (guard='outside_phase')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__duration",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__invalid_contract (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__source_states",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__source_states (source='covered')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__source_states (source='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__source_states (source='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__source_states (source='other_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__unpaid",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sandokaron_banners_bearer__sandokaron_banner_power__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__duration",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__invalid_contract (invalid='will')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__invalid_contract (invalid='other_zone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__invalid_contract (invalid='other_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__target_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__token",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_sticky_fasces_fly__fasces_fly_wins_weaken_interzone__trigger_guards (guard='face_down')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__duration",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__invalid_contract (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__unpaid",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_strengthen__strengthen_power_modifier__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__duration",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__source_states",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__source_states (source='covered')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__source_states (source='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__source_states (source='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__source_states (source='other_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__use_limit",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_thornmaster__lose_points_for_power__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__duration",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__invalid_contract (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_tombloom__tombloom_exiles_itself_and_weakens__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__duration",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__invalid_contract (invalid='will')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__invalid_contract (invalid='other_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__normal",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__target_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__trigger_guards (guard='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_watchtower__watchtower_weakens_on_own_will__trigger_guards (guard='event_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__duration",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__invalid_contract (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__normal",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__token",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_weaken__weaken_power_modifier__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__duration",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__invalid_contract (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__source_states",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__source_states (source='covered')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__source_states (source='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__source_states (source='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__source_states (source='other_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.141
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__token",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__unpaid",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__use_limit",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_strengthen__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__duration",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__existing_bonus",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__invalid_contract",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__invalid_contract (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__invalid_contract (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__leave_reset",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__normal",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__source_states",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__source_states (source='covered')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__source_states (source='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__source_states (source='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__source_states (source='other_controller')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.141
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__target_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__target_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__target_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__token",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__unpaid",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__use_limit",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamily.test_zum_the_manifold__zum_weaken__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='flower_tender__boost_low_power_on_support_entry')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='oppress__oppress_power_modifier')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='strengthen__strengthen_power_modifier')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='weaken__weaken_power_modifier')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='accentuate__accentuate_power_modifier')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='bolbakazim_the_cursed__reduce_manifestation_power')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='atavic_fury__spend_violence_to_shrink_manifestation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='ehgog_the_livid__shrink_opponent_manifestation_on_any_discard')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='conflux_of_catastrophe__shrink_opponent_manifestation_on_discard')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='ohmom_the_azure__ohmom_boosts_on_own_will')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='watchtower__watchtower_weakens_on_own_will')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='sticky_fasces_fly__fasces_fly_wins_weaken_interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='linoleus_the_verdant__linoleus_doubles_down_on_point_gains')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='tombloom__tombloom_exiles_itself_and_weakens')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='thornmaster__lose_points_for_power')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='zum_the_manifold__zum_weaken')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='zum_the_manifold__zum_strengthen')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='sandokaron_banners_bearer__sandokaron_banner_power')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='powerful_pidue__pidue_choleric_weakens')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='guart_the_slinger__guart_answers_opponent_power_gain')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='guart_the_slinger__guart_answers_own_power_loss')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='flaying_jaw__flaying_jaw_power_link')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_power_family.PowerFamilyOracleSensitivity.test_changed_expected_number_is_detected_for_every_effect (effect='incite_to_sacrifice__incite_to_sacrifice')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.844
+    },
+    {
+      "testId": "test_power_family_integration.PowerFamilyIntegration.test_accentuate__accentuate_power_modifier__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.094
+    },
+    {
+      "testId": "test_power_family_integration.PowerFamilyIntegration.test_atavic_fury__spend_violence_to_shrink_manifestation__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.078
+    },
+    {
+      "testId": "test_power_family_integration.PowerFamilyIntegration.test_bolbakazim_the_cursed__reduce_manifestation_power__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.062
+    },
+    {
+      "testId": "test_power_family_integration.PowerFamilyIntegration.test_incite_to_sacrifice__incite_to_sacrifice__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.031
+    },
+    {
+      "testId": "test_power_family_integration.PowerFamilyIntegration.test_oppress__oppress_power_modifier__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.062
+    },
+    {
+      "testId": "test_power_family_integration.PowerFamilyIntegration.test_sandokaron_banners_bearer__sandokaron_banner_power__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.047
+    },
+    {
+      "testId": "test_power_family_integration.PowerFamilyIntegration.test_strengthen__strengthen_power_modifier__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.032
+    },
+    {
+      "testId": "test_power_family_integration.PowerFamilyIntegration.test_thornmaster__lose_points_for_power__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.063
+    },
+    {
+      "testId": "test_power_family_integration.PowerFamilyIntegration.test_weaken__weaken_power_modifier__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.063
+    },
+    {
+      "testId": "test_power_family_integration.PowerFamilyIntegration.test_zum_the_manifold__zum_strengthen__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.062
+    },
+    {
+      "testId": "test_power_family_integration.PowerFamilyIntegration.test_zum_the_manifold__zum_weaken__websocket_resolution",
+      "status": "pass",
+      "durationSeconds": 2.062
+    },
+    {
+      "testId": "test_coverage_status.CoverageStatus.test_a_report_with_failures_cannot_add_covered_cards",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_coverage_status.CoverageStatus.test_changed_printed_text_requires_review_even_with_passing_tests",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_coverage_status.CoverageStatus.test_duplicate_clauses_and_reports_count_the_card_once",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_coverage_status.CoverageStatus.test_interaction_only_cards_and_failed_or_missing_tests_are_not_counted",
+      "status": "pass",
+      "durationSeconds": 0.0
+    }
+  ],
+  "candidateInventory": {
+    "source": "ability metadata; grouping only, not proof",
+    "effects": 24,
+    "cards": 22,
+    "withoutIndependentContract": [
+      {
+        "cardId": "02y2r5cvbw1mauv_en",
+        "name": "Jija, Matron Bomb",
+        "abilityId": "sacrifice-created-token-for-power-loss",
+        "hasIndependentContract": false
+      }
+    ]
+  },
+  "limits": [
+    "Selected power clauses only; other abilities and all branches remain uncertified.",
+    "Triggered effects use production event queues with explicit event stimuli; their full producer actions and whole-match scheduling are outside this batch.",
+    "The Thornmaster intrinsic source change has its own scenario applicability; targeted Protection/token cases are not applied to it.",
+    "Non-power parts of compound effects are only checked where explicitly asserted; costs, trigger conditions and exact deltas are handwritten.",
+    "Cards sharing an encoded mechanism but lacking an independent contract are not counted.",
+    "No new browser/card-illustration or physical-device certification is implied by these backend tests."
+  ]
+}

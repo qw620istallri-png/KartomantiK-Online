@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "1b7a65e57a730228e696e59680e49225e0ea8656afc2d900c5ff9a5bb3e7227e",
+  "gates": [
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_rules_parity.log",
+      "durationSeconds": 32.266
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_frontend.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_frontend.log",
+      "durationSeconds": 14.671
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_state_transport.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_state_transport.log",
+      "durationSeconds": 0.157
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_pwa_install.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_pwa_install.log",
+      "durationSeconds": 4.156
+    }
+  ],
+  "summary": {
+    "executed": 4,
+    "failed": 0
+  }
+}

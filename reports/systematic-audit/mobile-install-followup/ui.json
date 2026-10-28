@@ -1,0 +1,77 @@
+{
+  "beforeFix": false,
+  "tests": [
+    {
+      "testId": "android-no-native-event-en",
+      "status": "pass"
+    },
+    {
+      "testId": "android-no-native-event-fr",
+      "status": "pass"
+    },
+    {
+      "testId": "android-no-native-event-it",
+      "status": "pass"
+    },
+    {
+      "testId": "early-native-event-retained-before-init",
+      "status": "pass"
+    },
+    {
+      "testId": "late-native-prompt-used-once",
+      "status": "pass"
+    },
+    {
+      "testId": "failed-native-prompt-falls-back",
+      "status": "pass"
+    },
+    {
+      "testId": "installed-hides-android",
+      "status": "pass"
+    },
+    {
+      "testId": "installed-hides-ios",
+      "status": "pass"
+    },
+    {
+      "testId": "installed-hides-desktop",
+      "status": "pass"
+    },
+    {
+      "testId": "appinstalled-event-hides-mobile-entry",
+      "status": "pass"
+    },
+    {
+      "testId": "ios-guide-and-desktop-no-false-entry",
+      "status": "pass"
+    },
+    {
+      "testId": "browser-android-entry",
+      "status": "pass"
+    },
+    {
+      "testId": "browser-iphone-entry",
+      "status": "pass"
+    },
+    {
+      "testId": "browser-desktop-entry",
+      "status": "pass"
+    }
+  ],
+  "summary": {
+    "executed": 14,
+    "passed": 14,
+    "failed": 0
+  },
+  "physicalDeviceTested": false,
+  "limits": [
+    "Native install events are simulated; browser rendering uses Chrome with Android/iOS user agents, not physical devices or Safari."
+  ],
+  "sourceHashes": {
+    "public/js/pwa.js": "7e499a193c3aa424a195fdf177ad1ba42f8cba621e0857e66828f4104178b1a3",
+    "public/i18n.js": "a4a396184eeca77b69e637fbd0cf41a54e6b46e91c11bc03b971b3101c278e1e",
+    "public/app.js": "3bad7d47de503a62387d70c8261504897d0dfb54690149ed98612a28046bb357",
+    "public/index.html": "0107073614760c70b80bb506c952e233bf75cabce517f135d1b402e1d2bd1c6b",
+    "public/sw.js": "6770fa7cd137f572b27a9d09914a580fed8eb5c8354a4328047c97a20ffb3285"
+  }
+}

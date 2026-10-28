@@ -1,0 +1,1823 @@
+{
+  "schemaVersion": 1,
+  "family": "draw-discard-fixed",
+  "sourceDigest": "c2978a4e88d131ef5810ef85c7de68ce7556ec2ca3069a4bfcdee71ad2ce2b61",
+  "finishedAt": "2026-10-28T15:44:00.225065+00:00",
+  "published": false,
+  "summary": {
+    "executed": 178,
+    "passed": 178,
+    "failed": 0,
+    "skipped": 0,
+    "cardsWithSelectedClauseProof": 13,
+    "selectedClauses": 15,
+    "familyScenarios": 162,
+    "networkScenarios": 16
+  },
+  "clauses": [
+    {
+      "cardId": "h8xzt2gkg2ax241_en",
+      "name": "Mazzolong, the Log-chief",
+      "abilityId": "draw-when-support-played",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Mazzolong is in the Interzone, whenever you play a manifestation in Support, draw a card.",
+      "printedTextSha256": "257e37eb6b7e980c6f5cbe9ddef67cb9885ff937c2ac24112796cabb04d17c31",
+      "independentOracle": {
+        "kind": "draw",
+        "expectedAmount": 1,
+        "sourceZone": "interzone",
+        "eventRelation": "self",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__draw_lock",
+        "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__kanon",
+        "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards",
+        "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__source_departure",
+        "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__real_event_builder",
+        "test_draw_family_integration.DrawFamilyIntegration.test_mazzolong__websocket_suspend"
+      ],
+      "scenarioCount": 12,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "fvk7w9y8xidbuwa_en",
+      "name": "Keen-eyed Seeker",
+      "abilityId": "draw-on-enter-field",
+      "paragraphIndex": 2,
+      "printedParagraph": "When Keen-Eyed Seeker enters the field, draw a card.",
+      "printedTextSha256": "d45f0946686254a9fcfee35e22bc117a553bf836e979d54766859fde866658ea",
+      "independentOracle": {
+        "kind": "draw",
+        "expectedAmount": 1,
+        "sourceZone": "confrontation",
+        "eventRelation": "any",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_seeker__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_seeker__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_seeker__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_seeker__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_seeker__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_seeker__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_seeker__draw_lock",
+        "test_draw_discard_family.DrawDiscardFamily.test_seeker__kanon",
+        "test_draw_discard_family.DrawDiscardFamily.test_seeker__trigger_guards",
+        "test_draw_discard_family.DrawDiscardFamily.test_seeker__source_departure",
+        "test_draw_family_integration.DrawFamilyIntegration.test_seeker__websocket_suspend"
+      ],
+      "scenarioCount": 11,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "yy29lowj25q1z5y_en",
+      "name": "Reliable Ammonite",
+      "abilityId": "draw-when-used-as-tribute",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Reliable Ammonite is used as tribute, draw a card.",
+      "printedTextSha256": "c091666ca27f2d4556a4e637b477d1cfd088e5ad363e38d43ebc33a66064b7ff",
+      "independentOracle": {
+        "kind": "draw",
+        "expectedAmount": 1,
+        "sourceZone": "graveyard",
+        "eventRelation": "source",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_ammonite__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_ammonite__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_ammonite__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_ammonite__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_ammonite__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_ammonite__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_ammonite__draw_lock",
+        "test_draw_discard_family.DrawDiscardFamily.test_ammonite__kanon",
+        "test_draw_discard_family.DrawDiscardFamily.test_ammonite__trigger_guards",
+        "test_draw_family_integration.DrawFamilyIntegration.test_ammonite__websocket_suspend"
+      ],
+      "scenarioCount": 10,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "tzizek39tj8rqq5_en",
+      "name": "Callus, the Thought-stirrer",
+      "abilityId": "draw-after-own-will",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Callus is in the Interzone, whenever you play a Will, draw a card.",
+      "printedTextSha256": "a42bc2daef82c75d544c65ba21085a5aa6dd9bf1a28b188eb6d4f8eca2f3a68f",
+      "independentOracle": {
+        "kind": "draw",
+        "expectedAmount": 1,
+        "sourceZone": "interzone",
+        "eventRelation": "self",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_callus__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_callus__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_callus__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_callus__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_callus__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_callus__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_callus__draw_lock",
+        "test_draw_discard_family.DrawDiscardFamily.test_callus__kanon",
+        "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards",
+        "test_draw_discard_family.DrawDiscardFamily.test_callus__source_departure",
+        "test_draw_discard_family.DrawDiscardFamily.test_callus__real_event_builder",
+        "test_draw_family_integration.DrawFamilyIntegration.test_callus__websocket_suspend"
+      ],
+      "scenarioCount": 12,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "282b0n6ldnzdp0p_en",
+      "name": "Zum, the Manifold",
+      "abilityId": "zum-draw",
+      "paragraphIndex": 4,
+      "printedParagraph": "{B}: A target player draws 1 card;",
+      "printedTextSha256": "724a803c22d243ef6c7c0c03cb6eab4ca23a701da254d51d5e8a2c2f2330b9ed",
+      "independentOracle": {
+        "kind": "draw",
+        "expectedAmount": 1,
+        "sourceZone": "confrontation",
+        "eventRelation": "any",
+        "essenceCost": {
+          "vitreous": 1
+        }
+      },
+      "validationStage": "declaration-payment-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__draw_lock",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__kanon",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__target_self",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__source_departure",
+        "test_draw_family_integration.DrawFamilyIntegration.test_zum_draw__websocket_suspend"
+      ],
+      "scenarioCount": 11,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ryg8e3lgopl6z52_en",
+      "name": "Ponder",
+      "abilityId": "draw-three-cards",
+      "paragraphIndex": 0,
+      "printedParagraph": "Draw 3 cards.",
+      "printedTextSha256": "8619e16e844a591fbc178baf6c2f8c48866083de40c725208731b67d5dd8d28d",
+      "independentOracle": {
+        "kind": "draw",
+        "expectedAmount": 3,
+        "sourceZone": "hand",
+        "eventRelation": "any",
+        "essenceCost": {
+          "hollow": 1
+        }
+      },
+      "validationStage": "declaration-payment-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_ponder__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_ponder__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_ponder__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_ponder__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_ponder__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_ponder__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_ponder__draw_lock",
+        "test_draw_discard_family.DrawDiscardFamily.test_ponder__kanon",
+        "test_draw_family_integration.DrawFamilyIntegration.test_ponder__websocket_suspend"
+      ],
+      "scenarioCount": 9,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-129",
+      "name": "Powerful Pidue",
+      "abilityId": "pidue-vitreous-draws",
+      "paragraphIndex": 4,
+      "printedParagraph": "If 💧, draw 1 card.",
+      "printedTextSha256": "93315386815ed99aaab30d63cc1bd7454edcbceac8308749eb12d6e5fe1167cc",
+      "independentOracle": {
+        "kind": "draw",
+        "expectedAmount": 1,
+        "sourceZone": "confrontation",
+        "eventRelation": "opponent",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__draw_lock",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__kanon",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__source_departure",
+        "test_draw_family_integration.DrawFamilyIntegration.test_pidue_draw__websocket_suspend"
+      ],
+      "scenarioCount": 11,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-139",
+      "name": "Hermetic Threshold",
+      "abilityId": "draw-on-first-will-of-turn",
+      "paragraphIndex": 0,
+      "printedParagraph": "Draw a card whenever a player plays their first Will during a turn.",
+      "printedTextSha256": "9a0ac871c506206511db49f68ce0aa638dd778867405beedf2f8f19d49deeaca",
+      "independentOracle": {
+        "kind": "draw",
+        "expectedAmount": 1,
+        "sourceZone": "field",
+        "eventRelation": "any",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_threshold__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_threshold__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_threshold__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_threshold__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_threshold__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_threshold__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_threshold__draw_lock",
+        "test_draw_discard_family.DrawDiscardFamily.test_threshold__kanon",
+        "test_draw_discard_family.DrawDiscardFamily.test_threshold__trigger_guards",
+        "test_draw_discard_family.DrawDiscardFamily.test_threshold__source_departure",
+        "test_draw_discard_family.DrawDiscardFamily.test_threshold__real_event_builder",
+        "test_draw_family_integration.DrawFamilyIntegration.test_threshold__websocket_suspend"
+      ],
+      "scenarioCount": 12,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "7e2ppf4rfgkdfms_en",
+      "name": "Dark Apparition",
+      "abilityId": "target-player-discards-on-enter-field",
+      "paragraphIndex": 2,
+      "printedParagraph": "When the Dark Apparition enters the field, a target player discards a card from their hand.",
+      "printedTextSha256": "4c70ad1b40cac1de4d97b5c1bd45e350b37da7f37aba1ed3801ee1713951f9d7",
+      "independentOracle": {
+        "kind": "discard",
+        "expectedAmount": 1,
+        "sourceZone": "confrontation",
+        "eventRelation": "any",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_apparition__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_apparition__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_apparition__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_apparition__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_apparition__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_apparition__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_apparition__hand_immunity",
+        "test_draw_discard_family.DrawDiscardFamily.test_apparition__bad_choices",
+        "test_draw_discard_family.DrawDiscardFamily.test_apparition__choice_actor_replay",
+        "test_draw_discard_family.DrawDiscardFamily.test_apparition__competing_replacements",
+        "test_draw_discard_family.DrawDiscardFamily.test_apparition__target_self",
+        "test_draw_discard_family.DrawDiscardFamily.test_apparition__trigger_guards",
+        "test_draw_discard_family.DrawDiscardFamily.test_apparition__source_departure",
+        "test_draw_family_integration.DrawFamilyIntegration.test_apparition__websocket_suspend"
+      ],
+      "scenarioCount": 14,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "0tcphe9viq39a5b_en",
+      "name": "Filth-eater",
+      "abilityId": "filth-eater-discard-on-tribute",
+      "paragraphIndex": 0,
+      "printedParagraph": "If Filth-Eater is used as tribute, a target player discards a card from their hand.",
+      "printedTextSha256": "ab0af85ce25f54e3a5fe5646f113b9d240b76ff427fac0a9d92f84ee7ed7c25e",
+      "independentOracle": {
+        "kind": "discard",
+        "expectedAmount": 1,
+        "sourceZone": "graveyard",
+        "eventRelation": "source",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_filth__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_filth__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_filth__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_filth__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_filth__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_filth__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_filth__hand_immunity",
+        "test_draw_discard_family.DrawDiscardFamily.test_filth__bad_choices",
+        "test_draw_discard_family.DrawDiscardFamily.test_filth__choice_actor_replay",
+        "test_draw_discard_family.DrawDiscardFamily.test_filth__competing_replacements",
+        "test_draw_discard_family.DrawDiscardFamily.test_filth__target_self",
+        "test_draw_discard_family.DrawDiscardFamily.test_filth__trigger_guards",
+        "test_draw_family_integration.DrawFamilyIntegration.test_filth__websocket_suspend"
+      ],
+      "scenarioCount": 13,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "cny6n2v2tap5jnm_en",
+      "name": "Wheel of Retribution",
+      "abilityId": "support-controller-discards",
+      "paragraphIndex": 0,
+      "printedParagraph": "Whenever a manifestation enters Support, the player who controls that manifestation discards a card from their hand.",
+      "printedTextSha256": "71f384bf077375d9302d722576fd2baaab4498df32070215a0acb224661d6416",
+      "independentOracle": {
+        "kind": "discard",
+        "expectedAmount": 1,
+        "sourceZone": "field",
+        "eventRelation": "any",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__hand_immunity",
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__bad_choices",
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__choice_actor_replay",
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__competing_replacements",
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__target_self",
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__trigger_guards",
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__source_departure",
+        "test_draw_discard_family.DrawDiscardFamily.test_wheel__real_event_builder",
+        "test_draw_family_integration.DrawFamilyIntegration.test_wheel__websocket_suspend",
+        "test_draw_family_integration.DrawFamilyIntegration.test_wheel__websocket_exile"
+      ],
+      "scenarioCount": 16,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-056",
+      "name": "Makaboon",
+      "abilityId": "makaboon-extra-hand-discard",
+      "paragraphIndex": 1,
+      "printedParagraph": "As long as Makaboon is on the field, whenever a player discards one or more cards from their deck, in addition that player discards a card from their hand.",
+      "printedTextSha256": "dd19e761ab80ab9e01f25a1e2abf8b6d52db9b595ebe0a6d0adcf2c1152e5e85",
+      "independentOracle": {
+        "kind": "discard",
+        "expectedAmount": 1,
+        "sourceZone": "confrontation",
+        "eventRelation": "any",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__hand_immunity",
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bad_choices",
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__choice_actor_replay",
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__competing_replacements",
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__target_self",
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__trigger_guards",
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__source_departure",
+        "test_draw_discard_family.DrawDiscardFamily.test_makaboon__real_event_builder",
+        "test_draw_family_integration.DrawFamilyIntegration.test_makaboon__websocket_suspend"
+      ],
+      "scenarioCount": 15,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-129",
+      "name": "Powerful Pidue",
+      "abilityId": "pidue-melancholic-discards",
+      "paragraphIndex": 5,
+      "printedParagraph": "If 🔮, a target player Discards 1 card from their hand.",
+      "printedTextSha256": "93315386815ed99aaab30d63cc1bd7454edcbceac8308749eb12d6e5fe1167cc",
+      "independentOracle": {
+        "kind": "discard",
+        "expectedAmount": 1,
+        "sourceZone": "confrontation",
+        "eventRelation": "opponent",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__hand_immunity",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bad_choices",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__choice_actor_replay",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__competing_replacements",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__target_self",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards",
+        "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__source_departure",
+        "test_draw_family_integration.DrawFamilyIntegration.test_pidue_discard__websocket_suspend"
+      ],
+      "scenarioCount": 14,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "282b0n6ldnzdp0p_en",
+      "name": "Zum, the Manifold",
+      "abilityId": "zum-mill",
+      "paragraphIndex": 5,
+      "printedParagraph": "{P}: A target player discards 1 card from the top of the deck.",
+      "printedTextSha256": "724a803c22d243ef6c7c0c03cb6eab4ca23a701da254d51d5e8a2c2f2330b9ed",
+      "independentOracle": {
+        "kind": "mill",
+        "expectedAmount": 1,
+        "sourceZone": "confrontation",
+        "eventRelation": "any",
+        "essenceCost": {
+          "melancholic": 1
+        }
+      },
+      "validationStage": "declaration-payment-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__target_self",
+        "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__source_departure",
+        "test_draw_family_integration.DrawFamilyIntegration.test_zum_mill__websocket_suspend"
+      ],
+      "scenarioCount": 9,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ghb6i1uoiqq12o2_en",
+      "name": "Pluff",
+      "abilityId": "discard-top-card-on-enter-field",
+      "paragraphIndex": 2,
+      "printedParagraph": "When Pluff enters the field, discard a card from the top of your deck.",
+      "printedTextSha256": "73538bd675fbb094f8a79546d2c5f37c00ad4eb23aa6c9541edf60512c68fc7d",
+      "independentOracle": {
+        "kind": "mill",
+        "expectedAmount": 1,
+        "sourceZone": "confrontation",
+        "eventRelation": "any",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution",
+      "testIds": [
+        "test_draw_discard_family.DrawDiscardFamily.test_pluff__normal",
+        "test_draw_discard_family.DrawDiscardFamily.test_pluff__empty",
+        "test_draw_discard_family.DrawDiscardFamily.test_pluff__one_available",
+        "test_draw_discard_family.DrawDiscardFamily.test_pluff__duplicates",
+        "test_draw_discard_family.DrawDiscardFamily.test_pluff__other_controller",
+        "test_draw_discard_family.DrawDiscardFamily.test_pluff__bob",
+        "test_draw_discard_family.DrawDiscardFamily.test_pluff__trigger_guards",
+        "test_draw_discard_family.DrawDiscardFamily.test_pluff__source_departure",
+        "test_draw_family_integration.DrawFamilyIntegration.test_pluff__websocket_suspend"
+      ],
+      "scenarioCount": 9,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__bob",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__empty",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__kanon",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__one_available",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__bad_choices",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__bad_choices (selected=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__bad_choices (selected=['absent'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__bad_choices (selected=['w2', 'pw3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__bad_choices (selected=[{}])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__bob",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__choice_actor_replay",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__competing_replacements",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__competing_replacements (first_replacement='suspend')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__competing_replacements (first_replacement='exile')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__empty",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__hand_immunity",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__one_available",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__target_self",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__bob",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__empty",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__kanon",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__one_available",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__real_event_builder",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards (condition='wrong_player')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards (condition='wrong_zone')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__bad_choices",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__bad_choices (selected=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__bad_choices (selected=['absent'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__bad_choices (selected=['w2', 'pw3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__bad_choices (selected=[{}])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__bob",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__choice_actor_replay",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__competing_replacements",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__competing_replacements (first_replacement='suspend')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__competing_replacements (first_replacement='exile')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__empty",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__hand_immunity",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__one_available",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__target_self",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bad_choices",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bad_choices (selected=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bad_choices (selected=['absent'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bad_choices (selected=['w2', 'pw3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bad_choices (selected=[{}])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bob",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__choice_actor_replay",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__competing_replacements",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__competing_replacements (first_replacement='suspend')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__competing_replacements (first_replacement='exile')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__empty",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__hand_immunity",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__one_available",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__real_event_builder",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__target_self",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__bob",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__empty",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__kanon",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__one_available",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__real_event_builder",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='wrong_player')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='wrong_zone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='put_not_played')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.172
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bad_choices",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bad_choices (selected=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bad_choices (selected=['absent'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bad_choices (selected=['w2', 'pw3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bad_choices (selected=[{}])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bob",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__choice_actor_replay",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__competing_replacements",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__competing_replacements (first_replacement='suspend')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__competing_replacements (first_replacement='exile')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__empty",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__hand_immunity",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__one_available",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__target_self",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='wrong_player')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='wrong_color')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='not_from_hand')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='outside_confrontation')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.188
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__bob",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__empty",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__kanon",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__one_available",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='wrong_player')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='wrong_color')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='not_from_hand')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='outside_confrontation')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.187
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__bob",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__empty",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__normal",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__one_available",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__bob",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__empty",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__kanon",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__one_available",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__bob",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__empty",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__kanon",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__one_available",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__bob",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__empty",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__kanon",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__one_available",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__real_event_builder",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__trigger_guards (condition='not_first_will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__bad_choices",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__bad_choices (selected=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__bad_choices (selected=['absent'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__bad_choices (selected=['w2', 'pw3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__bad_choices (selected=[{}])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__bob",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__choice_actor_replay",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__competing_replacements",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__competing_replacements (first_replacement='suspend')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__competing_replacements (first_replacement='exile')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__empty",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__hand_immunity",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__one_available",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__real_event_builder",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__target_self",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.079
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__bob",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__empty",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__kanon",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__one_available",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__target_self",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__bob",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__empty",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__one_available",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__target_self",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_ammonite__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.188
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_apparition__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.078
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_callus__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.141
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_filth__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 1.985
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_makaboon__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.016
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_mazzolong__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.078
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_pidue_discard__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.063
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_pidue_draw__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.094
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_pluff__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.0
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_ponder__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.141
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_seeker__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.062
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_threshold__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.078
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_wheel__websocket_exile",
+      "status": "pass",
+      "durationSeconds": 1.984
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_wheel__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.031
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_zum_draw__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.079
+    },
+    {
+      "testId": "test_draw_family_integration.DrawFamilyIntegration.test_zum_mill__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.11
+    }
+  ],
+  "limits": [
+    "Fifteen selected fixed-quantity clauses, not all abilities or interactions of the thirteen cards.",
+    "Trigger stimuli are explicit and use production queues. Five additional producer cases use actual Support/Will/deck-discard paths; tribute-producing declarations and complete matches are not certified.",
+    "Ponder and Zum use real declarations, exact paid essences and resolution. Other Zum abilities and the all-five Support condition are outside this batch.",
+    "Pidue covers only its vitreous draw and melancholic discard branches. Its other temperaments remain outside this batch.",
+    "Kanon replacement checks use Manifestations as discarded cards, so the Will-discard power-distribution follow-up is not certified by this batch.",
+    "BOB/Quasimillenary ordering is tested on simple single hand-discard effects. Discard-then-draw conditional continuations, exiling costs, shuffles and larger sequential effects require separate proofs.",
+    "The network journeys use controlled event/replacement fixtures and actual choice/priority messages; auto-phase driving is isolated.",
+    "No new card UI, physical-device, Safari or illustration certification is implied."
+  ]
+}

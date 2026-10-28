@@ -1,0 +1,50 @@
+{
+  "gummo": {
+    "id": "8841ae7cd800",
+    "kind": "reveal_hand_discard",
+    "purpose": "gummo",
+    "playerId": "p1",
+    "targetPlayerId": "p1",
+    "cardIds": [
+      "m3",
+      "m3",
+      "m4"
+    ],
+    "sourceItemId": "gummo",
+    "sourceCardId": "hcgvp7lbadlng1h_en",
+    "actionId": "semantic-action"
+  },
+  "wish": {
+    "id": "1df7774de720",
+    "kind": "reveal_hand_discard",
+    "purpose": "wish",
+    "playerId": "p2",
+    "targetPlayerId": "p2",
+    "cardIds": [
+      "m3",
+      "m3",
+      "m4"
+    ],
+    "casterId": "p1",
+    "chosenCardId": "m2",
+    "sourceCardId": "inner-deserts-048",
+    "actionId": "semantic-action",
+    "controllerId": "p1"
+  },
+  "pescojolero": {
+    "id": "5a66a5dc6348",
+    "kind": "reveal_hand_discard",
+    "purpose": "pescojolero",
+    "playerId": "p1",
+    "targetPlayerId": "p2",
+    "cardIds": [
+      "m4",
+      "m3",
+      "m3",
+      "m4"
+    ],
+    "sourceCardId": "inner-deserts-090",
+    "actionId": "semantic-action",
+    "controllerId": "p1"
+  }
+}

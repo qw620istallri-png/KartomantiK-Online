@@ -1,0 +1,2 @@
+{"callbacks":{"extraJoin":0,"staleState":false,"staleClose":false},"reset":{"flowBefore":true,"graceBefore":true,"afterDisconnect":{"flow":false,"grace":false},"staleSends":[]},"vfx":{"before":1,"holds":0,"delayed":0},"errors":[]}
+Connection lifecycle regression: OK

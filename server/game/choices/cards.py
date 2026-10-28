@@ -68,7 +68,7 @@ class CardsChoicesMixin:
             }
 
         if choice.get("kind") == "reveal_hand_discard":
-            if choice.get("purpose") in {None, "gorlok", "womb"} and (isinstance(option, bool) or not isinstance(option, (int, str))):
+            if choice.get("purpose") in {None, "gorlok", "womb", "gummo", "wish", "pescojolero", "bloatuba"} and (isinstance(option, bool) or not isinstance(option, (int, str))):
                 return "Choose a card from the revealed hand.", None
             try:
                 index = int(option)
@@ -94,6 +94,11 @@ class CardsChoicesMixin:
                 if not self.rules_surviving_drawn_hand_cards(target_id, [selected_hand_card]):
                     return "That selected card is no longer in the Hand.", None
             card_id = card_ids[index]
+            selected_vessel_card = None
+            if "_vesselCards" in choice:
+                selected_vessel_card = choice["_vesselCards"][index]
+                if not self.rules_vessel_entry_present(target_id, selected_vessel_card):
+                    return "That selected card is no longer in the Empathic Vessel.", None
             if choice.get("purpose") == "gummo":
                 host = self.find_battlefield_item(choice.get("sourceItemId"))
                 self.rules_engine["pendingChoice"] = None
@@ -106,7 +111,14 @@ class CardsChoicesMixin:
                 }
             if choice.get("purpose") == "pescojolero":
                 self.rules_engine["pendingChoice"] = None
-                placed = self.place_rules_card_in_interzone(player_id, target_id, "receptacle", card_id)
+                previous = getattr(self, "_rules_vessel_pick", None)
+                self._rules_vessel_pick = (target_id, selected_vessel_card["id"]) if selected_vessel_card else None
+                try:
+                    placed = self.place_rules_card_in_interzone(player_id, target_id, "receptacle", card_id)
+                finally:
+                    self._rules_vessel_pick = previous
+                if placed:
+                    self.record_rules_observed_event("manifestation_left_by_effect", target_id, cardId=card_id)
                 return None, {
                     "kind": "pescojolero_take", "playerId": player_id,
                     "status": "taken" if placed else "interzone_full", "cardId": card_id,
@@ -116,17 +128,26 @@ class CardsChoicesMixin:
             if choice.get("purpose") == "wish":
                 caster_id = choice.get("casterId")
                 mine_id = choice.get("chosenCardId")
-                if mine_id not in self.players[caster_id]["zones"]["receptacle"]:
+                original = choice.get("_chosenVesselCard")
+                if (mine_id not in self.players[caster_id]["zones"]["receptacle"]
+                        or original and not self.rules_vessel_entry_present(caster_id, original)):
                     self.rules_engine["pendingChoice"] = None
                     return None, {"kind": "wish_exchange", "status": "target_missing"}
-                mine_owner = self.take_zone_card(caster_id, "receptacle", mine_id)
-                theirs_owner = self.take_zone_card(target_id, "receptacle", card_id)
-                self.put_zone_card(mine_owner if mine_owner in self.players else target_id, "deck", mine_id, mine_owner, "top")
-                self.put_zone_card(theirs_owner if theirs_owner in self.players else caster_id, "deck", card_id, theirs_owner, "top")
+                movements = []
+                for container_id, entry, cid in ((caster_id, original, mine_id), (target_id, selected_vessel_card, card_id)):
+                    if entry:
+                        error, _owner, replacement = self.move_rules_vessel_card_by_effect(container_id, entry, "deck")
+                    else:
+                        owner = self.card_owner_in_zone(container_id, "receptacle", cid)
+                        error, _owner, replacement = self.move_zone_card_by_effect(container_id, "receptacle", owner, "deck", cid, "top")
+                    if error:
+                        return error, None
+                    movements.append(replacement or {"cardId": cid, "destination": "deck"})
                 self.rules_engine["pendingChoice"] = None
                 return None, {
                     "kind": "wish_exchange", "status": "exchanged", "playerId": player_id,
                     "cardIds": [mine_id, card_id], "sourceCardId": choice.get("sourceCardId"),
+                    "movements": movements,
                 }
             if choice.get("purpose") == "gorlok":
                 drawn_cards = choice.get("_drawnCards") or []
@@ -147,19 +168,36 @@ class CardsChoicesMixin:
                     "sourceCardId": choice.get("sourceCardId"),
                 }
             if choice.get("purpose") == "bloatuba":
-                owner_id = self.take_zone_card(target_id, "deck", card_id)
-                if owner_id is None:
-                    return "That card is no longer on top of the Deck.", None
-                seat = self.players[target_id].get("seat")
-                stalemate_item = {
-                    "id": new_id(), "ownerId": owner_id, "controllerId": target_id,
-                    "cardId": card_id, "x": 650.0, "y": 800.0 if seat != 1 else 525.0,
-                    "faceUp": True, "rotation": 0.0, "counters": {}, "stackedOn": None,
-                    "fieldZone": "stalemate",
-                    "rarity": self.players[owner_id].get("cardRarities", {}).get(card_id),
-                }
-                self.battlefield.append(stalemate_item)
-                remaining = [c for c in choice.get("_revealed") or [] if c != card_id]
+                if not self.rules_deck_choice_is_current(target_id, choice):
+                    return "The revealed Deck cards have changed. Review the current choice.", None
+                remaining = list(choice.get("_revealed") or [])
+                positions = choice.get("_pickPositions")
+                position = positions[index] if positions is not None else remaining.index(card_id)
+                previous = getattr(self, "_rules_deck_pick", None)
+                self._rules_deck_pick = (target_id, position)
+                stalemate_item = None
+                try:
+                    error, owner_id, replacement = self.rules_zone_move_replacement(
+                        target_id, "deck", "stalemate", card_id, target_id,
+                    )
+                    if error:
+                        return error, None
+                    if not replacement:
+                        owner_id = self.take_zone_card(target_id, "deck", card_id)
+                        if owner_id is None:
+                            return "That card is no longer on top of the Deck.", None
+                        seat = self.players[target_id].get("seat")
+                        stalemate_item = {
+                            "id": new_id(), "ownerId": owner_id, "controllerId": target_id,
+                            "cardId": card_id, "x": 650.0, "y": 800.0 if seat != 1 else 525.0,
+                            "faceUp": True, "rotation": 0.0, "counters": {}, "stackedOn": None,
+                            "fieldZone": "stalemate",
+                            "rarity": self.players[owner_id].get("cardRarities", {}).get(card_id),
+                        }
+                        self.battlefield.append(stalemate_item)
+                finally:
+                    self._rules_deck_pick = previous
+                remaining.pop(position)
                 self.rules_engine["pendingChoice"] = (
                     self.make_bloatuba_reorder(
                         choice.get("controllerId"), target_id, remaining, choice.get("sourceCardId"),
@@ -168,8 +206,9 @@ class CardsChoicesMixin:
                 return None, {
                     "kind": "bloatuba_pick", "playerId": player_id,
                     "targetPlayerId": target_id, "cardId": card_id,
-                    "itemId": stalemate_item["id"],
+                    "itemId": stalemate_item["id"] if stalemate_item else None,
                     "remaining": remaining,
+                    **({"movement": replacement} if replacement else {}),
                 }
             if choice.get("purpose") == "womb":
                 restriction = self.rules_card_chain_restriction_error(target_id, card_id)
@@ -269,12 +308,7 @@ class CardsChoicesMixin:
                 not isinstance(top, list)
                 or not isinstance(bottom, list)
                 or not all(isinstance(card_id, str) for card_id in top + bottom + extra)
-                or len(top) != len(set(top))
-                or len(bottom) != len(set(bottom))
-                or set(top) & set(bottom)
-                or set(extra) & (set(top) | set(bottom))
-                or len(extra) != len(set(extra))
-                or sorted(top + bottom + extra) != sorted(group.get("cardIds") or [])
+                or Counter(top + bottom + extra) != Counter(group.get("cardIds") or [])
             ):
                 return "Use every revealed card exactly once.", None
             if (
@@ -290,6 +324,8 @@ class CardsChoicesMixin:
             target_id = group.get("playerId")
             from_zone = group.get("fromZone") or "deck"
             source_cards = self.players.get(target_id, {}).get("zones", {}).get(from_zone, [])
+            if from_zone == "deck" and not self.rules_deck_choice_is_current(target_id, group):
+                return "The inspected Deck cards have changed. Review the current choice.", None
             remaining = list(source_cards)
             owners = {}
             for card_id in group.get("cardIds") or []:
@@ -333,7 +369,7 @@ class CardsChoicesMixin:
                 # Reordering within a Deck does not enter or leave that zone.
                 # Cards set aside below are actual transfers and can Suspend.
                 for card_id in top + bottom:
-                    self.take_zone_card(target_id, from_zone, card_id)
+                    self.players[target_id]["zones"]["deck"].remove(card_id)
                 placed["top"], placed["bottom"] = list(top), list(bottom)
             else:
                 for side, ordered in [("top", reversed(top)), ("bottom", bottom)]:
@@ -764,7 +800,9 @@ class CardsChoicesMixin:
             self._rules_draw_batch_id = previous_batch
         will_count = sum(
             self.card_rules.get(card_id, {}).get("type") in RULES_WILL_TYPES
-            for card_id in discarded_ids
+            # Replacing the destination still fulfills the discard. Keep the
+            # public ID list restricted to ordinary Limbo/Support movements.
+            for card_id in to_discard
         )
         self.rules_engine["pendingChoice"] = None
         follow_up = None
@@ -1199,10 +1237,16 @@ class CardsChoicesMixin:
                 if (moved or {}).get("status") != "moved":
                     return "Your Interzone has no room for this Manifestation.", None
                 continue
-            error, _owner_id = self.move_zone_card(
-                player_id, "hand", player_id, "exile" if destination == "exile" else "graveyard",
-                card_id, "top",
-            )
+            if destination == "exile":
+                error, _owner_id = self.move_zone_card(
+                    player_id, "hand", player_id, "exile", card_id, "top",
+                )
+            else:
+                # A chosen discard is still an effect-driven Limbo entry:
+                # apply BOB and competing replacements before extracting it.
+                error, _owner_id, _replacement = self.move_zone_card_by_effect(
+                    player_id, "hand", player_id, "graveyard", card_id, "top",
+                )
             if error:
                 return error, None
         destroyed = None

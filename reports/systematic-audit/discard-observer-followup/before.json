@@ -1,0 +1,904 @@
+{
+  "sourceDigest": "32dd5731e9391dcb11acac6eb90f8cb895f10a4f027793790097480e86490c68",
+  "productionHashes": {
+    "server/game/zones.py": "8ec506532a8b3c59c2c0194b0f41157423432a10f4fbabe022aaedbedfa00ff5",
+    "server/game/choices/cards.py": "9ea03569f45e9d56fe7d98cb8c44ad3ac11d39424874950404530315b0f68895"
+  },
+  "summary": {
+    "executed": 168,
+    "passed": 118,
+    "failed": 50
+  },
+  "tests": [
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Buddhan the Transcended', 'deck__exile')\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck__order_exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Buddhan the Transcended', 'deck__order_exile')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Buddhan the Transcended', 'deck__suspend')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck_batch__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Buddhan the Transcended', 'deck_batch__exile')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__deck_batch__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Buddhan the Transcended', 'deck_batch__suspend')\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__face_down",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__hand__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Buddhan the Transcended', 'hand__exile')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__hand__order_suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Buddhan the Transcended', 'hand__order_suspend')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__hand__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Buddhan the Transcended', 'hand__suspend')\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__own_player",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__silenced",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__tribute",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_buddhan__will_card",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Conflux of Catastrophe', 'deck__exile')\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck__order_exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Conflux of Catastrophe', 'deck__order_exile')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Conflux of Catastrophe', 'deck__suspend')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck_batch__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Conflux of Catastrophe', 'deck_batch__exile')\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__deck_batch__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Conflux of Catastrophe', 'deck_batch__suspend')\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__face_down",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__hand__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Conflux of Catastrophe', 'hand__exile')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__hand__order_suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Conflux of Catastrophe', 'hand__order_suspend')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__hand__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Conflux of Catastrophe', 'hand__suspend')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__own_player",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__silenced",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__tribute",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_conflux__will_card",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Ehgog, the Livid', 'deck__exile')\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck__order_exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Ehgog, the Livid', 'deck__order_exile')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Ehgog, the Livid', 'deck__suspend')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck_batch__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Ehgog, the Livid', 'deck_batch__exile')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__deck_batch__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Ehgog, the Livid', 'deck_batch__suspend')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__face_down",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__hand__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Ehgog, the Livid', 'hand__exile')\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__hand__order_suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Ehgog, the Livid', 'hand__order_suspend')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__hand__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Ehgog, the Livid', 'hand__suspend')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__own_player",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__silenced",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__tribute",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_ehgog__will_card",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Forfog, the Hanged', 'deck__exile')\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck__order_exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Forfog, the Hanged', 'deck__order_exile')\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Forfog, the Hanged', 'deck__suspend')\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck_batch__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Forfog, the Hanged', 'deck_batch__exile')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__deck_batch__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Forfog, the Hanged', 'deck_batch__suspend')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__face_down",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__hand__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Forfog, the Hanged', 'hand__exile')\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__hand__order_suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Forfog, the Hanged', 'hand__order_suspend')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__hand__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Forfog, the Hanged', 'hand__suspend')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__own_player",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__silenced",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__tribute",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_forfog__will_card",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 188, in run\n    if row['key']=='kanon':self.kanon(row,case)\n                           ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 172, in kanon\n    choice=s.rules_engine['pendingChoice'];self.assertIsNotNone(choice)\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__exile__source_departure",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 188, in run\n    if row['key']=='kanon':self.kanon(row,case)\n                           ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 172, in kanon\n    choice=s.rules_engine['pendingChoice'];self.assertIsNotNone(choice)\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__order_exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 188, in run\n    if row['key']=='kanon':self.kanon(row,case)\n                           ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 172, in kanon\n    choice=s.rules_engine['pendingChoice'];self.assertIsNotNone(choice)\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__order_suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 188, in run\n    if row['key']=='kanon':self.kanon(row,case)\n                           ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 172, in kanon\n    choice=s.rules_engine['pendingChoice'];self.assertIsNotNone(choice)\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 188, in run\n    if row['key']=='kanon':self.kanon(row,case)\n                           ^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 172, in kanon\n    choice=s.rules_engine['pendingChoice'];self.assertIsNotNone(choice)\n                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_kanon__suspend__no_will",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Makaboon', 'deck__exile')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck__order_exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Makaboon', 'deck__order_exile')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Makaboon', 'deck__suspend')\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck_batch__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Makaboon', 'deck_batch__exile')\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__deck_batch__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Makaboon', 'deck_batch__suspend')\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__face_down",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__hand__exile",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__hand__order_suspend",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__hand__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__own_player",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__silenced",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__tribute",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_makaboon__will_card",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck__exile",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck__order_exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck__suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck_batch__exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__deck_batch__suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__face_down",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__hand__exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__hand__order_suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__hand__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__own_player",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__silenced",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__tribute",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_otranth__will_card",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__controller_changed",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Pale Entity', 'deck__exile')\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck__limbo",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck__order_exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Pale Entity', 'deck__order_exile')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck__support_no",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Pale Entity', 'deck__suspend')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck_batch",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck_batch__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Pale Entity', 'deck_batch__exile')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__deck_batch__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Pale Entity', 'deck_batch__suspend')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__face_down",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__failed_move",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__hand__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Pale Entity', 'hand__exile')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__hand__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__hand__order_suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Pale Entity', 'hand__order_suspend')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__hand__support_yes",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__hand__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 189, in run\n    else:self.exercise(row,case)\n         ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_discard_observers.py\", line 149, in exercise\n    self.assertEqual(len(actions),expected,(row['name'],case))\nAssertionError: 0 != 1 : ('Pale Entity', 'hand__suspend')\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__own_player",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__silenced",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__suspended_draw",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__suspended_shuffle",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__tribute",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_discard_observers.DiscardObservers.test_pale__will_card",
+      "status": "pass",
+      "durationSeconds": 0.015
+    }
+  ]
+}

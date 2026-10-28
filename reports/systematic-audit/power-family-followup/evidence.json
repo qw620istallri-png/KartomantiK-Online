@@ -1,0 +1,53 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-28T11:24:28.125297+00:00",
+  "sourceDigest": "abc621db2fb2e4418957619ba989c5f6b9a28f31d2a0ad16418b7d2b1cd9bd55",
+  "published": false,
+  "summary": {
+    "family": {
+      "executed": 307,
+      "passed": 307,
+      "failed": 0,
+      "skipped": 0,
+      "cardsWithSelectedClauseProof": 21,
+      "selectedParagraphs": 23,
+      "familyScenarios": 291,
+      "networkScenarios": 11,
+      "auditInfrastructureTests": 5
+    },
+    "python": {
+      "executed": 1899,
+      "passed": 1899,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuitesPassed": 3,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 87,
+      "percentageWithSelectedClauseProof": 19.3,
+      "cardsOutsideThisStrictRegister": 363,
+      "fullCatalogSemanticCertification": false
+    },
+    "newUniqueCards": 16
+  },
+  "artifacts": {
+    "clauses.json": "06a08b1200e64a1beb3b996718c94ab156c0fee92e9a4d035b1569225ed2459d",
+    "coverage-before.json": "e67203e8577bd2c3b1fc0e397ab87bb9cc1fe79f31e3734da26a58bb5a8fdf90",
+    "test_frontend.log": "14010ce473f2079d5ccc164eddfa9bd1c74212f88326d374799251fb39fc1def",
+    "test_rules_parity.log": "47cae38a9917913d5d7f052a09376ca4b576f96cd01afd690c0398b66a684c61",
+    "test_state_transport.log": "2d979b9d1f36555d1dcff3c211aaf80259ef9f836106266b5719c253e0323408",
+    "ui-tests.json": "157d182aca247917701f84b56a45db0e138bb1e50f6df07dc079cf3ec2dabffc",
+    "unit-tests.json": "6a08e54e156632bd9347543bebeda14bef5669efcf78c410770cdd956ce18d6a"
+  },
+  "coverageRegistrySha256": "16160be0256214e81261be44a83a1f114c8fb761d2fb60f44051bfb43c5b3d1b",
+  "oracleManifestSha256": "531c61853ae8fd73e9e559fe9295353c9acb711bbd4bb0a66575e4f0a28eb6cf",
+  "limits": [
+    "Selected power clauses only; other abilities and all branches remain uncertified.",
+    "Triggered effects use production event queues with explicit event stimuli; their full producer actions and whole-match scheduling are outside this batch.",
+    "The Thornmaster intrinsic source change has its own scenario applicability; targeted Protection/token cases are not applied to it.",
+    "Non-power parts of compound effects are only checked where explicitly asserted; costs, trigger conditions and exact deltas are handwritten.",
+    "Cards sharing an encoded mechanism but lacking an independent contract are not counted.",
+    "No new browser/card-illustration or physical-device certification is implied by these backend tests."
+  ]
+}

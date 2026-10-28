@@ -425,19 +425,39 @@ class CardsEffectsMixin:
                 "count": 1, "requireManifestation": True,
             }
 
+    def rules_self_discard_source_available(self, action):
+        source = action.get("_discardSource")
+        if not source:
+            source = action.get("source") or {}
+            return source.get("cardId") in self.players.get(source.get("ownerId") or action.get("controllerId"), {}).get("zones", {}).get("graveyard", [])
+        owner_id, zone = source["ownerId"], source["zone"]
+        if zone == "suspended":
+            return any(e["id"] == source.get("suspensionId") and e.get("ownerId") == owner_id and e["cardId"] == source["cardId"] for e in self.rules_engine["suspendedCards"])
+        return zone == "graveyard" and any(e["id"] == source.get("entryId") and e["cardId"] == source["cardId"] for e in self.rules_offboard_card_entries(owner_id, zone))
+
+    def exile_rules_self_discard_source(self, action):
+        source = action.get("_discardSource") or action.get("source") or {}
+        owner_id = source.get("ownerId") or action.get("controllerId")
+        if source.get("zone") == "exile" and source.get("entryId") and any(
+            e["id"] == source["entryId"] and e["cardId"] == source["cardId"]
+            for e in self.rules_offboard_card_entries(owner_id, "exile")
+        ):
+            return {"status": "already_exiled", "cardId": source["cardId"]}
+        if not self.rules_self_discard_source_available(action):
+            return {"status": "source_missing"}
+        if source.get("zone") == "suspended":
+            error, _ = self.restore_suspended_card(source["suspensionId"], "exile")
+            return {"status": "error" if error else "exiled", "cardId": source["cardId"]}
+        previous = getattr(self, "_rules_offboard_pick", None)
+        self._rules_offboard_pick = (owner_id, "graveyard", source["entryId"]) if source.get("entryId") else None
+        try:
+            error, _, replacement = self.move_zone_card_by_effect(owner_id, "graveyard", owner_id, "exile", source["cardId"], "top")
+        finally:
+            self._rules_offboard_pick = previous
+        return {"status": "error" if error else (replacement or {}).get("status", "exiled"), "cardId": source["cardId"]}
+
     def _rules_result_exile_source_card_from_limbo(self, action, result, player_id, player):
-        source = action.get("source") or {}
-        owner_id = source.get("ownerId") or player_id
-        card_id = source.get("cardId")
-        if card_id not in self.players.get(owner_id, {}).get("zones", {}).get("graveyard", []):
-            return {"kind": result.get("kind"), "status": "source_missing"}
-        error, _owner, _replacement = self.move_zone_card_by_effect(
-            owner_id, "graveyard", owner_id, "exile", card_id, "top"
-        )
-        return {
-            "kind": result.get("kind"),
-            "status": "error" if error else "exiled", "cardId": card_id,
-        }
+        return {"kind": result.get("kind"), **self.exile_rules_self_discard_source(action)}
 
     def _rules_result_gorlok_peek(self, action, result, player_id, player):
         draw_event = action.get("_drawEvent") or {}
@@ -464,11 +484,11 @@ class CardsEffectsMixin:
         }
 
     def _rules_result_exile_source_grant_limbo_will_play(self, action, result, player_id, player):
-        # Nghoul-ong: exile it from the Limbo, then an Ephemeral Will of cost <= its base power is free.
+        # Nghoul-ong exiles its discarded occurrence before granting the permission.
         source = action.get("source") or {}
         owner_id = source.get("ownerId") or player_id
         card_id = source.get("cardId")
-        if card_id not in self.players.get(owner_id, {}).get("zones", {}).get("graveyard", []):
+        if not self.rules_self_discard_source_available(action):
             return {"kind": result.get("kind"), "status": "source_missing"}
         target = next((entry for entry in action.get("targets") or []
                        if entry.get("kind") == "zone_card"), None)
@@ -485,12 +505,9 @@ class CardsEffectsMixin:
                 self.rules_zone_entry_version(player_id, "graveyard", target_card_id))
         ):
             return {"kind": result.get("kind"), "status": "target_missing"}
-        error, _owner, _replacement = self.move_zone_card_by_effect(
-            owner_id, "graveyard", owner_id, "exile", card_id, "top"
-        )
-        if error or card_id not in self.players[owner_id]["zones"]["exile"]:
-            return {"kind": result.get("kind"),
-                    "status": "error" if error else (_replacement or {}).get("status", "not_exiled")}
+        exiled = self.exile_rules_self_discard_source(action)
+        if exiled["status"] != "exiled":
+            return {"kind": result.get("kind"), **exiled}
         self.rules_engine["playPermissions"].append({
             "id": new_id(), "abilityId": (action.get("ability") or {}).get("id"),
             "playerId": player_id, "cardId": target_card_id, "fromZone": "graveyard",
@@ -561,8 +578,12 @@ class CardsEffectsMixin:
                 player_id, "hand", player_id, "deck", card_id, "top"
             )
         random.shuffle(player["zones"]["deck"])
-        drawn = self.draw_rules_cards(player_id, 7)
-        return {"kind": result.get("kind"), "status": "done", "draw": drawn}
+        draw = self.request_rules_draw(
+            player_id, 7, action.get("controllerId"), include_drawn=True,
+        )
+        return {"kind": result.get("kind"), "playerId": player_id,
+                "status": "choice_required" if draw["kind"] == "choice_required" else "done",
+                "draw": draw.get("drawn", []), "drawRequest": draw}
 
     def _rules_result_move_source_to_owner_deck_top(self, action, result, player_id, player):
         source_item = self.find_battlefield_item(
@@ -707,7 +728,8 @@ class CardsEffectsMixin:
         drawn = {}
         for current_id, current in self.players.items():
             moved[current_id] = []
-            for card_id in list(current["zones"]["hand"]):
+            hand = [] if self.rules_hand_is_immune(current_id, action.get("controllerId")) else list(current["zones"]["hand"])
+            for card_id in hand:
                 error, _owner_id, replacement = self.move_zone_card_by_effect(
                     current_id, "hand", current_id, "deck",
                     card_id, "bottom",
@@ -716,16 +738,14 @@ class CardsEffectsMixin:
                     moved[current_id].append(card_id)
             random.shuffle(current["zones"]["deck"])
             drawn[current_id] = 0
-            for _index in range(min(draw_count, len(current["zones"]["deck"]))):
-                card_id = current["zones"]["deck"][0]
-                error, _owner_id, replacement = self.move_zone_card_by_effect(
-                    current_id, "deck", current_id, "hand",
-                    card_id, "bottom",
-                )
-                if error:
-                    break
-                if not replacement:
-                    drawn[current_id] += 1
+        requests = self.continue_rules_draw_requests([
+            {"playerId": current_id, "count": draw_count,
+             "sourceControllerId": action.get("controllerId")}
+            for current_id in self.players
+        ])
+        for draw in requests:
+            if draw["kind"] == "draw":
+                drawn[draw["playerId"]] = draw["count"]
         return {
             "kind": "shuffle_hands_then_draw",
             "movedCounts": {
@@ -733,6 +753,7 @@ class CardsEffectsMixin:
                 for current_id, card_ids in moved.items()
             },
             "drawn": drawn,
+            "status": "choice_required" if self.rules_engine.get("pendingChoice") else "done",
         }
 
     def _rules_result_exile_all_limbos(self, action, result, player_id, player):
@@ -846,6 +867,7 @@ class CardsEffectsMixin:
                 groups.append({
                     "playerId": target_player_id,
                     "cardIds": card_ids,
+                    **self.rules_deck_choice_snapshot(target_player_id, card_ids),
                     "topCount": top_count,
                     "bottomCount": bottom_count,
                     **({

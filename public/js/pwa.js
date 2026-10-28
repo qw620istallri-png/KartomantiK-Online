@@ -1,13 +1,15 @@
 // Installed app (PWA): install button and iPhone guide, update banner, and
 // coming back to the same seat after a reload.
-// Loaded before app.js: declarations only, nothing runs at load time.
+// Capture installation events before app.js initializes the interface.
 
 let deferredInstallPrompt = null;
+let appInstallInitialized = false;
+let appInstallCompleted = false;
 let appUpdateRegistration = null;
 let appUpdateRequested = false;
 
 function appIsInstalled() {
-  return window.matchMedia?.("(display-mode: fullscreen), (display-mode: standalone)").matches || navigator.standalone === true;
+  return appInstallCompleted || window.matchMedia?.("(display-mode: fullscreen), (display-mode: standalone)").matches || navigator.standalone === true;
 }
 function isAppleMobile() {
   return /iPhone|iPad|iPod/.test(navigator.userAgent)
@@ -16,22 +18,38 @@ function isAppleMobile() {
 function isAppleSafari() {
   return isAppleMobile() && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(navigator.userAgent);
 }
+function isAndroidMobile() { return /Android/i.test(navigator.userAgent); }
 
-// the button only shows when installing is actually possible here
+window.addEventListener("beforeinstallprompt", (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  if (appInstallInitialized) renderInstallButton();
+});
+window.addEventListener("appinstalled", () => {
+  deferredInstallPrompt = null;
+  appInstallCompleted = true;
+  if (appInstallInitialized) renderInstallButton();
+});
+
+// Mobile browsers also offer their own menu, even without a native prompt.
 function renderInstallButton() {
   const button = $("#installAppBtn");
   if (!button) return;
   const canPrompt = Boolean(deferredInstallPrompt);
   const apple = isAppleMobile() && !appIsInstalled();
-  button.classList.toggle("hidden", appIsInstalled() || (!canPrompt && !apple));
+  button.classList.toggle("hidden", appIsInstalled() || (!canPrompt && !apple && !isAndroidMobile()));
   button.textContent = t("installApp");
 }
 async function installApp() {
   if (deferredInstallPrompt) {
     const prompt = deferredInstallPrompt;
     deferredInstallPrompt = null;
-    prompt.prompt();
-    await prompt.userChoice.catch(() => null);
+    try {
+      await prompt.prompt();
+      await prompt.userChoice;
+    } catch (error) {
+      showInstallGuide();
+    }
     renderInstallButton();
     return;
   }
@@ -41,29 +59,31 @@ function showInstallGuide() {
   const guide = $("#installGuide");
   if (!guide) return;
   const share = `<svg class="install-guide-share" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg>`;
-  guide.querySelector("h2").textContent = t("installGuideTitle");
-  guide.querySelector("ol").innerHTML = [
+  const apple = isAppleMobile();
+  guide.querySelector("h2").textContent = apple ? t("installGuideTitle") : isAndroidMobile() ? t("installGuideAndroidTitle") : t("installApp");
+  const steps = apple ? [
     rulesText("installGuideStep1", { icon: "@@" }).split("@@").map(esc).join(share),
     esc(t("installGuideStep2")),
     esc(t("installGuideStep3")),
-  ].map((step) => `<li>${step}</li>`).join("");
-  guide.querySelector(".install-guide-note").textContent = isAppleSafari() ? "" : t("installGuideSafari");
+  ] : ["installGuideAndroidStep1", "installGuideAndroidStep2", "installGuideAndroidStep3"].map(key => esc(t(key)));
+  guide.querySelector("ol").innerHTML = steps.map((step) => `<li>${step}</li>`).join("");
+  guide.querySelector(".install-guide-note").textContent = apple ? (isAppleSafari() ? "" : t("installGuideSafari")) : t("installGuideAndroidNote");
   guide.querySelector("[data-install-close]").textContent = t("close");
   guide.classList.remove("hidden");
+  guide.querySelector("[data-install-close]").focus();
+}
+function closeInstallGuide() {
+  $("#installGuide")?.classList.add("hidden");
+  $("#installAppBtn")?.focus();
 }
 function initAppInstall() {
-  window.addEventListener("beforeinstallprompt", (event) => {
-    event.preventDefault();
-    deferredInstallPrompt = event;
-    renderInstallButton();
-  });
-  window.addEventListener("appinstalled", () => {
-    deferredInstallPrompt = null;
-    renderInstallButton();
-  });
+  appInstallInitialized = true;
   $("#installAppBtn")?.addEventListener("click", installApp);
   $("#installGuide")?.addEventListener("click", (event) => {
-    if (event.target.closest("[data-install-close]") || event.target.id === "installGuide") $("#installGuide").classList.add("hidden");
+    if (event.target.closest("[data-install-close]") || event.target.id === "installGuide") closeInstallGuide();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !$("#installGuide")?.classList.contains("hidden")) closeInstallGuide();
   });
   renderInstallButton();
 }

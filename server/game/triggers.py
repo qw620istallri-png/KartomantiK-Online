@@ -294,7 +294,7 @@ class TriggersMixin:
                              resume_confrontation_cleanup=False,
                              abilities_override=None,
                              first_will_of_turn=False,
-                             event_card_id=None):
+                             event_card_id=None, discard_source=None):
         """Put server-verifiable triggers for one completed event on the Stack."""
         if not self.rules_engine["enabled"] or self.ended or len(self.players) < NUM_SEATS:
             return []
@@ -738,6 +738,9 @@ class TriggersMixin:
             }
             if ability.get("immediate"):
                 action["immediate"] = True
+            if event == "discarded" and discard_source:
+                action["_discardSource"] = dict(discard_source)
+                action["source"].update(discard_source)
             if (event == "used_as_tribute"
                     and (clean_result or {}).get("kind") == "create_effect_memory"
                     and clean_result.get("memoryKind") == "return_from_limbo_end_turn"):
@@ -938,6 +941,8 @@ class TriggersMixin:
             return False
         if kind == "optional_discard_then_draw":
             return bool(hand) and not self.rules_hand_is_immune(player_id, player_id)
+        if kind == "exile_source_grant_limbo_will_play":
+            return self.rules_self_discard_source_available(action)
         if kind == "optional_discard_up_to":
             return bool(hand)
         if kind in {

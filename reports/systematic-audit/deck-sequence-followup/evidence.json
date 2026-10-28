@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-28T10:50:30.452777+00:00",
+  "basePublishedCommit": "355efdd244fed3f5e2736dd25beb4326320f5844",
+  "sourceDigest": "e8d915a698f9537f4e892470262e6350dedcc9816810741ff5909d427a52a370",
+  "published": false,
+  "includesPriorLocalVesselLot": true,
+  "summary": {
+    "selectedClauses": {
+      "executed": 26,
+      "passed": 26,
+      "failed": 0,
+      "skipped": 0,
+      "selectedParagraphs": 2,
+      "cardsWithSelectedClauseProof": 2
+    },
+    "python": {
+      "executed": 1592,
+      "passed": 1592,
+      "failed": 0,
+      "skipped": 0
+    },
+    "uiSuitesPassed": 7,
+    "picker": {
+      "configurations": 6,
+      "scenarios": 18,
+      "failed": 0
+    },
+    "fullCatalogSemanticCertification": false
+  },
+  "artifacts": {
+    "before.json": "ba54a60a4d8f5fc08c82cc2f6e0fba6856aa3be5d8294cc831e45903ce26c61e",
+    "bloatuba-order-1440.png": "cf9cc7af5f1d52753b51c9641155d76f8f0bc6d2030b45db3407f2f0fd51890f",
+    "bloatuba-order-844.png": "5dabd7c00e030626930fdacf151b75fb07e74398b05bf14d8411621d3f304e85",
+    "clauses.json": "98f005ca614b17d1c7ad4a4186834c057375b81720784d8841d3e92fd6ad7d9b",
+    "picker-fixtures.json": "cc70fdf4b6ca09cec5f8b5cdcf176ce451e019434fe83561b13184e56f9e889d",
+    "picker.json": "8ef2cdbc7fdda2c3cb0310143858d5862b428f6af13eb44daee0c99c681fa3cd",
+    "ponderer-1440.png": "0fb63486a168225054632d563b20ec2ee0d2fa2841f78ef882fcbb05b467bdfd",
+    "ponderer-844.png": "d0c6c69bd4bf73aa9d471d8bb9a864533b8a0c0f822364bda3b678c513e5bacd",
+    "test_choice_continuity.log": "7b04a5b6dbd702857174643fd8010f6839cf2b497b8e05966fcaa228c16caf77",
+    "test_connection_lifecycle.log": "051a613ffa186972628968f48c78c5d1abc09053488d6d2f5c86d712c6e43ff6",
+    "test_deck_sequence_ui.log": "f2c5a3611b52d70d58eb3edb2ffff92d3ba0e479dd825025e7c86010a9e900b5",
+    "test_frontend.log": "14010ce473f2079d5ccc164eddfa9bd1c74212f88326d374799251fb39fc1def",
+    "test_ponderer_drag.log": "1b45de6102bb270dad1757ea2e1be96d8e6420d778f276e2fcaf1d85dfa48604",
+    "test_rules_parity.log": "47cae38a9917913d5d7f052a09376ca4b576f96cd01afd690c0398b66a684c61",
+    "test_state_transport.log": "2d979b9d1f36555d1dcff3c211aaf80259ef9f836106266b5719c253e0323408",
+    "ui-tests.json": "ef3d0279e7822042efc3a14c3664bac7463a7a652502fd17656ea0733211a07b",
+    "unit-tests.json": "ec4bf744e4437b67372d8324e04e9f07929b45e054d94384a5f5b89e507c46e0"
+  },
+  "limits": [
+    "Entry and Chain use actual queued abilities; synthetic Manifestations isolate printed base-power counts.",
+    "Network tests isolate automatic phase driving and do not certify complete match sequences.",
+    "Late Deck mutations check stale responses, not legal responses inside effects.",
+    "Deck snapshots use existing per-card-ID zone versions, not globally unique identities for every Deck occurrence.",
+    "Base-power modifiers applied to the Chained card during its entry are not certified by these printed-power fixtures.",
+    "Other afterDraw/afterDiscard continuations, all replacement combinations, real Safari, physical devices and remote art remain outside this batch."
+  ]
+}

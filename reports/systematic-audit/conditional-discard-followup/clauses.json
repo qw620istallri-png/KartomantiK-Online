@@ -1,0 +1,574 @@
+{
+  "schemaVersion": 1,
+  "family": "conditional-discard-replacement",
+  "sourceDigest": "6abc7651c301da5bfa0c973597a7c948bb9025e64749b293c0982fad7ff0633f",
+  "finishedAt": "2026-10-28T16:16:13.680397+00:00",
+  "published": false,
+  "summary": {
+    "executed": 76,
+    "passed": 76,
+    "failed": 0,
+    "skipped": 0,
+    "cardsWithSelectedClauseProof": 2,
+    "selectedClauses": 2,
+    "familyScenarios": 70,
+    "networkScenarios": 6
+  },
+  "clauses": [
+    {
+      "cardId": "zni76s4aabicqag_en",
+      "name": "Pray the Ether",
+      "abilityId": "discard-one-then-draw-two",
+      "paragraphIndex": 0,
+      "printedParagraph": "Discard a card from your hand. If you do, draw 2 cards.",
+      "printedTextSha256": "d3b14697ddc3dca2d9ed8ba3ac4cf8218934c48b3abbc635d66ddf6c5a3d3a8e",
+      "independentOracle": {
+        "expectedDraw": 2,
+        "discardCount": 1,
+        "discardReplacementSatisfiesCondition": true,
+        "sequence": "discard-then-draw",
+        "authority": "User rulings 2026-10-28: replacement fulfills hand discard; Beta errata takes precedence; Press discards before drawing."
+      },
+      "validationStage": "discard-condition-replacements-ordered-draw-and-network",
+      "testIds": [
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__limbo__normal",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__limbo__short_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__limbo__empty_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__limbo__duplicates",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__limbo__locked",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__limbo__kanon",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__exile__normal",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__exile__short_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__exile__empty_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__exile__duplicates",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__exile__locked",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__exile__kanon",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__suspend__normal",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__suspend__short_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__suspend__empty_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__suspend__duplicates",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__suspend__locked",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__suspend__kanon",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_exile__normal",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_exile__short_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_exile__empty_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_exile__duplicates",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_exile__locked",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_exile__kanon",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_suspend__normal",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_suspend__short_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_suspend__empty_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_suspend__duplicates",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_suspend__locked",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_suspend__kanon",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__invalid",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__roundtrip",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__source_departure",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__no_discard",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__immunity",
+        "test_conditional_discard_integration.ConditionalDiscardIntegration.test_pray__websocket_exile",
+        "test_conditional_discard_integration.ConditionalDiscardIntegration.test_pray__websocket_suspend",
+        "test_conditional_discard_integration.ConditionalDiscardIntegration.test_pray__websocket_order_exile"
+      ],
+      "scenarioCount": 38,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ze99bj8uw2oisfx_en",
+      "name": "Alchemical Press",
+      "abilityId": "discard-to-draw-after-will",
+      "paragraphIndex": 2,
+      "printedParagraph": "Whenever you play a Will, you can discard a card. If you do, draw a card.",
+      "printedTextSha256": "8b8231871cff365c725ccd885595f37d4e7f8ac34b9cd75e667113172c41cb7b",
+      "independentOracle": {
+        "expectedDraw": 1,
+        "discardCount": 1,
+        "discardReplacementSatisfiesCondition": true,
+        "sequence": "discard-then-draw",
+        "authority": "User rulings 2026-10-28: replacement fulfills hand discard; Beta errata takes precedence; Press discards before drawing."
+      },
+      "validationStage": "discard-condition-replacements-ordered-draw-and-network",
+      "testIds": [
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__limbo__normal",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__limbo__short_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__limbo__empty_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__limbo__duplicates",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__limbo__locked",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__limbo__kanon",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__exile__normal",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__exile__short_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__exile__empty_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__exile__duplicates",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__exile__locked",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__exile__kanon",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__suspend__normal",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__suspend__short_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__suspend__empty_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__suspend__duplicates",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__suspend__locked",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__suspend__kanon",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_exile__normal",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_exile__short_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_exile__empty_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_exile__duplicates",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_exile__locked",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_exile__kanon",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_suspend__normal",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_suspend__short_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_suspend__empty_deck",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_suspend__duplicates",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_suspend__locked",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_suspend__kanon",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__invalid",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__roundtrip",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__source_departure",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__no_discard",
+        "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__immunity",
+        "test_conditional_discard_integration.ConditionalDiscardIntegration.test_press__websocket_exile",
+        "test_conditional_discard_integration.ConditionalDiscardIntegration.test_press__websocket_suspend",
+        "test_conditional_discard_integration.ConditionalDiscardIntegration.test_press__websocket_order_exile"
+      ],
+      "scenarioCount": 38,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__exile__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__exile__empty_deck",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__exile__kanon",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__exile__locked",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__exile__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__exile__short_deck",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__immunity",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__invalid",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__limbo__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__limbo__empty_deck",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__limbo__kanon",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__limbo__locked",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__limbo__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__limbo__short_deck",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__no_discard",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_exile__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_exile__empty_deck",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_exile__kanon",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_exile__locked",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_exile__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_exile__short_deck",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_suspend__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_suspend__empty_deck",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_suspend__kanon",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_suspend__locked",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_suspend__normal",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__order_suspend__short_deck",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__suspend__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__suspend__empty_deck",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__suspend__kanon",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__suspend__locked",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__suspend__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_pray__suspend__short_deck",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__exile__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__exile__empty_deck",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__exile__kanon",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__exile__locked",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__exile__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__exile__short_deck",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__immunity",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__invalid",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__limbo__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__limbo__empty_deck",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__limbo__kanon",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__limbo__locked",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__limbo__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__limbo__short_deck",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__no_discard",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_exile__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_exile__empty_deck",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_exile__kanon",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_exile__locked",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_exile__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_exile__short_deck",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_suspend__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_suspend__empty_deck",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_suspend__kanon",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_suspend__locked",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_suspend__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__order_suspend__short_deck",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__roundtrip",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__suspend__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__suspend__empty_deck",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__suspend__kanon",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__suspend__locked",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__suspend__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_conditional_discard_replacement.ConditionalDiscardReplacement.test_press__suspend__short_deck",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_conditional_discard_integration.ConditionalDiscardIntegration.test_pray__websocket_exile",
+      "status": "pass",
+      "durationSeconds": 2.187
+    },
+    {
+      "testId": "test_conditional_discard_integration.ConditionalDiscardIntegration.test_pray__websocket_order_exile",
+      "status": "pass",
+      "durationSeconds": 2.297
+    },
+    {
+      "testId": "test_conditional_discard_integration.ConditionalDiscardIntegration.test_pray__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.125
+    },
+    {
+      "testId": "test_conditional_discard_integration.ConditionalDiscardIntegration.test_press__websocket_exile",
+      "status": "pass",
+      "durationSeconds": 2.203
+    },
+    {
+      "testId": "test_conditional_discard_integration.ConditionalDiscardIntegration.test_press__websocket_order_exile",
+      "status": "pass",
+      "durationSeconds": 2.344
+    },
+    {
+      "testId": "test_conditional_discard_integration.ConditionalDiscardIntegration.test_press__websocket_suspend",
+      "status": "pass",
+      "durationSeconds": 2.234
+    }
+  ],
+  "runtimeHashes": {
+    "server/game/__init__.py": "eddb9d972b8e80e50c4ed94951e05c0712eb7b54313c3bdc7601bf1b9f408490",
+    "server/game/actions.py": "c97f8011ccaa04e01e0d69acc12a70e84ddb3e05ece286800abdffe47692c601",
+    "server/game/board.py": "35feac220d82a3ba847bb3b372bc9888e43e5eafb1359e68f4f4e9b9822a6428",
+    "server/game/chain.py": "e77085347e101c0779e70729652532179cececc7e689117bd144d156578501c1",
+    "server/game/choices/__init__.py": "f33cc31fedd9de2ee934705007a4ea261d3f16d1264713f6faaa1504bc19e9a6",
+    "server/game/choices/cards.py": "9ea03569f45e9d56fe7d98cb8c44ad3ac11d39424874950404530315b0f68895",
+    "server/game/choices/confrontation.py": "4a9bc7a44cca5b35e18c0008f19eaf66f1e682d6fbe23008c59023516fb92559",
+    "server/game/choices/decisions.py": "9812d44d600acb4fe59175325caab162bdcdf7756622c0aef6343f5a823a9d80",
+    "server/game/choices/payment.py": "10d6ae24335dbae84442abdaef66f2f029487fdfdbd4eb024997c39ff6034704",
+    "server/game/choices/stack.py": "ab5a961303126bd68b48b00af9fbd348d71be64cf5066afa230ea8fcf226adf8",
+    "server/game/common.py": "b6fb69d28fbcb6f51fc7b4a97452320227bb02f142a000cc98134e131c2f56f4",
+    "server/game/confrontation.py": "c7ed29ee0b558e73d9642afc46645800daf44f271e5a5d461689dafcf144a9d4",
+    "server/game/effects/__init__.py": "504687375bf4e9c97161b34655011c37afd573d2134098667db18f1e82b2e3c9",
+    "server/game/effects/board.py": "2661c663531890ea6765ea575fafae82d84d396bfabd2ff310ef63bb13d5ec04",
+    "server/game/effects/cards.py": "b1f17a7fb5ab817489d96b68513d484c4ef1ead4d2cdda09379c6291b9548b2e",
+    "server/game/effects/dice.py": "565e8ee20af3838655ec57b8aa4a5bc3f6e4b881d15a42521e6f24329b27d1b0",
+    "server/game/effects/power.py": "747ccc99732bf0c5cb491035c74dc5d363f34d477c750aae6ec44549aa54d95d",
+    "server/game/effects/removal.py": "c59dc2a6501dde4cc29b348f4a0f28a1a1afe1234c983ae85503485d5b3ddfd7",
+    "server/game/effects/score.py": "aea6df5d42d414307e9cbf10dda21435ead1b5ca2949821dcdbda7ccedc777c9",
+    "server/game/effects/signature.py": "c6723bf66ce647b4e4237f6eda346dfc1b8441559ecd68a200fe82ec9be42f77",
+    "server/game/effects/stack.py": "2e22cf40e9d1719ddf065f1724c85d1f8ee4d31fcb03abe1779c96d5033b2304",
+    "server/game/payment.py": "a0e6b7ff98f745e76648c75c2001b82eea87974c869645e73c3a433709677212",
+    "server/game/phases.py": "8e49d287423069ba61ee5a0b028bec5a1e8457efa2f11aaa0116c1758b022de5",
+    "server/game/power.py": "d7362e6f738cab0e6c51bd7b5ba9efb0d64170afd4c9579f32897de413d08e44",
+    "server/game/pregame.py": "64b62b4af185cb0974d7729a5f464da12f4025b37d536af3b018a6105d050b8b",
+    "server/game/priority.py": "ab52de6191ec94f5b7515efe7125c246a69e6ad736158d1daa821262f9d78681",
+    "server/game/replacements.py": "56403ab17c14e31e1e5eabd13975a272dfcdb723da180e9a598f96c0f44f1f5e",
+    "server/game/resolution.py": "b5450216e67577fc7d2cdf98c9c26c69e05ccdd8eb997403fb40dd90a42797b1",
+    "server/game/stack.py": "8d8f2dafccd5596dda37798c5486cd8956bee87fe3e58e2a88804379df94cf89",
+    "server/game/summary.py": "c176e0bb1658104bb9dc38e6bd081a5c813bdf5a2431f3a338ee28d297c30daa",
+    "server/game/triggers.py": "0de08e76d46c0680d5e17fa5a382f4c52dabee6275c37f9045cc8adf4b755dc5",
+    "server/game/view.py": "2bc21fd6226c6c8b52a93e4e171d118ac01f2498932edf5b2f63a444ce7b57a5",
+    "server/game/zones.py": "8ec506532a8b3c59c2c0194b0f41157423432a10f4fbabe022aaedbedfa00ff5",
+    "server/main.py": "185b8119f66cb07e287b195dd5beb082e92397c2350110727cb0f7b0fe4117cd",
+    "server/sandbox.py": "33f665c52699cdf2ed7aaff89dc7a564970b202bb798bf0c399cbc6752d44999",
+    "server/session.py": "21b89e3bd1d0048bbae4c4a612093b6dc5063c68e8799ce25b35cf515019b26e",
+    "server/state_transport.py": "a1ccc2de4ecffa20f021cecc2a62560f12ada439257b601f427ceee733304e2b",
+    "public/card-abilities.json": "826feaf4552ba8bbf35676204932c05d37f27c27e47b8802bb311a423c801fe9",
+    "public/cards-data.json": "6ed2e633fbd838922465b4d07c21f1aa3a306890fa9e65c9393457dc55424368",
+    "public/extensions/inner-desert/cards.json": "c43fd4da44e3eabe67fa89fdf8c1c5b7af419e39b8b549837015e8d189c05d35"
+  },
+  "runtimeUnchangedDuringExecution": true,
+  "productionFixRequired": false,
+  "limits": [
+    "Two previously registered cards gain selected replacement branches; no new unique-card coverage is claimed.",
+    "The user confirmed that replaced hand discards satisfy the draw condition and that the Beta errata makes Press discard before drawing. The local EN/FR/IT catalog already agrees; no text change is required.",
+    "Five destination profiles (Limbo, exile, suspension and both competing-replacement outcomes), bounded decks, duplicate cards, draw locks, Kanon and invalid/replayed choices are executed.",
+    "Unit Press effects use isolated trigger-action fixtures. Network Press effects are produced by a real Will declaration, optional acceptance and simultaneous Stack ordering. The underlying Pray action is left unresolved while inspecting Press.",
+    "Replacement states are explicit fixtures. Automatic phase driving is isolated; the phase is asserted stable during these choices.",
+    "An ordinary discard-choice JSON round trip and live-server reconnect at replacement order are checked; a full process restart or persistent save restoration is not certified.",
+    "Other Press clauses and all possible card combinations remain outside this batch. No new card UI, Safari, physical-device or illustration certification."
+  ]
+}

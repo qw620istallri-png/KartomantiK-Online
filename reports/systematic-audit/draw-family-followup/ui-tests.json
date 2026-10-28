@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "c2978a4e88d131ef5810ef85c7de68ce7556ec2ca3069a4bfcdee71ad2ce2b61",
+  "gates": [
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_rules_parity.log",
+      "durationSeconds": 41.031
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_frontend.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_frontend.log",
+      "durationSeconds": 15.328
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_state_transport.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_state_transport.log",
+      "durationSeconds": 0.187
+    }
+  ],
+  "summary": {
+    "executed": 3,
+    "failed": 0
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "e8d915a698f9537f4e892470262e6350dedcc9816810741ff5909d427a52a370",
+  "gates": [
+    {
+      "command": [
+        "node",
+        "tests/test_deck_sequence_ui.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_deck_sequence_ui.log",
+      "durationSeconds": 13.25
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_ponderer_drag.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_ponderer_drag.log",
+      "durationSeconds": 10.625
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_choice_continuity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_choice_continuity.log",
+      "durationSeconds": 6.328
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_rules_parity.log",
+      "durationSeconds": 40.828
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_frontend.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_frontend.log",
+      "durationSeconds": 14.766
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_connection_lifecycle.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_connection_lifecycle.log",
+      "durationSeconds": 5.859
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_state_transport.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_state_transport.log",
+      "durationSeconds": 0.156
+    }
+  ],
+  "summary": {
+    "executed": 7,
+    "failed": 0
+  }
+}

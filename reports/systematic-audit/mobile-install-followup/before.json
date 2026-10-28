@@ -1,0 +1,63 @@
+{
+  "beforeFix": true,
+  "tests": [
+    {
+      "testId": "android-no-native-event-en",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:37:12\n    at test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:33:45)\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:35:48\n    at Object.<anonymous> (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:107:3)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module._load (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)"
+    },
+    {
+      "testId": "android-no-native-event-fr",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:37:12\n    at test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:33:45)\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:35:48"
+    },
+    {
+      "testId": "android-no-native-event-it",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:37:12\n    at test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:33:45)\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:35:48"
+    },
+    {
+      "testId": "early-native-event-retained-before-init",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:47:12\n    at test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:33:45)\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:43:9"
+    },
+    {
+      "testId": "late-native-prompt-used-once",
+      "status": "pass"
+    },
+    {
+      "testId": "failed-native-prompt-falls-back",
+      "status": "fail",
+      "detail": "Error: not available\n    at Object.prompt (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:58:75)\n    at Object.installApp (evalmachine.<anonymous>:33:12)\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:59:15\n    at test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:33:45)\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:56:9"
+    },
+    {
+      "testId": "installed-hides-android",
+      "status": "pass"
+    },
+    {
+      "testId": "installed-hides-ios",
+      "status": "pass"
+    },
+    {
+      "testId": "installed-hides-desktop",
+      "status": "pass"
+    },
+    {
+      "testId": "appinstalled-event-hides-mobile-entry",
+      "status": "pass"
+    },
+    {
+      "testId": "ios-guide-and-desktop-no-false-entry",
+      "status": "pass"
+    }
+  ],
+  "summary": {
+    "executed": 11,
+    "passed": 6,
+    "failed": 5
+  },
+  "physicalDeviceTested": false,
+  "limits": [
+    "Native install events are simulated; browser rendering uses Chrome with Android/iOS user agents, not physical devices or Safari."
+  ]
+}

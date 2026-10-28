@@ -1,0 +1,12 @@
+{
+  "summary": {
+    "catalogCards": 450,
+    "cardsWithSelectedClauseProof": 71,
+    "percentageWithSelectedClauseProof": 15.8,
+    "cardsOutsideThisStrictRegister": 379,
+    "fullCatalogSemanticCertification": false
+  },
+  "unitEvidence": "reports/systematic-audit/deck-sequence-followup/unit-tests.json",
+  "unitEvidenceSourceDigest": "e8d915a698f9537f4e892470262e6350dedcc9816810741ff5909d427a52a370",
+  "note": "Counting baseline from the previous full run; not current runtime evidence."
+}

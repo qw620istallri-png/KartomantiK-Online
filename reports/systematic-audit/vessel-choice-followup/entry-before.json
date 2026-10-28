@@ -1,0 +1,17 @@
+{
+  "sourceDigest": "474dcafd0df4f956a7d9b2bb6b35fa3debd6ad5af2b1e7388d74ce90d955c4cd",
+  "tests": [
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_pesco_put_entry_triggers_for_controller_without_playing_or_chaining",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_vessel_choice_clauses.py\", line 292, in test_pesco_put_entry_triggers_for_controller_without_playing_or_chaining\n    self.assertEqual([(a['ability']['id'], a['controllerId']) for a in entries], [('draw-on-enter-field', 'p1')])\nAssertionError: Lists differ: [] != [('draw-on-enter-field', 'p1')]\n\nSecond list contains 1 additional elements.\nFirst extra element 0:\n('draw-on-enter-field', 'p1')\n\n- []\n+ [('draw-on-enter-field', 'p1')]\n",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_vessel_choice_clauses.VesselChoiceClauses.test_missing_interzone_source_card_cannot_create_a_phantom",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_vessel_choice_clauses.py\", line 312, in test_missing_interzone_source_card_cannot_create_a_phantom\n    self.assertIsNone(s.place_rules_card_in_interzone('p1', 'p2', 'receptacle', 'm3'))\nAssertionError: {'id': 'a0c98689e49c', 'ownerId': 'p2', 'controllerId': 'p1', 'cardId': 'm3', 'x': 740.0, 'y': 800.0, 'faceUp': True, 'rotation': 0.0, 'counters': {}, 'stackedOn': None, 'fieldZone': 'interzone', 'interzoneTurn': 2} is not None\n",
+      "durationSeconds": 0.046
+    }
+  ]
+}

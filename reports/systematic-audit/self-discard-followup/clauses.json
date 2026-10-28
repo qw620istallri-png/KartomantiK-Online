@@ -1,0 +1,284 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "1b7a65e57a730228e696e59680e49225e0ea8656afc2d900c5ff9a5bb3e7227e",
+  "finishedAt": "2026-10-28T20:56:57.126765+00:00",
+  "published": false,
+  "summary": {
+    "executed": 37,
+    "passed": 37,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 2,
+    "cardsWithSelectedClauseProof": 2,
+    "familyScenarios": 33,
+    "networkScenarios": 4
+  },
+  "clauses": [
+    {
+      "cardId": "inner-deserts-050",
+      "name": "Tombloom",
+      "abilityId": "tombloom-exiles-itself-and-weakens",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Tombloom is discarded, exile it. A target Manifestation on the field gets -2 power until the end of the turn.",
+      "printedTextSha256": "d45640785ca0a7d27c65ad6d510d55a39ec9a73a666f9b4951262bb2e054c2ac",
+      "independentOracle": {
+        "expectedPowerDelta": -2,
+        "maxWillCost": null,
+        "selfExileFromSuspensionAllowed": true
+      },
+      "testIds": [
+        "test_self_discard.SelfDiscard.test_tombloom__limbo",
+        "test_self_discard.SelfDiscard.test_tombloom__suspend",
+        "test_self_discard.SelfDiscard.test_tombloom__deck_suspend",
+        "test_self_discard.SelfDiscard.test_tombloom__exile",
+        "test_self_discard.SelfDiscard.test_tombloom__source_left",
+        "test_self_discard.SelfDiscard.test_tombloom__source_returned",
+        "test_self_discard.SelfDiscard.test_tombloom__two_suspended",
+        "test_self_discard.SelfDiscard.test_tombloom__second_copy_remains",
+        "test_self_discard.SelfDiscard.test_tombloom__reordered",
+        "test_self_discard.SelfDiscard.test_tombloom__invalid_target",
+        "test_self_discard.SelfDiscard.test_tombloom__source_exile_replaced_by_suspend",
+        "test_self_discard.SelfDiscard.test_tombloom__no_target",
+        "test_self_discard.SelfDiscard.test_tombloom__invalid_old_suspension",
+        "test_self_discard.SelfDiscard.test_tombloom__json_restore",
+        "test_self_discard_integration.SelfDiscardIntegration.test_tombloom__websocket_resolve",
+        "test_self_discard_integration.SelfDiscardIntegration.test_tombloom__websocket_source_left"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-055",
+      "name": "Nghoul-ong, the Tormented",
+      "abilityId": "nghoulong-exiles-itself-for-a-free-limbo-ephemeral-will",
+      "paragraphIndex": 0,
+      "printedParagraph": "If Nghoul-ong is discarded, you may exile it. If you do, you may play a target Ephemeral Will from your Limbo with a cost equal to or less than Nghoul-ong's base power without paying its Tribute cost until the end of the turn. If that Will would leave the Stack, exile it.",
+      "printedTextSha256": "1578a3b042b36c12f9e7fcff534d72be97eee3ba5abd4169d255295995d70788",
+      "independentOracle": {
+        "expectedPowerDelta": 0,
+        "maxWillCost": 3,
+        "selfExileFromSuspensionAllowed": true
+      },
+      "testIds": [
+        "test_self_discard.SelfDiscard.test_nghoul__limbo",
+        "test_self_discard.SelfDiscard.test_nghoul__suspend",
+        "test_self_discard.SelfDiscard.test_nghoul__deck_suspend",
+        "test_self_discard.SelfDiscard.test_nghoul__exile",
+        "test_self_discard.SelfDiscard.test_nghoul__source_left",
+        "test_self_discard.SelfDiscard.test_nghoul__source_returned",
+        "test_self_discard.SelfDiscard.test_nghoul__two_suspended",
+        "test_self_discard.SelfDiscard.test_nghoul__second_copy_remains",
+        "test_self_discard.SelfDiscard.test_nghoul__reordered",
+        "test_self_discard.SelfDiscard.test_nghoul__invalid_target",
+        "test_self_discard.SelfDiscard.test_nghoul__source_exile_replaced_by_suspend",
+        "test_self_discard.SelfDiscard.test_nghoul__no_target",
+        "test_self_discard.SelfDiscard.test_nghoul__invalid_old_suspension",
+        "test_self_discard.SelfDiscard.test_nghoul__json_restore",
+        "test_self_discard.SelfDiscard.test_nghoul__decline",
+        "test_self_discard.SelfDiscard.test_nghoul__play_permission",
+        "test_self_discard.SelfDiscard.test_nghoul__max_cost",
+        "test_self_discard.SelfDiscard.test_nghoul__over_cost",
+        "test_self_discard.SelfDiscard.test_nghoul__wrong_type",
+        "test_self_discard_integration.SelfDiscardIntegration.test_nghoul__websocket_resolve",
+        "test_self_discard_integration.SelfDiscardIntegration.test_nghoul__websocket_source_left"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__deck_suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__decline",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__exile",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__invalid_old_suspension",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__invalid_target",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__json_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__max_cost",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__no_target",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__over_cost",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__play_permission",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__reordered",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__second_copy_remains",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__source_exile_replaced_by_suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__source_left",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__source_returned",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__two_suspended",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__wrong_type",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__deck_suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__invalid_old_suspension",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__invalid_target",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__json_restore",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__limbo",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__no_target",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__reordered",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__second_copy_remains",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__source_exile_replaced_by_suspend",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__source_left",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__source_returned",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__two_suspended",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard_integration.SelfDiscardIntegration.test_nghoul__websocket_resolve",
+      "status": "pass",
+      "durationSeconds": 5.766
+    },
+    {
+      "testId": "test_self_discard_integration.SelfDiscardIntegration.test_nghoul__websocket_source_left",
+      "status": "pass",
+      "durationSeconds": 4.016
+    },
+    {
+      "testId": "test_self_discard_integration.SelfDiscardIntegration.test_tombloom__websocket_resolve",
+      "status": "pass",
+      "durationSeconds": 4.0
+    },
+    {
+      "testId": "test_self_discard_integration.SelfDiscardIntegration.test_tombloom__websocket_source_left",
+      "status": "pass",
+      "durationSeconds": 3.953
+    }
+  ],
+  "rulingId": "self-discard-exile-from-suspension",
+  "limits": [
+    "Two selected clauses and executed branches, not complete card/match certification.",
+    "Unit sources, Nullify resolved state, BOB and duplicate occurrences are controlled fixtures. Reentry/source departure interventions are occurrence controls, not complete opponent-response journeys.",
+    "Four network journeys use actual Pray declarations and discard choices, then a self-discard choice and live-server reconnect. The successful Nghoul journey plays Ponder through the granted free permission and checks its exile on leaving the Stack.",
+    "Private Limbo/Exile occurrence ledgers preserve identical copies and same-zone reorder. Existing in-flight legacy actions without an occurrence snapshot retain their former Limbo fallback; no process restart is certified.",
+    "Automatic phase driving is isolated. No new card UI, physical-device, Safari or illustration certification."
+  ]
+}

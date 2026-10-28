@@ -1,0 +1,170 @@
+{
+  "sourceDigest": "435df1d7cdca112723b62bae94e0cd83b855e0d4b6c25fcaa0860bd308d6dadf",
+  "productionHashes": {
+    "server/game/zones.py": "17dcb6ee0179298132b0d36457a7b1a1083d9a37e08544acad1778404a7ed62e",
+    "server/game/triggers.py": "0de08e76d46c0680d5e17fa5a382f4c52dabee6275c37f9045cc8adf4b755dc5",
+    "server/game/effects/cards.py": "b1f17a7fb5ab817489d96b68513d484c4ef1ead4d2cdda09379c6291b9548b2e"
+  },
+  "summary": {
+    "executed": 28,
+    "passed": 13,
+    "failed": 15
+  },
+  "tests": [
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__deck_suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 63, in exercise\n    self.assertEqual(len(s.rules_engine['actionStack']),1,(row['name'],case))\nAssertionError: 0 != 1 : ('Nghoul-ong, the Tormented', 'deck_suspend')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__decline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__invalid_old_suspension",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 63, in exercise\n    self.assertEqual(len(s.rules_engine['actionStack']),1,(row['name'],case))\nAssertionError: 0 != 1 : ('Nghoul-ong, the Tormented', 'invalid_old_suspension')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__invalid_target",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__limbo",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__no_target",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__play_permission",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 63, in exercise\n    self.assertEqual(len(s.rules_engine['actionStack']),1,(row['name'],case))\nAssertionError: 0 != 1 : ('Nghoul-ong, the Tormented', 'play_permission')\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__reordered",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__second_copy_remains",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 83, in exercise\n    self.assertNotIn(cid,s.players['p1']['zones']['exile'])\nAssertionError: 'inner-deserts-055' unexpectedly found in ['inner-deserts-055']\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__source_exile_replaced_by_suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__source_left",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__source_returned",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 83, in exercise\n    self.assertNotIn(cid,s.players['p1']['zones']['exile'])\nAssertionError: 'inner-deserts-055' unexpectedly found in ['inner-deserts-055']\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 63, in exercise\n    self.assertEqual(len(s.rules_engine['actionStack']),1,(row['name'],case))\nAssertionError: 0 != 1 : ('Nghoul-ong, the Tormented', 'suspend')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_nghoul__two_suspended",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 63, in exercise\n    self.assertEqual(len(s.rules_engine['actionStack']),1,(row['name'],case))\nAssertionError: 0 != 1 : ('Nghoul-ong, the Tormented', 'two_suspended')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__deck_suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 63, in exercise\n    self.assertEqual(len(s.rules_engine['actionStack']),1,(row['name'],case))\nAssertionError: 0 != 1 : ('Tombloom', 'deck_suspend')\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__exile",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 63, in exercise\n    self.assertEqual(len(s.rules_engine['actionStack']),1,(row['name'],case))\nAssertionError: 0 != 1 : ('Tombloom', 'exile')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__invalid_old_suspension",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 63, in exercise\n    self.assertEqual(len(s.rules_engine['actionStack']),1,(row['name'],case))\nAssertionError: 0 != 1 : ('Tombloom', 'invalid_old_suspension')\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__invalid_target",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__limbo",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__no_target",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__reordered",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__second_copy_remains",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 83, in exercise\n    self.assertNotIn(cid,s.players['p1']['zones']['exile'])\nAssertionError: 'inner-deserts-050' unexpectedly found in ['inner-deserts-050']\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__source_exile_replaced_by_suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 87, in exercise\n    if case=='source_exile_replaced_by_suspend':self.assertEqual(result['status'],'suspended')\n                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 'exiled' != 'suspended'\n- exiled\n+ suspended\n\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__source_left",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__source_returned",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 83, in exercise\n    self.assertNotIn(cid,s.players['p1']['zones']['exile'])\nAssertionError: 'inner-deserts-050' unexpectedly found in ['inner-deserts-050']\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 63, in exercise\n    self.assertEqual(len(s.rules_engine['actionStack']),1,(row['name'],case))\nAssertionError: 0 != 1 : ('Tombloom', 'suspend')\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_self_discard.SelfDiscard.test_tombloom__two_suspended",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 105, in run\n    def run(self,row=row,case=case):self.exercise(row,case)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_self_discard.py\", line 63, in exercise\n    self.assertEqual(len(s.rules_engine['actionStack']),1,(row['name'],case))\nAssertionError: 0 != 1 : ('Tombloom', 'two_suspended')\n",
+      "durationSeconds": 0.015
+    }
+  ]
+}

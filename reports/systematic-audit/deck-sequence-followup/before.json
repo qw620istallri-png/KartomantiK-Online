@@ -1,0 +1,339 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "22b961dff49aa988616868dc8b40002e330b1517de2f2ad45c1bbad158ca12e0",
+  "finishedAt": "2026-10-28T10:40:41.559882+00:00",
+  "published": false,
+  "summary": {
+    "executed": 23,
+    "passed": 10,
+    "failed": 13,
+    "skipped": 0,
+    "selectedParagraphs": 2,
+    "cardsWithSelectedClauseProof": 2
+  },
+  "clauses": [
+    {
+      "cardId": "vt30v1v8anw5hib_en",
+      "name": "Bloatuba",
+      "paragraphIndex": 0,
+      "printedParagraph": "When the Bloatuba enters the field, you may Chain from your hand. A target opponent reveals a number of cards from the top of the deck equal to the base power of the Chained manifestation. If they can, the opponent chooses and puts into stalemate a manifestation among those cards, then you reorder the remaining cards and the opponent puts them at the bottom of their deck in the order established by you.",
+      "paragraphSha256": "fd267c7b085419940c9fc251dd700abfe6426955c95af9327de680f9ca5d50ac",
+      "expectedBehavior": "Offer the optional entry Chain. Reveal top cards equal to the Chained Manifestation’s printed base power. The opponent puts one revealed Manifestation into Stalemate if possible; the controller orders every remaining occurrence on the bottom. Respect Deck-exit replacements, choice actors, stale snapshots and unchanged in-Deck identities.",
+      "testIds": [
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_all_identical_cards_leave_two_to_order",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_bob_replacement_removes_the_second_identical_position",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_deck_exit_respects_bob_and_orders_remaining_cards",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_does_not_pick_a_card_outside_the_revealed_prefix",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_no_manifestation_skips_pick_and_orders_all_wills",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_rejects_non_integer_or_out_of_range_indices_atomically",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_reveals_chained_base_power_then_opponent_picks_and_controller_orders",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_roundtrip_to_same_prefix_is_a_stale_pick",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_second_identical_pick_removes_only_that_revealed_position",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_no_chainable_card_never_opens_a_deck_choice",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_optional_decline_never_chains_or_inspects",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_inspected_cards_stay_private_bloatuba_reveal_is_public",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_reorder_rejects_changed_prefix_or_returned_card_atomically",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_same_deck_reorder_preserves_zone_versions_and_entry_turns",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_short_or_empty_decks_finish_without_missing_card",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_source_departure_does_not_cancel_the_open_sequence",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_stalemate_placement_is_not_an_entry_on_the_field",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_wrong_actor_and_duplicate_reply_cannot_move_cards"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "xoo3jxtiy1sonm1_en",
+      "name": "Expansive Ponderer",
+      "paragraphIndex": 0,
+      "printedParagraph": "When the Expansive Ponderer enters the field, you can Chain from your hand. Look at a number of cards from the top of the deck equal to the base power of the Chained manifestation. Choose and put one card among them into your hand, then distribute any number of the others on the top and bottom of the deck in any order.",
+      "paragraphSha256": "4e4d1aad9bc09fcd44d56950fcc3fca1acf1e583815f8e4327b7ef5e14ee0b0f",
+      "expectedBehavior": "Offer the optional entry Chain; privately inspect top cards equal to the Chained Manifestation’s base power. Put exactly one into Hand, then distribute every other occurrence between top and bottom in any order. This is a put, not a draw; preserve actual movement replacements and exact multiplicities.",
+      "testIds": [
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_no_chainable_card_never_opens_a_deck_choice",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_optional_decline_never_chains_or_inspects",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_bob_suspends_only_the_card_transferred_to_hand",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_inspected_cards_stay_private_bloatuba_reveal_is_public",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_put_is_not_a_draw_and_ignores_draw_lock_and_kanon",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_requires_exactly_one_hand_card_and_exact_multiplicities",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_splits_identical_cards_between_top_bottom_and_hand",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_reorder_rejects_changed_prefix_or_returned_card_atomically",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_short_or_empty_decks_finish_without_missing_card",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_source_departure_does_not_cancel_the_open_sequence",
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_wrong_actor_and_duplicate_reply_cannot_move_cards"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    }
+  ],
+  "otherInteractions": [
+    {
+      "name": "Dissect",
+      "scope": "Shared multi-group distribution only; not full card certification",
+      "testIds": [
+        "test_deck_sequence_clauses.DeckSequenceClauses.test_shared_multigroup_dissection_validates_both_before_moving_either"
+      ]
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_all_identical_cards_leave_two_to_order",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 75, in test_bloatuba_all_identical_cards_leave_two_to_order\n    self.assertIsNotNone(s.rules_engine['pendingChoice'])\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_bob_replacement_removes_the_second_identical_position",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 255, in test_bloatuba_bob_replacement_removes_the_second_identical_position\n    self.assertEqual(result['remaining'], ['m2', 'w2'])\nAssertionError: Lists differ: ['w2'] != ['m2', 'w2']\n\nFirst differing element 0:\n'w2'\n'm2'\n\nSecond list contains 1 additional elements.\nFirst extra element 1:\n'w2'\n\n- ['w2']\n+ ['m2', 'w2']\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_deck_exit_respects_bob_and_orders_remaining_cards",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 156, in test_bloatuba_deck_exit_respects_bob_and_orders_remaining_cards\n    self.assertFalse(any(s.rules_field_zone(i) == 'stalemate' for i in s.battlefield))\nAssertionError: True is not false\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_does_not_pick_a_card_outside_the_revealed_prefix",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 127, in test_bloatuba_does_not_pick_a_card_outside_the_revealed_prefix\n    self.reject(s, option='0')\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 47, in reject\n    self.assertIsNotNone(error)\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_no_manifestation_skips_pick_and_orders_all_wills",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 82, in test_bloatuba_no_manifestation_skips_pick_and_orders_all_wills\n    self.order(s, bottom=['pw3', 'w2', 'w2'])\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 41, in order\n    return self.choose(s, option=option)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_atavic_end_clauses.py\", line 47, in choose\n    self.assertIsNone(error)\nAssertionError: 'Use every revealed card exactly once.' is not None\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_rejects_non_integer_or_out_of_range_indices_atomically",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 122, in test_bloatuba_rejects_non_integer_or_out_of_range_indices_atomically\n    self.reject(s, option=option)\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 47, in reject\n    self.assertIsNotNone(error)\nAssertionError: unexpectedly None\n",
+      "subtests": [
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_rejects_non_integer_or_out_of_range_indices_atomically (option=False)",
+          "status": "fail"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_rejects_non_integer_or_out_of_range_indices_atomically (option=True)",
+          "status": "fail"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_rejects_non_integer_or_out_of_range_indices_atomically (option=0.5)",
+          "status": "fail"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_rejects_non_integer_or_out_of_range_indices_atomically (option=-1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_rejects_non_integer_or_out_of_range_indices_atomically (option='7')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_rejects_non_integer_or_out_of_range_indices_atomically (option=None)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_rejects_non_integer_or_out_of_range_indices_atomically (option={})",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.156
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_reveals_chained_base_power_then_opponent_picks_and_controller_orders",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_roundtrip_to_same_prefix_is_a_stale_pick",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 133, in test_bloatuba_roundtrip_to_same_prefix_is_a_stale_pick\n    self.reject(s, option='0')\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 47, in reject\n    self.assertIsNotNone(error)\nAssertionError: unexpectedly None\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_bloatuba_second_identical_pick_removes_only_that_revealed_position",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 66, in test_bloatuba_second_identical_pick_removes_only_that_revealed_position\n    self.assertEqual(result['remaining'], ['m2', 'w2'])\nAssertionError: Lists differ: ['w2'] != ['m2', 'w2']\n\nFirst differing element 0:\n'w2'\n'm2'\n\nSecond list contains 1 additional elements.\nFirst extra element 1:\n'w2'\n\n- ['w2']\n+ ['m2', 'w2']\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_no_chainable_card_never_opens_a_deck_choice",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_no_chainable_card_never_opens_a_deck_choice (card='Bloatuba')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_no_chainable_card_never_opens_a_deck_choice (card='Expansive Ponderer')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_optional_decline_never_chains_or_inspects",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_optional_decline_never_chains_or_inspects (card='Bloatuba')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_optional_decline_never_chains_or_inspects (card='Expansive Ponderer')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_bob_suspends_only_the_card_transferred_to_hand",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_inspected_cards_stay_private_bloatuba_reveal_is_public",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_put_is_not_a_draw_and_ignores_draw_lock_and_kanon",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_requires_exactly_one_hand_card_and_exact_multiplicities",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_requires_exactly_one_hand_card_and_exact_multiplicities (supplied={'top': ['m2', 'm2'], 'bottom': ['w2'], 'extra': []})",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_requires_exactly_one_hand_card_and_exact_multiplicities (supplied={'top': [], 'bottom': ['w2'], 'extra': ['m2', 'm2']})",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_requires_exactly_one_hand_card_and_exact_multiplicities (supplied={'top': ['m2'], 'bottom': ['m2'], 'extra': ['m4']})",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_requires_exactly_one_hand_card_and_exact_multiplicities (supplied={'top': ['m2'], 'bottom': [], 'extra': ['w2']})",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_ponderer_splits_identical_cards_between_top_bottom_and_hand",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 183, in test_ponderer_splits_identical_cards_between_top_bottom_and_hand\n    self.order(s, top=['m2'], bottom=['m2'], extra=['m2'])\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 41, in order\n    return self.choose(s, option=option)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_atavic_end_clauses.py\", line 47, in choose\n    self.assertIsNone(error)\nAssertionError: 'Use every revealed card exactly once.' is not None\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_reorder_rejects_changed_prefix_or_returned_card_atomically",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 150, in test_reorder_rejects_changed_prefix_or_returned_card_atomically\n    self.reject(s, option={'groups': [supplied]})\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 47, in reject\n    self.assertIsNotNone(error)\nAssertionError: unexpectedly None\n",
+      "subtests": [
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_reorder_rejects_changed_prefix_or_returned_card_atomically (card='Bloatuba', mutation='prefix')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_reorder_rejects_changed_prefix_or_returned_card_atomically (card='Bloatuba', mutation='roundtrip')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_reorder_rejects_changed_prefix_or_returned_card_atomically (card='Expansive Ponderer', mutation='prefix')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_reorder_rejects_changed_prefix_or_returned_card_atomically (card='Expansive Ponderer', mutation='roundtrip')",
+          "status": "fail"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_same_deck_reorder_preserves_zone_versions_and_entry_turns",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 223, in test_same_deck_reorder_preserves_zone_versions_and_entry_turns\n    self.assertEqual(s.rules_engine['zoneEntryVersions'], versions)\nAssertionError: {'p1:[17 chars]deck:w2': 8, 'p2:deck:pw3': 4, 'p2:deck:bithch9c4vi77cu_en': 1} != {'p1:[17 chars]deck:w2': 7, 'p2:deck:pw3': 3}\n+ {'p1:hand:m3': 1, 'p2:deck:pw3': 3, 'p2:deck:w2': 7}\n- {'p1:hand:m3': 1,\n-  'p2:deck:bithch9c4vi77cu_en': 1,\n-  'p2:deck:pw3': 4,\n-  'p2:deck:w2': 8}\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_shared_multigroup_dissection_validates_both_before_moving_either",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 270, in test_shared_multigroup_dissection_validates_both_before_moving_either\n    self.choose(s, option=valid)\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_atavic_end_clauses.py\", line 47, in choose\n    self.assertIsNone(error)\nAssertionError: 'Use every revealed card exactly once.' is not None\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_short_or_empty_decks_finish_without_missing_card",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_short_or_empty_decks_finish_without_missing_card (card='Bloatuba', deck=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_short_or_empty_decks_finish_without_missing_card (card='Bloatuba', deck=['m2'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_short_or_empty_decks_finish_without_missing_card (card='Expansive Ponderer', deck=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_short_or_empty_decks_finish_without_missing_card (card='Expansive Ponderer', deck=['m2'])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_source_departure_does_not_cancel_the_open_sequence",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 178, in test_source_departure_does_not_cancel_the_open_sequence\n    self.order(s, top=['m2'], bottom=['m2'], extra=['w2'])\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_deck_sequence_clauses.py\", line 41, in order\n    return self.choose(s, option=option)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_atavic_end_clauses.py\", line 47, in choose\n    self.assertIsNone(error)\nAssertionError: 'Use every revealed card exactly once.' is not None\n",
+      "subtests": [
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_source_departure_does_not_cancel_the_open_sequence (card='Bloatuba')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_source_departure_does_not_cancel_the_open_sequence (card='Expansive Ponderer')",
+          "status": "fail"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_stalemate_placement_is_not_an_entry_on_the_field",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_wrong_actor_and_duplicate_reply_cannot_move_cards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_wrong_actor_and_duplicate_reply_cannot_move_cards (card='Bloatuba')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_deck_sequence_clauses.DeckSequenceClauses.test_wrong_actor_and_duplicate_reply_cannot_move_cards (card='Expansive Ponderer')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    }
+  ],
+  "limits": [
+    "Entry and Chain use actual queued abilities; synthetic Manifestations isolate printed base-power counts.",
+    "Network tests isolate automatic phase driving and do not certify complete match sequences.",
+    "Late Deck mutations check stale responses, not legal responses inside effects.",
+    "Deck snapshots use existing per-card-ID zone versions, not globally unique identities for every Deck occurrence.",
+    "Other afterDraw/afterDiscard continuations, all replacement combinations, real Safari, physical devices and remote art remain outside this batch."
+  ]
+}

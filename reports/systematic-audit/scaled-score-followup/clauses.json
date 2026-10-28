@@ -1,0 +1,1079 @@
+{
+  "schemaVersion": 1,
+  "family": "scaled-point-change",
+  "sourceDigest": "63368879dbcf7d6a657f58b1759d445aaef48a3351f2a5146993fb3a8c0de2fe",
+  "finishedAt": "2026-10-28T14:56:28.766540+00:00",
+  "published": false,
+  "summary": {
+    "executed": 120,
+    "passed": 120,
+    "failed": 0,
+    "skipped": 0,
+    "cardsWithSelectedClauseProof": 6,
+    "selectedClauses": 6,
+    "familyScenarios": 113,
+    "networkScenarios": 6,
+    "auditInfrastructureTests": 1
+  },
+  "clauses": [
+    {
+      "cardId": "fr1414jedqssttr_en",
+      "name": "Floating Dancer",
+      "abilityId": "score-per-interzone-manifestation-on-win",
+      "paragraphIndex": 0,
+      "printedParagraph": "If Floating Dancer wins the confrontation, you gain 5 points for each manifestation in your Interzone.",
+      "printedTextSha256": "bb52ea7bce718599e25dd840c2ec3ef90143cc9c47c22a5167c311754b6a8869",
+      "independentOracle": {
+        "expectedMultiplier": 5,
+        "recipient": "controller",
+        "scope": "interzone",
+        "event": "wins_confrontation",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution-plus-outcome-builder",
+      "testIds": [
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__zero",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__one",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__two",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__three",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__negative_scores",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__other_controller",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__prevention",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__balance",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__late_increase",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__late_decrease",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__source_departure",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__trigger_guards",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__builder",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__source_control_after_queue",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__tokens_and_copies",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__control_change",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__counted_protected",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__animated_will",
+        "test_scaled_score_family.ScaledScoreFamily.test_dancer__source_joins_counted_zone",
+        "test_scaled_score_integration.ScaledScoreIntegration.test_dancer__websocket_dynamic_count"
+      ],
+      "scenarioCount": 20,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "31k2b7hz7ockvvn_en",
+      "name": "Plea for Generosity",
+      "abilityId": "score-per-target-player-confrontation-manifestation",
+      "paragraphIndex": 0,
+      "printedParagraph": "Gain 5 points for each non-token manifestation in the Confrontation Zone under the control of a target player.",
+      "printedTextSha256": "ceef04ed3d5d5f634b9572700f6940b89c2902dbe7ddb0b52536ce4b66631509",
+      "independentOracle": {
+        "expectedMultiplier": 5,
+        "recipient": "controller",
+        "scope": "cz_non_token",
+        "event": null,
+        "essenceCost": {
+          "phlegmatic": 2
+        }
+      },
+      "validationStage": "declaration-payment-and-resolution",
+      "testIds": [
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__zero",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__one",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__two",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__three",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__negative_scores",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__other_controller",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__prevention",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__balance",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__late_increase",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__late_decrease",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__tokens_and_copies",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__control_change",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__counted_protected",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__animated_will",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__plea_own_player",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__plea_unpayable",
+        "test_scaled_score_family.ScaledScoreFamily.test_plea__plea_declaration_guards",
+        "test_scaled_score_integration.ScaledScoreIntegration.test_plea__websocket_dynamic_count"
+      ],
+      "scenarioCount": 18,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "j2a7x783j5ql0ab_en",
+      "name": "Agrupol, Ponderer of Fields",
+      "abilityId": "gain-per-owned-vessel-manifestation",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Agrupol wins a confrontation, you gain 5 points for each manifestation of which you are the owner in each Empathic Vessel.",
+      "printedTextSha256": "1b357c7058ed30106721f54922afb437f080e1f921b8803da1c10cf48a6c6c8e",
+      "independentOracle": {
+        "expectedMultiplier": 5,
+        "recipient": "controller",
+        "scope": "vessel_owned",
+        "event": "wins_confrontation",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution-plus-outcome-builder",
+      "testIds": [
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__zero",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__one",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__two",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__three",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__negative_scores",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__other_controller",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__prevention",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__balance",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__late_increase",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__late_decrease",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__source_departure",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__trigger_guards",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__builder",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__source_control_after_queue",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__source_joins_counted_zone",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__vessel_duplicates",
+        "test_scaled_score_family.ScaledScoreFamily.test_agrupol__animation_resets_in_vessel",
+        "test_scaled_score_integration.ScaledScoreIntegration.test_agrupol__websocket_dynamic_count"
+      ],
+      "scenarioCount": 18,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-121",
+      "name": "Donmo, the Truth-Bender",
+      "abilityId": "donmo-gives-opponents-points-for-exhausted",
+      "paragraphIndex": 2,
+      "printedParagraph": "As long as Donmo is on the field, at the end of the turn each opponent gains 5 Points for each Exhausted card under your control.",
+      "printedTextSha256": "d535ac266ccc494a75f0c36a503e72e9d3f79e7d9199cb628afe36db30d7d529",
+      "independentOracle": {
+        "expectedMultiplier": 5,
+        "recipient": "opponent",
+        "scope": "exhausted",
+        "event": "end_of_turn",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution-plus-outcome-builder",
+      "testIds": [
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__zero",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__one",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__two",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__three",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__negative_scores",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__other_controller",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__prevention",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__balance",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__late_increase",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__late_decrease",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__source_departure",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__trigger_guards",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__builder",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__source_control_after_queue",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__tokens_and_copies",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__control_change",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__counted_protected",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__donmo_rotations",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__donmo_counts_itself",
+        "test_scaled_score_family.ScaledScoreFamily.test_donmo__donmo_skipped_end",
+        "test_scaled_score_integration.ScaledScoreIntegration.test_donmo__websocket_dynamic_count"
+      ],
+      "scenarioCount": 21,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-014",
+      "name": "Lombriculpop",
+      "abilityId": "gain-per-excess-power-over-opponent-first",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Lombriculpop wins a confrontation, you gain 5 Points for each point of excess difference between Lombriculpop's power and that of the First Manifestation controlled by a target opponent.",
+      "printedTextSha256": "093396410e74f8267cf6c4bdc28e99f3f09de51f0bb6ac299678730b56038bc6",
+      "independentOracle": {
+        "expectedMultiplier": 5,
+        "recipient": "controller",
+        "scope": "first_difference",
+        "event": "wins_confrontation",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution-plus-outcome-builder",
+      "testIds": [
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__zero",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__one",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__two",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__three",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__negative_scores",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__other_controller",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__prevention",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__balance",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__late_increase",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__late_decrease",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__source_departure",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__trigger_guards",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__builder",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__source_control_after_queue",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__excess_floor",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__excess_current_powers",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__excess_source_reset",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__excess_promoted_first",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__excess_empty_opponent",
+        "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__excess_source_new_instance",
+        "test_scaled_score_integration.ScaledScoreIntegration.test_lombriculpop__websocket_dynamic_count"
+      ],
+      "scenarioCount": 21,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "9ypw4x4igfon1qi_en",
+      "name": "Armored Pachywyrm",
+      "abilityId": "opponent-loses-per-excess-power-over-its-first",
+      "paragraphIndex": 0,
+      "printedParagraph": "If Armored Pachywyrm wins the confrontation, a target opponent loses 5 points for each point of excess difference between Armored Pachywyrm's power and that of the First Manifestation controlled by that player.",
+      "printedTextSha256": "148262dec4ba795098d2d0f41887a25f77a15be19b5849516d40cfc85c2fd403",
+      "independentOracle": {
+        "expectedMultiplier": -5,
+        "recipient": "opponent",
+        "scope": "first_difference",
+        "event": "wins_confrontation",
+        "essenceCost": {}
+      },
+      "validationStage": "event-queue-and-resolution-plus-outcome-builder",
+      "testIds": [
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__zero",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__one",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__two",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__three",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__negative_scores",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__other_controller",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__prevention",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__balance",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__late_increase",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__late_decrease",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__source_departure",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__trigger_guards",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__builder",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__source_control_after_queue",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__excess_floor",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__excess_current_powers",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__excess_source_reset",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__excess_promoted_first",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__excess_empty_opponent",
+        "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__excess_source_new_instance",
+        "test_scaled_score_integration.ScaledScoreIntegration.test_pachywyrm__websocket_dynamic_count"
+      ],
+      "scenarioCount": 21,
+      "websocketScenario": true,
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "infrastructureTestIds": [
+    "test_scaled_score_family.ScaledScoreOracleSensitivity.test_each_multiplier_is_observed"
+  ],
+  "tests": [
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__animation_resets_in_vessel",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__balance",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__balance (redirect=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__balance (redirect=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__builder",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__late_decrease",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__late_increase",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__negative_scores",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__one",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__prevention",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__source_control_after_queue",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__source_joins_counted_zone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__three",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__two",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__vessel_duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_agrupol__zero",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__animated_will",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__balance",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__balance (redirect=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__balance (redirect=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__builder",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__control_change",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__counted_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__late_decrease",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__late_increase",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__negative_scores",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__one",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__prevention",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__source_control_after_queue",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__source_joins_counted_zone",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__three",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__tokens_and_copies",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__two",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_dancer__zero",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__balance",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__balance (redirect=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__balance (redirect=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__builder",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__control_change",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__counted_protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__donmo_counts_itself",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__donmo_rotations",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__donmo_skipped_end",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__late_decrease",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__late_increase",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__negative_scores",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__one",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__prevention",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__source_control_after_queue",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__three",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__tokens_and_copies",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__two",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_donmo__zero",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__balance",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__balance (redirect=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__balance (redirect=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__builder",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__excess_current_powers",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__excess_empty_opponent",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__excess_floor",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__excess_promoted_first",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__excess_source_new_instance",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__excess_source_reset",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__late_decrease",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__late_increase",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__negative_scores",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__one",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__source_control_after_queue",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__three",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__two",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_lombriculpop__zero",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__balance",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__balance (redirect=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__balance (redirect=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__builder",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__excess_current_powers",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__excess_empty_opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__excess_floor",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__excess_promoted_first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__excess_source_new_instance",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__excess_source_reset",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__late_decrease",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__late_increase",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__negative_scores",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__one",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__prevention",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__source_control_after_queue",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__three",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__two",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_pachywyrm__zero",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__animated_will",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__balance",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__balance (redirect=False)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__balance (redirect=True)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__control_change",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__counted_protected",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__late_decrease",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__late_increase",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__negative_scores",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__one",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__plea_declaration_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__plea_declaration_guards (condition='wrong_priority')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__plea_declaration_guards (condition='missing_player')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__plea_declaration_guards (condition='pending_choice')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__plea_own_player",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__plea_unpayable",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__prevention",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__three",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__tokens_and_copies",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__two",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreFamily.test_plea__zero",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_scaled_score_family.ScaledScoreOracleSensitivity.test_each_multiplier_is_observed",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_scaled_score_family.ScaledScoreOracleSensitivity.test_each_multiplier_is_observed (card='dancer')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreOracleSensitivity.test_each_multiplier_is_observed (card='plea')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreOracleSensitivity.test_each_multiplier_is_observed (card='agrupol')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreOracleSensitivity.test_each_multiplier_is_observed (card='donmo')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreOracleSensitivity.test_each_multiplier_is_observed (card='lombriculpop')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_scaled_score_family.ScaledScoreOracleSensitivity.test_each_multiplier_is_observed (card='pachywyrm')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.188
+    },
+    {
+      "testId": "test_scaled_score_integration.ScaledScoreIntegration.test_agrupol__websocket_dynamic_count",
+      "status": "pass",
+      "durationSeconds": 2.109
+    },
+    {
+      "testId": "test_scaled_score_integration.ScaledScoreIntegration.test_dancer__websocket_dynamic_count",
+      "status": "pass",
+      "durationSeconds": 2.203
+    },
+    {
+      "testId": "test_scaled_score_integration.ScaledScoreIntegration.test_donmo__websocket_dynamic_count",
+      "status": "pass",
+      "durationSeconds": 2.157
+    },
+    {
+      "testId": "test_scaled_score_integration.ScaledScoreIntegration.test_lombriculpop__websocket_dynamic_count",
+      "status": "pass",
+      "durationSeconds": 2.11
+    },
+    {
+      "testId": "test_scaled_score_integration.ScaledScoreIntegration.test_pachywyrm__websocket_dynamic_count",
+      "status": "pass",
+      "durationSeconds": 2.141
+    },
+    {
+      "testId": "test_scaled_score_integration.ScaledScoreIntegration.test_plea__websocket_dynamic_count",
+      "status": "pass",
+      "durationSeconds": 2.171
+    }
+  ],
+  "limits": [
+    "Six selected printed point clauses only; every branch of each card remains uncertified.",
+    "Population changes are explicit controlled fixtures; separate producer cases exercise the real confrontation-outcome and End trigger builders, not a complete match.",
+    "Plea uses real declarations, green essence payment and resolution; other cards use normal triggered effects on the Stack.",
+    "The six WebSocket cases modify the counted fixture while the action waits, then pass actual priority and verify both clients against the precise resolved action ID. Auto-phase driving is isolated.",
+    "Donmo tests exhaustion on the field, both upright orientations, Will/token/copy inclusion and current control. Exhausted Stalemate/covered/attached card counting is outside this batch.",
+    "Agrupol tests only legal opponent-Vessel populations, including duplicates and reset animation; its bottom-Deck shuffle is not certified.",
+    "Donmo activation and tribute prohibition are outside the selected score clause.",
+    "All six cards already have selected-clause evidence; the unique-card counter must not increase.",
+    "No new browser/card UI, physical device, Safari or illustration certification is implied."
+  ]
+}

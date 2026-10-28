@@ -243,20 +243,27 @@ class KanonEventClauses(unittest.TestCase):
                 self.assertEqual(kinds.count("deck_cards_discarded"), 1)
 
     def test_suspension_replaces_movements_without_draw_discard_or_will_penalty(self):
+        # Historical evidence ID retained. The 2026-10-28 ruling supersedes its
+        # original interpretation: replaced discards and Will penalties remain.
         s, _ = self.setup(["w2", "pw3", "m2", "m3"])
         self.field(s, "inner-deserts-134", "bob", power_bonus=2)
         target = self.field(s, "m4", "target")
         result = self.replace(s, 4, ["w2", "pw3"])
-        self.assertEqual(result["willCount"], 0)
+        self.assertEqual(result["willCount"], 2)
         self.assertEqual(result["drawnCardIds"], [])
         self.assertEqual(result["discardedCardIds"], [])
         self.assertEqual(s.players["p1"]["zones"]["hand"], [])
         self.assertEqual(s.players["p1"]["zones"]["graveyard"], [])
         self.assertCountEqual([c["cardId"] for c in s.rules_engine["suspendedCards"]], ["w2", "pw3", "m2", "m3"])
-        self.assertFalse(any(e["kind"] in {"cards_discarded", "cards_drawn", "deck_cards_discarded"}
-                             for e in s.rules_engine.get("observedEvents") or []))
-        self.assertIsNone(s.rules_engine["pendingChoice"])
+        kinds=[e["kind"] for e in s.rules_engine.get("observedEvents") or []]
+        self.assertEqual(kinds.count("cards_discarded"),2)
+        self.assertEqual(kinds.count("deck_cards_discarded"),2)
+        self.assertNotIn("cards_drawn",kinds)
+        self.assertNotIn("card_entered_limbo",kinds)
+        self.assertEqual(s.rules_engine["pendingChoice"]["kind"],"power_loss_distribution")
         self.assertEqual(s.rules_manifestation_characteristics(target)["power"], 4)
+        self.choose(s,option={"itemIds":[target["id"],target["id"]]})
+        self.assertEqual(s.rules_manifestation_characteristics(target)["power"],2)
 
     def test_discarded_wills_allow_split_or_repeated_target_and_exact_power_loss(self):
         for targets in (["a", "a"], ["a", "b"]):

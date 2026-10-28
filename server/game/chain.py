@@ -204,6 +204,7 @@ class ChainMixin:
                 if card_ids:
                     groups = [{
                         "playerId": chain_player_id, "cardIds": card_ids,
+                        **self.rules_deck_choice_snapshot(chain_player_id, card_ids),
                         "topCount": None, "bottomCount": None,
                         "extraSide": "hand", "extraMin": 1, "extraMax": 1,
                     }]
@@ -429,6 +430,20 @@ class ChainMixin:
             "count": len(drawn),
             **({"drawn": drawn} if include_drawn else {}),
         }
+
+    def continue_rules_draw_requests(self, requests):
+        """Finish ordered draws, pausing through replacement follow-up choices."""
+        results = []
+        for index, request in enumerate(requests):
+            results.append(self.request_rules_draw(
+                request["playerId"], request["count"],
+                request.get("sourceControllerId"),
+            ))
+            choice = self.rules_engine.get("pendingChoice")
+            if choice is not None:
+                choice["_drawRequestsAfterChoice"] = requests[index + 1:]
+                break
+        return results
 
     def create_rules_token_copy(self, card_id, controller_id, *,
                                 source_item_id=None, hollow=False,
@@ -724,14 +739,33 @@ class ChainMixin:
             **(choice.get("_simultaneousProofs") or {}),
         }
 
+    def rules_deck_choice_snapshot(self, player_id, cards):
+        """Bind an inspected prefix to the existing zone-entry version contract."""
+        return {
+            "_deckPrefix": list(cards),
+            "_deckVersions": {cid: self.rules_zone_entry_version(player_id, "deck", cid) for cid in cards},
+        }
+
+    def rules_deck_choice_is_current(self, player_id, snapshot):
+        if "_deckPrefix" not in snapshot:
+            return True
+        prefix = snapshot["_deckPrefix"]
+        deck = self.players.get(player_id, {}).get("zones", {}).get("deck", [])
+        return deck[:len(prefix)] == prefix and all(
+            self.rules_zone_entry_version(player_id, "deck", cid) == version
+            for cid, version in snapshot.get("_deckVersions", {}).items()
+        )
+
     def make_bloatuba_choice(self, controller_id, victim_id, revealed, source_card_id):
-        """Opponent picks a revealed Manifestation to suspend, else the controller orders."""
+        """Opponent puts a revealed Manifestation in Stalemate, then the controller orders."""
         picks = [c for c in revealed if self.card_rules.get(c, {}).get("type") == "manifestation"]
         if picks:
             return {
                 "id": new_id(), "kind": "reveal_hand_discard", "purpose": "bloatuba",
                 "playerId": victim_id, "targetPlayerId": victim_id,
                 "cardIds": picks, "_revealed": list(revealed),
+                "_pickPositions": [i for i, cid in enumerate(revealed) if self.card_rules.get(cid, {}).get("type") == "manifestation"],
+                **self.rules_deck_choice_snapshot(victim_id, revealed),
                 "controllerId": controller_id, "sourceCardId": source_card_id,
             }
         return self.make_bloatuba_reorder(controller_id, victim_id, revealed, source_card_id)
@@ -740,6 +774,7 @@ class ChainMixin:
         group = {
             "playerId": victim_id, "cardIds": list(remaining),
             "topCount": 0, "bottomCount": len(remaining),
+            **self.rules_deck_choice_snapshot(victim_id, remaining),
         }
         return {
             "id": new_id(), "kind": "deck_reorder", "playerId": controller_id,
@@ -784,7 +819,7 @@ class ChainMixin:
     def place_rules_card_in_interzone(self, player_id, container_id, zone, card_id):
         """Put a card from a player zone into player_id's Interzone (shared slot when full)."""
         owner_id = self.card_owner_in_zone(container_id, zone, card_id)
-        if owner_id is None:
+        if owner_id is None or card_id not in self.players[container_id]["zones"][zone]:
             return None
         seat = self.players[player_id].get("seat")
         item = {
@@ -801,6 +836,16 @@ class ChainMixin:
         self.mark_rules_interzone_entry(item)
         self.take_zone_card(container_id, zone, card_id)
         self.battlefield.append(item)
+        triggered = self.queue_rules_battlefield_entry_triggers(
+            card_id, owner_id, item["id"], True, defer=True,
+        )
+        triggered.extend(self.queue_rules_manifestation_entry_watchers(
+            item, defer=True, played=False,
+        ))
+        triggered.extend(self.queue_rules_field_zone_entry_triggers(
+            item, "interzone", defer=True,
+        ))
+        self.queue_or_defer_rules_simultaneous_actions(triggered)
         return item
 
     def rules_uncovered_deck_top(self, player_id):

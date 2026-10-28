@@ -1,0 +1,191 @@
+{
+  "engine": "chromium",
+  "physicalDevice": false,
+  "summary": {
+    "configurations": 6,
+    "scenarios": 18,
+    "failed": 0
+  },
+  "cases": [
+    {
+      "scenario": "bloatuba-pick",
+      "language": "fr",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "actor": "p2",
+      "passed": true
+    },
+    {
+      "scenario": "bloatuba-order",
+      "language": "fr",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "actor": "p1",
+      "passed": true
+    },
+    {
+      "scenario": "ponderer",
+      "language": "fr",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "actor": "p1",
+      "passed": true
+    },
+    {
+      "scenario": "bloatuba-pick",
+      "language": "en",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "actor": "p2",
+      "passed": true
+    },
+    {
+      "scenario": "bloatuba-order",
+      "language": "en",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "actor": "p1",
+      "passed": true
+    },
+    {
+      "scenario": "ponderer",
+      "language": "en",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "actor": "p1",
+      "passed": true
+    },
+    {
+      "scenario": "bloatuba-pick",
+      "language": "it",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "actor": "p2",
+      "passed": true
+    },
+    {
+      "scenario": "bloatuba-order",
+      "language": "it",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "actor": "p1",
+      "passed": true
+    },
+    {
+      "scenario": "ponderer",
+      "language": "it",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "actor": "p1",
+      "passed": true
+    },
+    {
+      "scenario": "bloatuba-pick",
+      "language": "fr",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "actor": "p2",
+      "passed": true
+    },
+    {
+      "scenario": "bloatuba-order",
+      "language": "fr",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "actor": "p1",
+      "passed": true
+    },
+    {
+      "scenario": "ponderer",
+      "language": "fr",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "actor": "p1",
+      "passed": true
+    },
+    {
+      "scenario": "bloatuba-pick",
+      "language": "en",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "actor": "p2",
+      "passed": true
+    },
+    {
+      "scenario": "bloatuba-order",
+      "language": "en",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "actor": "p1",
+      "passed": true
+    },
+    {
+      "scenario": "ponderer",
+      "language": "en",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "actor": "p1",
+      "passed": true
+    },
+    {
+      "scenario": "bloatuba-pick",
+      "language": "it",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "actor": "p2",
+      "passed": true
+    },
+    {
+      "scenario": "bloatuba-order",
+      "language": "it",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "actor": "p1",
+      "passed": true
+    },
+    {
+      "scenario": "ponderer",
+      "language": "it",
+      "viewport": {
+        "width": 844,
+        "height": 390
+      },
+      "actor": "p1",
+      "passed": true
+    }
+  ]
+}

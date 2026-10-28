@@ -50,6 +50,16 @@ RULES_CHOICE_HANDLERS = {
 
 
 class ChoicesMixin:
+    def _rules_continue_draws_after_choice(self, choice, response):
+        if response[0] is None and choice.get("_drawRequestsAfterChoice"):
+            remaining = choice["_drawRequestsAfterChoice"]
+            next_choice = self.rules_engine.get("pendingChoice")
+            if next_choice is not None:
+                next_choice["_drawRequestsAfterChoice"] = remaining
+            else:
+                self.continue_rules_draw_requests(remaining)
+        return response
+
     @replacement_checkpoint("choice")
     def resolve_rules_choice(self, player_id, choice_id, card_ids=None, option=None, item_id=None,
                              placement=None, targets=None, transcendent_payment=None):
@@ -71,5 +81,6 @@ class ChoicesMixin:
             } else {}
             response = getattr(self, handler)(player_id, choice_id, choice, card_ids, option, item_id, placement, targets, **payment_options)
             if response is not None:
-                return response
-        return self._resolve_rules_discard_choice(player_id, choice_id, choice, card_ids)
+                return self._rules_continue_draws_after_choice(choice, response)
+        response = self._resolve_rules_discard_choice(player_id, choice_id, choice, card_ids)
+        return self._rules_continue_draws_after_choice(choice, response)

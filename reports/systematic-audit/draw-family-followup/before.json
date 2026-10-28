@@ -1,0 +1,1220 @@
+{
+  "sourceDigest": "285d77b4f848005b4c33959877d36cde8c15ed4dbfc4e7f116105189549d794c",
+  "note": "Production discard-choice movement unchanged; legitimate card ownership and played-Will destination are accounted for in fixtures.",
+  "productionFileSha256": "8b42e3bed5ddfe96b7daf9e12937daf08a5b685c59a422c17cae85a2f550312f",
+  "summary": {
+    "executed": 162,
+    "passed": 152,
+    "failed": 10
+  },
+  "tests": [
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__bob",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__empty",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__kanon",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__one_available",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_ammonite__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__bad_choices",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__bad_choices (selected=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__bad_choices (selected=['absent'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__bad_choices (selected=['w2', 'pw3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__bad_choices (selected=[{}])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__bob",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 304, in run\n    def run(self,row=row,scenario=scenario):getattr(self,'check_'+scenario)(row)\n                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 198, in check_bob\n    self.assertCountEqual([c['cardId'] for c in s.rules_engine['suspendedCards']],expected)\nAssertionError: Element counts were not equal:\nFirst has 0, Second has 1:  'w2'\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__choice_actor_replay",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__competing_replacements",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 244, in check_competing_replacements\n    self.assertIsNotNone(choice)\nAssertionError: unexpectedly None\n",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__competing_replacements (first_replacement='suspend')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__competing_replacements (first_replacement='exile')",
+          "status": "fail"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__empty",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__hand_immunity",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__one_available",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__target_self",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_apparition__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.079
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__bob",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__empty",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__kanon",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__one_available",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__real_event_builder",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards (condition='wrong_player')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_callus__trigger_guards (condition='wrong_zone')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__bad_choices",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__bad_choices (selected=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__bad_choices (selected=['absent'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__bad_choices (selected=['w2', 'pw3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__bad_choices (selected=[{}])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__bob",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 304, in run\n    def run(self,row=row,scenario=scenario):getattr(self,'check_'+scenario)(row)\n                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 198, in check_bob\n    self.assertCountEqual([c['cardId'] for c in s.rules_engine['suspendedCards']],expected)\nAssertionError: Element counts were not equal:\nFirst has 0, Second has 1:  'w2'\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__choice_actor_replay",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__competing_replacements",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 244, in check_competing_replacements\n    self.assertIsNotNone(choice)\nAssertionError: unexpectedly None\n",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__competing_replacements (first_replacement='suspend')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__competing_replacements (first_replacement='exile')",
+          "status": "fail"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__empty",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__hand_immunity",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__one_available",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__target_self",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_filth__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bad_choices",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bad_choices (selected=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bad_choices (selected=['absent'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bad_choices (selected=['w2', 'pw3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bad_choices (selected=[{}])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__bob",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 304, in run\n    def run(self,row=row,scenario=scenario):getattr(self,'check_'+scenario)(row)\n                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 198, in check_bob\n    self.assertCountEqual([c['cardId'] for c in s.rules_engine['suspendedCards']],expected)\nAssertionError: Element counts were not equal:\nFirst has 0, Second has 1:  'w2'\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__choice_actor_replay",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__competing_replacements",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 244, in check_competing_replacements\n    self.assertIsNotNone(choice)\nAssertionError: unexpectedly None\n",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__competing_replacements (first_replacement='suspend')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__competing_replacements (first_replacement='exile')",
+          "status": "fail"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__empty",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__hand_immunity",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__one_available",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__real_event_builder",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__target_self",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_makaboon__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__bob",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__empty",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__kanon",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__one_available",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__real_event_builder",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='wrong_player')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='wrong_zone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_mazzolong__trigger_guards (condition='put_not_played')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.156
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bad_choices",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bad_choices (selected=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bad_choices (selected=['absent'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bad_choices (selected=['w2', 'pw3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bad_choices (selected=[{}])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__bob",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 304, in run\n    def run(self,row=row,scenario=scenario):getattr(self,'check_'+scenario)(row)\n                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 198, in check_bob\n    self.assertCountEqual([c['cardId'] for c in s.rules_engine['suspendedCards']],expected)\nAssertionError: Element counts were not equal:\nFirst has 0, Second has 1:  'w2'\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__choice_actor_replay",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__competing_replacements",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 244, in check_competing_replacements\n    self.assertIsNotNone(choice)\nAssertionError: unexpectedly None\n",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__competing_replacements (first_replacement='suspend')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__competing_replacements (first_replacement='exile')",
+          "status": "fail"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__empty",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__hand_immunity",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__normal",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__one_available",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__target_self",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='wrong_player')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='wrong_color')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='not_from_hand')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_discard__trigger_guards (condition='outside_confrontation')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.172
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__bob",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__empty",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__kanon",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__one_available",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='wrong_player')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='wrong_color')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='not_from_hand')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pidue_draw__trigger_guards (condition='outside_confrontation')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.172
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__bob",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__empty",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__one_available",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_pluff__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__bob",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__empty",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__kanon",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__one_available",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_ponder__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__bob",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__empty",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__kanon",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__one_available",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_seeker__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__bob",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__empty",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__kanon",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__one_available",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__real_event_builder",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_threshold__trigger_guards (condition='not_first_will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__bad_choices",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__bad_choices (selected=[])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__bad_choices (selected=['absent'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__bad_choices (selected=['w2', 'pw3'])",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__bad_choices (selected=[{}])",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__bob",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 304, in run\n    def run(self,row=row,scenario=scenario):getattr(self,'check_'+scenario)(row)\n                                            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 198, in check_bob\n    self.assertCountEqual([c['cardId'] for c in s.rules_engine['suspendedCards']],expected)\nAssertionError: Element counts were not equal:\nFirst has 0, Second has 1:  'w2'\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__choice_actor_replay",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__competing_replacements",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_draw_discard_family.py\", line 244, in check_competing_replacements\n    self.assertIsNotNone(choice)\nAssertionError: unexpectedly None\n",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__competing_replacements (first_replacement='suspend')",
+          "status": "fail"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__competing_replacements (first_replacement='exile')",
+          "status": "fail"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__empty",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__hand_immunity",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__one_available",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__real_event_builder",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__target_self",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__trigger_guards",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__trigger_guards (condition='wrong_event')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__trigger_guards (condition='hidden')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__trigger_guards (condition='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_draw_discard_family.DrawDiscardFamily.test_wheel__trigger_guards (condition='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__bob",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__draw_lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__empty",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__kanon",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__normal",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__one_available",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_draw__target_self",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__bob",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__duplicates",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__empty",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__one_available",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__other_controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_draw_discard_family.DrawDiscardFamily.test_zum_mill__target_self",
+      "status": "pass",
+      "durationSeconds": 0.032
+    }
+  ]
+}

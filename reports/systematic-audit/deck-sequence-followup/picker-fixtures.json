@@ -1,0 +1,54 @@
+{
+  "bloatuba-pick": {
+    "id": "45f57ff294a7",
+    "kind": "reveal_hand_discard",
+    "purpose": "bloatuba",
+    "playerId": "p2",
+    "targetPlayerId": "p2",
+    "cardIds": [
+      "m2",
+      "m2"
+    ],
+    "controllerId": "p1",
+    "sourceCardId": "vt30v1v8anw5hib_en"
+  },
+  "bloatuba-order": {
+    "id": "f1e5fe6e8981",
+    "kind": "deck_reorder",
+    "playerId": "p1",
+    "sourceCardId": "vt30v1v8anw5hib_en",
+    "groups": [
+      {
+        "playerId": "p2",
+        "cardIds": [
+          "w2",
+          "w2",
+          "pw3"
+        ],
+        "topCount": 0,
+        "bottomCount": 3
+      }
+    ]
+  },
+  "ponderer": {
+    "id": "dc7b8fd63cea",
+    "kind": "deck_reorder",
+    "playerId": "p1",
+    "sourceCardId": "xoo3jxtiy1sonm1_en",
+    "groups": [
+      {
+        "playerId": "p1",
+        "cardIds": [
+          "m2",
+          "m2",
+          "m2"
+        ],
+        "topCount": null,
+        "bottomCount": null,
+        "extraSide": "hand",
+        "extraMin": 1,
+        "extraMax": 1
+      }
+    ]
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "authority": "Creator ruling 2026-10-28: a self-discard trigger can exile its own original suspended occurrence, without BOB intercepting the Suspension-to-Exile move.",
+  "contracts": [
+    {
+      "key": "tombloom",
+      "cardId": "inner-deserts-050",
+      "name": "Tombloom",
+      "abilityId": "tombloom-exiles-itself-and-weakens",
+      "printedParagraph": "When Tombloom is discarded, exile it. A target Manifestation on the field gets -2 power until the end of the turn.",
+      "paragraphIndex": 0,
+      "printedTextSha256": "d45640785ca0a7d27c65ad6d510d55a39ec9a73a666f9b4951262bb2e054c2ac",
+      "expectedPowerDelta": -2,
+      "maxWillCost": null,
+      "selfExileFromSuspensionAllowed": true
+    },
+    {
+      "key": "nghoul",
+      "cardId": "inner-deserts-055",
+      "name": "Nghoul-ong, the Tormented",
+      "abilityId": "nghoulong-exiles-itself-for-a-free-limbo-ephemeral-will",
+      "printedParagraph": "If Nghoul-ong is discarded, you may exile it. If you do, you may play a target Ephemeral Will from your Limbo with a cost equal to or less than Nghoul-ong's base power without paying its Tribute cost until the end of the turn. If that Will would leave the Stack, exile it.",
+      "paragraphIndex": 0,
+      "printedTextSha256": "1578a3b042b36c12f9e7fcff534d72be97eee3ba5abd4169d255295995d70788",
+      "expectedPowerDelta": 0,
+      "maxWillCost": 3,
+      "selfExileFromSuspensionAllowed": true
+    }
+  ]
+}

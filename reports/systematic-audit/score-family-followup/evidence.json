@@ -1,0 +1,109 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-28T11:41:42.549478+00:00",
+  "sourceDigest": "bc8e55305a69c25aec9b9b112473dc8a9ef65a664420648b45f3e1bfa8f952da",
+  "published": false,
+  "summary": {
+    "family": {
+      "executed": 292,
+      "passed": 292,
+      "failed": 0,
+      "skipped": 0,
+      "cardsWithSelectedClauseProof": 19,
+      "selectedClauses": 23,
+      "familyScenarios": 285,
+      "networkScenarios": 6,
+      "auditInfrastructureTests": 1
+    },
+    "python": {
+      "executed": 2191,
+      "passed": 2191,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuitesPassed": 3,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 100,
+      "percentageWithSelectedClauseProof": 22.2,
+      "cardsOutsideThisStrictRegister": 350,
+      "fullCatalogSemanticCertification": false
+    },
+    "newUniqueCards": 13
+  },
+  "newCards": [
+    {
+      "cardId": "erkwir53va9m8gm_en",
+      "name": "Atavic Welcome"
+    },
+    {
+      "cardId": "i6oj7gtnkfd1jja_en",
+      "name": "Compensating Orchard"
+    },
+    {
+      "cardId": "de3meyzl13rpqo5_en",
+      "name": "Half Han, the Renegade"
+    },
+    {
+      "cardId": "kae4oy2v7jtkgn2_en",
+      "name": "Imgurd, Flame Craver"
+    },
+    {
+      "cardId": "kw78e3qfnqw6sms_en",
+      "name": "Katun, the Inconsistent"
+    },
+    {
+      "cardId": "40lqhpf5xr5v5sk_en",
+      "name": "Kox, the Amoral"
+    },
+    {
+      "cardId": "inner-deserts-132",
+      "name": "Losers' Chariot"
+    },
+    {
+      "cardId": "tvjlvc3vj3r2zws_en",
+      "name": "Otranth, the Bloodthirsty"
+    },
+    {
+      "cardId": "16hmmz3fw32r27q_en",
+      "name": "Shuk, the Bile-filled"
+    },
+    {
+      "cardId": "wfxxi0znaojxiti_en",
+      "name": "Soul-borer"
+    },
+    {
+      "cardId": "skh6d780jne193w_en",
+      "name": "Spontaneous Incubator"
+    },
+    {
+      "cardId": "5hpmlq50blbf3y6_en",
+      "name": "Will-punishing Cannon"
+    },
+    {
+      "cardId": "inner-deserts-003",
+      "name": "Zam-za, the Prosperous"
+    }
+  ],
+  "artifacts": {
+    "clauses.json": "b0831c723181459eb2816defb1a31ee48f256d43ccf26061cd09e3b00e775bd0",
+    "coverage-before.json": "16160be0256214e81261be44a83a1f114c8fb761d2fb60f44051bfb43c5b3d1b",
+    "test_frontend.log": "14010ce473f2079d5ccc164eddfa9bd1c74212f88326d374799251fb39fc1def",
+    "test_rules_parity.log": "47cae38a9917913d5d7f052a09376ca4b576f96cd01afd690c0398b66a684c61",
+    "test_state_transport.log": "2d979b9d1f36555d1dcff3c211aaf80259ef9f836106266b5719c253e0323408",
+    "ui-tests.json": "5fe1fdabad4a08c571912601c8be32db5eba5ffc44b3c8352154257e9aa55ffb",
+    "unit-tests.json": "c6c8300b8be9326fd2c6cafbb63b40c6cecd21bb446f8274bec4c73974d71dfc"
+  },
+  "coverageRegistrySha256": "d6dbfac63c8381ad5dc920c974aa367adf07fb4720af995c40b744e96802334b",
+  "oracleManifestSha256": "17915ed2197ab25bbd63b00687041881bc6000ae78efeb58dc41c3e00bc0d66f",
+  "limits": [
+    "Only the selected fixed-point clauses and explicit branches are certified.",
+    "The generic matrix supplies explicit event stimuli, not whole-match event production.",
+    "Sixteen producer scenarios use actual turn/confrontation builders, score adjustments, discards, field moves or power counters; each filters the selected ability. Simultaneous ordering is isolated there.",
+    "Cannon and Zam-za additionally use paid Strengthen declarations, the production trigger wrapper and both legal Stack orders.",
+    "Otranth counter restoration and Chariot movement are not proved by their score-only rows; other clauses on these cards remain outside this batch.",
+    "Linoleus is tested with a valid optional target and with no target; late-invalid compound targets require a separate audit.",
+    "Scaled point effects remain inventoried, not counted as new proof.",
+    "No new browser, physical-device, Safari or illustration certification is implied."
+  ]
+}

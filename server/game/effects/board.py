@@ -275,7 +275,8 @@ class BoardEffectsMixin:
         self.rules_engine["pendingChoice"] = {
             "id": choice_id, "kind": "reveal_hand_discard", "purpose": "gummo",
             "playerId": player_id, "targetPlayerId": player_id,
-            "cardIds": list(dict.fromkeys(vessel)), "sourceItemId": host["id"],
+            "cardIds": vessel, "sourceItemId": host["id"],
+            "_vesselCards": [dict(entry) for entry in self.rules_vessel_card_entries(player_id) if entry["cardId"] in vessel],
             "sourceCardId": (action.get("source") or {}).get("cardId"),
             "actionId": action.get("id"),
         }
@@ -342,6 +343,8 @@ class BoardEffectsMixin:
             "id": choice_id, "kind": "reveal_hand_discard", "purpose": "wish",
             "playerId": owner_id, "targetPlayerId": owner_id, "cardIds": candidates,
             "casterId": player_id, "chosenCardId": mine_id,
+            "_chosenVesselCard": dict(next(entry for entry in self.rules_vessel_card_entries(player_id) if entry["cardId"] == mine_id)),
+            "_vesselCards": [dict(entry) for entry in self.rules_vessel_card_entries(owner_id) if entry["cardId"] in candidates],
             "sourceCardId": (action.get("source") or {}).get("cardId"),
             "actionId": action.get("id"), "controllerId": action.get("controllerId"),
         }

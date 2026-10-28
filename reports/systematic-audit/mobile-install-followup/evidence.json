@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "1b7a65e57a730228e696e59680e49225e0ea8656afc2d900c5ff9a5bb3e7227e",
+  "version": "141.1",
+  "summary": {
+    "executed": 14,
+    "passed": 14,
+    "failed": 0
+  },
+  "sources": {
+    "public/js/pwa.js": "7e499a193c3aa424a195fdf177ad1ba42f8cba621e0857e66828f4104178b1a3",
+    "public/i18n.js": "a4a396184eeca77b69e637fbd0cf41a54e6b46e91c11bc03b971b3101c278e1e",
+    "public/app.js": "3bad7d47de503a62387d70c8261504897d0dfb54690149ed98612a28046bb357",
+    "public/index.html": "0107073614760c70b80bb506c952e233bf75cabce517f135d1b402e1d2bd1c6b",
+    "public/sw.js": "6770fa7cd137f572b27a9d09914a580fed8eb5c8354a4328047c97a20ffb3285"
+  },
+  "artifacts": {
+    "android-guide.png": "e5eed37eef265a9b762b50d6139fc1777208ebe965418b3c6f0497230b8d0247",
+    "android-home-before.png": "2eea6d29a6a371a5412cec6f9b993b37c2e782548887d108247c4c2b905ac7b4",
+    "android-home.png": "478f15ebfa4ce8886f5983bbd44ef933940fb653bb88f9e5801626c5e810cdac",
+    "before.json": "c62955338484c5b147ea2e99f2502331a8d8ab3d91795d866d4d0474837bcf6a",
+    "desktop-home-before.png": "e6be8abfd7dbef8aac80ceda8bde4bd66befbf7d3b08d5686c2b3f9e186aa767",
+    "desktop-home.png": "a383e40f106e597869f1a5da4849c3cc924fafd696e4e4bbc25e5e4bb6f2f07e",
+    "iphone-guide.png": "be0e4955ad07b37d286d1eecb197eb34520dc1f814f2087404fcf4e2dcfa6478",
+    "iphone-home-before.png": "75faf053a69d6da39c367f292352999cfb0ab3d2685e8685d6c850181b3001c0",
+    "iphone-home.png": "478f15ebfa4ce8886f5983bbd44ef933940fb653bb88f9e5801626c5e810cdac",
+    "ui.json": "0f2e11237db18b4f7af812eac61c7e99464e9f86e49d9a4e5a1520f074d69ee3"
+  },
+  "limits": [
+    "Native install events are simulated; browser rendering uses Chrome with Android/iOS user agents, not physical devices or Safari."
+  ],
+  "nativeEventsSimulated": true,
+  "physicalDeviceTested": false
+}

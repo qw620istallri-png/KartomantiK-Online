@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "355efdd244fed3f5e2736dd25beb4326320f5844",
+  "finishedAt": "2026-10-28T10:06:45.197190+00:00",
+  "sourceDigest": "ab7041bd9260d707be384a5744b0dfd1406545ee0286410cf5523d2e993de8d4",
+  "published": false,
+  "summary": {
+    "selectedClauses": {
+      "executed": 28,
+      "passed": 28,
+      "failed": 0,
+      "skipped": 0,
+      "selectedParagraphs": 3,
+      "cardsWithSelectedClauseProof": 3
+    },
+    "python": {
+      "executed": 1566,
+      "passed": 1566,
+      "failed": 0,
+      "skipped": 0
+    },
+    "uiSuitesPassed": 6,
+    "picker": {
+      "configurations": 6,
+      "scenarios": 18,
+      "failed": 0
+    },
+    "fullCatalogSemanticCertification": false
+  },
+  "artifacts": {
+    "baseline-corrected.json": "acf6b62d84ff3581e193e7b82b16e198fd01f91a5d05812ecb259156d0e8dc14",
+    "baseline-published.py": "71095ab829a61aa16a1616c1c0f35e9610d13b7d43606a6c588218124fe3c576",
+    "before.json": "24c24088c19a08acb0ab82ba6aa9e2525e185d8f6fb02ca899da2ea18c88b27c",
+    "clauses-before-final-review.json": "f56bcc50c5bed416daaff398cd2d8cc28b5d662d360721fcabb3aae55b063a42",
+    "clauses.json": "1c6c89170599f27020346e25b00decc8220bac5929e90ccceaba8d620e62d505",
+    "entry-before.json": "25e1534441924a54e4207976e35ba61cc719f8d13d67909a787d37257771a64b",
+    "gummo-1440.png": "ddcf1804f1b115683277d9f467447a5e14fad51a1f91f39ea78d39fb6ed212ba",
+    "gummo-844.png": "d7e4d50563d6dfd7dc3721e6c6fccfc860a3ce31f76c3a4b8e8a0b2f00e4c2e1",
+    "pescojolero-1440.png": "4e253e6214a1e75e702abec8b72bf05d477408dd344830e174b81246c3cf0ca4",
+    "pescojolero-844.png": "fc4278a82f94fe0b71a8cb05416720a39857ae16e721f61b1f156c1a38d7a9d9",
+    "picker-fixtures.json": "03d3afaebffa1486845fe3e4e6fcd68684e9c2d4b35337d079874d80f3138d5a",
+    "picker.json": "523678bbacc83000d8723a9e54896d7fa8493fabdd1efc43056ea571f077aba4",
+    "test_choice_continuity.log": "7b04a5b6dbd702857174643fd8010f6839cf2b497b8e05966fcaa228c16caf77",
+    "test_connection_lifecycle.log": "051a613ffa186972628968f48c78c5d1abc09053488d6d2f5c86d712c6e43ff6",
+    "test_frontend.log": "14010ce473f2079d5ccc164eddfa9bd1c74212f88326d374799251fb39fc1def",
+    "test_rules_parity.log": "47cae38a9917913d5d7f052a09376ca4b576f96cd01afd690c0398b66a684c61",
+    "test_state_transport.log": "2d979b9d1f36555d1dcff3c211aaf80259ef9f836106266b5719c253e0323408",
+    "test_vessel_picker.log": "ddc9301e9fbf511764b72d01cd021bc19b4dbb17f69d190640b983d108c2f8f4",
+    "ui-tests-before-final-review.json": "7e4ab6bfbed15621539bbb28a5fd3f74799805d33386b2f511196a38e97e46a1",
+    "ui-tests.json": "b154a8ea1526a930530004fc590790c63c9abba4560fc680413532f16eed535d",
+    "unit-tests-before-final-review.json": "a86b242e62eaf8124ee28a7fef4bedb9fbc77d4037c485705221e6c2ae8fb4fb",
+    "unit-tests.json": "3f76b105f254d41556216b1699d6878edb8e7828e36ea94d749bc1de1c80d97a",
+    "wish-1440.png": "6339ecbd2b0d1727b3c6813e4184e00077febb0253e98ac9971be83193147a0e",
+    "wish-844.png": "c0f3493cd40323aaec24803e866a93081e5bdcec44810888fa8aca4a8e600105"
+  },
+  "baselineCaveats": [
+    "The initial Gummo not_interzone subcase injected resolution outside its real trigger; it is not a retained game defect.",
+    "The initial returned-card Pesco subcase used option 0 (the gift) rather than m3; its final index is corrected. Gummo/Wish independently reproduced the stale-answer defect.",
+    "Initial positive Pesco fixtures incorrectly used cards owned by their Vessel container. Corrected fixtures use the caster-owned cards in the opponent Vessel; baseline-corrected.json replays published gameplay methods with these final fixtures.",
+    "entry-before.json retains the initial common-entry observations; baseline-corrected.json is the authoritative replay on published methods with corrected ownership fixtures."
+  ],
+  "limits": [
+    "Resolution fixtures isolate the selected paragraphs; they do not certify all abilities or full phase scheduling.",
+    "Late mutations test stale answers, not legal responses inside an effect.",
+    "Other Vessel selectors, all replacement combinations, remote art, physical devices and Safari are outside this batch.",
+    "Full phase sequences and all card combinations remain outside this batch.",
+    "Real Safari, physical devices and remote illustrations are not certified."
+  ]
+}
