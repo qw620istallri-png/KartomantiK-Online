@@ -1,0 +1,110 @@
+{
+  "beforeFix": true,
+  "tests": [
+    {
+      "testId": "chrome-preserves-browser-promotion-and-direct-install",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Do not suppress the browser installation promotion\n\n1 !== 0\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:42:14\n    at test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:35:45)\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:38:11\n    at Object.<anonymous> (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:172:3)\n    at Module._compile (node:internal/modules/cjs/loader:1872:14)\n    at Object..js (node:internal/modules/cjs/loader:2003:10)\n    at Module.load (node:internal/modules/cjs/loader:1594:32)\n    at Module._load (node:internal/modules/cjs/loader:1396:12)\n    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)\n    at Module.executeUserEntryPoint [as runMain] (node:internal/modules/run_main:154:5)"
+    },
+    {
+      "testId": "chrome-native-action-appears-in-already-open-guide",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:51:14\n    at async test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:35:39)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:47:5"
+    },
+    {
+      "testId": "samsung-preserves-browser-promotion-and-direct-install",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Do not suppress the browser installation promotion\n\n1 !== 0\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:42:14\n    at test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:35:45)\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:38:11"
+    },
+    {
+      "testId": "samsung-native-action-appears-in-already-open-guide",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\ntrue !== false\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:51:14\n    at async test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:35:39)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:47:5"
+    },
+    {
+      "testId": "browser-dismissal-clears-consumed-native-event",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n1 !== 0\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:64:12\n    at async test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:35:39)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:59:3"
+    },
+    {
+      "testId": "samsung-fallback-stays-in-samsung-en",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Samsung Internet/. Input:\n\n'Install on Android'\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:69:12\n    at async test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:35:39)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:67:42"
+    },
+    {
+      "testId": "samsung-fallback-stays-in-samsung-fr",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Samsung Internet/. Input:\n\n'Installer sur Android'\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:69:12\n    at async test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:35:39)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:67:42"
+    },
+    {
+      "testId": "samsung-fallback-stays-in-samsung-it",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The input did not match the regular expression /Samsung Internet/. Input:\n\n'Installa su Android'\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:69:12\n    at async test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:35:39)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:67:42"
+    },
+    {
+      "testId": "appinstalled-closes-open-guide",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:76:12\n    at async test (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:35:39)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_pwa_install.cjs:74:3"
+    },
+    {
+      "testId": "android-no-native-event-en",
+      "status": "pass"
+    },
+    {
+      "testId": "android-no-native-event-fr",
+      "status": "pass"
+    },
+    {
+      "testId": "android-no-native-event-it",
+      "status": "pass"
+    },
+    {
+      "testId": "early-native-event-retained-before-init",
+      "status": "pass"
+    },
+    {
+      "testId": "late-native-prompt-used-once",
+      "status": "pass"
+    },
+    {
+      "testId": "failed-native-prompt-falls-back",
+      "status": "pass"
+    },
+    {
+      "testId": "installed-hides-android",
+      "status": "pass"
+    },
+    {
+      "testId": "installed-hides-ios",
+      "status": "pass"
+    },
+    {
+      "testId": "installed-hides-desktop",
+      "status": "pass"
+    },
+    {
+      "testId": "appinstalled-event-hides-mobile-entry",
+      "status": "pass"
+    },
+    {
+      "testId": "ios-guide-and-desktop-no-false-entry",
+      "status": "pass"
+    }
+  ],
+  "summary": {
+    "executed": 20,
+    "passed": 11,
+    "failed": 9
+  },
+  "physicalDeviceTested": false,
+  "limits": [
+    "Native install events are simulated; rendering uses Chrome with Android/Samsung/iOS user agents, not physical devices, Samsung Internet or Safari."
+  ],
+  "sourceHashes": {
+    "public/js/pwa.js": "7e499a193c3aa424a195fdf177ad1ba42f8cba621e0857e66828f4104178b1a3",
+    "public/i18n.js": "a4a396184eeca77b69e637fbd0cf41a54e6b46e91c11bc03b971b3101c278e1e",
+    "public/app.js": "3bad7d47de503a62387d70c8261504897d0dfb54690149ed98612a28046bb357",
+    "public/index.html": "0107073614760c70b80bb506c952e233bf75cabce517f135d1b402e1d2bd1c6b",
+    "public/sw.js": "6770fa7cd137f572b27a9d09914a580fed8eb5c8354a4328047c97a20ffb3285"
+  }
+}

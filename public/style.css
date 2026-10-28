@@ -4058,6 +4058,7 @@ img.ko-img-in { animation: ko-img-in .3s ease-out; }
 .install-guide-note { margin: 12px 0 0; font-size: 13px; color: #cdbb85; }
 .install-guide-note:empty { display: none; }
 .install-guide-card button { margin-top: 16px; width: 100%; }
+.install-guide-card button:not(.primary) { background: transparent; color: #f6edcf; border-color: var(--gold-deep); box-shadow: none; }
 .app-update-banner {
   position: fixed; left: 12px; bottom: max(12px, env(safe-area-inset-bottom)); z-index: 3950; display: flex; align-items: center; gap: 8px;
   max-width: calc(100vw - 24px); padding: 8px 10px 8px 14px; border-radius: 10px; border: 1px solid #c9a24a; background: #17140ef2; color: #f3e6c4;

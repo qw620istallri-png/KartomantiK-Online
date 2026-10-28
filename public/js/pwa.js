@@ -19,16 +19,28 @@ function isAppleSafari() {
   return isAppleMobile() && !/CriOS|FxiOS|EdgiOS|OPiOS/.test(navigator.userAgent);
 }
 function isAndroidMobile() { return /Android/i.test(navigator.userAgent); }
+function isSamsungInternet() { return /SamsungBrowser\//i.test(navigator.userAgent); }
 
 window.addEventListener("beforeinstallprompt", (event) => {
-  event.preventDefault();
+  // Keep the browser's own installation promotion. Also retain the event so
+  // our button can open the native dialog directly from a user gesture.
+  if (appIsInstalled()) return;
   deferredInstallPrompt = event;
+  event.userChoice?.then(() => {
+    // The browser's own UI can consume the event without our button being used.
+    if (deferredInstallPrompt !== event) return;
+    deferredInstallPrompt = null;
+    if (appInstallInitialized) renderInstallButton();
+  }).catch(() => {});
   if (appInstallInitialized) renderInstallButton();
 });
 window.addEventListener("appinstalled", () => {
   deferredInstallPrompt = null;
   appInstallCompleted = true;
-  if (appInstallInitialized) renderInstallButton();
+  if (appInstallInitialized) {
+    if (!$("#installGuide")?.classList.contains("hidden")) closeInstallGuide();
+    renderInstallButton();
+  }
 });
 
 // Mobile browsers also offer their own menu, even without a native prompt.
@@ -39,11 +51,14 @@ function renderInstallButton() {
   const apple = isAppleMobile() && !appIsInstalled();
   button.classList.toggle("hidden", appIsInstalled() || (!canPrompt && !apple && !isAndroidMobile()));
   button.textContent = t("installApp");
+  if (!$("#installGuide")?.classList.contains("hidden")) renderInstallGuide();
 }
 async function installApp() {
+  if (appIsInstalled()) return;
   if (deferredInstallPrompt) {
     const prompt = deferredInstallPrompt;
     deferredInstallPrompt = null;
+    if (!$("#installGuide")?.classList.contains("hidden")) closeInstallGuide();
     try {
       await prompt.prompt();
       await prompt.userChoice;
@@ -55,22 +70,33 @@ async function installApp() {
   }
   showInstallGuide();
 }
-function showInstallGuide() {
+function renderInstallGuide() {
   const guide = $("#installGuide");
   if (!guide) return;
   const share = `<svg class="install-guide-share" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M8 7l4-4 4 4"/><path d="M6 11H5v10h14V11h-1"/></svg>`;
   const apple = isAppleMobile();
-  guide.querySelector("h2").textContent = apple ? t("installGuideTitle") : isAndroidMobile() ? t("installGuideAndroidTitle") : t("installApp");
+  const samsung = isSamsungInternet();
+  const canPrompt = Boolean(deferredInstallPrompt) && !appIsInstalled();
+  guide.querySelector("h2").textContent = apple ? t("installGuideTitle") : samsung ? t("installGuideSamsungTitle") : isAndroidMobile() ? t("installGuideAndroidTitle") : t("installApp");
   const steps = apple ? [
     rulesText("installGuideStep1", { icon: "@@" }).split("@@").map(esc).join(share),
     esc(t("installGuideStep2")),
     esc(t("installGuideStep3")),
-  ] : ["installGuideAndroidStep1", "installGuideAndroidStep2", "installGuideAndroidStep3"].map(key => esc(t(key)));
+  ] : [samsung ? "installGuideSamsungStep1" : "installGuideAndroidStep1", "installGuideAndroidStep2", "installGuideAndroidStep3"].map(key => esc(t(key)));
   guide.querySelector("ol").innerHTML = steps.map((step) => `<li>${step}</li>`).join("");
-  guide.querySelector(".install-guide-note").textContent = apple ? (isAppleSafari() ? "" : t("installGuideSafari")) : t("installGuideAndroidNote");
+  guide.querySelector("ol").classList.toggle("hidden", canPrompt);
+  guide.querySelector(".install-guide-note").textContent = canPrompt ? t("installGuideReady") : apple ? (isAppleSafari() ? "" : t("installGuideSafari")) : samsung ? t("installGuideSamsungNote") : t("installGuideAndroidNote");
+  guide.querySelector("[data-install-native]").textContent = t("installApp");
+  guide.querySelector("[data-install-native]").classList.toggle("hidden", !canPrompt);
+  guide.querySelector("[data-install-close]").classList.toggle("primary", !canPrompt);
   guide.querySelector("[data-install-close]").textContent = t("close");
+}
+function showInstallGuide() {
+  const guide = $("#installGuide");
+  if (!guide) return;
+  renderInstallGuide();
   guide.classList.remove("hidden");
-  guide.querySelector("[data-install-close]").focus();
+  guide.querySelector(deferredInstallPrompt ? "[data-install-native]" : "[data-install-close]").focus();
 }
 function closeInstallGuide() {
   $("#installGuide")?.classList.add("hidden");
@@ -80,6 +106,7 @@ function initAppInstall() {
   appInstallInitialized = true;
   $("#installAppBtn")?.addEventListener("click", installApp);
   $("#installGuide")?.addEventListener("click", (event) => {
+    if (event.target.closest("[data-install-native]")) installApp();
     if (event.target.closest("[data-install-close]") || event.target.id === "installGuide") closeInstallGuide();
   });
   document.addEventListener("keydown", (event) => {
