@@ -1,0 +1,354 @@
+{
+  "schemaVersion": 1,
+  "beforeFix": true,
+  "engine": "Chrome",
+  "version": "156.0.8078.48",
+  "finishedAt": "2026-10-28T22:33:49.284Z",
+  "physicalDeviceTested": false,
+  "summary": {
+    "executed": 72,
+    "passed": 30,
+    "failed": 42
+  },
+  "tests": [
+    {
+      "testId": "1440x1000-mouse-fr-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-fr-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-fr-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":1266,\"y\":908,\"width\":170,\"height\":88},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "1440x1000-mouse-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-en-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-en-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-en-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":1266,\"y\":908,\"width\":170,\"height\":88},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "1440x1000-mouse-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-it-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-it-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-it-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":1266,\"y\":924,\"width\":170,\"height\":72},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "1440x1000-mouse-it-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-fr-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":331.984375,\"y\":449,\"width\":180,\"height\":39},\"viewport\":{\"width\":844,\"height\":390}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "844x390-mouse-fr-field-menu-bottom-deck",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":588,\"y\":4,\"width\":256,\"height\":517},\"viewport\":{\"width\":844,\"height\":390}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:111:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:106:7"
+    },
+    {
+      "testId": "844x390-mouse-fr-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":670,\"y\":298,\"width\":170,\"height\":88},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "844x390-mouse-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-en-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":331.984375,\"y\":449,\"width\":180,\"height\":39},\"viewport\":{\"width\":844,\"height\":390}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "844x390-mouse-en-field-menu-bottom-deck",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":588,\"y\":4,\"width\":252,\"height\":501},\"viewport\":{\"width\":844,\"height\":390}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:111:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:106:7"
+    },
+    {
+      "testId": "844x390-mouse-en-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":670,\"y\":298,\"width\":170,\"height\":88},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "844x390-mouse-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-it-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":331.984375,\"y\":449,\"width\":180,\"height\":39},\"viewport\":{\"width\":844,\"height\":390}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "844x390-mouse-it-field-menu-bottom-deck",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":588,\"y\":4,\"width\":256,\"height\":517},\"viewport\":{\"width\":844,\"height\":390}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:111:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:106:7"
+    },
+    {
+      "testId": "844x390-mouse-it-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":670,\"y\":314,\"width\":170,\"height\":72},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "844x390-mouse-it-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-fr-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":69.984375,\"y\":635.390625,\"width\":180,\"height\":39},\"viewport\":{\"width\":320,\"height\":568}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "320x568-touch-fr-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-fr-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":146,\"y\":476,\"width\":170.96875,\"height\":72},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "320x568-touch-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-en-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":69.984375,\"y\":635.390625,\"width\":180,\"height\":39},\"viewport\":{\"width\":320,\"height\":568}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "320x568-touch-en-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-en-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":146,\"y\":476,\"width\":174,\"height\":88},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "320x568-touch-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-it-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":69.984375,\"y\":670.390625,\"width\":180,\"height\":39},\"viewport\":{\"width\":320,\"height\":568}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "320x568-touch-it-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-it-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":146,\"y\":492,\"width\":170,\"height\":72},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "320x568-touch-it-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-fr-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":105,\"y\":856.1875,\"width\":180,\"height\":39},\"viewport\":{\"width\":390,\"height\":844}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "390x844-touch-fr-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-fr-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":216,\"y\":752,\"width\":170,\"height\":88},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "390x844-touch-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-en-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":105,\"y\":856.1875,\"width\":180,\"height\":39},\"viewport\":{\"width\":390,\"height\":844}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "390x844-touch-en-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-en-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":216,\"y\":752,\"width\":170,\"height\":88},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "390x844-touch-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-it-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":105,\"y\":856.1875,\"width\":180,\"height\":39},\"viewport\":{\"width\":390,\"height\":844}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "390x844-touch-it-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-it-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":216,\"y\":768,\"width\":170,\"height\":72},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "390x844-touch-it-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-fr-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":194,\"y\":393,\"width\":180,\"height\":39},\"viewport\":{\"width\":568,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "568x320-touch-fr-field-menu-bottom-deck",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":312,\"y\":4,\"width\":256,\"height\":517},\"viewport\":{\"width\":568,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:111:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:106:7"
+    },
+    {
+      "testId": "568x320-touch-fr-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":394,\"y\":228,\"width\":170,\"height\":88},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "568x320-touch-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-en-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":194,\"y\":393,\"width\":180,\"height\":39},\"viewport\":{\"width\":568,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "568x320-touch-en-field-menu-bottom-deck",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":312,\"y\":4,\"width\":252,\"height\":501},\"viewport\":{\"width\":568,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:111:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:106:7"
+    },
+    {
+      "testId": "568x320-touch-en-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":394,\"y\":228,\"width\":170,\"height\":88},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "568x320-touch-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-it-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":194,\"y\":393,\"width\":180,\"height\":39},\"viewport\":{\"width\":568,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "568x320-touch-it-field-menu-bottom-deck",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":312,\"y\":4,\"width\":256,\"height\":517},\"viewport\":{\"width\":568,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:111:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:106:7"
+    },
+    {
+      "testId": "568x320-touch-it-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":394,\"y\":244,\"width\":170,\"height\":72},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "568x320-touch-it-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-fr-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":331.984375,\"y\":449,\"width\":180,\"height\":39},\"viewport\":{\"width\":844,\"height\":390}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "844x390-touch-fr-field-menu-bottom-deck",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":588,\"y\":4,\"width\":256,\"height\":517},\"viewport\":{\"width\":844,\"height\":390}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:111:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:106:7"
+    },
+    {
+      "testId": "844x390-touch-fr-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":670,\"y\":298,\"width\":170,\"height\":88},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "844x390-touch-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-en-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":331.984375,\"y\":449,\"width\":180,\"height\":39},\"viewport\":{\"width\":844,\"height\":390}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "844x390-touch-en-field-menu-bottom-deck",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":588,\"y\":4,\"width\":252,\"height\":501},\"viewport\":{\"width\":844,\"height\":390}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:111:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:106:7"
+    },
+    {
+      "testId": "844x390-touch-en-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":670,\"y\":298,\"width\":170,\"height\":88},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "844x390-touch-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-it-deck-confirm-and-scroll",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":331.984375,\"y\":449,\"width\":180,\"height\":39},\"viewport\":{\"width\":844,\"height\":390}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:93:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:86:7"
+    },
+    {
+      "testId": "844x390-touch-it-field-menu-bottom-deck",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":588,\"y\":4,\"width\":256,\"height\":517},\"viewport\":{\"width\":844,\"height\":390}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:111:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:106:7"
+    },
+    {
+      "testId": "844x390-touch-it-menu-resize-clamps",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Outside viewport: {\"box\":{\"x\":670,\"y\":314,\"width\":170,\"height\":72},\"viewport\":{\"width\":320,\"height\":320}}\n    at onScreen (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:20:10)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:130:9\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_overflow.cjs:126:7"
+    },
+    {
+      "testId": "844x390-touch-it-no-script-errors",
+      "status": "pass"
+    }
+  ],
+  "sourceHashes": {
+    "public/style.css": "a4a2c7f373bc862ee868779781e6f1e3048ae0e999db7b629f053e8925c0063a",
+    "public/js/drag-drop.js": "a2983e349f3aef32e345b960799ecb817c3f84b6d99e8fe9abc4531a585dc46d",
+    "public/js/players.js": "b495f9c4dac409496911647e7f0740d9d501bebe1984995d1651f2803d29d4c8"
+  },
+  "limits": [
+    "Native touch gestures use Chrome device emulation, not a physical phone or Safari/Samsung Internet.",
+    "The rotate-device overlay is hidden in the fixture to inspect portrait geometry; production still requests landscape play."
+  ]
+}

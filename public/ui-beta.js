@@ -1128,7 +1128,8 @@
     } else {
       for (const candidate of ["me", "opp"]) {
         const col = columns[candidate];
-        if (x >= col.column.l && x <= col.column.r) {
+        const margin = !rulesOn() && lastPointerType === "touch" ? 8 : 0;
+        if (x >= col.column.l - margin && x <= col.column.r + margin) {
           side = candidate;
           zone = y < col.divider ? "interzone" : "will";
         }
@@ -3510,6 +3511,25 @@
     fieldZone(item) { return active() ? classify(item, firstManifestationIds()).zone : null; },
     decorateCard,
     dropLogical,
+    clearTouchDropPreview() {
+      document.querySelectorAll(".ub-touch-zone-over").forEach(node => node.classList.remove("ub-touch-zone-over"));
+    },
+    previewTouchDrop(x, y) {
+      this.clearTouchDropPreview();
+      if (!active() || rulesOn() || isObserver || lastPointerType !== "touch" || !local.geometry) return;
+      const { G, columns } = local.geometry;
+      x -= G.wrapLeft; y -= G.wrapTop;
+      for (const side of ["me", "opp"]) {
+        const col = columns[side];
+        if (x < col.column.l - 8 || x > col.column.r + 8 || y < 0 || y > G.H) continue;
+        const node = document.getElementById(side === "me" ? "ubIzMe" : "ubIzOpp");
+        const top = y < col.divider ? 0 : col.divider;
+        const bottom = y < col.divider ? col.divider : G.H;
+        node.style.setProperty("--touch-zone-top", top + "px");
+        node.style.setProperty("--touch-zone-height", bottom - top + "px");
+        node.classList.add("ub-touch-zone-over");
+      }
+    },
     resetTransient() {
       hidePeek();
       cancelLongPress();
@@ -3522,6 +3542,7 @@
       local.boardCounts = null;
       local.vfxClaims = null;
       local.droppedItem = null;
+      this.clearTouchDropPreview();
       document.body.classList.remove("ub-hand-drawing");
       document.querySelectorAll(".ub-draw-pop, .ub-choice-arrow, .ub-spotlight, #ubChoiceBanner").forEach((node) => node.remove());
       document.querySelectorAll(".ub-draw-pending, .ub-choice-lifted, .ub-drop-over").forEach((node) => node.classList.remove("ub-draw-pending", "ub-choice-lifted", "ub-drop-over"));

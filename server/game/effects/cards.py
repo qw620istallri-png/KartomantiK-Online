@@ -26,7 +26,8 @@ class CardsEffectsMixin:
             movement = self._rules_remove_field_item_by_effect(
                 item, item.get("ownerId"), "graveyard", "top", reason="destroy"
             )
-            if movement.get("status") in {"moved", "removed_copy"}:
+            if (movement.get("status") == "removed_copy"
+                    or movement.get("status") == "moved" and movement.get("zone") == "graveyard"):
                 destroyed.append(item["id"])
                 draws[controller_id] = draws.get(controller_id, 0) + 2
         self.prune_rules_ongoing_effects()

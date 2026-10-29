@@ -217,27 +217,59 @@ function playFromZone(ownerId, zone, cardId, faceUp) {
 // ---------------------------------------------------------------- drag and drop
 
 let lastDropHighlight = null;
+let touchStackIntent = null;
+
+function clearTouchStackIntent() {
+  if (touchStackIntent) {
+    clearTimeout(touchStackIntent.timer);
+    touchStackIntent.el.classList.remove("ub-stack-ready");
+    touchStackIntent.el.removeAttribute("data-stack-hint");
+  }
+  touchStackIntent = null;
+}
+
+function updateTouchStackIntent(x, y, ctx) {
+  if (lastPointerType !== "touch" || isObserver || latestState?.rulesEngine?.enabled || !window.uiBeta?.active() || !ctx) {
+    clearTouchStackIntent(); return;
+  }
+  const anchor = stackAnchorAt(x, y, ctx.itemId, true);
+  if (!anchor?.anchorEl.matches(".ub-zone-interzone, .ub-zone-will")) { clearTouchStackIntent(); return; }
+  if (touchStackIntent?.id === anchor.anchorId && Math.hypot(x-touchStackIntent.x, y-touchStackIntent.y) <= 8) return;
+  clearTouchStackIntent();
+  const intent = { id: anchor.anchorId, el: anchor.anchorEl, x, y, since: Date.now() };
+  intent.timer = setTimeout(() => {
+    if (touchStackIntent !== intent || !intent.el.isConnected) return;
+    intent.el.dataset.stackHint = t("manualStackReady");
+    intent.el.classList.add("ub-stack-ready");
+  }, 480);
+  touchStackIntent = intent;
+}
 
 function dropTargetElAt(x, y) {
   const el = document.elementFromPoint(x, y);
   return el && el.closest("[data-drop-zone], #battlefieldWrap, #myHandTray");
 }
 
-function highlightDropTargetAt(x, y) {
+function highlightDropTargetAt(x, y, ctx = null) {
   const hit = document.elementFromPoint(x, y);
   const target = pendingRulesBoardFlow ? hit?.closest("#rulesFloatingCard")
     : rulesHandDropChoice() ? hit?.closest("#rulesChoicePanel .box") : dropTargetElAt(x, y);
-  if (target === lastDropHighlight) return;
-  clearDropHighlights();
-  if (target) {
-    target.classList.add("drop-target-active");
-    lastDropHighlight = target;
+  if (target !== lastDropHighlight) {
+    clearDropHighlights();
+    if (target) {
+      target.classList.add("drop-target-active");
+      lastDropHighlight = target;
+    }
   }
+  updateTouchStackIntent(x, y, ctx);
+  window.uiBeta?.previewTouchDrop?.(x, y);
 }
 
 function clearDropHighlights() {
   if (lastDropHighlight) lastDropHighlight.classList.remove("drop-target-active");
   lastDropHighlight = null;
+  clearTouchStackIntent();
+  window.uiBeta?.clearTouchDropPreview?.();
 }
 
 // A drop landing exactly on another (non-stacked) battlefield card stacks
@@ -254,12 +286,16 @@ function clearDropHighlights() {
 // and fall through to unstacking instead of re-stacking — walking the full
 // stack of elements at that point lets it see past its own leftover spot to
 // whatever anchor is genuinely underneath.
-function stackAnchorAt(clientX, clientY, excludeItemId) {
+function stackAnchorAt(clientX, clientY, excludeItemId, raw = false) {
   for (const el of document.elementsFromPoint(clientX, clientY)) {
     const cardEl = el.closest(".bf-card");
     if (!cardEl || cardEl.dataset.itemId === excludeItemId) continue;
     const anchorItem = latestState.battlefield.find((it) => it.id === cardEl.dataset.itemId);
     if (!anchorItem || anchorItem.stackedOn) continue;
+    if (!raw && lastPointerType === "touch" && !latestState?.rulesEngine?.enabled && window.uiBeta?.active()
+        && cardEl.matches(".ub-zone-interzone, .ub-zone-will")
+        && !(touchStackIntent?.id === anchorItem.id && Date.now()-touchStackIntent.since >= 480
+          && Math.hypot(clientX-touchStackIntent.x, clientY-touchStackIntent.y) <= 8)) continue;
     return { anchorEl: cardEl, anchorId: anchorItem.id };
   }
   return null;
@@ -567,9 +603,10 @@ function startCardPointerDrag(down, source, onMove, onEnd, { capture = true } = 
   }
 }
 
-function bindCardDragSource(el, ctx) {
+function bindCardDragSource(el, ctx, { touchScroll = false } = {}) {
   el.addEventListener("pointerdown", (event) => {
     if (event.button !== 0 || event.isPrimary === false) return;
+    if (touchScroll && event.pointerType === "touch") return;
     const control = event.target.closest("button, select");
     if (control && control !== el) return;
     // the freshly drawn Recovery hand is not playable before it has landed
@@ -585,18 +622,22 @@ function bindCardDragSource(el, ctx) {
         ghost = buildDragGhost(ctx, el);
       }
       if (moved) {
-        highlightDropTargetAt(e.clientX, e.clientY);
+        highlightDropTargetAt(e.clientX, e.clientY, ctx);
         moveGhostTo(ghost, e.clientX, e.clientY);
       }
     };
     const up = (e) => {
-      clearDropHighlights();
-      removeGhost(ghost);
-      if (moved) {
-        const swallow = click => { click.stopImmediatePropagation(); click.preventDefault(); };
-        window.addEventListener("click", swallow, true);
-        setTimeout(() => window.removeEventListener("click", swallow, true), 0);
-        if (e.type === "pointerup" && el.isConnected) resolveDrop(ctx, e.clientX, e.clientY);
+      try {
+        if (moved) {
+          const swallow = click => { click.stopImmediatePropagation(); click.preventDefault(); };
+          window.addEventListener("click", swallow, true);
+          setTimeout(() => window.removeEventListener("click", swallow, true), 0);
+          // Retain the deliberate touch-stacking intent through hit-testing.
+          if (e.type === "pointerup" && el.isConnected) resolveDrop(ctx, e.clientX, e.clientY);
+        }
+      } finally {
+        clearDropHighlights();
+        removeGhost(ghost);
       }
     };
     startCardPointerDrag(event, el, move, up);
@@ -608,6 +649,23 @@ function bindCardDragSource(el, ctx) {
 let activeContextMenu = null;
 
 let activeCardLabels = [];
+
+function fitActiveContextMenu() {
+  const menu = activeContextMenu;
+  if (!menu) return;
+  const viewport = window.visualViewport;
+  const left = viewport?.offsetLeft || 0, top = viewport?.offsetTop || 0;
+  const width = viewport?.width || window.innerWidth, height = viewport?.height || window.innerHeight;
+  menu.style.maxHeight = Math.max(0, height - 8) + "px";
+  menu.style.maxWidth = Math.max(0, width - 8) + "px";
+  menu.style.minWidth = Math.min(170, Math.max(0, width - 8)) + "px";
+  const rect = menu.getBoundingClientRect();
+  menu.style.left = Math.max(left + 4, Math.min(parseFloat(menu.style.left) || 0, left + width - rect.width - 4)) + "px";
+  menu.style.top = Math.max(top + 4, Math.min(parseFloat(menu.style.top) || 0, top + height - rect.height - 4)) + "px";
+}
+window.addEventListener("resize", fitActiveContextMenu);
+window.visualViewport?.addEventListener("resize", fitActiveContextMenu);
+window.visualViewport?.addEventListener("scroll", fitActiveContextMenu);
 
 function closeContextMenu() {
   if (activeContextMenu) activeContextMenu.remove();
@@ -699,10 +757,8 @@ function showContextMenu(clientX, clientY, items) {
       item.onSelect();
     };
   });
-  const rect = menu.getBoundingClientRect();
-  if (rect.right > window.innerWidth) menu.style.left = Math.max(4, window.innerWidth - rect.width - 4) + "px";
-  if (rect.bottom > window.innerHeight) menu.style.top = Math.max(4, window.innerHeight - rect.height - 4) + "px";
   activeContextMenu = menu;
+  fitActiveContextMenu();
   setTimeout(() => document.addEventListener("pointerdown", closeContextMenuOnOutsideClick, true), 0);
 }
 

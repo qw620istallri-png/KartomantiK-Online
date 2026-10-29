@@ -152,13 +152,17 @@ const { chromium } = require("playwright");
       document.body.appendChild(panel);
       const source = panel.querySelector(".hover-probe");
       wireCardHoverZoom(source, "db-card-hover-clone");
+      lastPointerType = "touch";
+      source.dispatchEvent(new MouseEvent("mouseenter"));
+      const assertTouchHover = document.querySelectorAll(".db-card-hover-clone").length;
+      lastPointerType = "mouse";
       source.dispatchEvent(new MouseEvent("mouseenter"));
       const before = document.querySelectorAll(".db-card-hover-clone").length;
       panel.remove();
       await new Promise(queueMicrotask);
-      return { before, after: document.querySelectorAll(".db-card-hover-clone").length };
+      return { touch: assertTouchHover, before, after: document.querySelectorAll(".db-card-hover-clone").length };
     });
-    assert.deepEqual(hover, { before: 1, after: 0 });
+    assert.deepEqual(hover, { touch: 0, before: 1, after: 0 });
 
     // Slot choices must clean up on cancel without treating it as a selection.
     const slot = await page.evaluate(() => {

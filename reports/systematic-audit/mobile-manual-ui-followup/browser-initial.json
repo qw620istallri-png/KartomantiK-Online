@@ -1,0 +1,578 @@
+{
+  "finishedAt": "2026-10-29T07:24:14.414Z",
+  "engine": "Chrome",
+  "version": "156.0.8078.48",
+  "physicalDevice": false,
+  "summary": {
+    "executed": 138,
+    "passed": 138,
+    "failed": 0
+  },
+  "tests": [
+    {
+      "testId": "844-fr-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-battlefield-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-hand-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-battlefield-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-hand-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-battlefield-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-hand-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-battlefield-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-hand-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-battlefield-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-hand-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-battlefield-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-hand-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-battlefield-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-hand-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-battlefield-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-hand-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-battlefield-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-hand-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-battlefield-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-hand-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-battlefield-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-hand-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-battlefield-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-hand-to-confrontation",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat1-no-script-errors",
+      "status": "pass"
+    }
+  ],
+  "sourceHashes": {
+    "public/ui-beta.js": "b01a5a95db30998d31beb81092319c427a57831d9bb8a2e3416ed6cf70f6310e",
+    "public/ui-beta.css": "ad659a1ec0e7402c48c436b2cfb4fc32ad0e1ff8cb9874a228d82e06e893db1a",
+    "public/js/drag-drop.js": "47c6ac4c8593bc565c96c7bece201b2222d9240dd9fb8af669f09a67a03f0f68",
+    "public/js/players.js": "f2bfef84228afaa21e19fc76f3acc7a92323935265f6202a49fdcc29b09d8313",
+    "public/js/zones.js": "ba4ad0ab35048f49685c1901b830f2ac9d5dc7ac52b60e171f8f1dd1ab393886",
+    "public/i18n.js": "2cc1525a57f0ea959a69e8f4babe11d6166dfa12f2ad3effca591ae628716043",
+    "public/index.html": "c6bad418016f566783db9fb134186c3de68b86ded528bb3fe9b597b98391f1ea",
+    "public/style.css": "98338874ab31252a5de6f75d8a6e26d1fdfada4f3eb8d5a18b07fd46608336d5"
+  },
+  "limits": [
+    "Chrome touch emulation; not physical-device, Safari or Samsung Internet certification. Local card-back artwork. Server responses are not simulated as full card-rule matches."
+  ]
+}

@@ -344,6 +344,7 @@ function searchPile(ownerId, zone) {
   // staged choices. Re-clicking Search on the pile already open keeps them.
   if (panel.classList.contains("hidden") || panel.dataset.ownerId !== ownerId || panel.dataset.zone !== zone) {
     pileBrowserStaged = new Map();
+    $("#deckBrowserFilter").value = "";
   }
   send({ type: "search_zone", ownerId, zone });
   setMyActivity("search");
@@ -354,10 +355,18 @@ function openPileBrowser(ownerId, zone) {
   const player = latestState.players[ownerId];
   const cards = player?.zones?.[zone]?.cards;
   if (!player || !cards) return;
+  $("#deckBrowserFilterLabel").textContent = t("deckBrowserFilter");
+  $("#deckBrowserFilter").placeholder = t("deckBrowserFilter");
+  $("#deckBrowserCloseBtn").textContent = t("close");
+  $("#deckBrowserValidateBtn").textContent = t("confirm");
+  $("#deckBrowserSliderLabel").textContent = t("deckBrowserSliderLabel");
+  $("#deckBrowserTouchHint").textContent = t("deckBrowserTouchHint");
   $("#deckBrowserPanel").dataset.ownerId = ownerId;
   $("#deckBrowserPanel").dataset.zone = zone;
   $("#deckBrowserHeading").textContent = `${player.name} — ${t(zone)} (${cards.length})`;
-  $("#deckBrowserCards").innerHTML = cards.map((cid) => dbCardHtml(ownerId, zone, cid)).join("") || `<p style="color:var(--muted);font-size:14px">${esc(t("cards"))}: 0</p>`;
+  const query = deckListNormalizedName($("#deckBrowserFilter").value);
+  const shown = cards.filter(cid => !query || deckListNormalizedName(cardName(cid)).includes(query));
+  $("#deckBrowserCards").innerHTML = shown.map((cid) => dbCardHtml(ownerId, zone, cid)).join("") || `<p class="deck-browser-empty" role="status">${esc(t("deckBrowserNoResults"))}</p>`;
   $("#deckBrowserValidateBtn").disabled = pileBrowserStaged.size === 0;
   $("#deckBrowserPanel").classList.remove("hidden");
   wirePileBrowserCards(ownerId, zone);
@@ -447,6 +456,7 @@ function wireCardHoverZoom(el, cloneClassName) {
     removalObserver = null;
   };
   el.addEventListener("mouseenter", () => {
+    if (lastPointerType === "touch") return;
     clearClone();
     const rect = el.getBoundingClientRect();
     clone = el.cloneNode(true);
@@ -530,7 +540,7 @@ function wirePileBrowserCards(ownerId, zone) {
   $$("#deckBrowserCards [data-zone-card]").forEach((el) => {
     const cardId = el.dataset.zoneCard.split(":")[2];
     const cardOwnerId = el.dataset.cardOwner || ownerId;
-    bindCardDragSource(el, { kind: "card", cardId, cardOwnerId, fromOwnerId: ownerId, fromZone: zone });
+    bindCardDragSource(el, { kind: "card", cardId, cardOwnerId, fromOwnerId: ownerId, fromZone: zone }, { touchScroll: true });
     wireCardHoverZoom(el, "db-card-hover-clone");
     const openMenu = (event) => {
       event.preventDefault();
@@ -556,7 +566,10 @@ function wirePileBrowserCards(ownerId, zone) {
       });
       showContextMenu(event.clientX, event.clientY, betaMenuItems(items));
     };
-    el.addEventListener("click", openMenu);
+    el.addEventListener("click", event => {
+      if (lastPointerType === "touch") { event.preventDefault(); showInspect(cardId); }
+      else openMenu(event);
+    });
     el.addEventListener("contextmenu", openMenu);
   });
   $$("#deckBrowserCards [data-undo-staged]").forEach((btn) => {
@@ -571,6 +584,12 @@ function wirePileBrowserCards(ownerId, zone) {
 const DECK_BROWSER_SIZE_KEY = "ko_deck_browser_card_w";
 
 function initPileBrowser() {
+  $("#deckBrowserFilterLabel").textContent = t("deckBrowserFilter");
+  $("#deckBrowserFilter").placeholder = t("deckBrowserFilter");
+  $("#deckBrowserFilter").oninput = () => {
+    const { ownerId, zone } = $("#deckBrowserPanel").dataset;
+    if (ownerId && zone) openPileBrowser(ownerId, zone);
+  };
   $("#deckBrowserSliderLabel").textContent = t("deckBrowserSliderLabel");
   $("#deckBrowserCloseBtn").textContent = t("close");
   $("#deckBrowserValidateBtn").textContent = t("confirm");
@@ -586,12 +605,9 @@ function initPileBrowser() {
     pileBrowserStaged = new Map();
     setMyActivity(null);
   };
-  // a click on empty space (outside the cards and the controls) closes it too
+  // Card-list whitespace remains a safe scrolling surface.
   $("#deckBrowserPanel").addEventListener("click", (event) => {
-    const target = event.target;
-    if (!(target instanceof Element)) return;
-    if (target.closest(".db-card, button, input, label, .deck-browser-slider-group, .ctx-menu, .context-menu")) return;
-    $("#deckBrowserCloseBtn").click();
+    if (event.target === $("#deckBrowserPanel")) $("#deckBrowserCloseBtn").click();
   });
   $("#deckBrowserValidateBtn").onclick = () => {
     const { ownerId, zone } = $("#deckBrowserPanel").dataset;

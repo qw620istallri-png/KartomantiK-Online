@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "version": "141.3",
+  "sourceDigest": "bfda0067d220a9f40d95855abe51195967ddf8e77f11339fb2d79f9ab81366f2",
+  "finishedAt": "2026-10-29T08:00:31.604445+00:00",
+  "publicationStatus": "validated-before-authorized-push",
+  "summary": {
+    "python": {
+      "executed": 3083,
+      "passed": 3083,
+      "failed": 0,
+      "skipped": 0
+    },
+    "clientSuitesPassed": 6,
+    "mobileChecks": 264,
+    "pwaChecks": 25,
+    "parityScenarios": 608,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 129,
+      "percentageWithSelectedClauseProof": 28.7,
+      "cardsOutsideThisStrictRegister": 321,
+      "fullCatalogSemanticCertification": false
+    }
+  },
+  "artifacts": {
+    "full.log": "6de0207fd42621bfa6ea88e8b860f2627d51e7df716ccdbd56b4368009585c2e",
+    "mobile/browser.json": "f0509ce66a7a0bc2744b3da18a71e9defa24c2baceb9ca5cc918282447b607a9",
+    "overflow/browser.json": "8376b2f16b0e285bf20f0d255e443bd8216b55bd7f2ea4c5baf2c2b5870291eb",
+    "parity-before-environment.log": "846867a2d0c41ddbdbf68bd68058b2f1d0114d31c13d3805f352ff236ac5d7e4",
+    "pwa/ui.json": "2534253f628f5cf2671b4a4161001adf78a93c43a30117774003e72acb7c52f2",
+    "test_drag_cleanup.log": "5d390d11772bfce4053ec83682db429a64008be54474ad55205284fdbf332a0f",
+    "test_frontend.log": "14010ce473f2079d5ccc164eddfa9bd1c74212f88326d374799251fb39fc1def",
+    "test_mobile_manual_ui.log": "4c8e4cdb14a039a8f523d26481897fb7ed2b030f273618cdcfa1a790b8de7d34",
+    "test_mobile_overflow.log": "bca59e9c175fd69dc269a567a421ac113f77642d6319d809d1e4b9d64ce656de",
+    "test_pwa_install.log": "362b18735e125b587277e281f9e621a0fb5055cf8e0ed4f49ed210fa7175854a",
+    "test_rules_parity.log": "47cae38a9917913d5d7f052a09376ca4b576f96cd01afd690c0398b66a684c61",
+    "ui-tests-before-environment.json": "3638c98f904778c332dc4271d415d077f755ce0c522ba13a4ebd7a57527439b2",
+    "ui-tests.json": "923899d4657aa0cf41155c76cedf70b202dc116241663b71f854e98af97118d1",
+    "unit-tests.json": "2ee92200e6fd370df7028b65b64c42bdee1aec8ed4efe4bc27f28abd60846f2b"
+  },
+  "coverageRegistrySha256": "eb78c1d872b5209c5f35d0fe553448a858e190d520641cff8d625178ad4ecd5c",
+  "limits": [
+    "Selected clauses only; not full-card or full-catalog certification.",
+    "Mobile Chrome touch emulation, local artwork; no physical devices or real Safari/Samsung Internet.",
+    "PNG/log captures remain local per gitignore; JSON reports and scripts are versioned.",
+    "Parity was rerun with local Python dependency path restored; no game change."
+  ]
+}

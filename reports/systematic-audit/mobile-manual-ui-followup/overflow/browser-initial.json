@@ -1,0 +1,409 @@
+{
+  "schemaVersion": 1,
+  "beforeFix": false,
+  "engine": "Chrome",
+  "version": "156.0.8078.48",
+  "finishedAt": "2026-10-29T07:24:35.102Z",
+  "physicalDeviceTested": false,
+  "summary": {
+    "executed": 96,
+    "passed": 96,
+    "failed": 0
+  },
+  "tests": [
+    {
+      "testId": "1440x1000-mouse-fr-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-fr-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-fr-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-en-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-en-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-en-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-it-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-it-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-it-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "1440x1000-mouse-it-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-fr-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-fr-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-fr-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-en-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-en-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-en-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-it-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-it-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-it-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-mouse-it-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-fr-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-fr-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-fr-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-en-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-en-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-en-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-it-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-it-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-it-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "320x568-touch-it-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-fr-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-fr-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-fr-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-en-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-en-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-en-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-it-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-it-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-it-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "390x844-touch-it-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-fr-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-fr-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-fr-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-en-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-en-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-en-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-it-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-it-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-it-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "568x320-touch-it-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-fr-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-fr-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-fr-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-en-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-en-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-en-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-it-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-it-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-it-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "844x390-touch-it-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1280x576-touch-fr-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "1280x576-touch-fr-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "1280x576-touch-fr-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "1280x576-touch-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1280x576-touch-en-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "1280x576-touch-en-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "1280x576-touch-en-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "1280x576-touch-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1280x576-touch-it-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "1280x576-touch-it-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "1280x576-touch-it-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "1280x576-touch-it-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640x288-dpr2-touch-fr-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "640x288-dpr2-touch-fr-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "640x288-dpr2-touch-fr-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "640x288-dpr2-touch-fr-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640x288-dpr2-touch-en-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "640x288-dpr2-touch-en-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "640x288-dpr2-touch-en-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "640x288-dpr2-touch-en-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640x288-dpr2-touch-it-deck-confirm-and-scroll",
+      "status": "pass"
+    },
+    {
+      "testId": "640x288-dpr2-touch-it-field-menu-bottom-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "640x288-dpr2-touch-it-menu-resize-clamps",
+      "status": "pass"
+    },
+    {
+      "testId": "640x288-dpr2-touch-it-no-script-errors",
+      "status": "pass"
+    }
+  ],
+  "sourceHashes": {
+    "public/style.css": "98338874ab31252a5de6f75d8a6e26d1fdfada4f3eb8d5a18b07fd46608336d5",
+    "public/js/drag-drop.js": "47c6ac4c8593bc565c96c7bece201b2222d9240dd9fb8af669f09a67a03f0f68",
+    "public/js/players.js": "f2bfef84228afaa21e19fc76f3acc7a92323935265f6202a49fdcc29b09d8313"
+  },
+  "limits": [
+    "Native touch gestures use Chrome device emulation, not a physical phone or Safari/Samsung Internet.",
+    "The rotate-device overlay is hidden in the fixture to inspect portrait geometry; production still requests landscape play.",
+    "The 1280x576 screenshot does not identify its CSS viewport or DPR. 1280x576 at DPR 1 and 640x288 at DPR 2 are two layout hypotheses, not an identified device."
+  ]
+}

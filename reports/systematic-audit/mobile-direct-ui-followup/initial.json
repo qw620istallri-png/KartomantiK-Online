@@ -1,0 +1,722 @@
+{
+  "finishedAt": "2026-10-29T07:38:58.057Z",
+  "engine": "Chrome",
+  "version": "156.0.8078.48",
+  "physicalDevice": false,
+  "summary": {
+    "executed": 168,
+    "passed": 144,
+    "failed": 24
+  },
+  "tests": [
+    {
+      "testId": "844-fr-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-hold-to-stack-in-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-hold-to-stack-in-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-tap-card-inspects-without-options",
+      "status": "fail",
+      "detail": "locator.click: Timeout 4000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inspectCloseBtn')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inspectCloseBtn\">Fermer</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:181:52\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:175:11"
+    },
+    {
+      "testId": "844-fr-seat0-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-direct-drop-follows-input-method",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:200:18\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:189:9"
+    },
+    {
+      "testId": "844-fr-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-hold-to-stack-in-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-hold-to-stack-in-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-tap-card-inspects-without-options",
+      "status": "fail",
+      "detail": "locator.click: Timeout 4000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inspectCloseBtn')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inspectCloseBtn\">Fermer</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:181:52\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:175:11"
+    },
+    {
+      "testId": "844-fr-seat1-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-direct-drop-follows-input-method",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:200:18\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:189:9"
+    },
+    {
+      "testId": "844-fr-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-hold-to-stack-in-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-hold-to-stack-in-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-tap-card-inspects-without-options",
+      "status": "fail",
+      "detail": "locator.click: Timeout 4000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inspectCloseBtn')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inspectCloseBtn\">Close</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:181:52\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:175:11"
+    },
+    {
+      "testId": "844-en-seat0-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-direct-drop-follows-input-method",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:200:18\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:189:9"
+    },
+    {
+      "testId": "844-en-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-hold-to-stack-in-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-hold-to-stack-in-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-tap-card-inspects-without-options",
+      "status": "fail",
+      "detail": "locator.click: Timeout 4000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inspectCloseBtn')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inspectCloseBtn\">Close</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:181:52\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:175:11"
+    },
+    {
+      "testId": "844-en-seat1-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-direct-drop-follows-input-method",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:200:18\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:189:9"
+    },
+    {
+      "testId": "844-en-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-hold-to-stack-in-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-hold-to-stack-in-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-tap-card-inspects-without-options",
+      "status": "fail",
+      "detail": "locator.click: Timeout 4000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inspectCloseBtn')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inspectCloseBtn\">Chiudi</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:181:52\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:175:11"
+    },
+    {
+      "testId": "844-it-seat0-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-direct-drop-follows-input-method",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:200:18\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:189:9"
+    },
+    {
+      "testId": "844-it-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-hold-to-stack-in-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-hold-to-stack-in-will",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-tap-card-inspects-without-options",
+      "status": "fail",
+      "detail": "locator.click: Timeout 4000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inspectCloseBtn')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inspectCloseBtn\">Chiudi</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:181:52\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:175:11"
+    },
+    {
+      "testId": "844-it-seat1-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-direct-drop-follows-input-method",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:200:18\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:189:9"
+    },
+    {
+      "testId": "844-it-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-hold-to-stack-in-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-hold-to-stack-in-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-tap-card-inspects-without-options",
+      "status": "fail",
+      "detail": "locator.click: Timeout 4000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inspectCloseBtn')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inspectCloseBtn\">Fermer</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:181:52\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:175:11"
+    },
+    {
+      "testId": "640-fr-seat0-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-direct-drop-follows-input-method",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:200:18\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:189:9"
+    },
+    {
+      "testId": "640-fr-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-hold-to-stack-in-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-hold-to-stack-in-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-tap-card-inspects-without-options",
+      "status": "fail",
+      "detail": "locator.click: Timeout 4000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inspectCloseBtn')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inspectCloseBtn\">Fermer</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:181:52\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:175:11"
+    },
+    {
+      "testId": "640-fr-seat1-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-direct-drop-follows-input-method",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:200:18\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:189:9"
+    },
+    {
+      "testId": "640-fr-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-hold-to-stack-in-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-hold-to-stack-in-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-tap-card-inspects-without-options",
+      "status": "fail",
+      "detail": "locator.click: Timeout 4000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inspectCloseBtn')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inspectCloseBtn\">Close</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:181:52\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:175:11"
+    },
+    {
+      "testId": "640-en-seat0-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-direct-drop-follows-input-method",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:200:18\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:189:9"
+    },
+    {
+      "testId": "640-en-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-hold-to-stack-in-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-hold-to-stack-in-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-tap-card-inspects-without-options",
+      "status": "fail",
+      "detail": "locator.click: Timeout 4000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inspectCloseBtn')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inspectCloseBtn\">Close</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:181:52\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:175:11"
+    },
+    {
+      "testId": "640-en-seat1-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-direct-drop-follows-input-method",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:200:18\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:189:9"
+    },
+    {
+      "testId": "640-en-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-hold-to-stack-in-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-hold-to-stack-in-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-tap-card-inspects-without-options",
+      "status": "fail",
+      "detail": "locator.click: Timeout 4000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inspectCloseBtn')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inspectCloseBtn\">Chiudi</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:181:52\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:175:11"
+    },
+    {
+      "testId": "640-it-seat0-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-direct-drop-follows-input-method",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:200:18\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:189:9"
+    },
+    {
+      "testId": "640-it-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-battlefield-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-hand-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-battlefield-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-hand-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-hold-to-stack-in-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-hold-to-stack-in-will",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-tap-card-inspects-without-options",
+      "status": "fail",
+      "detail": "locator.click: Timeout 4000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#inspectCloseBtn')\u001b[22m\n\u001b[2m    - locator resolved to <button id=\"inspectCloseBtn\">Chiudi</button>\u001b[22m\n\u001b[2m  - attempting click action\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m    - waiting 20ms\u001b[22m\n\u001b[2m    2 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 100ms\u001b[22m\n\u001b[2m    8 × waiting for element to be visible, enabled and stable\u001b[22m\n\u001b[2m      - element is not visible\u001b[22m\n\u001b[2m    - retrying click action\u001b[22m\n\u001b[2m      - waiting 500ms\u001b[22m\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:181:52\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:175:11"
+    },
+    {
+      "testId": "640-it-seat1-cancel-cleans-targets",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-direct-drop-follows-input-method",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\n0 !== 1\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:200:18\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:11:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_mobile_manual_ui.cjs:189:9"
+    },
+    {
+      "testId": "640-it-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat0-direct-drop-follows-input-method",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat1-direct-drop-follows-input-method",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat0-direct-drop-follows-input-method",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat1-direct-drop-follows-input-method",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-seat1-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat0-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat0-direct-drop-follows-input-method",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat0-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat0-no-script-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat1-deck-shortcut-filter-and-stage",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat1-direct-drop-follows-input-method",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat1-no-shortcuts-in-rules-or-observer-mode",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-seat1-no-script-errors",
+      "status": "pass"
+    }
+  ],
+  "sourceHashes": {
+    "public/ui-beta.js": "906a731b1c950bd3d36e178ad95dc837b1031802f571f2b7685e99783c9710bc",
+    "public/ui-beta.css": "3ea3a24804e887a09f864e2cebfe015a0df264f96badba3cc9eea5acfa6f38f8",
+    "public/js/drag-drop.js": "0b138530fb02a4332105e1c06b75b90cd71d9771888ea997b2c4ba309b437ac7",
+    "public/js/players.js": "a62ff2f0468ff51b88055fc91871d3cd588ce008af82cfe7e2cfab57cbf4adae",
+    "public/js/zones.js": "ba4ad0ab35048f49685c1901b830f2ac9d5dc7ac52b60e171f8f1dd1ab393886",
+    "public/i18n.js": "51f97f7104289c09aadae756a6c2399f00cc9a1e7729f58489c31af5a38dd988",
+    "public/index.html": "dac13d28e5b329808643676e73126388f21e808f10a341338692688e1353ee07",
+    "public/style.css": "25ebf77d89ecea9b692ba6bef126d45cf7ed203ff815d3ed91ac7a7659757c49"
+  },
+  "limits": [
+    "Chrome touch emulation; not physical-device, Safari or Samsung Internet certification. Local card-back artwork. Server responses are not simulated as full card-rule matches."
+  ]
+}

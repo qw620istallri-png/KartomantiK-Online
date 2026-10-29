@@ -1,0 +1,140 @@
+{
+  "schemaVersion": 1,
+  "authority": "Current printed English text, beta errata and creator replacement-not-destruction ruling. Expectations manually reviewed; synthetic target value is fixed at 20 points.",
+  "contracts": [
+    {
+      "key": "disfigure",
+      "name": "Disfigure",
+      "abilityId": "disfigure-destroy-manifestation",
+      "mode": "play",
+      "targetController": "any",
+      "scoreOnSuccess": 0,
+      "drawPerDestroyed": 0,
+      "essenceCost": {
+        "melancholic": 2
+      },
+      "maxPoints": 20,
+      "cardId": "jy05w4j8zcuvezq_en",
+      "printedText": "Destroy a target manifestation, on the field or in an Empathic Vessel, that has 20 or less points of value.",
+      "printedTextSha256": "2d7fe85bd9fa0854bd201331df7a24f5009b7b0ce7233ba24883782fb582bd96"
+    },
+    {
+      "key": "knobbly",
+      "name": "Knobbly Colossus",
+      "abilityId": "destroy-opponent-will-or-manifestation-on-win",
+      "mode": "event",
+      "event": "wins_confrontation",
+      "targetController": "opponent",
+      "scoreOnSuccess": 0,
+      "drawPerDestroyed": 0,
+      "essenceCost": {},
+      "optional": true,
+      "cardId": "o1b1hf2xpmkt8j2_en",
+      "printedText": "If Knobbly Colossus wins the confrontation, you can destroy a target Will or manifestation on the field controlled by an opponent.",
+      "printedTextSha256": "58c9ff74156f35bf0ad8996352ab8943fd735473ee3e1e6d77918c0832e1ca94"
+    },
+    {
+      "key": "borombo",
+      "name": "Borombo, the Mad",
+      "abilityId": "destroy-opposing-confrontation-manifestation-on-loss",
+      "mode": "event",
+      "event": "loses_confrontation",
+      "targetController": "opponent",
+      "scoreOnSuccess": 0,
+      "drawPerDestroyed": 0,
+      "essenceCost": {},
+      "cardId": "70wsdfb29mmcsqf_en",
+      "printedText": "If Borombo loses the confrontation, destroy a target manifestation in the Confrontation Zone controlled by an opponent.",
+      "printedTextSha256": "703cfea4625a5cf1fb1a03de5a9a6c70463bf5377dfe4da04d1d0fa0bec0e502"
+    },
+    {
+      "key": "deviate",
+      "name": "Deviate",
+      "abilityId": "deviate-destroy-loser",
+      "mode": "play",
+      "targetController": "any",
+      "scoreOnSuccess": -5,
+      "drawPerDestroyed": 0,
+      "essenceCost": {
+        "capricious": 2
+      },
+      "resolutionOnly": true,
+      "outcome": "lost",
+      "cardId": "ynp0apjx1risrpt_en",
+      "printedText": "Lose 5 points. You can play this Will only during the Resolution.\r\nDestroy a target manifestation in the Confrontation Zone that lost the confrontation this turn.",
+      "printedTextSha256": "328d453b1410b64d372678adedeb70be2c7c81a315c8f10c6135386dd7ae563c"
+    },
+    {
+      "key": "repress",
+      "name": "Repress the Self",
+      "abilityId": "repress-the-self",
+      "mode": "play",
+      "targetController": "self",
+      "scoreOnSuccess": 20,
+      "drawPerDestroyed": 0,
+      "essenceCost": {
+        "choleric": 2
+      },
+      "resolutionOnly": true,
+      "outcome": "won",
+      "cardId": "yk0ic6ev7465bxo_en",
+      "printedText": "You can play this Will only during the Resolution.\r\nDestroy a target manifestation in the Confrontation Zone under your control that won the confrontation this turn, then gain its points.",
+      "printedTextSha256": "8115994715915064480a75d98ccc822b7d9ea4eb0379ac621c3763bce5bef017"
+    },
+    {
+      "key": "convert",
+      "name": "Convert the Pain",
+      "abilityId": "convert-the-pain",
+      "mode": "play",
+      "targetController": "any",
+      "scoreOnSuccess": 0,
+      "drawPerDestroyed": 2,
+      "essenceCost": {
+        "phlegmatic": 3
+      },
+      "supportOnly": true,
+      "minTargets": 0,
+      "maxTargets": 2,
+      "cardId": "inner-deserts-021",
+      "printedText": "Destroy up to 2 target Manifestations in Support. Each player draws 2 cards for each Manifestation they control destroyed this way.",
+      "printedTextSha256": "c93341c98c5acfc2709daf703014bc9762fb36f90f97ecdc3649b3a0224dc4a2"
+    },
+    {
+      "key": "multicastigate",
+      "name": "Multicastigate",
+      "abilityId": "destroy-one-or-two-support-manifestations",
+      "mode": "play",
+      "targetController": "any",
+      "scoreOnSuccess": 0,
+      "drawPerDestroyed": 0,
+      "essenceCost": {
+        "hollow": 2
+      },
+      "supportOnly": true,
+      "minTargets": 1,
+      "maxTargets": 2,
+      "extraForSecond": 3,
+      "cardId": "inner-deserts-138",
+      "printedText": "You may pay 3 extra 🔘 essences to play this Will.\nDestroy a target Manifestation in Support.\nIf you paid the extra essences, Destroy 2 target Manifestations in Support instead.",
+      "printedTextSha256": "95eb28faba55a52b04419ed08defd179a72b79190832e62887ff52f8629f49dd"
+    },
+    {
+      "key": "lilitha",
+      "name": "Lilitha, the Dismemberer",
+      "cardId": "inner-deserts-113",
+      "printedText": "Support from hand.\nCannot be played as First Manifestation.\nWhen Lilitha enters the Confrontation Zone, you may Destroy a target manifestation in the Confrontation Zone. If you do, that manifestation’s controller puts a number of Tokens with 1 🔘 power equal to its base power in Support under their control.\nWhen Lilitha wins a confrontation, Exile it.",
+      "printedTextSha256": "650648110b755034a0972bd28d83850491d12fdcbb02892c3ef4b996a61b4657",
+      "selectedParagraphs": [
+        2
+      ],
+      "abilityId": "lilitha-dismembers-confrontation-manifestation",
+      "mode": "event",
+      "event": "enters_field_zone",
+      "targetController": "any",
+      "scoreOnSuccess": 0,
+      "drawPerDestroyed": 0,
+      "essenceCost": {},
+      "tokenCountOnSuccess": 4
+    }
+  ]
+}

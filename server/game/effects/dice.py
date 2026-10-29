@@ -20,7 +20,8 @@ class DiceEffectsMixin:
             item, item.get("ownerId"), "graveyard", "top", reason="destroy"
         )
         self.prune_rules_ongoing_effects()
-        if movement.get("status") not in {"moved", "removed_copy"}:
+        if not (movement.get("status") == "removed_copy"
+                or movement.get("status") == "moved" and movement.get("zone") == "graveyard"):
             return {"kind": result.get("kind"), "status": movement.get("status")}
         created = [
             self.create_rules_token_copy(

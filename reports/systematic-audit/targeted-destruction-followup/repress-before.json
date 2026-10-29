@@ -1,0 +1,1289 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "9421e349d66ab98fa159e53d20b2ade603eaf90eb1488517a11295ef282deb8b",
+  "finishedAt": "2026-10-28T22:18:23.363910+00:00",
+  "published": false,
+  "summary": {
+    "executed": 126,
+    "passed": 125,
+    "failed": 1,
+    "skipped": 0,
+    "selectedClauses": 12,
+    "cardsWithSelectedClauseProof": 8
+  },
+  "clauses": [
+    {
+      "cardId": "jy05w4j8zcuvezq_en",
+      "name": "Disfigure",
+      "abilityId": "disfigure-destroy-manifestation",
+      "paragraphIndex": 0,
+      "printedParagraph": "Destroy a target manifestation, on the field or in an Empathic Vessel, that has 20 or less points of value.",
+      "printedClauseSha256": "2d7fe85bd9fa0854bd201331df7a24f5009b7b0ce7233ba24883782fb582bd96",
+      "independentOracle": {
+        "scoreOnSuccess": 0,
+        "drawPerDestroyed": 0,
+        "essenceCost": {
+          "melancholic": 2
+        }
+      },
+      "testIds": [
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__normal",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__owner",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__adamant",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__invalid_declaration",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__late_gone",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__late_protection",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__late_immune",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__late_stalemate",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__cost",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__unfunded",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__late_will",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__replacement_suspend",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__replacement_exile",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__threshold",
+        "test_targeted_destruction.TargetedDestruction.test_disfigure__vessel"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "o1b1hf2xpmkt8j2_en",
+      "name": "Knobbly Colossus",
+      "abilityId": "destroy-opponent-will-or-manifestation-on-win",
+      "paragraphIndex": 0,
+      "printedParagraph": "If Knobbly Colossus wins the confrontation, you can destroy a target Will or manifestation on the field controlled by an opponent.",
+      "printedClauseSha256": "58c9ff74156f35bf0ad8996352ab8943fd735473ee3e1e6d77918c0832e1ca94",
+      "independentOracle": {
+        "scoreOnSuccess": 0,
+        "drawPerDestroyed": 0,
+        "essenceCost": {}
+      },
+      "testIds": [
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__normal",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__owner",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__adamant",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__invalid_declaration",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__late_gone",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__late_protection",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__late_immune",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__late_stalemate",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__source_departure",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__wrong_event",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__late_controller",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__replacement_suspend",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__replacement_exile",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__wills",
+        "test_targeted_destruction.TargetedDestruction.test_knobbly__decline"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "70wsdfb29mmcsqf_en",
+      "name": "Borombo, the Mad",
+      "abilityId": "destroy-opposing-confrontation-manifestation-on-loss",
+      "paragraphIndex": 0,
+      "printedParagraph": "If Borombo loses the confrontation, destroy a target manifestation in the Confrontation Zone controlled by an opponent.",
+      "printedClauseSha256": "703cfea4625a5cf1fb1a03de5a9a6c70463bf5377dfe4da04d1d0fa0bec0e502",
+      "independentOracle": {
+        "scoreOnSuccess": 0,
+        "drawPerDestroyed": 0,
+        "essenceCost": {}
+      },
+      "testIds": [
+        "test_targeted_destruction.TargetedDestruction.test_borombo__normal",
+        "test_targeted_destruction.TargetedDestruction.test_borombo__owner",
+        "test_targeted_destruction.TargetedDestruction.test_borombo__adamant",
+        "test_targeted_destruction.TargetedDestruction.test_borombo__invalid_declaration",
+        "test_targeted_destruction.TargetedDestruction.test_borombo__late_gone",
+        "test_targeted_destruction.TargetedDestruction.test_borombo__late_protection",
+        "test_targeted_destruction.TargetedDestruction.test_borombo__late_immune",
+        "test_targeted_destruction.TargetedDestruction.test_borombo__late_stalemate",
+        "test_targeted_destruction.TargetedDestruction.test_borombo__source_departure",
+        "test_targeted_destruction.TargetedDestruction.test_borombo__wrong_event",
+        "test_targeted_destruction.TargetedDestruction.test_borombo__late_will",
+        "test_targeted_destruction.TargetedDestruction.test_borombo__late_controller",
+        "test_targeted_destruction.TargetedDestruction.test_borombo__replacement_suspend",
+        "test_targeted_destruction.TargetedDestruction.test_borombo__replacement_exile"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ynp0apjx1risrpt_en",
+      "name": "Deviate",
+      "abilityId": "deviate-destroy-loser",
+      "paragraphIndex": 0,
+      "printedParagraph": "Lose 5 points. You can play this Will only during the Resolution.",
+      "printedClauseSha256": "8eb69efe7cd52d4af784c79cc89f7cb910badeda6f9c1c33f3d5707b88457f96",
+      "independentOracle": {
+        "scoreOnSuccess": -5,
+        "drawPerDestroyed": 0,
+        "essenceCost": {
+          "capricious": 2
+        }
+      },
+      "testIds": [
+        "test_targeted_destruction.TargetedDestruction.test_deviate__normal",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__owner",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__adamant",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__invalid_declaration",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__late_gone",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__late_protection",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__late_immune",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__late_stalemate",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__cost",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__unfunded",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__late_will",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__phase_and_outcome",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__replacement_suspend",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__replacement_exile"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ynp0apjx1risrpt_en",
+      "name": "Deviate",
+      "abilityId": "deviate-destroy-loser",
+      "paragraphIndex": 1,
+      "printedParagraph": "Destroy a target manifestation in the Confrontation Zone that lost the confrontation this turn.",
+      "printedClauseSha256": "6f77ad7ab623b32b37025a23508ce9cc151aa504b509f9bc691268cd9d44ed12",
+      "independentOracle": {
+        "scoreOnSuccess": -5,
+        "drawPerDestroyed": 0,
+        "essenceCost": {
+          "capricious": 2
+        }
+      },
+      "testIds": [
+        "test_targeted_destruction.TargetedDestruction.test_deviate__normal",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__owner",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__adamant",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__invalid_declaration",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__late_gone",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__late_protection",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__late_immune",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__late_stalemate",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__cost",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__unfunded",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__late_will",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__phase_and_outcome",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__replacement_suspend",
+        "test_targeted_destruction.TargetedDestruction.test_deviate__replacement_exile"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "yk0ic6ev7465bxo_en",
+      "name": "Repress the Self",
+      "abilityId": "repress-the-self",
+      "paragraphIndex": 0,
+      "printedParagraph": "You can play this Will only during the Resolution.",
+      "printedClauseSha256": "158b33f7f8948f19cbd2722c18edfd69f1163ad50f5862e889145abc8f32f3ec",
+      "independentOracle": {
+        "scoreOnSuccess": 20,
+        "drawPerDestroyed": 0,
+        "essenceCost": {
+          "choleric": 2
+        }
+      },
+      "testIds": [
+        "test_targeted_destruction.TargetedDestruction.test_repress__normal",
+        "test_targeted_destruction.TargetedDestruction.test_repress__owner",
+        "test_targeted_destruction.TargetedDestruction.test_repress__adamant",
+        "test_targeted_destruction.TargetedDestruction.test_repress__invalid_declaration",
+        "test_targeted_destruction.TargetedDestruction.test_repress__late_gone",
+        "test_targeted_destruction.TargetedDestruction.test_repress__late_protection",
+        "test_targeted_destruction.TargetedDestruction.test_repress__late_immune",
+        "test_targeted_destruction.TargetedDestruction.test_repress__late_stalemate",
+        "test_targeted_destruction.TargetedDestruction.test_repress__cost",
+        "test_targeted_destruction.TargetedDestruction.test_repress__unfunded",
+        "test_targeted_destruction.TargetedDestruction.test_repress__late_will",
+        "test_targeted_destruction.TargetedDestruction.test_repress__late_controller",
+        "test_targeted_destruction.TargetedDestruction.test_repress__phase_and_outcome",
+        "test_targeted_destruction.TargetedDestruction.test_repress__replacement_suspend",
+        "test_targeted_destruction.TargetedDestruction.test_repress__replacement_exile"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "yk0ic6ev7465bxo_en",
+      "name": "Repress the Self",
+      "abilityId": "repress-the-self",
+      "paragraphIndex": 1,
+      "printedParagraph": "Destroy a target manifestation in the Confrontation Zone under your control that won the confrontation this turn, then gain its points.",
+      "printedClauseSha256": "8823037ef87380914c04d914f138d2af8d696d32b1992137acd54ed6a3769b81",
+      "independentOracle": {
+        "scoreOnSuccess": 20,
+        "drawPerDestroyed": 0,
+        "essenceCost": {
+          "choleric": 2
+        }
+      },
+      "testIds": [
+        "test_targeted_destruction.TargetedDestruction.test_repress__normal",
+        "test_targeted_destruction.TargetedDestruction.test_repress__owner",
+        "test_targeted_destruction.TargetedDestruction.test_repress__adamant",
+        "test_targeted_destruction.TargetedDestruction.test_repress__invalid_declaration",
+        "test_targeted_destruction.TargetedDestruction.test_repress__late_gone",
+        "test_targeted_destruction.TargetedDestruction.test_repress__late_protection",
+        "test_targeted_destruction.TargetedDestruction.test_repress__late_immune",
+        "test_targeted_destruction.TargetedDestruction.test_repress__late_stalemate",
+        "test_targeted_destruction.TargetedDestruction.test_repress__cost",
+        "test_targeted_destruction.TargetedDestruction.test_repress__unfunded",
+        "test_targeted_destruction.TargetedDestruction.test_repress__late_will",
+        "test_targeted_destruction.TargetedDestruction.test_repress__late_controller",
+        "test_targeted_destruction.TargetedDestruction.test_repress__phase_and_outcome",
+        "test_targeted_destruction.TargetedDestruction.test_repress__replacement_suspend",
+        "test_targeted_destruction.TargetedDestruction.test_repress__replacement_exile"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-021",
+      "name": "Convert the Pain",
+      "abilityId": "convert-the-pain",
+      "paragraphIndex": 0,
+      "printedParagraph": "Destroy up to 2 target Manifestations in Support. Each player draws 2 cards for each Manifestation they control destroyed this way.",
+      "printedClauseSha256": "c93341c98c5acfc2709daf703014bc9762fb36f90f97ecdc3649b3a0224dc4a2",
+      "independentOracle": {
+        "scoreOnSuccess": 0,
+        "drawPerDestroyed": 2,
+        "essenceCost": {
+          "phlegmatic": 3
+        }
+      },
+      "testIds": [
+        "test_targeted_destruction.TargetedDestruction.test_convert__normal",
+        "test_targeted_destruction.TargetedDestruction.test_convert__owner",
+        "test_targeted_destruction.TargetedDestruction.test_convert__adamant",
+        "test_targeted_destruction.TargetedDestruction.test_convert__invalid_declaration",
+        "test_targeted_destruction.TargetedDestruction.test_convert__late_gone",
+        "test_targeted_destruction.TargetedDestruction.test_convert__late_protection",
+        "test_targeted_destruction.TargetedDestruction.test_convert__late_immune",
+        "test_targeted_destruction.TargetedDestruction.test_convert__late_stalemate",
+        "test_targeted_destruction.TargetedDestruction.test_convert__cost",
+        "test_targeted_destruction.TargetedDestruction.test_convert__unfunded",
+        "test_targeted_destruction.TargetedDestruction.test_convert__late_will",
+        "test_targeted_destruction.TargetedDestruction.test_convert__partial",
+        "test_targeted_destruction.TargetedDestruction.test_convert__late_not_support",
+        "test_targeted_destruction.TargetedDestruction.test_convert__replacement_suspend",
+        "test_targeted_destruction.TargetedDestruction.test_convert__replacement_exile",
+        "test_targeted_destruction.TargetedDestruction.test_convert__zero_or_two",
+        "test_targeted_destruction.TargetedDestruction.test_convert__two_controllers",
+        "test_targeted_destruction.TargetedDestruction.test_convert__token",
+        "test_targeted_destruction.TargetedDestruction.test_convert__mixed_replacement",
+        "test_targeted_destruction.TargetedDestruction.test_convert__exile_memory"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-138",
+      "name": "Multicastigate",
+      "abilityId": "destroy-one-or-two-support-manifestations",
+      "paragraphIndex": 0,
+      "printedParagraph": "You may pay 3 extra 🔘 essences to play this Will.",
+      "printedClauseSha256": "3f1ea6f156734e3cdfe16fab1201a71a3f5bf885c8ad7fb0159d991ededb27cf",
+      "independentOracle": {
+        "scoreOnSuccess": 0,
+        "drawPerDestroyed": 0,
+        "essenceCost": {
+          "hollow": 2
+        }
+      },
+      "testIds": [
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__normal",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__owner",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__adamant",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__invalid_declaration",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_gone",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_protection",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_immune",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_stalemate",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__cost",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__unfunded",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_will",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_not_support",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__replacement_suspend",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__replacement_exile",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__second_target_payment"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-138",
+      "name": "Multicastigate",
+      "abilityId": "destroy-one-or-two-support-manifestations",
+      "paragraphIndex": 1,
+      "printedParagraph": "Destroy a target Manifestation in Support.",
+      "printedClauseSha256": "dd4bbc8474a84f01b0d361c488aace436d215fc81bae62816b7e0ad4106d4791",
+      "independentOracle": {
+        "scoreOnSuccess": 0,
+        "drawPerDestroyed": 0,
+        "essenceCost": {
+          "hollow": 2
+        }
+      },
+      "testIds": [
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__normal",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__owner",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__adamant",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__invalid_declaration",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_gone",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_protection",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_immune",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_stalemate",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__cost",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__unfunded",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_will",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_not_support",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__replacement_suspend",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__replacement_exile",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__second_target_payment"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-138",
+      "name": "Multicastigate",
+      "abilityId": "destroy-one-or-two-support-manifestations",
+      "paragraphIndex": 2,
+      "printedParagraph": "If you paid the extra essences, Destroy 2 target Manifestations in Support instead.",
+      "printedClauseSha256": "ddd56150ed26fbf3bb6dac7cc6064ed837f10c1f00a23836e63c91f664fb3391",
+      "independentOracle": {
+        "scoreOnSuccess": 0,
+        "drawPerDestroyed": 0,
+        "essenceCost": {
+          "hollow": 2
+        }
+      },
+      "testIds": [
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__normal",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__owner",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__adamant",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__invalid_declaration",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_gone",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_protection",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_immune",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_stalemate",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__cost",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__unfunded",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_will",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_not_support",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__replacement_suspend",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__replacement_exile",
+        "test_targeted_destruction.TargetedDestruction.test_multicastigate__second_target_payment"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-113",
+      "name": "Lilitha, the Dismemberer",
+      "abilityId": "lilitha-dismembers-confrontation-manifestation",
+      "paragraphIndex": 2,
+      "printedParagraph": "When Lilitha enters the Confrontation Zone, you may Destroy a target manifestation in the Confrontation Zone. If you do, that manifestation’s controller puts a number of Tokens with 1 🔘 power equal to its base power in Support under their control.",
+      "printedClauseSha256": "1a3386f37f819e54f616ecf716c09885ca536b4f3993c5cacdee38c0b4e02680",
+      "independentOracle": {
+        "scoreOnSuccess": 0,
+        "drawPerDestroyed": 0,
+        "essenceCost": {},
+        "tokenCountOnSuccess": 4
+      },
+      "testIds": [
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__normal",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__owner",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__adamant",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__invalid_declaration",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__late_gone",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__late_protection",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__late_immune",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__late_stalemate",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__source_departure",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__wrong_event",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__late_will",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__replacement_suspend",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__replacement_exile",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__base_not_bonus",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__self_target",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__token",
+        "test_targeted_destruction.TargetedDestruction.test_lilitha__decline"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__adamant",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__invalid_declaration",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__invalid_declaration (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__invalid_declaration (invalid='protection')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__invalid_declaration (invalid='immune')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__invalid_declaration (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__late_controller",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__late_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__late_immune",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__late_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__late_will",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__owner",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__replacement_exile",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__replacement_suspend",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_borombo__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__adamant",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__cost",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__exile_memory",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__invalid_declaration",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__invalid_declaration (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__invalid_declaration (invalid='protection')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__invalid_declaration (invalid='immune')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__invalid_declaration (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__late_gone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__late_immune",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__late_not_support",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__late_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__late_will",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__mixed_replacement",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__owner",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__partial",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__partial (invalid='gone', index=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__partial (invalid='gone', index=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__partial (invalid='protection', index=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__partial (invalid='protection', index=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__partial (invalid='immune', index=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__partial (invalid='immune', index=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__partial (invalid='stalemate', index=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__partial (invalid='stalemate', index=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__partial (invalid='not_support', index=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_convert__partial (invalid='not_support', index=1)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.265
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__replacement_exile",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__replacement_suspend",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__token",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__two_controllers",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_convert__zero_or_two",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__adamant",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__cost",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__invalid_declaration",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__invalid_declaration (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__invalid_declaration (invalid='protection')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__invalid_declaration (invalid='immune')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__invalid_declaration (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__late_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__late_immune",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__late_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__late_will",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__owner",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__phase_and_outcome",
+      "status": "pass",
+      "durationSeconds": 0.079
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__replacement_exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__replacement_suspend",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_deviate__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__adamant",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__cost",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__invalid_declaration",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__invalid_declaration (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__invalid_declaration (invalid='protection')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__invalid_declaration (invalid='immune')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__invalid_declaration (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__late_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__late_immune",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__late_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__late_will",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__owner",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__replacement_exile",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__replacement_suspend",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__threshold",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_disfigure__vessel",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__adamant",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__decline",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__invalid_declaration",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__invalid_declaration (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__invalid_declaration (invalid='protection')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__invalid_declaration (invalid='immune')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__late_controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__late_gone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__late_immune",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__late_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__owner",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__replacement_exile",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__replacement_suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__wills",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_knobbly__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__adamant",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__base_not_bonus",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__decline",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__invalid_declaration",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__invalid_declaration (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__invalid_declaration (invalid='protection')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__invalid_declaration (invalid='immune')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__invalid_declaration (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__late_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__late_immune",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__late_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__late_will",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__owner",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__replacement_exile",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__replacement_suspend",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__self_target",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__source_departure",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__token",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_lilitha__wrong_event",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__adamant",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__cost",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__invalid_declaration",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__invalid_declaration (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__invalid_declaration (invalid='protection')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__invalid_declaration (invalid='immune')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__invalid_declaration (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_gone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_immune",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_not_support",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__late_will",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__owner",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial (invalid='gone', index=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial (invalid='gone', index=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial (invalid='protection', index=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial (invalid='protection', index=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial (invalid='immune', index=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial (invalid='immune', index=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial (invalid='stalemate', index=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial (invalid='stalemate', index=1)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial (invalid='not_support', index=0)",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__partial (invalid='not_support', index=1)",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.235
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__replacement_exile",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__replacement_suspend",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__second_target_payment",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_multicastigate__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__adamant",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__cost",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__invalid_declaration",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_repress__invalid_declaration (invalid='stalemate')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_repress__invalid_declaration (invalid='protection')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_repress__invalid_declaration (invalid='immune')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_targeted_destruction.TargetedDestruction.test_repress__invalid_declaration (invalid='will')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.079
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__late_controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__late_gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__late_immune",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__late_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__late_will",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__owner",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__phase_and_outcome",
+      "status": "pass",
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__replacement_exile",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__replacement_suspend",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_targeted_destruction.py\", line 375, in run\n    if case.startswith('replacement_'): return self.check_replacement(row, case[12:])\n                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_targeted_destruction.py\", line 210, in check_replacement\n    self.assertEqual(s.players['p1']['score'], 50 + row['scoreOnSuccess'])\nAssertionError: 50 != 70\n",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_targeted_destruction.TargetedDestruction.test_repress__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.016
+    }
+  ],
+  "limits": [
+    "Selected clauses and explicit branches, not certification of every card interaction.",
+    "Manifestations, result-of-confrontation, Nullify resolved state and BOB are controlled fixtures.",
+    "Repress replacement semantics are not inferred from Convert: its text has an independent then instruction.",
+    "No new browser, physical-device or automatic phase-driving certification."
+  ]
+}

@@ -229,6 +229,9 @@ function pileFieldHtml(ownerId, zone, zoneData, canView, canAct, pos, score, ove
   const limboPlayButton = zone === "graveyard" && ownerId === myPlayerId && !isObserver
     && latestState?.rulesEngine?.enabled && rulesLimboPlayMode()
     ? `<button type="button" class="limbo-play-btn" data-limbo-play-open>${esc(t("limboPlayButton"))}</button>` : "";
+  const quickSearch = zone === "deck" && ownerId === myPlayerId && canAct && !isObserver && !latestState?.rulesEngine?.enabled
+    ? `<button type="button" class="pile-search-shortcut" data-open-pile-browser="${esc(key)}" aria-label="${esc(t("search"))} ${esc(t("deck"))}">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg><span>${esc(t("search"))}</span></button>` : "";
   return `<div class="field-pile ${count === 0 ? "empty" : ""}"${dropAttr} data-field-pile="${esc(key)}" data-zone="${esc(zone)}" data-override-key="${esc(overrideKey)}" style="left:${pos.x}px;top:${pos.y}px;--owner-color:${playerColor(ownerId)}">
     ${scoreAdjust}
     <div class="pile-trigger" data-pile-trigger="${esc(key)}">
@@ -238,6 +241,7 @@ function pileFieldHtml(ownerId, zone, zoneData, canView, canAct, pos, score, ove
       ${pointsBadge}
     </div>
     ${conditionalCard}
+    ${quickSearch}
     ${limboPlayButton}
     <span class="pile-coords">${esc(zone)}: ${Math.round(rawPos.x)}, ${Math.round(rawPos.y)}</span>
     ${isOpen ? `<div class="zone-popover">${zoneBlockHtml(ownerId, zone, zoneData, canView, canAct)}</div>` : ""}

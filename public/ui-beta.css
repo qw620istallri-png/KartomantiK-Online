@@ -722,6 +722,9 @@ body:has(#gameScreen.ui-beta:not(.hidden)) { overscroll-behavior: none; }
 
 /* held upright, a phone shows a "turn me" screen over the table */
 .ub-rotate { display: none; }
+.ub-izcol.ub-touch-zone-over::after { content: ""; position: absolute; left: 2px; right: 2px; top: var(--touch-zone-top); height: var(--touch-zone-height); border: 2px solid var(--ub-gold); border-radius: 8px; background: #d7ba6818; pointer-events: none; }
+#gameScreen.ui-beta .bf-card.ub-stack-ready { outline: 3px solid var(--ub-gold-pale); outline-offset: 3px; }
+#gameScreen.ui-beta .bf-card.ub-stack-ready::after { content: attr(data-stack-hint); position: absolute; left: 0; right: 0; top: 0; padding: 8px 4px; color: #17120a; background: #e9ca78; font-size: 16px; text-align: center; }
 @media (orientation: portrait) and (pointer: coarse) and (max-width: 820px) {
   #gameScreen.ui-beta:not(.hidden) .ub-rotate { position: fixed; inset: 0; z-index: 900; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: 32px; background: radial-gradient(120% 90% at 50% 40%, var(--ub-bg-2), var(--ub-bg)); color: var(--ub-ink); text-align: center; }
   #gameScreen.ui-beta .ub-rotate svg { width: 72px; height: 72px; fill: none; stroke: var(--ub-gold-pale); stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; animation: ub-rotate-hint 2.4s var(--ub-ease) infinite; }

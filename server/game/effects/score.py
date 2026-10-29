@@ -181,7 +181,8 @@ class ScoreEffectsMixin:
             item, item.get("ownerId"), "graveyard", "top", reason="destroy"
         )
         self.prune_rules_ongoing_effects()
-        if movement.get("status") == "moved" and points:
+        # This gain is an independent instruction, unlike "destroyed this way".
+        if movement.get("status") in {"moved", "suspended"} and points:
             self.adjust_rules_score(player_id, points)
         return {
             "kind": result.get("kind"), "status": movement.get("status"),

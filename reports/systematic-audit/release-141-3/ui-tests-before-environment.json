@@ -1,0 +1,69 @@
+{
+  "gates": [
+    {
+      "command": [
+        "node",
+        "tests/test_mobile_manual_ui.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_mobile_manual_ui.log",
+      "durationSeconds": 89.91
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_mobile_overflow.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_mobile_overflow.log",
+      "durationSeconds": 77.27
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_frontend.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_frontend.log",
+      "durationSeconds": 14.78
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_drag_cleanup.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_drag_cleanup.log",
+      "durationSeconds": 10.97
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_pwa_install.cjs"
+      ],
+      "status": "pass",
+      "exitCode": 0,
+      "log": "test_pwa_install.log",
+      "durationSeconds": 5.26
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "fail",
+      "exitCode": 1,
+      "log": "test_rules_parity.log",
+      "durationSeconds": 0.8
+    }
+  ],
+  "summary": {
+    "executed": 6,
+    "passed": 5,
+    "failed": 1
+  }
+}
