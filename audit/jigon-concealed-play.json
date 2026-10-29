@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "cardId": "z6awx4mwwkfrvdd_en",
+  "name": "Jigon, the Trap Setter",
+  "printedText": "When Jigon enters the Confrontation Zone, search your deck for a Will and put it Concealed on the field, then shuffle the deck. The Concealed Will can be played as if it were in your hand.\r\nIf Jigon loses the confrontation, the Concealed Will can be played without paying its tribute cost.",
+  "printedTextSha256": "df4aafe65c2377f8617fff70c9bee5a38288d2b0b9e55a3ca9ea46909d79258a",
+  "clauses": [
+    "When Jigon enters the Confrontation Zone, search your deck for a Will and put it Concealed on the field, then shuffle the deck. The Concealed Will can be played as if it were in your hand.",
+    "If Jigon loses the confrontation, the Concealed Will can be played without paying its tribute cost."
+  ],
+  "oracle": {
+    "encodedWill": "Strengthen",
+    "normalCost": {
+      "hollow": 1
+    },
+    "costAfterLoss": {},
+    "targetPowerBefore": 1,
+    "targetPowerAfter": 4
+  }
+}

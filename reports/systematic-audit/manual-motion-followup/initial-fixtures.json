@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 1,
+  "summary": {
+    "executed": 54,
+    "passed": 3,
+    "failed": 51
+  },
+  "tests": [
+    {
+      "testId": "pc-pc-p1-field-to-deck",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:51:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-pc-p1-field-to-graveyard",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(owner>=1)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:56:141\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-pc-p1-field-to-exile",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: {\"flights\":[{\"kind\":\"effect-card\",\"origin\":{\"x\":884.2446594238281,\"y\":466.93846130371094},\"target\":{\"x\":1318,\"y\":223.6875},\"options\":{\"cardId\":\"6jz7otalrdq0q8u_en\",\"index\":0}}],\"pile\":{\"x\":1318,\"y\":297.28125}}\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:55:12\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-pc-p1-field-to-hand",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: {\"flights\":[{\"kind\":\"effect-card\",\"origin\":{\"x\":884.2446899414062,\"y\":466.9512634277344},\"target\":{\"x\":1318,\"y\":223.6875},\"options\":{\"cardId\":\"6jz7otalrdq0q8u_en\",\"index\":0}}],\"pile\":{\"x\":720,\"y\":108}}\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:55:12\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-pc-p1-field-to-receptacle",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:51:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-pc-p1-zone-to-zone",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:59:235\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:59:4"
+    },
+    {
+      "testId": "pc-pc-p1-board-to-interzone",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:62:16\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:43"
+    },
+    {
+      "testId": "pc-pc-p1-board-to-will",
+      "status": "fail",
+      "detail": "locator.boundingBox: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#ubWillsMe')\u001b[22m\n\n    at drag (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:10:52)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:61:5\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:43"
+    },
+    {
+      "testId": "pc-pc-p1-cleanup-and-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p2-field-to-deck",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:51:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-pc-p2-field-to-graveyard",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(owner>=1)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:56:141\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-pc-p2-field-to-exile",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: {\"flights\":[{\"kind\":\"effect-card\",\"origin\":{\"x\":884.2447204589844,\"y\":466.9459533691406},\"target\":{\"x\":1318,\"y\":223.6875},\"options\":{\"cardId\":\"6jz7otalrdq0q8u_en\",\"index\":0}}],\"pile\":{\"x\":1318,\"y\":297.28125}}\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:55:12\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-pc-p2-field-to-hand",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: {\"flights\":[{\"kind\":\"effect-card\",\"origin\":{\"x\":884.2446899414062,\"y\":466.9460144042969},\"target\":{\"x\":1318,\"y\":223.6875},\"options\":{\"cardId\":\"6jz7otalrdq0q8u_en\",\"index\":0}}],\"pile\":{\"x\":720,\"y\":108}}\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:55:12\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-pc-p2-field-to-receptacle",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:51:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-pc-p2-zone-to-zone",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:59:235\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:59:4"
+    },
+    {
+      "testId": "pc-pc-p2-board-to-interzone",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:62:16\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:43"
+    },
+    {
+      "testId": "pc-pc-p2-board-to-will",
+      "status": "fail",
+      "detail": "locator.boundingBox: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#ubWillsMe')\u001b[22m\n\n    at drag (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:10:52)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:61:5\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:43"
+    },
+    {
+      "testId": "pc-pc-p2-cleanup-and-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p1-field-to-deck",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:51:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "mobile-mobile-p1-field-to-graveyard",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(owner>=1)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:56:141\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "mobile-mobile-p1-field-to-exile",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: {\"flights\":[{\"kind\":\"effect-card\",\"origin\":{\"x\":518.496826171875,\"y\":187.39925384521484},\"target\":{\"x\":808.5,\"y\":99.09375},\"options\":{\"cardId\":\"6jz7otalrdq0q8u_en\",\"index\":0}}],\"pile\":{\"x\":745.5,\"y\":133.09375}}\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:55:12\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "mobile-mobile-p1-field-to-hand",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: {\"flights\":[{\"kind\":\"effect-card\",\"origin\":{\"x\":518.496826171875,\"y\":186.60846710205078},\"target\":{\"x\":808.5,\"y\":99.09375},\"options\":{\"cardId\":\"6jz7otalrdq0q8u_en\",\"index\":0}}],\"pile\":{\"x\":422,\"y\":108}}\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:55:12\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "mobile-mobile-p1-field-to-receptacle",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:5)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:51:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "mobile-mobile-p1-zone-to-zone",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:59:48\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:59:4"
+    },
+    {
+      "testId": "mobile-mobile-p1-board-to-interzone",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:91\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:43"
+    },
+    {
+      "testId": "mobile-mobile-p1-board-to-will",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:91\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:43"
+    },
+    {
+      "testId": "mobile-mobile-p1-cleanup-and-errors",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   \"Failed to read the 'localStorage' property from 'Window': Access is denied for this document.\",\n+   'latestState is not defined',\n+   'latestState is not defined',\n+   'latestState is not defined',\n+   'latestState is not defined'\n+ ]\n- []\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:65:194\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:65:4"
+    },
+    {
+      "testId": "mobile-mobile-p2-field-to-deck",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:46:5\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "mobile-mobile-p2-field-to-graveyard",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:46:5\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "mobile-mobile-p2-field-to-exile",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:46:5\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "mobile-mobile-p2-field-to-hand",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:46:5\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "mobile-mobile-p2-field-to-receptacle",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:46:5\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "mobile-mobile-p2-zone-to-zone",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:59:48\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:59:4"
+    },
+    {
+      "testId": "mobile-mobile-p2-board-to-interzone",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:91\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:43"
+    },
+    {
+      "testId": "mobile-mobile-p2-board-to-will",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:91\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:43"
+    },
+    {
+      "testId": "mobile-mobile-p2-cleanup-and-errors",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   \"Failed to read the 'localStorage' property from 'Window': Access is denied for this document.\",\n+   'latestState is not defined',\n+   'latestState is not defined',\n+   'latestState is not defined',\n+   'latestState is not defined',\n+   'latestState is not defined',\n+   'latestState is not defined',\n+   'latestState is not defined',\n+   'latestState is not defined',\n+   'latestState is not defined',\n+   'latestState is not defined',\n+   'latestState is not defined',\n+   'latestState is not defined'\n+ ]\n- []\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:65:194\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:65:4"
+    },
+    {
+      "testId": "pc-mobile-p1-field-to-deck",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:51:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-mobile-p1-field-to-graveyard",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(owner>=1)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:56:141\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-mobile-p1-field-to-exile",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: {\"flights\":[{\"kind\":\"effect-card\",\"origin\":{\"x\":385.99806213378906,\"y\":141.83612442016602},\"target\":{\"x\":608.75,\"y\":99.09375},\"options\":{\"cardId\":\"6jz7otalrdq0q8u_en\",\"index\":0}}],\"pile\":{\"x\":554.25,\"y\":133.09375}}\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:55:12\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-mobile-p1-field-to-hand",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: {\"flights\":[{\"kind\":\"effect-card\",\"origin\":{\"x\":385.998046875,\"y\":141.88701629638672},\"target\":{\"x\":608.75,\"y\":99.09375},\"options\":{\"cardId\":\"6jz7otalrdq0q8u_en\",\"index\":0}}],\"pile\":{\"x\":320,\"y\":108}}\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:55:12\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-mobile-p1-field-to-receptacle",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:51:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-mobile-p1-zone-to-zone",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:59:235\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:59:4"
+    },
+    {
+      "testId": "pc-mobile-p1-board-to-interzone",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:62:16\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:43"
+    },
+    {
+      "testId": "pc-mobile-p1-board-to-will",
+      "status": "fail",
+      "detail": "locator.boundingBox: Timeout 5000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('#ubWillsMe')\u001b[22m\n\n    at drag (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:10:52)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:61:5\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:43"
+    },
+    {
+      "testId": "pc-mobile-p1-cleanup-and-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p2-field-to-deck",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:51:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-mobile-p2-field-to-graveyard",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(owner>=1)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:56:141\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-mobile-p2-field-to-exile",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: {\"flights\":[{\"kind\":\"effect-card\",\"origin\":{\"x\":884.2446899414062,\"y\":466.9461212158203},\"target\":{\"x\":1318,\"y\":223.6875},\"options\":{\"cardId\":\"6jz7otalrdq0q8u_en\",\"index\":0}}],\"pile\":{\"x\":1318,\"y\":297.28125}}\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:55:12\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-mobile-p2-field-to-hand",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: {\"flights\":[{\"kind\":\"effect-card\",\"origin\":{\"x\":884.2446899414062,\"y\":466.9512176513672},\"target\":{\"x\":1318,\"y\":223.6875},\"options\":{\"cardId\":\"6jz7otalrdq0q8u_en\",\"index\":0}}],\"pile\":{\"x\":720,\"y\":108}}\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:55:12\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-mobile-p2-field-to-receptacle",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:51:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:45:71"
+    },
+    {
+      "testId": "pc-mobile-p2-zone-to-zone",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:59:48\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:59:4"
+    },
+    {
+      "testId": "pc-mobile-p2-board-to-interzone",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:91\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:43"
+    },
+    {
+      "testId": "pc-mobile-p2-board-to-will",
+      "status": "fail",
+      "detail": "page.waitForFunction: ReferenceError: latestState is not defined\n    at eval (eval at predicate (eval at evaluate (:370:30)), <anonymous>:1:29)\n    at predicate (eval at evaluate (:370:30), <anonymous>:7:27)\n    at next (eval at evaluate (:370:30), <anonymous>:29:33)\n    at eval (eval at evaluate (:370:30), <anonymous>:42:13)\n    at UtilityScript.evaluate (<anonymous>:372:16)\n    at UtilityScript.<anonymous> (<anonymous>:1:44)\n    at reset (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:44:105)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:91\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:60:43"
+    },
+    {
+      "testId": "pc-mobile-p2-cleanup-and-errors",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:\n+ actual - expected\n\n+ [\n+   \"Failed to read the 'localStorage' property from 'Window': Access is denied for this document.\",\n+   'latestState is not defined',\n+   'latestState is not defined',\n+   'latestState is not defined'\n+ ]\n- []\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:65:194\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:65:4"
+    }
+  ],
+  "limits": [
+    "Chrome desktop and touch emulation, not physical phones or real Safari.",
+    "Real production socket/render/drag path; initial zones reset by loopback fixture."
+  ],
+  "sources": {
+    "public/js/vfx.js": "61ce2e60b527858d3b64fc5548a4653b664c3f16051933eee24fade3d82011d5",
+    "public/ui-beta.js": "906a731b1c950bd3d36e178ad95dc837b1031802f571f2b7685e99783c9710bc",
+    "public/js/board.js": "966d74d7a9614e30fc14a4e7c8781a100d959dcea5538a2f7e16c5141941547b",
+    "server/main.py": "185b8119f66cb07e287b195dd5beb082e92397c2350110727cb0f7b0fe4117cd",
+    "tools/manual_motion_server.py": "aa3e6a2c10fe42d9d1d821c263e9e94657c68eaa7dbd5a4ee9e40195ced866be"
+  }
+}

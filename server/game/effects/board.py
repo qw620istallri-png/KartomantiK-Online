@@ -94,6 +94,16 @@ class BoardEffectsMixin:
                     "stackOffsetX": 18.0,
                     "stackOffsetY": 18.0,
                 })
+        error, _owner, replacement = self.rules_zone_move_replacement(
+            container_id, zone, "interzone" if field_zone == "interzone" else "battlefield", card_id, player_id,
+        )
+        if error:
+            return {"kind": result.get("kind"), "status": "target_missing"}
+        if replacement:
+            if self.card_rules.get(card_id, {}).get("type") == "manifestation":
+                self.record_rules_observed_event("manifestation_left_by_effect", container_id, cardId=card_id)
+            return {"kind": result.get("kind"), **replacement}
+        if field_zone == "interzone":
             item["fieldZone"] = "interzone"
             self.mark_rules_interzone_entry(item)
         elif result.get("asSupport"):
@@ -103,6 +113,8 @@ class BoardEffectsMixin:
         else:
             item["fieldZone"] = field_zone
         self.take_zone_card(container_id, zone, card_id)
+        if self.card_rules.get(card_id, {}).get("type") == "manifestation":
+            self.record_rules_observed_event("manifestation_left_by_effect", container_id, cardId=card_id)
         self.battlefield.append(item)
         triggered = self.queue_rules_battlefield_entry_triggers(
             card_id, owner_id, item["id"], True, defer=True,
@@ -227,6 +239,7 @@ class BoardEffectsMixin:
             counts[pid] = max(0, base)
         source = action.get("source") or {}
         created = {}
+        all_created = []
         for pid, count in counts.items():
             copies = [
                 self.create_rules_token_copy(
@@ -237,10 +250,12 @@ class BoardEffectsMixin:
                 for _index in range(count)
             ]
             created[pid] = [copy["id"] for copy in copies if copy is not None]
+            all_created.extend(copy for copy in copies if copy is not None)
         return {
             "kind": result.get("kind"),
             "status": "resolved" if counts else "nothing",
             "tokens": {pid: len(ids) for pid, ids in created.items()},
+            "resolutionTriggers": self.collect_rules_token_entry_triggers(all_created),
         }
 
     def _rules_result_interzone_target_to_support(self, action, result, player_id, player):
@@ -448,8 +463,13 @@ class BoardEffectsMixin:
         owner_id = self.card_owner_in_zone(container_id, zone, card_id)
         if owner_id is None or owner_id == player_id:
             return {"kind": result.get("kind"), "status": "target_missing"}
-        self.take_zone_card(container_id, zone, card_id)
-        self.put_zone_card(player_id, "receptacle", card_id, owner_id)
+        error, _owner, replacement = self.move_zone_card_by_effect(
+            container_id, zone, player_id, "receptacle", card_id, "top",
+        )
+        if error:
+            return {"kind": result.get("kind"), "status": "target_missing"}
+        if replacement:
+            return {"kind": result.get("kind"), **replacement}
         self.record_rules_observed_event(
             "manifestation_enters_opponent_vessel", owner_id
         )
@@ -592,6 +612,7 @@ class BoardEffectsMixin:
             "status": "created",
             "count": len(tokens),
             "itemIds": [item["id"] for item in tokens],
+            "resolutionTriggers": self.collect_rules_token_entry_triggers(tokens),
         }
 
     def _rules_result_create_support_token(self, action, result, player_id, player):
@@ -609,6 +630,7 @@ class BoardEffectsMixin:
             "createdItemId": token["id"],
             "power": token["power"],
             "temperament": token["temperament"],
+            "resolutionTriggers": self.collect_rules_token_entry_triggers([token]),
         }
 
     def _rules_result_protect_related_will(self, action, result, player_id, player):
@@ -847,6 +869,7 @@ class BoardEffectsMixin:
             "count": len(created),
             "itemIds": [item["id"] for item in created],
             "targetPlayerId": target_id,
+            "resolutionTriggers": self.collect_rules_token_entry_triggers(created),
         }
 
     def _rules_result_copy_related_tribute_if_exhaust(self, action, result, player_id, player):
@@ -1248,6 +1271,7 @@ class BoardEffectsMixin:
             "status": "created",
             "count": len(created),
             "itemIds": [item["id"] for item in created],
+            "resolutionTriggers": self.collect_rules_token_entry_triggers(created),
         }
 
     def _rules_result_move_random_zone_card(self, action, result, player_id, player):

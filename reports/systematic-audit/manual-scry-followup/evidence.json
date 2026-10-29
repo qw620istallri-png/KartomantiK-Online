@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-29T13:38:55.468641+00:00",
+  "published": false,
+  "summary": {
+    "browser": {
+      "executed": 54,
+      "passed": 54,
+      "failed": 0
+    },
+    "networkTestsPassed": 3
+  },
+  "browserSources": {
+    "public/index.html": "1d0d9dba6749de8d50e9dbac017abfad70e0bc9b6d84a43fe69f974494cb96d7",
+    "public/style.css": "42f6225854e9e139ea5cb90ca2d7c694dea38887d966f37c018597f4d2c2faf2",
+    "public/js/connection.js": "db026f356254b97d4a40af963193cbd5faa6850dde5ec51afdfa889c0eaf7656",
+    "public/js/board.js": "254110405197f01fe0ce86c1aca2e813c62ac62af39f11dc77c6f3ce0fdb26de"
+  },
+  "artifacts": {
+    "before.json": "f9f941717fcbabe0f839c7f2e783a661f09ede00b67b49fbbccd1a8ebb473a78",
+    "before.log": "f5db57e72d7a0e43b5d85a525710f4150af71b4063c1e4b3fc7476a0d2c54086",
+    "browser.json": "a71b3a809116ed15f997907d9b8397aacbe7957c6ad227b956805c052b5b741f",
+    "final.log": "153019316c53a3ab2005efc7a00b34bfbf86817bd8e04ecb6978f3c8e48e7da9",
+    "network.log": "a232cbb342682023a90d93c3d379b5dbaf7d2ab16ed036d78e002cfe66fac9ef"
+  },
+  "limits": [
+    "Chrome touch emulation; no physical devices.",
+    "Scry-result handler and outgoing commands exercised with controlled state; no server in this UI gate."
+  ]
+}

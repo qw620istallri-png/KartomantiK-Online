@@ -552,39 +552,16 @@ const REVEAL_SIZE_MAX = 400;
 
 function applyRevealCardWidth() {
   document.documentElement.style.setProperty("--reveal-card-w", revealCardWidth + "px");
+  if ($("#revealSizeInput")) $("#revealSizeInput").value = String(revealCardWidth);
 }
 
 function initRevealResize() {
   applyRevealCardWidth();
-  $("#revealResizeHandle").addEventListener("pointerdown", (event) => {
-    event.preventDefault();
-    const startY = event.clientY;
-    const startWidth = revealCardWidth;
-    const move = (e) => {
-      // unlike the hand's handle (above its tray), this one sits BELOW the
-      // card row, so dragging away from the content (down) is what should grow it
-      revealCardWidth = Math.min(REVEAL_SIZE_MAX, Math.max(90, startWidth + (e.clientY - startY)));
-      applyRevealCardWidth();
-    };
-    const up = () => {
-      window.removeEventListener("pointermove", move);
-      window.removeEventListener("pointerup", up);
-      localStorage.setItem(REVEAL_SIZE_KEY, String(revealCardWidth));
-    };
-    window.addEventListener("pointermove", move);
-    window.addEventListener("pointerup", up);
+  $("#revealSizeInput").addEventListener("input", (event) => {
+    revealCardWidth = Math.min(REVEAL_SIZE_MAX, Math.max(90, Number(event.target.value) || 190));
+    applyRevealCardWidth();
+    localStorage.setItem(REVEAL_SIZE_KEY, String(revealCardWidth));
   });
-  $("#revealCards").addEventListener(
-    "wheel",
-    (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      if ($("#revealCards").scrollWidth > $("#revealCards").clientWidth) {
-        $("#revealCards").scrollLeft += event.deltaY;
-      }
-    },
-    { passive: false }
-  );
 }
 
 // ---------------------------------------------------------------- hand-view resize

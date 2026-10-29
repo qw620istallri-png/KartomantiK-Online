@@ -1,0 +1,182 @@
+{
+  "schemaVersion": 1,
+  "summary": {
+    "executed": 36,
+    "passed": 18,
+    "failed": 18
+  },
+  "tests": [
+    {
+      "testId": "1440-fr-left-controls-visible",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(a.x+a.width<=b.x)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:224\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:2"
+    },
+    {
+      "testId": "1440-fr-scroll-cards",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(await page.locator('#revealCards').evaluate(el=>el.scrollTop>0))\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:182\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:2"
+    },
+    {
+      "testId": "1440-fr-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-left-controls-visible",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(a.x+a.width<=b.x)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:224\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:2"
+    },
+    {
+      "testId": "1440-en-scroll-cards",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(await page.locator('#revealCards').evaluate(el=>el.scrollTop>0))\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:182\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:2"
+    },
+    {
+      "testId": "1440-en-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-left-controls-visible",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(a.x+a.width<=b.x)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:224\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:2"
+    },
+    {
+      "testId": "1440-it-scroll-cards",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(await page.locator('#revealCards').evaluate(el=>el.scrollTop>0))\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:182\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:2"
+    },
+    {
+      "testId": "1440-it-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-left-controls-visible",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(a.x+a.width<=b.x)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:224\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:2"
+    },
+    {
+      "testId": "844-fr-scroll-cards",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(await page.locator('#revealCards').evaluate(el=>el.scrollTop>0))\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:182\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:2"
+    },
+    {
+      "testId": "844-fr-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-left-controls-visible",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(a.x+a.width<=b.x)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:224\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:2"
+    },
+    {
+      "testId": "844-en-scroll-cards",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(await page.locator('#revealCards').evaluate(el=>el.scrollTop>0))\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:182\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:2"
+    },
+    {
+      "testId": "844-en-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-left-controls-visible",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(a.x+a.width<=b.x)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:224\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:2"
+    },
+    {
+      "testId": "844-it-scroll-cards",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(await page.locator('#revealCards').evaluate(el=>el.scrollTop>0))\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:182\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:2"
+    },
+    {
+      "testId": "844-it-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-left-controls-visible",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(a.x+a.width<=b.x)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:224\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:2"
+    },
+    {
+      "testId": "640-fr-scroll-cards",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(await page.locator('#revealCards').evaluate(el=>el.scrollTop>0))\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:182\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:2"
+    },
+    {
+      "testId": "640-fr-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-left-controls-visible",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(a.x+a.width<=b.x)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:224\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:2"
+    },
+    {
+      "testId": "640-en-scroll-cards",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(await page.locator('#revealCards').evaluate(el=>el.scrollTop>0))\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:182\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:2"
+    },
+    {
+      "testId": "640-en-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-left-controls-visible",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(a.x+a.width<=b.x)\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:224\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:17:2"
+    },
+    {
+      "testId": "640-it-scroll-cards",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:\n\n  assert.ok(await page.locator('#revealCards').evaluate(el=>el.scrollTop>0))\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:182\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:6:33)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_scry_mobile.cjs:18:2"
+    },
+    {
+      "testId": "640-it-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-close-and-reopen",
+      "status": "pass"
+    }
+  ],
+  "sources": {
+    "public/index.html": "8de4f8bffd9a351c7e683541686ae005ee84e26a538829501fe5de7bff0e07b8",
+    "public/style.css": "6dce5387c0951eeaaad97af819f692b5eb14417f31de9b240dec40f61633bb60",
+    "public/js/connection.js": "0c51cee9c390a04f806d5f886c3ba9b34ad16c66d8db07fbf2b0a3503ff39a0b",
+    "public/js/board.js": "966d74d7a9614e30fc14a4e7c8781a100d959dcea5538a2f7e16c5141941547b"
+  },
+  "limits": [
+    "Chrome touch emulation; no physical devices.",
+    "Scry-result handler and outgoing commands exercised with controlled state; no server in this UI gate."
+  ]
+}

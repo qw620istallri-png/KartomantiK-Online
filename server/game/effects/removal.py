@@ -464,6 +464,9 @@ class RemovalEffectsMixin:
         for item in list(self.battlefield):
             if item.get("id") not in matched_ids or not item.get("faceUp"):
                 continue
+            if (self.rules_field_zone(item) == "stalemate"
+                    or self.rules_item_is_immune(item, player_id)):
+                continue
             if (
                 self.rules_item_card_rules(item).get("type")
                 != "manifestation"

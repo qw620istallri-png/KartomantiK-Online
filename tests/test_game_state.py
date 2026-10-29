@@ -14379,20 +14379,24 @@ class CarcassDevourerChoiceTests(RealCardRulesCase):
         self.put(p1, "graveyard", ["m-1", "m-2", "m-3"])
         item = self.field_item("cd", "p1", self.CARCASS, "interzone")
         session.battlefield = [item]
-        ability = self.ability(self.CARCASS, "carcass-devourer-eats-limbo")
-        action = {
-            "id": "a1", "controllerId": "p1", "targets": [],
-            "source": {"cardId": self.CARCASS, "itemId": "cd", "zone": "battlefield"},
-            "ability": {**ability, "result": ability["result"]},
-        }
-        outcome = session.apply_rules_action_result(action)
-        self.assertEqual(outcome["kind"], "choice_required")
+        actions = session.queue_rules_triggers(self.CARCASS, "p1", "enters_field",
+            zone="interzone", item_id="cd", face_up=True, controller_id="p1", defer=True)
+        session.queue_rules_simultaneous_actions(actions)
         choice = session.rules_engine["pendingChoice"]
-        self.assertEqual(choice["playerId"], "p1")
-        self.assertCountEqual(choice["candidateCardIds"], ["m-1", "m-2", "m-3"])
-        error, result = session.resolve_rules_choice("p1", choice["id"], ["m-1", "m-3"])
+        self.assertEqual(choice["kind"], "optional_stack_action")
+        error, _ = session.resolve_rules_choice("p1", choice["id"], option="accept")
         self.assertIsNone(error)
-        self.assertEqual(result["cardIds"], ["m-1", "m-3"])
+        choice = session.rules_engine["pendingChoice"]
+        self.assertEqual(choice["kind"], "trigger_targets")
+        self.assertEqual(choice["playerId"], "p1")
+        self.assertFalse(session.rules_engine["actionStack"])
+        error, result = session.resolve_rules_choice("p1", choice["id"], targets=[{
+            "kind": "zone_card", "containerId": "p1", "zone": "graveyard", "cardId": cid,
+        } for cid in ["m-1", "m-3"]])
+        self.assertIsNone(error)
+        self.assertEqual(p1["zones"]["graveyard"], ["m-1", "m-2", "m-3"])
+        self.assertEqual(len(session.rules_engine["actionStack"]), 1)
+        session.resolve_rules_top_action()
         self.assertEqual(p1["zones"]["graveyard"], ["m-2"])
         self.assertEqual(item["counters"]["power"], 2)
         self.assertIsNone(session.rules_engine["pendingChoice"])

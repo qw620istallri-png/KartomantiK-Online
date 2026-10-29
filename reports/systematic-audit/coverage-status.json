@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-29T08:00:16.245757+00:00",
-  "sourceDigest": "bfda0067d220a9f40d95855abe51195967ddf8e77f11339fb2d79f9ab81366f2",
-  "unitEvidence": "reports/systematic-audit/release-141-3/unit-tests.json",
-  "unitEvidenceSourceDigest": "bfda0067d220a9f40d95855abe51195967ddf8e77f11339fb2d79f9ab81366f2",
+  "generatedAt": "2026-10-29T15:02:06.536738+00:00",
+  "sourceDigest": "85715e8ac3d0752dcc2da2ce3bbf79b7b72486d2524cbab0f5b7204e9b0f6ea4",
+  "unitEvidence": "reports/systematic-audit/release-141-4/unit-tests.json",
+  "unitEvidenceSourceDigest": "85715e8ac3d0752dcc2da2ce3bbf79b7b72486d2524cbab0f5b7204e9b0f6ea4",
   "currentUnitEvidence": true,
   "unitEvidencePassed": true,
   "summary": {
     "catalogCards": 450,
-    "cardsWithSelectedClauseProof": 129,
-    "percentageWithSelectedClauseProof": 28.7,
-    "cardsOutsideThisStrictRegister": 321,
+    "cardsWithSelectedClauseProof": 188,
+    "percentageWithSelectedClauseProof": 41.8,
+    "cardsOutsideThisStrictRegister": 262,
     "fullCatalogSemanticCertification": false
   },
   "countingRule": "At least one explicit printed clause linked to tests that all passed in the named full unit run. Unique card IDs; interaction-only references excluded. Selected clauses do not certify all branches.",
@@ -39,6 +39,32 @@
           ],
           "paragraphIndex": 1,
           "printedClauseSha256": "ca6e6ed36414db8c90e283107b8cfd69db31e07f35c550b5454399274453fa5b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ptwyrc2a26wqwc8_en",
+      "name": "Absent Trinket",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_absent_trinket__controlled",
+            "test_support_permissions.SupportPermissions.test_absent_trinket__disabled",
+            "test_support_permissions.SupportPermissions.test_absent_trinket__duplicate",
+            "test_support_permissions.SupportPermissions.test_absent_trinket__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_absent_trinket__first",
+            "test_support_permissions.SupportPermissions.test_absent_trinket__hand",
+            "test_support_permissions.SupportPermissions.test_absent_trinket__interzone",
+            "test_support_permissions.SupportPermissions.test_absent_trinket__lock",
+            "test_support_permissions.SupportPermissions.test_absent_trinket__opponent",
+            "test_support_permissions.SupportPermissions.test_absent_trinket__stalemate",
+            "test_support_permissions.SupportPermissions.test_absent_trinket__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_absent_trinket__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
         }
       ],
       "allBranchesCertified": false
@@ -412,6 +438,161 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "axsr1earxwcrta3_en",
+      "name": "Auriwings",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_auriwings__controlled",
+            "test_support_permissions.SupportPermissions.test_auriwings__disabled",
+            "test_support_permissions.SupportPermissions.test_auriwings__duplicate",
+            "test_support_permissions.SupportPermissions.test_auriwings__first",
+            "test_support_permissions.SupportPermissions.test_auriwings__hand",
+            "test_support_permissions.SupportPermissions.test_auriwings__interzone",
+            "test_support_permissions.SupportPermissions.test_auriwings__lock",
+            "test_support_permissions.SupportPermissions.test_auriwings__opponent",
+            "test_support_permissions.SupportPermissions.test_auriwings__stalemate",
+            "test_support_permissions.SupportPermissions.test_auriwings__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_auriwings__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_auriwings__controlled",
+            "test_support_permissions.SupportPermissions.test_auriwings__disabled",
+            "test_support_permissions.SupportPermissions.test_auriwings__duplicate",
+            "test_support_permissions.SupportPermissions.test_auriwings__first",
+            "test_support_permissions.SupportPermissions.test_auriwings__hand",
+            "test_support_permissions.SupportPermissions.test_auriwings__interzone",
+            "test_support_permissions.SupportPermissions.test_auriwings__lock",
+            "test_support_permissions.SupportPermissions.test_auriwings__opponent",
+            "test_support_permissions.SupportPermissions.test_auriwings__stalemate",
+            "test_support_permissions.SupportPermissions.test_auriwings__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_auriwings__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-051",
+      "name": "Bakato, the Obsessive",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__controlled",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__disabled",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__duplicate",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__first",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__hand",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__interzone",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__lock",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__opponent",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__stalemate",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__controlled",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__disabled",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__duplicate",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__first",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__hand",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__interzone",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__lock",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__opponent",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__stalemate",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "xav48hincrnl32d_en",
+      "name": "Banish",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-destination-followup/clauses.json",
+          "testIds": [
+            "test_zone_destination_family.ZoneDestinationFamily.test_banish__bob",
+            "test_zone_destination_family.ZoneDestinationFamily.test_banish__cost",
+            "test_zone_destination_family.ZoneDestinationFamily.test_banish__deck_replacement",
+            "test_zone_destination_family.ZoneDestinationFamily.test_banish__gone",
+            "test_zone_destination_family.ZoneDestinationFamily.test_banish__normal",
+            "test_zone_destination_family.ZoneDestinationFamily.test_banish__owner",
+            "test_zone_destination_family.ZoneDestinationFamily.test_banish__protected",
+            "test_zone_destination_family.ZoneDestinationFamily.test_banish__type",
+            "test_zone_destination_family.ZoneDestinationFamily.test_banish__unfunded",
+            "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_banish__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "0a2d7580ad6be5747758f76e17c640cc391ba808981a0ee10c55a91f06c3abed"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-127",
+      "name": "Bibi, the Confused",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__controlled",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__disabled",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__duplicate",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__first",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__hand",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__interzone",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__lock",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__opponent",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__stalemate",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__wrong_priority",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_bibi_the_confused__websocket_hand"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__controlled",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__disabled",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__duplicate",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__first",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__hand",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__interzone",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__lock",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__opponent",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__stalemate",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_bibi_the_confused__wrong_priority",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_bibi_the_confused__websocket_hand"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "vt30v1v8anw5hib_en",
       "name": "Bloatuba",
       "proofs": [
@@ -541,6 +722,53 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-002",
+      "name": "Buuz, the Helicoidal",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__controlled",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__disabled",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__duplicate",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__first",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__hand",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__interzone",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__lock",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__opponent",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__stalemate",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__wrong_priority",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_buuz_the_helicoidal__websocket_hand"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__controlled",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__disabled",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__duplicate",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__first",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__hand",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__interzone",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__lock",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__opponent",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__stalemate",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__wrong_priority",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_buuz_the_helicoidal__websocket_hand"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "tzizek39tj8rqq5_en",
       "name": "Callus, the Thought-stirrer",
       "proofs": [
@@ -562,6 +790,78 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "a42bc2daef82c75d544c65ba21085a5aa6dd9bf1a28b188eb6d4f8eca2f3a68f"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "43faoiy4cmoxmaw_en",
+      "name": "Candle Serpent",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_candle_serpent__controlled",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__disabled",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__duplicate",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__first",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__hand",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__interzone",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__lock",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__opponent",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__stalemate",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_candle_serpent__controlled",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__disabled",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__duplicate",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__first",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__hand",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__interzone",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__lock",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__opponent",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__stalemate",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_candle_serpent__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "zh4rjhzon9qes6m_en",
+      "name": "Carcass Devourer",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/exile-family-followup/clauses.json",
+          "testIds": [
+            "test_exile_family.ExileFamily.test_carcass__bob",
+            "test_exile_family.ExileFamily.test_carcass__cost",
+            "test_exile_family.ExileFamily.test_carcass__decline",
+            "test_exile_family.ExileFamily.test_carcass__duration",
+            "test_exile_family.ExileFamily.test_carcass__invalid",
+            "test_exile_family.ExileFamily.test_carcass__late",
+            "test_exile_family.ExileFamily.test_carcass__maximum",
+            "test_exile_family.ExileFamily.test_carcass__normal",
+            "test_exile_family.ExileFamily.test_carcass__partial",
+            "test_exile_family.ExileFamily.test_carcass__reentry",
+            "test_exile_family.ExileFamily.test_carcass__source_gone",
+            "test_exile_family.ExileFamily.test_carcass__too_many",
+            "test_exile_family.ExileFamily.test_carcass__zero",
+            "test_exile_family_integration.ExileFamilyIntegration.test_carcass__websocket_bob",
+            "test_exile_family_integration.ExileFamilyIntegration.test_carcass__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "752d7330895592b9dab049488863099a7c2a0ad2a16bdd7da5d111afc0098dc6"
         }
       ],
       "allBranchesCertified": false
@@ -616,6 +916,163 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "dxl82w4oxzcg1eg_en",
+      "name": "Chitinous Repeller",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__controlled",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__disabled",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__duplicate",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__first",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__hand",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__interzone",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__lock",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__opponent",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__stalemate",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__controlled",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__disabled",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__duplicate",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__first",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__hand",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__interzone",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__lock",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__opponent",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__stalemate",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_chitinous_repeller__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-011",
+      "name": "Chobariki, of the Shiny Muscles",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__controlled",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__disabled",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__duplicate",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__first",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__hand",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__interzone",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__lock",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__opponent",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__stalemate",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__controlled",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__disabled",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__duplicate",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__first",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__hand",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__interzone",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__lock",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__opponent",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__stalemate",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "rngwnb4y158ya2q_en",
+      "name": "Cimba, the Boisterous",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__controlled",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__disabled",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__duplicate",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__first",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__hand",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__interzone",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__lock",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__opponent",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__stalemate",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__controlled",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__disabled",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__duplicate",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__first",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__hand",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__interzone",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__lock",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__opponent",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__stalemate",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "zd6h16he0m4kuwb_en",
+      "name": "Claim the Forsaken",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-destination-followup/clauses.json",
+          "testIds": [
+            "test_zone_destination_family.ZoneDestinationFamily.test_claim__bob",
+            "test_zone_destination_family.ZoneDestinationFamily.test_claim__cost",
+            "test_zone_destination_family.ZoneDestinationFamily.test_claim__departure_event",
+            "test_zone_destination_family.ZoneDestinationFamily.test_claim__gone",
+            "test_zone_destination_family.ZoneDestinationFamily.test_claim__normal",
+            "test_zone_destination_family.ZoneDestinationFamily.test_claim__old_entry",
+            "test_zone_destination_family.ZoneDestinationFamily.test_claim__owner",
+            "test_zone_destination_family.ZoneDestinationFamily.test_claim__stale",
+            "test_zone_destination_family.ZoneDestinationFamily.test_claim__type",
+            "test_zone_destination_family.ZoneDestinationFamily.test_claim__unfunded",
+            "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_claim__websocket_bob",
+            "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_claim__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "c1641ca2347db418be4d0f4ea012a7abe8e1eed17301a26bc17ec2b4da20f529"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "i6oj7gtnkfd1jja_en",
       "name": "Compensating Orchard",
       "proofs": [
@@ -638,6 +1095,49 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "95f802aeaa6ff2e8d9b4a182158aca4ae4e52ef80772108b96bbe1bea59c88af"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "tpnlqhi6o8evklz_en",
+      "name": "Concealed Manta",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_concealed_manta__controlled",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__disabled",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__duplicate",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__first",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__hand",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__interzone",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__lock",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__opponent",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__stalemate",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_concealed_manta__controlled",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__disabled",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__duplicate",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__first",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__hand",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__interzone",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__lock",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__opponent",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__stalemate",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_concealed_manta__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
         }
       ],
       "allBranchesCertified": false
@@ -815,6 +1315,31 @@
           ],
           "paragraphIndex": 2,
           "printedClauseSha256": "c71b43eee19b2edda8adf2034f8992570b69b8080cf5c3077394e9b0a02f5896"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ek1bng9r7vhriwt_en",
+      "name": "Defer",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-destination-followup/clauses.json",
+          "testIds": [
+            "test_zone_destination_family.ZoneDestinationFamily.test_defer__bob",
+            "test_zone_destination_family.ZoneDestinationFamily.test_defer__cost",
+            "test_zone_destination_family.ZoneDestinationFamily.test_defer__deck_replacement",
+            "test_zone_destination_family.ZoneDestinationFamily.test_defer__ephemeral_on_field",
+            "test_zone_destination_family.ZoneDestinationFamily.test_defer__gone",
+            "test_zone_destination_family.ZoneDestinationFamily.test_defer__normal",
+            "test_zone_destination_family.ZoneDestinationFamily.test_defer__owner",
+            "test_zone_destination_family.ZoneDestinationFamily.test_defer__protected",
+            "test_zone_destination_family.ZoneDestinationFamily.test_defer__type",
+            "test_zone_destination_family.ZoneDestinationFamily.test_defer__unfunded",
+            "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_defer__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "64823938b2d641f4961fd5e6eb42c108ab0e09b329bf992bbd573edcb62a022a"
         }
       ],
       "allBranchesCertified": false
@@ -1055,6 +1580,31 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-131",
+      "name": "Drildrill",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_drildrill__controlled",
+            "test_support_permissions.SupportPermissions.test_drildrill__disabled",
+            "test_support_permissions.SupportPermissions.test_drildrill__duplicate",
+            "test_support_permissions.SupportPermissions.test_drildrill__first",
+            "test_support_permissions.SupportPermissions.test_drildrill__hand",
+            "test_support_permissions.SupportPermissions.test_drildrill__interzone",
+            "test_support_permissions.SupportPermissions.test_drildrill__lock",
+            "test_support_permissions.SupportPermissions.test_drildrill__opponent",
+            "test_support_permissions.SupportPermissions.test_drildrill__stalemate",
+            "test_support_permissions.SupportPermissions.test_drildrill__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_drildrill__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "6b4f3yh4tk4091p_en",
       "name": "Echo of the Wilds",
       "proofs": [
@@ -1138,6 +1688,57 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "67009ud077sgz7b_en",
+      "name": "Everspring",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/exile-family-followup/clauses.json",
+          "testIds": [
+            "test_exile_family.ExileFamily.test_everspring__cost",
+            "test_exile_family.ExileFamily.test_everspring__foreign_vessel",
+            "test_exile_family.ExileFamily.test_everspring__invalid",
+            "test_exile_family.ExileFamily.test_everspring__late",
+            "test_exile_family.ExileFamily.test_everspring__maximum",
+            "test_exile_family.ExileFamily.test_everspring__normal",
+            "test_exile_family.ExileFamily.test_everspring__partial",
+            "test_exile_family.ExileFamily.test_everspring__reentry",
+            "test_exile_family.ExileFamily.test_everspring__source_gone",
+            "test_exile_family.ExileFamily.test_everspring__too_many",
+            "test_exile_family.ExileFamily.test_everspring__total_points",
+            "test_exile_family.ExileFamily.test_everspring__unfunded",
+            "test_exile_family.ExileFamily.test_everspring__zero",
+            "test_exile_family_integration.ExileFamilyIntegration.test_everspring__websocket_normal"
+          ],
+          "paragraphIndex": 1,
+          "printedClauseSha256": "f2f6f74ee19aa995c58be96bd3eef8905d70404153619f0b7a29e4d7448876a8"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "1q6crbc7nwugrgs_en",
+      "name": "Exile",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/exile-family-followup/clauses.json",
+          "testIds": [
+            "test_exile_family.ExileFamily.test_exile__cost",
+            "test_exile_family.ExileFamily.test_exile__invalid",
+            "test_exile_family.ExileFamily.test_exile__late",
+            "test_exile_family.ExileFamily.test_exile__limbo_either_player",
+            "test_exile_family.ExileFamily.test_exile__normal",
+            "test_exile_family.ExileFamily.test_exile__protected",
+            "test_exile_family.ExileFamily.test_exile__too_many",
+            "test_exile_family.ExileFamily.test_exile__unfunded",
+            "test_exile_family_integration.ExileFamilyIntegration.test_exile__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "ddb0bd7e205ce197830933f8800b3fa484f22556b42edf9e4d1b340e3975107b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "xoo3jxtiy1sonm1_en",
       "name": "Expansive Ponderer",
       "proofs": [
@@ -1216,6 +1817,49 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "ab0af85ce25f54e3a5fe5646f113b9d240b76ff427fac0a9d92f84ee7ed7c25e"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "4rnpxnnceu8x9o9_en",
+      "name": "First Stone",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_first_stone__controlled",
+            "test_support_permissions.SupportPermissions.test_first_stone__disabled",
+            "test_support_permissions.SupportPermissions.test_first_stone__duplicate",
+            "test_support_permissions.SupportPermissions.test_first_stone__first",
+            "test_support_permissions.SupportPermissions.test_first_stone__hand",
+            "test_support_permissions.SupportPermissions.test_first_stone__interzone",
+            "test_support_permissions.SupportPermissions.test_first_stone__lock",
+            "test_support_permissions.SupportPermissions.test_first_stone__opponent",
+            "test_support_permissions.SupportPermissions.test_first_stone__stalemate",
+            "test_support_permissions.SupportPermissions.test_first_stone__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_first_stone__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_first_stone__controlled",
+            "test_support_permissions.SupportPermissions.test_first_stone__disabled",
+            "test_support_permissions.SupportPermissions.test_first_stone__duplicate",
+            "test_support_permissions.SupportPermissions.test_first_stone__first",
+            "test_support_permissions.SupportPermissions.test_first_stone__hand",
+            "test_support_permissions.SupportPermissions.test_first_stone__interzone",
+            "test_support_permissions.SupportPermissions.test_first_stone__lock",
+            "test_support_permissions.SupportPermissions.test_first_stone__opponent",
+            "test_support_permissions.SupportPermissions.test_first_stone__stalemate",
+            "test_support_permissions.SupportPermissions.test_first_stone__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_first_stone__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
         }
       ],
       "allBranchesCertified": false
@@ -1310,6 +1954,33 @@
           ],
           "paragraphIndex": 1,
           "printedClauseSha256": "67687fe9632cb23d935d432ff25d8c470b09a4ec93c46fe24dc1e20569419b2b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ibf2epfw6eap5x3_en",
+      "name": "Forest Guide",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_forest_guide__controlled",
+            "test_support_permissions.SupportPermissions.test_forest_guide__disabled",
+            "test_support_permissions.SupportPermissions.test_forest_guide__duplicate",
+            "test_support_permissions.SupportPermissions.test_forest_guide__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_forest_guide__first",
+            "test_support_permissions.SupportPermissions.test_forest_guide__hand",
+            "test_support_permissions.SupportPermissions.test_forest_guide__interzone",
+            "test_support_permissions.SupportPermissions.test_forest_guide__lock",
+            "test_support_permissions.SupportPermissions.test_forest_guide__opponent",
+            "test_support_permissions.SupportPermissions.test_forest_guide__stalemate",
+            "test_support_permissions.SupportPermissions.test_forest_guide__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_forest_guide__wrong_priority",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_forest_guide__websocket_interzone"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
         }
       ],
       "allBranchesCertified": false
@@ -1472,6 +2143,51 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "5ea6511d80fca154dfe8b7ec0215624a3422b86662da5e65cdf793c616f5b36d"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "3k3i91mo61xgl24_en",
+      "name": "Granite Mass",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_granite_mass__controlled",
+            "test_support_permissions.SupportPermissions.test_granite_mass__disabled",
+            "test_support_permissions.SupportPermissions.test_granite_mass__duplicate",
+            "test_support_permissions.SupportPermissions.test_granite_mass__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_granite_mass__first",
+            "test_support_permissions.SupportPermissions.test_granite_mass__hand",
+            "test_support_permissions.SupportPermissions.test_granite_mass__interzone",
+            "test_support_permissions.SupportPermissions.test_granite_mass__lock",
+            "test_support_permissions.SupportPermissions.test_granite_mass__opponent",
+            "test_support_permissions.SupportPermissions.test_granite_mass__stalemate",
+            "test_support_permissions.SupportPermissions.test_granite_mass__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_granite_mass__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_granite_mass__controlled",
+            "test_support_permissions.SupportPermissions.test_granite_mass__disabled",
+            "test_support_permissions.SupportPermissions.test_granite_mass__duplicate",
+            "test_support_permissions.SupportPermissions.test_granite_mass__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_granite_mass__first",
+            "test_support_permissions.SupportPermissions.test_granite_mass__hand",
+            "test_support_permissions.SupportPermissions.test_granite_mass__interzone",
+            "test_support_permissions.SupportPermissions.test_granite_mass__lock",
+            "test_support_permissions.SupportPermissions.test_granite_mass__opponent",
+            "test_support_permissions.SupportPermissions.test_granite_mass__stalemate",
+            "test_support_permissions.SupportPermissions.test_granite_mass__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_granite_mass__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
         }
       ],
       "allBranchesCertified": false
@@ -1647,6 +2363,61 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "dm0hz9sb5i737gx_en",
+      "name": "Hogma, the Petty",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_hogma_the_petty__controlled",
+            "test_support_permissions.SupportPermissions.test_hogma_the_petty__disabled",
+            "test_support_permissions.SupportPermissions.test_hogma_the_petty__duplicate",
+            "test_support_permissions.SupportPermissions.test_hogma_the_petty__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_hogma_the_petty__first",
+            "test_support_permissions.SupportPermissions.test_hogma_the_petty__hand",
+            "test_support_permissions.SupportPermissions.test_hogma_the_petty__interzone",
+            "test_support_permissions.SupportPermissions.test_hogma_the_petty__lock",
+            "test_support_permissions.SupportPermissions.test_hogma_the_petty__opponent",
+            "test_support_permissions.SupportPermissions.test_hogma_the_petty__stalemate",
+            "test_support_permissions.SupportPermissions.test_hogma_the_petty__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_hogma_the_petty__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-108",
+      "name": "Horned Augustus",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/exile-family-followup/clauses.json",
+          "testIds": [
+            "test_exile_family.ExileFamily.test_augustus__any_type",
+            "test_exile_family.ExileFamily.test_augustus__bob",
+            "test_exile_family.ExileFamily.test_augustus__cost",
+            "test_exile_family.ExileFamily.test_augustus__invalid",
+            "test_exile_family.ExileFamily.test_augustus__late",
+            "test_exile_family.ExileFamily.test_augustus__maximum",
+            "test_exile_family.ExileFamily.test_augustus__normal",
+            "test_exile_family.ExileFamily.test_augustus__partial",
+            "test_exile_family.ExileFamily.test_augustus__reentry",
+            "test_exile_family.ExileFamily.test_augustus__source_gone",
+            "test_exile_family.ExileFamily.test_augustus__too_many",
+            "test_exile_family.ExileFamily.test_augustus__unfunded",
+            "test_exile_family.ExileFamily.test_augustus__wrong_phase",
+            "test_exile_family.ExileFamily.test_augustus__zero",
+            "test_exile_family_integration.ExileFamilyIntegration.test_augustus__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "f77c69134b389adba7e0f76e71a83e3d5648b2e529ef73d461bd92728361b727"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "pqi88s5ytyfnalf_en",
       "name": "Humiliate",
       "proofs": [
@@ -1709,6 +2480,32 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "47d62309529067e860694fb91ef8ad57cb6c83763eb675dcf33a4c0c8a7bbd5e"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "4naoqbqz6ebozj5_en",
+      "name": "Incinerate",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-family-followup/clauses.json",
+          "testIds": [
+            "test_support_family.SupportFamily.test_incinerate__bob",
+            "test_support_family.SupportFamily.test_incinerate__cost",
+            "test_support_family.SupportFamily.test_incinerate__empty_field",
+            "test_support_family.SupportFamily.test_incinerate__incinerate_history",
+            "test_support_family.SupportFamily.test_incinerate__incinerate_immunity",
+            "test_support_family.SupportFamily.test_incinerate__incinerate_protection",
+            "test_support_family.SupportFamily.test_incinerate__incinerate_stalemate",
+            "test_support_family.SupportFamily.test_incinerate__incinerate_tokens",
+            "test_support_family.SupportFamily.test_incinerate__neutralized",
+            "test_support_family.SupportFamily.test_incinerate__normal",
+            "test_support_family.SupportFamily.test_incinerate__unfunded",
+            "test_support_family_integration.SupportFamilyIntegration.test_incinerate__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "6d782d201b8e5c84bf03cfe6796bf55400c36bae90f953619efd9b19c2e180f9"
         }
       ],
       "allBranchesCertified": false
@@ -1811,6 +2608,141 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "b7d62bac879bba14f5a6571a367e665437a0ea363a93ed82ba651f0c34fa6ec4"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-122",
+      "name": "Jeovak, the Illusory",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__controlled",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__disabled",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__duplicate",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__first",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__hand",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__interzone",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__lock",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__opponent",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__stalemate",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__controlled",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__disabled",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__duplicate",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__first",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__hand",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__interzone",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__lock",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__opponent",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__stalemate",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-065",
+      "name": "Jesterina, the Decadent",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__controlled",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__disabled",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__duplicate",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__first",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__hand",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__interzone",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__lock",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__opponent",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__stalemate",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__wrong_priority",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_jesterina_the_decadent__websocket_hand"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__controlled",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__disabled",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__duplicate",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__first",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__hand",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__interzone",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__lock",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__opponent",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__stalemate",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__wrong_priority",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_jesterina_the_decadent__websocket_hand"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "z6awx4mwwkfrvdd_en",
+      "name": "Jigon, the Trap Setter",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_blanked_manifestation_still_cannot_activate_its_ability",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_does_not_allow_an_unmarked_face_down_card",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_preserves_timing_and_target_validation",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_free_concealed_encoded_will_resolves_without_tribute",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_freeing_one_jigon_does_not_free_another_jigons_will",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_jigon_search_and_loss_make_the_actual_concealed_will_playable",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_jigon_winning_does_not_make_the_concealed_will_free",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_paid_concealed_encoded_will_resolves_its_printed_effect",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_paid_concealed_will_still_requires_payment",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_tebebe_encoded_concealed_will_keeps_its_three_hollow_cost",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_jigon__websocket_free",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_jigon__websocket_paid"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "62e5d3dc802c92d312c8b3910f56536027149146968f450660131b539d26e13e"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_blanked_manifestation_still_cannot_activate_its_ability",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_does_not_allow_an_unmarked_face_down_card",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_preserves_timing_and_target_validation",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_free_concealed_encoded_will_resolves_without_tribute",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_freeing_one_jigon_does_not_free_another_jigons_will",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_jigon_search_and_loss_make_the_actual_concealed_will_playable",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_jigon_winning_does_not_make_the_concealed_will_free",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_paid_concealed_encoded_will_resolves_its_printed_effect",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_paid_concealed_will_still_requires_payment",
+            "test_concealed_play_permissions.ConcealedPlayPermissions.test_tebebe_encoded_concealed_will_keeps_its_three_hollow_cost",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_jigon__websocket_free",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_jigon__websocket_paid"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "130421fbb61dfd8f99511dee9de86d43bd7471a2c6b3bb131421a6357d06fdc6"
         }
       ],
       "allBranchesCertified": false
@@ -2114,6 +3046,49 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "lmjn89wobbttfop_en",
+      "name": "Lament, Thought-nullifier",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__controlled",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__disabled",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__duplicate",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__first",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__hand",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__interzone",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__lock",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__opponent",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__stalemate",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__controlled",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__disabled",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__duplicate",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__first",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__hand",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__interzone",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__lock",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__opponent",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__stalemate",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-113",
       "name": "Lilitha, the Dismemberer",
       "proofs": [
@@ -2204,6 +3179,49 @@
           ],
           "paragraphIndex": 1,
           "printedClauseSha256": "cb9929cac844445ee539004460ca90ec4df40124d65eef9e0087e168676345b9"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "zozynivu4tbojjg_en",
+      "name": "Little Abhorrence",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__controlled",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__disabled",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__duplicate",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__first",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__hand",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__interzone",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__lock",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__opponent",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__stalemate",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__controlled",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__disabled",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__duplicate",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__first",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__hand",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__interzone",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__lock",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__opponent",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__stalemate",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_little_abhorrence__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
         }
       ],
       "allBranchesCertified": false
@@ -2390,6 +3408,160 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-017",
+      "name": "Mamelath, the Polymancer",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__controlled",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__disabled",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__duplicate",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__first",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__hand",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__interzone",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__lock",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__opponent",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__stalemate",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__controlled",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__disabled",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__duplicate",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__first",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__hand",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__interzone",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__lock",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__opponent",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__stalemate",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-005",
+      "name": "Manibirbo",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_manibirbo__controlled",
+            "test_support_permissions.SupportPermissions.test_manibirbo__disabled",
+            "test_support_permissions.SupportPermissions.test_manibirbo__duplicate",
+            "test_support_permissions.SupportPermissions.test_manibirbo__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_manibirbo__first",
+            "test_support_permissions.SupportPermissions.test_manibirbo__hand",
+            "test_support_permissions.SupportPermissions.test_manibirbo__interzone",
+            "test_support_permissions.SupportPermissions.test_manibirbo__lock",
+            "test_support_permissions.SupportPermissions.test_manibirbo__opponent",
+            "test_support_permissions.SupportPermissions.test_manibirbo__stalemate",
+            "test_support_permissions.SupportPermissions.test_manibirbo__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_manibirbo__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_manibirbo__controlled",
+            "test_support_permissions.SupportPermissions.test_manibirbo__disabled",
+            "test_support_permissions.SupportPermissions.test_manibirbo__duplicate",
+            "test_support_permissions.SupportPermissions.test_manibirbo__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_manibirbo__first",
+            "test_support_permissions.SupportPermissions.test_manibirbo__hand",
+            "test_support_permissions.SupportPermissions.test_manibirbo__interzone",
+            "test_support_permissions.SupportPermissions.test_manibirbo__lock",
+            "test_support_permissions.SupportPermissions.test_manibirbo__opponent",
+            "test_support_permissions.SupportPermissions.test_manibirbo__stalemate",
+            "test_support_permissions.SupportPermissions.test_manibirbo__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_manibirbo__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "343xggqp4a0zfw1_en",
+      "name": "Manipulate Intellect",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-destination-followup/clauses.json",
+          "testIds": [
+            "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__cost",
+            "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__gone",
+            "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__normal",
+            "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__old_entry",
+            "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__owner",
+            "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__protected",
+            "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__type",
+            "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__unfunded",
+            "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_manipulate__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "21770534177d784164f667260e9e1e2169f26a423196d47ea53c78a8d121b2a9"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-053",
+      "name": "Manymaws",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_manymaws__controlled",
+            "test_support_permissions.SupportPermissions.test_manymaws__disabled",
+            "test_support_permissions.SupportPermissions.test_manymaws__duplicate",
+            "test_support_permissions.SupportPermissions.test_manymaws__first",
+            "test_support_permissions.SupportPermissions.test_manymaws__hand",
+            "test_support_permissions.SupportPermissions.test_manymaws__interzone",
+            "test_support_permissions.SupportPermissions.test_manymaws__lock",
+            "test_support_permissions.SupportPermissions.test_manymaws__opponent",
+            "test_support_permissions.SupportPermissions.test_manymaws__stalemate",
+            "test_support_permissions.SupportPermissions.test_manymaws__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_manymaws__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_manymaws__controlled",
+            "test_support_permissions.SupportPermissions.test_manymaws__disabled",
+            "test_support_permissions.SupportPermissions.test_manymaws__duplicate",
+            "test_support_permissions.SupportPermissions.test_manymaws__first",
+            "test_support_permissions.SupportPermissions.test_manymaws__hand",
+            "test_support_permissions.SupportPermissions.test_manymaws__interzone",
+            "test_support_permissions.SupportPermissions.test_manymaws__lock",
+            "test_support_permissions.SupportPermissions.test_manymaws__opponent",
+            "test_support_permissions.SupportPermissions.test_manymaws__stalemate",
+            "test_support_permissions.SupportPermissions.test_manymaws__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_manymaws__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "3gqrmx5jegwz8kb_en",
       "name": "Martyrize",
       "proofs": [
@@ -2468,6 +3640,32 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "8lion52jjnmxvko_en",
+      "name": "Merciful Pago",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_merciful_pago__controlled",
+            "test_support_permissions.SupportPermissions.test_merciful_pago__disabled",
+            "test_support_permissions.SupportPermissions.test_merciful_pago__duplicate",
+            "test_support_permissions.SupportPermissions.test_merciful_pago__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_merciful_pago__first",
+            "test_support_permissions.SupportPermissions.test_merciful_pago__hand",
+            "test_support_permissions.SupportPermissions.test_merciful_pago__interzone",
+            "test_support_permissions.SupportPermissions.test_merciful_pago__lock",
+            "test_support_permissions.SupportPermissions.test_merciful_pago__opponent",
+            "test_support_permissions.SupportPermissions.test_merciful_pago__stalemate",
+            "test_support_permissions.SupportPermissions.test_merciful_pago__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_merciful_pago__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "ydijk2x1ne8w93g_en",
       "name": "Mind Parasite",
       "proofs": [
@@ -2486,6 +3684,35 @@
           ],
           "paragraphIndex": 1,
           "printedClauseSha256": "b579dbdb5a733d7231faf74f012c98dbb08da41342bf91a902e3f38f169cb1f3"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "72zvsiuky5ytolh_en",
+      "name": "Mirror the Impulse",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-family-followup/clauses.json",
+          "testIds": [
+            "test_support_family.SupportFamily.test_mirror__control_changed",
+            "test_support_family.SupportFamily.test_mirror__controller",
+            "test_support_family.SupportFamily.test_mirror__cost",
+            "test_support_family.SupportFamily.test_mirror__entry_watchers",
+            "test_support_family.SupportFamily.test_mirror__gone",
+            "test_support_family.SupportFamily.test_mirror__invalid",
+            "test_support_family.SupportFamily.test_mirror__late_protection",
+            "test_support_family.SupportFamily.test_mirror__lock",
+            "test_support_family.SupportFamily.test_mirror__neutralized",
+            "test_support_family.SupportFamily.test_mirror__no_targets",
+            "test_support_family.SupportFamily.test_mirror__normal",
+            "test_support_family.SupportFamily.test_mirror__play_only_lock",
+            "test_support_family.SupportFamily.test_mirror__unfunded",
+            "test_support_family_integration.SupportFamilyIntegration.test_mirror__websocket_normal",
+            "test_support_family_integration.SupportFamilyIntegration.test_mirror__websocket_watcher"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "fb60ffce4c43ce375ae9c282960eff234c172ff14bd35418af9df272ad67ff41"
         }
       ],
       "allBranchesCertified": false
@@ -2603,6 +3830,32 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-059",
+      "name": "Nameless Arcane",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_nameless_arcane__controlled",
+            "test_support_permissions.SupportPermissions.test_nameless_arcane__disabled",
+            "test_support_permissions.SupportPermissions.test_nameless_arcane__duplicate",
+            "test_support_permissions.SupportPermissions.test_nameless_arcane__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_nameless_arcane__first",
+            "test_support_permissions.SupportPermissions.test_nameless_arcane__hand",
+            "test_support_permissions.SupportPermissions.test_nameless_arcane__interzone",
+            "test_support_permissions.SupportPermissions.test_nameless_arcane__lock",
+            "test_support_permissions.SupportPermissions.test_nameless_arcane__opponent",
+            "test_support_permissions.SupportPermissions.test_nameless_arcane__stalemate",
+            "test_support_permissions.SupportPermissions.test_nameless_arcane__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_nameless_arcane__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-055",
       "name": "Nghoul-ong, the Tormented",
       "proofs": [
@@ -2638,6 +3891,51 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-076",
+      "name": "Nubilung, the Elder",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__controlled",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__disabled",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__duplicate",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__first",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__hand",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__interzone",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__lock",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__opponent",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__stalemate",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__wrong_priority",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_nubilung_the_elder__websocket_stalemate"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__controlled",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__disabled",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__duplicate",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__first",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__hand",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__interzone",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__lock",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__opponent",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__stalemate",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_nubilung_the_elder__wrong_priority",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_nubilung_the_elder__websocket_stalemate"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "bx0uyxxb3c6pas2_en",
       "name": "Ohmom, the Azure",
       "proofs": [
@@ -2659,6 +3957,31 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "3a7f75bd5869d92997537d25a3d3758c7a84afef0c6a6755f2f68448a81d2317"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "tzoadjk7wb5qj5f_en",
+      "name": "Ononok, Chaotic Scatterer",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__controlled",
+            "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__disabled",
+            "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__duplicate",
+            "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__first",
+            "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__hand",
+            "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__interzone",
+            "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__lock",
+            "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__opponent",
+            "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__stalemate",
+            "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
         }
       ],
       "allBranchesCertified": false
@@ -2754,6 +4077,49 @@
           ],
           "paragraphIndex": 1,
           "printedClauseSha256": "a6fe5e203abafd884725997d50df0e64e2ddcac559e308c2a3469ea28aa62b0b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-075",
+      "name": "Ozzit, the Unwary",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__controlled",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__disabled",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__duplicate",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__first",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__hand",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__interzone",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__lock",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__opponent",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__stalemate",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__controlled",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__disabled",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__duplicate",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__first",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__hand",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__interzone",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__lock",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__opponent",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__stalemate",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
         }
       ],
       "allBranchesCertified": false
@@ -2908,6 +4274,49 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-079",
+      "name": "Pegasso",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_pegasso__controlled",
+            "test_support_permissions.SupportPermissions.test_pegasso__disabled",
+            "test_support_permissions.SupportPermissions.test_pegasso__duplicate",
+            "test_support_permissions.SupportPermissions.test_pegasso__first",
+            "test_support_permissions.SupportPermissions.test_pegasso__hand",
+            "test_support_permissions.SupportPermissions.test_pegasso__interzone",
+            "test_support_permissions.SupportPermissions.test_pegasso__lock",
+            "test_support_permissions.SupportPermissions.test_pegasso__opponent",
+            "test_support_permissions.SupportPermissions.test_pegasso__stalemate",
+            "test_support_permissions.SupportPermissions.test_pegasso__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_pegasso__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_pegasso__controlled",
+            "test_support_permissions.SupportPermissions.test_pegasso__disabled",
+            "test_support_permissions.SupportPermissions.test_pegasso__duplicate",
+            "test_support_permissions.SupportPermissions.test_pegasso__first",
+            "test_support_permissions.SupportPermissions.test_pegasso__hand",
+            "test_support_permissions.SupportPermissions.test_pegasso__interzone",
+            "test_support_permissions.SupportPermissions.test_pegasso__lock",
+            "test_support_permissions.SupportPermissions.test_pegasso__opponent",
+            "test_support_permissions.SupportPermissions.test_pegasso__stalemate",
+            "test_support_permissions.SupportPermissions.test_pegasso__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_pegasso__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "k6l96o0xphpycpm_en",
       "name": "Peropero, the Spirophant",
       "proofs": [
@@ -2927,6 +4336,33 @@
           ],
           "paragraphIndex": 1,
           "printedClauseSha256": "870fce614b59b232e3475c3e0a237b2d8b53d049662dfb60eb8f6f3f1189b410"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "fwccphp46678238_en",
+      "name": "Persist",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-family-followup/clauses.json",
+          "testIds": [
+            "test_support_family.SupportFamily.test_persist__cost",
+            "test_support_family.SupportFamily.test_persist__gone",
+            "test_support_family.SupportFamily.test_persist__invalid",
+            "test_support_family.SupportFamily.test_persist__late_protection",
+            "test_support_family.SupportFamily.test_persist__neutralized",
+            "test_support_family.SupportFamily.test_persist__no_targets",
+            "test_support_family.SupportFamily.test_persist__normal",
+            "test_support_family.SupportFamily.test_persist__persist_cleanse",
+            "test_support_family.SupportFamily.test_persist__persist_expiry",
+            "test_support_family.SupportFamily.test_persist__persist_loss",
+            "test_support_family.SupportFamily.test_persist__persist_win",
+            "test_support_family.SupportFamily.test_persist__unfunded",
+            "test_support_family_integration.SupportFamilyIntegration.test_persist__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "131121e06d0c2183ffd430c51f68e18f65614f79f64d8edd8f336094eb7b74c7"
         }
       ],
       "allBranchesCertified": false
@@ -2954,6 +4390,49 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "7c1ceef5ddf6bff8115e8ca60777683ab1be7dd85a2331f0743f185bd148fb61"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-111",
+      "name": "Phalanx Tower",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__controlled",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__disabled",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__duplicate",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__first",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__hand",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__interzone",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__lock",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__opponent",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__stalemate",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__controlled",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__disabled",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__duplicate",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__first",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__hand",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__interzone",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__lock",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__opponent",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__stalemate",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_phalanx_tower__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
         }
       ],
       "allBranchesCertified": false
@@ -3186,6 +4665,31 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "tw4am6bjl3z323v_en",
+      "name": "Possessed Pyramid",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_possessed_pyramid__controlled",
+            "test_support_permissions.SupportPermissions.test_possessed_pyramid__disabled",
+            "test_support_permissions.SupportPermissions.test_possessed_pyramid__duplicate",
+            "test_support_permissions.SupportPermissions.test_possessed_pyramid__first",
+            "test_support_permissions.SupportPermissions.test_possessed_pyramid__hand",
+            "test_support_permissions.SupportPermissions.test_possessed_pyramid__interzone",
+            "test_support_permissions.SupportPermissions.test_possessed_pyramid__lock",
+            "test_support_permissions.SupportPermissions.test_possessed_pyramid__opponent",
+            "test_support_permissions.SupportPermissions.test_possessed_pyramid__stalemate",
+            "test_support_permissions.SupportPermissions.test_possessed_pyramid__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_possessed_pyramid__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-129",
       "name": "Powerful Pidue",
       "proofs": [
@@ -3337,6 +4841,57 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "5q6t7i5pzctbi8s_en",
+      "name": "Rally",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-family-followup/clauses.json",
+          "testIds": [
+            "test_support_family.SupportFamily.test_rally__cost",
+            "test_support_family.SupportFamily.test_rally__entry_watchers",
+            "test_support_family.SupportFamily.test_rally__lock",
+            "test_support_family.SupportFamily.test_rally__neutralized",
+            "test_support_family.SupportFamily.test_rally__normal",
+            "test_support_family.SupportFamily.test_rally__play_only_lock",
+            "test_support_family.SupportFamily.test_rally__rally_counts",
+            "test_support_family.SupportFamily.test_rally__rally_extra_tribute",
+            "test_support_family.SupportFamily.test_rally__rally_surplus",
+            "test_support_family.SupportFamily.test_rally__rally_then_incinerate",
+            "test_support_family.SupportFamily.test_rally__rally_unpaid_extra",
+            "test_support_family.SupportFamily.test_rally__token_family_routes",
+            "test_support_family.SupportFamily.test_rally__unfunded",
+            "test_support_family_integration.SupportFamilyIntegration.test_rally__websocket_normal",
+            "test_support_family_integration.SupportFamilyIntegration.test_rally__websocket_watcher"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "e716ed3250a84bdfa52de7d850c404b025caeda428d5a39ff08ce8b8c822fab5"
+        },
+        {
+          "source": "reports/systematic-audit/support-family-followup/clauses.json",
+          "testIds": [
+            "test_support_family.SupportFamily.test_rally__cost",
+            "test_support_family.SupportFamily.test_rally__entry_watchers",
+            "test_support_family.SupportFamily.test_rally__lock",
+            "test_support_family.SupportFamily.test_rally__neutralized",
+            "test_support_family.SupportFamily.test_rally__normal",
+            "test_support_family.SupportFamily.test_rally__play_only_lock",
+            "test_support_family.SupportFamily.test_rally__rally_counts",
+            "test_support_family.SupportFamily.test_rally__rally_extra_tribute",
+            "test_support_family.SupportFamily.test_rally__rally_surplus",
+            "test_support_family.SupportFamily.test_rally__rally_then_incinerate",
+            "test_support_family.SupportFamily.test_rally__rally_unpaid_extra",
+            "test_support_family.SupportFamily.test_rally__token_family_routes",
+            "test_support_family.SupportFamily.test_rally__unfunded",
+            "test_support_family_integration.SupportFamilyIntegration.test_rally__websocket_normal",
+            "test_support_family_integration.SupportFamilyIntegration.test_rally__websocket_watcher"
+          ],
+          "paragraphIndex": 1,
+          "printedClauseSha256": "f6782d77297c4413719953684aba9f4eb642eb135a6dc9d713b7fe0e126c5789"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "8xi4zh0ekdl42me_en",
       "name": "Reap What You’ve Sown",
       "proofs": [
@@ -3369,6 +4924,95 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "b9cb9332f3d8665b17c79515422ce7edb044e6f7721f734965a1c7c15e47e6c5"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-038",
+      "name": "Referen-Doom, the Dreamer",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/exile-family-followup/clauses.json",
+          "testIds": [
+            "test_exile_family.ExileFamily.test_referen__bob",
+            "test_exile_family.ExileFamily.test_referen__cost",
+            "test_exile_family.ExileFamily.test_referen__decline",
+            "test_exile_family.ExileFamily.test_referen__duration",
+            "test_exile_family.ExileFamily.test_referen__invalid",
+            "test_exile_family.ExileFamily.test_referen__late",
+            "test_exile_family.ExileFamily.test_referen__maximum",
+            "test_exile_family.ExileFamily.test_referen__normal",
+            "test_exile_family.ExileFamily.test_referen__partial",
+            "test_exile_family.ExileFamily.test_referen__reentry",
+            "test_exile_family.ExileFamily.test_referen__source_gone",
+            "test_exile_family.ExileFamily.test_referen__zero",
+            "test_exile_family_integration.ExileFamilyIntegration.test_referen__websocket_bob",
+            "test_exile_family_integration.ExileFamilyIntegration.test_referen__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "291dcf5561703eb10702f0f2ef33a38d81da1347e2e1c515ef0684987726ec7e"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "z2fen73ktw8pbqz_en",
+      "name": "Reforging Fate",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-family-followup/clauses.json",
+          "testIds": [
+            "test_support_family.SupportFamily.test_reforging__bob",
+            "test_support_family.SupportFamily.test_reforging__cost",
+            "test_support_family.SupportFamily.test_reforging__departure",
+            "test_support_family.SupportFamily.test_reforging__entry_watchers",
+            "test_support_family.SupportFamily.test_reforging__gone",
+            "test_support_family.SupportFamily.test_reforging__invalid",
+            "test_support_family.SupportFamily.test_reforging__lock",
+            "test_support_family.SupportFamily.test_reforging__memory_personal_zones",
+            "test_support_family.SupportFamily.test_reforging__neutralized",
+            "test_support_family.SupportFamily.test_reforging__no_targets",
+            "test_support_family.SupportFamily.test_reforging__normal",
+            "test_support_family.SupportFamily.test_reforging__play_only_lock",
+            "test_support_family.SupportFamily.test_reforging__reforging_cleanse",
+            "test_support_family.SupportFamily.test_reforging__reforging_memory",
+            "test_support_family.SupportFamily.test_reforging__reforging_win",
+            "test_support_family.SupportFamily.test_reforging__stale",
+            "test_support_family.SupportFamily.test_reforging__unfunded",
+            "test_support_family_integration.SupportFamilyIntegration.test_reforging__websocket_bob",
+            "test_support_family_integration.SupportFamilyIntegration.test_reforging__websocket_normal",
+            "test_support_family_integration.SupportFamilyIntegration.test_reforging__websocket_watcher"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "fed85e06c7ce193e8c56678a5842dcba8528bb888e6e610ce2de9197a284a195"
+        },
+        {
+          "source": "reports/systematic-audit/support-family-followup/clauses.json",
+          "testIds": [
+            "test_support_family.SupportFamily.test_reforging__bob",
+            "test_support_family.SupportFamily.test_reforging__cost",
+            "test_support_family.SupportFamily.test_reforging__departure",
+            "test_support_family.SupportFamily.test_reforging__entry_watchers",
+            "test_support_family.SupportFamily.test_reforging__gone",
+            "test_support_family.SupportFamily.test_reforging__invalid",
+            "test_support_family.SupportFamily.test_reforging__lock",
+            "test_support_family.SupportFamily.test_reforging__memory_personal_zones",
+            "test_support_family.SupportFamily.test_reforging__neutralized",
+            "test_support_family.SupportFamily.test_reforging__no_targets",
+            "test_support_family.SupportFamily.test_reforging__normal",
+            "test_support_family.SupportFamily.test_reforging__play_only_lock",
+            "test_support_family.SupportFamily.test_reforging__reforging_cleanse",
+            "test_support_family.SupportFamily.test_reforging__reforging_memory",
+            "test_support_family.SupportFamily.test_reforging__reforging_win",
+            "test_support_family.SupportFamily.test_reforging__stale",
+            "test_support_family.SupportFamily.test_reforging__unfunded",
+            "test_support_family_integration.SupportFamilyIntegration.test_reforging__websocket_bob",
+            "test_support_family_integration.SupportFamilyIntegration.test_reforging__websocket_normal",
+            "test_support_family_integration.SupportFamilyIntegration.test_reforging__websocket_watcher"
+          ],
+          "paragraphIndex": 1,
+          "printedClauseSha256": "14541f74ef9f7bdf5b73db72fb3620c86d895972ae880775ed2712e4249bdc9b"
         }
       ],
       "allBranchesCertified": false
@@ -3470,6 +5114,57 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "uin3dxt3bc50z6q_en",
+      "name": "Revive",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-destination-followup/clauses.json",
+          "testIds": [
+            "test_zone_destination_family.ZoneDestinationFamily.test_revive__bob",
+            "test_zone_destination_family.ZoneDestinationFamily.test_revive__competing_replacements",
+            "test_zone_destination_family.ZoneDestinationFamily.test_revive__cost",
+            "test_zone_destination_family.ZoneDestinationFamily.test_revive__departure_event",
+            "test_zone_destination_family.ZoneDestinationFamily.test_revive__gone",
+            "test_zone_destination_family.ZoneDestinationFamily.test_revive__interzone_full",
+            "test_zone_destination_family.ZoneDestinationFamily.test_revive__interzone_replacement",
+            "test_zone_destination_family.ZoneDestinationFamily.test_revive__normal",
+            "test_zone_destination_family.ZoneDestinationFamily.test_revive__owner",
+            "test_zone_destination_family.ZoneDestinationFamily.test_revive__stale",
+            "test_zone_destination_family.ZoneDestinationFamily.test_revive__type",
+            "test_zone_destination_family.ZoneDestinationFamily.test_revive__unfunded",
+            "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_revive__websocket_bob",
+            "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_revive__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "9057359deb4c9d0e537d9afc763385bcd17f2729ff1b7edbd8ba5c288c37307c"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "xeeg6rdiy9xeew5_en",
+      "name": "Salvage the Fragments",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-destination-followup/clauses.json",
+          "testIds": [
+            "test_zone_destination_family.ZoneDestinationFamily.test_salvage__cost",
+            "test_zone_destination_family.ZoneDestinationFamily.test_salvage__gone",
+            "test_zone_destination_family.ZoneDestinationFamily.test_salvage__normal",
+            "test_zone_destination_family.ZoneDestinationFamily.test_salvage__old_entry",
+            "test_zone_destination_family.ZoneDestinationFamily.test_salvage__owner",
+            "test_zone_destination_family.ZoneDestinationFamily.test_salvage__stale",
+            "test_zone_destination_family.ZoneDestinationFamily.test_salvage__type",
+            "test_zone_destination_family.ZoneDestinationFamily.test_salvage__unfunded",
+            "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_salvage__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "09c1694c56f52aefea0ae9771a66b5f98a637c6d66b6bbceec1d78076baa041d"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-114",
       "name": "Sandokaron, Banners Bearer",
       "proofs": [
@@ -3509,6 +5204,55 @@
           ],
           "paragraphIndex": null,
           "printedClauseSha256": "253f459408b257bf282df9205ed61db784f9da4fde8c9f7be7edaee19d940fd7"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-136",
+      "name": "Shattered Memory",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/exile-family-followup/clauses.json",
+          "testIds": [
+            "test_exile_family.ExileFamily.test_memory__any_type",
+            "test_exile_family.ExileFamily.test_memory__bob",
+            "test_exile_family.ExileFamily.test_memory__cost",
+            "test_exile_family.ExileFamily.test_memory__invalid",
+            "test_exile_family.ExileFamily.test_memory__late",
+            "test_exile_family.ExileFamily.test_memory__limbo_either_player",
+            "test_exile_family.ExileFamily.test_memory__normal",
+            "test_exile_family.ExileFamily.test_memory__other_limbo",
+            "test_exile_family.ExileFamily.test_memory__reentry",
+            "test_exile_family.ExileFamily.test_memory__sacrifice",
+            "test_exile_family.ExileFamily.test_memory__source_gone",
+            "test_exile_family.ExileFamily.test_memory__too_many",
+            "test_exile_family.ExileFamily.test_memory__unfunded",
+            "test_exile_family_integration.ExileFamilyIntegration.test_memory__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "eed4efbb53be263c7cc68fd7ee14cd66c6f55b7ca73cef69dd978a2eac2e710c"
+        },
+        {
+          "source": "reports/systematic-audit/exile-family-followup/clauses.json",
+          "testIds": [
+            "test_exile_family.ExileFamily.test_memory__any_type",
+            "test_exile_family.ExileFamily.test_memory__bob",
+            "test_exile_family.ExileFamily.test_memory__cost",
+            "test_exile_family.ExileFamily.test_memory__invalid",
+            "test_exile_family.ExileFamily.test_memory__late",
+            "test_exile_family.ExileFamily.test_memory__limbo_either_player",
+            "test_exile_family.ExileFamily.test_memory__normal",
+            "test_exile_family.ExileFamily.test_memory__other_limbo",
+            "test_exile_family.ExileFamily.test_memory__reentry",
+            "test_exile_family.ExileFamily.test_memory__sacrifice",
+            "test_exile_family.ExileFamily.test_memory__source_gone",
+            "test_exile_family.ExileFamily.test_memory__too_many",
+            "test_exile_family.ExileFamily.test_memory__unfunded",
+            "test_exile_family_integration.ExileFamilyIntegration.test_memory__websocket_normal"
+          ],
+          "paragraphIndex": 1,
+          "printedClauseSha256": "2faaa124959d64286e8c1a90ab105e12bee1a7a26a18a9dcd2fe90a5979bdc18"
         }
       ],
       "allBranchesCertified": false
@@ -3580,6 +5324,51 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "v1mhtnl7jec5xby_en",
+      "name": "Skapus, the Vile",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__controlled",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__disabled",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__duplicate",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__first",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__hand",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__interzone",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__lock",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__opponent",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__stalemate",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__controlled",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__disabled",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__duplicate",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__first",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__hand",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__interzone",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__lock",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__opponent",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__stalemate",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_skapus_the_vile__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "wfxxi0znaojxiti_en",
       "name": "Soul-borer",
       "proofs": [
@@ -3627,6 +5416,51 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "382e0467cbdf263b54fc8e090ebaee94dbf7647db4e1e11e0d2bde185e59c3db"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "85kx4sk1y809276_en",
+      "name": "Sprawling Tentacle",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__controlled",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__disabled",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__duplicate",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__first",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__hand",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__interzone",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__lock",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__opponent",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__stalemate",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__controlled",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__disabled",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__duplicate",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__first",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__hand",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__interzone",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__lock",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__opponent",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__stalemate",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_sprawling_tentacle__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
         }
       ],
       "allBranchesCertified": false
@@ -3768,6 +5602,47 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-140",
+      "name": "Subjugate",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/exile-family-followup/clauses.json",
+          "testIds": [
+            "test_exile_family.ExileFamily.test_subjugate__cost",
+            "test_exile_family.ExileFamily.test_subjugate__invalid",
+            "test_exile_family.ExileFamily.test_subjugate__late",
+            "test_exile_family.ExileFamily.test_subjugate__normal",
+            "test_exile_family.ExileFamily.test_subjugate__points_boundary",
+            "test_exile_family.ExileFamily.test_subjugate__protected",
+            "test_exile_family.ExileFamily.test_subjugate__too_many",
+            "test_exile_family.ExileFamily.test_subjugate__tribute_surplus",
+            "test_exile_family.ExileFamily.test_subjugate__unfunded",
+            "test_exile_family_integration.ExileFamilyIntegration.test_subjugate__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "096011891f65d4688276c487c3953280bd58c08f0f9a77487cb6503efe20f59f"
+        },
+        {
+          "source": "reports/systematic-audit/exile-family-followup/clauses.json",
+          "testIds": [
+            "test_exile_family.ExileFamily.test_subjugate__cost",
+            "test_exile_family.ExileFamily.test_subjugate__invalid",
+            "test_exile_family.ExileFamily.test_subjugate__late",
+            "test_exile_family.ExileFamily.test_subjugate__normal",
+            "test_exile_family.ExileFamily.test_subjugate__points_boundary",
+            "test_exile_family.ExileFamily.test_subjugate__protected",
+            "test_exile_family.ExileFamily.test_subjugate__too_many",
+            "test_exile_family.ExileFamily.test_subjugate__tribute_surplus",
+            "test_exile_family.ExileFamily.test_subjugate__unfunded",
+            "test_exile_family_integration.ExileFamilyIntegration.test_subjugate__websocket_normal"
+          ],
+          "paragraphIndex": 1,
+          "printedClauseSha256": "3cd7abaae7943cea29cd5dcef1f7ea2259be3fbfa152b8bfb33d9c0cf196d202"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "kl0n8mt9m1fwly0_en",
       "name": "Tenebro, Night Assailant",
       "proofs": [
@@ -3803,6 +5678,75 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "0db2072e04a072a4b43d84a95545890ad6163fe0841af9b42f13144f93c59e1e"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "xw1fbhs6hwz6thc_en",
+      "name": "Tigrolione",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_tigrolione__controlled",
+            "test_support_permissions.SupportPermissions.test_tigrolione__disabled",
+            "test_support_permissions.SupportPermissions.test_tigrolione__duplicate",
+            "test_support_permissions.SupportPermissions.test_tigrolione__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_tigrolione__first",
+            "test_support_permissions.SupportPermissions.test_tigrolione__hand",
+            "test_support_permissions.SupportPermissions.test_tigrolione__interzone",
+            "test_support_permissions.SupportPermissions.test_tigrolione__lock",
+            "test_support_permissions.SupportPermissions.test_tigrolione__opponent",
+            "test_support_permissions.SupportPermissions.test_tigrolione__stalemate",
+            "test_support_permissions.SupportPermissions.test_tigrolione__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_tigrolione__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-041",
+      "name": "Timidette, the Elusive",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__controlled",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__disabled",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__duplicate",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__first",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__hand",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__interzone",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__lock",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__opponent",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__stalemate",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__controlled",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__disabled",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__duplicate",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__first",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__hand",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__interzone",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__lock",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__opponent",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__stalemate",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_timidette_the_elusive__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
         }
       ],
       "allBranchesCertified": false
@@ -3925,6 +5869,53 @@
           ],
           "paragraphIndex": 1,
           "printedClauseSha256": "35b928382c81270739bdec8ccdf1aa7978bd8cfa9449a9f1df71c3672eda5177"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "nzyipkk7u6vrd4a_en",
+      "name": "Unite Impulses",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-family-followup/clauses.json",
+          "testIds": [
+            "test_support_family.SupportFamily.test_unite__cost",
+            "test_support_family.SupportFamily.test_unite__empty_field",
+            "test_support_family.SupportFamily.test_unite__neutralized",
+            "test_support_family.SupportFamily.test_unite__normal",
+            "test_support_family.SupportFamily.test_unite__unfunded",
+            "test_support_family.SupportFamily.test_unite__unite_resolution_scope",
+            "test_support_family.SupportFamily.test_unite__unite_scope",
+            "test_support_family_integration.SupportFamilyIntegration.test_unite__websocket_normal"
+          ],
+          "paragraphIndex": 0,
+          "printedClauseSha256": "588fba8ecd3feb3727f64b862740e8a90639bdd89d7ff6d4db56ae206dc15d0a"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "a9bsslut738hm0k_en",
+      "name": "Unpredictable Loudmouth",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__controlled",
+            "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__disabled",
+            "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__duplicate",
+            "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__first",
+            "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__hand",
+            "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__interzone",
+            "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__lock",
+            "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__opponent",
+            "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__stalemate",
+            "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
         }
       ],
       "allBranchesCertified": false
@@ -4097,6 +6088,51 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "6jz7otalrdq0q8u_en",
+      "name": "Wind Sprout",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_wind_sprout__controlled",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__disabled",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__duplicate",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__first",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__hand",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__interzone",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__lock",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__opponent",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__stalemate",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__wrong_priority",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_wind_sprout__websocket_hand"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_wind_sprout__controlled",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__disabled",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__duplicate",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__first",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__hand",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__interzone",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__lock",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__opponent",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__stalemate",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_wind_sprout__wrong_priority",
+            "test_support_permissions_integration.SupportPermissionsIntegration.test_wind_sprout__websocket_hand"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-048",
       "name": "Wish Upon the Stars",
       "proofs": [
@@ -4125,6 +6161,76 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "jh2nsqxr9x2ii1l_en",
+      "name": "World Spore",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_world_spore__controlled",
+            "test_support_permissions.SupportPermissions.test_world_spore__disabled",
+            "test_support_permissions.SupportPermissions.test_world_spore__duplicate",
+            "test_support_permissions.SupportPermissions.test_world_spore__first",
+            "test_support_permissions.SupportPermissions.test_world_spore__hand",
+            "test_support_permissions.SupportPermissions.test_world_spore__interzone",
+            "test_support_permissions.SupportPermissions.test_world_spore__lock",
+            "test_support_permissions.SupportPermissions.test_world_spore__opponent",
+            "test_support_permissions.SupportPermissions.test_world_spore__stalemate",
+            "test_support_permissions.SupportPermissions.test_world_spore__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_world_spore__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ypvac71teuck2za_en",
+      "name": "Worn Old Shape",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__controlled",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__disabled",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__duplicate",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__first",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__hand",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__interzone",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__lock",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__opponent",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__stalemate",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__controlled",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__disabled",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__duplicate",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__duplicate_field",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__first",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__hand",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__interzone",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__lock",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__opponent",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__stalemate",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_worn_old_shape__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "4phs0d8l223jk7t_en",
       "name": "Wretched Arena",
       "proofs": [
@@ -4145,6 +6251,49 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "d5bb0202edddc082e376ff3fb53ec2cf11db4863652b0ded992e28416fd54b25"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "93gvk0hy12hylm6_en",
+      "name": "Yzzit, the Gambler",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__controlled",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__disabled",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__duplicate",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__first",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__hand",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__interzone",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__lock",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__opponent",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__stalemate",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "146ffb6632c48ac4c19f5544ce3ca1041306fb3c509a8226216e2993b8ba37bc"
+        },
+        {
+          "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
+          "testIds": [
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__controlled",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__disabled",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__duplicate",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__first",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__hand",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__interzone",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__lock",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__opponent",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__stalemate",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__wrong_phase",
+            "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__wrong_priority"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
         }
       ],
       "allBranchesCertified": false

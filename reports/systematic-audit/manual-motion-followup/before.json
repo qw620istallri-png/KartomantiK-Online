@@ -1,0 +1,31 @@
+{
+  "schemaVersion": 1,
+  "summary": {
+    "executed": 2,
+    "passed": 0,
+    "failed": 2
+  },
+  "tests": [
+    {
+      "testId": "pc-pc-p1-field-to-deck",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Card origin occluded: {\"a\":{\"x\":481.74664306640625,\"y\":251.79898071289062,\"width\":148.00030517578125,\"height\":207.20040893554688},\"b\":{\"x\":12,\"y\":64,\"width\":220,\"height\":67.59375},\"x\":555.7467956542969,\"y\":324.31912384033205,\"hit\":{\"html\":\"<p id=\\\"rulesPregameHint\\\">Importez ou choisissez un deck, ajustez son sideboard, puis validez-le. La première main sera disponible lorsque les deux joueurs auront validé.</p>\"}}\n    at drag (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:51:43\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:106)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:47:71"
+    },
+    {
+      "testId": "pc-pc-p2-field-to-deck",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Card origin occluded: {\"a\":{\"x\":481.74664306640625,\"y\":251.79898071289062,\"width\":148.00030517578125,\"height\":207.20040893554688},\"b\":{\"x\":12,\"y\":64,\"width\":220,\"height\":67.59375},\"x\":555.7467956542969,\"y\":324.31912384033205,\"hit\":{\"html\":\"<p id=\\\"rulesPregameHint\\\">Importez ou choisissez un deck, ajustez son sideboard, puis validez-le. La première main sera disponible lorsque les deux joueurs auront validé.</p>\"}}\n    at drag (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:13:9)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:51:43\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:106)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:47:71"
+    }
+  ],
+  "limits": [
+    "Chrome desktop and touch emulation, not physical phones or real Safari.",
+    "Real production socket/render/drag path; initial zones reset by loopback fixture."
+  ],
+  "sources": {
+    "public/js/vfx.js": "61ce2e60b527858d3b64fc5548a4653b664c3f16051933eee24fade3d82011d5",
+    "public/ui-beta.js": "906a731b1c950bd3d36e178ad95dc837b1031802f571f2b7685e99783c9710bc",
+    "public/js/board.js": "966d74d7a9614e30fc14a4e7c8781a100d959dcea5538a2f7e16c5141941547b",
+    "server/main.py": "185b8119f66cb07e287b195dd5beb082e92397c2350110727cb0f7b0fe4117cd",
+    "tools/manual_motion_server.py": "d89fcc281d8b3ae772323665966e37ec595abb6c6dd1c778c89474cbcb037fef"
+  }
+}

@@ -1,0 +1,572 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "a8beab7680cb15de1761e8431c1a669ffcb7e20f4cef59422aea0d54ecd135c3",
+  "finishedAt": "2026-10-29T13:53:19.317354+00:00",
+  "published": false,
+  "summary": {
+    "executed": 63,
+    "passed": 55,
+    "failed": 8,
+    "skipped": 0,
+    "selectedClauses": 8,
+    "cardsWithSelectedClauseProof": 6
+  },
+  "clauses": [
+    {
+      "cardId": "nzyipkk7u6vrd4a_en",
+      "name": "Unite Impulses",
+      "abilityId": "grant-interzone-support-until-end-turn",
+      "paragraphIndex": 0,
+      "printedParagraph": "All manifestations currently in your Interzone gain Support until the end of the turn.",
+      "printedClauseSha256": "588fba8ecd3feb3727f64b862740e8a90639bdd89d7ff6d4db56ae206dc15d0a",
+      "independentOracle": {
+        "essenceCost": {
+          "phlegmatic": 2
+        }
+      },
+      "testIds": [
+        "test_support_family.SupportFamily.test_unite__normal",
+        "test_support_family.SupportFamily.test_unite__cost",
+        "test_support_family.SupportFamily.test_unite__unfunded",
+        "test_support_family.SupportFamily.test_unite__neutralized",
+        "test_support_family.SupportFamily.test_unite__unite_scope",
+        "test_support_family.SupportFamily.test_unite__unite_resolution_scope"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "5q6t7i5pzctbi8s_en",
+      "name": "Rally",
+      "abilityId": "rally-extra-essence-tokens",
+      "paragraphIndex": 0,
+      "printedParagraph": "You may use extra {H} essences as tribute to play this Will.",
+      "printedClauseSha256": "e716ed3250a84bdfa52de7d850c404b025caeda428d5a39ff08ce8b8c822fab5",
+      "independentOracle": {
+        "essenceCost": {
+          "phlegmatic": 2
+        }
+      },
+      "testIds": [
+        "test_support_family.SupportFamily.test_rally__normal",
+        "test_support_family.SupportFamily.test_rally__cost",
+        "test_support_family.SupportFamily.test_rally__unfunded",
+        "test_support_family.SupportFamily.test_rally__neutralized",
+        "test_support_family.SupportFamily.test_rally__entry_watchers",
+        "test_support_family.SupportFamily.test_rally__lock",
+        "test_support_family.SupportFamily.test_rally__play_only_lock",
+        "test_support_family.SupportFamily.test_rally__rally_counts",
+        "test_support_family.SupportFamily.test_rally__rally_unpaid_extra",
+        "test_support_family.SupportFamily.test_rally__rally_surplus",
+        "test_support_family.SupportFamily.test_rally__rally_extra_tribute"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "5q6t7i5pzctbi8s_en",
+      "name": "Rally",
+      "abilityId": "rally-extra-essence-tokens",
+      "paragraphIndex": 1,
+      "printedParagraph": "For each extra essence used to play this Will, put a token with 1 power {H} into Support.",
+      "printedClauseSha256": "f6782d77297c4413719953684aba9f4eb642eb135a6dc9d713b7fe0e126c5789",
+      "independentOracle": {
+        "essenceCost": {
+          "phlegmatic": 2
+        }
+      },
+      "testIds": [
+        "test_support_family.SupportFamily.test_rally__normal",
+        "test_support_family.SupportFamily.test_rally__cost",
+        "test_support_family.SupportFamily.test_rally__unfunded",
+        "test_support_family.SupportFamily.test_rally__neutralized",
+        "test_support_family.SupportFamily.test_rally__entry_watchers",
+        "test_support_family.SupportFamily.test_rally__lock",
+        "test_support_family.SupportFamily.test_rally__play_only_lock",
+        "test_support_family.SupportFamily.test_rally__rally_counts",
+        "test_support_family.SupportFamily.test_rally__rally_unpaid_extra",
+        "test_support_family.SupportFamily.test_rally__rally_surplus",
+        "test_support_family.SupportFamily.test_rally__rally_extra_tribute"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "72zvsiuky5ytolh_en",
+      "name": "Mirror the Impulse",
+      "abilityId": "copy-friendly-manifestation-in-support",
+      "paragraphIndex": 0,
+      "printedParagraph": "Put into Support a token copy of a target manifestation you control on the field.",
+      "printedClauseSha256": "fb60ffce4c43ce375ae9c282960eff234c172ff14bd35418af9df272ad67ff41",
+      "independentOracle": {
+        "essenceCost": {
+          "vitreous": 3
+        }
+      },
+      "testIds": [
+        "test_support_family.SupportFamily.test_mirror__normal",
+        "test_support_family.SupportFamily.test_mirror__cost",
+        "test_support_family.SupportFamily.test_mirror__unfunded",
+        "test_support_family.SupportFamily.test_mirror__neutralized",
+        "test_support_family.SupportFamily.test_mirror__gone",
+        "test_support_family.SupportFamily.test_mirror__invalid",
+        "test_support_family.SupportFamily.test_mirror__late_protection",
+        "test_support_family.SupportFamily.test_mirror__controller",
+        "test_support_family.SupportFamily.test_mirror__entry_watchers",
+        "test_support_family.SupportFamily.test_mirror__lock",
+        "test_support_family.SupportFamily.test_mirror__play_only_lock"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "z2fen73ktw8pbqz_en",
+      "name": "Reforging Fate",
+      "abilityId": "reforging-fate-support-from-limbo",
+      "paragraphIndex": 0,
+      "printedParagraph": "A target manifestation in a player's Limbo enters into Support under your control.",
+      "printedClauseSha256": "fed85e06c7ce193e8c56678a5842dcba8528bb888e6e610ce2de9197a284a195",
+      "independentOracle": {
+        "essenceCost": {
+          "melancholic": 3
+        }
+      },
+      "testIds": [
+        "test_support_family.SupportFamily.test_reforging__normal",
+        "test_support_family.SupportFamily.test_reforging__cost",
+        "test_support_family.SupportFamily.test_reforging__unfunded",
+        "test_support_family.SupportFamily.test_reforging__neutralized",
+        "test_support_family.SupportFamily.test_reforging__gone",
+        "test_support_family.SupportFamily.test_reforging__invalid",
+        "test_support_family.SupportFamily.test_reforging__stale",
+        "test_support_family.SupportFamily.test_reforging__bob",
+        "test_support_family.SupportFamily.test_reforging__departure",
+        "test_support_family.SupportFamily.test_reforging__reforging_win",
+        "test_support_family.SupportFamily.test_reforging__reforging_cleanse",
+        "test_support_family.SupportFamily.test_reforging__reforging_memory",
+        "test_support_family.SupportFamily.test_reforging__entry_watchers",
+        "test_support_family.SupportFamily.test_reforging__lock",
+        "test_support_family.SupportFamily.test_reforging__play_only_lock"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "z2fen73ktw8pbqz_en",
+      "name": "Reforging Fate",
+      "abilityId": "reforging-fate-support-from-limbo",
+      "paragraphIndex": 1,
+      "printedParagraph": "If that manifestation wins the confrontation, exile it.",
+      "printedClauseSha256": "14541f74ef9f7bdf5b73db72fb3620c86d895972ae880775ed2712e4249bdc9b",
+      "independentOracle": {
+        "essenceCost": {
+          "melancholic": 3
+        }
+      },
+      "testIds": [
+        "test_support_family.SupportFamily.test_reforging__normal",
+        "test_support_family.SupportFamily.test_reforging__cost",
+        "test_support_family.SupportFamily.test_reforging__unfunded",
+        "test_support_family.SupportFamily.test_reforging__neutralized",
+        "test_support_family.SupportFamily.test_reforging__gone",
+        "test_support_family.SupportFamily.test_reforging__invalid",
+        "test_support_family.SupportFamily.test_reforging__stale",
+        "test_support_family.SupportFamily.test_reforging__bob",
+        "test_support_family.SupportFamily.test_reforging__departure",
+        "test_support_family.SupportFamily.test_reforging__reforging_win",
+        "test_support_family.SupportFamily.test_reforging__reforging_cleanse",
+        "test_support_family.SupportFamily.test_reforging__reforging_memory",
+        "test_support_family.SupportFamily.test_reforging__entry_watchers",
+        "test_support_family.SupportFamily.test_reforging__lock",
+        "test_support_family.SupportFamily.test_reforging__play_only_lock"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "fwccphp46678238_en",
+      "name": "Persist",
+      "abilityId": "grant-persist-until-end-of-turn",
+      "paragraphIndex": 0,
+      "printedParagraph": "A target manifestation in the Confrontation Zone gains Persist until the end of the turn. (If a manifestation with Persist has won the confrontation, it remains in the Confrontation Zone as First Manifestation).",
+      "printedClauseSha256": "131121e06d0c2183ffd430c51f68e18f65614f79f64d8edd8f336094eb7b74c7",
+      "independentOracle": {
+        "essenceCost": {
+          "vitreous": 2
+        }
+      },
+      "testIds": [
+        "test_support_family.SupportFamily.test_persist__normal",
+        "test_support_family.SupportFamily.test_persist__cost",
+        "test_support_family.SupportFamily.test_persist__unfunded",
+        "test_support_family.SupportFamily.test_persist__neutralized",
+        "test_support_family.SupportFamily.test_persist__gone",
+        "test_support_family.SupportFamily.test_persist__invalid",
+        "test_support_family.SupportFamily.test_persist__late_protection",
+        "test_support_family.SupportFamily.test_persist__persist_win",
+        "test_support_family.SupportFamily.test_persist__persist_loss",
+        "test_support_family.SupportFamily.test_persist__persist_expiry"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "4naoqbqz6ebozj5_en",
+      "name": "Incinerate",
+      "abilityId": "destroy-manifestations-that-entered-support",
+      "paragraphIndex": 0,
+      "printedParagraph": "Destroy all manifestations on the field that entered Support this turn.",
+      "printedClauseSha256": "6d782d201b8e5c84bf03cfe6796bf55400c36bae90f953619efd9b19c2e180f9",
+      "independentOracle": {
+        "essenceCost": {
+          "choleric": 4
+        }
+      },
+      "testIds": [
+        "test_support_family.SupportFamily.test_incinerate__normal",
+        "test_support_family.SupportFamily.test_incinerate__cost",
+        "test_support_family.SupportFamily.test_incinerate__unfunded",
+        "test_support_family.SupportFamily.test_incinerate__neutralized",
+        "test_support_family.SupportFamily.test_incinerate__incinerate_history",
+        "test_support_family.SupportFamily.test_incinerate__incinerate_stalemate",
+        "test_support_family.SupportFamily.test_incinerate__incinerate_protection",
+        "test_support_family.SupportFamily.test_incinerate__incinerate_immunity",
+        "test_support_family.SupportFamily.test_incinerate__incinerate_tokens",
+        "test_support_family.SupportFamily.test_incinerate__bob"
+      ],
+      "status": "fail",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_support_family.SupportFamily.test_incinerate__bob",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_incinerate__cost",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_incinerate__incinerate_history",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_incinerate__incinerate_immunity",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 330, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 303, in check_incinerate_immunity\n    self.play(s,row,t);self.assertIn(items[0],s.battlefield)\n                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: {'id': 'probe', 'cardId': 'support-probe', 'ownerId': 'p2', 'controllerId': 'p2', 'faceUp': True, 'fieldZone': 'confrontation', 'isSupport': True, 'x': 0, 'y': 0, 'rotation': 0, 'counters': {}, 'confrontationOrder': 1, 'supportUsedTurn': 2} not found in []\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_incinerate__incinerate_protection",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_incinerate__incinerate_stalemate",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 330, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 293, in check_incinerate_stalemate\n    s,items,t=self.setup_case(row);items[0]['fieldZone']='stalemate';self.play(s,row,t);self.assertIn(items[0],s.battlefield)\n                                                                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: {'id': 'probe', 'cardId': 'support-probe', 'ownerId': 'p1', 'controllerId': 'p1', 'faceUp': True, 'fieldZone': 'stalemate', 'isSupport': True, 'x': 0, 'y': 0, 'rotation': 0, 'counters': {}, 'confrontationOrder': 1, 'supportUsedTurn': 2} not found in []\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_incinerate__incinerate_tokens",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_incinerate__neutralized",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_incinerate__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_incinerate__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_mirror__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_mirror__cost",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_mirror__entry_watchers",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 330, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 184, in check_entry_watchers\n    self.assertEqual(blossom['counters'].get('Petal',0),2 if row['key']=='rally' else 1)\nAssertionError: 0 != 1\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_mirror__gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_mirror__invalid",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_mirror__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_mirror__lock",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_mirror__neutralized",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_mirror__normal",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_mirror__play_only_lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_mirror__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_persist__cost",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_persist__gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_persist__invalid",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_persist__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_persist__neutralized",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_persist__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_persist__persist_expiry",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_persist__persist_loss",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_persist__persist_win",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_persist__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_rally__cost",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_rally__entry_watchers",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 330, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 184, in check_entry_watchers\n    self.assertEqual(blossom['counters'].get('Petal',0),2 if row['key']=='rally' else 1)\nAssertionError: 0 != 2\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_rally__lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_rally__neutralized",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_rally__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_rally__play_only_lock",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_rally__rally_counts",
+      "status": "pass",
+      "durationSeconds": 0.14
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_rally__rally_extra_tribute",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_rally__rally_surplus",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_rally__rally_unpaid_extra",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_rally__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__bob",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__cost",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__departure",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 330, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 178, in check_departure\n    self.assertEqual(sum(c.args[0]=='manifestation_left_by_effect' and c.kwargs.get('cardId')=='support-probe' for c in observed.call_args_list),1)\nAssertionError: 0 != 1\n",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__entry_watchers",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 330, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 184, in check_entry_watchers\n    self.assertEqual(blossom['counters'].get('Petal',0),2 if row['key']=='rally' else 1)\nAssertionError: 0 != 1\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__gone",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__invalid",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__neutralized",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__play_only_lock",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__reforging_cleanse",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 330, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 275, in check_reforging_cleanse\n    self.assertNotIn(item,s.battlefield);self.assertIn('support-probe',s.players['p1']['zones']['exile'])\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: {'id': 'eb6e5994fcde', 'ownerId': 'p1', 'controllerId': 'p1', 'cardId': 'support-probe', 'x': 740.0, 'y': 800.0, 'faceUp': True, 'rotation': 0.0, 'counters': {}, 'stackedOn': None, 'isSupport': True, 'fieldZone': 'confrontation', 'confrontationOrder': 1, 'supportUsedTurn': 2} unexpectedly found in [{'id': 'eb6e5994fcde', 'ownerId': 'p1', 'controllerId': 'p1', 'cardId': 'support-probe', 'x': 740.0, 'y': 800.0, 'faceUp': True, 'rotation': 0.0, 'counters': {}, 'stackedOn': None, 'isSupport': True, 'fieldZone': 'confrontation', 'confrontationOrder': 1, 'supportUsedTurn': 2}]\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__reforging_memory",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 330, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_support_family.py\", line 280, in check_reforging_memory\n    self.assertEqual(len(memories),1);self.assertEqual(memories[0]['data']['itemId'],item['id'])\n    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: 0 != 1\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__reforging_win",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__stale",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_reforging__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_unite__cost",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_unite__neutralized",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_unite__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_unite__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_unite__unite_resolution_scope",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_family.SupportFamily.test_unite__unite_scope",
+      "status": "pass",
+      "durationSeconds": 0.031
+    }
+  ],
+  "limits": [
+    "Selected clauses and explicit branches, not certification of every card interaction.",
+    "Targets, entry histories, locks and comparison results are controlled fixtures; production declarations, entry events and cleanup are exercised.",
+    "Printed costs, token counts, ownership, duration and victory destinations are literal oracles.",
+    "No new browser, physical-device or automatic phase-driving certification."
+  ]
+}

@@ -2052,7 +2052,7 @@
     const opp = players.opp;
     if (!opp) { bar.innerHTML = ""; return; }
     const mini = [["deck", "deck"], ["graveyard", "graveyard"], ["exile", "exile"], ["receptacle", "receptacle"]]
-      .map(([zone]) => `<span class="mini" title="${esc(t(zone))}"><small>${esc(t(zone).slice(0, 5))}</small><i>${ICONS[ZONE_ICONS[zone]]}</i><b>${pileCount(opp, zone)}</b></span>`).join("");
+      .map(([zone]) => `<span class="mini" data-drop-zone="${esc(opp.id)}:${zone}" data-pile-summary="${esc(opp.id)}:${zone}" title="${esc(t(zone))}"><small>${esc(t(zone).slice(0, 5))}</small><i>${ICONS[ZONE_ICONS[zone]]}</i><b>${pileCount(opp, zone)}</b></span>`).join("");
     const points = receptaclePoints(opp.zones.receptacle || {}, opp.score);
     bar.innerHTML = `<span class="v"><span class="long">${esc(t("ubPilesOf"))} </span>${esc(opp.name)}</span>${mini}<span class="pts">${points}</span><span class="chev">${ICONS.chevron}</span>`;
   }
@@ -3244,6 +3244,7 @@
       (details.effectResult?.itemIds || []).forEach(claim);
       claim(details.effectResult?.itemId);
       claim(event?.movedCard?.cardId);
+      claim(event?.manualMove?.itemId);
       claim(event?.sacrifice?.cardId);
       claim(event?.supportWin?.cardId);
       claim(event?.supportWin?.itemId);

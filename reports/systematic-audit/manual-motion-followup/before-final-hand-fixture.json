@@ -1,0 +1,45 @@
+{
+  "schemaVersion": 1,
+  "summary": {
+    "executed": 6,
+    "passed": 6,
+    "failed": 0
+  },
+  "tests": [
+    {
+      "testId": "pc-pc-p1-hand-to-field-visible-to-peer",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p2-hand-to-field-visible-to-peer",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p1-hand-to-field-visible-to-peer",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p2-hand-to-field-visible-to-peer",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p1-hand-to-field-visible-to-peer",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p2-hand-to-field-visible-to-peer",
+      "status": "pass"
+    }
+  ],
+  "limits": [
+    "Chrome desktop and touch emulation, not physical phones or real Safari.",
+    "Real production socket/render/drag path; initial zones reset by loopback fixture."
+  ],
+  "sources": {
+    "public/js/vfx.js": "c98cd430110af284aa94e555571e2d59d846071f17dab013d4c26a672fd1b5f4",
+    "public/ui-beta.js": "9df725885d9466f31c7d25ed2414ad4178994e2dc09bfb7d4d441a9b231ef824",
+    "public/js/board.js": "254110405197f01fe0ce86c1aca2e813c62ac62af39f11dc77c6f3ce0fdb26de",
+    "server/main.py": "185b8119f66cb07e287b195dd5beb082e92397c2350110727cb0f7b0fe4117cd",
+    "tools/manual_motion_server.py": "fe9c60fd7887fd02795cf1ed362c2d0a14463cfa3cab59e75800f674a20d67a5"
+  }
+}

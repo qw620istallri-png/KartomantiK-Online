@@ -1,0 +1,53 @@
+{
+  "sourceDigest": "ccc26b621a79ccec469ee44c6c6688ca702bf524db0da30095438fcd4af62c2f",
+  "finishedAt": "2026-10-29T14:27:55.580200+00:00",
+  "summary": {
+    "executed": 6,
+    "failed": 3
+  },
+  "tests": [
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_blanked_manifestation_still_cannot_activate_its_ability",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_does_not_allow_an_unmarked_face_down_card",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_preserves_timing_and_target_validation",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_preserves_timing_and_target_validation (invalid='timing')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_preserves_timing_and_target_validation (invalid='target')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_free_concealed_encoded_will_resolves_without_tribute",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_concealed_play_permissions.py\", line 47, in test_free_concealed_encoded_will_resolves_without_tribute\n    self.assertIsNone(error)\nAssertionError: 'This source Manifestation has lost its effects.' is not None\n",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_jigon_search_and_loss_make_the_actual_concealed_will_playable",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_concealed_play_permissions.py\", line 105, in test_jigon_search_and_loss_make_the_actual_concealed_will_playable\n    self.assertIsNone(error)\nAssertionError: 'This source Manifestation has lost its effects.' is not None\n",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_paid_concealed_encoded_will_resolves_its_printed_effect",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_concealed_play_permissions.py\", line 35, in test_paid_concealed_encoded_will_resolves_its_printed_effect\n    self.assertIsNone(error)\nAssertionError: 'This source Manifestation has lost its effects.' is not None\n",
+      "durationSeconds": 0.032
+    }
+  ]
+}

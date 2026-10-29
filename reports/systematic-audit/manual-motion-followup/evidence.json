@@ -1,0 +1,46 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-29T13:38:55.439618+00:00",
+  "published": false,
+  "summary": {
+    "browser": {
+      "executed": 78,
+      "passed": 78,
+      "failed": 0
+    },
+    "neighborSuitesPassed": 4,
+    "parityScenarios": 608
+  },
+  "browserSources": {
+    "public/js/vfx.js": "c98cd430110af284aa94e555571e2d59d846071f17dab013d4c26a672fd1b5f4",
+    "public/ui-beta.js": "9df725885d9466f31c7d25ed2414ad4178994e2dc09bfb7d4d441a9b231ef824",
+    "public/js/board.js": "254110405197f01fe0ce86c1aca2e813c62ac62af39f11dc77c6f3ce0fdb26de",
+    "server/main.py": "185b8119f66cb07e287b195dd5beb082e92397c2350110727cb0f7b0fe4117cd",
+    "tools/manual_motion_server.py": "fe9c60fd7887fd02795cf1ed362c2d0a14463cfa3cab59e75800f674a20d67a5"
+  },
+  "artifacts": {
+    "before-compact-drop.json": "24d0f32059e0f81bd95c1b21daa51ee1db8b525bd8eaf7c0e343fbf312d9de52",
+    "before-final-hand-fixture.json": "abf5febd5b4b29aca8093c1dd9162132ac7c1d099a29ed5fca8e5b61e033021f",
+    "before.json": "3a62cc7c1bef04c738f4f98aba85e07c7c1dfcd484d8470c0112d5d20e89ccb6",
+    "before.log": "0c069b1043dc7f610f11f64b08165784ddb350df9c2ba5f3408db406021097bb",
+    "browser.json": "d5f271efcdd83521082936cdffdf2c5c48e014ecf78cf095296e80610d10232e",
+    "card-before.log": "407773bde347d4510a501903937b971acd09301d420d710ba0208050ea1ac5f0",
+    "card-initial.log": "267bb659861e6af5ddeb97cb393ea1dca93ac8110b7c7ac41ea524de1aafcec0",
+    "diagnostic.log": "bf1038b912a3b3e95025490c78751d04c82c3796f4099faa49c58381ccc21b20",
+    "drag-after.log": "a90c4fb536073b391eef9f3f04817d73f00d2ae3c930dafcf39f80af3018af71",
+    "drag-diagnostic.log": "4e78fc43536a539dfe7522a96fd50c1c6b5ba6ff381695ed9bd21534892110d3",
+    "final.log": "1680c6bfd65ab12d11e8b930ed78b511fbc8b03c15dcb9122d71b1116048a9c6",
+    "hand-all-formats.log": "82be416fdcd077b71642d97b84daf2ef9851f7d67f55edde617546c54814bc31",
+    "hand-diagnostic.log": "667a7d47ab627d1f25ee3a2e03f0516dcf07e0f23cdbc161de82f47ae0b110da",
+    "initial-fixtures.json": "f9295516da797c7c5989e4ce02f98b562717df6849735ea1be67511bfeb4e603",
+    "test_drag_cleanup.cjs.log": "5d390d11772bfce4053ec83682db429a64008be54474ad55205284fdbf332a0f",
+    "test_frontend.cjs.log": "14010ce473f2079d5ccc164eddfa9bd1c74212f88326d374799251fb39fc1def",
+    "test_rarity_immediate_vfx.cjs.log": "d63c33a82a7380992142fcab87e6771c98eec8bacca60a2164f0220e7a7060a3",
+    "test_rules_parity.cjs.log": "47cae38a9917913d5d7f052a09376ca4b576f96cd01afd690c0398b66a684c61",
+    "ui-gates.json": "755feb932670d4f115c716853360e2d1139e1ba247360204fa90c57cf2f74b7d"
+  },
+  "limits": [
+    "Chrome desktop and touch emulation, not physical phones or real Safari.",
+    "Real production socket/render/drag path; initial zones reset by loopback fixture."
+  ]
+}

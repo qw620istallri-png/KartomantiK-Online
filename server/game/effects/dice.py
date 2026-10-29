@@ -35,6 +35,7 @@ class DiceEffectsMixin:
         return {
             "kind": result.get("kind"), "status": "destroyed",
             "controllerId": controller_id, "tokens": len(created),
+            "resolutionTriggers": self.collect_rules_token_entry_triggers(created),
         }
 
     def _rules_result_roll_d6_gain_half_essence(self, action, result, player_id, player):

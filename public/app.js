@@ -2,7 +2,7 @@
 // (see index.html); this file keeps every statement that runs at load, in order.
 
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261029-rules-beta-141-3";
+const STATIC_ASSET_VERSION = "20261029-rules-beta-141-4";
 
 {
   const versionEl = document.getElementById("appVersion");
@@ -245,6 +245,7 @@ async function boot() {
   };
   $("#inspectXBtn").onclick = () => $("#inspectCloseBtn").click();
   $("#revealCloseBtn").onclick = () => {
+    closeContextMenu();
     $("#revealPanel").classList.add("hidden");
     setMyActivity(null);
   };

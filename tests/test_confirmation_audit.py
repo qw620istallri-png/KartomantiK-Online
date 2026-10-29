@@ -127,9 +127,9 @@ class ConfirmationAuditTests(game_tests.RealCardRulesCase):
                     choice = session.rules_engine["pendingChoice"]
                     if choice:
                         self.assertEqual(choice["kind"], "trigger_targets")
-                        error, _ = session.resolve_rules_choice("p1", choice["id"], targets=[{
-                            "kind": "card", "itemId": "target", "cardId": "m-5",
-                        }])
+                        targets = ([{"kind": "zone_card", "containerId": "p1", "zone": "graveyard", "cardId": "m-0"}]
+                                   if card_id == self.CARCASS else [{"kind": "card", "itemId": "target", "cardId": "m-5"}])
+                        error, _ = session.resolve_rules_choice("p1", choice["id"], targets=targets)
                         self.assertIsNone(error)
                     effect = session.resolve_rules_top_action()["action"]["effectResult"]
                     self.assertNotIn(effect.get("status"), {"no_hand_card", "no_vessel_card", "no_eligible_card", "unavailable", "nothing"})

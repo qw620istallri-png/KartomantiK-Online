@@ -1,0 +1,43 @@
+{
+  "version": "141.4",
+  "assetTag": "20261029-rules-beta-141-4",
+  "versionedIndexAssets": 24,
+  "uiEvidenceReuse": {
+    "manual-motion-followup": {
+      "summary": {
+        "browser": {
+          "executed": 78,
+          "passed": 78,
+          "failed": 0
+        },
+        "neighborSuitesPassed": 4,
+        "parityScenarios": 608
+      },
+      "sourceChecks": {
+        "public/js/vfx.js": true,
+        "public/ui-beta.js": true,
+        "public/js/board.js": true,
+        "server/main.py": true,
+        "tools/manual_motion_server.py": true
+      },
+      "indexNormalization": "141.4 asset query tags restored to 141.3 only; no other changes"
+    },
+    "manual-scry-followup": {
+      "summary": {
+        "browser": {
+          "executed": 54,
+          "passed": 54,
+          "failed": 0
+        },
+        "networkTestsPassed": 3
+      },
+      "sourceChecks": {
+        "public/index.html": true,
+        "public/style.css": true,
+        "public/js/connection.js": true,
+        "public/js/board.js": true
+      },
+      "indexNormalization": "141.4 asset query tags restored to 141.3 only; no other changes"
+    }
+  }
+}

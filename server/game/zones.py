@@ -970,7 +970,7 @@ class ZonesMixin:
                     continue
                 add('suspend:' + source['id'], self.rules_item_controller_id(source), source['cardId'],
                     'suspend', None, source)
-        if zone in {'deck', 'graveyard'} and self.card_rules.get(card_id, {}).get('type') == 'manifestation':
+        if zone in {'deck', 'graveyard', 'interzone'} and self.card_rules.get(card_id, {}).get('type') == 'manifestation':
             for effect in self.rules_engine['ongoingEffects']:
                 if effect.get('kind') == 'exile_incoming_manifestations' and (effect.get('target') or {}).get('playerId') == container_id:
                     add('exile:' + str(effect.get('actionId') or effect.get('id')), effect.get('controllerId'),

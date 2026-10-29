@@ -570,6 +570,7 @@ class CardsEffectsMixin:
             "kind": result.get("kind"),
             "status": "created" if tokens else "nothing",
             "cardIds": exiled, "tokens": len(tokens),
+            "resolutionTriggers": self.collect_rules_token_entry_triggers(tokens),
         }
 
     def _rules_result_shuffle_hand_into_deck_and_draw(self, action, result, player_id, player):
@@ -631,6 +632,9 @@ class CardsEffectsMixin:
                 "status": "target_missing",
             }
         if replacement:
+            self.record_rules_observed_event(
+                "manifestation_left_by_effect", target.get("containerId"), cardId=target.get("cardId"),
+            )
             return {"kind": result.get("kind"), **replacement}
         owner_id = self.take_zone_card(
             target.get("containerId"), "graveyard",
@@ -654,6 +658,11 @@ class CardsEffectsMixin:
         self.mark_rules_support_entry(item)
         if result.get("winDestination") == "exile":
             item["supportWinDestination"] = "exile"
+            self.create_rules_effect_memory(
+                owner_id, item["cardId"], "win_destination_exile",
+                controller_id=player_id, source_action_id=action.get("id"),
+                data={"itemId": item["id"]},
+            )
         if result.get("losesEffects"):
             item["effectsDisabled"] = True
         if result.get("exileInsteadOfLeaving"):
@@ -1012,6 +1021,7 @@ class CardsEffectsMixin:
             "status": "resolved",
             "exiled": exiled,
             "createdItemIds": [item["id"] for item in created],
+            "resolutionTriggers": self.collect_rules_token_entry_triggers(created),
         }
 
     def _rules_result_search_deck_will_conceal(self, action, result, player_id, player):

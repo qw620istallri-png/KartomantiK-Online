@@ -216,7 +216,7 @@ class PowerEffectsMixin:
             error, _owner, _replacement = self.move_zone_card_by_effect(
                 container_id, "graveyard", owner_id, "exile", card_id, "top"
             )
-            if not error:
+            if not error and not _replacement:
                 exiled.append(card_id)
         if exiled and source_item is not None:
             self.append_rules_ongoing_effect({
@@ -316,7 +316,8 @@ class PowerEffectsMixin:
         source_item = self.find_battlefield_item(
             (action.get("source") or {}).get("itemId")
         )
-        if not action.get("targets") and not action.get("_limboChosen"):
+        if (not action.get("targets") and not action.get("_limboChosen")
+                and not (action.get("ability") or {}).get("targets")):
             # Carcass Devourer: ask which Manifestations to exile from Limbo
             limbo = [
                 card_id for card_id in player["zones"]["graveyard"]
@@ -351,7 +352,7 @@ class PowerEffectsMixin:
             error, _owner, _replacement = self.move_zone_card_by_effect(
                 container_id, "graveyard", owner_id, "exile", card_id, "top"
             )
-            if error:
+            if error or _replacement:
                 continue
             exiled.append(card_id)
             added += int(self.card_rules.get(card_id, {}).get("power") or 0)

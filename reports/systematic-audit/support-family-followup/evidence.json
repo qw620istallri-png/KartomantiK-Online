@@ -1,0 +1,59 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-29T14:17:21.425577+00:00",
+  "sourceDigest": "f1b0fe869a81f535e0d3b196794355cdf740dad72a70b6b822f57add5b2ba9cc",
+  "published": false,
+  "publishedBaselineCommit": "2f0854995886af201e36e7013b3c707e51103cfb",
+  "summary": {
+    "fullPython": {
+      "executed": 3325,
+      "passed": 3325,
+      "failed": 0,
+      "skipped": 0
+    },
+    "cardFamily": {
+      "executed": 83,
+      "passed": 83,
+      "failed": 0,
+      "skipped": 0,
+      "selectedClauses": 8,
+      "cardsWithSelectedClauseProof": 6
+    },
+    "neighborPythonTestsPassed": 90,
+    "parityScenarios": 608,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 148,
+      "percentageWithSelectedClauseProof": 32.9,
+      "cardsOutsideThisStrictRegister": 302,
+      "fullCatalogSemanticCertification": false
+    }
+  },
+  "artifacts": {
+    "adjacent.log": "1351ca496752d8b7ad5d6315311a8d7e430e838ee8bbbaefd556a01ec47f9533",
+    "before.json": "7ecb983346e937538233155ca7c3ea8e68b4deff73f08d98ade8c2e209e6465a",
+    "clauses.json": "8bfc389e03d6800309baebc97a84efd7c01c5b0555b736884fdbc566eee5c34d",
+    "count-choice-before.json": "0eca5dbeb2b2ca4792eb1218508ca83654d2c31348ba98874c6bd5c2f115120e",
+    "count-choice-before.log": "78d4c4290cab1fa20be66365d59a30640e3902149b6ebf2a243b309d965c9e9d",
+    "EXECUTIONS.md": "84bd9778a46c992e8351f7c228f62463749aa4613518edf4375691192c44363c",
+    "family.log": "1330476dcd50dbf673dfb086d70d3206f61fcc7d34684c58d103c6fd21ee496d",
+    "full.log": "978688e7a71b6bdb96712e68d321add676a5994ee948a46e00db618d842212be",
+    "initial-before.log": "4f61a47c0323e8b775b0e6ad6063192c71792b5a6b46cde86356decdf12e9665",
+    "initial-harness-errors.log": "241a767bb5b966de4d478b85a70fc8dbb7078c10a8c07855be4a186dcf4f8fc9",
+    "parity.log": "56df3e6188a200b0078c497da183cb3dcbe7ce5756e333de46cb869094e9a86c",
+    "token-routes-before.json": "185365ba0bc964c1ce55fe097e7287b1d0c0c35ca8b52dfe1202f4b613a2890b",
+    "token-routes-before.log": "1ff24bd4b0362ccbf92ab8dddbe1019130beb87432d836ce066b44bb041f2656",
+    "unit-tests.json": "07c040a386122c6f24c964778ddf71687cd7e777fda85fee04e0c97282d094a6",
+    "units.log": "9b3d0f7b86287b23d9a2d39df6b00d88cade96d2e1b8d4c6fd675b2ab044a984"
+  },
+  "coverageRegistrySha256": "f63a73e06be34b79c8899df71f7de0bad98ccc08880634436231c46f4618b804",
+  "reportSha256": "f0c46395e5b115e20751e654c02afc840b5bcbabea7d89b7eac504f064690d22",
+  "limits": [
+    "Selected clauses and explicit branches, not complete semantic certification of these cards or the catalog.",
+    "Eight extra generators are interaction subcases, not eight additional cards with complete printed-clause coverage.",
+    "Controlled initial states and target fixtures; automatic phase driving disabled in the ten network journeys.",
+    "No new browser, physical-device or remote-artwork certification.",
+    "Before reports retain the corrected fixture expectations described in the report; not every initial failure was a product defect.",
+    "All changes after published baseline remain local."
+  ]
+}

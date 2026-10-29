@@ -13,8 +13,8 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Kartomantik">
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
-  <link rel="stylesheet" href="style.css?v=20261029-rules-beta-141-3">
-  <link rel="stylesheet" href="ui-beta.css?v=20261029-rules-beta-141-3">
+  <link rel="stylesheet" href="style.css?v=20261029-rules-beta-141-4">
+  <link rel="stylesheet" href="ui-beta.css?v=20261029-rules-beta-141-4">
 </head>
 <body>
 
@@ -481,13 +481,17 @@
 
   <div class="log-panel reveal-panel hidden" id="revealPanel">
     <div class="box">
-      <h2 id="revealHeading"></h2>
-      <p class="reveal-who" id="revealWho"></p>
-      <div class="reveal-cards" id="revealCards"></div>
-      <div class="reveal-resize-handle" id="revealResizeHandle"></div>
-      <div style="display:flex;justify-content:flex-end;margin-top:16px">
+      <div class="reveal-browser-actions">
+        <div class="reveal-browser-head">
+          <h2 id="revealHeading"></h2>
+          <p class="reveal-who" id="revealWho"></p>
+          <p class="deck-browser-touch-hint" id="revealTouchHint"></p>
+          <label class="reveal-size-label" for="revealSizeInput" id="revealSizeLabel"></label>
+          <input type="range" id="revealSizeInput" min="90" max="400" step="10">
+        </div>
         <button id="revealCloseBtn"></button>
       </div>
+      <div class="reveal-cards" id="revealCards"></div>
     </div>
   </div>
 
@@ -705,27 +709,27 @@
     <p id="tournamentPlayerAlertText"></p>
   </div>
 
-  <script src="i18n.js?v=20261029-rules-beta-141-3"></script>
-  <script src="audio-manager.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/cards.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/decks.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/phases.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/vfx.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/vfx-elements.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/board-flow.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/rules-actions.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/connection.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/pwa.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/tournament.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/players.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/zones.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/hand.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/choices.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/drag-drop.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/board.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/controls.js?v=20261029-rules-beta-141-3"></script>
-  <script src="js/log.js?v=20261029-rules-beta-141-3"></script>
-  <script src="app.js?v=20261029-rules-beta-141-3"></script>
-  <script src="ui-beta.js?v=20261029-rules-beta-141-3"></script>
+  <script src="i18n.js?v=20261029-rules-beta-141-4"></script>
+  <script src="audio-manager.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/cards.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/decks.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/phases.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/vfx.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/vfx-elements.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/board-flow.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/rules-actions.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/connection.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/pwa.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/tournament.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/players.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/zones.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/hand.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/choices.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/drag-drop.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/board.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/controls.js?v=20261029-rules-beta-141-4"></script>
+  <script src="js/log.js?v=20261029-rules-beta-141-4"></script>
+  <script src="app.js?v=20261029-rules-beta-141-4"></script>
+  <script src="ui-beta.js?v=20261029-rules-beta-141-4"></script>
 </body>
 </html>

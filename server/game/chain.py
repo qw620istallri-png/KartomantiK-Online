@@ -497,26 +497,36 @@ class ChainMixin:
         self.battlefield.append(item)
         return item
 
-    def queue_rules_token_copy_entry_triggers(self, copy):
+    def queue_rules_token_copy_entry_triggers(self, copy, *, defer=False):
         """A token copy of a real card enters the battlefield like the card
         itself: its "enters the field" effects trigger."""
         if (
-            copy is None or copy.get("isTokenCard") or copy.get("effectsDisabled")
-            or not self.rules_engine["enabled"]
+            copy is None or not self.rules_engine["enabled"]
         ):
             return []
-        triggered = self.queue_rules_battlefield_entry_triggers(
-            copy["cardId"], copy["ownerId"], copy["id"], True, defer=True,
-        )
-        triggered.extend(self.queue_rules_support_entry_triggers(
+        triggered = []
+        if not copy.get("isTokenCard") and not copy.get("effectsDisabled"):
+            triggered.extend(self.queue_rules_battlefield_entry_triggers(
+                copy["cardId"], copy["ownerId"], copy["id"], True, defer=True,
+            ))
+        if self.rules_field_zone(copy) == "confrontation":
+            triggered.extend(self.queue_rules_support_entry_triggers(
+                copy, played=False, defer=True,
+            ))
+        triggered.extend(self.queue_rules_manifestation_entry_watchers(
             copy, played=False, defer=True,
         ))
         triggered.extend(self.queue_rules_field_zone_entry_triggers(
             copy, self.rules_field_zone(copy) or "confrontation", defer=True,
         ))
-        if triggered:
+        if triggered and not defer:
             self.queue_rules_simultaneous_actions(triggered)
         return triggered
+
+    def collect_rules_token_entry_triggers(self, items):
+        """Collect one creation batch before asking for simultaneous ordering."""
+        return [trigger for item in items if item is not None
+                for trigger in self.queue_rules_token_copy_entry_triggers(item, defer=True)]
 
     def _finish_rules_support_returns(self, counts, action):
         effects = []

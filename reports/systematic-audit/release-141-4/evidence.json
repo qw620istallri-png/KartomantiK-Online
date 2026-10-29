@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "version": "141.4",
+  "assetTag": "20261029-rules-beta-141-4",
+  "finishedAt": "2026-10-29T15:02:13.198358+00:00",
+  "sourceDigest": "85715e8ac3d0752dcc2da2ce3bbf79b7b72486d2524cbab0f5b7204e9b0f6ea4",
+  "summary": {
+    "fullPython": {
+      "executed": 3788,
+      "passed": 3788,
+      "failed": 0,
+      "skipped": 0
+    },
+    "pwa": {
+      "executed": 25,
+      "passed": 25,
+      "failed": 0
+    },
+    "frontend": "pass",
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 188,
+      "percentageWithSelectedClauseProof": 41.8,
+      "cardsOutsideThisStrictRegister": 262,
+      "fullCatalogSemanticCertification": false
+    }
+  },
+  "artifacts": {
+    "asset-validation.json": "7e0812a7a125b2b43a96d67ebc73cc9907e83dd7ac152fda4b4d6503cba5bd2d",
+    "EXECUTIONS.md": "75e8f6461ca00405559d8053a717d42bfe47576a79b1c0b7997d0abcb7de6d2e",
+    "frontend.log": "4320e6e2a3bc2ce0ef75aca2070030321d6fefd85776ee523a3a42e01290980c",
+    "full.log": "c7d20d7f74dd0bfe96cd469fb59e335c212faecc98f84956aa3310758c3627e1",
+    "pwa/ui.json": "daf7fcb46089de7c29d29c9da62440badddd5823c174bc369a07718109c1dad6",
+    "pwa.log": "e9c6eb6c92c3f158541a1bd904f2413d30e9409b0f9e7b270536075ae8162176",
+    "source-equivalence.json": "0c141f557bfcee5bd46056e0eb6df76c609a2f0e69f7bca29c731192998f243d",
+    "unit-tests.json": "40c7c595bf395f46425fdc48203afbfd77440c48512f81b1410f603d5ffd2f02"
+  },
+  "coverageRegistrySha256": "c614da03236609b07ae6f4f2224374d24daefc02ae238cd2e05f9a0b1de0e1d2",
+  "releaseNotesSha256": "5482d918f57365d47cbdcc6959df5a561329cc00a8e1f412f88e5dc055ba301e",
+  "auditEvidence": {
+    "exile-family-followup": "53acfb229cde4519ad676090aa24de1c58f42ef2b5ca543425f2b69cb0d9c834",
+    "zone-destination-followup": "b6db0f438a82eaa3abd479a4b88b8b768f0664e1595ba3d2ece6dc6c0c37164e",
+    "support-family-followup": "0bffa496282d96cdd7cf6d3762ca2ae1e91f9e4645bfbeb1a4f57a5073ed1125",
+    "support-permissions-followup": "a6371699936fec47c5dd69764192c53045cc35a5ec62dde3befe73f6cc152273",
+    "manual-motion-followup": "25746faa5db5f83c8a7248f8fceb1c63249a35cc7915a2dae0c6661f485373c7",
+    "manual-scry-followup": "39acd22d79505a2373be9f005a273e6ec4de83aea66da70769d32c80a9170333"
+  },
+  "limits": [
+    "Coverage counts selected clauses, not every behavior or interaction of these cards.",
+    "Prior browser motion/Scry evidence reused only after verifying scoped source hashes and normalizing the index cache-version tag.",
+    "PWA and frontend gates executed on the final release; no physical device or real Safari/Samsung Internet certification.",
+    "Historical audit reports retain their pre-publication metadata."
+  ]
+}

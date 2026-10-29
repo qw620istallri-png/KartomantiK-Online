@@ -1,0 +1,4248 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "7967b1022c9c57981679608fd419fae2801d133ab2aa6017023ea511e6849246",
+  "finishedAt": "2026-10-29T14:46:44.977390+00:00",
+  "published": false,
+  "executionSource": "reports/systematic-audit/support-permissions-followup/unit-tests.json",
+  "summary": {
+    "executed": 463,
+    "passed": 463,
+    "failed": 0,
+    "selectedClauses": 69,
+    "cardsWithSelectedClauseProof": 40,
+    "supportCards": 39,
+    "networkJourneys": 8,
+    "oracleSensitivityTests": 2
+  },
+  "clauses": [
+    {
+      "cardId": "6jz7otalrdq0q8u_en",
+      "name": "Wind Sprout",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_wind_sprout__hand",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__interzone",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__stalemate",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__opponent",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__disabled",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__lock",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__duplicate",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__first",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__controlled",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_wind_sprout__websocket_hand"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "6jz7otalrdq0q8u_en",
+      "name": "Wind Sprout",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_wind_sprout__hand",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__interzone",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__stalemate",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__opponent",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__disabled",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__lock",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__duplicate",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__first",
+        "test_support_permissions.SupportPermissions.test_wind_sprout__controlled",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_wind_sprout__websocket_hand"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "jh2nsqxr9x2ii1l_en",
+      "name": "World Spore",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "b3af34949f4708b934197b5fd8d38f5b0f85f5002441fa5c13a4b385b0d5d71d",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": true
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_world_spore__hand",
+        "test_support_permissions.SupportPermissions.test_world_spore__interzone",
+        "test_support_permissions.SupportPermissions.test_world_spore__stalemate",
+        "test_support_permissions.SupportPermissions.test_world_spore__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_world_spore__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_world_spore__opponent",
+        "test_support_permissions.SupportPermissions.test_world_spore__disabled",
+        "test_support_permissions.SupportPermissions.test_world_spore__lock",
+        "test_support_permissions.SupportPermissions.test_world_spore__duplicate",
+        "test_support_permissions.SupportPermissions.test_world_spore__first",
+        "test_support_permissions.SupportPermissions.test_world_spore__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "4rnpxnnceu8x9o9_en",
+      "name": "First Stone",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "4eb254dc2f769d40821d6489649ca5892b20382165bd916d361fe3d943fca9f2",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_first_stone__hand",
+        "test_support_permissions.SupportPermissions.test_first_stone__interzone",
+        "test_support_permissions.SupportPermissions.test_first_stone__stalemate",
+        "test_support_permissions.SupportPermissions.test_first_stone__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_first_stone__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_first_stone__opponent",
+        "test_support_permissions.SupportPermissions.test_first_stone__disabled",
+        "test_support_permissions.SupportPermissions.test_first_stone__lock",
+        "test_support_permissions.SupportPermissions.test_first_stone__duplicate",
+        "test_support_permissions.SupportPermissions.test_first_stone__first",
+        "test_support_permissions.SupportPermissions.test_first_stone__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "4rnpxnnceu8x9o9_en",
+      "name": "First Stone",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "4eb254dc2f769d40821d6489649ca5892b20382165bd916d361fe3d943fca9f2",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_first_stone__hand",
+        "test_support_permissions.SupportPermissions.test_first_stone__interzone",
+        "test_support_permissions.SupportPermissions.test_first_stone__stalemate",
+        "test_support_permissions.SupportPermissions.test_first_stone__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_first_stone__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_first_stone__opponent",
+        "test_support_permissions.SupportPermissions.test_first_stone__disabled",
+        "test_support_permissions.SupportPermissions.test_first_stone__lock",
+        "test_support_permissions.SupportPermissions.test_first_stone__duplicate",
+        "test_support_permissions.SupportPermissions.test_first_stone__first",
+        "test_support_permissions.SupportPermissions.test_first_stone__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "tpnlqhi6o8evklz_en",
+      "name": "Concealed Manta",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_concealed_manta__hand",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__interzone",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__stalemate",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__opponent",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__disabled",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__lock",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__duplicate",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__first",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "tpnlqhi6o8evklz_en",
+      "name": "Concealed Manta",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_concealed_manta__hand",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__interzone",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__stalemate",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__opponent",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__disabled",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__lock",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__duplicate",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__first",
+        "test_support_permissions.SupportPermissions.test_concealed_manta__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "dxl82w4oxzcg1eg_en",
+      "name": "Chitinous Repeller",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "cb02692096a050653889b5d82a02ccc2559676c46f5f2c8bc231a5c948dbcdc3",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__hand",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__interzone",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__stalemate",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__opponent",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__disabled",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__lock",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__duplicate",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__first",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "dxl82w4oxzcg1eg_en",
+      "name": "Chitinous Repeller",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "cb02692096a050653889b5d82a02ccc2559676c46f5f2c8bc231a5c948dbcdc3",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__hand",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__interzone",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__stalemate",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__opponent",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__disabled",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__lock",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__duplicate",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__first",
+        "test_support_permissions.SupportPermissions.test_chitinous_repeller__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "zozynivu4tbojjg_en",
+      "name": "Little Abhorrence",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__hand",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__interzone",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__stalemate",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__opponent",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__disabled",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__lock",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__duplicate",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__first",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "zozynivu4tbojjg_en",
+      "name": "Little Abhorrence",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__hand",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__interzone",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__stalemate",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__opponent",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__disabled",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__lock",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__duplicate",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__first",
+        "test_support_permissions.SupportPermissions.test_little_abhorrence__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "tw4am6bjl3z323v_en",
+      "name": "Possessed Pyramid",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "53f010523ad34ca42808523f5d971f1719d01322068bcea40e603314ea7c5148",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": true
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_possessed_pyramid__hand",
+        "test_support_permissions.SupportPermissions.test_possessed_pyramid__interzone",
+        "test_support_permissions.SupportPermissions.test_possessed_pyramid__stalemate",
+        "test_support_permissions.SupportPermissions.test_possessed_pyramid__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_possessed_pyramid__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_possessed_pyramid__opponent",
+        "test_support_permissions.SupportPermissions.test_possessed_pyramid__disabled",
+        "test_support_permissions.SupportPermissions.test_possessed_pyramid__lock",
+        "test_support_permissions.SupportPermissions.test_possessed_pyramid__duplicate",
+        "test_support_permissions.SupportPermissions.test_possessed_pyramid__first",
+        "test_support_permissions.SupportPermissions.test_possessed_pyramid__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "lmjn89wobbttfop_en",
+      "name": "Lament, Thought-nullifier",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "c094a111324b4f099a8b0609116b5450e6954fbceda11c6762e1b3ce765a98eb",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__hand",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__interzone",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__stalemate",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__opponent",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__disabled",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__lock",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__duplicate",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__first",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "lmjn89wobbttfop_en",
+      "name": "Lament, Thought-nullifier",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "c094a111324b4f099a8b0609116b5450e6954fbceda11c6762e1b3ce765a98eb",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__hand",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__interzone",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__stalemate",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__opponent",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__disabled",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__lock",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__duplicate",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__first",
+        "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "axsr1earxwcrta3_en",
+      "name": "Auriwings",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_auriwings__hand",
+        "test_support_permissions.SupportPermissions.test_auriwings__interzone",
+        "test_support_permissions.SupportPermissions.test_auriwings__stalemate",
+        "test_support_permissions.SupportPermissions.test_auriwings__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_auriwings__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_auriwings__opponent",
+        "test_support_permissions.SupportPermissions.test_auriwings__disabled",
+        "test_support_permissions.SupportPermissions.test_auriwings__lock",
+        "test_support_permissions.SupportPermissions.test_auriwings__duplicate",
+        "test_support_permissions.SupportPermissions.test_auriwings__first",
+        "test_support_permissions.SupportPermissions.test_auriwings__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "axsr1earxwcrta3_en",
+      "name": "Auriwings",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_auriwings__hand",
+        "test_support_permissions.SupportPermissions.test_auriwings__interzone",
+        "test_support_permissions.SupportPermissions.test_auriwings__stalemate",
+        "test_support_permissions.SupportPermissions.test_auriwings__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_auriwings__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_auriwings__opponent",
+        "test_support_permissions.SupportPermissions.test_auriwings__disabled",
+        "test_support_permissions.SupportPermissions.test_auriwings__lock",
+        "test_support_permissions.SupportPermissions.test_auriwings__duplicate",
+        "test_support_permissions.SupportPermissions.test_auriwings__first",
+        "test_support_permissions.SupportPermissions.test_auriwings__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "93gvk0hy12hylm6_en",
+      "name": "Yzzit, the Gambler",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "b3fe986f67cb3be13f8d5a693b7ef3dc31ec12f752060c1d6da03833a4cba8b7",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__hand",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__interzone",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__stalemate",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__opponent",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__disabled",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__lock",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__duplicate",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__first",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "93gvk0hy12hylm6_en",
+      "name": "Yzzit, the Gambler",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "b3fe986f67cb3be13f8d5a693b7ef3dc31ec12f752060c1d6da03833a4cba8b7",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__hand",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__interzone",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__stalemate",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__opponent",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__disabled",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__lock",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__duplicate",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__first",
+        "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "a9bsslut738hm0k_en",
+      "name": "Unpredictable Loudmouth",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "82940f522a0cfb4381c449bf1fcf38ecf1822c37b489d41ae6e15a9df66fd652",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": true
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__hand",
+        "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__interzone",
+        "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__stalemate",
+        "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__opponent",
+        "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__disabled",
+        "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__lock",
+        "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__duplicate",
+        "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__first",
+        "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "43faoiy4cmoxmaw_en",
+      "name": "Candle Serpent",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_candle_serpent__hand",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__interzone",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__stalemate",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__opponent",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__disabled",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__lock",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__duplicate",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__first",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "43faoiy4cmoxmaw_en",
+      "name": "Candle Serpent",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_candle_serpent__hand",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__interzone",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__stalemate",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__opponent",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__disabled",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__lock",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__duplicate",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__first",
+        "test_support_permissions.SupportPermissions.test_candle_serpent__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "tzoadjk7wb5qj5f_en",
+      "name": "Ononok, Chaotic Scatterer",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "4c3d531592faafc6547de3cb18eb515ffefeb000d19bb0d44a1a4075e541321a",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": true
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__hand",
+        "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__interzone",
+        "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__stalemate",
+        "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__opponent",
+        "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__disabled",
+        "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__lock",
+        "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__duplicate",
+        "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__first",
+        "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-011",
+      "name": "Chobariki, of the Shiny Muscles",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "2106a8e99a64164aa0ca2d27daa9767a38d463e3a58d1e2956c32110a685ba81",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__hand",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__interzone",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__stalemate",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__opponent",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__disabled",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__lock",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__duplicate",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__first",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-011",
+      "name": "Chobariki, of the Shiny Muscles",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "2106a8e99a64164aa0ca2d27daa9767a38d463e3a58d1e2956c32110a685ba81",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__hand",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__interzone",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__stalemate",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__opponent",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__disabled",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__lock",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__duplicate",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__first",
+        "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-017",
+      "name": "Mamelath, the Polymancer",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "9621d34c0659fdfdf25550cad4c8c7b39b3873c5c09ef6b16bfd5d766284c0a4",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__hand",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__interzone",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__stalemate",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__opponent",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__disabled",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__lock",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__duplicate",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__first",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-017",
+      "name": "Mamelath, the Polymancer",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "9621d34c0659fdfdf25550cad4c8c7b39b3873c5c09ef6b16bfd5d766284c0a4",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__hand",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__interzone",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__stalemate",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__opponent",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__disabled",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__lock",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__duplicate",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__first",
+        "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-041",
+      "name": "Timidette, the Elusive",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "10a6f3c1733c1bad4ec70d3fda0101368b4ded427ff985fef90a25654062fc52",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__hand",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__interzone",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__stalemate",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__opponent",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__disabled",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__lock",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__duplicate",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__first",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-041",
+      "name": "Timidette, the Elusive",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "10a6f3c1733c1bad4ec70d3fda0101368b4ded427ff985fef90a25654062fc52",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__hand",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__interzone",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__stalemate",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__opponent",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__disabled",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__lock",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__duplicate",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__first",
+        "test_support_permissions.SupportPermissions.test_timidette_the_elusive__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-051",
+      "name": "Bakato, the Obsessive",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "4e34549e9a86f2ecfc900e59cb4c0901eb0e208806950fc42ff9b9d8b9b5029b",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__hand",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__interzone",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__stalemate",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__opponent",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__disabled",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__lock",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__duplicate",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__first",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-051",
+      "name": "Bakato, the Obsessive",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "4e34549e9a86f2ecfc900e59cb4c0901eb0e208806950fc42ff9b9d8b9b5029b",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__hand",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__interzone",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__stalemate",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__opponent",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__disabled",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__lock",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__duplicate",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__first",
+        "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-053",
+      "name": "Manymaws",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "fb784ed1da45fbb70134853518312a575469a79fc593fc3233b40b9351949989",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_manymaws__hand",
+        "test_support_permissions.SupportPermissions.test_manymaws__interzone",
+        "test_support_permissions.SupportPermissions.test_manymaws__stalemate",
+        "test_support_permissions.SupportPermissions.test_manymaws__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_manymaws__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_manymaws__opponent",
+        "test_support_permissions.SupportPermissions.test_manymaws__disabled",
+        "test_support_permissions.SupportPermissions.test_manymaws__lock",
+        "test_support_permissions.SupportPermissions.test_manymaws__duplicate",
+        "test_support_permissions.SupportPermissions.test_manymaws__first",
+        "test_support_permissions.SupportPermissions.test_manymaws__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-053",
+      "name": "Manymaws",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "fb784ed1da45fbb70134853518312a575469a79fc593fc3233b40b9351949989",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_manymaws__hand",
+        "test_support_permissions.SupportPermissions.test_manymaws__interzone",
+        "test_support_permissions.SupportPermissions.test_manymaws__stalemate",
+        "test_support_permissions.SupportPermissions.test_manymaws__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_manymaws__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_manymaws__opponent",
+        "test_support_permissions.SupportPermissions.test_manymaws__disabled",
+        "test_support_permissions.SupportPermissions.test_manymaws__lock",
+        "test_support_permissions.SupportPermissions.test_manymaws__duplicate",
+        "test_support_permissions.SupportPermissions.test_manymaws__first",
+        "test_support_permissions.SupportPermissions.test_manymaws__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-065",
+      "name": "Jesterina, the Decadent",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "11ff95d8e0f8fd7329339f4a27537a0a332f5ccf932eae88b25d1dc7cd5c69e2",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__hand",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__interzone",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__stalemate",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__opponent",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__disabled",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__lock",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__duplicate",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__first",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__controlled",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_jesterina_the_decadent__websocket_hand"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-065",
+      "name": "Jesterina, the Decadent",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "11ff95d8e0f8fd7329339f4a27537a0a332f5ccf932eae88b25d1dc7cd5c69e2",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__hand",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__interzone",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__stalemate",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__opponent",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__disabled",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__lock",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__duplicate",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__first",
+        "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__controlled",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_jesterina_the_decadent__websocket_hand"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-075",
+      "name": "Ozzit, the Unwary",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "e833952ec65401243aec9b36e7d02562e3d5b6430ed5d67a7848547d14a4b622",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__hand",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__interzone",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__stalemate",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__opponent",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__disabled",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__lock",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__duplicate",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__first",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-075",
+      "name": "Ozzit, the Unwary",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "e833952ec65401243aec9b36e7d02562e3d5b6430ed5d67a7848547d14a4b622",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__hand",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__interzone",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__stalemate",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__opponent",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__disabled",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__lock",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__duplicate",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__first",
+        "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-076",
+      "name": "Nubilung, the Elder",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "ea6e85ab0cb05ddc2cb8801f0201f4cfd5897edd8bebc451ef6cccbc17001436",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": true,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__hand",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__interzone",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__stalemate",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__opponent",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__disabled",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__lock",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__duplicate",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__first",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__controlled",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_nubilung_the_elder__websocket_stalemate"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-076",
+      "name": "Nubilung, the Elder",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "ea6e85ab0cb05ddc2cb8801f0201f4cfd5897edd8bebc451ef6cccbc17001436",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": true,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__hand",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__interzone",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__stalemate",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__opponent",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__disabled",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__lock",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__duplicate",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__first",
+        "test_support_permissions.SupportPermissions.test_nubilung_the_elder__controlled",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_nubilung_the_elder__websocket_stalemate"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-079",
+      "name": "Pegasso",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "f9dd9009ee18c8fc194773438c674386db0ec10141816866ac5fcb492018f9f9",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_pegasso__hand",
+        "test_support_permissions.SupportPermissions.test_pegasso__interzone",
+        "test_support_permissions.SupportPermissions.test_pegasso__stalemate",
+        "test_support_permissions.SupportPermissions.test_pegasso__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_pegasso__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_pegasso__opponent",
+        "test_support_permissions.SupportPermissions.test_pegasso__disabled",
+        "test_support_permissions.SupportPermissions.test_pegasso__lock",
+        "test_support_permissions.SupportPermissions.test_pegasso__duplicate",
+        "test_support_permissions.SupportPermissions.test_pegasso__first",
+        "test_support_permissions.SupportPermissions.test_pegasso__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-079",
+      "name": "Pegasso",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "f9dd9009ee18c8fc194773438c674386db0ec10141816866ac5fcb492018f9f9",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_pegasso__hand",
+        "test_support_permissions.SupportPermissions.test_pegasso__interzone",
+        "test_support_permissions.SupportPermissions.test_pegasso__stalemate",
+        "test_support_permissions.SupportPermissions.test_pegasso__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_pegasso__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_pegasso__opponent",
+        "test_support_permissions.SupportPermissions.test_pegasso__disabled",
+        "test_support_permissions.SupportPermissions.test_pegasso__lock",
+        "test_support_permissions.SupportPermissions.test_pegasso__duplicate",
+        "test_support_permissions.SupportPermissions.test_pegasso__first",
+        "test_support_permissions.SupportPermissions.test_pegasso__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-111",
+      "name": "Phalanx Tower",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "a2ca1163c6f9859777890ca4a4c1dcffae3b056cee7e25beffb32d9cda1ef1c2",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__hand",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__interzone",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__stalemate",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__opponent",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__disabled",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__lock",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__duplicate",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__first",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-111",
+      "name": "Phalanx Tower",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "a2ca1163c6f9859777890ca4a4c1dcffae3b056cee7e25beffb32d9cda1ef1c2",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__hand",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__interzone",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__stalemate",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__opponent",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__disabled",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__lock",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__duplicate",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__first",
+        "test_support_permissions.SupportPermissions.test_phalanx_tower__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-127",
+      "name": "Bibi, the Confused",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "a6c0538a3b762eee08428ecee7a94269f7eb9fe1c6739f978a715e2aa634e053",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__hand",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__interzone",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__stalemate",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__opponent",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__disabled",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__lock",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__duplicate",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__first",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__controlled",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_bibi_the_confused__websocket_hand"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-127",
+      "name": "Bibi, the Confused",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "a6c0538a3b762eee08428ecee7a94269f7eb9fe1c6739f978a715e2aa634e053",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__hand",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__interzone",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__stalemate",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__opponent",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__disabled",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__lock",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__duplicate",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__first",
+        "test_support_permissions.SupportPermissions.test_bibi_the_confused__controlled",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_bibi_the_confused__websocket_hand"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-131",
+      "name": "Drildrill",
+      "printedParagraph": "Support from hand.",
+      "printedTextSha256": "ee7ed650791544503f315b19b48cd0a6c9366a189b887e680f3933ffe8b89d6d",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": false,
+        "fromStalemate": false,
+        "canBeFirst": true
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_drildrill__hand",
+        "test_support_permissions.SupportPermissions.test_drildrill__interzone",
+        "test_support_permissions.SupportPermissions.test_drildrill__stalemate",
+        "test_support_permissions.SupportPermissions.test_drildrill__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_drildrill__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_drildrill__opponent",
+        "test_support_permissions.SupportPermissions.test_drildrill__disabled",
+        "test_support_permissions.SupportPermissions.test_drildrill__lock",
+        "test_support_permissions.SupportPermissions.test_drildrill__duplicate",
+        "test_support_permissions.SupportPermissions.test_drildrill__first",
+        "test_support_permissions.SupportPermissions.test_drildrill__controlled"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "8lion52jjnmxvko_en",
+      "name": "Merciful Pago",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "e0ad4d7311a05bd925841f6e3717696facf8a4f9ff408a09fb91ed7214eb56fe",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": true
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_merciful_pago__hand",
+        "test_support_permissions.SupportPermissions.test_merciful_pago__interzone",
+        "test_support_permissions.SupportPermissions.test_merciful_pago__stalemate",
+        "test_support_permissions.SupportPermissions.test_merciful_pago__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_merciful_pago__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_merciful_pago__opponent",
+        "test_support_permissions.SupportPermissions.test_merciful_pago__disabled",
+        "test_support_permissions.SupportPermissions.test_merciful_pago__lock",
+        "test_support_permissions.SupportPermissions.test_merciful_pago__duplicate",
+        "test_support_permissions.SupportPermissions.test_merciful_pago__first",
+        "test_support_permissions.SupportPermissions.test_merciful_pago__controlled",
+        "test_support_permissions.SupportPermissions.test_merciful_pago__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "85kx4sk1y809276_en",
+      "name": "Sprawling Tentacle",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "cef98667aba8a0fd42295602e2c687274cad710f76e1e1882dc3715be7fcfa03",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__hand",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__interzone",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__stalemate",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__opponent",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__disabled",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__lock",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__duplicate",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__first",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__controlled",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "85kx4sk1y809276_en",
+      "name": "Sprawling Tentacle",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "cef98667aba8a0fd42295602e2c687274cad710f76e1e1882dc3715be7fcfa03",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__hand",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__interzone",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__stalemate",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__opponent",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__disabled",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__lock",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__duplicate",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__first",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__controlled",
+        "test_support_permissions.SupportPermissions.test_sprawling_tentacle__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "ibf2epfw6eap5x3_en",
+      "name": "Forest Guide",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": true
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_forest_guide__hand",
+        "test_support_permissions.SupportPermissions.test_forest_guide__interzone",
+        "test_support_permissions.SupportPermissions.test_forest_guide__stalemate",
+        "test_support_permissions.SupportPermissions.test_forest_guide__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_forest_guide__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_forest_guide__opponent",
+        "test_support_permissions.SupportPermissions.test_forest_guide__disabled",
+        "test_support_permissions.SupportPermissions.test_forest_guide__lock",
+        "test_support_permissions.SupportPermissions.test_forest_guide__duplicate",
+        "test_support_permissions.SupportPermissions.test_forest_guide__first",
+        "test_support_permissions.SupportPermissions.test_forest_guide__controlled",
+        "test_support_permissions.SupportPermissions.test_forest_guide__duplicate_field",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_forest_guide__websocket_interzone"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "ptwyrc2a26wqwc8_en",
+      "name": "Absent Trinket",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "e6bf2e52e2dc4466d0b7473103d97d448cac0c1f096513ec62cb96cf8be2e7a5",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": true
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_absent_trinket__hand",
+        "test_support_permissions.SupportPermissions.test_absent_trinket__interzone",
+        "test_support_permissions.SupportPermissions.test_absent_trinket__stalemate",
+        "test_support_permissions.SupportPermissions.test_absent_trinket__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_absent_trinket__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_absent_trinket__opponent",
+        "test_support_permissions.SupportPermissions.test_absent_trinket__disabled",
+        "test_support_permissions.SupportPermissions.test_absent_trinket__lock",
+        "test_support_permissions.SupportPermissions.test_absent_trinket__duplicate",
+        "test_support_permissions.SupportPermissions.test_absent_trinket__first",
+        "test_support_permissions.SupportPermissions.test_absent_trinket__controlled",
+        "test_support_permissions.SupportPermissions.test_absent_trinket__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "rngwnb4y158ya2q_en",
+      "name": "Cimba, the Boisterous",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "8b903ab999ea138764185e9b821415ca819edd48c01acd5fdc315dcf6cd96abf",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__hand",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__interzone",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__stalemate",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__opponent",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__disabled",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__lock",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__duplicate",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__first",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__controlled",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "rngwnb4y158ya2q_en",
+      "name": "Cimba, the Boisterous",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "8b903ab999ea138764185e9b821415ca819edd48c01acd5fdc315dcf6cd96abf",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__hand",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__interzone",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__stalemate",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__opponent",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__disabled",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__lock",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__duplicate",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__first",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__controlled",
+        "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "xw1fbhs6hwz6thc_en",
+      "name": "Tigrolione",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "c3efa829dc3e5fa936a86d9bac9b8a215c8b0a2fde04361c71f4f85bdd00ac04",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": true
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_tigrolione__hand",
+        "test_support_permissions.SupportPermissions.test_tigrolione__interzone",
+        "test_support_permissions.SupportPermissions.test_tigrolione__stalemate",
+        "test_support_permissions.SupportPermissions.test_tigrolione__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_tigrolione__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_tigrolione__opponent",
+        "test_support_permissions.SupportPermissions.test_tigrolione__disabled",
+        "test_support_permissions.SupportPermissions.test_tigrolione__lock",
+        "test_support_permissions.SupportPermissions.test_tigrolione__duplicate",
+        "test_support_permissions.SupportPermissions.test_tigrolione__first",
+        "test_support_permissions.SupportPermissions.test_tigrolione__controlled",
+        "test_support_permissions.SupportPermissions.test_tigrolione__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "v1mhtnl7jec5xby_en",
+      "name": "Skapus, the Vile",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "7564935e0ebbeee83917dc9ce8670e6048986d08e7d23c2c92c15c3cfd49faa9",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__hand",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__interzone",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__stalemate",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__opponent",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__disabled",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__lock",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__duplicate",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__first",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__controlled",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "v1mhtnl7jec5xby_en",
+      "name": "Skapus, the Vile",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "7564935e0ebbeee83917dc9ce8670e6048986d08e7d23c2c92c15c3cfd49faa9",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__hand",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__interzone",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__stalemate",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__opponent",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__disabled",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__lock",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__duplicate",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__first",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__controlled",
+        "test_support_permissions.SupportPermissions.test_skapus_the_vile__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "3k3i91mo61xgl24_en",
+      "name": "Granite Mass",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "68eb1f96ba451bd609322cb405712e6f23ec2ef53446cc048947db1a2b7ae2cc",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_granite_mass__hand",
+        "test_support_permissions.SupportPermissions.test_granite_mass__interzone",
+        "test_support_permissions.SupportPermissions.test_granite_mass__stalemate",
+        "test_support_permissions.SupportPermissions.test_granite_mass__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_granite_mass__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_granite_mass__opponent",
+        "test_support_permissions.SupportPermissions.test_granite_mass__disabled",
+        "test_support_permissions.SupportPermissions.test_granite_mass__lock",
+        "test_support_permissions.SupportPermissions.test_granite_mass__duplicate",
+        "test_support_permissions.SupportPermissions.test_granite_mass__first",
+        "test_support_permissions.SupportPermissions.test_granite_mass__controlled",
+        "test_support_permissions.SupportPermissions.test_granite_mass__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "3k3i91mo61xgl24_en",
+      "name": "Granite Mass",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "68eb1f96ba451bd609322cb405712e6f23ec2ef53446cc048947db1a2b7ae2cc",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_granite_mass__hand",
+        "test_support_permissions.SupportPermissions.test_granite_mass__interzone",
+        "test_support_permissions.SupportPermissions.test_granite_mass__stalemate",
+        "test_support_permissions.SupportPermissions.test_granite_mass__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_granite_mass__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_granite_mass__opponent",
+        "test_support_permissions.SupportPermissions.test_granite_mass__disabled",
+        "test_support_permissions.SupportPermissions.test_granite_mass__lock",
+        "test_support_permissions.SupportPermissions.test_granite_mass__duplicate",
+        "test_support_permissions.SupportPermissions.test_granite_mass__first",
+        "test_support_permissions.SupportPermissions.test_granite_mass__controlled",
+        "test_support_permissions.SupportPermissions.test_granite_mass__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "ypvac71teuck2za_en",
+      "name": "Worn Old Shape",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "c4ccf89360b5b1f713163502335b800ef2643be12e5863c0cbbc3d1485ba1957",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__hand",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__interzone",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__stalemate",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__opponent",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__disabled",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__lock",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__duplicate",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__first",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__controlled",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "ypvac71teuck2za_en",
+      "name": "Worn Old Shape",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "c4ccf89360b5b1f713163502335b800ef2643be12e5863c0cbbc3d1485ba1957",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__hand",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__interzone",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__stalemate",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__opponent",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__disabled",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__lock",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__duplicate",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__first",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__controlled",
+        "test_support_permissions.SupportPermissions.test_worn_old_shape__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "dm0hz9sb5i737gx_en",
+      "name": "Hogma, the Petty",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "f5393780d147be36085fa99e08dc60f3ca11fe0be63b120045e8da2529b71ffa",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": true
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_hogma_the_petty__hand",
+        "test_support_permissions.SupportPermissions.test_hogma_the_petty__interzone",
+        "test_support_permissions.SupportPermissions.test_hogma_the_petty__stalemate",
+        "test_support_permissions.SupportPermissions.test_hogma_the_petty__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_hogma_the_petty__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_hogma_the_petty__opponent",
+        "test_support_permissions.SupportPermissions.test_hogma_the_petty__disabled",
+        "test_support_permissions.SupportPermissions.test_hogma_the_petty__lock",
+        "test_support_permissions.SupportPermissions.test_hogma_the_petty__duplicate",
+        "test_support_permissions.SupportPermissions.test_hogma_the_petty__first",
+        "test_support_permissions.SupportPermissions.test_hogma_the_petty__controlled",
+        "test_support_permissions.SupportPermissions.test_hogma_the_petty__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-002",
+      "name": "Buuz, the Helicoidal",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "1470d75dd513b090fd75cf8837f0a27a2e4ef295dc916652f5f3203fc18f55b3",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__hand",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__interzone",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__stalemate",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__opponent",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__disabled",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__lock",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__duplicate",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__first",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__controlled",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__duplicate_field",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_buuz_the_helicoidal__websocket_hand"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-002",
+      "name": "Buuz, the Helicoidal",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "1470d75dd513b090fd75cf8837f0a27a2e4ef295dc916652f5f3203fc18f55b3",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__hand",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__interzone",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__stalemate",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__opponent",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__disabled",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__lock",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__duplicate",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__first",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__controlled",
+        "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__duplicate_field",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_buuz_the_helicoidal__websocket_hand"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-005",
+      "name": "Manibirbo",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "60654b6dd28e8cf1422096c0cb2d802c5f068a4afb2280721be75c7f6c3a4257",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_manibirbo__hand",
+        "test_support_permissions.SupportPermissions.test_manibirbo__interzone",
+        "test_support_permissions.SupportPermissions.test_manibirbo__stalemate",
+        "test_support_permissions.SupportPermissions.test_manibirbo__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_manibirbo__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_manibirbo__opponent",
+        "test_support_permissions.SupportPermissions.test_manibirbo__disabled",
+        "test_support_permissions.SupportPermissions.test_manibirbo__lock",
+        "test_support_permissions.SupportPermissions.test_manibirbo__duplicate",
+        "test_support_permissions.SupportPermissions.test_manibirbo__first",
+        "test_support_permissions.SupportPermissions.test_manibirbo__controlled",
+        "test_support_permissions.SupportPermissions.test_manibirbo__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-005",
+      "name": "Manibirbo",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "60654b6dd28e8cf1422096c0cb2d802c5f068a4afb2280721be75c7f6c3a4257",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_manibirbo__hand",
+        "test_support_permissions.SupportPermissions.test_manibirbo__interzone",
+        "test_support_permissions.SupportPermissions.test_manibirbo__stalemate",
+        "test_support_permissions.SupportPermissions.test_manibirbo__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_manibirbo__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_manibirbo__opponent",
+        "test_support_permissions.SupportPermissions.test_manibirbo__disabled",
+        "test_support_permissions.SupportPermissions.test_manibirbo__lock",
+        "test_support_permissions.SupportPermissions.test_manibirbo__duplicate",
+        "test_support_permissions.SupportPermissions.test_manibirbo__first",
+        "test_support_permissions.SupportPermissions.test_manibirbo__controlled",
+        "test_support_permissions.SupportPermissions.test_manibirbo__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-059",
+      "name": "Nameless Arcane",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "f04d6c421a26945efa4d094385a874b51473b9ae11d2273d48a644c4bdf0f4fd",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": true
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_nameless_arcane__hand",
+        "test_support_permissions.SupportPermissions.test_nameless_arcane__interzone",
+        "test_support_permissions.SupportPermissions.test_nameless_arcane__stalemate",
+        "test_support_permissions.SupportPermissions.test_nameless_arcane__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_nameless_arcane__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_nameless_arcane__opponent",
+        "test_support_permissions.SupportPermissions.test_nameless_arcane__disabled",
+        "test_support_permissions.SupportPermissions.test_nameless_arcane__lock",
+        "test_support_permissions.SupportPermissions.test_nameless_arcane__duplicate",
+        "test_support_permissions.SupportPermissions.test_nameless_arcane__first",
+        "test_support_permissions.SupportPermissions.test_nameless_arcane__controlled",
+        "test_support_permissions.SupportPermissions.test_nameless_arcane__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-122",
+      "name": "Jeovak, the Illusory",
+      "printedParagraph": "Support.",
+      "printedTextSha256": "6086f8dbe5ff7a57ae2d5c2324c418a131101ff45c95307e1cc30f14f242bb9f",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__hand",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__interzone",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__stalemate",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__opponent",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__disabled",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__lock",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__duplicate",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__first",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__controlled",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "inner-deserts-122",
+      "name": "Jeovak, the Illusory",
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "printedTextSha256": "6086f8dbe5ff7a57ae2d5c2324c418a131101ff45c95307e1cc30f14f242bb9f",
+      "independentOracle": {
+        "fromHand": true,
+        "fromInterzone": true,
+        "fromStalemate": false,
+        "canBeFirst": false
+      },
+      "testIds": [
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__hand",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__interzone",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__stalemate",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__wrong_phase",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__wrong_priority",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__opponent",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__disabled",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__lock",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__duplicate",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__first",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__controlled",
+        "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__duplicate_field"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "z6awx4mwwkfrvdd_en",
+      "name": "Jigon, the Trap Setter",
+      "printedParagraph": "When Jigon enters the Confrontation Zone, search your deck for a Will and put it Concealed on the field, then shuffle the deck. The Concealed Will can be played as if it were in your hand.",
+      "printedTextSha256": "df4aafe65c2377f8617fff70c9bee5a38288d2b0b9e55a3ca9ea46909d79258a",
+      "independentOracle": {
+        "encodedWill": "Strengthen",
+        "normalCost": {
+          "hollow": 1
+        },
+        "costAfterLoss": {},
+        "targetPowerBefore": 1,
+        "targetPowerAfter": 4
+      },
+      "testIds": [
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_blanked_manifestation_still_cannot_activate_its_ability",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_does_not_allow_an_unmarked_face_down_card",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_preserves_timing_and_target_validation",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_free_concealed_encoded_will_resolves_without_tribute",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_freeing_one_jigon_does_not_free_another_jigons_will",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_jigon_search_and_loss_make_the_actual_concealed_will_playable",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_jigon_winning_does_not_make_the_concealed_will_free",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_paid_concealed_encoded_will_resolves_its_printed_effect",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_paid_concealed_will_still_requires_payment",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_tebebe_encoded_concealed_will_keeps_its_three_hollow_cost",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_jigon__websocket_free",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_jigon__websocket_paid"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    },
+    {
+      "cardId": "z6awx4mwwkfrvdd_en",
+      "name": "Jigon, the Trap Setter",
+      "printedParagraph": "If Jigon loses the confrontation, the Concealed Will can be played without paying its tribute cost.",
+      "printedTextSha256": "df4aafe65c2377f8617fff70c9bee5a38288d2b0b9e55a3ca9ea46909d79258a",
+      "independentOracle": {
+        "encodedWill": "Strengthen",
+        "normalCost": {
+          "hollow": 1
+        },
+        "costAfterLoss": {},
+        "targetPowerBefore": 1,
+        "targetPowerAfter": 4
+      },
+      "testIds": [
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_blanked_manifestation_still_cannot_activate_its_ability",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_does_not_allow_an_unmarked_face_down_card",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_preserves_timing_and_target_validation",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_free_concealed_encoded_will_resolves_without_tribute",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_freeing_one_jigon_does_not_free_another_jigons_will",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_jigon_search_and_loss_make_the_actual_concealed_will_playable",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_jigon_winning_does_not_make_the_concealed_will_free",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_paid_concealed_encoded_will_resolves_its_printed_effect",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_paid_concealed_will_still_requires_payment",
+        "test_concealed_play_permissions.ConcealedPlayPermissions.test_tebebe_encoded_concealed_will_keeps_its_three_hollow_cost",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_jigon__websocket_free",
+        "test_support_permissions_integration.SupportPermissionsIntegration.test_jigon__websocket_paid"
+      ],
+      "allBranchesCertified": false,
+      "status": "selected-branches-pass"
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_blanked_manifestation_still_cannot_activate_its_ability",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_does_not_allow_an_unmarked_face_down_card",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_concealed_permission_preserves_timing_and_target_validation",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_free_concealed_encoded_will_resolves_without_tribute",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_freeing_one_jigon_does_not_free_another_jigons_will",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_jigon_search_and_loss_make_the_actual_concealed_will_playable",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_jigon_winning_does_not_make_the_concealed_will_free",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_paid_concealed_encoded_will_resolves_its_printed_effect",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_paid_concealed_will_still_requires_payment",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_concealed_play_permissions.ConcealedPlayPermissions.test_tebebe_encoded_concealed_will_keeps_its_three_hollow_cost",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_absent_trinket__controlled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_absent_trinket__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_absent_trinket__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_absent_trinket__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_absent_trinket__first",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_absent_trinket__hand",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_absent_trinket__interzone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_absent_trinket__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_absent_trinket__opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_absent_trinket__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_absent_trinket__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_absent_trinket__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_auriwings__controlled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_auriwings__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_auriwings__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_auriwings__first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_auriwings__hand",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_auriwings__interzone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_auriwings__lock",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_auriwings__opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_auriwings__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_auriwings__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_auriwings__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__controlled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__disabled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__first",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__interzone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bakato_the_obsessive__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bibi_the_confused__controlled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bibi_the_confused__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bibi_the_confused__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bibi_the_confused__first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bibi_the_confused__hand",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bibi_the_confused__interzone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bibi_the_confused__lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bibi_the_confused__opponent",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bibi_the_confused__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bibi_the_confused__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_bibi_the_confused__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__controlled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__hand",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__interzone",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_buuz_the_helicoidal__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_candle_serpent__controlled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_candle_serpent__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_candle_serpent__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_candle_serpent__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_candle_serpent__hand",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_candle_serpent__interzone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_candle_serpent__lock",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_candle_serpent__opponent",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_candle_serpent__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_candle_serpent__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_candle_serpent__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chitinous_repeller__controlled",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chitinous_repeller__disabled",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chitinous_repeller__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chitinous_repeller__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chitinous_repeller__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chitinous_repeller__interzone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chitinous_repeller__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chitinous_repeller__opponent",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chitinous_repeller__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chitinous_repeller__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chitinous_repeller__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__controlled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__disabled",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__interzone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__lock",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_chobariki_of_the_shiny_muscles__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__controlled",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__disabled",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__interzone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__opponent",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_concealed_manta__controlled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_concealed_manta__disabled",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_concealed_manta__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_concealed_manta__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_concealed_manta__hand",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_concealed_manta__interzone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_concealed_manta__lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_concealed_manta__opponent",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_concealed_manta__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_concealed_manta__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_concealed_manta__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_drildrill__controlled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_drildrill__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_drildrill__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_drildrill__first",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_drildrill__hand",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_drildrill__interzone",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_drildrill__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_drildrill__opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_drildrill__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_drildrill__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_drildrill__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_first_stone__controlled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_first_stone__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_first_stone__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_first_stone__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_first_stone__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_first_stone__interzone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_first_stone__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_first_stone__opponent",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_first_stone__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_first_stone__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_first_stone__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_forest_guide__controlled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_forest_guide__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_forest_guide__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_forest_guide__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_forest_guide__first",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_forest_guide__hand",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_forest_guide__interzone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_forest_guide__lock",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_forest_guide__opponent",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_forest_guide__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_forest_guide__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_forest_guide__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_granite_mass__controlled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_granite_mass__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_granite_mass__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_granite_mass__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_granite_mass__first",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_granite_mass__hand",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_granite_mass__interzone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_granite_mass__lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_granite_mass__opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_granite_mass__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_granite_mass__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_granite_mass__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_hogma_the_petty__controlled",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_hogma_the_petty__disabled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_hogma_the_petty__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_hogma_the_petty__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_hogma_the_petty__first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_hogma_the_petty__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_hogma_the_petty__interzone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_hogma_the_petty__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_hogma_the_petty__opponent",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_hogma_the_petty__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_hogma_the_petty__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_hogma_the_petty__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__controlled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__hand",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__interzone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jeovak_the_illusory__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__controlled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__first",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__hand",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__interzone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__opponent",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_jesterina_the_decadent__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__controlled",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__disabled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__first",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__hand",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__interzone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__opponent",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_lament_thought_nullifier__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_little_abhorrence__controlled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_little_abhorrence__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_little_abhorrence__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_little_abhorrence__first",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_little_abhorrence__hand",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_little_abhorrence__interzone",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_little_abhorrence__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_little_abhorrence__opponent",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_little_abhorrence__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_little_abhorrence__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_little_abhorrence__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__controlled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__interzone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__opponent",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_mamelath_the_polymancer__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manibirbo__controlled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manibirbo__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manibirbo__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manibirbo__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manibirbo__first",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manibirbo__hand",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manibirbo__interzone",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manibirbo__lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manibirbo__opponent",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manibirbo__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manibirbo__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manibirbo__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manymaws__controlled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manymaws__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manymaws__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manymaws__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manymaws__hand",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manymaws__interzone",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manymaws__lock",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manymaws__opponent",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manymaws__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manymaws__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_manymaws__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_merciful_pago__controlled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_merciful_pago__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_merciful_pago__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_merciful_pago__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_merciful_pago__first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_merciful_pago__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_merciful_pago__interzone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_merciful_pago__lock",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_merciful_pago__opponent",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_merciful_pago__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_merciful_pago__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_merciful_pago__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nameless_arcane__controlled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nameless_arcane__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nameless_arcane__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nameless_arcane__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nameless_arcane__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nameless_arcane__hand",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nameless_arcane__interzone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nameless_arcane__lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nameless_arcane__opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nameless_arcane__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nameless_arcane__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nameless_arcane__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nubilung_the_elder__controlled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nubilung_the_elder__disabled",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nubilung_the_elder__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nubilung_the_elder__first",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nubilung_the_elder__hand",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nubilung_the_elder__interzone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nubilung_the_elder__lock",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nubilung_the_elder__opponent",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nubilung_the_elder__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nubilung_the_elder__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_nubilung_the_elder__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__controlled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__hand",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__interzone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__lock",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__opponent",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ononok_chaotic_scatterer__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__controlled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__disabled",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__interzone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__lock",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__opponent",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_ozzit_the_unwary__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_pegasso__controlled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_pegasso__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_pegasso__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_pegasso__first",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_pegasso__hand",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_pegasso__interzone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_pegasso__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_pegasso__opponent",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_pegasso__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_pegasso__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_pegasso__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_phalanx_tower__controlled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_phalanx_tower__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_phalanx_tower__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_phalanx_tower__first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_phalanx_tower__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_phalanx_tower__interzone",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_phalanx_tower__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_phalanx_tower__opponent",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_phalanx_tower__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_phalanx_tower__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_phalanx_tower__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_possessed_pyramid__controlled",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_possessed_pyramid__disabled",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_possessed_pyramid__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_possessed_pyramid__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_possessed_pyramid__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_possessed_pyramid__interzone",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_possessed_pyramid__lock",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_possessed_pyramid__opponent",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_possessed_pyramid__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_possessed_pyramid__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_possessed_pyramid__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_skapus_the_vile__controlled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_skapus_the_vile__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_skapus_the_vile__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_skapus_the_vile__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_skapus_the_vile__first",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_skapus_the_vile__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_skapus_the_vile__interzone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_skapus_the_vile__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_skapus_the_vile__opponent",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_skapus_the_vile__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_skapus_the_vile__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_skapus_the_vile__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_sprawling_tentacle__controlled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_sprawling_tentacle__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_sprawling_tentacle__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_sprawling_tentacle__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_sprawling_tentacle__first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_sprawling_tentacle__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_sprawling_tentacle__interzone",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_sprawling_tentacle__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_sprawling_tentacle__opponent",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_sprawling_tentacle__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_sprawling_tentacle__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_sprawling_tentacle__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_tigrolione__controlled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_tigrolione__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_tigrolione__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_tigrolione__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_tigrolione__first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_tigrolione__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_tigrolione__interzone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_tigrolione__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_tigrolione__opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_tigrolione__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_tigrolione__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_tigrolione__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_timidette_the_elusive__controlled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_timidette_the_elusive__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_timidette_the_elusive__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_timidette_the_elusive__first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_timidette_the_elusive__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_timidette_the_elusive__interzone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_timidette_the_elusive__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_timidette_the_elusive__opponent",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_timidette_the_elusive__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_timidette_the_elusive__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_timidette_the_elusive__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__controlled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__hand",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__interzone",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__lock",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_unpredictable_loudmouth__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_wind_sprout__controlled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_wind_sprout__disabled",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_wind_sprout__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_wind_sprout__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_wind_sprout__hand",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_wind_sprout__interzone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_wind_sprout__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_wind_sprout__opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_wind_sprout__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_wind_sprout__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_wind_sprout__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_world_spore__controlled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_world_spore__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_world_spore__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_world_spore__first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_world_spore__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_world_spore__interzone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_world_spore__lock",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_world_spore__opponent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_world_spore__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_world_spore__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_world_spore__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_worn_old_shape__controlled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_worn_old_shape__disabled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_worn_old_shape__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_worn_old_shape__duplicate_field",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_worn_old_shape__first",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_worn_old_shape__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_worn_old_shape__interzone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_worn_old_shape__lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_worn_old_shape__opponent",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_worn_old_shape__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_worn_old_shape__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_worn_old_shape__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__controlled",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__disabled",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__first",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__interzone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__lock",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__opponent",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_support_permissions.SupportPermissions.test_yzzit_the_gambler__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_support_permissions_integration.SupportPermissionsIntegration.test_bibi_the_confused__websocket_hand",
+      "status": "pass",
+      "durationSeconds": 2.062
+    },
+    {
+      "testId": "test_support_permissions_integration.SupportPermissionsIntegration.test_buuz_the_helicoidal__websocket_hand",
+      "status": "pass",
+      "durationSeconds": 2.094
+    },
+    {
+      "testId": "test_support_permissions_integration.SupportPermissionsIntegration.test_forest_guide__websocket_interzone",
+      "status": "pass",
+      "durationSeconds": 2.079
+    },
+    {
+      "testId": "test_support_permissions_integration.SupportPermissionsIntegration.test_jesterina_the_decadent__websocket_hand",
+      "status": "pass",
+      "durationSeconds": 2.016
+    },
+    {
+      "testId": "test_support_permissions_integration.SupportPermissionsIntegration.test_jigon__websocket_free",
+      "status": "pass",
+      "durationSeconds": 2.016
+    },
+    {
+      "testId": "test_support_permissions_integration.SupportPermissionsIntegration.test_jigon__websocket_paid",
+      "status": "pass",
+      "durationSeconds": 2.0
+    },
+    {
+      "testId": "test_support_permissions_integration.SupportPermissionsIntegration.test_nubilung_the_elder__websocket_stalemate",
+      "status": "pass",
+      "durationSeconds": 2.063
+    },
+    {
+      "testId": "test_support_permissions_integration.SupportPermissionsIntegration.test_wind_sprout__websocket_hand",
+      "status": "pass",
+      "durationSeconds": 2.125
+    },
+    {
+      "testId": "test_support_permissions_oracle.SupportPermissionOracle.test_missing_hand_permission_is_detected",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_support_permissions_oracle.SupportPermissionOracle.test_missing_interzone_permission_is_detected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    }
+  ],
+  "limits": [
+    "Support keyword and First Manifestation restrictions only for the 39 Support cards; other paragraphs are not certified.",
+    "Input fixtures supply required ETB targets and played controller choices; those separate effects remain on the Stack.",
+    "Jigon search, shuffle, loss trigger, paid/free cast and exact +3 are exercised with Strengthen, not every possible Will.",
+    "Two sensitivity tests verify handwritten expectations detect wrong encoded permissions.",
+    "Eight real mixed-version socket journeys; automatic phase driving disabled to isolate permissions and Stack resolution.",
+    "No new browser, remote-artwork or physical-device certification."
+  ]
+}

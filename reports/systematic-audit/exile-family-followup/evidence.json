@@ -1,0 +1,60 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-29T08:14:44.156524+00:00",
+  "sourceDigest": "250a614ed8d4b405840c95507150e287c09cc504e7cbbd9022493d072e1ae973",
+  "published": false,
+  "publishedBaselineCommit": "2f0854995886af201e36e7013b3c707e51103cfb",
+  "summary": {
+    "fullPython": {
+      "executed": 3174,
+      "passed": 3174,
+      "failed": 0,
+      "skipped": 0
+    },
+    "family": {
+      "executed": 91,
+      "passed": 91,
+      "failed": 0,
+      "skipped": 0,
+      "selectedClauses": 9,
+      "cardsWithSelectedClauseProof": 7
+    },
+    "adjacentTestsPassed": 52,
+    "clientSuitesPassed": 2,
+    "parityScenarios": 608,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 136,
+      "percentageWithSelectedClauseProof": 30.2,
+      "cardsOutsideThisStrictRegister": 314,
+      "fullCatalogSemanticCertification": false
+    }
+  },
+  "artifacts": {
+    "adjacent.log": "cc92da8257542a44c699db4327b4208f7a7a44054a34f28db4c9d3d1e33cba95",
+    "before.json": "1b6e78fdb02cb6546d2cc3d7f785d38779216c2826fe0a4eff97880aca795fb8",
+    "choice-continuity.log": "1c235d0e9c1c50988543c7a9b7a5b96255d86fd2fdd93b96e9d9820f5ed3ea84",
+    "clauses.json": "77f19be4390bbdd5b057ab011e0c26476f4d5ff60cf30ae398e2d56d014f9911",
+    "family.log": "8a6209f58b15575a123d118737fd2bb101fc9114b86df70a66320ef232c085f0",
+    "full.log": "bb2b0b4183229b6d55168dd4c4e20d90267ce17acb26cdf31e364e56f53023ef",
+    "historical-after.log": "7bee11ec3c2d2d982b594bcab9eebd1f7be3af83676c3502fbd78f8b3a3b95d1",
+    "historical-before.log": "20b161fec05b54406115c6cb69b48e5ca8641640c9407d20f4343fa96215ecd4",
+    "historical-family.log": "ea1395542e0a02f09397aefbf742f1c875cf73fdc89f115de7921920b9988f09",
+    "historical-initial.log": "a0cd5587efec57a64c11837129eeab7261e6f159f47c0d41f8975dd5599aa11a",
+    "historical-targets.log": "9f052cf149229b9995db43587f8b275cafe5fae9a527089271a471c0c47f388c",
+    "parity.log": "56df3e6188a200b0078c497da183cb3dcbe7ce5756e333de46cb869094e9a86c",
+    "target-choice-fixed.json": "9a63d16d052bceda8baed9e9e2eedffeb98a36ec3c71a893577b7b6cd7e1618a",
+    "ui-tests.json": "58a345632f29902f887cad2af28968428aed0233dc530a9e4f7fa60d9236bd16",
+    "unit-tests.json": "aad42d01eb2fa0ee63266954b0f45afbb682736d911f3a4d70aa8e7ca98a8d6b"
+  },
+  "coverageRegistrySha256": "d785664346a28d46d90b0f3768a04a3e9b9a40104ed94fbbb182808139b72e12",
+  "limits": [
+    "Selected clauses and explicit branches, not certification of every card interaction.",
+    "Targets, ETB entry events and BOB state are controlled fixtures; production choice and declaration paths are exercised.",
+    "Power and tokens require actual exile; BOB Suspension grants neither.",
+    "No new browser, physical-device or automatic phase-driving certification.",
+    "The two browser gates are existing regression suites; no new per-card browser certification.",
+    "Unique catalog IDs are counted once, only for selected printed clauses; not all interactions.",
+    "Early fixture failures are explained in README, not claimed as game defects."
+  ]
+}

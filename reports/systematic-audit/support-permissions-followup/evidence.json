@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-29T14:47:05.932574+00:00",
+  "sourceDigest": "7967b1022c9c57981679608fd419fae2801d133ab2aa6017023ea511e6849246",
+  "published": false,
+  "publishedBaselineCommit": "2f0854995886af201e36e7013b3c707e51103cfb",
+  "summary": {
+    "fullPython": {
+      "executed": 3788,
+      "passed": 3788,
+      "failed": 0,
+      "skipped": 0
+    },
+    "cardFamily": {
+      "executed": 463,
+      "passed": 463,
+      "failed": 0,
+      "selectedClauses": 69,
+      "cardsWithSelectedClauseProof": 40,
+      "supportCards": 39,
+      "networkJourneys": 8,
+      "oracleSensitivityTests": 2
+    },
+    "neighborPythonTestsPassed": 91,
+    "parityScenarios": 608,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 188,
+      "percentageWithSelectedClauseProof": 41.8,
+      "cardsOutsideThisStrictRegister": 262,
+      "fullCatalogSemanticCertification": false
+    }
+  },
+  "executionReuse": {
+    "clausesCollectedFrom": "reports/systematic-audit/support-permissions-followup/unit-tests.json",
+    "reexecutedToAssembleReport": false,
+    "fullRegressionRunsForThisBatch": 1
+  },
+  "artifacts": {
+    "adjacent.log": "35fa07e80ed82848833f33e489aa7cd659abb154f496f076a7b070690aac3357",
+    "clauses.json": "f1a987e9aa365d33245efe6cd410022388d5a0d386bb1c3c1f31568644afe0cc",
+    "EXECUTIONS.md": "49669f20901b14d7d0b6901312ff54e4aa5586b660c523794d5ae6c2e6f7a27c",
+    "family.log": "fb2bfc43a3ce786620cbc2f2fa5ef6b505fa840245c05e458837f6c080480e62",
+    "full.log": "94d93f10eec0a936bd84b370eaa5a36d2257bf30f1457de638a73ae7267351d9",
+    "jigon-before.json": "dd8d00788f553f91460e33dc0eaa7be7738eecaf89974527077bb81baf873757",
+    "network-fixture-initial.log": "3656b1c159dc751a6a28b56b7b0852f5f96b9dbcd1c66cb52e6f69341c569fba",
+    "network.log": "cab6e361489bc2f30d91d941cfb1cfb70e38d960af7515582d1675b74abbc701",
+    "parity.log": "56df3e6188a200b0078c497da183cb3dcbe7ce5756e333de46cb869094e9a86c",
+    "permissions-initial.log": "583adf58ab70ec7e9806d6e3f2245cf93e1c1bfd078991bbea717cbad57e5f9c",
+    "permissions.log": "b046f51eaa71fe8769779da8942fc093b8438c46551c660886c21c0fec996a95",
+    "unit-tests.json": "cc94ddeec08fc0522cb522ae5c7acb042444e4d3eb22699d00f61b14ec06c09f"
+  },
+  "coverageRegistrySha256": "7b4b6d4d99003255b5d0a080011568cedfb538dcd113a6f8416eb324de00206b",
+  "reportSha256": "dd1cea5e3e50bd4c091cb737cb92b79b5e10df2127cd3fcd743be923dbeebfe2",
+  "limits": [
+    "Support keyword and First Manifestation restrictions only for the 39 Support cards; other paragraphs are not certified.",
+    "Input fixtures supply required ETB targets and played controller choices; those separate effects remain on the Stack.",
+    "Jigon search, shuffle, loss trigger, paid/free cast and exact +3 are exercised with Strengthen, not every possible Will.",
+    "Two sensitivity tests verify handwritten expectations detect wrong encoded permissions.",
+    "Eight real mixed-version socket journeys; automatic phase driving disabled to isolate permissions and Stack resolution.",
+    "No new browser, remote-artwork or physical-device certification.",
+    "Initial fixture errors are described separately from the Jigon product defect.",
+    "All changes after published baseline remain local."
+  ]
+}

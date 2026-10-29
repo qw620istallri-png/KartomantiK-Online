@@ -1,0 +1,291 @@
+{
+  "schemaVersion": 1,
+  "summary": {
+    "executed": 66,
+    "passed": 60,
+    "failed": 6
+  },
+  "tests": [
+    {
+      "testId": "pc-pc-p1-field-to-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p1-field-to-graveyard",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p1-field-to-exile",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p1-field-to-hand",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p1-field-to-receptacle",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:54:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:106)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:47:71"
+    },
+    {
+      "testId": "pc-pc-p1-zone-to-zone",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p1-board-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p1-board-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p1-cleanup-and-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p1-hidden-hand-to-deck-and-replay",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p1-reduced-motion",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p2-field-to-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p2-field-to-graveyard",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p2-field-to-exile",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p2-field-to-hand",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p2-field-to-receptacle",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:54:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:106)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:47:71"
+    },
+    {
+      "testId": "pc-pc-p2-zone-to-zone",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p2-board-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p2-board-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p2-cleanup-and-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p2-hidden-hand-to-deck-and-replay",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-pc-p2-reduced-motion",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p1-field-to-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p1-field-to-graveyard",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p1-field-to-exile",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p1-field-to-hand",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p1-field-to-receptacle",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:54:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:106)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:47:71"
+    },
+    {
+      "testId": "mobile-mobile-p1-zone-to-zone",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p1-board-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p1-board-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p1-cleanup-and-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p1-hidden-hand-to-deck-and-replay",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p1-reduced-motion",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p2-field-to-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p2-field-to-graveyard",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p2-field-to-exile",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p2-field-to-hand",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p2-field-to-receptacle",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:54:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:106)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:47:71"
+    },
+    {
+      "testId": "mobile-mobile-p2-zone-to-zone",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p2-board-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p2-board-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p2-cleanup-and-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p2-hidden-hand-to-deck-and-replay",
+      "status": "pass"
+    },
+    {
+      "testId": "mobile-mobile-p2-reduced-motion",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p1-field-to-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p1-field-to-graveyard",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p1-field-to-exile",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p1-field-to-hand",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p1-field-to-receptacle",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:54:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:106)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:47:71"
+    },
+    {
+      "testId": "pc-mobile-p1-zone-to-zone",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p1-board-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p1-board-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p1-cleanup-and-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p1-hidden-hand-to-deck-and-replay",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p1-reduced-motion",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p2-field-to-deck",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p2-field-to-graveyard",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p2-field-to-exile",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p2-field-to-hand",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p2-field-to-receptacle",
+      "status": "fail",
+      "detail": "page.waitForFunction: Timeout 5000ms exceeded.\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:54:40\n    at async check (C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:8:106)\n    at async C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_manual_motion.cjs:47:71"
+    },
+    {
+      "testId": "pc-mobile-p2-zone-to-zone",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p2-board-to-interzone",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p2-board-to-will",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p2-cleanup-and-errors",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p2-hidden-hand-to-deck-and-replay",
+      "status": "pass"
+    },
+    {
+      "testId": "pc-mobile-p2-reduced-motion",
+      "status": "pass"
+    }
+  ],
+  "limits": [
+    "Chrome desktop and touch emulation, not physical phones or real Safari.",
+    "Real production socket/render/drag path; initial zones reset by loopback fixture."
+  ],
+  "sources": {
+    "public/js/vfx.js": "7b3406ca77e0e7b2036324b0763739065acf0b9bb85c248b13c71483da5a491c",
+    "public/ui-beta.js": "82a55bc690d14e1428cfa9fbe699a75e044a0a699a9ff3306b47f5426a1db5b6",
+    "public/js/board.js": "966d74d7a9614e30fc14a4e7c8781a100d959dcea5538a2f7e16c5141941547b",
+    "server/main.py": "185b8119f66cb07e287b195dd5beb082e92397c2350110727cb0f7b0fe4117cd",
+    "tools/manual_motion_server.py": "fe9c60fd7887fd02795cf1ed362c2d0a14463cfa3cab59e75800f674a20d67a5"
+  }
+}

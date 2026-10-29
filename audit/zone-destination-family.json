@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "contracts": [
+    {
+      "key": "defer",
+      "name": "Defer",
+      "cardId": "ek1bng9r7vhriwt_en",
+      "abilityId": "defer-to-deck-top",
+      "printedText": "A target manifestation or Will on the field returns to the top of its owner's deck.",
+      "printedTextSha256": "64823938b2d641f4961fd5e6eb42c108ab0e09b329bf992bbd573edcb62a022a",
+      "targetZone": "battlefield",
+      "destination": "deck",
+      "position": "top",
+      "essenceCost": {
+        "vitreous": 2
+      }
+    },
+    {
+      "key": "banish",
+      "name": "Banish",
+      "cardId": "xav48hincrnl32d_en",
+      "abilityId": "banish-to-deck-bottom",
+      "printedText": "A target manifestation on the field is moved to the bottom of its owner's deck.",
+      "printedTextSha256": "0a2d7580ad6be5747758f76e17c640cc391ba808981a0ee10c55a91f06c3abed",
+      "targetZone": "battlefield",
+      "destination": "deck",
+      "position": "bottom",
+      "essenceCost": {
+        "vitreous": 3
+      }
+    },
+    {
+      "key": "revive",
+      "name": "Revive",
+      "cardId": "uin3dxt3bc50z6q_en",
+      "abilityId": "revive-limbo-manifestation-to-interzone",
+      "printedText": "Move a target manifestation from your Limbo to your Interzone.",
+      "printedTextSha256": "9057359deb4c9d0e537d9afc763385bcd17f2729ff1b7edbd8ba5c288c37307c",
+      "targetZone": "graveyard",
+      "destination": "interzone",
+      "position": null,
+      "essenceCost": {
+        "melancholic": 4
+      }
+    },
+    {
+      "key": "claim",
+      "name": "Claim the Forsaken",
+      "cardId": "zd6h16he0m4kuwb_en",
+      "abilityId": "claim-recent-opponent-limbo-manifestation",
+      "printedText": "Put into your Empathic Vessel a target manifestation that entered an opponent's Limbo this turn.",
+      "printedTextSha256": "c1641ca2347db418be4d0f4ea012a7abe8e1eed17301a26bc17ec2b4da20f529",
+      "targetZone": "graveyard",
+      "destination": "receptacle",
+      "position": null,
+      "essenceCost": {
+        "melancholic": 4
+      }
+    },
+    {
+      "key": "salvage",
+      "name": "Salvage the Fragments",
+      "cardId": "xeeg6rdiy9xeew5_en",
+      "abilityId": "stalemate-recent-opponent-vessel-manifestation",
+      "printedText": "Put into stalemate a target manifestation that entered an opponent's Empathic Vessel this turn.",
+      "printedTextSha256": "09c1694c56f52aefea0ae9771a66b5f98a637c6d66b6bbceec1d78076baa041d",
+      "targetZone": "receptacle",
+      "destination": "stalemate",
+      "position": null,
+      "essenceCost": {
+        "capricious": 2
+      }
+    },
+    {
+      "key": "manipulate",
+      "name": "Manipulate Intellect",
+      "cardId": "343xggqp4a0zfw1_en",
+      "abilityId": "manipulate-recent-opponent-interzone-manifestation",
+      "printedText": "Move into your Empathic Vessel a target manifestation of which you are not the owner that entered an opponent's Interzone this turn.",
+      "printedTextSha256": "21770534177d784164f667260e9e1e2169f26a423196d47ea53c78a8d121b2a9",
+      "targetZone": "battlefield",
+      "destination": "receptacle",
+      "position": null,
+      "essenceCost": {
+        "capricious": 4
+      }
+    }
+  ]
+}

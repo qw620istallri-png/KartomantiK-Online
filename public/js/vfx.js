@@ -79,6 +79,24 @@ function captureRulesVfxEvent(entry) {
 
 function captureRulesVfxEventInner(entry) {
   const details = entry.details || {};
+  if (["draw", "draw_to_limit"].includes(entry.type)) {
+    return { entry, manualDraw: {
+      count: Math.min(5, Math.max(0, Number(details.count) || 0)),
+      origin: rulesVfxManualZoneCenter(entry.actorId, "deck"),
+      target: rulesVfxManualZoneCenter(entry.actorId, "hand"),
+    } };
+  }
+  if (["move_card", "remove_battlefield_item"].includes(entry.type)) {
+    const item = entry.type === "remove_battlefield_item"
+      ? (latestState?.battlefield || []).find((item) => item.id === details.itemId) : null;
+    const origin = item ? rulesVfxCenter(rulesVfxFindBattlefieldItem(item.id))
+      : rulesVfxManualZoneCenter(details.fromOwnerId, details.fromZone);
+    // Use the authoritative movement, never another copy already in a pile.
+    return { entry, manualMove: origin && details.toZone ? {
+      itemId: item?.id, cardId: details.cardId || (item?.faceUp ? item.cardId : null),
+      origin, target: rulesVfxManualZoneCenter(details.toOwnerId, details.toZone),
+    } : null };
+  }
   const fallback = rulesVfxPlayerOrigin(entry.actorId);
   const tributeOrigins = [];
   const handCards = $$('[data-hand-card]');
@@ -210,7 +228,7 @@ function prepareRulesVfxBatch(nextState) {
   const fresh = entries.filter((entry) => Number(entry.sequence) > lastRulesVfxSequence);
   lastRulesVfxSequence = Math.max(lastRulesVfxSequence, newest);
   return fresh
-    .filter((entry) => ["rules_action_declared", "rules_action_triggered", "rules_action_resolved", "rules_choice_resolved", "rules_confrontation_cleanup", "rules_phase_advanced", "rules_confrontation_compared", "recovery_draw"].includes(entry.type))
+    .filter((entry) => ["draw", "draw_to_limit", "move_card", "remove_battlefield_item", "rules_action_declared", "rules_action_triggered", "rules_action_resolved", "rules_choice_resolved", "rules_confrontation_cleanup", "rules_phase_advanced", "rules_confrontation_compared", "recovery_draw"].includes(entry.type))
     .map(captureRulesVfxEvent);
 }
 
@@ -501,7 +519,21 @@ function rulesVfxBoardRect() {
 }
 
 function rulesVfxPileCenter(playerId, zone) {
-  return rulesVfxCenter($$("[data-field-pile]").find((element) => element.dataset.fieldPile === `${playerId}:${zone}`));
+  const key = `${playerId}:${zone}`;
+  const pile = $$("[data-field-pile]").find((element) => element.dataset.fieldPile === key);
+  if (pile?.closest(".ub-oppblock:not(.open)")) {
+    return rulesVfxCenter($$("[data-pile-summary]").find((element) => element.dataset.pileSummary === key))
+      || rulesVfxCenter($("#ubOppBar"));
+  }
+  return rulesVfxCenter(pile);
+}
+
+function rulesVfxManualZoneCenter(playerId, zone) {
+  if (zone === "hand") {
+    return rulesVfxCenter($(playerId === myPlayerId ? "#myHandTray" : "#opponentHandFan"))
+      || rulesVfxPlayerOrigin(playerId);
+  }
+  return rulesVfxPileCenter(playerId, zone) || rulesVfxPlayerOrigin(playerId);
 }
 
 function rulesVfxOverlay(className, keyframes, duration, delay = 0) {
@@ -1520,6 +1552,23 @@ function playRulesVfxEvent(event) {
 function playRulesVfxEventInner(event) {
   {
     const { entry, tributeOrigins, essenceOrigins, sourceRect, sacrifice, effectTarget, movedCard, deckDiscard, supportWin } = event;
+    if (event.manualDraw) {
+      const draw = event.manualDraw;
+      if (!draw.count) return 0;
+      if (rulesVfxReducedMotion()) { playRulesVfxPulse(draw.target, "moved"); return 180; }
+      for (let index = 0; index < draw.count; index += 1) playRulesVfxFlight("draw-card", draw.origin, draw.target, { index });
+      return 660 + (draw.count - 1) * 36;
+    }
+    if (["move_card", "remove_battlefield_item"].includes(entry.type)) {
+      const move = event.manualMove;
+      if (!move?.target) return 0;
+      if (rulesVfxReducedMotion()) {
+        playRulesVfxPulse(move.target, "moved");
+        return 180;
+      }
+      playRulesVfxFlight(move.cardId ? "effect-card" : "draw-card", move.origin, move.target, { cardId: move.cardId, index: 0 });
+      return 660;
+    }
     const target = rulesVfxStackTarget();
     if (entry.type === "rules_phase_advanced") {
       return playRulesVfxPhaseBanner(event);

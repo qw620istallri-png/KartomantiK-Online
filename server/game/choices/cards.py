@@ -14,7 +14,10 @@ class CardsChoicesMixin:
         payload = self.apply_rules_action_result({
             **(choice.get("_action") or {}), "_tokenCount": int(option),
         })
-        return None, {**payload, "playerId": player_id}
+        triggered = payload.pop("resolutionTriggers", None) or []
+        if triggered:
+            self.queue_or_defer_rules_simultaneous_actions(triggered)
+        return None, {**payload, "playerId": player_id, "triggeredActions": triggered}
 
     def _rules_choice_pick_distribution_extra(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets):
         if item_id not in choice.get("candidateItemIds", []):

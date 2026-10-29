@@ -1,0 +1,236 @@
+{
+  "schemaVersion": 1,
+  "summary": {
+    "executed": 54,
+    "passed": 54,
+    "failed": 0
+  },
+  "tests": [
+    {
+      "testId": "1440-fr-left-controls-visible",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-scroll-cards",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-inspect-above-popup",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-fr-size-control",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-left-controls-visible",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-scroll-cards",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-inspect-above-popup",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-en-size-control",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-left-controls-visible",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-scroll-cards",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-inspect-above-popup",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-it-size-control",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-left-controls-visible",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-scroll-cards",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-inspect-above-popup",
+      "status": "pass"
+    },
+    {
+      "testId": "844-fr-size-control",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-left-controls-visible",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-scroll-cards",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-inspect-above-popup",
+      "status": "pass"
+    },
+    {
+      "testId": "844-en-size-control",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-left-controls-visible",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-scroll-cards",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-inspect-above-popup",
+      "status": "pass"
+    },
+    {
+      "testId": "844-it-size-control",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-left-controls-visible",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-scroll-cards",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-inspect-above-popup",
+      "status": "pass"
+    },
+    {
+      "testId": "640-fr-size-control",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-left-controls-visible",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-scroll-cards",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-inspect-above-popup",
+      "status": "pass"
+    },
+    {
+      "testId": "640-en-size-control",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-left-controls-visible",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-scroll-cards",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-bottom-deck-menu",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-close-and-reopen",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-inspect-above-popup",
+      "status": "pass"
+    },
+    {
+      "testId": "640-it-size-control",
+      "status": "pass"
+    }
+  ],
+  "sources": {
+    "public/index.html": "1d0d9dba6749de8d50e9dbac017abfad70e0bc9b6d84a43fe69f974494cb96d7",
+    "public/style.css": "42f6225854e9e139ea5cb90ca2d7c694dea38887d966f37c018597f4d2c2faf2",
+    "public/js/connection.js": "db026f356254b97d4a40af963193cbd5faa6850dde5ec51afdfa889c0eaf7656",
+    "public/js/board.js": "254110405197f01fe0ce86c1aca2e813c62ac62af39f11dc77c6f3ce0fdb26de"
+  },
+  "limits": [
+    "Chrome touch emulation; no physical devices.",
+    "Scry-result handler and outgoing commands exercised with controlled state; no server in this UI gate."
+  ]
+}

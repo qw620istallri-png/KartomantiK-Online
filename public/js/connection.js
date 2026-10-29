@@ -125,6 +125,8 @@ function paintStaticText() {
   $("#drawClearBtn").title = t("clearDrawings");
   $("#revealHeading").textContent = t("revealHeader");
   $("#revealCloseBtn").textContent = t("close");
+  $("#revealTouchHint").textContent = t("deckBrowserTouchHint");
+  $("#revealSizeLabel").textContent = t("deckBrowserSliderLabel");
   $("#createTokenBtn").title = t("createToken");
   $("#tokenPanelHeading").textContent = t("tokenPanelHeading");
   $("#tokenPanelHint").textContent = t("tokenPanelHint");
@@ -751,7 +753,7 @@ function markRevealCardSent(cardId, destinationLabel, undoFn) {
 function wireRevealCards(ctx) {
   $$("#revealCards [data-card-id]").forEach((el) => {
     const cardId = el.dataset.cardId;
-    el.addEventListener("contextmenu", (event) => {
+    const openMenu = (event) => {
       event.preventDefault();
       // checked at fire-time, not just when this listener was attached: the
       // card's own listener stays bound even after markRevealCardSent()
@@ -799,6 +801,11 @@ function wireRevealCards(ctx) {
         });
       }
       showContextMenu(event.clientX, event.clientY, items);
+    };
+    el.addEventListener("contextmenu", openMenu);
+    el.addEventListener("click", (event) => {
+      if (lastPointerType === "touch") { event.preventDefault(); showInspect(cardId); }
+      else openMenu(event);
     });
   });
 }

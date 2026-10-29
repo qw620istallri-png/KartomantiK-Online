@@ -552,6 +552,7 @@ class TriggersMixin:
                     target_validation_error and int(target_rules.get("min") or 0) > 0
                     or (clean_result or {}).get("kind") in {
                         "shuffle_limbo_targets_into_deck", "exile_limbo_wills_add_power_each",
+                        "exile_limbo_targets_add_power",
                     }
                 )
             )

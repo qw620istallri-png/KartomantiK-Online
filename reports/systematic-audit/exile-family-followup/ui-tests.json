@@ -1,0 +1,35 @@
+{
+  "schemaVersion": 1,
+  "gates": [
+    {
+      "command": [
+        "node",
+        "tests/test_choice_continuity.cjs"
+      ],
+      "status": "pass",
+      "viewports": [
+        1440,
+        844
+      ],
+      "log": "choice-continuity.log"
+    },
+    {
+      "command": [
+        "node",
+        "tests/test_rules_parity.cjs"
+      ],
+      "status": "pass",
+      "catalogScenarios": 608,
+      "log": "parity.log"
+    }
+  ],
+  "summary": {
+    "executed": 2,
+    "passed": 2,
+    "failed": 0
+  },
+  "sourceDigest": "250a614ed8d4b405840c95507150e287c09cc504e7cbbd9022493d072e1ae973",
+  "limits": [
+    "Existing browser regression suites, not a new full browser journey for each exile card."
+  ]
+}

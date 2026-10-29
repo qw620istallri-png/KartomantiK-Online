@@ -1,0 +1,67 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-29T13:45:54.399775+00:00",
+  "sourceDigest": "e2f61f7c02d7c96b5e1622435de0546d77d126120feb53ffcb27a1ced4e1e920",
+  "published": false,
+  "publishedBaselineCommit": "2f0854995886af201e36e7013b3c707e51103cfb",
+  "summary": {
+    "fullPython": {
+      "executed": 3242,
+      "passed": 3242,
+      "failed": 0,
+      "skipped": 0
+    },
+    "cardFamily": {
+      "executed": 65,
+      "passed": 65,
+      "failed": 0,
+      "skipped": 0,
+      "selectedClauses": 6,
+      "cardsWithSelectedClauseProof": 6
+    },
+    "motion": {
+      "executed": 78,
+      "passed": 78,
+      "failed": 0
+    },
+    "scryUI": {
+      "executed": 54,
+      "passed": 54,
+      "failed": 0
+    },
+    "scryNetworkTestsPassed": 3,
+    "neighborClientSuitesPassed": 4,
+    "parityScenarios": 608,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 142,
+      "percentageWithSelectedClauseProof": 31.6,
+      "cardsOutsideThisStrictRegister": 308,
+      "fullCatalogSemanticCertification": false
+    }
+  },
+  "artifacts": {
+    "before.json": "c20152d43da217c0b291309828932e37b37cdeee76523ab468d8d3c66e715e67",
+    "clauses.json": "ecfcd3235ae3107bd6cad39bf27fb3d82df0eb4fb1bef79fe57aeaa09f957a83",
+    "defer-will-before.json": "6fc2731d9f68d091cf15e41152b02a566b7f3fa92f9eb9e9ae01607a5df811c7",
+    "defer-will-before.log": "e297eb19d19c5e0e0bcc2263a3e581054ff225e6a2ecaebc04ccf6f7dec5aa40",
+    "family.log": "f0e28bc349d080e65bb33dd2f759d6741ab1b94b07800ea38be1375e00c111d3",
+    "full-before-final-label.log": "164f67d5fcc4c6a632bd1bbab88e26745ce03871a8752dd2e8f6d91ef42a20bc",
+    "full.log": "3d0da968f1cefaeab914a8da9b89468351a497339138d35d076454071f0ed0d5",
+    "parity.log": "56df3e6188a200b0078c497da183cb3dcbe7ce5756e333de46cb869094e9a86c",
+    "unit-tests.json": "82263b9288ca2f8fe943b4a0b5190158e83f57b8fa0304032f1c7133fb3408dc",
+    "units.log": "02502de13917038edbd0e2eb92614f3c901799867fc0d02d6260a190022b2aec"
+  },
+  "relatedEvidence": {
+    "manual-motion-followup": "25746faa5db5f83c8a7248f8fceb1c63249a35cc7915a2dae0c6661f485373c7",
+    "manual-scry-followup": "39acd22d79505a2373be9f005a273e6ec4de83aea66da70769d32c80a9170333"
+  },
+  "coverageRegistrySha256": "3dfa6b96baa8cbe0c910cbc80dcaf99f5f1c8465cbe26b28947c6548f3364bb5",
+  "limits": [
+    "Selected clauses and branches, not full semantic certification of the six cards or full catalog.",
+    "Chrome touch emulation, local artwork; no physical phone, Safari or Samsung Internet certification.",
+    "Browser evidence lists actual scoped source hashes. Earlier neighboring gates preceded the final text-label correction and Defer targeting; Scry and parity were rerun for those changes.",
+    "Two earlier full attempts were interrupted to finish corrections; only this final 3242-test run is used for the current counter.",
+    "All changes after published baseline remain local."
+  ]
+}

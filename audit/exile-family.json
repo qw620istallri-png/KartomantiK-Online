@@ -1,0 +1,124 @@
+{
+  "schemaVersion": 1,
+  "basis": "Printed English clauses with handwritten costs, target limits and literal outcome assertions. Other card paragraphs excluded.",
+  "contracts": [
+    {
+      "key": "exile",
+      "cardId": "1q6crbc7nwugrgs_en",
+      "name": "Exile",
+      "printedText": "Exile a target manifestation on the field or in a Limbo.",
+      "printedTextSha256": "ddb0bd7e205ce197830933f8800b3fa484f22556b42edf9e4d1b340e3975107b",
+      "abilityId": "exile-manifestation",
+      "mode": "play",
+      "minimumTargets": 1,
+      "maximumTargets": 1,
+      "targetZone": "battlefield",
+      "essenceCost": {
+        "hollow": 4
+      },
+      "selectedParagraphs": [
+        0
+      ]
+    },
+    {
+      "key": "carcass",
+      "cardId": "zh4rjhzon9qes6m_en",
+      "name": "Carcass Devourer",
+      "printedText": "When Carcass Devourer enters the field, you may exile up to two target manifestations from your Limbo. If you do, add their base power to Carcass Devourer's power.\r\nIf Carcass Devourer is put on the bottom of the deck, shuffle it.",
+      "printedTextSha256": "f3bd6686bf423293cb360f86a45e88b04e8eeec1d28e2e388e7b121de0e1ad01",
+      "abilityId": "carcass-devourer-eats-limbo",
+      "mode": "event",
+      "minimumTargets": 0,
+      "maximumTargets": 2,
+      "targetZone": "graveyard",
+      "essenceCost": {},
+      "selectedParagraphs": [
+        0
+      ]
+    },
+    {
+      "key": "referen",
+      "cardId": "inner-deserts-038",
+      "name": "Referen-Doom, the Dreamer",
+      "printedText": "When Referen-Doom enters the field, you may Exile any number of target Wills from your Limbo. Referen-Doom gets +1 power for each Will Exiled this way until the end of the turn.\nWhen Referen-Doom loses a Confrontation, you gain a number of 🌈 essences equal to its power.",
+      "printedTextSha256": "c46202b9c1fc6a8b9ff48d9202a29476b90d48ac97e921b85e0481ee911ad27c",
+      "abilityId": "referen-doom-exiles-limbo-wills",
+      "mode": "event",
+      "minimumTargets": 0,
+      "maximumTargets": null,
+      "targetZone": "graveyard",
+      "essenceCost": {},
+      "selectedParagraphs": [
+        0
+      ]
+    },
+    {
+      "key": "augustus",
+      "cardId": "inner-deserts-108",
+      "name": "Horned Augustus",
+      "printedText": "As long as it is on the field, during the confrontation you may Exhaust the Horned Augustus: Exile up to 3 target cards from your Limbo. Put in Support under you control a Token with 1 🔥 power for each card exiled this way.",
+      "printedTextSha256": "f77c69134b389adba7e0f76e71a83e3d5648b2e529ef73d461bd92728361b727",
+      "abilityId": "horned-augustus-exiles-limbo-for-tokens",
+      "mode": "activate",
+      "minimumTargets": 0,
+      "maximumTargets": 3,
+      "targetZone": "graveyard",
+      "essenceCost": {},
+      "selectedParagraphs": [
+        0
+      ]
+    },
+    {
+      "key": "everspring",
+      "cardId": "67009ud077sgz7b_en",
+      "name": "Everspring",
+      "printedText": "Whenever you lose a confrontation, put a Tear counter on Everspring.\r\nRemove 3 Tear counters: Exile up to 3 target manifestations in the Empathic Vessel of an opponent for a maximum total value of 60 points.",
+      "printedTextSha256": "27e9adf77f0e602e6366ae390b7e1da72815579651b0d7abc7607a520fc5a37c",
+      "abilityId": "everspring-spend-tears-to-exile-vessel",
+      "mode": "activate",
+      "minimumTargets": 0,
+      "maximumTargets": 3,
+      "targetZone": "receptacle",
+      "essenceCost": {},
+      "selectedParagraphs": [
+        1
+      ]
+    },
+    {
+      "key": "memory",
+      "cardId": "inner-deserts-136",
+      "name": "Shattered Memory",
+      "printedText": "Exhaust this card: Exile a target card in a player's Limbo.\nExile this card: You gain 1 🌈 essence.",
+      "printedTextSha256": "4669c32ea365a83e29515732230441184107325259915f40ba00d67a4a5d15d0",
+      "abilityId": "shattered-memory-exile-limbo-card",
+      "mode": "activate",
+      "minimumTargets": 1,
+      "maximumTargets": 1,
+      "targetZone": "graveyard",
+      "essenceCost": {},
+      "selectedParagraphs": [
+        0,
+        1
+      ]
+    },
+    {
+      "key": "subjugate",
+      "cardId": "inner-deserts-140",
+      "name": "Subjugate",
+      "printedText": "You may pay up to 4 extra 🔘 essences to play this Will. \nExile a target Manifestation on the field with a Point value equal to or less than the number of essences used as tribute multiplied by 10. (e.g., 2 essences = 20, 3 essences = 30)",
+      "printedTextSha256": "0771c5d6271a1812b20c85eec845372d2a44d8fcabac89f60684ea092f2cbdca",
+      "abilityId": "exile-by-essence-total",
+      "mode": "play",
+      "minimumTargets": 1,
+      "maximumTargets": 1,
+      "targetZone": "battlefield",
+      "essenceCost": {
+        "hollow": 2
+      },
+      "selectedParagraphs": [
+        0,
+        1
+      ]
+    }
+  ]
+}

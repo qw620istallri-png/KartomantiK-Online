@@ -1,0 +1,72 @@
+{
+  "schemaVersion": 1,
+  "basis": "Printed English clauses and existing creator rulings: handwritten costs, counters, destinations and timing assertions; no expected values read from ability metadata.",
+  "contracts": [
+    {
+      "key": "unite",
+      "name": "Unite Impulses",
+      "cardId": "nzyipkk7u6vrd4a_en",
+      "abilityId": "grant-interzone-support-until-end-turn",
+      "printedText": "All manifestations currently in your Interzone gain Support until the end of the turn.",
+      "printedTextSha256": "588fba8ecd3feb3727f64b862740e8a90639bdd89d7ff6d4db56ae206dc15d0a",
+      "essenceCost": {
+        "phlegmatic": 2
+      }
+    },
+    {
+      "key": "rally",
+      "name": "Rally",
+      "cardId": "5q6t7i5pzctbi8s_en",
+      "abilityId": "rally-extra-essence-tokens",
+      "printedText": "You may use extra {H} essences as tribute to play this Will.\r\nFor each extra essence used to play this Will, put a token with 1 power {H} into Support.",
+      "printedTextSha256": "eb6102266bf5c4dbe3eb5a4c3d56878d03384e2a4900c12420bc9681184144ff",
+      "essenceCost": {
+        "phlegmatic": 2
+      }
+    },
+    {
+      "key": "mirror",
+      "name": "Mirror the Impulse",
+      "cardId": "72zvsiuky5ytolh_en",
+      "abilityId": "copy-friendly-manifestation-in-support",
+      "printedText": "Put into Support a token copy of a target manifestation you control on the field.",
+      "printedTextSha256": "fb60ffce4c43ce375ae9c282960eff234c172ff14bd35418af9df272ad67ff41",
+      "essenceCost": {
+        "vitreous": 3
+      }
+    },
+    {
+      "key": "reforging",
+      "name": "Reforging Fate",
+      "cardId": "z2fen73ktw8pbqz_en",
+      "abilityId": "reforging-fate-support-from-limbo",
+      "printedText": "A target manifestation in a player's Limbo enters into Support under your control.\r\nIf that manifestation wins the confrontation, exile it.",
+      "printedTextSha256": "d5026c64bd9fbf310f9144d003e9efd885f992c254990da271d6058eb0c6eab7",
+      "essenceCost": {
+        "melancholic": 3
+      }
+    },
+    {
+      "key": "persist",
+      "name": "Persist",
+      "cardId": "fwccphp46678238_en",
+      "abilityId": "grant-persist-until-end-of-turn",
+      "printedText": "A target manifestation in the Confrontation Zone gains Persist until the end of the turn. (If a manifestation with Persist has won the confrontation, it remains in the Confrontation Zone as First Manifestation).",
+      "printedTextSha256": "131121e06d0c2183ffd430c51f68e18f65614f79f64d8edd8f336094eb7b74c7",
+      "essenceCost": {
+        "vitreous": 2
+      }
+    },
+    {
+      "key": "incinerate",
+      "name": "Incinerate",
+      "cardId": "4naoqbqz6ebozj5_en",
+      "abilityId": "destroy-manifestations-that-entered-support",
+      "printedText": "Destroy all manifestations on the field that entered Support this turn.",
+      "printedTextSha256": "6d782d201b8e5c84bf03cfe6796bf55400c36bae90f953619efd9b19c2e180f9",
+      "essenceCost": {
+        "choleric": 4
+      }
+    }
+  ]
+}

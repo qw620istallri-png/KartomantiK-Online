@@ -1398,7 +1398,9 @@ class ActionsMixin:
             return "This card cannot receive the power reduction required by its cost.", None
         if (
             source.get("zone") == "battlefield"
-            and not (kind == "play_card" and source_item and source_item.get("revealedFreeWill"))
+            and not (kind == "play_card" and source_item and (
+                source_item.get("revealedFreeWill") or source_item.get("concealedWill")
+            ))
             and not self.rules_item_effects_active(
                 self.find_battlefield_item(source.get("itemId"))
             )

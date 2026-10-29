@@ -1,0 +1,21 @@
+{
+  "sourceDigest": "85715e8ac3d0752dcc2da2ce3bbf79b7b72486d2524cbab0f5b7204e9b0f6ea4",
+  "preReleaseTestDigest": "7967b1022c9c57981679608fd419fae2801d133ab2aa6017023ea511e6849246",
+  "normalizedDigest": "7967b1022c9c57981679608fd419fae2801d133ab2aa6017023ea511e6849246",
+  "versionOnlyDelta": true,
+  "normalization": {
+    "old": "20261029-rules-beta-141-3",
+    "new": "20261029-rules-beta-141-4",
+    "files": [
+      "public/app.js",
+      "public/index.html",
+      "public/sw.js"
+    ]
+  },
+  "priorPassingTests": {
+    "executed": 3788,
+    "passed": 3788,
+    "failed": 0,
+    "skipped": 0
+  }
+}

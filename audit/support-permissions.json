@@ -1,0 +1,580 @@
+{
+  "schemaVersion": 1,
+  "basis": "Human-reviewed printed Support keyword and First Manifestation restrictions; handwritten zone permissions; other abilities not certified.",
+  "contracts": [
+    {
+      "key": "wind_sprout",
+      "name": "Wind Sprout",
+      "cardId": "6jz7otalrdq0q8u_en",
+      "printedText": "Support from hand.\r\nCannot be played as First Manifestation.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "world_spore",
+      "name": "World Spore",
+      "cardId": "jh2nsqxr9x2ii1l_en",
+      "printedText": "Support from hand.\r\nCan be used as tribute from the Interzone.\r\nIf World Spore is used as tribute, it is considered of base power {G}{G}.",
+      "printedTextSha256": "b3af34949f4708b934197b5fd8d38f5b0f85f5002441fa5c13a4b385b0d5d71d",
+      "printedClauses": [
+        "Support from hand."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": true
+    },
+    {
+      "key": "first_stone",
+      "name": "First Stone",
+      "cardId": "4rnpxnnceu8x9o9_en",
+      "printedText": "Support from hand.\r\nCannot be played as First Manifestation.\r\nWhen First Stone enters the Confrontation Zone, every other player must Chain from their hand.\r\nIf a player cannot do so, they show their hand.",
+      "printedTextSha256": "4eb254dc2f769d40821d6489649ca5892b20382165bd916d361fe3d943fca9f2",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "concealed_manta",
+      "name": "Concealed Manta",
+      "cardId": "tpnlqhi6o8evklz_en",
+      "printedText": "Support from hand.\r\nCannot be played as First Manifestation.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "chitinous_repeller",
+      "name": "Chitinous Repeller",
+      "cardId": "dxl82w4oxzcg1eg_en",
+      "printedText": "Support from hand.\r\nCannot be played as First Manifestation.\r\nWhen Chitinous Repeller enters the field, a target manifestation you control in the Confrontation Zone returns to its owner's hand and cannot be played until the end of the turn.",
+      "printedTextSha256": "cb02692096a050653889b5d82a02ccc2559676c46f5f2c8bc231a5c948dbcdc3",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "little_abhorrence",
+      "name": "Little Abhorrence",
+      "cardId": "zozynivu4tbojjg_en",
+      "printedText": "Support from hand.\r\nCannot be played as First Manifestation.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "possessed_pyramid",
+      "name": "Possessed Pyramid",
+      "cardId": "tw4am6bjl3z323v_en",
+      "printedText": "Support from hand.\r\nWhen the Possessed Pyramid enters an opponent's Empathic Vessel, the next turn that player's hand is reduced by 1. During that turn, any excess card in their hand must be immediately discarded.",
+      "printedTextSha256": "53f010523ad34ca42808523f5d971f1719d01322068bcea40e603314ea7c5148",
+      "printedClauses": [
+        "Support from hand."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": true
+    },
+    {
+      "key": "lament_thought_nullifier",
+      "name": "Lament, Thought-nullifier",
+      "cardId": "lmjn89wobbttfop_en",
+      "printedText": "Support from hand.\r\nCannot be played as First Manifestation.\r\nWhen Lament enters the Confrontation Zone, a target player discards a card from the top of their deck for each non-token manifestation they control in the Confrontation Zone.",
+      "printedTextSha256": "c094a111324b4f099a8b0609116b5450e6954fbceda11c6762e1b3ce765a98eb",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "auriwings",
+      "name": "Auriwings",
+      "cardId": "axsr1earxwcrta3_en",
+      "printedText": "Support from hand.\r\nCannot be played as First Manifestation.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "yzzit_the_gambler",
+      "name": "Yzzit, the Gambler",
+      "cardId": "93gvk0hy12hylm6_en",
+      "printedText": "Support from hand.\r\nCannot be played as First Manifestation.\r\nIf Yzzit is about to enter an Empathic Vessel, roll a D6. If the result of the roll is odd, it returns to its owner's hand.",
+      "printedTextSha256": "b3fe986f67cb3be13f8d5a693b7ef3dc31ec12f752060c1d6da03833a4cba8b7",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "unpredictable_loudmouth",
+      "name": "Unpredictable Loudmouth",
+      "cardId": "a9bsslut738hm0k_en",
+      "printedText": "Support from hand.\r\nAs long as Unpredictable Loudmouth is the last manifestation to enter the Confrontation Zone this turn, at Resolution the confrontation ends in a stalemate.",
+      "printedTextSha256": "82940f522a0cfb4381c449bf1fcf38ecf1822c37b489d41ae6e15a9df66fd652",
+      "printedClauses": [
+        "Support from hand."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": true
+    },
+    {
+      "key": "candle_serpent",
+      "name": "Candle Serpent",
+      "cardId": "43faoiy4cmoxmaw_en",
+      "printedText": "Support from hand.\r\nCannot be played as First Manifestation.",
+      "printedTextSha256": "454ec7fb192b4f7189d31fce970c3fc0fc6147c2b89dbcc76558e633107e8160",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "ononok_chaotic_scatterer",
+      "name": "Ononok, Chaotic Scatterer",
+      "cardId": "tzoadjk7wb5qj5f_en",
+      "printedText": "Support from hand.\r\nWhen Ononok enters the Interzone, exile it, then each player shuffles the cards in the Limbo and in the Interzone into their respective decks.",
+      "printedTextSha256": "4c3d531592faafc6547de3cb18eb515ffefeb000d19bb0d44a1a4075e541321a",
+      "printedClauses": [
+        "Support from hand."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": true
+    },
+    {
+      "key": "chobariki_of_the_shiny_muscles",
+      "name": "Chobariki, of the Shiny Muscles",
+      "cardId": "inner-deserts-011",
+      "printedText": "Support from hand.\nCannot be played as First Manifestation.\nYou may put Chobariki in Support under any player's control.\nAs long as Chobariki is not under its owner's control:\n  • When Chobariki loses a confrontation, its owner gains 10 Points;\n  • When Chobariki wins a confrontation, it returns to the top of its owner's deck.\nAs long as Chobariki is in the Interzone, you may pay 🌿: It gains Support until the end of the turn.",
+      "printedTextSha256": "2106a8e99a64164aa0ca2d27daa9767a38d463e3a58d1e2956c32110a685ba81",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "mamelath_the_polymancer",
+      "name": "Mamelath, the Polymancer",
+      "cardId": "inner-deserts-017",
+      "printedText": "Support from hand.\nCannot be played as First Manifestation.\nWhen Mamelath enters the Confrontation Zone, each player puts the First Manifestation they control into the Interzone, then each player puts in Support under their control a number of Tokens with 1 🔘 power equal to the base power of the manifestation moved into their Interzone this way.\nWhen Mamelath wins a confrontation, Exile it.",
+      "printedTextSha256": "9621d34c0659fdfdf25550cad4c8c7b39b3873c5c09ef6b16bfd5d766284c0a4",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "timidette_the_elusive",
+      "name": "Timidette, the Elusive",
+      "cardId": "inner-deserts-041",
+      "printedText": "Support from hand.\nCannot be played as First Manifestation.\nWhen Timidette enters the Confrontation Zone, choose a target Manifestation in Support under the control of each opponent. All Manifestations in Support, except Timidette and the chosen Manifestations, are put on the bottom of their owners' decks in any order.\nWhen Timidette wins a confrontation, exile it.",
+      "printedTextSha256": "10a6f3c1733c1bad4ec70d3fda0101368b4ded427ff985fef90a25654062fc52",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "bakato_the_obsessive",
+      "name": "Bakato, the Obsessive",
+      "cardId": "inner-deserts-051",
+      "printedText": "Support from hand.\nCannot be played as First Manifestation.\nIf at the beginning of the turn Bakato is in the Limbo, it can be played in Support from the Limbo.\nWhen Bakato wins a confrontation in Support, exile it.",
+      "printedTextSha256": "4e34549e9a86f2ecfc900e59cb4c0901eb0e208806950fc42ff9b9d8b9b5029b",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "manymaws",
+      "name": "Manymaws",
+      "cardId": "inner-deserts-053",
+      "printedText": "Support from hand.\nCannot be played as First Manifestation.\nWhen Manymaws enters the Confrontation Zone, sacrifice a Manifestation you control in the Confrontation Zone.",
+      "printedTextSha256": "fb784ed1da45fbb70134853518312a575469a79fc593fc3233b40b9351949989",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "jesterina_the_decadent",
+      "name": "Jesterina, the Decadent",
+      "cardId": "inner-deserts-065",
+      "printedText": "Support from hand.\nCannot be played as First Manifestation.\nWhen Jesterina enters the Confrontation Zone, a target opponent uncovers and discards cards from the top of their deck until they uncover a Manifestation. Chain that Manifestation under your control.\nWhen Jesterina wins a Confrontation, exile it.",
+      "printedTextSha256": "11ff95d8e0f8fd7329339f4a27537a0a332f5ccf932eae88b25d1dc7cd5c69e2",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "ozzit_the_unwary",
+      "name": "Ozzit, the Unwary",
+      "cardId": "inner-deserts-075",
+      "printedText": "Support from hand.\nCannot be played as First Manifestation.\nWhen Ozzit enters the Confrontation Zone, roll a D6. If the result of the roll is odd, put it into the Stalemate Zone.",
+      "printedTextSha256": "e833952ec65401243aec9b36e7d02562e3d5b6430ed5d67a7848547d14a4b622",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "nubilung_the_elder",
+      "name": "Nubilung, the Elder",
+      "cardId": "inner-deserts-076",
+      "printedText": "Support from hand.\nCannot be played as First Manifestation.\nNubilung can enter in Support from the Stalemate Zone. If it does, it gets +2 power until Resolution.\nWhen Nubilung wins a Confrontation in Support, exile it.",
+      "printedTextSha256": "ea6e85ab0cb05ddc2cb8801f0201f4cfd5897edd8bebc451ef6cccbc17001436",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": true,
+      "canBeFirst": false
+    },
+    {
+      "key": "pegasso",
+      "name": "Pegasso",
+      "cardId": "inner-deserts-079",
+      "printedText": "Support from hand.\nCannot be played as First Manifestation.\nWhen Pegasso enters the Confrontation Zone, it gets +1 power until Resolution.\nWhen Pegasso wins a Confrontation, exile it.",
+      "printedTextSha256": "f9dd9009ee18c8fc194773438c674386db0ec10141816866ac5fcb492018f9f9",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "phalanx_tower",
+      "name": "Phalanx Tower",
+      "cardId": "inner-deserts-111",
+      "printedText": "Support from hand.\nCannot be played as First Manifestation.\nWhen the Phalanx Tower enters the field, you may show and Discard a manifestation from your hand. If you do, a target manifestation in the Confrontation Zone loses power equal to the base power of the discarded manifestation.",
+      "printedTextSha256": "a2ca1163c6f9859777890ca4a4c1dcffae3b056cee7e25beffb32d9cda1ef1c2",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "bibi_the_confused",
+      "name": "Bibi, the Confused",
+      "cardId": "inner-deserts-127",
+      "printedText": "Support from hand.\nCannot be played as First Manifestation.\nYou may put Bibi in Support under any player's control.\nWhen Bibi enters the field, its Controller rolls a D6 and based on the result applies the following effects: If it is odd, a target card on the field you control other than Bibi loses its current effects until the end of the turn. If it is even, draw a card.\nWhen Bibi wins a Confrontation, its Controller loses Points based on the result of the roll: 1 or 2 = -5 Points ; 3 or 4 = -10 Points ; 5 or 6 = -15 Points. Then Exile Bibi.",
+      "printedTextSha256": "a6c0538a3b762eee08428ecee7a94269f7eb9fe1c6739f978a715e2aa634e053",
+      "printedClauses": [
+        "Support from hand.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "drildrill",
+      "name": "Drildrill",
+      "cardId": "inner-deserts-131",
+      "printedText": "Support from hand.\nAs long as Drildrill is on the field, you may Exhaust it and pay 🔘🔘: Destroy a target Persistent Will on the field. Its Controller gains essences of Temperament and number equal to its Tribute cost.",
+      "printedTextSha256": "ee7ed650791544503f315b19b48cd0a6c9366a189b887e680f3933ffe8b89d6d",
+      "printedClauses": [
+        "Support from hand."
+      ],
+      "fromHand": true,
+      "fromInterzone": false,
+      "fromStalemate": false,
+      "canBeFirst": true
+    },
+    {
+      "key": "merciful_pago",
+      "name": "Merciful Pago",
+      "cardId": "8lion52jjnmxvko_en",
+      "printedText": "Support.\r\nWhen Merciful Pago wins a confrontation as Support, it enters the Empathic Vessel of a target opponent, then that player gains 10 points.",
+      "printedTextSha256": "e0ad4d7311a05bd925841f6e3717696facf8a4f9ff408a09fb91ed7214eb56fe",
+      "printedClauses": [
+        "Support."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": true
+    },
+    {
+      "key": "sprawling_tentacle",
+      "name": "Sprawling Tentacle",
+      "cardId": "85kx4sk1y809276_en",
+      "printedText": "Support.\r\nCannot be played as First Manifestation.\r\nAs long as Sprawling Tentacle is on the field, it gets +1 power if there are at least 4 manifestations in the Confrontation Zone.",
+      "printedTextSha256": "cef98667aba8a0fd42295602e2c687274cad710f76e1e1882dc3715be7fcfa03",
+      "printedClauses": [
+        "Support.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "forest_guide",
+      "name": "Forest Guide",
+      "cardId": "ibf2epfw6eap5x3_en",
+      "printedText": "Support.",
+      "printedTextSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa",
+      "printedClauses": [
+        "Support."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": true
+    },
+    {
+      "key": "absent_trinket",
+      "name": "Absent Trinket",
+      "cardId": "ptwyrc2a26wqwc8_en",
+      "printedText": "Support.\r\nAs long as Absent Trinket is on the field, if a manifestation on the field you control becomes the target of a Will on the stack, Absent Trinket returns to its owner's hand and cannot be played until the end of the turn.",
+      "printedTextSha256": "e6bf2e52e2dc4466d0b7473103d97d448cac0c1f096513ec62cb96cf8be2e7a5",
+      "printedClauses": [
+        "Support."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": true
+    },
+    {
+      "key": "cimba_the_boisterous",
+      "name": "Cimba, the Boisterous",
+      "cardId": "rngwnb4y158ya2q_en",
+      "printedText": "Support.\r\nCannot be played as First Manifestation.\r\nAs long as it is on the field and there is at least one manifestation in a stalemate, Cimba gets +1 power.",
+      "printedTextSha256": "8b903ab999ea138764185e9b821415ca819edd48c01acd5fdc315dcf6cd96abf",
+      "printedClauses": [
+        "Support.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "tigrolione",
+      "name": "Tigrolione",
+      "cardId": "xw1fbhs6hwz6thc_en",
+      "printedText": "Support.\r\nTigrolione cannot enter an Empathic Vessel for having lost a confrontation.\r\nIf Tigrolione loses the confrontation, the winner puts it into the Interzone under their control.",
+      "printedTextSha256": "c3efa829dc3e5fa936a86d9bac9b8a215c8b0a2fde04361c71f4f85bdd00ac04",
+      "printedClauses": [
+        "Support."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": true
+    },
+    {
+      "key": "skapus_the_vile",
+      "name": "Skapus, the Vile",
+      "cardId": "v1mhtnl7jec5xby_en",
+      "printedText": "Support.\r\nCannot be played as First Manifestation.\r\nAs long as Skapus is the only manifestation in Support you control, it gets +2 power.",
+      "printedTextSha256": "7564935e0ebbeee83917dc9ce8670e6048986d08e7d23c2c92c15c3cfd49faa9",
+      "printedClauses": [
+        "Support.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "granite_mass",
+      "name": "Granite Mass",
+      "cardId": "3k3i91mo61xgl24_en",
+      "printedText": "Support.\r\nCannot be played as First Manifestation.",
+      "printedTextSha256": "68eb1f96ba451bd609322cb405712e6f23ec2ef53446cc048947db1a2b7ae2cc",
+      "printedClauses": [
+        "Support.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "worn_old_shape",
+      "name": "Worn Old Shape",
+      "cardId": "ypvac71teuck2za_en",
+      "printedText": "Support.\r\nCannot be played as First Manifestation.\r\nWhenever Worn Old Shape enters Support from the Interzone, it gets -1 power.",
+      "printedTextSha256": "c4ccf89360b5b1f713163502335b800ef2643be12e5863c0cbbc3d1485ba1957",
+      "printedClauses": [
+        "Support.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "hogma_the_petty",
+      "name": "Hogma, the Petty",
+      "cardId": "dm0hz9sb5i737gx_en",
+      "printedText": "Support.\r\nWhen Hogma enters the Confrontation Zone, all manifestations you currently control in the Confrontation Zone lose their effects until the end of the turn.",
+      "printedTextSha256": "f5393780d147be36085fa99e08dc60f3ca11fe0be63b120045e8da2529b71ffa",
+      "printedClauses": [
+        "Support."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": true
+    },
+    {
+      "key": "buuz_the_helicoidal",
+      "name": "Buuz, the Helicoidal",
+      "cardId": "inner-deserts-002",
+      "printedText": "Support.\nCannot be played as First Manifestation.\nWhen Buuz enters the field, put a Token with 1 🌿 power in Support under your control.",
+      "printedTextSha256": "1470d75dd513b090fd75cf8837f0a27a2e4ef295dc916652f5f3203fc18f55b3",
+      "printedClauses": [
+        "Support.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "manibirbo",
+      "name": "Manibirbo",
+      "cardId": "inner-deserts-005",
+      "printedText": "Support.\nCannot be played as First Manifestation.\nIf Manibirbo enters in Support from hand, its power is not considered for the resolution of the confrontation.",
+      "printedTextSha256": "60654b6dd28e8cf1422096c0cb2d802c5f068a4afb2280721be75c7f6c3a4257",
+      "printedClauses": [
+        "Support.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": false
+    },
+    {
+      "key": "nameless_arcane",
+      "name": "Nameless Arcane",
+      "cardId": "inner-deserts-059",
+      "printedText": "Support.\nWhen Nameless Arcane enters the Confrontation Zone, sacrifice all other Manifestations you control in the Confrontation Zone. For each Manifestation that enters the Limbo due to this effect, you gain 1 🌈 essence.",
+      "printedTextSha256": "f04d6c421a26945efa4d094385a874b51473b9ae11d2273d48a644c4bdf0f4fd",
+      "printedClauses": [
+        "Support."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": true
+    },
+    {
+      "key": "jeovak_the_illusory",
+      "name": "Jeovak, the Illusory",
+      "cardId": "inner-deserts-122",
+      "printedText": "Support.\nCannot be played as First Manifestation.\nJeovak can only be played while the Stack is empty.\nWhen Jeovak enters the Confrontation Zone, Exile it. Each Manifestation in the Confrontation Zone is moved to its owner's Interzone, up to the maximum limit, or to the bottom of their deck in any order. The Confrontation ends and players skip the Resolution, then each opponent gains 50 Points.",
+      "printedTextSha256": "6086f8dbe5ff7a57ae2d5c2324c418a131101ff45c95307e1cc30f14f242bb9f",
+      "printedClauses": [
+        "Support.",
+        "Cannot be played as First Manifestation."
+      ],
+      "fromHand": true,
+      "fromInterzone": true,
+      "fromStalemate": false,
+      "canBeFirst": false
+    }
+  ]
+}

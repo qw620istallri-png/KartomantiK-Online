@@ -1,0 +1,534 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "e2f61f7c02d7c96b5e1622435de0546d77d126120feb53ffcb27a1ced4e1e920",
+  "finishedAt": "2026-10-29T13:33:55.432240+00:00",
+  "published": false,
+  "summary": {
+    "executed": 65,
+    "passed": 65,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 6,
+    "cardsWithSelectedClauseProof": 6
+  },
+  "clauses": [
+    {
+      "cardId": "ek1bng9r7vhriwt_en",
+      "name": "Defer",
+      "abilityId": "defer-to-deck-top",
+      "paragraphIndex": 0,
+      "printedParagraph": "A target manifestation or Will on the field returns to the top of its owner's deck.",
+      "printedClauseSha256": "64823938b2d641f4961fd5e6eb42c108ab0e09b329bf992bbd573edcb62a022a",
+      "independentOracle": {
+        "targetZone": "battlefield",
+        "destination": "deck",
+        "position": "top",
+        "essenceCost": {
+          "vitreous": 2
+        }
+      },
+      "testIds": [
+        "test_zone_destination_family.ZoneDestinationFamily.test_defer__normal",
+        "test_zone_destination_family.ZoneDestinationFamily.test_defer__cost",
+        "test_zone_destination_family.ZoneDestinationFamily.test_defer__unfunded",
+        "test_zone_destination_family.ZoneDestinationFamily.test_defer__type",
+        "test_zone_destination_family.ZoneDestinationFamily.test_defer__gone",
+        "test_zone_destination_family.ZoneDestinationFamily.test_defer__owner",
+        "test_zone_destination_family.ZoneDestinationFamily.test_defer__protected",
+        "test_zone_destination_family.ZoneDestinationFamily.test_defer__bob",
+        "test_zone_destination_family.ZoneDestinationFamily.test_defer__deck_replacement",
+        "test_zone_destination_family.ZoneDestinationFamily.test_defer__ephemeral_on_field",
+        "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_defer__websocket_normal"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "xav48hincrnl32d_en",
+      "name": "Banish",
+      "abilityId": "banish-to-deck-bottom",
+      "paragraphIndex": 0,
+      "printedParagraph": "A target manifestation on the field is moved to the bottom of its owner's deck.",
+      "printedClauseSha256": "0a2d7580ad6be5747758f76e17c640cc391ba808981a0ee10c55a91f06c3abed",
+      "independentOracle": {
+        "targetZone": "battlefield",
+        "destination": "deck",
+        "position": "bottom",
+        "essenceCost": {
+          "vitreous": 3
+        }
+      },
+      "testIds": [
+        "test_zone_destination_family.ZoneDestinationFamily.test_banish__normal",
+        "test_zone_destination_family.ZoneDestinationFamily.test_banish__cost",
+        "test_zone_destination_family.ZoneDestinationFamily.test_banish__unfunded",
+        "test_zone_destination_family.ZoneDestinationFamily.test_banish__type",
+        "test_zone_destination_family.ZoneDestinationFamily.test_banish__gone",
+        "test_zone_destination_family.ZoneDestinationFamily.test_banish__owner",
+        "test_zone_destination_family.ZoneDestinationFamily.test_banish__protected",
+        "test_zone_destination_family.ZoneDestinationFamily.test_banish__bob",
+        "test_zone_destination_family.ZoneDestinationFamily.test_banish__deck_replacement",
+        "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_banish__websocket_normal"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "uin3dxt3bc50z6q_en",
+      "name": "Revive",
+      "abilityId": "revive-limbo-manifestation-to-interzone",
+      "paragraphIndex": 0,
+      "printedParagraph": "Move a target manifestation from your Limbo to your Interzone.",
+      "printedClauseSha256": "9057359deb4c9d0e537d9afc763385bcd17f2729ff1b7edbd8ba5c288c37307c",
+      "independentOracle": {
+        "targetZone": "graveyard",
+        "destination": "interzone",
+        "position": null,
+        "essenceCost": {
+          "melancholic": 4
+        }
+      },
+      "testIds": [
+        "test_zone_destination_family.ZoneDestinationFamily.test_revive__normal",
+        "test_zone_destination_family.ZoneDestinationFamily.test_revive__cost",
+        "test_zone_destination_family.ZoneDestinationFamily.test_revive__unfunded",
+        "test_zone_destination_family.ZoneDestinationFamily.test_revive__type",
+        "test_zone_destination_family.ZoneDestinationFamily.test_revive__gone",
+        "test_zone_destination_family.ZoneDestinationFamily.test_revive__owner",
+        "test_zone_destination_family.ZoneDestinationFamily.test_revive__stale",
+        "test_zone_destination_family.ZoneDestinationFamily.test_revive__bob",
+        "test_zone_destination_family.ZoneDestinationFamily.test_revive__interzone_replacement",
+        "test_zone_destination_family.ZoneDestinationFamily.test_revive__interzone_full",
+        "test_zone_destination_family.ZoneDestinationFamily.test_revive__competing_replacements",
+        "test_zone_destination_family.ZoneDestinationFamily.test_revive__departure_event",
+        "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_revive__websocket_bob",
+        "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_revive__websocket_normal"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "zd6h16he0m4kuwb_en",
+      "name": "Claim the Forsaken",
+      "abilityId": "claim-recent-opponent-limbo-manifestation",
+      "paragraphIndex": 0,
+      "printedParagraph": "Put into your Empathic Vessel a target manifestation that entered an opponent's Limbo this turn.",
+      "printedClauseSha256": "c1641ca2347db418be4d0f4ea012a7abe8e1eed17301a26bc17ec2b4da20f529",
+      "independentOracle": {
+        "targetZone": "graveyard",
+        "destination": "receptacle",
+        "position": null,
+        "essenceCost": {
+          "melancholic": 4
+        }
+      },
+      "testIds": [
+        "test_zone_destination_family.ZoneDestinationFamily.test_claim__normal",
+        "test_zone_destination_family.ZoneDestinationFamily.test_claim__cost",
+        "test_zone_destination_family.ZoneDestinationFamily.test_claim__unfunded",
+        "test_zone_destination_family.ZoneDestinationFamily.test_claim__type",
+        "test_zone_destination_family.ZoneDestinationFamily.test_claim__gone",
+        "test_zone_destination_family.ZoneDestinationFamily.test_claim__owner",
+        "test_zone_destination_family.ZoneDestinationFamily.test_claim__stale",
+        "test_zone_destination_family.ZoneDestinationFamily.test_claim__old_entry",
+        "test_zone_destination_family.ZoneDestinationFamily.test_claim__bob",
+        "test_zone_destination_family.ZoneDestinationFamily.test_claim__departure_event",
+        "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_claim__websocket_bob",
+        "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_claim__websocket_normal"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "xeeg6rdiy9xeew5_en",
+      "name": "Salvage the Fragments",
+      "abilityId": "stalemate-recent-opponent-vessel-manifestation",
+      "paragraphIndex": 0,
+      "printedParagraph": "Put into stalemate a target manifestation that entered an opponent's Empathic Vessel this turn.",
+      "printedClauseSha256": "09c1694c56f52aefea0ae9771a66b5f98a637c6d66b6bbceec1d78076baa041d",
+      "independentOracle": {
+        "targetZone": "receptacle",
+        "destination": "stalemate",
+        "position": null,
+        "essenceCost": {
+          "capricious": 2
+        }
+      },
+      "testIds": [
+        "test_zone_destination_family.ZoneDestinationFamily.test_salvage__normal",
+        "test_zone_destination_family.ZoneDestinationFamily.test_salvage__cost",
+        "test_zone_destination_family.ZoneDestinationFamily.test_salvage__unfunded",
+        "test_zone_destination_family.ZoneDestinationFamily.test_salvage__type",
+        "test_zone_destination_family.ZoneDestinationFamily.test_salvage__gone",
+        "test_zone_destination_family.ZoneDestinationFamily.test_salvage__owner",
+        "test_zone_destination_family.ZoneDestinationFamily.test_salvage__stale",
+        "test_zone_destination_family.ZoneDestinationFamily.test_salvage__old_entry",
+        "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_salvage__websocket_normal"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "343xggqp4a0zfw1_en",
+      "name": "Manipulate Intellect",
+      "abilityId": "manipulate-recent-opponent-interzone-manifestation",
+      "paragraphIndex": 0,
+      "printedParagraph": "Move into your Empathic Vessel a target manifestation of which you are not the owner that entered an opponent's Interzone this turn.",
+      "printedClauseSha256": "21770534177d784164f667260e9e1e2169f26a423196d47ea53c78a8d121b2a9",
+      "independentOracle": {
+        "targetZone": "battlefield",
+        "destination": "receptacle",
+        "position": null,
+        "essenceCost": {
+          "capricious": 4
+        }
+      },
+      "testIds": [
+        "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__normal",
+        "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__cost",
+        "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__unfunded",
+        "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__type",
+        "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__gone",
+        "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__owner",
+        "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__protected",
+        "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__old_entry",
+        "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_manipulate__websocket_normal"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_banish__bob",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_banish__cost",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_banish__deck_replacement",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_banish__gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_banish__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_banish__owner",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_banish__protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_banish__type",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_banish__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_claim__bob",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_claim__cost",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_claim__departure_event",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_claim__gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_claim__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_claim__old_entry",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_claim__owner",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_claim__stale",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_claim__type",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_claim__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_defer__bob",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_defer__cost",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_defer__deck_replacement",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_defer__ephemeral_on_field",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_defer__gone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_defer__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_defer__owner",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_defer__protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_defer__type",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_defer__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__cost",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__old_entry",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__owner",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__protected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__type",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_manipulate__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_revive__bob",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_revive__competing_replacements",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_revive__cost",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_revive__departure_event",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_revive__gone",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_revive__interzone_full",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_revive__interzone_replacement",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_revive__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_revive__owner",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_revive__stale",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_revive__type",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_revive__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_salvage__cost",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_salvage__gone",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_salvage__normal",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_salvage__old_entry",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_salvage__owner",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_salvage__stale",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_salvage__type",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_zone_destination_family.ZoneDestinationFamily.test_salvage__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_banish__websocket_normal",
+      "status": "pass",
+      "durationSeconds": 2.14
+    },
+    {
+      "testId": "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_claim__websocket_bob",
+      "status": "pass",
+      "durationSeconds": 2.156
+    },
+    {
+      "testId": "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_claim__websocket_normal",
+      "status": "pass",
+      "durationSeconds": 2.125
+    },
+    {
+      "testId": "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_defer__websocket_normal",
+      "status": "pass",
+      "durationSeconds": 2.109
+    },
+    {
+      "testId": "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_manipulate__websocket_normal",
+      "status": "pass",
+      "durationSeconds": 2.125
+    },
+    {
+      "testId": "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_revive__websocket_bob",
+      "status": "pass",
+      "durationSeconds": 2.203
+    },
+    {
+      "testId": "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_revive__websocket_normal",
+      "status": "pass",
+      "durationSeconds": 2.031
+    },
+    {
+      "testId": "test_zone_destination_family_integration.ZoneDestinationFamilyIntegration.test_salvage__websocket_normal",
+      "status": "pass",
+      "durationSeconds": 2.062
+    }
+  ],
+  "limits": [
+    "Selected clauses and explicit branches, not certification of every card interaction.",
+    "Targets, ETB entry events and BOB state are controlled fixtures; production choice and declaration paths are exercised.",
+    "Printed destination, ownership, ordering and this-turn entry limits are explicit oracles.",
+    "No new browser, physical-device or automatic phase-driving certification."
+  ]
+}
