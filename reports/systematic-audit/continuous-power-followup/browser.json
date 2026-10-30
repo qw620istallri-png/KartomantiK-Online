@@ -1,0 +1,938 @@
+{
+  "sourceHashes": {
+    "server/game/power.py": "1b657a6230e3d334751fe69b732181eb4411158c4d59d1f841d0e428af9b7bb3",
+    "tests/test_continuous_power_family.py": "4eea8951d48e88e72693fc66fb09434ca7bd4340cf546c8b2ca716446e571ce3",
+    "tools/continuous_power_ui_fixtures.py": "b817a86a9e03ed4375f286c8df983656463ef288becc23de20df69da2fdc7d6e",
+    "audit/continuous-power-family.json": "90fdb7c56f12bf66cdde65d89e253e69dd4a0b3d9e34f3540509c9a2dcdaef59",
+    "public/js/board.js": "254110405197f01fe0ce86c1aca2e813c62ac62af39f11dc77c6f3ce0fdb26de",
+    "public/app.js": "617d9835680d1e9b595fcc94bd422503d60d2884fad41df0ca825a9d7bf0d272",
+    "public/index.html": "f4befb40ef3ba3ca1b02fbcf130a26a210af052392d691df69bfb784f3230cd5",
+    "public/ui-beta.js": "9df725885d9466f31c7d25ed2414ad4178994e2dc09bfb7d4d441a9b231ef824",
+    "public/style.css": "42f6225854e9e139ea5cb90ca2d7c694dea38887d966f37c018597f4d2c2faf2"
+  },
+  "fixtureSha256": "4f6be8c0e7b79fcfbb8f5f7d99ada0823a4395ec3cbdbf6b4352954120484128",
+  "summary": {
+    "executed": 228,
+    "passed": 228,
+    "failed": 0
+  },
+  "tests": [
+    {
+      "testId": "1440-sprawling-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-sprawling-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-sprawling-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-sprawling-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-sprawling-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-sprawling-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-prospero-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-prospero-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-prospero-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-prospero-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-prospero-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-prospero-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-herbaceous-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-herbaceous-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-herbaceous-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-herbaceous-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-herbaceous-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-herbaceous-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-gargullo-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-gargullo-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-gargullo-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-gargullo-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-gargullo-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-gargullo-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-monument-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-monument-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-monument-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-monument-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-monument-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-monument-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-thinker-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-thinker-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-thinker-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-thinker-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-thinker-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-thinker-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-tipson-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-tipson-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-tipson-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-tipson-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-tipson-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-tipson-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-urn-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-urn-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-urn-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-urn-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-urn-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-urn-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-cimba-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-cimba-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-cimba-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-cimba-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-cimba-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-cimba-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beak-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beak-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beak-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beak-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beak-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beak-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-skapus-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-skapus-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-skapus-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-skapus-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-skapus-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-skapus-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-lucerco-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-lucerco-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-lucerco-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-lucerco-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-lucerco-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-lucerco-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-vilupera-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-vilupera-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-vilupera-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-vilupera-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-vilupera-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-vilupera-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-bell-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-bell-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-bell-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-bell-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-bell-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-bell-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-berta-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-berta-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-berta-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-berta-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-berta-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-berta-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-tower-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-tower-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-tower-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-tower-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-tower-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-tower-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-sangen-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-sangen-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-sangen-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-sangen-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-sangen-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-sangen-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-kelona-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-kelona-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-kelona-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-kelona-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-kelona-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-kelona-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-kazadur-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-kazadur-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-kazadur-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-kazadur-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-kazadur-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-kazadur-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sprawling-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sprawling-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sprawling-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sprawling-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sprawling-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sprawling-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-prospero-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-prospero-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-prospero-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-prospero-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-prospero-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-prospero-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-herbaceous-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-herbaceous-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-herbaceous-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-herbaceous-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-herbaceous-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-herbaceous-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-gargullo-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-gargullo-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-gargullo-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-gargullo-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-gargullo-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-gargullo-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-monument-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-monument-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-monument-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-monument-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-monument-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-monument-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-thinker-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-thinker-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-thinker-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-thinker-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-thinker-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-thinker-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-tipson-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-tipson-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-tipson-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-tipson-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-tipson-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-tipson-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-urn-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-urn-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-urn-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-urn-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-urn-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-urn-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-cimba-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-cimba-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-cimba-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-cimba-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-cimba-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-cimba-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beak-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beak-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beak-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beak-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beak-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beak-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-skapus-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-skapus-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-skapus-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-skapus-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-skapus-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-skapus-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-lucerco-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-lucerco-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-lucerco-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-lucerco-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-lucerco-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-lucerco-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-vilupera-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-vilupera-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-vilupera-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-vilupera-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-vilupera-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-vilupera-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-bell-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-bell-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-bell-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-bell-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-bell-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-bell-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-berta-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-berta-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-berta-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-berta-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-berta-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-berta-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-tower-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-tower-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-tower-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-tower-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-tower-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-tower-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sangen-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sangen-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sangen-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sangen-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sangen-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sangen-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-kelona-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-kelona-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-kelona-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-kelona-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-kelona-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-kelona-restored-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-kazadur-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-kazadur-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-kazadur-disabled-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-kazadur-disabled-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-kazadur-restored-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-kazadur-restored-p2",
+      "status": "pass"
+    }
+  ],
+  "limits": [
+    "Production serialized states with controlled fixtures; local artwork.",
+    "PC Chrome and mobile landscape/touch emulation, no physical phone or Safari.",
+    "DOM modifier rendering and both player views; drag, artwork and animation layout are outside this gate."
+  ]
+}

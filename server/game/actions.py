@@ -294,7 +294,7 @@ class ActionsMixin:
         if not isinstance(action, dict) or not (action.get("source") or {}).get("cardId"):
             return False
         if target_kind == "stack_action":
-            return action.get("kind") == "play_card" and bool(action.get("sourceOnStack"))
+            return action.get("kind") == "play_card" and bool(action.get("sourceOnStack") or action.get("isStackCopy"))
         if target_kind == "stack_effect":
             return action.get("kind") in {"activated_effect", "triggered_effect"} or bool(action.get("sourceRemainsOnField"))
         return False
@@ -1192,7 +1192,9 @@ class ActionsMixin:
                 ):
                     return "This effect must target a card on the field you control."
                 if target_rules.get("effectTemperamentChosenBySource"):
-                    chosen = (self.find_battlefield_item(source_item_id) or {}).get("chosenTemperament")
+                    source_item = self.find_battlefield_item(source_item_id)
+                    chosen = (source_item.get("chosenTemperament") if source_item is not None
+                              else target_rules.get("sourceChosenTemperament"))
                     effect_temperaments = self.card_rules.get(
                         (stack_action.get("source") or {}).get("cardId"), {}
                     ).get("temperaments") or []

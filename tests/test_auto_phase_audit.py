@@ -281,8 +281,10 @@ class AutoPhaseAudit(unittest.IsolatedAsyncioTestCase):
                     accepted += 1
                     with self.subTest(card=cid, ability=ability["id"], phase=s.current_phase_id()):
                         self.assertTrue(can_act)
-        self.assertEqual(checked, 182)
-        self.assertGreaterEqual(accepted, 180)
+        # Nectar and Hot Potato select their target in an entry trigger,
+        # rather than as a voluntary declaration from Hand.
+        self.assertEqual(checked, 180)
+        self.assertGreaterEqual(accepted, 178)
 
 
 if __name__ == "__main__":

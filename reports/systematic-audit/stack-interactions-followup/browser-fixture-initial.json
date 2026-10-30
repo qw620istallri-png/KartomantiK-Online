@@ -1,0 +1,346 @@
+{
+  "sourceHashes": {
+    "server/game/actions.py": "f13bc658bdc27d63b3a2583a2c47365e5d9db11d3d85a21057497cffcc24b04d",
+    "server/game/priority.py": "92c34ecba326b4428be4a692ee1c05d126b15f7fad0267fe47dbf9b1c401cf69",
+    "server/game/effects/signature.py": "266b194bfe4ac087cba248978f37a29b6c51890e04e13835e333a4f5e77308b0",
+    "tests/test_stack_interaction_family.py": "759cd1f8158be027c7c03fcaeb2393f60c0e66975e56fa18c48f3f46b71c2606",
+    "tools/stack_interaction_ui_fixtures.py": "132072205ed0dc43da66f399acb098e52d4c1e5fb4cf55694556e7e51cf85dbb",
+    "audit/stack-interactions.json": "30f27e3f9ead1fd33fb669b433a00b6283994d91f58cf6722d463af59a1933d6",
+    "public/js/rules-actions.js": "18af1707b9fee70d169c40e74eca8f754ff1c7ebd10d377a661d74b5f9761606",
+    "public/index.html": "f4befb40ef3ba3ca1b02fbcf130a26a210af052392d691df69bfb784f3230cd5"
+  },
+  "summary": {
+    "executed": 80,
+    "passed": 78,
+    "failed": 2
+  },
+  "tests": [
+    {
+      "testId": "1440-neutralize-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-neutralize-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-neutralize-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-neutralize-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-deny-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-deny-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-deny-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-deny-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-ignore-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-ignore-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-ignore-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-ignore-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-veer-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-veer-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-veer-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-veer-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-compensate-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-compensate-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-compensate-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-compensate-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-imitate-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-imitate-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-imitate-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-imitate-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-malaleuco-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-malaleuco-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-malaleuco-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-malaleuco-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beacon-ready",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: 1440-beacon-ready\n+ actual - expected\n\n+ []\n- [\n-   'original'\n- ]\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_stack_interaction_ui.cjs:22:12"
+    },
+    {
+      "testId": "1440-beacon-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beacon-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beacon-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-radiance-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-radiance-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-radiance-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-radiance-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-wall-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-wall-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-wall-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-wall-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-neutralize-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-neutralize-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-neutralize-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-neutralize-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-deny-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-deny-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-deny-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-deny-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-ignore-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-ignore-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-ignore-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-ignore-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-veer-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-veer-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-veer-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-veer-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-compensate-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-compensate-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-compensate-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-compensate-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-imitate-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-imitate-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-imitate-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-imitate-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-malaleuco-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-malaleuco-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-malaleuco-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-malaleuco-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beacon-ready",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: 844-beacon-ready\n+ actual - expected\n\n+ []\n- [\n-   'original'\n- ]\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_stack_interaction_ui.cjs:22:12"
+    },
+    {
+      "testId": "844-beacon-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beacon-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beacon-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-radiance-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-radiance-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-radiance-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-radiance-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-wall-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-wall-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-wall-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-wall-missing",
+      "status": "pass"
+    }
+  ],
+  "limits": [
+    "Client candidate filters for ten response cards, four controlled target states, PC and mobile landscape Chrome.",
+    "Synthetic pending originals and local artwork; no full game or physical device certification.",
+    "Copy ownership, copied object category and Eorthoda pre-resolution timing await creator rulings and are outside these candidate cases."
+  ]
+}

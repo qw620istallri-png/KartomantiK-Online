@@ -1,0 +1,122 @@
+{
+  "beforeFix": false,
+  "tests": [
+    {
+      "testId": "chrome-preserves-browser-promotion-and-direct-install",
+      "status": "pass"
+    },
+    {
+      "testId": "chrome-native-action-appears-in-already-open-guide",
+      "status": "pass"
+    },
+    {
+      "testId": "samsung-preserves-browser-promotion-and-direct-install",
+      "status": "pass"
+    },
+    {
+      "testId": "samsung-native-action-appears-in-already-open-guide",
+      "status": "pass"
+    },
+    {
+      "testId": "browser-dismissal-clears-consumed-native-event",
+      "status": "pass"
+    },
+    {
+      "testId": "samsung-fallback-stays-in-samsung-en",
+      "status": "pass"
+    },
+    {
+      "testId": "samsung-fallback-stays-in-samsung-fr",
+      "status": "pass"
+    },
+    {
+      "testId": "samsung-fallback-stays-in-samsung-it",
+      "status": "pass"
+    },
+    {
+      "testId": "appinstalled-closes-open-guide",
+      "status": "pass"
+    },
+    {
+      "testId": "installation-before-init-needs-no-dom-helper",
+      "status": "pass"
+    },
+    {
+      "testId": "android-no-native-event-en",
+      "status": "pass"
+    },
+    {
+      "testId": "android-no-native-event-fr",
+      "status": "pass"
+    },
+    {
+      "testId": "android-no-native-event-it",
+      "status": "pass"
+    },
+    {
+      "testId": "early-native-event-retained-before-init",
+      "status": "pass"
+    },
+    {
+      "testId": "late-native-prompt-used-once",
+      "status": "pass"
+    },
+    {
+      "testId": "failed-native-prompt-falls-back",
+      "status": "pass"
+    },
+    {
+      "testId": "installed-hides-android",
+      "status": "pass"
+    },
+    {
+      "testId": "installed-hides-ios",
+      "status": "pass"
+    },
+    {
+      "testId": "installed-hides-desktop",
+      "status": "pass"
+    },
+    {
+      "testId": "appinstalled-event-hides-mobile-entry",
+      "status": "pass"
+    },
+    {
+      "testId": "ios-guide-and-desktop-no-false-entry",
+      "status": "pass"
+    },
+    {
+      "testId": "browser-android-entry",
+      "status": "pass"
+    },
+    {
+      "testId": "browser-samsung-entry",
+      "status": "pass"
+    },
+    {
+      "testId": "browser-iphone-entry",
+      "status": "pass"
+    },
+    {
+      "testId": "browser-desktop-entry",
+      "status": "pass"
+    }
+  ],
+  "summary": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "physicalDeviceTested": false,
+  "limits": [
+    "Native install events are simulated; rendering uses Chrome with Android/Samsung/iOS user agents, not physical devices, Samsung Internet or Safari."
+  ],
+  "sourceHashes": {
+    "public/js/pwa.js": "e776e4b43812301151d69c86bf39d7f665507740d1a1db6127587edba5bf13ab",
+    "public/i18n.js": "51f97f7104289c09aadae756a6c2399f00cc9a1e7729f58489c31af5a38dd988",
+    "public/app.js": "11d28acc5414420e8fe05b75e1f043a06b1d4404058b918ef1f705904ea2176b",
+    "public/index.html": "d6dce8584859c79e0adaf16b06fb07ecc47dd8d71ab1333c34d567ee83d946fa",
+    "public/sw.js": "7be412e96a49f03b74c1c806024796c20e1227b0d52ad4daf5d6cb8194af55fd",
+    "public/style.css": "42f6225854e9e139ea5cb90ca2d7c694dea38887d966f37c018597f4d2c2faf2"
+  }
+}

@@ -813,6 +813,9 @@ class PriorityMixin:
             if not isinstance(declared_card_id, str) or declared_card_id not in self.card_labels:
                 return "Declare the name of an existing card.", None
         clean_targets = self.rules_redirect_targets(player_id, clean_targets, (clean_source or {}).get("cardId"))
+        if clean_ability and (clean_ability.get("targets") or {}).get("effectTemperamentChosenBySource"):
+            source_item = self.find_battlefield_item(clean_source.get("itemId"))
+            clean_ability["targets"]["sourceChosenTemperament"] = (source_item or {}).get("chosenTemperament")
         action = {
             "id": new_id(),
             "controllerId": player_id,

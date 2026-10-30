@@ -544,7 +544,7 @@ function rulesStructuredActionTargets(encodedAbility, context = {}) {
         structuredTargetKind === "stack_item"
           ? ["play_card", "activated_effect", "triggered_effect"].includes(action.kind)
           : allowsStackCard
-          ? action.kind === "play_card" && action.sourceOnStack && action.source?.cardId
+          ? action.kind === "play_card" && (action.sourceOnStack || action.isStackCopy) && action.source?.cardId
           : (["activated_effect", "triggered_effect"].includes(action.kind) || action.sourceRemainsOnField) && action.source?.cardId
       ))
       .filter((action) => targetMatchesRules(action.source.cardId))

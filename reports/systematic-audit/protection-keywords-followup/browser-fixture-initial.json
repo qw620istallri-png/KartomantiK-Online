@@ -1,0 +1,721 @@
+{
+  "sourceHashes": {
+    "server/game/power.py": "22828dd1b2e5eea8a25a422bdd328d838d5de31bd5cd11a843dd3120ec00e252",
+    "server/game/board.py": "35feac220d82a3ba847bb3b372bc9888e43e5eafb1359e68f4f4e9b9822a6428",
+    "server/game/stack.py": "5ab7dc3cd539bdcbe475996ccad8951f764ac4e99379e2d21ae0a5a3b4616bea",
+    "server/game/view.py": "2bc21fd6226c6c8b52a93e4e171d118ac01f2498932edf5b2f63a444ce7b57a5",
+    "server/game/triggers.py": "af29b871a16a347e2cb10f2d35dc0f78f399b78bc1dbac17d965dcbc4524d6db",
+    "tests/test_protection_keyword_family.py": "db9dbdd262fcdeb64979786d59493c15de32aa836c06376c2cf3916b897e02fb",
+    "tools/protection_keyword_ui_fixtures.py": "471cc90e568d154abbbb0be6df803d73beff5f22c369451de93d70af4e952108",
+    "tests/test_protection_keyword_ui.cjs": "c1a838cdec69adbc2dffa45bb6e891930546550e00755c01788c360370412f48",
+    "audit/protection-keywords.json": "872ce75e8a81fb27122f4da37f14ea43de97b8eafc1684c74f9b9a943b6382de",
+    "public/card-abilities.json": "1c950ef4a443fc39e845f035f40692810d0dbda890a80ba30031693c9709a099",
+    "public/js/rules-actions.js": "9288e068a56bdb24d7437757504da8ba3d749a7687ed197e67a6dd5fdda45d15",
+    "public/js/board.js": "254110405197f01fe0ce86c1aca2e813c62ac62af39f11dc77c6f3ce0fdb26de",
+    "public/app.js": "617d9835680d1e9b595fcc94bd422503d60d2884fad41df0ca825a9d7bf0d272",
+    "public/index.html": "f4befb40ef3ba3ca1b02fbcf130a26a210af052392d691df69bfb784f3230cd5",
+    "public/ui-beta.js": "9df725885d9466f31c7d25ed2414ad4178994e2dc09bfb7d4d441a9b231ef824",
+    "public/style.css": "42f6225854e9e139ea5cb90ca2d7c694dea38887d966f37c018597f4d2c2faf2"
+  },
+  "summary": {
+    "executed": 144,
+    "passed": 30,
+    "failed": 114
+  },
+  "tests": [
+    {
+      "testId": "1440-husk-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12\n    at runNextTicks (node:internal/process/task_queues:65:5)\n    at process.processImmediate (node:internal/timers:502:9)"
+    },
+    {
+      "testId": "1440-husk-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-husk-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-husk-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-husk-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-husk-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-inflorescence-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-inflorescence-active-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-inflorescence-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-inflorescence-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-inflorescence-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-inflorescence-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-jaw-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-jaw-active-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-jaw-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-jaw-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-jaw-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-jaw-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-nectar-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-nectar-active-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-nectar-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-nectar-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-nectar-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-nectar-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-nullify-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-nullify-active-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-nullify-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-nullify-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-nullify-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-nullify-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-float-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-float-active-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-float-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-float-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-float-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-float-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-bivalv-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12\n    at runNextTicks (node:internal/process/task_queues:65:5)\n    at process.processImmediate (node:internal/timers:502:9)"
+    },
+    {
+      "testId": "1440-bivalv-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-bivalv-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-bivalv-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-bivalv-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-bivalv-source_blanked-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-gladionimbus-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-gladionimbus-active-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-gladionimbus-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-gladionimbus-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-gladionimbus-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-gladionimbus-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-sanctuary-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-sanctuary-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-sanctuary-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-sanctuary-cleansed-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-sanctuary-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-sanctuary-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-rajas-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-rajas-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-rajas-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-rajas-cleansed-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-rajas-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-rajas-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-pillar-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-pillar-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-pillar-cleansed-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-pillar-cleansed-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-pillar-source_blanked-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-pillar-source_blanked-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-protect-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-protect-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-protect-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-protect-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-protect-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "1440-protect-source_blanked-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-husk-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12\n    at runNextTicks (node:internal/process/task_queues:65:5)\n    at process.processImmediate (node:internal/timers:502:9)"
+    },
+    {
+      "testId": "844-husk-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-husk-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-husk-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-husk-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-husk-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-inflorescence-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-inflorescence-active-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-inflorescence-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-inflorescence-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-inflorescence-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-inflorescence-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-jaw-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-jaw-active-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-jaw-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-jaw-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-jaw-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-jaw-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-nectar-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-nectar-active-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-nectar-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-nectar-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-nectar-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-nectar-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-nullify-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-nullify-active-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-nullify-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-nullify-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-nullify-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-nullify-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-float-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-float-active-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-float-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-float-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-float-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-float-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-bivalv-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-bivalv-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-bivalv-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-bivalv-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-bivalv-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-bivalv-source_blanked-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-gladionimbus-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-gladionimbus-active-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-gladionimbus-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-gladionimbus-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-gladionimbus-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-gladionimbus-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-sanctuary-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-sanctuary-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sanctuary-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-sanctuary-cleansed-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-sanctuary-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-sanctuary-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-rajas-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-rajas-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-rajas-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-rajas-cleansed-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-rajas-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-rajas-source_blanked-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-pillar-active-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-pillar-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-pillar-cleansed-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-pillar-cleansed-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-pillar-source_blanked-p1",
+      "status": "pass"
+    },
+    {
+      "testId": "844-pillar-source_blanked-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-protect-active-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-protect-active-p2",
+      "status": "pass"
+    },
+    {
+      "testId": "844-protect-cleansed-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-protect-cleansed-p2",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-protect-source_blanked-p1",
+      "status": "fail",
+      "detail": "AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:\n\nfalse !== true\n\n    at C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_protection_keyword_ui.cjs:30:12"
+    },
+    {
+      "testId": "844-protect-source_blanked-p2",
+      "status": "pass"
+    }
+  ],
+  "limits": [
+    "Twelve selected cards, active/Cleanse/blanked-source fixtures, both viewers, PC and mobile landscape Chrome.",
+    "Production serialization and real candidate filters/DOM markers; controlled fixtures and local artwork, not complete matches or physical devices."
+  ]
+}

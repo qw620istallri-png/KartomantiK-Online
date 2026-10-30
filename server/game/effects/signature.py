@@ -596,7 +596,10 @@ class SignatureEffectsMixin:
         trigger = (action.get("ability") or {}).get("trigger") or {}
         chooser_id = trigger.get("eventControllerId")
         gain = int(result.get("value") or 0)
-        if chooser_id not in self.players:
+        related = next((entry for entry in self.rules_engine.get("actionStack") or []
+                        if entry.get("id") == trigger.get("relatedActionId")
+                        and entry.get("kind") == "play_card"), None)
+        if chooser_id not in self.players or related is None or related.get("cannotBeNeutralized"):
             delta = self.adjust_rules_score(player_id, gain)
             return {"kind": result.get("kind"), "status": "gained", "delta": delta}
         choice_id = new_id()

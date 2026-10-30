@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-29T21:48:35.362145+00:00",
+  "sourceDigest": "6bf2cb5c72398414778b75017fc86e4bdf5a523b682a0d9e525339df52dc7741",
+  "published": false,
+  "publishedBaselineCommit": "ebeb398fc3cd4b3a54142074104f92e309e552c9",
+  "summary": {
+    "fullPython": {
+      "executed": 4189,
+      "passed": 4189,
+      "failed": 0,
+      "skipped": 0
+    },
+    "cardFamily": {
+      "executed": 174,
+      "passed": 174,
+      "failed": 0,
+      "selectedClauses": 18,
+      "cardsWithSelectedClauseProof": 13,
+      "coreScenarios": 129,
+      "triggerScenarios": 12,
+      "networkJourneys": 17,
+      "oracleSensitivityTests": 2,
+      "reusedDuelScenarios": 14
+    },
+    "browser": {
+      "executed": 100,
+      "passed": 100,
+      "failed": 0
+    },
+    "parityScenariosPassed": 608,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 216,
+      "percentageWithSelectedClauseProof": 48.0,
+      "cardsOutsideThisStrictRegister": 234,
+      "fullCatalogSemanticCertification": false
+    }
+  },
+  "executionReuse": {
+    "clausesCollectedFrom": "reports/systematic-audit/stack-interactions-followup/unit-tests.json",
+    "reexecutedToAssembleReport": false,
+    "fullRegressionRunsForThisBatch": 1
+  },
+  "artifacts": {
+    "adjacent.log": "a4b955809a329846e285491ce03321840a07425cdab1e653c1e3ba240ad7a562",
+    "before.json": "70aa4c444e5bdfdbc4a1f145a112f17156fb15acac1ed04fe98acfca2e9bd9f0",
+    "before.log": "6ef6ef95eed5f8f900b47aad7d6df09c39834f4dce75771ece6f3872df5429b7",
+    "branches.log": "4f7bf111355841208f9edb3fe82a8e6001ab0c7249497f76fe442e5e52906d92",
+    "browser-fixture-initial.json": "512ecc68391e921a4a3fc6c6c1d0f013fcd69bb0367727b3025905e1e7d45f3b",
+    "browser.json": "fc687a18a58c4572537239a5ec50bcd9ea4c75994f9f936d7bc6b0bb82edb512",
+    "browser.log": "a6c19270c67bcc87d40e5c91bb34dac2a2c91d0dc2b3b57b2c25bdd7573a4296",
+    "choice-ui.log": "1c235d0e9c1c50988543c7a9b7a5b96255d86fd2fdd93b96e9d9820f5ed3ea84",
+    "clauses.json": "315884b84de2bbc78bb677f382124e3c87c88a9d0ec0e3f62e99c99d9d8d624f",
+    "clemency-before.json": "ff6d9eb63efe191600fcfdfe5d7b57cc771446b73271a3c42be598b16342af3c",
+    "clemency-before.log": "68a480a60e9789e0de229243471da4254d6e71cd7bc4463f4a1499e0e3e96f0b",
+    "copy-branches.log": "b6c60232c55b67b99bdae71521f7b29262c78cc056d810c3511ce74e7d92ec0d",
+    "core.log": "8ef98a87cced23f02e642ed229e17256c88c87cdc38f94fcb7b54c07c8d4b04a",
+    "EXECUTIONS.md": "7f5dc8626c321b1deb98754c3ec6b0d2f4640fed38e13bdcfa7a14955a6946f9",
+    "full.log": "0656c5bbd50f69b77038b22b8f4b619b8a2bf71986e6108182ebad020aaa902f",
+    "initial.log": "357c7c6f2598a36b1e5239e892cd321a94420760c60f4ec5951815a9022e2bbf",
+    "network-clemency-fixed.log": "5218284cdec532becb96fb6b5405c51b4a50695909b01fd299c862edb711eade",
+    "network.log": "b42340c7983a306700006db81db0f98b7eab42a3f1b514a9f5229f7fdd58d484",
+    "parity.log": "56df3e6188a200b0078c497da183cb3dcbe7ce5756e333de46cb869094e9a86c",
+    "preflight.json": "38c9b7a174628a3cacffcdceba6189be5e7d7c26def37ca4e64702349ec7c13a",
+    "rulings-after.log": "0aa424161dcef72c83368e75319305000bd820ecda211076a157ef4a19805c41",
+    "rulings-before.log": "3132729ffbddc2cdbcdb6bb85c0ef76e4440a3dcb978bcb15f09f6fdbb472990",
+    "triggers-before.log": "d5c32f281a7fd19e5009edac73df7a10dca55a430d8ca59ba4472bc6497f0d7c",
+    "triggers-initial.log": "0b8f0c3b4ef7bfff32a6fcd98ea51338da074711a5ab2840afe0ad864eb89afb",
+    "unit-tests.json": "bc0762374d76d95e0c7ce6866e7cf1d014abffb9056eb357a4181c35a088daca",
+    "units.log": "bea0385e4f1b604ffbb90500956d8faeb3904450a625bc5a479afc5bd7a75490"
+  },
+  "coverageRegistrySha256": "e1961e4c9a8b63ef34b5a7b78f6a3ae067ad3b8ffd72b3085bab5d2e0fae6df8",
+  "reportSha256": "8162aa3597898e08177bee257136acb263c7fc61a542b901cff0732551ab8a0b",
+  "limits": [
+    "Selected clauses and explicit branches only, not every interaction of the thirteen cards.",
+    "Core pending original actions are controlled fixtures; responses use production declarations, costs and Stack resolution.",
+    "Triggered tests also execute the public server declaration hook that produces tribute and Will-play triggers.",
+    "Eorthoda timing uses the atomic public declaration hook; a bare Session declaration does not invoke the public trigger producer.",
+    "Copied targets use production declarations; controlled pending originals isolate the selected interactions.",
+    "Automatic phase driving disabled in the real socket journeys. Physical devices and remote artwork are not certified.",
+    "Client candidate filters for ten response cards, five controlled target states including copied Wills, PC and mobile landscape Chrome.",
+    "Synthetic pending originals and local artwork; no full game or physical device certification.",
+    "Timing, ownership and exact effect outcomes are checked by the associated Python and socket journeys, not this candidate-filter gate."
+  ]
+}

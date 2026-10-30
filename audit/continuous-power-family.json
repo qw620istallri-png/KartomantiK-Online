@@ -1,0 +1,463 @@
+{
+  "schemaVersion": 1,
+  "basis": "Hand-authored exact printed power, recipients, scopes, thresholds and live-count oracles. Encoded rules are implementation only.",
+  "contracts": [
+    {
+      "key": "sprawling",
+      "cardId": "85kx4sk1y809276_en",
+      "name": "Sprawling Tentacle",
+      "printedText": "Support.\r\nCannot be played as First Manifestation.\r\nAs long as Sprawling Tentacle is on the field, it gets +1 power if there are at least 4 manifestations in the Confrontation Zone.",
+      "printedTextSha256": "cef98667aba8a0fd42295602e2c687274cad710f76e1e1882dc3715be7fcfa03",
+      "selectedClauses": [
+        "As long as Sprawling Tentacle is on the field, it gets +1 power if there are at least 4 manifestations in the Confrontation Zone."
+      ],
+      "sourceZone": "confrontation",
+      "sourceBase": 1,
+      "targetBase": 1,
+      "selfTarget": true,
+      "expectedPower": 2,
+      "inactivePower": 1,
+      "changedControlPower": 2,
+      "duplicateSourcePower": 2,
+      "zonePowers": {
+        "interzone": 1,
+        "confrontation": 2,
+        "field": 1,
+        "stalemate": 1
+      }
+    },
+    {
+      "key": "prospero",
+      "cardId": "47c5eb6xe7wj614_en",
+      "name": "Prospero of the Bushes",
+      "printedText": "As long as Prospero of the Bushes is in the Interzone, the First Manifestation you control gets +1 power for each manifestation in your Interzone.",
+      "printedTextSha256": "0e19227206431dbd0494aff6b27b345cbdda6b7c28ef7d48d59298459a37095a",
+      "selectedClauses": [
+        "As long as Prospero of the Bushes is in the Interzone, the First Manifestation you control gets +1 power for each manifestation in your Interzone."
+      ],
+      "sourceZone": "interzone",
+      "sourceBase": 4,
+      "targetBase": 5,
+      "selfTarget": false,
+      "expectedPower": 8,
+      "inactivePower": 5,
+      "changedControlPower": 5,
+      "duplicateSourcePower": 13,
+      "zonePowers": {
+        "interzone": 8,
+        "confrontation": 5,
+        "field": 5,
+        "stalemate": 5
+      }
+    },
+    {
+      "key": "herbaceous",
+      "cardId": "57ahe6ngzq5c013_en",
+      "name": "Herbaceous Whisperer",
+      "printedText": "As long as Herbaceous Whisperer is on the field, the manifestations in Support you control get +1 power.",
+      "printedTextSha256": "72a2fd8927d7b2b91322a51b07e03ff2538e021254b4d9d8d1b0ea65e2be8d18",
+      "selectedClauses": [
+        "As long as Herbaceous Whisperer is on the field, the manifestations in Support you control get +1 power."
+      ],
+      "sourceZone": "field",
+      "sourceBase": 3,
+      "targetBase": 5,
+      "selfTarget": false,
+      "expectedPower": 6,
+      "inactivePower": 5,
+      "changedControlPower": 5,
+      "duplicateSourcePower": 7,
+      "zonePowers": {
+        "interzone": 6,
+        "confrontation": 6,
+        "field": 6,
+        "stalemate": 5
+      }
+    },
+    {
+      "key": "gargullo",
+      "cardId": "msif6nhq0v1zbh0_en",
+      "name": "Gargullo, King of the Woods",
+      "printedText": "As long as Gargullo is on the field, each non-token manifestation in Support you control gets +1 power for each other non-token manifestation you control in the Confrontation Zone.",
+      "printedTextSha256": "f59766d777e3d821c60ec84eb35cb8a122831aaf20538b51672233ec93641065",
+      "selectedClauses": [
+        "As long as Gargullo is on the field, each non-token manifestation in Support you control gets +1 power for each other non-token manifestation you control in the Confrontation Zone."
+      ],
+      "sourceZone": "field",
+      "sourceBase": 1,
+      "targetBase": 5,
+      "selfTarget": false,
+      "expectedPower": 7,
+      "inactivePower": 5,
+      "changedControlPower": 5,
+      "duplicateSourcePower": 9,
+      "zonePowers": {
+        "interzone": 7,
+        "confrontation": 8,
+        "field": 7,
+        "stalemate": 5
+      }
+    },
+    {
+      "key": "monument",
+      "cardId": "n9olbthp7vtmypo_en",
+      "name": "Heartening Monument",
+      "printedText": "The manifestations you control get +1 power as long as they are in the Confrontation Zone.",
+      "printedTextSha256": "16b77f24544a55f5244ca4b3274e3960e23ebcefdc6235b410c6bda51bfb4aed",
+      "selectedClauses": [
+        "The manifestations you control get +1 power as long as they are in the Confrontation Zone."
+      ],
+      "sourceZone": "field",
+      "sourceBase": null,
+      "targetBase": 5,
+      "selfTarget": false,
+      "expectedPower": 6,
+      "inactivePower": 5,
+      "changedControlPower": 5,
+      "duplicateSourcePower": 7,
+      "zonePowers": {
+        "interzone": 6,
+        "confrontation": 6,
+        "field": 6,
+        "stalemate": 5
+      }
+    },
+    {
+      "key": "thinker",
+      "cardId": "01ynsddc9h2r6wc_en",
+      "name": "Artificial Thinker",
+      "printedText": "As long as there are 5 or more Wills in your Limbo, Artificial Thinker gains Support and, as long as it is in the Confrontation Zone, gets +2 power.",
+      "printedTextSha256": "42ea508976c68988a46ebab1d27d466b40dbbe18ef9ad9ffd1512bb409e3ba5d",
+      "selectedClauses": [
+        "As long as there are 5 or more Wills in your Limbo, Artificial Thinker gains Support and, as long as it is in the Confrontation Zone, gets +2 power."
+      ],
+      "sourceZone": "confrontation",
+      "sourceBase": 1,
+      "targetBase": 1,
+      "selfTarget": true,
+      "expectedPower": 3,
+      "inactivePower": 1,
+      "changedControlPower": 1,
+      "duplicateSourcePower": 3,
+      "zonePowers": {
+        "interzone": 1,
+        "confrontation": 3,
+        "field": 1,
+        "stalemate": 1
+      }
+    },
+    {
+      "key": "tipson",
+      "cardId": "twn0cer0tjbw09n_en",
+      "name": "Tipson, the Mediator",
+      "printedText": "As long as Tipson is in the Confrontation Zone, it gets +1 power for each card in your hand.",
+      "printedTextSha256": "fda03e643ac1d9b5bdf68c66cfb7d6f6d900f3c3864f33fc1b01f9bac31afcf6",
+      "selectedClauses": [
+        "As long as Tipson is in the Confrontation Zone, it gets +1 power for each card in your hand."
+      ],
+      "sourceZone": "confrontation",
+      "sourceBase": 1,
+      "targetBase": 1,
+      "selfTarget": true,
+      "expectedPower": 4,
+      "inactivePower": 1,
+      "changedControlPower": 2,
+      "duplicateSourcePower": 4,
+      "zonePowers": {
+        "interzone": 1,
+        "confrontation": 4,
+        "field": 1,
+        "stalemate": 1
+      }
+    },
+    {
+      "key": "urn",
+      "cardId": "86nfr2vhox3l6y2_en",
+      "name": "Repelling Urn",
+      "printedText": "As long as the Repelling Urn is in the Confrontation Zone, it gets +1 power for each manifestation in your Limbo.",
+      "printedTextSha256": "4ca97ca666affc4a098a5f5c54517905ca51f5e1880380b3a71d084fdcb6e440",
+      "selectedClauses": [
+        "As long as the Repelling Urn is in the Confrontation Zone, it gets +1 power for each manifestation in your Limbo."
+      ],
+      "sourceZone": "confrontation",
+      "sourceBase": 1,
+      "targetBase": 1,
+      "selfTarget": true,
+      "expectedPower": 4,
+      "inactivePower": 1,
+      "changedControlPower": 6,
+      "duplicateSourcePower": 4,
+      "zonePowers": {
+        "interzone": 1,
+        "confrontation": 4,
+        "field": 1,
+        "stalemate": 1
+      }
+    },
+    {
+      "key": "cimba",
+      "cardId": "rngwnb4y158ya2q_en",
+      "name": "Cimba, the Boisterous",
+      "printedText": "Support.\r\nCannot be played as First Manifestation.\r\nAs long as it is on the field and there is at least one manifestation in a stalemate, Cimba gets +1 power.",
+      "printedTextSha256": "8b903ab999ea138764185e9b821415ca819edd48c01acd5fdc315dcf6cd96abf",
+      "selectedClauses": [
+        "As long as it is on the field and there is at least one manifestation in a stalemate, Cimba gets +1 power."
+      ],
+      "sourceZone": "field",
+      "sourceBase": 1,
+      "targetBase": 1,
+      "selfTarget": true,
+      "expectedPower": 2,
+      "inactivePower": 1,
+      "changedControlPower": 2,
+      "duplicateSourcePower": 2,
+      "zonePowers": {
+        "interzone": 2,
+        "confrontation": 2,
+        "field": 2,
+        "stalemate": 1
+      }
+    },
+    {
+      "key": "beak",
+      "cardId": "kaw822pzpzd2l9k_en",
+      "name": "Planar Beak",
+      "printedText": "As long as the Planar Beak is in the Confrontation Zone, it gets +1 power for each manifestation in stalemate.",
+      "printedTextSha256": "bc4504f54d00419efab5bcee4042e98f4aba728f0272b0d667506badc0016c46",
+      "selectedClauses": [
+        "As long as the Planar Beak is in the Confrontation Zone, it gets +1 power for each manifestation in stalemate."
+      ],
+      "sourceZone": "confrontation",
+      "sourceBase": 4,
+      "targetBase": 4,
+      "selfTarget": true,
+      "expectedPower": 6,
+      "inactivePower": 4,
+      "changedControlPower": 6,
+      "duplicateSourcePower": 6,
+      "zonePowers": {
+        "interzone": 4,
+        "confrontation": 6,
+        "field": 4,
+        "stalemate": 4
+      }
+    },
+    {
+      "key": "skapus",
+      "cardId": "v1mhtnl7jec5xby_en",
+      "name": "Skapus, the Vile",
+      "printedText": "Support.\r\nCannot be played as First Manifestation.\r\nAs long as Skapus is the only manifestation in Support you control, it gets +2 power.",
+      "printedTextSha256": "7564935e0ebbeee83917dc9ce8670e6048986d08e7d23c2c92c15c3cfd49faa9",
+      "selectedClauses": [
+        "As long as Skapus is the only manifestation in Support you control, it gets +2 power."
+      ],
+      "sourceZone": "confrontation",
+      "sourceBase": 1,
+      "targetBase": 1,
+      "selfTarget": true,
+      "expectedPower": 3,
+      "inactivePower": 1,
+      "changedControlPower": 1,
+      "duplicateSourcePower": 1,
+      "zonePowers": {
+        "interzone": 1,
+        "confrontation": 3,
+        "field": 1,
+        "stalemate": 1
+      }
+    },
+    {
+      "key": "lucerco",
+      "cardId": "6huhkc5cydtlzgo_en",
+      "name": "Lucerco the Reckless",
+      "printedText": "As long as Lucerco the Reckless is in the Confrontation Zone, it gets +1 power for each manifestation in the Confrontation Zone controlled by the opponent who controls the most.",
+      "printedTextSha256": "38b67fed1b8100512d36d03151bde0b2ef6ba16001a70ee6ee85691d727a4e36",
+      "selectedClauses": [
+        "As long as Lucerco the Reckless is in the Confrontation Zone, it gets +1 power for each manifestation in the Confrontation Zone controlled by the opponent who controls the most."
+      ],
+      "sourceZone": "confrontation",
+      "sourceBase": 3,
+      "targetBase": 3,
+      "selfTarget": true,
+      "expectedPower": 6,
+      "inactivePower": 3,
+      "changedControlPower": 3,
+      "duplicateSourcePower": 6,
+      "zonePowers": {
+        "interzone": 3,
+        "confrontation": 6,
+        "field": 3,
+        "stalemate": 3
+      }
+    },
+    {
+      "key": "vilupera",
+      "cardId": "6hhl878fytgjf77_en",
+      "name": "Vengeful Vilupera",
+      "printedText": "As long as Vengeful Vilupera is in the Confrontation Zone, it gets +1 power for each of your manifestations present in each Empathic Vessel.",
+      "printedTextSha256": "3bbd1cd38f93d601285f598102f5587f917052800e66715fb430438c73d4a034",
+      "selectedClauses": [
+        "As long as Vengeful Vilupera is in the Confrontation Zone, it gets +1 power for each of your manifestations present in each Empathic Vessel."
+      ],
+      "sourceZone": "confrontation",
+      "sourceBase": 2,
+      "targetBase": 2,
+      "selfTarget": true,
+      "expectedPower": 5,
+      "inactivePower": 2,
+      "changedControlPower": 3,
+      "duplicateSourcePower": 5,
+      "zonePowers": {
+        "interzone": 2,
+        "confrontation": 5,
+        "field": 2,
+        "stalemate": 2
+      }
+    },
+    {
+      "key": "bell",
+      "cardId": "e769fgfnxo63e2t_en",
+      "name": "Bell, Ardent Fanatic",
+      "printedText": "As long as Bell is in the Interzone and you control only one manifestation in the Confrontation Zone, that manifestation gets +2 power.",
+      "printedTextSha256": "c71a369fd468c065d0a47043d4a65565d33258100a9047e2069209db1923e663",
+      "selectedClauses": [
+        "As long as Bell is in the Interzone and you control only one manifestation in the Confrontation Zone, that manifestation gets +2 power."
+      ],
+      "sourceZone": "interzone",
+      "sourceBase": 4,
+      "targetBase": 5,
+      "selfTarget": false,
+      "expectedPower": 7,
+      "inactivePower": 5,
+      "changedControlPower": 5,
+      "duplicateSourcePower": 9,
+      "zonePowers": {
+        "interzone": 7,
+        "confrontation": 5,
+        "field": 5,
+        "stalemate": 5
+      }
+    },
+    {
+      "key": "berta",
+      "cardId": "inner-deserts-009",
+      "name": "Berta, the Peaceful",
+      "printedText": "Adamant.\nAs long as Berta is on the field, the power of other manifestations on the field cannot be reduced below their base power.",
+      "printedTextSha256": "b7c0668dfd1c2bde7403ef9bcb8e10e4f1bb6c331fdb07cd57a76c96bb3ad79e",
+      "selectedClauses": [
+        "As long as Berta is on the field, the power of other manifestations on the field cannot be reduced below their base power."
+      ],
+      "sourceZone": "field",
+      "sourceBase": 3,
+      "targetBase": 5,
+      "selfTarget": false,
+      "expectedPower": 5,
+      "inactivePower": 3,
+      "changedControlPower": 5,
+      "duplicateSourcePower": 5,
+      "zonePowers": {
+        "interzone": 5,
+        "confrontation": 5,
+        "field": 5,
+        "stalemate": 3
+      }
+    },
+    {
+      "key": "tower",
+      "cardId": "inner-deserts-045",
+      "name": "Hyperuranic Tower",
+      "printedText": "When Hyperuranic Tower enters the field, put 3 Abstraction counters on it.\nPay 💧: Move an Abstraction counter from a target card you control to a target Manifestation on the field.\nManifestations you control with one or more Abstraction counters gain Float.\nManifestations with Float you control on the field get +1 power.",
+      "printedTextSha256": "02351a97bc2f8dad6bab425922051762da92445dea72a9f645fc0504fe04bfc0",
+      "selectedClauses": [
+        "Manifestations you control with one or more Abstraction counters gain Float.",
+        "Manifestations with Float you control on the field get +1 power."
+      ],
+      "sourceZone": "field",
+      "sourceBase": null,
+      "targetBase": 5,
+      "selfTarget": false,
+      "expectedPower": 6,
+      "inactivePower": 5,
+      "changedControlPower": 5,
+      "duplicateSourcePower": 7,
+      "zonePowers": {
+        "interzone": 6,
+        "confrontation": 6,
+        "field": 6,
+        "stalemate": 5
+      }
+    },
+    {
+      "key": "sangen",
+      "cardId": "inner-deserts-057",
+      "name": "Sangen, the Relic",
+      "printedText": "When Sangen wins a confrontation, it enters a target opponent's Interzone under their control.\nAs long as Sangen is in the Interzone, it cannot be replaced, and all other Manifestations in its controller's Interzone get -1 power.\nIf at the end of the game Sangen is in the Interzone, its controller gains 25 points.",
+      "printedTextSha256": "abfc02c4170045ac9982880c59ffa65b8d2eb2d5d9cbfc28a309ad4559d0b118",
+      "selectedClauses": [
+        "all other Manifestations in its controller's Interzone get -1 power."
+      ],
+      "sourceZone": "interzone",
+      "sourceBase": 3,
+      "targetBase": 5,
+      "selfTarget": false,
+      "expectedPower": 4,
+      "inactivePower": 5,
+      "changedControlPower": 5,
+      "duplicateSourcePower": 3,
+      "zonePowers": {
+        "interzone": 4,
+        "confrontation": 5,
+        "field": 5,
+        "stalemate": 5
+      }
+    },
+    {
+      "key": "kelona",
+      "cardId": "inner-deserts-106",
+      "name": "Kelona, the Anchorite",
+      "printedText": "Cannot be used as tribute.\nAs long as Kelona is in the Confrontation Zone, it gets -1 power for each card in your Limbo, up to a maximum of -6.",
+      "printedTextSha256": "eeaef02f29db967ba942d11e49bc419b99f07186db5605dc3097f9f13b98251f",
+      "selectedClauses": [
+        "As long as Kelona is in the Confrontation Zone, it gets -1 power for each card in your Limbo, up to a maximum of -6."
+      ],
+      "sourceZone": "confrontation",
+      "sourceBase": 7,
+      "targetBase": 7,
+      "selfTarget": true,
+      "expectedPower": 1,
+      "inactivePower": 7,
+      "changedControlPower": 7,
+      "duplicateSourcePower": 1,
+      "zonePowers": {
+        "interzone": 7,
+        "confrontation": 1,
+        "field": 7,
+        "stalemate": 7
+      }
+    },
+    {
+      "key": "kazadur",
+      "cardId": "inner-deserts-112",
+      "name": "Kazadur, the Fiery",
+      "printedText": "Adamant.\nWhen Kazadur enters the Confrontation Zone, each opponent must Chain from their hand at the same time.\nAs long as Kazadur is in the Confrontation Zone, it gets +1 power for each manifestation controlled by opponents in the Confrontation Zone, up to a maximum of +3.",
+      "printedTextSha256": "ba247da3ffe6951fed4d95a7b3924562e0cbd08ca6bc9f8e6649befb09c9d772",
+      "selectedClauses": [
+        "As long as Kazadur is in the Confrontation Zone, it gets +1 power for each manifestation controlled by opponents in the Confrontation Zone, up to a maximum of +3."
+      ],
+      "sourceZone": "confrontation",
+      "sourceBase": 4,
+      "targetBase": 4,
+      "selfTarget": true,
+      "expectedPower": 7,
+      "inactivePower": 4,
+      "changedControlPower": 4,
+      "duplicateSourcePower": 7,
+      "zonePowers": {
+        "interzone": 4,
+        "confrontation": 7,
+        "field": 4,
+        "stalemate": 4
+      }
+    }
+  ]
+}

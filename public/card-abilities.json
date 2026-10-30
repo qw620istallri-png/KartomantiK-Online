@@ -228,7 +228,10 @@
   "b4yyd5uut0ga9df_en": [
     {
       "id": "enter-under-opponent-control-with-burn",
-      "action": "play_card",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
       "targets": {
         "kind": "player",
         "min": 1,
@@ -351,7 +354,10 @@
   "7gd19pmexrjlrap_en": [
     {
       "id": "nectar-disable-target",
-      "action": "play_card",
+      "trigger": {
+        "event": "enters_field",
+        "visibility": "face_up"
+      },
       "targets": {
         "min": 1,
         "max": 1,

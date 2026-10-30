@@ -1,16 +1,16 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-29T15:02:06.536738+00:00",
-  "sourceDigest": "85715e8ac3d0752dcc2da2ce3bbf79b7b72486d2524cbab0f5b7204e9b0f6ea4",
-  "unitEvidence": "reports/systematic-audit/release-141-4/unit-tests.json",
-  "unitEvidenceSourceDigest": "85715e8ac3d0752dcc2da2ce3bbf79b7b72486d2524cbab0f5b7204e9b0f6ea4",
-  "currentUnitEvidence": true,
+  "generatedAt": "2026-10-30T15:40:41.081291+00:00",
+  "sourceDigest": "60fea67ddc4fdbf5ead1958c0fc0279d41a797dc16452eb9e55e2fdbecd1017c",
+  "unitEvidence": "reports/systematic-audit/protection-keywords-followup/unit-tests.json",
+  "unitEvidenceSourceDigest": "937dee457aced052ffde2d17c763e7aada2144987705d623b07e1e8fa57e33ba",
+  "currentUnitEvidence": false,
   "unitEvidencePassed": true,
   "summary": {
     "catalogCards": 450,
-    "cardsWithSelectedClauseProof": 188,
-    "percentageWithSelectedClauseProof": 41.8,
-    "cardsOutsideThisStrictRegister": 262,
+    "cardsWithSelectedClauseProof": 227,
+    "percentageWithSelectedClauseProof": 50.4,
+    "cardsOutsideThisStrictRegister": 223,
     "fullCatalogSemanticCertification": false
   },
   "countingRule": "At least one explicit printed clause linked to tests that all passed in the named full unit run. Unique card IDs; interaction-only references excluded. Selected clauses do not certify all branches.",
@@ -221,6 +221,198 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "vt3extxbwd6gybn_en",
+      "name": "Altruistic Inflorescence",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_dormant",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_invalid_late_target",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_late_protection",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_paid_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_reapply_after_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_retarget",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_missing_at_resolution",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_stalemate",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_target_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_token_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_unfunded",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_wrong_phase",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_inflorescence__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "4ae194b235ddd59a0bd1c4f816377043442d5a2d5d279255c64b23392eca6174"
+        },
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_dormant",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_invalid_late_target",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_late_protection",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_paid_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_reapply_after_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_retarget",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_missing_at_resolution",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_stalemate",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_target_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_token_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_unfunded",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_wrong_phase",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_inflorescence__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "a50e21e7f0282a48f0fb2ea473baf5040cbcc10fa98fcd46989621443c156626"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "7gd19pmexrjlrap_en",
+      "name": "Annihilating Nectar",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_game_state.AnnihilatingNectarNeedsATargetTests.test_nectar_can_enter_without_a_target_and_does_not_open_an_empty_choice",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_dormant",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_invalid_late_target",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_late_protection",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_paid_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_reapply_after_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_retarget",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_missing_at_resolution",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_stalemate",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_target_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_token_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_unfunded",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_wrong_phase",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_nectar__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "bc176fc9c5bf2ba043f13e5b5df9008870bc6f31e9bacda3b8c24ebe3e370897"
+        },
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_game_state.AnnihilatingNectarNeedsATargetTests.test_nectar_can_enter_without_a_target_and_does_not_open_an_empty_choice",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_dormant",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_invalid_late_target",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_late_protection",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_paid_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_reapply_after_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_retarget",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_missing_at_resolution",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_stalemate",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_target_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_token_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_unfunded",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_wrong_phase",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_nectar__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "aabfdc6bec16fc3d55db9f03458d25969f72f38bb3f94cbe0a7b330fc3dfb794"
+        },
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_game_state.AnnihilatingNectarNeedsATargetTests.test_nectar_can_enter_without_a_target_and_does_not_open_an_empty_choice",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_dormant",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_invalid_late_target",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_late_protection",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_paid_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_reapply_after_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_retarget",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_missing_at_resolution",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_stalemate",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_target_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_token_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_unfunded",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_wrong_phase",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_nectar__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "71055505021dcdf5361ff3142e9e11a33863b63fce51b782f89305893f00a672"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "8g5pn3mukkuniog_en",
+      "name": "Armored Husk",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_dormant",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_invalid_late_target",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_late_protection",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_paid_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_reapply_after_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_retarget",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_missing_at_resolution",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_stalemate",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_target_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_token_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_unfunded",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_wrong_phase",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_husk__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "32584e9eae9993cfb5fdb655a0996e70a4cf6952a402d93034e4a363fd868c9e"
+        },
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_dormant",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_invalid_late_target",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_late_protection",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_paid_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_reapply_after_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_retarget",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_missing_at_resolution",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_stalemate",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_target_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_token_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_unfunded",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_wrong_phase",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_husk__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "8a02de5ea6807430850ab9e96cbcbbdbd85166b0e67448d7d407484272d87afa"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "9ypw4x4igfon1qi_en",
       "name": "Armored Pachywyrm",
       "proofs": [
@@ -259,6 +451,32 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "148262dec4ba795098d2d0f41887a25f77a15be19b5849516d40cfc85c2fd403"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "01ynsddc9h2r6wc_en",
+      "name": "Artificial Thinker",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_thinker__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_thinker__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_thinker__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_thinker__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_thinker__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_thinker__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_thinker__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_thinker__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_thinker__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_thinker__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_thinker__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_thinker__stalemate_recipient"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "42ea508976c68988a46ebab1d27d466b40dbbe18ef9ad9ffd1512bb409e3ba5d"
         }
       ],
       "allBranchesCertified": false
@@ -548,6 +766,60 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "e769fgfnxo63e2t_en",
+      "name": "Bell, Ardent Fanatic",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_bell__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_bell__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_bell__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_bell__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_bell__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_bell__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_bell__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_bell__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_bell__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_bell__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_bell__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_bell__stalemate_recipient",
+            "test_continuous_power_integration.ContinuousPowerIntegration.test_bell__defer_blocker"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "c71a369fd468c065d0a47043d4a65565d33258100a9047e2069209db1923e663"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-009",
+      "name": "Berta, the Peaceful",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_berta__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_berta__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_berta__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_berta__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_berta__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_berta__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_berta__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_berta__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_berta__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_berta__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_berta__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_berta__stalemate_recipient",
+            "test_continuous_power_integration.ContinuousPowerIntegration.test_berta__defer_host"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "684ee81cd2b7cd3e30f8620bd752caa668254135a8e29956385b0cb4ad8b418f"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-127",
       "name": "Bibi, the Confused",
       "proofs": [
@@ -588,6 +860,27 @@
           ],
           "paragraphIndex": null,
           "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-029",
+      "name": "Bivalv, the Circumspect",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_blanking",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_lifetime",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_normal",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_snapshot",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_target_returned",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_bivalv__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "b682930ad1c38470a9d93bdae0be153f4471d7e7e7f4c73eafd7fde4edef5d8d"
         }
       ],
       "allBranchesCertified": false
@@ -1006,6 +1299,25 @@
       "name": "Cimba, the Boisterous",
       "proofs": [
         {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_cimba__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_cimba__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_cimba__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_cimba__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_cimba__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_cimba__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_cimba__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_cimba__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_cimba__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_cimba__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_cimba__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_cimba__stalemate_recipient"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "22bcb63168eb22a9e7086430ec6a81370f3f0f666dca623b3f928018485661be"
+        },
+        {
           "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
           "testIds": [
             "test_support_permissions.SupportPermissions.test_cimba_the_boisterous__controlled",
@@ -1068,6 +1380,53 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "c1641ca2347db418be4d0f4ea012a7abe8e1eed17301a26bc17ec2b4da20f529"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-149",
+      "name": "Compensate",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__copied_target",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__cost",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__late_missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__late_protection",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__normal",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__unfunded",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__unneutralizable",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__wrong_card_type",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__wrong_kind",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__wrong_priority",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_compensate__copied_will_websocket",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_compensate__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "98afd3635e9d649323e2a896620fae398e4527ab661036cc5e980886e7fd925e"
+        },
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__copied_target",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__cost",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__late_missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__late_protection",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__normal",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__unfunded",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__unneutralizable",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__wrong_card_type",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__wrong_kind",
+            "test_stack_interaction_family.StackInteractionFamily.test_compensate__wrong_priority",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_compensate__copied_will_websocket",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_compensate__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "13fb9e30d7b5470ac30499c92e2b4d576a0463edd203b5c9cc278215893a3f50"
         }
       ],
       "allBranchesCertified": false
@@ -1364,6 +1723,35 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "g0mtnp4zbhwj7cb_en",
+      "name": "Deny",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__copied_paid_escape",
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__copied_target",
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__cost",
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__late_missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__late_protection",
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__manifestation",
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__normal",
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__paid_escape",
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__payer",
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__payment_target_gone",
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__unneutralizable",
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__wrong_kind",
+            "test_stack_interaction_family.StackInteractionFamily.test_deny__wrong_priority",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_deny__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "79c64d0681c69236a50c370c9080a1bb5c7ccda21f2fd4d33f23f494f6506da7"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "f18fccv1k2co206_en",
       "name": "Deny Fate",
       "proofs": [
@@ -1605,6 +1993,82 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "dly528oj65qnznh_en",
+      "name": "Duel Honorably",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_integration.StackInteractionIntegration.test_duel__websocket",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_duel_only_before_revelation_and_lock_expires_next_turn",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_autopass_keeps_intrinsic_payment_with_white_tribute_or_gems",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_both_players_can_pay_with_priority_before_resolution_including_own_will",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_decline_keeps_card_stack_and_put_lock_only_appears_when_duel_resolves",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_duplicate_request_while_pending_does_not_replace_choice",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_gem_conversion_inside_pending_payment_works_without_putting_new_effect_on_stack",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_insufficient_payment_invalid_option_and_wrong_chooser_do_not_spend",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_no_payment_resources_can_autopass_and_immediate_effect_blocks_request",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_payment_can_neutralize_duel_below_another_stack_card_without_resolving_either",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_request_can_be_reopened_after_decline_without_spending",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_resolved_duel_cannot_be_paid_later",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_target_disappears_before_payment_no_resources_are_spent",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_tribute_payment_preserves_optional_mirror_trigger_choice",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_tribute_payment_uses_real_manifestation_and_preserves_surplus",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_wrong_priority_nonplayer_missing_and_noneligible_target_requests_are_atomic"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "7b41b91b4795e90856309db50c90943b68fee8d094f77f6507b92d66ea67061a"
+        },
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_integration.StackInteractionIntegration.test_duel__websocket",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_duel_only_before_revelation_and_lock_expires_next_turn",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_autopass_keeps_intrinsic_payment_with_white_tribute_or_gems",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_both_players_can_pay_with_priority_before_resolution_including_own_will",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_decline_keeps_card_stack_and_put_lock_only_appears_when_duel_resolves",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_duplicate_request_while_pending_does_not_replace_choice",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_gem_conversion_inside_pending_payment_works_without_putting_new_effect_on_stack",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_insufficient_payment_invalid_option_and_wrong_chooser_do_not_spend",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_no_payment_resources_can_autopass_and_immediate_effect_blocks_request",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_payment_can_neutralize_duel_below_another_stack_card_without_resolving_either",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_request_can_be_reopened_after_decline_without_spending",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_resolved_duel_cannot_be_paid_later",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_target_disappears_before_payment_no_resources_are_spent",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_tribute_payment_preserves_optional_mirror_trigger_choice",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_tribute_payment_uses_real_manifestation_and_preserves_surplus",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_wrong_priority_nonplayer_missing_and_noneligible_target_requests_are_atomic"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "93661bb72e8eddb343f9b6de628c7bcd57999faef66c229d70828a885751289f"
+        },
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_integration.StackInteractionIntegration.test_duel__websocket",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_duel_only_before_revelation_and_lock_expires_next_turn",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_autopass_keeps_intrinsic_payment_with_white_tribute_or_gems",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_both_players_can_pay_with_priority_before_resolution_including_own_will",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_decline_keeps_card_stack_and_put_lock_only_appears_when_duel_resolves",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_duplicate_request_while_pending_does_not_replace_choice",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_gem_conversion_inside_pending_payment_works_without_putting_new_effect_on_stack",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_insufficient_payment_invalid_option_and_wrong_chooser_do_not_spend",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_no_payment_resources_can_autopass_and_immediate_effect_blocks_request",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_payment_can_neutralize_duel_below_another_stack_card_without_resolving_either",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_request_can_be_reopened_after_decline_without_spending",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_resolved_duel_cannot_be_paid_later",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_target_disappears_before_payment_no_resources_are_spent",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_tribute_payment_preserves_optional_mirror_trigger_choice",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_tribute_payment_uses_real_manifestation_and_preserves_surplus",
+            "test_stack_intrinsic_payment.StackIntrinsicPaymentTests.test_wrong_priority_nonplayer_missing_and_noneligible_target_requests_are_atomic"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "aee3f6200829c00728f002ecd2ac6c10983c1cfaa5b107e24889a306ff4d757c"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "6b4f3yh4tk4091p_en",
       "name": "Echo of the Wilds",
       "proofs": [
@@ -1683,6 +2147,25 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "d8ddd7e5349d27753bd48ef37a72ccb22667811e2a2c69d6b646c4de4d46bbc6"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-007",
+      "name": "Eorthoda, the Limpid",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_integration.StackInteractionIntegration.test_eorthoda__websocket",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_eorthoda_does_not_protect_a_will_played_from_the_field",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_eorthoda_persistent_protection_transfers_to_field_until_end_of_turn",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_eorthoda_protection_can_be_cleansed_without_reapplication",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_eorthoda_protects_the_paid_ephemeral_will_after_its_effect"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "688f2707aa4f7ff0de34639b427aac3cfdc85d0a963ffcfed12b83b019a1810f"
         }
       ],
       "allBranchesCertified": false
@@ -1886,6 +2369,99 @@
           ],
           "paragraphIndex": 1,
           "printedClauseSha256": "a1fa43a0bb14a10264da03e7f83285891873f63d16672c57e66d09a115113cec"
+        },
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_dormant",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_invalid_late_target",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_late_protection",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_paid_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_reapply_after_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_retarget",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_missing_at_resolution",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_stalemate",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_target_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_token_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_unfunded",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_wrong_phase",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_jaw__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "4c639e509fbf5a8cbb7ad335090a9826ac4b5b9bc23e4c7ddc258fd02204894a"
+        },
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_dormant",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_invalid_late_target",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_late_protection",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_paid_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_reapply_after_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_retarget",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_missing_at_resolution",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_stalemate",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_target_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_token_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_unfunded",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_wrong_phase",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_jaw__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "a1fa43a0bb14a10264da03e7f83285891873f63d16672c57e66d09a115113cec"
+        },
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_dormant",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_invalid_late_target",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_late_protection",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_paid_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_reapply_after_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_retarget",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_missing_at_resolution",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_stalemate",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_target_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_token_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_unfunded",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_wrong_phase",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_jaw__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "8fb6d98b0c7dcdfe09066dabe5758474022754de1078bee84b3b86e0ef5c20af"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-147",
+      "name": "Float",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_blanking",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_lifetime",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_normal",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_snapshot",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_target_returned",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_float__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "190f69e5cdf2a01f2ab2a0e1b99af5b4e03e803c7e609c558bd8019885c22e91"
         }
       ],
       "allBranchesCertified": false
@@ -2064,6 +2640,55 @@
           ],
           "paragraphIndex": null,
           "printedClauseSha256": "bbebab09b3858d0144f0155ab976539ffe519cc51a8312779bb87e9dc96a4e6f"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "msif6nhq0v1zbh0_en",
+      "name": "Gargullo, King of the Woods",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__stalemate_recipient",
+            "test_continuous_power_integration.ContinuousPowerIntegration.test_gargullo__defer_host"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "f59766d777e3d821c60ec84eb35cb8a122831aaf20538b51672233ec93641065"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-033",
+      "name": "Gladionimbus",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_blanking",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_lifetime",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_normal",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_resolution_recipients",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_snapshot",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_target_returned",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_gladionimbus__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "9733734db0470d7954b9f74eaf9a38c4793a59d13fafefbc6c192cfc3829c82f"
         }
       ],
       "allBranchesCertified": false
@@ -2291,6 +2916,32 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "n9olbthp7vtmypo_en",
+      "name": "Heartening Monument",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_monument__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_monument__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_monument__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_monument__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_monument__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_monument__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_monument__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_monument__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_monument__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_monument__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_monument__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_monument__stalemate_recipient"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "16b77f24544a55f5244ca4b3274e3960e23ebcefdc6235b410c6bda51bfb4aed"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "mv2vad6gwrfbi1l_en",
       "name": "Help!",
       "proofs": [
@@ -2309,6 +2960,33 @@
           ],
           "paragraphIndex": 1,
           "printedClauseSha256": "b579dbdb5a733d7231faf74f012c98dbb08da41342bf91a902e3f38f169cb1f3"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "57ahe6ngzq5c013_en",
+      "name": "Herbaceous Whisperer",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__stalemate_recipient",
+            "test_continuous_power_integration.ContinuousPowerIntegration.test_herbaceous__defer_host"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "72a2fd8927d7b2b91322a51b07e03ff2538e021254b4d9d8d1b0ea65e2be8d18"
         }
       ],
       "allBranchesCertified": false
@@ -2418,6 +3096,28 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "b4yyd5uut0ga9df_en",
+      "name": "Hot Potato",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_cancel",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_hidden",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_opponent_only",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_paid_entry",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_source_left",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_token_entry",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_potato__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "74f1d88874e3c1def4c9892f1b6ce75b67feeaae4a0544c55d18fa3770cc3eec"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "pqi88s5ytyfnalf_en",
       "name": "Humiliate",
       "proofs": [
@@ -2453,6 +3153,75 @@
           ],
           "paragraphIndex": 1,
           "printedClauseSha256": "975650ff217d5cdf7494224c633adf573362fdf104d7cad86929fface5e6fee3"
+        },
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__stalemate_recipient",
+            "test_continuous_power_integration.ContinuousPowerIntegration.test_tower__defer_host",
+            "test_continuous_power_integration.ContinuousPowerIntegration.test_tower__defer_stalemate_host"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "ce0b5d0bfe26ea1248e035a5a0ed536c582dd9a090ce7c509a1ed323727f7eeb"
+        },
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tower__stalemate_recipient",
+            "test_continuous_power_integration.ContinuousPowerIntegration.test_tower__defer_host",
+            "test_continuous_power_integration.ContinuousPowerIntegration.test_tower__defer_stalemate_host"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "87dbb2aa2ccd254a5e17934060edb8d65299cfaa47bfd33a46dfb6e160b34e6a"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ey6fuk5gguasrb0_en",
+      "name": "Ignore",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_family.StackInteractionFamily.test_ignore__copied_target",
+            "test_stack_interaction_family.StackInteractionFamily.test_ignore__cost",
+            "test_stack_interaction_family.StackInteractionFamily.test_ignore__late_missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_ignore__late_protection",
+            "test_stack_interaction_family.StackInteractionFamily.test_ignore__missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_ignore__normal",
+            "test_stack_interaction_family.StackInteractionFamily.test_ignore__paid_escape",
+            "test_stack_interaction_family.StackInteractionFamily.test_ignore__payer",
+            "test_stack_interaction_family.StackInteractionFamily.test_ignore__payment_target_gone",
+            "test_stack_interaction_family.StackInteractionFamily.test_ignore__support_movement",
+            "test_stack_interaction_family.StackInteractionFamily.test_ignore__wrong_kind",
+            "test_stack_interaction_family.StackInteractionFamily.test_ignore__wrong_priority",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_ignore__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "f33ef5ee0a3d29cf3e372f0166593493998d7c3eeac5a2318a8d3775a38034aa"
         }
       ],
       "allBranchesCertified": false
@@ -2480,6 +3249,37 @@
           ],
           "paragraphIndex": 0,
           "printedClauseSha256": "47d62309529067e860694fb91ef8ad57cb6c83763eb675dcf33a4c0c8a7bbd5e"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "q6rha5kz42bkxle_en",
+      "name": "Imitate",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__copied_target",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__copy_counted_as_card",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__copy_countered",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__copy_does_not_reserve_hand",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__copy_keep",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__cost",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__late_missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__late_protection",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__normal",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__persistent_copy_enters",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__persistent_copy_etb",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__unfunded",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__wrong_card_type",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__wrong_kind",
+            "test_stack_interaction_family.StackInteractionFamily.test_imitate__wrong_priority",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_imitate__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "af3e6cc210d7d529d47763a938345f32d58ecfc94bd9ea81faaf39ef123fb0f8"
         }
       ],
       "allBranchesCertified": false
@@ -2924,6 +3724,33 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-112",
+      "name": "Kazadur, the Fiery",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__stalemate_recipient",
+            "test_continuous_power_integration.ContinuousPowerIntegration.test_kazadur__defer_count_0"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "1a89f96ba8c5fee24d27248444d80706f522853597f43380de7ea7b2973a3a64"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "fvk7w9y8xidbuwa_en",
       "name": "Keen-eyed Seeker",
       "proofs": [
@@ -2944,6 +3771,32 @@
           ],
           "paragraphIndex": 2,
           "printedClauseSha256": "8c432d6531569f922883a8a548b906e389a057ff82c977e53a426748936e2227"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-106",
+      "name": "Kelona, the Anchorite",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_kelona__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kelona__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kelona__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kelona__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kelona__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kelona__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kelona__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kelona__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kelona__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kelona__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kelona__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_kelona__stalemate_recipient"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "1858eb525b82df244fb1d1451fce9ce4759f26a803aea05b168cee8acf016e16"
         }
       ],
       "allBranchesCertified": false
@@ -3339,6 +4192,33 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "6huhkc5cydtlzgo_en",
+      "name": "Lucerco the Reckless",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__stalemate_recipient",
+            "test_continuous_power_integration.ContinuousPowerIntegration.test_lucerco__defer_count_0"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "38b67fed1b8100512d36d03151bde0b2ef6ba16001a70ee6ee85691d727a4e36"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-056",
       "name": "Makaboon",
       "proofs": [
@@ -3403,6 +4283,38 @@
           ],
           "paragraphIndex": 1,
           "printedClauseSha256": "ac159e2eb5c725171681f3d3972d1e6194c59fb8b804fda5bf46939d4336b88b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "7yu566ip7zuqdoc_en",
+      "name": "Malaleuco, the Will-shaper",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__bad_source",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__copied_target",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__copy_counted_as_card",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__copy_countered",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__copy_does_not_reserve_hand",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__copy_keep",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__cost",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__late_missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__late_protection",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__normal",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__persistent_copy_enters",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__persistent_copy_etb",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__source_gone",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__wrong_card_type",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__wrong_kind",
+            "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__wrong_priority",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_malaleuco__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "3bccee34b8038f0daa9a24d380658620a53ff3d1bfeb5a792ad8cccfc6fd4318"
         }
       ],
       "allBranchesCertified": false
@@ -3718,6 +4630,27 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "276sz8daqngt2dh_en",
+      "name": "Mobile Sanctuary",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_current_control",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_late_arrival",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_normal",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_recipients",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_source_states",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_sanctuary__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "913d48eea788a5488418e0163f37cd828ec6fa1096b9ac747dc27b845f39e325"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-012",
       "name": "Mukkabell",
       "proofs": [
@@ -3856,6 +4789,33 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "2y961kgs0crdict_en",
+      "name": "Neutralize",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_family.StackInteractionFamily.test_neutralize__copied_target",
+            "test_stack_interaction_family.StackInteractionFamily.test_neutralize__cost",
+            "test_stack_interaction_family.StackInteractionFamily.test_neutralize__late_missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_neutralize__late_protection",
+            "test_stack_interaction_family.StackInteractionFamily.test_neutralize__manifestation",
+            "test_stack_interaction_family.StackInteractionFamily.test_neutralize__missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_neutralize__normal",
+            "test_stack_interaction_family.StackInteractionFamily.test_neutralize__unfunded",
+            "test_stack_interaction_family.StackInteractionFamily.test_neutralize__unneutralizable",
+            "test_stack_interaction_family.StackInteractionFamily.test_neutralize__wrong_kind",
+            "test_stack_interaction_family.StackInteractionFamily.test_neutralize__wrong_priority",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_neutralize__copied_will_websocket",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_neutralize__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "d23b3ac4f4ed17b155882e71ff1d8adfa23635e9962614365e8ed950a4a2a904"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-055",
       "name": "Nghoul-ong, the Tormented",
       "proofs": [
@@ -3931,6 +4891,57 @@
           ],
           "paragraphIndex": null,
           "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "fwh3yrkvg9n09vg_en",
+      "name": "Nullify",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_lifetime",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_normal",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_snapshot",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_target_returned",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__nullify_owner",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__nullify_pay",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__nullify_persistent",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_nullify__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "20e6d222a994b3760e151a1e6cddab5ec8c0714aff347e4ef078ad1bf12f206e"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "yca1lsjic3cktj1_en",
+      "name": "Nullifying Radiance",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_family.StackInteractionFamily.test_radiance__bad_source",
+            "test_stack_interaction_family.StackInteractionFamily.test_radiance__cost",
+            "test_stack_interaction_family.StackInteractionFamily.test_radiance__late_missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_radiance__late_protection",
+            "test_stack_interaction_family.StackInteractionFamily.test_radiance__missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_radiance__normal",
+            "test_stack_interaction_family.StackInteractionFamily.test_radiance__radiance_conditions",
+            "test_stack_interaction_family.StackInteractionFamily.test_radiance__radiance_snapshot",
+            "test_stack_interaction_family.StackInteractionFamily.test_radiance__source_gone",
+            "test_stack_interaction_family.StackInteractionFamily.test_radiance__unfunded",
+            "test_stack_interaction_family.StackInteractionFamily.test_radiance__wrong_kind",
+            "test_stack_interaction_family.StackInteractionFamily.test_radiance__wrong_priority",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_radiance__source_gone_websocket",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_radiance__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "966d2fd5281889affa44eb0425a6b225b7da9c80e7ccecbb5d4ce870845016e8"
         }
       ],
       "allBranchesCertified": false
@@ -4522,6 +5533,32 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "kaw822pzpzd2l9k_en",
+      "name": "Planar Beak",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_beak__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_beak__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_beak__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_beak__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_beak__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_beak__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_beak__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_beak__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_beak__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_beak__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_beak__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_beak__stalemate_recipient"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "bc4504f54d00419efab5bcee4042e98f4aba728f0272b0d667506badc0016c46"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "31k2b7hz7ockvvn_en",
       "name": "Plea for Generosity",
       "proofs": [
@@ -4826,6 +5863,33 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "47c5eb6xe7wj614_en",
+      "name": "Prospero of the Bushes",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_prospero__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_prospero__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_prospero__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_prospero__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_prospero__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_prospero__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_prospero__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_prospero__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_prospero__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_prospero__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_prospero__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_prospero__stalemate_recipient",
+            "test_continuous_power_integration.ContinuousPowerIntegration.test_prospero__defer_host"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "0e19227206431dbd0494aff6b27b345cbdda6b7c28ef7d48d59298459a37095a"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "whwfrjzl6flgww9_en",
       "name": "Protect",
       "proofs": [
@@ -4836,6 +5900,43 @@
           ],
           "paragraphIndex": null,
           "printedClauseSha256": "ea6f4c606ea48381d9a8a882fddeaab31e8cfce534d057bc1df9ee94e72cba08"
+        },
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_blanking",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_lifetime",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_normal",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_resolution_recipients",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_snapshot",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_target_returned",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_protect__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "ea6f4c606ea48381d9a8a882fddeaab31e8cfce534d057bc1df9ee94e72cba08"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "oq88mu68bnbqe0w_en",
+      "name": "Rajas, Great Aegis",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_cleanse",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_current_control",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_late_arrival",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_normal",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_recipients",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_source_states",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__rajas_wills",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_rajas__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "a996706bd0d33b516607f2b62d72b5402f674fb337e060aa35fa78e828b8be46"
         }
       ],
       "allBranchesCertified": false
@@ -5057,6 +6158,32 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "86nfr2vhox3l6y2_en",
+      "name": "Repelling Urn",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_urn__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_urn__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_urn__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_urn__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_urn__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_urn__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_urn__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_urn__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_urn__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_urn__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_urn__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_urn__stalemate_recipient"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "4ca97ca666affc4a098a5f5c54517905ca51f5e1880380b3a71d084fdcb6e440"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "yk0ic6ev7465bxo_en",
       "name": "Repress the Self",
       "proofs": [
@@ -5194,6 +6321,61 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-057",
+      "name": "Sangen, the Relic",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_sangen__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sangen__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sangen__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sangen__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sangen__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sangen__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sangen__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sangen__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sangen__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sangen__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sangen__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sangen__stalemate_recipient",
+            "test_continuous_power_integration.ContinuousPowerIntegration.test_sangen__defer_host"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "cbeebb0ca2a100d3a9fb25e471644a2de7726078194c7de9b8b198a1fba469c7"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "z2gm0fc6fxlnsb1_en",
+      "name": "Scrambling Beacon",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_family.StackInteractionFamily.test_beacon__bad_source",
+            "test_stack_interaction_family.StackInteractionFamily.test_beacon__copied_target",
+            "test_stack_interaction_family.StackInteractionFamily.test_beacon__cost",
+            "test_stack_interaction_family.StackInteractionFamily.test_beacon__invalid_retarget",
+            "test_stack_interaction_family.StackInteractionFamily.test_beacon__late_missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_beacon__late_protection",
+            "test_stack_interaction_family.StackInteractionFamily.test_beacon__missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_beacon__normal",
+            "test_stack_interaction_family.StackInteractionFamily.test_beacon__retarget_effect",
+            "test_stack_interaction_family.StackInteractionFamily.test_beacon__source_gone",
+            "test_stack_interaction_family.StackInteractionFamily.test_beacon__unfunded",
+            "test_stack_interaction_family.StackInteractionFamily.test_beacon__wrong_kind",
+            "test_stack_interaction_family.StackInteractionFamily.test_beacon__wrong_priority",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_beacon__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "617e461bf04bf238bfcc8a364277092b4d0697504d96f4836b5ec05740a19d8c"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-150",
       "name": "Sever the Ascent",
       "proofs": [
@@ -5324,9 +6506,84 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-023",
+      "name": "Simulacrum of Clemency",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_integration.StackInteractionIntegration.test_clemency__missing_will_websocket",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_clemency__websocket",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_allow_grants_five_without_exhausting_or_countering",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_bad_and_duplicate_choices_cannot_score_twice",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_current_controller_gets_points_not_owner",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_exhausted_source_does_not_trigger_until_readied",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_missing_will_gains_without_useless_choice",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_neutralization_preserves_paid_cost_and_exhausts_source",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_unneutralizable_will_gains_without_useless_choice"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "d35a90c5749248faa0b88ecd8ed7eda33347d452177775ab91c23961fc140a10"
+        },
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_integration.StackInteractionIntegration.test_clemency__missing_will_websocket",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_clemency__websocket",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_allow_grants_five_without_exhausting_or_countering",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_bad_and_duplicate_choices_cannot_score_twice",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_current_controller_gets_points_not_owner",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_exhausted_source_does_not_trigger_until_readied",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_missing_will_gains_without_useless_choice",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_neutralization_preserves_paid_cost_and_exhausts_source",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_unneutralizable_will_gains_without_useless_choice"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "df341d6e1e0bb23594a9d6c6c50c8ec2a008d400606c3266d754c7169f8e7c78"
+        },
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_integration.StackInteractionIntegration.test_clemency__missing_will_websocket",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_clemency__websocket",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_allow_grants_five_without_exhausting_or_countering",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_bad_and_duplicate_choices_cannot_score_twice",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_current_controller_gets_points_not_owner",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_exhausted_source_does_not_trigger_until_readied",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_missing_will_gains_without_useless_choice",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_neutralization_preserves_paid_cost_and_exhausts_source",
+            "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_unneutralizable_will_gains_without_useless_choice"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "961d3fc8778a6ea5a4ed6363a4e55b751703c1b15ea27176d06f0e157ddc6494"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "v1mhtnl7jec5xby_en",
       "name": "Skapus, the Vile",
       "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_skapus__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_skapus__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_skapus__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_skapus__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_skapus__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_skapus__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_skapus__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_skapus__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_skapus__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_skapus__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_skapus__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_skapus__stalemate_recipient",
+            "test_continuous_power_integration.ContinuousPowerIntegration.test_skapus__defer_blocker"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "e94d4698c017654d77dcb04b664156bcc3d3c80e8bb58602544997e28c6adb1e"
+        },
         {
           "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
           "testIds": [
@@ -5424,6 +6681,25 @@
       "cardId": "85kx4sk1y809276_en",
       "name": "Sprawling Tentacle",
       "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__stalemate_recipient"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "b286cb34a1882508b677f9fb80803814c7898593487a7f7ef8e5a92be2d90d8c"
+        },
         {
           "source": "reports/systematic-audit/support-permissions-followup/clauses.json",
           "testIds": [
@@ -5752,6 +7028,32 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "twn0cer0tjbw09n_en",
+      "name": "Tipson, the Mediator",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_tipson__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tipson__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tipson__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tipson__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tipson__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tipson__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tipson__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tipson__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tipson__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tipson__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tipson__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_tipson__stalemate_recipient"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "fda03e643ac1d9b5bdf68c66cfb7d6f6d900f3c3864f33fc1b01f9bac31afcf6"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-050",
       "name": "Tombloom",
       "proofs": [
@@ -5921,6 +7223,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "7gaov0c4cjndl9w_en",
+      "name": "Unreachable Pillar",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/protection-keywords-followup/clauses.json",
+          "testIds": [
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_pillar__pillar_normal",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_pillar__pillar_source",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_pillar__pillar_suppresses_vessel_triggers",
+            "test_protection_keyword_family.ProtectionKeywordFamily.test_pillar__pillar_targeting",
+            "test_protection_keyword_integration.ProtectionKeywordIntegration.test_pillar__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "52008c706714efbcfbcbb31ca0d28339dc55a02cff42a9cabda73ac8341d66c0"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "xf03zroy4tigefr_en",
       "name": "Urocione, the Anarchist",
       "proofs": [
@@ -5954,6 +7275,33 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-044",
+      "name": "Veer the Will",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_family.StackInteractionFamily.test_veer__copied_target",
+            "test_stack_interaction_family.StackInteractionFamily.test_veer__cost",
+            "test_stack_interaction_family.StackInteractionFamily.test_veer__exile_override",
+            "test_stack_interaction_family.StackInteractionFamily.test_veer__late_missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_veer__late_protection",
+            "test_stack_interaction_family.StackInteractionFamily.test_veer__missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_veer__normal",
+            "test_stack_interaction_family.StackInteractionFamily.test_veer__unfunded",
+            "test_stack_interaction_family.StackInteractionFamily.test_veer__unneutralizable",
+            "test_stack_interaction_family.StackInteractionFamily.test_veer__wrong_card_type",
+            "test_stack_interaction_family.StackInteractionFamily.test_veer__wrong_kind",
+            "test_stack_interaction_family.StackInteractionFamily.test_veer__wrong_priority",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_veer__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "98d8dbeac29d330f83cac3ff56d5888dd3b9a3625fa4a4a0163feb025d9ec09b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "3gy8gbbbmamc8d0_en",
       "name": "Venerable Viper",
       "proofs": [
@@ -5964,6 +7312,58 @@
           ],
           "paragraphIndex": null,
           "printedClauseSha256": "b686876fc236c24c15ead34c0ca9cdc5e1ff50442ad657b9acebaa0e5f5c349a"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "6hhl878fytgjf77_en",
+      "name": "Vengeful Vilupera",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/continuous-power-followup/clauses.json",
+          "testIds": [
+            "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__baseline",
+            "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__blank_restore",
+            "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__cleanse",
+            "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__controller",
+            "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__duplicate",
+            "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__inactive",
+            "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__live_counts",
+            "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__no_stack",
+            "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__phase_and_turn",
+            "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__scope",
+            "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__source_zones",
+            "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__stalemate_recipient"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "3bbd1cd38f93d601285f598102f5587f917052800e66715fb430438c73d4a034"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-146",
+      "name": "Wall off",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/stack-interactions-followup/clauses.json",
+          "testIds": [
+            "test_stack_interaction_family.StackInteractionFamily.test_wall__copied_target",
+            "test_stack_interaction_family.StackInteractionFamily.test_wall__cost",
+            "test_stack_interaction_family.StackInteractionFamily.test_wall__late_missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_wall__late_protection",
+            "test_stack_interaction_family.StackInteractionFamily.test_wall__missing",
+            "test_stack_interaction_family.StackInteractionFamily.test_wall__normal",
+            "test_stack_interaction_family.StackInteractionFamily.test_wall__unfunded",
+            "test_stack_interaction_family.StackInteractionFamily.test_wall__wall_field_and_expiry",
+            "test_stack_interaction_family.StackInteractionFamily.test_wall__wall_transfer",
+            "test_stack_interaction_family.StackInteractionFamily.test_wall__wrong_kind",
+            "test_stack_interaction_family.StackInteractionFamily.test_wall__wrong_priority",
+            "test_stack_interaction_integration.StackInteractionIntegration.test_wall__websocket"
+          ],
+          "paragraphIndex": null,
+          "printedClauseSha256": "2747fae814b7667d4e7987af8ddffdb9f0f87b2f474e4caf4abefc6c6cd455d3"
         }
       ],
       "allBranchesCertified": false
@@ -6408,5 +7808,11 @@
       "allBranchesCertified": false
     }
   ],
-  "excluded": []
+  "excluded": [],
+  "versionEquivalentUnitEvidence": true,
+  "releaseEquivalence": {
+    "proof": "reports/systematic-audit/release-141-5/source-equivalence.json",
+    "verified": true,
+    "version": "141.5"
+  }
 }

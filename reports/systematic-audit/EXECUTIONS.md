@@ -1,5 +1,9 @@
 # Rapport des exécutions
 
+Publication préparée **141.5** : [validation et équivalence des sources](release-141-5/EXECUTIONS.md). Les **4326 tests Python** passent avant le seul changement de tag ; la normalisation des trois fichiers versionnés retrouve exactement les sources testées. Sur le tag final, **25 contrôles PWA** et la régression frontend passent. Le [registre strict](coverage-status.json) reste à **227/450 cartes (50,4 %)** ; il distingue l’exécution Python antérieure et son équivalence vérifiée avec la version publiée.
+
+Dernière validation locale après 141.4 : [Protection, capacités accordées et entrées](protection-keywords-followup/EXECUTIONS.md), **4326/4326 tests Python réussis**, 144 contrôles Chrome et 609 scénarios de parité. Le [registre strict courant](coverage-status.json) contient **227/450 cartes (50,4 %)** avec des preuves de clauses sélectionnées. Aucun push. Les chiffres et empreintes des sections ci-dessous et des précédents lots sont historiques ; ils ne constituent pas la validation des sources courantes.
+
 Empreinte : `d7206b761c14f98bfb92805803e73341e06ebecf175e711c5e60197b4d50bf07`
 
 ```json

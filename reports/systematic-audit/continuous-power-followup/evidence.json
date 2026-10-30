@@ -1,0 +1,73 @@
+{
+  "schemaVersion": 1,
+  "finishedAt": "2026-10-29T20:55:09.084473+00:00",
+  "sourceDigest": "00d6f038876198e59a334bc4081d65df10891d3c2dd362b494223afbe8d371a5",
+  "published": false,
+  "publishedBaselineCommit": "ebeb398fc3cd4b3a54142074104f92e309e552c9",
+  "summary": {
+    "fullPython": {
+      "executed": 4029,
+      "passed": 4029,
+      "failed": 0,
+      "skipped": 0
+    },
+    "cardFamily": {
+      "executed": 241,
+      "passed": 241,
+      "failed": 0,
+      "selectedClauses": 20,
+      "cardsWithSelectedClauseProof": 19,
+      "unitScenarios": 228,
+      "networkJourneys": 11,
+      "oracleSensitivityTests": 2
+    },
+    "browser": {
+      "executed": 228,
+      "passed": 228,
+      "failed": 0
+    },
+    "neighborPythonTestsPassed": 381,
+    "strictCoverage": {
+      "catalogCards": 450,
+      "cardsWithSelectedClauseProof": 203,
+      "percentageWithSelectedClauseProof": 45.1,
+      "cardsOutsideThisStrictRegister": 247,
+      "fullCatalogSemanticCertification": false
+    }
+  },
+  "executionReuse": {
+    "clausesCollectedFrom": "reports/systematic-audit/continuous-power-followup/unit-tests.json",
+    "reexecutedToAssembleReport": false,
+    "fullRegressionRunsForThisBatch": 1
+  },
+  "artifacts": {
+    "adjacent.log": "3ebbbb79e629589c501b8f7c9a492fc8c8de69d99b14c79c56ae1c4adf807452",
+    "before.json": "8987f3079882f9099e82ac99c8df40f67e73e9053b156a50ea92996d9c0eea47",
+    "before.log": "147769d24512a9ebde18731018908a316253092b3769b389f05f7f3a009fc757",
+    "branches-before.log": "43572378b228d784dfda28134a3031237868b31d3296e816a4db7e974af45f76",
+    "browser.json": "b1e79cafbe436a43715ce6105df29ac61251163b9abd018d2940cff58ff776bb",
+    "browser.log": "17a843026ec587a0b1e355c1fbfcfcd83e1a063f68fd6dcc37ce2fcd369a3e5e",
+    "clauses.json": "38252c8daef9bc9bac6fd8e6a2b4d751e61e2bf3c9926ad8ba75996e8d26a75c",
+    "common.log": "41b82a781a80445506576585b456e968d6943d4e93cd821efa6c9368900d7cd5",
+    "EXECUTIONS.md": "cc754f564f5f5e1804263307e1d38186adcd05066c24a3291e00406a38064bd0",
+    "full.log": "338430d3c5ac7c3ce1d965e6c675155f59eeea7461c9c347666842fd75ced25c",
+    "initial.log": "44e8543da687698e23dd5ba957e53a78cadec1dce8f39515572112c61537d4e4",
+    "network.log": "86ba2edae82039798705e8668f72c4084b5c616e7ba147455243a4781336446d",
+    "unit-tests.json": "144f4156c7479df8844a2abf8ed2d268bddce33e72de9c74b69e5ca6fe47cff8",
+    "units.log": "c8488bd310bc95b84c5d83302d7a58129e2b1f7ed0474ac498b1a5780bdf29e8"
+  },
+  "coverageRegistrySha256": "a45f14d790fbc3dad1d531758e66806c921c0d62d00bbbcbde5945f057efc59b",
+  "reportSha256": "5f46cb35cefee1ea174c931d1f4e706732f059fdeb61b282fae4997e226e1708",
+  "limits": [
+    "Selected continuous power/Float clauses only; other paragraphs and every interaction are not certified.",
+    "Initial zone counts, control changes and comparison snapshots are controlled fixtures, not whole matches.",
+    "Paid Defer journeys exercise actual declarations, payments, Stack resolution, owner destinations and both clients public power.",
+    "Automatic phase driving disabled in the eleven socket journeys; no new physical-device or remote-artwork certification.",
+    "Sensitivity tests mutate encoded rules only in isolated fixtures and verify literal expectations detect the error.",
+    "Production serialized states with controlled fixtures; local artwork.",
+    "PC Chrome and mobile landscape/touch emulation, no physical phone or Safari.",
+    "DOM modifier rendering and both player views; drag, artwork and animation layout are outside this gate.",
+    "Initial fixture errors are described separately from the two product scope defects.",
+    "All changes after published baseline remain local."
+  ]
+}

@@ -1,0 +1,1310 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "937dee457aced052ffde2d17c763e7aada2144987705d623b07e1e8fa57e33ba",
+  "finishedAt": "2026-10-30T15:07:43.392190+00:00",
+  "published": false,
+  "executionSource": "reports/systematic-audit/protection-keywords-followup/unit-tests.json",
+  "summary": {
+    "executed": 138,
+    "passed": 138,
+    "failed": 0,
+    "cardsWithSelectedClauseProof": 13,
+    "selectedClauses": 19,
+    "unitScenarios": 122,
+    "networkJourneys": 13,
+    "reusedUpdatedEmptyEntryScenarios": 1,
+    "oracleSensitivityTests": 2
+  },
+  "clauses": [
+    {
+      "cardId": "8g5pn3mukkuniog_en",
+      "name": "Armored Husk",
+      "abilityId": "armored-husk-protect",
+      "printedParagraph": "When Armored Husk enters the field, choose a target manifestation on the field. That manifestation is Protected from cards and effects controlled by the opponents.",
+      "printedTextSha256": "d8773b01fb048433153ce113ed5785d3cbec97a108506cb9319a664d744465fa",
+      "independentOracle": {
+        "observable": "protection",
+        "activationCost": {
+          "phlegmatic": 1
+        },
+        "playCost": {
+          "phlegmatic": 3
+        }
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_dormant",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_invalid_late_target",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_late_protection",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_paid_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_reapply_after_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_retarget",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_missing_at_resolution",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_stalemate",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_target_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_token_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_unfunded",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_wrong_phase",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_husk__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "8g5pn3mukkuniog_en",
+      "name": "Armored Husk",
+      "abilityId": "armored-husk-protect",
+      "printedParagraph": "In the End Phase, you can exhaust this card and pay {G}: Change the target of the effect of this card.",
+      "printedTextSha256": "d8773b01fb048433153ce113ed5785d3cbec97a108506cb9319a664d744465fa",
+      "independentOracle": {
+        "observable": "protection",
+        "activationCost": {
+          "phlegmatic": 1
+        },
+        "playCost": {
+          "phlegmatic": 3
+        }
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_dormant",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_invalid_late_target",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_late_protection",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_paid_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_reapply_after_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_retarget",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_missing_at_resolution",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_stalemate",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_target_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_token_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_unfunded",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_wrong_phase",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_husk__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "vt3extxbwd6gybn_en",
+      "name": "Altruistic Inflorescence",
+      "abilityId": "inflorescence-grants-support",
+      "printedParagraph": "When Altruistic Inflorescence enters the field, choose a target manifestation on the field. That manifestation has Support in addition to its other effects.",
+      "printedTextSha256": "1f9ecf9cfea254237fd4ec4d6d33ed6f038e4809754f3ce46e7c861d2c738f97",
+      "independentOracle": {
+        "observable": "support",
+        "activationCost": {
+          "phlegmatic": 3
+        },
+        "playCost": {
+          "phlegmatic": 3
+        }
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_dormant",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_invalid_late_target",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_late_protection",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_paid_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_reapply_after_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_retarget",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_missing_at_resolution",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_stalemate",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_target_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_token_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_unfunded",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_wrong_phase",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_inflorescence__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "vt3extxbwd6gybn_en",
+      "name": "Altruistic Inflorescence",
+      "abilityId": "inflorescence-grants-support",
+      "printedParagraph": "In the End Phase, you may exhaust this card and pay {G}{G}{G}: Change the target of this card's effect.",
+      "printedTextSha256": "1f9ecf9cfea254237fd4ec4d6d33ed6f038e4809754f3ce46e7c861d2c738f97",
+      "independentOracle": {
+        "observable": "support",
+        "activationCost": {
+          "phlegmatic": 3
+        },
+        "playCost": {
+          "phlegmatic": 3
+        }
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_dormant",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_invalid_late_target",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_late_protection",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_paid_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_reapply_after_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_retarget",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_missing_at_resolution",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_stalemate",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_target_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_token_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_unfunded",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_wrong_phase",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_inflorescence__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "y6g3tex9ypttk8u_en",
+      "name": "Flaying Jaw",
+      "abilityId": "flaying-jaw-power-link",
+      "printedParagraph": "When Flaying Jaw enters the field, choose a target manifestation on the field.",
+      "printedTextSha256": "45f6c49b1c2e3acc0c541e28358dcf9ed866920755d9f14d9e98a0315a155fc8",
+      "independentOracle": {
+        "observable": "power",
+        "activationCost": {
+          "melancholic": 1
+        },
+        "playCost": {
+          "melancholic": 2
+        }
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_dormant",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_invalid_late_target",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_late_protection",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_paid_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_reapply_after_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_retarget",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_missing_at_resolution",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_stalemate",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_target_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_token_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_unfunded",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_wrong_phase",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_jaw__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "y6g3tex9ypttk8u_en",
+      "name": "Flaying Jaw",
+      "abilityId": "flaying-jaw-power-link",
+      "printedParagraph": "That manifestation gets -2 power.",
+      "printedTextSha256": "45f6c49b1c2e3acc0c541e28358dcf9ed866920755d9f14d9e98a0315a155fc8",
+      "independentOracle": {
+        "observable": "power",
+        "activationCost": {
+          "melancholic": 1
+        },
+        "playCost": {
+          "melancholic": 2
+        }
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_dormant",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_invalid_late_target",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_late_protection",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_paid_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_reapply_after_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_retarget",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_missing_at_resolution",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_stalemate",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_target_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_token_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_unfunded",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_wrong_phase",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_jaw__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "y6g3tex9ypttk8u_en",
+      "name": "Flaying Jaw",
+      "abilityId": "flaying-jaw-power-link",
+      "printedParagraph": "In the End Phase, you may exhaust this card and pay {P}: Change the target of this card's effect.",
+      "printedTextSha256": "45f6c49b1c2e3acc0c541e28358dcf9ed866920755d9f14d9e98a0315a155fc8",
+      "independentOracle": {
+        "observable": "power",
+        "activationCost": {
+          "melancholic": 1
+        },
+        "playCost": {
+          "melancholic": 2
+        }
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_dormant",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_invalid_late_target",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_late_protection",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_paid_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_reapply_after_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_retarget",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_missing_at_resolution",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_stalemate",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_target_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_token_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_unfunded",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_wrong_phase",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_jaw__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "7gd19pmexrjlrap_en",
+      "name": "Annihilating Nectar",
+      "abilityId": "nectar-disable-target",
+      "printedParagraph": "When Annihilating Nectar enters the field, choose a target manifestation on the field.",
+      "printedTextSha256": "e6757aaa2bfb8310b6d41a71e57d0109f2c074c609050293209372e6a5cfd75e",
+      "independentOracle": {
+        "observable": "blank",
+        "activationCost": {
+          "capricious": 1
+        },
+        "playCost": {
+          "capricious": 3
+        }
+      },
+      "testIds": [
+        "test_game_state.AnnihilatingNectarNeedsATargetTests.test_nectar_can_enter_without_a_target_and_does_not_open_an_empty_choice",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_dormant",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_invalid_late_target",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_late_protection",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_paid_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_reapply_after_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_retarget",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_missing_at_resolution",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_stalemate",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_target_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_token_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_unfunded",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_wrong_phase",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_nectar__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "7gd19pmexrjlrap_en",
+      "name": "Annihilating Nectar",
+      "abilityId": "nectar-disable-target",
+      "printedParagraph": "That manifestation loses all its effects.",
+      "printedTextSha256": "e6757aaa2bfb8310b6d41a71e57d0109f2c074c609050293209372e6a5cfd75e",
+      "independentOracle": {
+        "observable": "blank",
+        "activationCost": {
+          "capricious": 1
+        },
+        "playCost": {
+          "capricious": 3
+        }
+      },
+      "testIds": [
+        "test_game_state.AnnihilatingNectarNeedsATargetTests.test_nectar_can_enter_without_a_target_and_does_not_open_an_empty_choice",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_dormant",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_invalid_late_target",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_late_protection",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_paid_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_reapply_after_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_retarget",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_missing_at_resolution",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_stalemate",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_target_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_token_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_unfunded",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_wrong_phase",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_nectar__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "7gd19pmexrjlrap_en",
+      "name": "Annihilating Nectar",
+      "abilityId": "nectar-disable-target",
+      "printedParagraph": "In the End Phase, you may exhaust this card and pay {Y}: Change the target of the effect of this card.",
+      "printedTextSha256": "e6757aaa2bfb8310b6d41a71e57d0109f2c074c609050293209372e6a5cfd75e",
+      "independentOracle": {
+        "observable": "blank",
+        "activationCost": {
+          "capricious": 1
+        },
+        "playCost": {
+          "capricious": 3
+        }
+      },
+      "testIds": [
+        "test_game_state.AnnihilatingNectarNeedsATargetTests.test_nectar_can_enter_without_a_target_and_does_not_open_an_empty_choice",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_dormant",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_invalid_late_target",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_late_protection",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_paid_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_reapply_after_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_retarget",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_missing_at_resolution",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_stalemate",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_target_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_token_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_unfunded",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_wrong_phase",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_nectar__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "fwh3yrkvg9n09vg_en",
+      "name": "Nullify",
+      "abilityId": "nullify-removes-effects-unless-payment",
+      "printedParagraph": "A target manifestation or persistent Will on the field loses all its effects unless its owner pays {H}{H}.",
+      "printedTextSha256": "20e6d222a994b3760e151a1e6cddab5ec8c0714aff347e4ef078ad1bf12f206e",
+      "independentOracle": {
+        "observable": "blank",
+        "activationCost": {},
+        "playCost": {}
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_lifetime",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_normal",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_snapshot",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_target_returned",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__nullify_owner",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__nullify_pay",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__nullify_persistent",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_nullify__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-147",
+      "name": "Float",
+      "abilityId": "grant-float",
+      "printedParagraph": "A target Manifestation on the field gains Float.",
+      "printedTextSha256": "190f69e5cdf2a01f2ab2a0e1b99af5b4e03e803c7e609c558bd8019885c22e91",
+      "independentOracle": {
+        "observable": "float",
+        "activationCost": {},
+        "playCost": {}
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_blanking",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_lifetime",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_normal",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_snapshot",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_target_returned",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_float__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-029",
+      "name": "Bivalv, the Circumspect",
+      "abilityId": "bivalv-discard-to-protect",
+      "printedParagraph": "Discard Bivalv from your hand: A target card you control on the field is Protected from cards and effects controlled by opponents until the end of the turn.",
+      "printedTextSha256": "b682930ad1c38470a9d93bdae0be153f4471d7e7e7f4c73eafd7fde4edef5d8d",
+      "independentOracle": {
+        "observable": "protection",
+        "activationCost": {},
+        "playCost": {}
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_blanking",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_lifetime",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_normal",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_snapshot",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_target_returned",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_bivalv__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-033",
+      "name": "Gladionimbus",
+      "abilityId": "sacrifice-to-grant-friendly-interzone-float",
+      "printedParagraph": "As long as Gladionimbus is in the Interzone, you may Sacrifice it: Each Manifestation you control currently in your Interzone gains Float.",
+      "printedTextSha256": "1591a3ecfd02a1ed97ca0ea8abd1532ea9cacfbf87fc2bea84dbcb5d8ff3a877",
+      "independentOracle": {
+        "observable": "float",
+        "activationCost": {},
+        "playCost": {}
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_blanking",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_lifetime",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_normal",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_resolution_recipients",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_snapshot",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_target_returned",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_gladionimbus__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "276sz8daqngt2dh_en",
+      "name": "Mobile Sanctuary",
+      "abilityId": null,
+      "printedParagraph": "As long as Mobile Sanctuary is on the field, the other manifestations you control in the Confrontation Zone are Protected from cards and effects controlled by the opponents.",
+      "printedTextSha256": "913d48eea788a5488418e0163f37cd828ec6fa1096b9ac747dc27b845f39e325",
+      "independentOracle": {
+        "observable": "protection",
+        "activationCost": {},
+        "playCost": {}
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_current_control",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_late_arrival",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_normal",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_recipients",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_source_states",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_sanctuary__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "oq88mu68bnbqe0w_en",
+      "name": "Rajas, Great Aegis",
+      "abilityId": null,
+      "printedParagraph": "As long as Rajas is in the Interzone, the persistent Wills you control and the other manifestations in your Interzone are Protected from cards and effects controlled by the opponents.",
+      "printedTextSha256": "a996706bd0d33b516607f2b62d72b5402f674fb337e060aa35fa78e828b8be46",
+      "independentOracle": {
+        "observable": "protection",
+        "activationCost": {},
+        "playCost": {}
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_current_control",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_late_arrival",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_normal",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_recipients",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_source_states",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__rajas_wills",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_rajas__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "7gaov0c4cjndl9w_en",
+      "name": "Unreachable Pillar",
+      "abilityId": null,
+      "printedParagraph": "The manifestations inside your Empathic Vessel are Protected from cards and effects controlled by opponents and lose all their effects.",
+      "printedTextSha256": "52008c706714efbcfbcbb31ca0d28339dc55a02cff42a9cabda73ac8341d66c0",
+      "independentOracle": {
+        "observable": "protection_blank",
+        "activationCost": {},
+        "playCost": {
+          "hollow": 2
+        }
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_pillar__pillar_normal",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_pillar__pillar_source",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_pillar__pillar_suppresses_vessel_triggers",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_pillar__pillar_targeting",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_pillar__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "whwfrjzl6flgww9_en",
+      "name": "Protect",
+      "abilityId": "protect-friendly-field-until-end-turn",
+      "printedParagraph": "The manifestations and Wills currently on the field you control are Protected from cards and effects controlled by opponents until the end of the turn.",
+      "printedTextSha256": "ea6f4c606ea48381d9a8a882fddeaab31e8cfce534d057bc1df9ee94e72cba08",
+      "independentOracle": {
+        "observable": "protection",
+        "activationCost": {},
+        "playCost": {
+          "hollow": 3
+        }
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_blanking",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_cleanse",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_lifetime",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_normal",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_resolution_recipients",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_snapshot",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_target_returned",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_protect__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "b4yyd5uut0ga9df_en",
+      "name": "Hot Potato",
+      "abilityId": "enter-under-opponent-control-with-burn",
+      "printedParagraph": "When the Hot Potato enters the field, it passes under the control of a target opponent with a Burn counter on it.",
+      "printedTextSha256": "68b462aa0133adaf93d0fe39f3d052c6fc8f01ae54ef6e8d7fba66ddbe88d642",
+      "independentOracle": {
+        "observable": "gift",
+        "activationCost": {},
+        "playCost": {
+          "capricious": 2
+        }
+      },
+      "testIds": [
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_cancel",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_hidden",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_opponent_only",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_paid_entry",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_source_left",
+        "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_token_entry",
+        "test_protection_keyword_integration.ProtectionKeywordIntegration.test_potato__websocket"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_game_state.AnnihilatingNectarNeedsATargetTests.test_nectar_can_enter_without_a_target_and_does_not_open_an_empty_choice",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_blanking",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_lifetime",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_normal",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_snapshot",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_bivalv__grant_target_returned",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_blanking",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_lifetime",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_snapshot",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_float__grant_target_returned",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_blanking",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_lifetime",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_resolution_recipients",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_snapshot",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_gladionimbus__grant_target_returned",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_dormant",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_entry",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_invalid_late_target",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_late_protection",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_paid_entry",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_reapply_after_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_retarget",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_left",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_source_missing_at_resolution",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_target_left",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_token_entry",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_unfunded",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_husk__link_wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_dormant",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_entry",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_invalid_late_target",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_late_protection",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_paid_entry",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_reapply_after_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_retarget",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_left",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_source_missing_at_resolution",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_target_left",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_token_entry",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_unfunded",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_inflorescence__link_wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_dormant",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_entry",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_invalid_late_target",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_late_protection",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_paid_entry",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_reapply_after_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_retarget",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_left",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_source_missing_at_resolution",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_target_left",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_token_entry",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_unfunded",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_jaw__link_wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_dormant",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_entry",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_invalid_late_target",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_late_protection",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_paid_entry",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_reapply_after_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_retarget",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_left",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_source_missing_at_resolution",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_target_left",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_token_entry",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_unfunded",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nectar__link_wrong_phase",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_lifetime",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_snapshot",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__grant_target_returned",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__nullify_owner",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__nullify_pay",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_nullify__nullify_persistent",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_pillar__pillar_normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_pillar__pillar_source",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_pillar__pillar_suppresses_vessel_triggers",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_pillar__pillar_targeting",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_cancel",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_entry",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_hidden",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_opponent_only",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_paid_entry",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_source_left",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_potato__gift_token_entry",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_blanking",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_lifetime",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_resolution_recipients",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_snapshot",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_protect__grant_target_returned",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_current_control",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_late_arrival",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_recipients",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__passive_source_states",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_rajas__rajas_wills",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_current_control",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_late_arrival",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_recipients",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_family.ProtectionKeywordFamily.test_sanctuary__passive_source_states",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_protection_keyword_integration.ProtectionKeywordIntegration.test_bivalv__websocket",
+      "status": "pass",
+      "durationSeconds": 2.016
+    },
+    {
+      "testId": "test_protection_keyword_integration.ProtectionKeywordIntegration.test_float__websocket",
+      "status": "pass",
+      "durationSeconds": 2.016
+    },
+    {
+      "testId": "test_protection_keyword_integration.ProtectionKeywordIntegration.test_gladionimbus__websocket",
+      "status": "pass",
+      "durationSeconds": 1.985
+    },
+    {
+      "testId": "test_protection_keyword_integration.ProtectionKeywordIntegration.test_husk__websocket",
+      "status": "pass",
+      "durationSeconds": 3.781
+    },
+    {
+      "testId": "test_protection_keyword_integration.ProtectionKeywordIntegration.test_inflorescence__websocket",
+      "status": "pass",
+      "durationSeconds": 3.797
+    },
+    {
+      "testId": "test_protection_keyword_integration.ProtectionKeywordIntegration.test_jaw__websocket",
+      "status": "pass",
+      "durationSeconds": 3.812
+    },
+    {
+      "testId": "test_protection_keyword_integration.ProtectionKeywordIntegration.test_nectar__websocket",
+      "status": "pass",
+      "durationSeconds": 3.781
+    },
+    {
+      "testId": "test_protection_keyword_integration.ProtectionKeywordIntegration.test_nullify__websocket",
+      "status": "pass",
+      "durationSeconds": 2.109
+    },
+    {
+      "testId": "test_protection_keyword_integration.ProtectionKeywordIntegration.test_pillar__websocket",
+      "status": "pass",
+      "durationSeconds": 2.032
+    },
+    {
+      "testId": "test_protection_keyword_integration.ProtectionKeywordIntegration.test_potato__websocket",
+      "status": "pass",
+      "durationSeconds": 3.719
+    },
+    {
+      "testId": "test_protection_keyword_integration.ProtectionKeywordIntegration.test_protect__websocket",
+      "status": "pass",
+      "durationSeconds": 2.0
+    },
+    {
+      "testId": "test_protection_keyword_integration.ProtectionKeywordIntegration.test_rajas__websocket",
+      "status": "pass",
+      "durationSeconds": 2.031
+    },
+    {
+      "testId": "test_protection_keyword_integration.ProtectionKeywordIntegration.test_sanctuary__websocket",
+      "status": "pass",
+      "durationSeconds": 2.0
+    },
+    {
+      "testId": "test_protection_keyword_oracle.ProtectionKeywordOracle.test_wrong_jaw_power_is_detected",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_protection_keyword_oracle.ProtectionKeywordOracle.test_wrong_protect_duration_is_detected",
+      "status": "pass",
+      "durationSeconds": 0.016
+    }
+  ],
+  "limits": [
+    "Selected printed clauses and named branches only; not full certification of each card or all interactions.",
+    "Entry fixtures execute the production trigger producer; five socket journeys additionally pay and resolve the Persistent Will before selecting its entry target.",
+    "Retarget costs, entry timing, Cleanse, current control, source departure, copy entry, recipient snapshots and exact power values have explicit oracles.",
+    "Vessel blanking uses a real Graceful Petal entry trigger; this carrier is not counted as another certified card.",
+    "Hot Potato proof selects its entry paragraph only; its repeat transfer and End paragraph are outside this selected contract.",
+    "Automatic phase driving disabled in the thirteen real socket journeys. No physical-device, Safari or remote-artwork certification."
+  ]
+}

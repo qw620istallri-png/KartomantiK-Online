@@ -1,0 +1,429 @@
+{
+  "sourceHashes": {
+    "server/game/actions.py": "2678ae1b25abc037a6c1ab1967c29d81cd7cbe11705931d7b1f4783df3203a13",
+    "server/game/chain.py": "0ef07d781034dc36c0c412bf5d0f94f38ef0fe4b5da02597d3d72494771dc27f",
+    "server/game/stack.py": "fcb99f85fc52698eeb2972fbd10da8b824fdb52fa70c23b615a68594ab92c4e2",
+    "server/game/triggers.py": "af29b871a16a347e2cb10f2d35dc0f78f399b78bc1dbac17d965dcbc4524d6db",
+    "server/game/zones.py": "8d2868abbdb03cd37a147f34972d2f2a24de77dbe609aed3d72142f306f3ceca",
+    "server/game/priority.py": "92c34ecba326b4428be4a692ee1c05d126b15f7fad0267fe47dbf9b1c401cf69",
+    "server/game/effects/signature.py": "266b194bfe4ac087cba248978f37a29b6c51890e04e13835e333a4f5e77308b0",
+    "tests/test_stack_interaction_family.py": "e9be1a1c7aa9d4f60eedf08e0d862fe56485db405d98403dafb6722490bb2985",
+    "tools/stack_interaction_ui_fixtures.py": "21e9e4af34e05d989a04f4a44025a0d95734c2a472f3853a1f7405c8a227772f",
+    "tests/test_stack_interaction_ui.cjs": "ca31045755a9264b2d1c0f6363369516fa36de6820cbf6be0ed47856d14ed35a",
+    "audit/stack-interactions.json": "30f27e3f9ead1fd33fb669b433a00b6283994d91f58cf6722d463af59a1933d6",
+    "public/js/rules-actions.js": "9288e068a56bdb24d7437757504da8ba3d749a7687ed197e67a6dd5fdda45d15",
+    "public/index.html": "f4befb40ef3ba3ca1b02fbcf130a26a210af052392d691df69bfb784f3230cd5"
+  },
+  "summary": {
+    "executed": 100,
+    "passed": 100,
+    "failed": 0
+  },
+  "tests": [
+    {
+      "testId": "1440-neutralize-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-neutralize-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-neutralize-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-neutralize-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-neutralize-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-deny-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-deny-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-deny-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-deny-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-deny-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-ignore-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-ignore-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-ignore-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-ignore-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-ignore-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-veer-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-veer-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-veer-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-veer-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-veer-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-compensate-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-compensate-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-compensate-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-compensate-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-compensate-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-imitate-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-imitate-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-imitate-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-imitate-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-imitate-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-malaleuco-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-malaleuco-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-malaleuco-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-malaleuco-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-malaleuco-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beacon-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beacon-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beacon-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beacon-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-beacon-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-radiance-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-radiance-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-radiance-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-radiance-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-radiance-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-wall-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-wall-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-wall-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-wall-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "1440-wall-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "844-neutralize-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-neutralize-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-neutralize-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-neutralize-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-neutralize-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "844-deny-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-deny-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-deny-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-deny-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-deny-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "844-ignore-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-ignore-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-ignore-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-ignore-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-ignore-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "844-veer-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-veer-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-veer-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-veer-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-veer-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "844-compensate-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-compensate-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-compensate-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-compensate-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-compensate-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "844-imitate-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-imitate-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-imitate-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-imitate-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-imitate-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "844-malaleuco-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-malaleuco-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-malaleuco-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-malaleuco-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-malaleuco-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beacon-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beacon-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beacon-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beacon-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-beacon-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "844-radiance-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-radiance-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-radiance-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-radiance-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-radiance-copied",
+      "status": "pass"
+    },
+    {
+      "testId": "844-wall-ready",
+      "status": "pass"
+    },
+    {
+      "testId": "844-wall-protected",
+      "status": "pass"
+    },
+    {
+      "testId": "844-wall-wrong_kind",
+      "status": "pass"
+    },
+    {
+      "testId": "844-wall-missing",
+      "status": "pass"
+    },
+    {
+      "testId": "844-wall-copied",
+      "status": "pass"
+    }
+  ],
+  "limits": [
+    "Client candidate filters for ten response cards, five controlled target states including copied Wills, PC and mobile landscape Chrome.",
+    "Synthetic pending originals and local artwork; no full game or physical device certification.",
+    "Timing, ownership and exact effect outcomes are checked by the associated Python and socket journeys, not this candidate-filter gate."
+  ]
+}

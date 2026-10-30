@@ -1,0 +1,72 @@
+{
+  "sourceDigest": "3745c19a4ff2d3910bb408899f4b84b8464745e375b6492c6da2b77ae0e926e4",
+  "finishedAt": "2026-10-29T21:21:34.551874+00:00",
+  "summary": {
+    "executed": 12,
+    "failed": 2
+  },
+  "tests": [
+    {
+      "testId": "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_allow_grants_five_without_exhausting_or_countering",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_bad_and_duplicate_choices_cannot_score_twice",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_current_controller_gets_points_not_owner",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_exhausted_source_does_not_trigger_until_readied",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_missing_will_gains_without_useless_choice",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_stack_interaction_triggers.py\", line 118, in test_clemency_missing_will_gains_without_useless_choice\n    self.assertIsNone(s.rules_engine['pendingChoice'])\nAssertionError: {'id': '06b46283d840', 'kind': 'clemency_choice', 'playerId': 'p2', 'sourceCardId': 'inner-deserts-023', 'sourceItemId': 'clemency', 'sourceControllerId': 'p1', 'relatedActionId': '45d413810f40', 'relatedCardId': 'lo85kdsow36bymu_en', 'points': 5, 'options': ['allow', 'neutralize']} is not None\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_neutralization_preserves_paid_cost_and_exhausts_source",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_triggers.StackInteractionTriggers.test_clemency_unneutralizable_will_gains_without_useless_choice",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_stack_interaction_triggers.py\", line 124, in test_clemency_unneutralizable_will_gains_without_useless_choice\n    self.assertIsNone(s.rules_engine['pendingChoice'])\nAssertionError: {'id': '290e3c431382', 'kind': 'clemency_choice', 'playerId': 'p2', 'sourceCardId': 'inner-deserts-023', 'sourceItemId': 'clemency', 'sourceControllerId': 'p1', 'relatedActionId': 'c59f56d595ad', 'relatedCardId': 'lo85kdsow36bymu_en', 'points': 5, 'options': ['allow', 'neutralize']} is not None\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_triggers.StackInteractionTriggers.test_duel_only_before_revelation_and_lock_expires_next_turn",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_stack_interaction_triggers.StackInteractionTriggers.test_eorthoda_does_not_protect_a_will_played_from_the_field",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_stack_interaction_triggers.StackInteractionTriggers.test_eorthoda_persistent_protection_transfers_to_field_until_end_of_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_triggers.StackInteractionTriggers.test_eorthoda_protection_can_be_cleansed_without_reapplication",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_triggers.StackInteractionTriggers.test_eorthoda_protects_the_paid_ephemeral_will_after_its_effect",
+      "status": "pass",
+      "durationSeconds": 0.031
+    }
+  ]
+}

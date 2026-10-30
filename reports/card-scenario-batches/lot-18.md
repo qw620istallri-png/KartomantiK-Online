@@ -13,7 +13,7 @@ Verdict : **PASS** · 0 contrôle(s) manuel(s) conservé(s).
 | 177 | Trim the Excess | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 178 | Equalize | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 179 | Neutralize | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
-| 180 | Annihilating Nectar | ✓ (2 cap.) | ✓ (2 actions) | ✓ | PASS |
+| 180 | Annihilating Nectar | ✓ (2 cap.) | ✓ (1 actions) | ✓ | PASS |
 
 ## Parcours vérifié
 

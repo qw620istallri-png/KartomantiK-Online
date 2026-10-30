@@ -1,0 +1,10 @@
+{
+  "sourceDigest": "937dee457aced052ffde2d17c763e7aada2144987705d623b07e1e8fa57e33ba",
+  "expectedFullTestCount": 4326,
+  "published": false,
+  "attemptsBeforeFinal": {
+    "interrupted": 1,
+    "completedWithFourStaleChecks": 1
+  },
+  "browserScopeCurrent": true
+}

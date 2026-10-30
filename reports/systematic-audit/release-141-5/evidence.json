@@ -1,0 +1,85 @@
+{
+  "schemaVersion": 1,
+  "release": "141.5",
+  "sourceDigest": "60fea67ddc4fdbf5ead1958c0fc0279d41a797dc16452eb9e55e2fdbecd1017c",
+  "sourceEquivalence": {
+    "schemaVersion": 1,
+    "release": "141.5",
+    "sourceDigest": "60fea67ddc4fdbf5ead1958c0fc0279d41a797dc16452eb9e55e2fdbecd1017c",
+    "preReleaseTestDigest": "937dee457aced052ffde2d17c763e7aada2144987705d623b07e1e8fa57e33ba",
+    "normalizedDigest": "937dee457aced052ffde2d17c763e7aada2144987705d623b07e1e8fa57e33ba",
+    "versionOnlyDelta": true,
+    "normalization": {
+      "old": "20261029-rules-beta-141-4",
+      "new": "20261030-rules-beta-141-5",
+      "files": [
+        "public/app.js",
+        "public/index.html",
+        "public/sw.js"
+      ]
+    },
+    "priorPassingTests": {
+      "executed": 4326,
+      "passed": 4326,
+      "failed": 0,
+      "skipped": 0
+    },
+    "unitEvidence": "reports/systematic-audit/protection-keywords-followup/unit-tests.json",
+    "unitEvidenceSha256": "90e86d1c4f27a43c30b1ed4017eb13bf23967820810d4940ff050e1b895feb67",
+    "scope": "No functional source changes since the passing full run; current full execution is reused by explicit asset-version normalization, not relabeled as a new run."
+  },
+  "versionedAssetUrls": 24,
+  "pwa": {
+    "executed": 25,
+    "passed": 25,
+    "failed": 0
+  },
+  "frontendStatus": "pass",
+  "browserScopes": {
+    "continuous-power-followup": {
+      "matchesAfterVersionNormalization": false,
+      "historicalScopeDifferences": [
+        "server/game/power.py"
+      ],
+      "summary": {
+        "executed": 228,
+        "passed": 228,
+        "failed": 0
+      }
+    },
+    "stack-interactions-followup": {
+      "matchesAfterVersionNormalization": false,
+      "historicalScopeDifferences": [
+        "server/game/stack.py"
+      ],
+      "summary": {
+        "executed": 100,
+        "passed": 100,
+        "failed": 0
+      }
+    },
+    "protection-keywords-followup": {
+      "matchesAfterVersionNormalization": true,
+      "historicalScopeDifferences": [],
+      "summary": {
+        "executed": 144,
+        "passed": 144,
+        "failed": 0
+      }
+    }
+  },
+  "coverage": {
+    "catalogCards": 450,
+    "cardsWithSelectedClauseProof": 227,
+    "percentageWithSelectedClauseProof": 50.4,
+    "cardsOutsideThisStrictRegister": 223,
+    "fullCatalogSemanticCertification": false
+  },
+  "coverageRegistrySha256": "25aae9b64b7dc85d58180b8894ee1a19adb1d770f3f6a30211f9c75cceb849f2",
+  "preReleaseCoverageSha256": "a70c243b4ebf001bf7743828b3dd1680d960f3f5183a93c3195a8f9b0dc9e377",
+  "limits": [
+    "Full Python run was executed before the version-only update, not rerun or relabeled.",
+    "Final assets were checked by PWA and frontend gates. Historical browser scopes with changed functional source remain historical.",
+    "Logs and captures remain local under gitignore. Physical devices and Safari are not certified."
+  ]
+}

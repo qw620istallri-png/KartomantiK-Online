@@ -1,0 +1,1966 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "00d6f038876198e59a334bc4081d65df10891d3c2dd362b494223afbe8d371a5",
+  "finishedAt": "2026-10-29T20:54:44.152842+00:00",
+  "published": false,
+  "executionSource": "reports/systematic-audit/continuous-power-followup/unit-tests.json",
+  "summary": {
+    "executed": 241,
+    "passed": 241,
+    "failed": 0,
+    "selectedClauses": 20,
+    "cardsWithSelectedClauseProof": 19,
+    "unitScenarios": 228,
+    "networkJourneys": 11,
+    "oracleSensitivityTests": 2
+  },
+  "clauses": [
+    {
+      "cardId": "85kx4sk1y809276_en",
+      "name": "Sprawling Tentacle",
+      "printedParagraph": "As long as Sprawling Tentacle is on the field, it gets +1 power if there are at least 4 manifestations in the Confrontation Zone.",
+      "printedTextSha256": "cef98667aba8a0fd42295602e2c687274cad710f76e1e1882dc3715be7fcfa03",
+      "independentOracle": {
+        "sourceBase": 1,
+        "targetBase": 1,
+        "expectedPower": 2,
+        "inactivePower": 1,
+        "changedControlPower": 2,
+        "duplicateSourcePower": 2,
+        "zonePowers": {
+          "interzone": 1,
+          "confrontation": 2,
+          "field": 1,
+          "stalemate": 1
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__stalemate_recipient"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "47c5eb6xe7wj614_en",
+      "name": "Prospero of the Bushes",
+      "printedParagraph": "As long as Prospero of the Bushes is in the Interzone, the First Manifestation you control gets +1 power for each manifestation in your Interzone.",
+      "printedTextSha256": "0e19227206431dbd0494aff6b27b345cbdda6b7c28ef7d48d59298459a37095a",
+      "independentOracle": {
+        "sourceBase": 4,
+        "targetBase": 5,
+        "expectedPower": 8,
+        "inactivePower": 5,
+        "changedControlPower": 5,
+        "duplicateSourcePower": 13,
+        "zonePowers": {
+          "interzone": 8,
+          "confrontation": 5,
+          "field": 5,
+          "stalemate": 5
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_prospero__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_prospero__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_prospero__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_prospero__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_prospero__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_prospero__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_prospero__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_prospero__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_prospero__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_prospero__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_prospero__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_prospero__stalemate_recipient",
+        "test_continuous_power_integration.ContinuousPowerIntegration.test_prospero__defer_host"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "57ahe6ngzq5c013_en",
+      "name": "Herbaceous Whisperer",
+      "printedParagraph": "As long as Herbaceous Whisperer is on the field, the manifestations in Support you control get +1 power.",
+      "printedTextSha256": "72a2fd8927d7b2b91322a51b07e03ff2538e021254b4d9d8d1b0ea65e2be8d18",
+      "independentOracle": {
+        "sourceBase": 3,
+        "targetBase": 5,
+        "expectedPower": 6,
+        "inactivePower": 5,
+        "changedControlPower": 5,
+        "duplicateSourcePower": 7,
+        "zonePowers": {
+          "interzone": 6,
+          "confrontation": 6,
+          "field": 6,
+          "stalemate": 5
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__stalemate_recipient",
+        "test_continuous_power_integration.ContinuousPowerIntegration.test_herbaceous__defer_host"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "msif6nhq0v1zbh0_en",
+      "name": "Gargullo, King of the Woods",
+      "printedParagraph": "As long as Gargullo is on the field, each non-token manifestation in Support you control gets +1 power for each other non-token manifestation you control in the Confrontation Zone.",
+      "printedTextSha256": "f59766d777e3d821c60ec84eb35cb8a122831aaf20538b51672233ec93641065",
+      "independentOracle": {
+        "sourceBase": 1,
+        "targetBase": 5,
+        "expectedPower": 7,
+        "inactivePower": 5,
+        "changedControlPower": 5,
+        "duplicateSourcePower": 9,
+        "zonePowers": {
+          "interzone": 7,
+          "confrontation": 8,
+          "field": 7,
+          "stalemate": 5
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__stalemate_recipient",
+        "test_continuous_power_integration.ContinuousPowerIntegration.test_gargullo__defer_host"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "n9olbthp7vtmypo_en",
+      "name": "Heartening Monument",
+      "printedParagraph": "The manifestations you control get +1 power as long as they are in the Confrontation Zone.",
+      "printedTextSha256": "16b77f24544a55f5244ca4b3274e3960e23ebcefdc6235b410c6bda51bfb4aed",
+      "independentOracle": {
+        "sourceBase": null,
+        "targetBase": 5,
+        "expectedPower": 6,
+        "inactivePower": 5,
+        "changedControlPower": 5,
+        "duplicateSourcePower": 7,
+        "zonePowers": {
+          "interzone": 6,
+          "confrontation": 6,
+          "field": 6,
+          "stalemate": 5
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_monument__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_monument__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_monument__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_monument__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_monument__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_monument__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_monument__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_monument__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_monument__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_monument__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_monument__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_monument__stalemate_recipient"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "01ynsddc9h2r6wc_en",
+      "name": "Artificial Thinker",
+      "printedParagraph": "As long as there are 5 or more Wills in your Limbo, Artificial Thinker gains Support and, as long as it is in the Confrontation Zone, gets +2 power.",
+      "printedTextSha256": "42ea508976c68988a46ebab1d27d466b40dbbe18ef9ad9ffd1512bb409e3ba5d",
+      "independentOracle": {
+        "sourceBase": 1,
+        "targetBase": 1,
+        "expectedPower": 3,
+        "inactivePower": 1,
+        "changedControlPower": 1,
+        "duplicateSourcePower": 3,
+        "zonePowers": {
+          "interzone": 1,
+          "confrontation": 3,
+          "field": 1,
+          "stalemate": 1
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_thinker__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_thinker__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_thinker__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_thinker__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_thinker__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_thinker__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_thinker__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_thinker__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_thinker__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_thinker__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_thinker__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_thinker__stalemate_recipient"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "twn0cer0tjbw09n_en",
+      "name": "Tipson, the Mediator",
+      "printedParagraph": "As long as Tipson is in the Confrontation Zone, it gets +1 power for each card in your hand.",
+      "printedTextSha256": "fda03e643ac1d9b5bdf68c66cfb7d6f6d900f3c3864f33fc1b01f9bac31afcf6",
+      "independentOracle": {
+        "sourceBase": 1,
+        "targetBase": 1,
+        "expectedPower": 4,
+        "inactivePower": 1,
+        "changedControlPower": 2,
+        "duplicateSourcePower": 4,
+        "zonePowers": {
+          "interzone": 1,
+          "confrontation": 4,
+          "field": 1,
+          "stalemate": 1
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_tipson__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tipson__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tipson__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tipson__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tipson__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tipson__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tipson__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tipson__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tipson__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tipson__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tipson__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tipson__stalemate_recipient"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "86nfr2vhox3l6y2_en",
+      "name": "Repelling Urn",
+      "printedParagraph": "As long as the Repelling Urn is in the Confrontation Zone, it gets +1 power for each manifestation in your Limbo.",
+      "printedTextSha256": "4ca97ca666affc4a098a5f5c54517905ca51f5e1880380b3a71d084fdcb6e440",
+      "independentOracle": {
+        "sourceBase": 1,
+        "targetBase": 1,
+        "expectedPower": 4,
+        "inactivePower": 1,
+        "changedControlPower": 6,
+        "duplicateSourcePower": 4,
+        "zonePowers": {
+          "interzone": 1,
+          "confrontation": 4,
+          "field": 1,
+          "stalemate": 1
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_urn__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_urn__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_urn__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_urn__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_urn__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_urn__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_urn__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_urn__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_urn__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_urn__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_urn__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_urn__stalemate_recipient"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "rngwnb4y158ya2q_en",
+      "name": "Cimba, the Boisterous",
+      "printedParagraph": "As long as it is on the field and there is at least one manifestation in a stalemate, Cimba gets +1 power.",
+      "printedTextSha256": "8b903ab999ea138764185e9b821415ca819edd48c01acd5fdc315dcf6cd96abf",
+      "independentOracle": {
+        "sourceBase": 1,
+        "targetBase": 1,
+        "expectedPower": 2,
+        "inactivePower": 1,
+        "changedControlPower": 2,
+        "duplicateSourcePower": 2,
+        "zonePowers": {
+          "interzone": 2,
+          "confrontation": 2,
+          "field": 2,
+          "stalemate": 1
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_cimba__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_cimba__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_cimba__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_cimba__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_cimba__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_cimba__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_cimba__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_cimba__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_cimba__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_cimba__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_cimba__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_cimba__stalemate_recipient"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "kaw822pzpzd2l9k_en",
+      "name": "Planar Beak",
+      "printedParagraph": "As long as the Planar Beak is in the Confrontation Zone, it gets +1 power for each manifestation in stalemate.",
+      "printedTextSha256": "bc4504f54d00419efab5bcee4042e98f4aba728f0272b0d667506badc0016c46",
+      "independentOracle": {
+        "sourceBase": 4,
+        "targetBase": 4,
+        "expectedPower": 6,
+        "inactivePower": 4,
+        "changedControlPower": 6,
+        "duplicateSourcePower": 6,
+        "zonePowers": {
+          "interzone": 4,
+          "confrontation": 6,
+          "field": 4,
+          "stalemate": 4
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_beak__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_beak__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_beak__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_beak__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_beak__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_beak__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_beak__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_beak__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_beak__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_beak__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_beak__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_beak__stalemate_recipient"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "v1mhtnl7jec5xby_en",
+      "name": "Skapus, the Vile",
+      "printedParagraph": "As long as Skapus is the only manifestation in Support you control, it gets +2 power.",
+      "printedTextSha256": "7564935e0ebbeee83917dc9ce8670e6048986d08e7d23c2c92c15c3cfd49faa9",
+      "independentOracle": {
+        "sourceBase": 1,
+        "targetBase": 1,
+        "expectedPower": 3,
+        "inactivePower": 1,
+        "changedControlPower": 1,
+        "duplicateSourcePower": 1,
+        "zonePowers": {
+          "interzone": 1,
+          "confrontation": 3,
+          "field": 1,
+          "stalemate": 1
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_skapus__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_skapus__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_skapus__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_skapus__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_skapus__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_skapus__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_skapus__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_skapus__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_skapus__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_skapus__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_skapus__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_skapus__stalemate_recipient",
+        "test_continuous_power_integration.ContinuousPowerIntegration.test_skapus__defer_blocker"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "6huhkc5cydtlzgo_en",
+      "name": "Lucerco the Reckless",
+      "printedParagraph": "As long as Lucerco the Reckless is in the Confrontation Zone, it gets +1 power for each manifestation in the Confrontation Zone controlled by the opponent who controls the most.",
+      "printedTextSha256": "38b67fed1b8100512d36d03151bde0b2ef6ba16001a70ee6ee85691d727a4e36",
+      "independentOracle": {
+        "sourceBase": 3,
+        "targetBase": 3,
+        "expectedPower": 6,
+        "inactivePower": 3,
+        "changedControlPower": 3,
+        "duplicateSourcePower": 6,
+        "zonePowers": {
+          "interzone": 3,
+          "confrontation": 6,
+          "field": 3,
+          "stalemate": 3
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__stalemate_recipient",
+        "test_continuous_power_integration.ContinuousPowerIntegration.test_lucerco__defer_count_0"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "6hhl878fytgjf77_en",
+      "name": "Vengeful Vilupera",
+      "printedParagraph": "As long as Vengeful Vilupera is in the Confrontation Zone, it gets +1 power for each of your manifestations present in each Empathic Vessel.",
+      "printedTextSha256": "3bbd1cd38f93d601285f598102f5587f917052800e66715fb430438c73d4a034",
+      "independentOracle": {
+        "sourceBase": 2,
+        "targetBase": 2,
+        "expectedPower": 5,
+        "inactivePower": 2,
+        "changedControlPower": 3,
+        "duplicateSourcePower": 5,
+        "zonePowers": {
+          "interzone": 2,
+          "confrontation": 5,
+          "field": 2,
+          "stalemate": 2
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__stalemate_recipient"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "e769fgfnxo63e2t_en",
+      "name": "Bell, Ardent Fanatic",
+      "printedParagraph": "As long as Bell is in the Interzone and you control only one manifestation in the Confrontation Zone, that manifestation gets +2 power.",
+      "printedTextSha256": "c71a369fd468c065d0a47043d4a65565d33258100a9047e2069209db1923e663",
+      "independentOracle": {
+        "sourceBase": 4,
+        "targetBase": 5,
+        "expectedPower": 7,
+        "inactivePower": 5,
+        "changedControlPower": 5,
+        "duplicateSourcePower": 9,
+        "zonePowers": {
+          "interzone": 7,
+          "confrontation": 5,
+          "field": 5,
+          "stalemate": 5
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_bell__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_bell__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_bell__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_bell__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_bell__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_bell__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_bell__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_bell__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_bell__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_bell__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_bell__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_bell__stalemate_recipient",
+        "test_continuous_power_integration.ContinuousPowerIntegration.test_bell__defer_blocker"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-009",
+      "name": "Berta, the Peaceful",
+      "printedParagraph": "As long as Berta is on the field, the power of other manifestations on the field cannot be reduced below their base power.",
+      "printedTextSha256": "b7c0668dfd1c2bde7403ef9bcb8e10e4f1bb6c331fdb07cd57a76c96bb3ad79e",
+      "independentOracle": {
+        "sourceBase": 3,
+        "targetBase": 5,
+        "expectedPower": 5,
+        "inactivePower": 3,
+        "changedControlPower": 5,
+        "duplicateSourcePower": 5,
+        "zonePowers": {
+          "interzone": 5,
+          "confrontation": 5,
+          "field": 5,
+          "stalemate": 3
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_berta__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_berta__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_berta__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_berta__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_berta__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_berta__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_berta__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_berta__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_berta__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_berta__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_berta__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_berta__stalemate_recipient",
+        "test_continuous_power_integration.ContinuousPowerIntegration.test_berta__defer_host"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-045",
+      "name": "Hyperuranic Tower",
+      "printedParagraph": "Manifestations you control with one or more Abstraction counters gain Float.",
+      "printedTextSha256": "02351a97bc2f8dad6bab425922051762da92445dea72a9f645fc0504fe04bfc0",
+      "independentOracle": {
+        "sourceBase": null,
+        "targetBase": 5,
+        "expectedPower": 6,
+        "inactivePower": 5,
+        "changedControlPower": 5,
+        "duplicateSourcePower": 7,
+        "zonePowers": {
+          "interzone": 6,
+          "confrontation": 6,
+          "field": 6,
+          "stalemate": 5
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__stalemate_recipient",
+        "test_continuous_power_integration.ContinuousPowerIntegration.test_tower__defer_host",
+        "test_continuous_power_integration.ContinuousPowerIntegration.test_tower__defer_stalemate_host"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-045",
+      "name": "Hyperuranic Tower",
+      "printedParagraph": "Manifestations with Float you control on the field get +1 power.",
+      "printedTextSha256": "02351a97bc2f8dad6bab425922051762da92445dea72a9f645fc0504fe04bfc0",
+      "independentOracle": {
+        "sourceBase": null,
+        "targetBase": 5,
+        "expectedPower": 6,
+        "inactivePower": 5,
+        "changedControlPower": 5,
+        "duplicateSourcePower": 7,
+        "zonePowers": {
+          "interzone": 6,
+          "confrontation": 6,
+          "field": 6,
+          "stalemate": 5
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_tower__stalemate_recipient",
+        "test_continuous_power_integration.ContinuousPowerIntegration.test_tower__defer_host",
+        "test_continuous_power_integration.ContinuousPowerIntegration.test_tower__defer_stalemate_host"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-057",
+      "name": "Sangen, the Relic",
+      "printedParagraph": "all other Manifestations in its controller's Interzone get -1 power.",
+      "printedTextSha256": "abfc02c4170045ac9982880c59ffa65b8d2eb2d5d9cbfc28a309ad4559d0b118",
+      "independentOracle": {
+        "sourceBase": 3,
+        "targetBase": 5,
+        "expectedPower": 4,
+        "inactivePower": 5,
+        "changedControlPower": 5,
+        "duplicateSourcePower": 3,
+        "zonePowers": {
+          "interzone": 4,
+          "confrontation": 5,
+          "field": 5,
+          "stalemate": 5
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_sangen__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sangen__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sangen__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sangen__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sangen__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sangen__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sangen__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sangen__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sangen__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sangen__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sangen__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_sangen__stalemate_recipient",
+        "test_continuous_power_integration.ContinuousPowerIntegration.test_sangen__defer_host"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-106",
+      "name": "Kelona, the Anchorite",
+      "printedParagraph": "As long as Kelona is in the Confrontation Zone, it gets -1 power for each card in your Limbo, up to a maximum of -6.",
+      "printedTextSha256": "eeaef02f29db967ba942d11e49bc419b99f07186db5605dc3097f9f13b98251f",
+      "independentOracle": {
+        "sourceBase": 7,
+        "targetBase": 7,
+        "expectedPower": 1,
+        "inactivePower": 7,
+        "changedControlPower": 7,
+        "duplicateSourcePower": 1,
+        "zonePowers": {
+          "interzone": 7,
+          "confrontation": 1,
+          "field": 7,
+          "stalemate": 7
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_kelona__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kelona__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kelona__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kelona__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kelona__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kelona__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kelona__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kelona__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kelona__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kelona__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kelona__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kelona__stalemate_recipient"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-112",
+      "name": "Kazadur, the Fiery",
+      "printedParagraph": "As long as Kazadur is in the Confrontation Zone, it gets +1 power for each manifestation controlled by opponents in the Confrontation Zone, up to a maximum of +3.",
+      "printedTextSha256": "ba247da3ffe6951fed4d95a7b3924562e0cbd08ca6bc9f8e6649befb09c9d772",
+      "independentOracle": {
+        "sourceBase": 4,
+        "targetBase": 4,
+        "expectedPower": 7,
+        "inactivePower": 4,
+        "changedControlPower": 4,
+        "duplicateSourcePower": 7,
+        "zonePowers": {
+          "interzone": 4,
+          "confrontation": 7,
+          "field": 4,
+          "stalemate": 4
+        }
+      },
+      "testIds": [
+        "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__baseline",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__source_zones",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__inactive",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__controller",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__no_stack",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__phase_and_turn",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__duplicate",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__cleanse",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__blank_restore",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__scope",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__live_counts",
+        "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__stalemate_recipient",
+        "test_continuous_power_integration.ContinuousPowerIntegration.test_kazadur__defer_count_0"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__inactive",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__scope",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__inactive",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__scope",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__baseline",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__inactive",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__scope",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__baseline",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__inactive",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__scope",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__inactive",
+      "status": "pass",
+      "durationSeconds": 0.079
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__scope",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__inactive",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__scope",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__baseline",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__inactive",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__scope",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.11
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__inactive",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__scope",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__baseline",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__controller",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__inactive",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__scope",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__baseline",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__inactive",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__scope",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__controller",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__inactive",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__scope",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__baseline",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__inactive",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__scope",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__inactive",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__scope",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__inactive",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__scope",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__baseline",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__inactive",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__scope",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__baseline",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__inactive",
+      "status": "pass",
+      "durationSeconds": 0.079
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__scope",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__inactive",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__scope",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__inactive",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__scope",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__baseline",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__inactive",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__scope",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__source_zones",
+      "status": "pass",
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_integration.ContinuousPowerIntegration.test_bell__defer_blocker",
+      "status": "pass",
+      "durationSeconds": 2.047
+    },
+    {
+      "testId": "test_continuous_power_integration.ContinuousPowerIntegration.test_berta__defer_host",
+      "status": "pass",
+      "durationSeconds": 2.016
+    },
+    {
+      "testId": "test_continuous_power_integration.ContinuousPowerIntegration.test_gargullo__defer_host",
+      "status": "pass",
+      "durationSeconds": 2.032
+    },
+    {
+      "testId": "test_continuous_power_integration.ContinuousPowerIntegration.test_herbaceous__defer_host",
+      "status": "pass",
+      "durationSeconds": 2.032
+    },
+    {
+      "testId": "test_continuous_power_integration.ContinuousPowerIntegration.test_kazadur__defer_count_0",
+      "status": "pass",
+      "durationSeconds": 2.031
+    },
+    {
+      "testId": "test_continuous_power_integration.ContinuousPowerIntegration.test_lucerco__defer_count_0",
+      "status": "pass",
+      "durationSeconds": 2.078
+    },
+    {
+      "testId": "test_continuous_power_integration.ContinuousPowerIntegration.test_prospero__defer_host",
+      "status": "pass",
+      "durationSeconds": 2.047
+    },
+    {
+      "testId": "test_continuous_power_integration.ContinuousPowerIntegration.test_sangen__defer_host",
+      "status": "pass",
+      "durationSeconds": 2.031
+    },
+    {
+      "testId": "test_continuous_power_integration.ContinuousPowerIntegration.test_skapus__defer_blocker",
+      "status": "pass",
+      "durationSeconds": 2.031
+    },
+    {
+      "testId": "test_continuous_power_integration.ContinuousPowerIntegration.test_tower__defer_host",
+      "status": "pass",
+      "durationSeconds": 2.0
+    },
+    {
+      "testId": "test_continuous_power_integration.ContinuousPowerIntegration.test_tower__defer_stalemate_host",
+      "status": "pass",
+      "durationSeconds": 2.078
+    },
+    {
+      "testId": "test_continuous_power_oracle.ContinuousPowerOracle.test_wrong_aura_value_is_detected",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_oracle.ContinuousPowerOracle.test_wrong_bonus_cap_is_detected",
+      "status": "pass",
+      "durationSeconds": 0.032
+    }
+  ],
+  "limits": [
+    "Selected continuous power/Float clauses only; other paragraphs and every interaction are not certified.",
+    "Initial zone counts, control changes and comparison snapshots are controlled fixtures, not whole matches.",
+    "Paid Defer journeys exercise actual declarations, payments, Stack resolution, owner destinations and both clients public power.",
+    "Automatic phase driving disabled in the eleven socket journeys; no new physical-device or remote-artwork certification.",
+    "Sensitivity tests mutate encoded rules only in isolated fixtures and verify literal expectations detect the error."
+  ]
+}

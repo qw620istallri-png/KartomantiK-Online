@@ -1,0 +1,1763 @@
+{
+  "sourceDigest": "2a7c4712b6d35403a3654a14cab48c1bae3c6ebb263a9d3e6dc060e3dcb81b4e",
+  "finishedAt": "2026-10-29T20:38:18.897244+00:00",
+  "summary": {
+    "executed": 228,
+    "passed": 224,
+    "failed": 4
+  },
+  "tests": [
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__baseline",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__scope",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_beak__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__scope",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_bell__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__scope",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_berta__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__baseline",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__scope",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_cimba__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__scope",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_gargullo__stalemate_recipient",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_continuous_power_family.py\", line 289, in run\n    def run(self, row=row, scenario=scenario): getattr(self, 'check_' + scenario)(row)\n                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_continuous_power_family.py\", line 281, in check_stalemate_recipient\n    self.assertEqual(self.power(s, target), 1)\nAssertionError: 4 != 1\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__scope",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.11
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_herbaceous__stalemate_recipient",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_continuous_power_family.py\", line 289, in run\n    def run(self, row=row, scenario=scenario): getattr(self, 'check_' + scenario)(row)\n                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_continuous_power_family.py\", line 281, in check_stalemate_recipient\n    self.assertEqual(self.power(s, target), 1)\nAssertionError: 2 != 1\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__baseline",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__scope",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kazadur__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__scope",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.11
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_kelona__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__baseline",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__scope",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_lucerco__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__baseline",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__scope",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_monument__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__baseline",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__scope",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_prospero__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__baseline",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__scope",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sangen__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__controller",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__live_counts",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_continuous_power_family.py\", line 289, in run\n    def run(self, row=row, scenario=scenario): getattr(self, 'check_' + scenario)(row)\n                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_continuous_power_family.py\", line 226, in check_live_counts\n    self.assertEqual(self.power(s, target), 3)\nAssertionError: 1 != 3\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__scope",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_skapus__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__baseline",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__scope",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_sprawling__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__baseline",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__scope",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_thinker__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__baseline",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__scope",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tipson__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__baseline",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__controller",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__scope",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_tower__stalemate_recipient",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_continuous_power_family.py\", line 289, in run\n    def run(self, row=row, scenario=scenario): getattr(self, 'check_' + scenario)(row)\n                                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_continuous_power_family.py\", line 281, in check_stalemate_recipient\n    self.assertEqual(self.power(s, target), 1)\nAssertionError: 2 != 1\n",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__baseline",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__controller",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__scope",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_urn__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__baseline",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__blank_restore",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__cleanse",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__controller",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__duplicate",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__inactive",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__inactive (reason='face_down')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__inactive (reason='disabled')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__inactive (reason='removed')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__live_counts",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__no_stack",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__phase_and_turn",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__scope",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__source_zones",
+      "status": "pass",
+      "subtests": [
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__source_zones (zone='interzone')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__source_zones (zone='confrontation')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__source_zones (zone='field')",
+          "status": "pass"
+        },
+        {
+          "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__source_zones (zone='stalemate')",
+          "status": "pass"
+        }
+      ],
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_continuous_power_family.ContinuousPowerFamily.test_vilupera__stalemate_recipient",
+      "status": "pass",
+      "durationSeconds": 0.031
+    }
+  ]
+}

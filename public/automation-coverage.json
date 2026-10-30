@@ -3061,7 +3061,8 @@
         "cost:tribute",
         "ongoing:lose_effects",
         "phase-window",
-        "result:retarget_source_effect"
+        "result:retarget_source_effect",
+        "trigger:enters_field"
       ],
       "testRefs": [
         "tests/test_game_state.py",
@@ -3165,7 +3166,8 @@
         "result:change_source_control",
         "result:score_controller_then_destroy_source",
         "target:player",
-        "trigger:end_of_turn"
+        "trigger:end_of_turn",
+        "trigger:enters_field"
       ],
       "testRefs": [
         "tests/test_game_state.py",

@@ -742,6 +742,11 @@ class TriggersMixin:
             if event == "discarded" and discard_source:
                 action["_discardSource"] = dict(discard_source)
                 action["source"].update(discard_source)
+            if event == "used_as_tribute" and (clean_result or {}).get("kind") == "protect_related_will":
+                # An intrinsic tribute modifier applies during the payment,
+                # before any response window; it is not a separate Stack effect.
+                self.apply_rules_action_result(action)
+                continue
             if (event == "used_as_tribute"
                     and (clean_result or {}).get("kind") == "create_effect_memory"
                     and clean_result.get("memoryKind") == "return_from_limbo_end_turn"):

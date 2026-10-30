@@ -61,7 +61,8 @@ class PowerMixin:
 
     def rules_continuous_power_modifier(self, item):
         """Resolve printed, public power rules without creating Stack objects."""
-        if item not in self.battlefield or not item.get("faceUp"):
+        if (item not in self.battlefield or not item.get("faceUp")
+                or self.rules_field_zone(item) == "stalemate"):
             return 0
         modifier = 0
         confrontation_items = None
@@ -109,10 +110,10 @@ class PowerMixin:
                         modifier += value * others
                 elif kind == "self_only_friendly_support" and source is item and item.get("isSupport"):
                     support_count = sum(
-                        1 for candidate in self.battlefield
-                        if candidate.get("faceUp")
-                        and self.rules_item_controller_id(candidate) == self.rules_item_controller_id(item)
-                        and candidate.get("isSupport")
+                        1 for candidate in self.rules_confrontation_items(
+                            self.rules_item_controller_id(item)
+                        )
+                        if candidate.get("isSupport")
                     )
                     if support_count == 1:
                         modifier += value
@@ -499,7 +500,8 @@ class PowerMixin:
             if (
                 controller_id != item_controller
                 and (
-                    metadata.get("type") == "persistent_will"
+                    (metadata.get("type") == "persistent_will"
+                     and self.rules_field_zone(item) != "stalemate")
                     or (
                         source is not item
                         and metadata.get("type") == "manifestation"

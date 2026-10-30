@@ -12999,11 +12999,9 @@ class LotSixteenTests(RealCardRulesCase):
         will_action = self.play_will(session)
         will_action["cannotBeNeutralized"] = True
         _simulacrum, trigger = self.clemency_trigger(session, will_action)
-        session.apply_rules_action_result(trigger)
-        error, result = session.resolve_rules_choice(
-            "p2", session.rules_engine["pendingChoice"]["id"], option="neutralize"
-        )
-        self.assertIsNone(error)
+        result = session.apply_rules_action_result(trigger)
+        self.assertIsNone(session.rules_engine["pendingChoice"])
+        self.assertIn(will_action, session.rules_engine["actionStack"])
         self.assertEqual((result["status"], p1["score"] - start), ("gained", 5))
 
     def test_spiked_pit_weakens_manifestations_entering_an_opponents_interzone(self):
@@ -14484,17 +14482,24 @@ class AnnihilatingNectarNeedsATargetTests(RealCardRulesCase):
     NECTAR = "7gd19pmexrjlrap_en"
     ALL = (NECTAR,)
 
-    def test_nectar_is_not_an_available_play_without_a_manifestation_to_target(self):
+    def test_nectar_can_enter_without_a_target_and_does_not_open_an_empty_choice(self):
         session, p1, _p2 = self.make_session()
+        session.phase_tracker.update(enabled=True, advanced=True)
         session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
-        session.rules_engine["priorityPlayerId"] = "p1"
-        for card_id in ("m-1", "m-2", "m-3"):
-            session.card_rules[card_id].update(power=3, temperaments=["capricious"])
-        p1["zones"]["hand"] = [self.NECTAR, "m-1", "m-2", "m-3"]
+        session.rules_engine.update(priorityPlayerId="p1", firstManifestationComplete=True,
+                                    firstManifestationTriggersQueued=True, readyPlayerIds=["p1", "p2"])
+        self.put(p1, "hand", [self.NECTAR])
+        session.add_rules_excess_essence("p1", [{"temperament": "capricious", "amount": 3}])
         session.battlefield = []
-        self.assertFalse(session.rules_played_ability_has_field_target("p1", self.NECTAR))
-        session.battlefield = [self.field_item("foe", "p2", "m-4")]
         self.assertTrue(session.rules_played_ability_has_field_target("p1", self.NECTAR))
+        error, _ = session.declare_rules_action(
+            "p1", "Nectar", kind="play_card", source={"cardId": self.NECTAR, "zone": "hand"},
+        )
+        self.assertIsNone(error)
+        session.resolve_rules_top_action()
+        self.assertEqual([item["cardId"] for item in session.battlefield], [self.NECTAR])
+        self.assertEqual(session.rules_engine["actionStack"], [])
+        self.assertIsNone(session.rules_engine["pendingChoice"])
 
 
 class LotTwentyThreeTests(RealCardRulesCase):

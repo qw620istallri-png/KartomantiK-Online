@@ -10,6 +10,14 @@ class StackMixin:
     def resolve_rules_action_source(self, action):
         source = action.get("source") or {}
         if action.get("isStackCopy"):
+            if source.get("cardType") == "persistent_will":
+                item = self.create_rules_token_copy(source.get("cardId"), action.get("controllerId"))
+                self.transfer_rules_stack_protection(action, item)
+                return {
+                    "status": "moved", "destination": "battlefield", "itemId": item["id"],
+                    "cardId": item["cardId"], "ownerId": item["ownerId"],
+                    "x": item["x"], "y": item["y"],
+                }
             return {
                 "status": "copy_resolved", "destination": "stack",
                 "cardId": source.get("cardId"),
@@ -167,6 +175,8 @@ class StackMixin:
     def neutralize_rules_action_source(self, action, destination="graveyard"):
         """Move a neutralized played card from the Stack to its owner's Limbo."""
         source = action.get("source") or {}
+        if action.get("isStackCopy"):
+            return None  # A token disappearing must never move its original card.
         if action.get("sourceRemainsOnField"):
             item = self.find_battlefield_item(source.get("itemId"))
             if item:
@@ -524,6 +534,10 @@ class StackMixin:
                 )
             )
             copying = effect.get("kind") in {"copy_power_temperament", "copy_power_effects"}
+            if not copying and effect.get("duration") == "while_source_and_target_on_field":
+                target_item = self.find_battlefield_item(target.get("itemId"))
+                if target_item is not None and self.rules_field_zone(target_item) == "stalemate":
+                    target_present = False  # Stalemate is outside the field.
             source_required = copying or effect.get("duration") in {
                 "while_source_and_target_on_field", "while_source_on_field",
             }

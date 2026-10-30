@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "release": "141.5",
+  "sourceDigest": "60fea67ddc4fdbf5ead1958c0fc0279d41a797dc16452eb9e55e2fdbecd1017c",
+  "preReleaseTestDigest": "937dee457aced052ffde2d17c763e7aada2144987705d623b07e1e8fa57e33ba",
+  "normalizedDigest": "937dee457aced052ffde2d17c763e7aada2144987705d623b07e1e8fa57e33ba",
+  "versionOnlyDelta": true,
+  "normalization": {
+    "old": "20261029-rules-beta-141-4",
+    "new": "20261030-rules-beta-141-5",
+    "files": [
+      "public/app.js",
+      "public/index.html",
+      "public/sw.js"
+    ]
+  },
+  "priorPassingTests": {
+    "executed": 4326,
+    "passed": 4326,
+    "failed": 0,
+    "skipped": 0
+  },
+  "unitEvidence": "reports/systematic-audit/protection-keywords-followup/unit-tests.json",
+  "unitEvidenceSha256": "90e86d1c4f27a43c30b1ed4017eb13bf23967820810d4940ff050e1b895feb67",
+  "scope": "No functional source changes since the passing full run; current full execution is reused by explicit asset-version normalization, not relabeled as a new run."
+}

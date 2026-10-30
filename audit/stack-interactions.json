@@ -1,0 +1,252 @@
+{
+  "schemaVersion": 1,
+  "basis": "Literal printed costs, permitted target categories, payers and destinations; target fixtures and production responses.",
+  "contracts": [
+    {
+      "cardId": "2y961kgs0crdict_en",
+      "key": "neutralize",
+      "name": "Neutralize",
+      "abilityId": "neutralize-stack-card",
+      "mode": "play",
+      "essenceCost": {
+        "capricious": 2
+      },
+      "targetKind": "stack_action",
+      "outcome": "neutralize",
+      "counterCost": null,
+      "exhaustSource": false,
+      "printedText": "Neutralize a target card in the stack.",
+      "printedTextSha256": "d23b3ac4f4ed17b155882e71ff1d8adfa23635e9962614365e8ed950a4a2a904",
+      "selectedClauses": [
+        "Neutralize a target card in the stack."
+      ]
+    },
+    {
+      "cardId": "g0mtnp4zbhwj7cb_en",
+      "key": "deny",
+      "name": "Deny",
+      "abilityId": "deny-stack-card-unless-paid",
+      "mode": "play",
+      "essenceCost": {},
+      "targetKind": "stack_action",
+      "outcome": "pay_neutralize",
+      "counterCost": null,
+      "exhaustSource": false,
+      "printedText": "Neutralize a target card on the stack unless its owner pays {H}{H}.",
+      "printedTextSha256": "79c64d0681c69236a50c370c9080a1bb5c7ccda21f2fd4d33f23f494f6506da7",
+      "selectedClauses": [
+        "Neutralize a target card on the stack unless its owner pays {H}{H}."
+      ]
+    },
+    {
+      "cardId": "ey6fuk5gguasrb0_en",
+      "key": "ignore",
+      "name": "Ignore",
+      "abilityId": "ignore-stack-effect-unless-paid",
+      "mode": "play",
+      "essenceCost": {},
+      "targetKind": "stack_effect",
+      "outcome": "pay_cancel",
+      "counterCost": null,
+      "exhaustSource": false,
+      "printedText": "Cancel a target effect on the stack unless its controller pays {H}{H}.",
+      "printedTextSha256": "f33ef5ee0a3d29cf3e372f0166593493998d7c3eeac5a2318a8d3775a38034aa",
+      "selectedClauses": [
+        "Cancel a target effect on the stack unless its controller pays {H}{H}."
+      ]
+    },
+    {
+      "cardId": "inner-deserts-044",
+      "key": "veer",
+      "name": "Veer the Will",
+      "abilityId": "veer-the-will",
+      "mode": "play",
+      "essenceCost": {
+        "vitreous": 2
+      },
+      "targetKind": "stack_action",
+      "outcome": "return",
+      "counterCost": null,
+      "exhaustSource": false,
+      "printedText": "Neutralize a target Will on the Stack. That Will returns to its owner's hand.",
+      "printedTextSha256": "98d8dbeac29d330f83cac3ff56d5888dd3b9a3625fa4a4a0163feb025d9ec09b",
+      "selectedClauses": [
+        "Neutralize a target Will on the Stack. That Will returns to its owner's hand."
+      ]
+    },
+    {
+      "cardId": "inner-deserts-149",
+      "key": "compensate",
+      "name": "Compensate",
+      "abilityId": "compensate",
+      "mode": "play",
+      "essenceCost": {
+        "hollow": 2
+      },
+      "targetKind": "stack_action",
+      "outcome": "refund",
+      "counterCost": null,
+      "exhaustSource": false,
+      "printedText": "Neutralize a target Persistent Will on the Stack.\nIts owner gains excess essence of Temperament and number equal to the Tribute cost of that card.",
+      "printedTextSha256": "12ea3b0a4da53d81d6311450dbb23c33a0dce8da56e5f3802ae8a0aa075764d5",
+      "selectedClauses": [
+        "Neutralize a target Persistent Will on the Stack.",
+        "Its owner gains excess essence of Temperament and number equal to the Tribute cost of that card."
+      ]
+    },
+    {
+      "cardId": "q6rha5kz42bkxle_en",
+      "key": "imitate",
+      "name": "Imitate",
+      "abilityId": "copy-target-will-on-stack",
+      "mode": "play",
+      "essenceCost": {
+        "vitreous": 2
+      },
+      "targetKind": "stack_action",
+      "outcome": "copy",
+      "counterCost": null,
+      "exhaustSource": false,
+      "printedText": "Copy a target Will on the stack. You can choose a new target for the copy.",
+      "printedTextSha256": "af3e6cc210d7d529d47763a938345f32d58ecfc94bd9ea81faaf39ef123fb0f8",
+      "selectedClauses": [
+        "Copy a target Will on the stack. You can choose a new target for the copy."
+      ]
+    },
+    {
+      "cardId": "7yu566ip7zuqdoc_en",
+      "key": "malaleuco",
+      "name": "Malaleuco, the Will-shaper",
+      "abilityId": "malaleuco-copy-will",
+      "mode": "activate",
+      "essenceCost": {},
+      "targetKind": "stack_action",
+      "outcome": "copy",
+      "counterCost": null,
+      "exhaustSource": true,
+      "printedText": "As long as Malaleuco is in the Interzone, you can exhaust it to copy a Will on the stack that you control. You can choose a new target for the copy.\r\nIf Malaleuco is in hand and there is space in your Interzone, you can pay {B}{B}{B}: Put it in your Interzone.",
+      "printedTextSha256": "c7510305eb70e53037ff3279b56b44fa9ea9596f22186db821af48fc3c263386",
+      "selectedClauses": [
+        "As long as Malaleuco is in the Interzone, you can exhaust it to copy a Will on the stack that you control. You can choose a new target for the copy."
+      ]
+    },
+    {
+      "cardId": "z2gm0fc6fxlnsb1_en",
+      "key": "beacon",
+      "name": "Scrambling Beacon",
+      "abilityId": "beacon-changes-a-target",
+      "mode": "activate",
+      "essenceCost": {
+        "hollow": 3
+      },
+      "targetKind": "stack_action",
+      "outcome": "retarget",
+      "counterCost": {
+        "name": "Lucore",
+        "amount": 1
+      },
+      "exhaustSource": false,
+      "printedText": "When the Scrambling Beacon enters the field, put 3 Lucore counters on it.\r\nPay {H}{H}{H} and remove a Lucore counter: Change the target of a target card or effect on the stack that has as target a card on the field.",
+      "printedTextSha256": "aeb4a9774c971e33f434d4380a75aa96a12c9450d6cdaf460278c5e376c3335a",
+      "selectedClauses": [
+        "Pay {H}{H}{H} and remove a Lucore counter: Change the target of a target card or effect on the stack that has as target a card on the field."
+      ]
+    },
+    {
+      "cardId": "yca1lsjic3cktj1_en",
+      "key": "radiance",
+      "name": "Nullifying Radiance",
+      "abilityId": "radiance-cancels-a-matching-effect",
+      "mode": "activate",
+      "essenceCost": {
+        "hollow": 2
+      },
+      "targetKind": "stack_effect",
+      "outcome": "cancel",
+      "counterCost": {
+        "name": "Flame",
+        "amount": 1
+      },
+      "exhaustSource": false,
+      "printedText": "When Nullifying Radiance enters the field, put 3 Flame counters on it and choose a base temperament.\r\nPay {H}{H} and remove a Flame counter: Cancel a target effect on the stack of the chosen temperament controlled by an opponent that targets a card on the field you control.",
+      "printedTextSha256": "053fbf13ed66a3bd33466083d5b48004e9c15d470f62970bf1db0305f95395b2",
+      "selectedClauses": [
+        "Pay {H}{H} and remove a Flame counter: Cancel a target effect on the stack of the chosen temperament controlled by an opponent that targets a card on the field you control."
+      ]
+    },
+    {
+      "cardId": "inner-deserts-146",
+      "key": "wall",
+      "name": "Wall off",
+      "abilityId": "protect-field-card-until-end-turn",
+      "mode": "play",
+      "essenceCost": {
+        "hollow": 1
+      },
+      "targetKind": "stack_action",
+      "outcome": "protect",
+      "counterCost": null,
+      "exhaustSource": false,
+      "printedText": "A target card on the Stack or on the field is Protected from cards and effects until the end of the turn.",
+      "printedTextSha256": "2747fae814b7667d4e7987af8ddffdb9f0f87b2f474e4caf4abefc6c6cd455d3",
+      "selectedClauses": [
+        "A target card on the Stack or on the field is Protected from cards and effects until the end of the turn."
+      ]
+    },
+    {
+      "cardId": "inner-deserts-007",
+      "key": "eorthoda",
+      "name": "Eorthoda, the Limpid",
+      "abilityId": "eorthoda-protects-paid-will",
+      "mode": "tribute",
+      "essenceCost": {},
+      "targetKind": null,
+      "outcome": "paid_protect",
+      "counterCost": null,
+      "exhaustSource": false,
+      "printedText": "If Eorthoda is used as tribute to play a Will from your hand, that Will cannot be neutralized. If it is a Persistent Will, it additionally enters the field with Protection from cards and effects controlled by the opponents until the end of the turn.",
+      "printedTextSha256": "688f2707aa4f7ff0de34639b427aac3cfdc85d0a963ffcfed12b83b019a1810f",
+      "selectedClauses": [
+        "If Eorthoda is used as tribute to play a Will from your hand, that Will cannot be neutralized. If it is a Persistent Will, it additionally enters the field with Protection from cards and effects controlled by the opponents until the end of the turn."
+      ]
+    },
+    {
+      "cardId": "inner-deserts-023",
+      "key": "clemency",
+      "name": "Simulacrum of Clemency",
+      "abilityId": "clemency-gain-unless-neutralized",
+      "mode": "event",
+      "essenceCost": {},
+      "targetKind": null,
+      "outcome": "clemency",
+      "counterCost": null,
+      "exhaustSource": false,
+      "printedText": "Whenever an opponent plays a Will, you gain 5 Points unless that player decides to neutralize that Will.\nIf a Will is neutralized this way, Exhaust Simulacrum of Clemency.\nAs long as Simulacrum of Clemency is Exhausted, it has no effects.",
+      "printedTextSha256": "39ad5e2156e89d83439985ad62ee8b3a42ec8e185f1cdd814e5c0bebfab42fd1",
+      "selectedClauses": [
+        "Whenever an opponent plays a Will, you gain 5 Points unless that player decides to neutralize that Will.",
+        "If a Will is neutralized this way, Exhaust Simulacrum of Clemency.",
+        "As long as Simulacrum of Clemency is Exhausted, it has no effects."
+      ]
+    },
+    {
+      "cardId": "dly528oj65qnznh_en",
+      "key": "duel",
+      "name": "Duel Honorably",
+      "abilityId": "lock-support-entries-unless-opponent-pays",
+      "mode": "intrinsic",
+      "essenceCost": {},
+      "targetKind": null,
+      "outcome": "duel",
+      "counterCost": null,
+      "exhaustSource": false,
+      "printedText": "You may play this Will only before the Revelation.\r\nPlayers cannot put manifestations into Support until the end of the turn.\r\nA player may pay {H}{H} while this Will is on the stack to neutralize it.",
+      "printedTextSha256": "86aee4e78c1c7797b7abaedc0b68a562479d9e57507035e6a31bdf2a185059ea",
+      "selectedClauses": [
+        "You may play this Will only before the Revelation.",
+        "Players cannot put manifestations into Support until the end of the turn.",
+        "A player may pay {H}{H} while this Will is on the stack to neutralize it."
+      ]
+    }
+  ]
+}

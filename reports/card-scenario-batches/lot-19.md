@@ -9,7 +9,7 @@ Verdict : **PASS** · 0 contrôle(s) manuel(s) conservé(s).
 | 183 | Pin Down | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 184 | Deviate | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 185 | Invert Emotions | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
-| 186 | Hot Potato | ✓ (3 cap.) | ✓ (2 actions) | ✓ | PASS |
+| 186 | Hot Potato | ✓ (3 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 187 | Manipulate Intellect | ✓ (1 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 188 | Atavic Volatility | ✓ (3 cap.) | ✓ (1 actions) | ✓ | PASS |
 | 189 | Candle Serpent | ✓ (0 cap.) | ✓ (0 actions) | ✓ | PASS |

@@ -10,8 +10,8 @@
     "clientPassed": 450,
     "abilities": 496,
     "carriers": 500,
-    "playerActions": 182,
-    "playerMessages": 528,
+    "playerActions": 180,
+    "playerMessages": 522,
     "genericSteps": 1265
   },
   "batches": [
@@ -5741,8 +5741,8 @@
           },
           "players": {
             "ok": true,
-            "actionableAbilities": 2,
-            "messages": 6,
+            "actionableAbilities": 1,
+            "messages": 3,
             "views": 2,
             "failures": []
           },
@@ -5936,8 +5936,8 @@
           },
           "players": {
             "ok": true,
-            "actionableAbilities": 2,
-            "messages": 6,
+            "actionableAbilities": 1,
+            "messages": 3,
             "views": 2,
             "failures": []
           },

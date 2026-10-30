@@ -50,13 +50,13 @@ class ChainMixin:
 
     @staticmethod
     def build_rules_stack_copy(target_action, controller_id, copying_action_id):
-        """Create a cost-free Stack object that copies an existing Will's effect."""
+        """Create a Will token owned by its creator, without a physical source."""
         return {
             "id": new_id(),
             "controllerId": controller_id,
             "label": target_action.get("label") or "Copied Will",
             "kind": target_action.get("kind"),
-            "source": dict(target_action.get("source") or {}),
+            "source": {**(target_action.get("source") or {}), "ownerId": controller_id},
             "target": target_action.get("target"),
             "targets": [dict(entry) for entry in target_action.get("targets") or []],
             "ability": dict(target_action.get("ability") or {}),

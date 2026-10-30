@@ -443,6 +443,7 @@ class ZonesMixin:
             1 for action in self.rules_engine["actionStack"]
             if action.get("controllerId") == container_id
             and not action.get("sourceOnStack")
+            and not action.get("isStackCopy")
             and (action.get("source") or {}).get("zone") == "hand"
             and (action.get("source") or {}).get("cardId") == card_id
         )

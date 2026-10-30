@@ -1,0 +1,105 @@
+{
+  "sourceDigest": "937dee457aced052ffde2d17c763e7aada2144987705d623b07e1e8fa57e33ba",
+  "criterion": "Persistent Wills with printed When ... enters the field text, up to 65 characters between When and enters. Structural sibling scan only, not clause execution proof.",
+  "entries": [
+    {
+      "cardId": "8g5pn3mukkuniog_en",
+      "name": "Armored Husk",
+      "entryTriggerIds": [
+        "armored-husk-protect"
+      ],
+      "playedAbilityIds": []
+    },
+    {
+      "cardId": "vt3extxbwd6gybn_en",
+      "name": "Altruistic Inflorescence",
+      "entryTriggerIds": [
+        "inflorescence-grants-support"
+      ],
+      "playedAbilityIds": []
+    },
+    {
+      "cardId": "z2gm0fc6fxlnsb1_en",
+      "name": "Scrambling Beacon",
+      "entryTriggerIds": [
+        "beacon-enters-with-lucore"
+      ],
+      "playedAbilityIds": []
+    },
+    {
+      "cardId": "cwgofw6qsn7aplc_en",
+      "name": "Parasitic Drill",
+      "entryTriggerIds": [
+        "parasitic-drill-links-a-persistent-will"
+      ],
+      "playedAbilityIds": []
+    },
+    {
+      "cardId": "y6g3tex9ypttk8u_en",
+      "name": "Flaying Jaw",
+      "entryTriggerIds": [
+        "flaying-jaw-power-link"
+      ],
+      "playedAbilityIds": []
+    },
+    {
+      "cardId": "7gd19pmexrjlrap_en",
+      "name": "Annihilating Nectar",
+      "entryTriggerIds": [
+        "nectar-disable-target"
+      ],
+      "playedAbilityIds": []
+    },
+    {
+      "cardId": "b4yyd5uut0ga9df_en",
+      "name": "Hot Potato",
+      "entryTriggerIds": [
+        "enter-under-opponent-control-with-burn"
+      ],
+      "playedAbilityIds": []
+    },
+    {
+      "cardId": "yca1lsjic3cktj1_en",
+      "name": "Nullifying Radiance",
+      "entryTriggerIds": [
+        "radiance-enters-with-flames"
+      ],
+      "playedAbilityIds": []
+    },
+    {
+      "cardId": "inner-deserts-045",
+      "name": "Hyperuranic Tower",
+      "entryTriggerIds": [
+        "enter-with-abstraction-counters"
+      ],
+      "playedAbilityIds": []
+    },
+    {
+      "cardId": "inner-deserts-067",
+      "name": "Regurgitating Catacomb",
+      "entryTriggerIds": [
+        "catacomb-bone-counters"
+      ],
+      "playedAbilityIds": []
+    },
+    {
+      "cardId": "inner-deserts-093",
+      "name": "Bizarre Mechanism",
+      "entryTriggerIds": [
+        "mechanism-starts-with-an-enigma"
+      ],
+      "playedAbilityIds": []
+    },
+    {
+      "cardId": "inner-deserts-143",
+      "name": "Temperamental Splendor",
+      "entryTriggerIds": [
+        "splendor-chooses-a-base-temperament"
+      ],
+      "playedAbilityIds": []
+    }
+  ],
+  "remainingPlayedAbilityCandidates": 0,
+  "expandedManifestationReview": "Bibi has a separate real entry trigger; its played ability implements chosen Support control.",
+  "finalRefreshNote": "Structural scan reexecuted against the final catalog and compiled rules; no new clause execution certification."
+}

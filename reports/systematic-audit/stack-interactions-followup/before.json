@@ -1,0 +1,426 @@
+{
+  "sourceDigest": "8e610c21a71c4bba46ebf47cbaa68fea2f6f0ed6969a7a22e88a79cf59f8edf0",
+  "finishedAt": "2026-10-29T21:15:50.668368+00:00",
+  "summary": {
+    "executed": 83,
+    "failed": 1
+  },
+  "tests": [
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_beacon__bad_source",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_beacon__cost",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_beacon__late_missing",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_beacon__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_beacon__missing",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_beacon__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_beacon__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_beacon__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_beacon__wrong_kind",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_beacon__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_compensate__cost",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_compensate__late_missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_compensate__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_compensate__missing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_compensate__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_compensate__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_compensate__wrong_kind",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_compensate__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_deny__cost",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_deny__late_missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_deny__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_deny__missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_deny__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_deny__wrong_kind",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_deny__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_ignore__cost",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_ignore__late_missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_ignore__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_ignore__missing",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_ignore__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_ignore__wrong_kind",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_ignore__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_imitate__cost",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_imitate__late_missing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_imitate__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_imitate__missing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_imitate__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_imitate__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_imitate__wrong_kind",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_imitate__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__bad_source",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__cost",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__late_missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__missing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__normal",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__source_gone",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__wrong_kind",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_malaleuco__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_neutralize__cost",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_neutralize__late_missing",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_neutralize__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_neutralize__missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_neutralize__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_neutralize__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_neutralize__wrong_kind",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_neutralize__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_radiance__bad_source",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_radiance__cost",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_radiance__late_missing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_radiance__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_radiance__missing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_radiance__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_radiance__source_gone",
+      "status": "fail",
+      "detail": "Traceback (most recent call last):\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_stack_interaction_family.py\", line 208, in run\n    def run(self,row=row,case=case):getattr(self,'check_'+case)(row)\n                                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_stack_interaction_family.py\", line 188, in check_source_gone\n    self.resolve_response(s,row);self.assert_outcome(s,row,original)\n                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"C:\\Users\\istal\\Documents\\Codex\\2026-08-04\\tu\\outputs\\KKO-Inner-Desert\\tests\\test_stack_interaction_family.py\", line 98, in assert_outcome\n    self.assertNotIn(original,s.rules_engine['actionStack'])\nAssertionError: {'id': 'original', 'controllerId': 'p2', 'label': 'Original fixture', 'kind': 'activated_effect', 'source': {'cardId': 'effect-probe', 'itemId': 'effect-source', 'zone': 'battlefield', 'ownerId': 'p2'}, 'sourceOnStack': False, 'targets': [{'kind': 'card', 'itemId': 'original-target', 'cardId': 'm4'}], 'ability': {'id': 'probe-effect', 'targets': {'min': 1, 'max': 1, 'cardType': 'manifestation'}, 'ongoingEffect': {'kind': 'power_modifier', 'value': 2, 'duration': 'until_end_of_turn'}}, 'cost': {'tributeRequirements': {}, 'essenceSpent': []}, 'turn': 2, 'phaseId': 'confrontation_reaction'} unexpectedly found in [{'id': 'original', 'controllerId': 'p2', 'label': 'Original fixture', 'kind': 'activated_effect', 'source': {'cardId': 'effect-probe', 'itemId': 'effect-source', 'zone': 'battlefield', 'ownerId': 'p2'}, 'sourceOnStack': False, 'targets': [{'kind': 'card', 'itemId': 'original-target', 'cardId': 'm4'}], 'ability': {'id': 'probe-effect', 'targets': {'min': 1, 'max': 1, 'cardType': 'manifestation'}, 'ongoingEffect': {'kind': 'power_modifier', 'value': 2, 'duration': 'until_end_of_turn'}}, 'cost': {'tributeRequirements': {}, 'essenceSpent': []}, 'turn': 2, 'phaseId': 'confrontation_reaction'}]\n",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_radiance__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_radiance__wrong_kind",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_radiance__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_veer__cost",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_veer__late_missing",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_veer__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_veer__missing",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_veer__normal",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_veer__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_veer__wrong_kind",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_veer__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_wall__cost",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_wall__late_missing",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_wall__late_protection",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_wall__missing",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_wall__normal",
+      "status": "pass",
+      "durationSeconds": 0.016
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_wall__unfunded",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_wall__wrong_kind",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_stack_interaction_family.StackInteractionFamily.test_wall__wrong_priority",
+      "status": "pass",
+      "durationSeconds": 0.016
+    }
+  ]
+}
