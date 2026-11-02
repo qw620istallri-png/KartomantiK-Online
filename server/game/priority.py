@@ -446,13 +446,14 @@ class PriorityMixin:
                     or card_type in RULES_WILL_TYPES and self.rules_will_affordable(player_id, card_id, source)):
                 return True
         if response:
-            for card_id in set(player["zones"]["receptacle"]):
-                if any(
-                    "receptacle" in (ability.get("sourceZones") or [])
-                    and not self.rules_ability_clearly_unusable(player_id, ability, phase_id, card_id)
-                    for ability in self.card_rules.get(card_id, {}).get("activatedAbilities") or []
-                ):
-                    return True
+            if any(
+                not self.rules_ability_clearly_unusable(
+                    player_id, ability, phase_id, card_id
+                )
+                for _container_id, card_id, ability
+                in self.rules_receptacle_activated_sources(player_id)
+            ):
+                return True
             if any(
                 self.rules_play_permission_usable(player_id, entry, phase_id)
                 for entry in self.rules_engine.get("playPermissions") or []

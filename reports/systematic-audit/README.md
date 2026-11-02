@@ -7,6 +7,8 @@ Un test de capacité isolée n'est pas une certification de l'intégralité du t
 
 [Revue indépendante des 450 textes](SEMANTIC_REVIEW.md) · [Suivi des corrections](SEMANTIC_FIXES.md) · [Illustrations distantes](remote-art.json) · [Essais manuels sur téléphone](PHYSICAL_DEVICE_CHECKLIST.md)
 
+[Registre strict courant](coverage-status.json) · [Lacunes exactes et lots mécaniques recommandés](COVERAGE_GAPS.md)
+
 Les preuves de la campagne 140 partagent une empreinte commune. Les anciens lots
 [chiffrés](NUMERIC.md), [départs](DEPARTURES.md) et [Premières Manifestations](FIRST_REFERENCES.md)
 restent des rapports historiques ; leurs tests sont également rejoués dans la

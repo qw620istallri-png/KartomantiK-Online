@@ -1248,15 +1248,47 @@ function renderBattlefield() {
         { keepInBeta: true, zOrder: true, label: t("sendToBack"), onSelect: () => send({ type: "reorder_battlefield_item", itemId: item.id, position: "back" }) },
       ];
       if (item.isTokenCard) {
-        showContextMenu(event.clientX, event.clientY, betaMenuItems([
+        const tokenItems = [
           { label: t("exhaust"), onSelect: () => send({ type: "move_battlefield_item", itemId: item.id, x: item.x, y: item.y, rotation: item.rotation ? 0 : 90 }) },
           { separator: true },
           ...zOrderItems,
+        ];
+        if (
+          isMine
+          && latestState?.rulesEngine?.enabled
+          && currentPhaseUi().phase?.id === "confrontation_reaction"
+          && latestState.rulesEngine.priorityPlayerId === myPlayerId
+          && rulesBattlefieldSupportAvailableClient(item)
+        ) {
+          tokenItems.push({
+            keepInBeta: true,
+            label: t("playInSupport"),
+            onSelect: () => {
+              const payload = {
+                type: "set_rules_field_zone",
+                itemId: item.id,
+                cardId: item.cardId,
+                faceUp: item.faceUp,
+                fieldZone: "confrontation",
+                x: item.x,
+                y: item.y,
+              };
+              requestCardPlacement(payload, {
+                cardId: item.cardId,
+                zone: "battlefield",
+                itemId: item.id,
+              });
+            },
+            highlight: true,
+          });
+        }
+        tokenItems.push(
           { separator: true },
           counterGridMenuItem("power", { itemId: item.id }),
           { separator: true },
           { label: t("remove"), onSelect: () => send({ type: "remove_battlefield_item", itemId: item.id, toZone: "graveyard" }) },
-        ]));
+        );
+        showContextMenu(event.clientX, event.clientY, betaMenuItems(tokenItems));
         return;
       }
       if (item.isCopy) {

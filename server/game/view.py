@@ -318,6 +318,8 @@ class ViewMixin:
                 entry["fieldZone"] = "confrontation"
             if item.get("isSupport"):
                 entry["isSupport"] = True
+            if item.get("hasSupport"):
+                entry["hasSupport"] = True
             if item.get("manualStack"):
                 entry["manualStack"] = item["manualStack"]
             if item.get("chosenTemperament"):
@@ -533,6 +535,10 @@ class ViewMixin:
                 },
                 "firstManifestationComplete": self.rules_engine["firstManifestationComplete"],
                 "confrontationResult": dict(self.rules_engine["confrontationResult"]) if self.rules_engine["confrontationResult"] else None,
+                "lostConfrontationThisTurn": bool(
+                    viewer_id in self.players
+                    and self.rules_player_lost_confrontation_this_turn(viewer_id)
+                ),
                 "lastConfrontationWinnerId": self.rules_engine["lastConfrontationWinnerId"],
             },
             # a small tail of the action log, piggybacked on every state sync so

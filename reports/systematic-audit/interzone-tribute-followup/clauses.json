@@ -1,0 +1,319 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "6bb8879eaaee7e66cdc8ebe8cacc3085c15fe0339b249e60cb4c2dcf8e06708d",
+  "published": false,
+  "finishedAt": "2026-11-02T22:14:02.086381+00:00",
+  "summary": {
+    "executed": 3,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "selectedParagraphs": 20,
+    "cardsWithSelectedClauseProof": 10,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "inner-deserts-001",
+      "name": "Flem",
+      "paragraphIndex": 0,
+      "printedParagraph": "In the End Phase, Flem can be played into the Interzone.",
+      "paragraphSha256": "0a090788fc6333d56e7b95a2d40a493069f053afa21bed0623254ec4e63ed559",
+      "expectedBehavior": "Playable from Hand into the Interzone only during End actions with priority, an empty Stack and available Interzone space.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_end_phase_family_has_exact_timing_and_printed_interzone_tribute",
+        "test_websocket_integration.WebSocketRulesIntegrationTests.test_flem_is_played_into_the_interzone_only_during_end_actions"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-001",
+      "name": "Flem",
+      "paragraphIndex": 1,
+      "printedParagraph": "Flem can be used as tribute from the Interzone.",
+      "paragraphSha256": "3412e4367789b460170c4cc5203d35ad671102ef6e7babc9c0ef3a1395fa13b4",
+      "expectedBehavior": "Can pay Tribute from the Interzone for exactly its printed one Power.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_end_phase_family_has_exact_timing_and_printed_interzone_tribute"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-025",
+      "name": "Viter",
+      "paragraphIndex": 0,
+      "printedParagraph": "In the End Phase, Viter can be played into the Interzone.",
+      "paragraphSha256": "900207cae081c2ea66a1caa42653747c5ef916cfd8aadede0c44bba2c6621f3a",
+      "expectedBehavior": "Playable from Hand into the Interzone only during End actions with priority, an empty Stack and available Interzone space.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_end_phase_family_has_exact_timing_and_printed_interzone_tribute"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-025",
+      "name": "Viter",
+      "paragraphIndex": 1,
+      "printedParagraph": "Viter can be used as tribute from the Interzone.",
+      "paragraphSha256": "2e91075a9884257677d52fa4a2a6c1812db0fdaaa91babe44a902a0691ef8d7c",
+      "expectedBehavior": "Can pay Tribute from the Interzone for exactly its printed one Power.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_end_phase_family_has_exact_timing_and_printed_interzone_tribute"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-049",
+      "name": "Mal",
+      "paragraphIndex": 0,
+      "printedParagraph": "In the End Phase, Mal can be played into the Interzone.",
+      "paragraphSha256": "cb2a6452eb0aa1df208a9974572709df69e8cc1df504c56a1848a251411a1637",
+      "expectedBehavior": "Playable from Hand into the Interzone only during End actions with priority, an empty Stack and available Interzone space.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_end_phase_family_has_exact_timing_and_printed_interzone_tribute"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-049",
+      "name": "Mal",
+      "paragraphIndex": 1,
+      "printedParagraph": "Mal can be used as tribute from the Interzone.",
+      "paragraphSha256": "022c8f61b7a872d5906759f43240b4ecccae3c64ecce67f7e1bdbdd810ec7170",
+      "expectedBehavior": "Can pay Tribute from the Interzone for exactly its printed one Power.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_end_phase_family_has_exact_timing_and_printed_interzone_tribute"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-073",
+      "name": "Capry",
+      "paragraphIndex": 0,
+      "printedParagraph": "In the End Phase, Capry can be played into the Interzone.",
+      "paragraphSha256": "ca34d3dfb8ad6979ddb591be5bfdafe859bb6ed582740e3168ce58c3d87e8ca6",
+      "expectedBehavior": "Playable from Hand into the Interzone only during End actions with priority, an empty Stack and available Interzone space.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_end_phase_family_has_exact_timing_and_printed_interzone_tribute"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-073",
+      "name": "Capry",
+      "paragraphIndex": 1,
+      "printedParagraph": "Capry can be used as tribute from the Interzone.",
+      "paragraphSha256": "f5bae0c50953c6afae537a453f80e4a20161132c45052c01898541f7e49ae0a1",
+      "expectedBehavior": "Can pay Tribute from the Interzone for exactly its printed one Power.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_end_phase_family_has_exact_timing_and_printed_interzone_tribute"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-097",
+      "name": "Chol",
+      "paragraphIndex": 0,
+      "printedParagraph": "In the End Phase, Chol can be played into the Interzone.",
+      "paragraphSha256": "6ff37374f732f96e4819aabbce8118fcbc386f4b44f29ad7cb5bd98e30a7461d",
+      "expectedBehavior": "Playable from Hand into the Interzone only during End actions with priority, an empty Stack and available Interzone space.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_end_phase_family_has_exact_timing_and_printed_interzone_tribute"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-097",
+      "name": "Chol",
+      "paragraphIndex": 1,
+      "printedParagraph": "Chol can be used as tribute from the Interzone.",
+      "paragraphSha256": "364297a6060f0c60ef2d79b4524f9552725033c90b9e90ad734b6d0f92dab79d",
+      "expectedBehavior": "Can pay Tribute from the Interzone for exactly its printed one Power.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_end_phase_family_has_exact_timing_and_printed_interzone_tribute"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-006",
+      "name": "Faroc-Ko, the Insipid",
+      "paragraphIndex": 0,
+      "printedParagraph": "Can be used as tribute from the Interzone.",
+      "paragraphSha256": "b5869626dcc6a4960f215c2de46c44bc77b44ce44b74f4f48c7f012665f56c51",
+      "expectedBehavior": "Can be selected as Tribute from the Interzone.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_fixed_two_family_is_worth_two_from_hand_and_interzone_not_five"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-006",
+      "name": "Faroc-Ko, the Insipid",
+      "paragraphIndex": 1,
+      "printedParagraph": "If Faroc-Ko is used as tribute, it is considered to have a base power of 🌿🌿.",
+      "paragraphSha256": "eb6e19325ac5d4179964af6ceb4c286c137414ffa2dc3d98df1914f912c9085b",
+      "expectedBehavior": "Whenever used as Tribute, from Hand or Interzone, its value is exactly two of its printed temperament rather than printed Power five.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_fixed_two_family_is_worth_two_from_hand_and_interzone_not_five"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-030",
+      "name": "Philfer, the Sharp",
+      "paragraphIndex": 0,
+      "printedParagraph": "Can be used as tribute from the Interzone.",
+      "paragraphSha256": "b5869626dcc6a4960f215c2de46c44bc77b44ce44b74f4f48c7f012665f56c51",
+      "expectedBehavior": "Can be selected as Tribute from the Interzone.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_fixed_two_family_is_worth_two_from_hand_and_interzone_not_five"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-030",
+      "name": "Philfer, the Sharp",
+      "paragraphIndex": 1,
+      "printedParagraph": "If Philfer is used as tribute, it is considered to have a base power of 💧💧.",
+      "paragraphSha256": "b27d9a014897c36a768423c74ff5b4ea7bc9f63db8d5578d3b8d109a3f8fce77",
+      "expectedBehavior": "Whenever used as Tribute, from Hand or Interzone, its value is exactly two of its printed temperament rather than printed Power five.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_fixed_two_family_is_worth_two_from_hand_and_interzone_not_five"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-054",
+      "name": "Quasimolg, the Hunched",
+      "paragraphIndex": 0,
+      "printedParagraph": "Can be used as tribute from the Interzone.",
+      "paragraphSha256": "b5869626dcc6a4960f215c2de46c44bc77b44ce44b74f4f48c7f012665f56c51",
+      "expectedBehavior": "Can be selected as Tribute from the Interzone.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_fixed_two_family_is_worth_two_from_hand_and_interzone_not_five"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-054",
+      "name": "Quasimolg, the Hunched",
+      "paragraphIndex": 1,
+      "printedParagraph": "If Quasimolg is used as tribute, it is considered to have a base power of 🔮🔮.",
+      "paragraphSha256": "1e87fc5c272b0974f07d428fae53cbba3d079552a8e9863d618d04bcf5f0d601",
+      "expectedBehavior": "Whenever used as Tribute, from Hand or Interzone, its value is exactly two of its printed temperament rather than printed Power five.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_fixed_two_family_is_worth_two_from_hand_and_interzone_not_five"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-078",
+      "name": "Proboscidon, the Boor",
+      "paragraphIndex": 0,
+      "printedParagraph": "Can be used as tribute from the Interzone.",
+      "paragraphSha256": "b5869626dcc6a4960f215c2de46c44bc77b44ce44b74f4f48c7f012665f56c51",
+      "expectedBehavior": "Can be selected as Tribute from the Interzone.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_fixed_two_family_is_worth_two_from_hand_and_interzone_not_five"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-078",
+      "name": "Proboscidon, the Boor",
+      "paragraphIndex": 1,
+      "printedParagraph": "If Proboscidon is used as tribute, it is considered to have a base power of ⚡⚡.",
+      "paragraphSha256": "d98e2b2d05a9b08775b075452b9fd5feabb34f41bbd8a02811d817c1cedfb38c",
+      "expectedBehavior": "Whenever used as Tribute, from Hand or Interzone, its value is exactly two of its printed temperament rather than printed Power five.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_fixed_two_family_is_worth_two_from_hand_and_interzone_not_five"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-102",
+      "name": "Orzo, the Greatmace",
+      "paragraphIndex": 0,
+      "printedParagraph": "Can be used as tribute from the Interzone.",
+      "paragraphSha256": "b5869626dcc6a4960f215c2de46c44bc77b44ce44b74f4f48c7f012665f56c51",
+      "expectedBehavior": "Can be selected as Tribute from the Interzone.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_fixed_two_family_is_worth_two_from_hand_and_interzone_not_five"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-102",
+      "name": "Orzo, the Greatmace",
+      "paragraphIndex": 1,
+      "printedParagraph": "If Orzo is used as tribute, it is considered to have a base power of 🔥🔥.",
+      "paragraphSha256": "e9181d42f6ac86c1a68daedf80293c9310d66b33974a6bb43ef63cbf11e92469",
+      "expectedBehavior": "Whenever used as Tribute, from Hand or Interzone, its value is exactly two of its printed temperament rather than printed Power five.",
+      "testIds": [
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+        "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_fixed_two_family_is_worth_two_from_hand_and_interzone_not_five"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_end_phase_family_has_exact_timing_and_printed_interzone_tribute",
+      "status": "pass",
+      "durationSeconds": 0.0061
+    },
+    {
+      "testId": "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_family_text_and_compilation_are_exact",
+      "status": "pass",
+      "durationSeconds": 0.0005
+    },
+    {
+      "testId": "test_interzone_tribute_family_clauses.InterzoneTributeFamilyClauses.test_fixed_two_family_is_worth_two_from_hand_and_interzone_not_five",
+      "status": "pass",
+      "durationSeconds": 0.0057
+    }
+  ],
+  "limits": [
+    "The shared End-action placement path has a real WebSocket proof on Flem and identical per-card timing gates for all five cards.",
+    "Other cards that alter Tribute values or Interzone permissions remain separate interactions."
+  ]
+}

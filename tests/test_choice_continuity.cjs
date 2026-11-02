@@ -146,6 +146,69 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
         document.querySelectorAll(".ko-toast").forEach((toast) => toast.remove());
         return { emptyLabel, duplicatesAreSeparate, oneHint, handIsGrey, canUndo, countedConfirm, correctPayload, noDuplicateAnswer, emptyIsExplicit };
       });
+      const tokenResume = await page.evaluate(async () => {
+        latestState.rulesEngine.pendingChoice = {
+          id: "brood-token-count",
+          kind: "token_count",
+          playerId: "p1",
+          sourceCardId: "je9rwgrjwk97oes_en",
+          max: 2,
+          options: ["0", "1", "2"],
+        };
+        rulesChoiceRenderKey = null;
+        rulesVfxQueue.length = 0;
+        if (rulesVfxQueueTimer) clearTimeout(rulesVfxQueueTimer);
+        rulesVfxQueueTimer = null;
+        rulesVfxQueueBusyUntil = performance.now() + 1000;
+        renderRulesChoice(true);
+        const hiddenDuringVfx = document.querySelector("#rulesChoicePanel").classList.contains("hidden");
+        rulesVfxQueueBusyUntil = 0;
+        runRulesVfxQueue();
+        await new Promise((resolve) => setTimeout(resolve, 20));
+        const buttons = [...document.querySelectorAll("[data-rules-token-count]")];
+        return {
+          hiddenDuringVfx,
+          tokenChoiceResumed: !document.querySelector("#rulesChoicePanel").classList.contains("hidden"),
+          tokenOptionsVisible: buttons.length === 3 && buttons.every((button) => !button.disabled),
+        };
+      });
+      const tokenSupport = await page.evaluate(() => {
+        latestState.rulesEngine.pendingChoice = null;
+        latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "confrontation_reaction");
+        latestState.rulesEngine.priorityPlayerId = "p1";
+        latestState.battlefield = [{
+          id: "brood-token",
+          cardId: null,
+          ownerId: "p1",
+          controllerId: "p1",
+          isTokenCard: true,
+          hasSupport: true,
+          isSupport: false,
+          permanent: true,
+          power: 1,
+          temperament: "phlegmatic",
+          faceUp: true,
+          fieldZone: "interzone",
+          x: 400,
+          y: 350,
+          rotation: 0,
+          counters: {},
+        }];
+        window.__sent = [];
+        renderAll();
+        const token = document.querySelector('[data-item-id="brood-token"]');
+        token.dispatchEvent(new MouseEvent("contextmenu", { bubbles: true, cancelable: true, clientX: 300, clientY: 200 }));
+        const support = [...document.querySelectorAll(".ctx-menu button")]
+          .find((button) => button.textContent.trim() === t("playInSupport"));
+        const tokenSupportVisible = Boolean(support);
+        support?.click();
+        const tokenSupportDeclared = window.__sent.some((payload) => (
+          payload.type === "declare_rules_action"
+          && payload.asSupport === true
+          && payload.source?.itemId === "brood-token"
+        ));
+        return { tokenSupportVisible, tokenSupportDeclared };
+      });
       if (process.env.SCREENSHOT_DIR) {
         fs.mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true });
         await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `grimoire-${viewport.width}.png`) });
@@ -164,7 +227,7 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
         fs.mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true });
         await page.screenshot({ path: path.join(process.env.SCREENSHOT_DIR, `choice-continuity-${viewport.width}.png`) });
       }
-      reports.push({ width: viewport.width, ...power, ...pickers, ...grimoire, reorderSurvives, errors });
+      reports.push({ width: viewport.width, ...power, ...pickers, ...grimoire, ...tokenResume, ...tokenSupport, reorderSurvives, errors });
       await page.close();
     }
     console.log(JSON.stringify(reports));

@@ -206,6 +206,55 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
       }, fixtures.find((test) => test.source.cardId === "obn1uv72ewxv3y5_en" && test.label.endsWith("/generic-token-targets")));
       assert.ok(Object.values(tokens).every(Boolean), `${viewport.width}: Token targeting ${JSON.stringify(tokens)}`);
     }
+    const transitionParity = await page.evaluate((baseState) => {
+      myPlayerId = "p1";
+      isObserver = false;
+      latestState = structuredClone(baseState);
+      latestState.ended = false;
+      latestState.rulesEngine.pendingChoice = null;
+      latestState.rulesEngine.priorityPlayerId = "p1";
+      latestState.rulesEngine.firstManifestationComplete = true;
+      latestState.rulesEngine.confrontationResult = null;
+      latestState.rulesEngine.lostConfrontationThisTurn = true;
+      latestState.phaseTracker.index = ADVANCED_PHASES.findIndex(
+        (phase) => phase.id === "confrontation_reaction"
+      );
+      const recallId = "cnqaie6oq458qgq_en";
+      latestState.players.p1.zones.hand = {
+        cards: [recallId], count: 1, owners: { [recallId]: "p1" },
+      };
+      const recallAfterRematch = handCardIsPlayable(recallId);
+      const recallReason = handCardUnplayableReason(recallId);
+      latestState.rulesEngine.lostConfrontationThisTurn = false;
+      const recallWithoutLoss = handCardIsPlayable(recallId);
+
+      const ignoreId = "ey6fuk5gguasrb0_en";
+      const tokenSupportAction = {
+        id: "token-support", kind: "play_card", controllerId: "p1",
+        source: { cardId: "", itemId: "brood-token", zone: "battlefield" },
+        sourceRemainsOnField: true, effectTargetable: true, targets: [],
+      };
+      latestState.rulesEngine.actionStack = [tokenSupportAction];
+      const ignoreAbility = (playedAbilitiesByCard.get(ignoreId) || [])[0];
+      const ignoreDraft = buildRulesActionDraft(
+        { cardId: ignoreId, zone: "hand" }, ignoreAbility
+      );
+      const tokenEffectTargetable = ignoreDraft.structuredTargets.some(
+        (target) => target.actionId === tokenSupportAction.id
+      );
+      return {
+        recallAfterRematch,
+        recallReason,
+        recallWithoutLoss,
+        tokenEffectTargetable,
+      };
+    }, fixtures[0].state);
+    assert.deepEqual(transitionParity, {
+      recallAfterRematch: true,
+      recallReason: "",
+      recallWithoutLoss: false,
+      tokenEffectTargetable: true,
+    });
     assert.deepEqual(errors, []);
     console.log(`Rules frontend/server parity: ${fixtures.length} catalog scenarios OK`);
   } finally {

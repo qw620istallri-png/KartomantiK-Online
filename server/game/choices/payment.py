@@ -18,9 +18,12 @@ class PaymentChoicesMixin:
                 "resolution_compare"
             )
             self.rules_engine["priorityPasses"] = []
+            confrontation = self.prepare_rules_confrontation_result()
             status = "skipped"
+        if option == "lose_points":
+            confrontation = None
         self.rules_engine["pendingChoice"] = None
-        return None, {
+        payload = {
             "kind": "skip_confrontation_payment",
             "status": status,
             "playerId": player_id,
@@ -28,6 +31,9 @@ class PaymentChoicesMixin:
             "phaseId": self.current_phase_id(),
             "sourceCardId": choice.get("sourceCardId"),
         }
+        if confrontation is not None:
+            payload["confrontationResult"] = confrontation
+        return None, payload
 
     def _rules_choice_effect_memory_payment(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets, transcendent_payment=None):
         if option not in {"pay", "decline"}:

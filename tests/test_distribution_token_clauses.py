@@ -182,9 +182,95 @@ class DistributionTokenClauses(unittest.TestCase):
                 self.assertEqual(len(s.battlefield), count)
                 for token in s.battlefield:
                     self.assertEqual((token["ownerId"], token["controllerId"], token["fieldZone"]), ("p1", "p1", "interzone"))
-                    self.assertTrue(token["isTokenCard"] and token["isSupport"] and token["permanent"])
+                    self.assertTrue(token["isTokenCard"] and token["hasSupport"] and token["permanent"])
+                    self.assertFalse(token["isSupport"])
                     self.assertEqual((self.power(s, token), s.rules_manifestation_characteristics(token)["temperament"]), (1, "phlegmatic"))
                 self.assertIn(self.cid(self.BROOD), s.players["p2"]["zones"]["receptacle"])
+
+    def test_brood_token_can_enter_support_from_the_interzone(self):
+        s = self.world()
+        self.brood(s)
+        self.choose_count(s, 1)
+        token = s.battlefield[0]
+        s.phase_tracker["index"] = fixtures.ADVANCED_PHASES.index("confrontation_reaction")
+        s.rules_engine["priorityPlayerId"] = "p1"
+        self.assertTrue(s.rules_card_can_enter_support(token, "interzone"))
+        error, result = s.declare_rules_action(
+            "p1", "Stampeding Brood Token", kind="play_card", as_support=True,
+            source={"cardId": None, "zone": "battlefield", "itemId": token["id"]},
+            placement={"x": token["x"], "y": token["y"]},
+        )
+        self.assertIsNone(error)
+        self.assertTrue(result["asSupport"])
+        self.assertEqual(token["pendingSupportActionId"], result["id"])
+        self.assertEqual(token["fieldZone"], "interzone")
+        s.resolve_rules_top_action()
+        self.assertEqual(token["fieldZone"], "confrontation")
+        self.assertTrue(token["isSupport"])
+        self.assertNotIn("pendingSupportActionId", token)
+
+    def test_brood_token_keeps_support_after_winning_and_returning_to_interzone(self):
+        s = self.world()
+        self.brood(s)
+        self.choose_count(s, 1)
+        token = s.battlefield[0]
+        s.rules_engine["priorityPlayerId"] = "p1"
+        error, _action = s.declare_rules_action(
+            "p1", "Stampeding Brood Token", kind="play_card", as_support=True,
+            source={"cardId": None, "zone": "battlefield", "itemId": token["id"]},
+        )
+        self.assertIsNone(error)
+        s.resolve_rules_top_action()
+        enemy = self.field(s, "m2", "enemy", owner="p2")
+        s.rules_engine["confrontationResult"] = {
+            "turn": 2, "status": "effects", "winnerId": "p1",
+            "loserId": "p2", "stalemate": False,
+            "participantItemIds": [token["id"], enemy["id"]],
+            "winnerItemIds": [token["id"]], "loserItemIds": [enemy["id"]],
+        }
+        s.begin_rules_confrontation_cleanup()
+        choice = s.rules_engine["pendingChoice"]
+        self.assertEqual((choice["kind"], choice["itemId"]), ("confrontation_destination", token["id"]))
+        self.assertIsNone(
+            s.resolve_rules_choice("p1", choice["id"], option="interzone")[0]
+        )
+        self.assertEqual(token["fieldZone"], "interzone")
+        self.assertFalse(token["isSupport"])
+        self.assertTrue(token["hasSupport"])
+        self.assertTrue(s.rules_card_can_enter_support(token, "interzone"))
+
+    def test_brood_token_in_interzone_does_not_receive_support_power_bonus(self):
+        s = self.world()
+        self.brood(s)
+        self.choose_count(s, 1)
+        token = s.battlefield[0]
+        self.field(
+            s, self.cid("Herbaceous Whisperer"),
+            "whisperer", zone="interzone",
+        )
+        self.assertEqual(self.power(s, token), 1)
+
+    def test_ignore_can_target_a_brood_token_entering_support(self):
+        s = self.world()
+        self.brood(s)
+        self.choose_count(s, 1)
+        token = s.battlefield[0]
+        s.rules_engine["priorityPlayerId"] = "p1"
+        error, support_action = s.declare_rules_action(
+            "p1", "Stampeding Brood Token", kind="play_card", as_support=True,
+            source={"cardId": None, "zone": "battlefield", "itemId": token["id"]},
+        )
+        self.assertIsNone(error)
+        ignore_id = self.cid("Ignore")
+        fixtures.SemanticBatch001150.put(s, "p2", "hand", [ignore_id])
+        error, ignore_action = s.declare_rules_action(
+            "p2", "Ignore", kind="play_card",
+            source={"cardId": ignore_id, "zone": "hand"},
+            ability_id="ignore-stack-effect-unless-paid",
+            targets=[{"kind": "stack_effect", "actionId": support_action["id"]}],
+        )
+        self.assertIsNone(error)
+        self.assertIsNotNone(ignore_action)
 
     def test_brood_available_spaces_limit_choice_without_overflow(self):
         for occupied, options in ((1, ["0", "1", "2"]), (2, ["0", "1"]), (3, None)):

@@ -1,6 +1,8 @@
 """Phase sequence and the per-turn phase tracker."""
 
-from .common import NORMAL_PHASES, ADVANCED_PHASES, PHASE_GROUP
+from .common import (
+    NORMAL_PHASES, ADVANCED_PHASES, PHASE_GROUP, make_rules_engine,
+)
 
 
 class PhasesMixin:
@@ -64,6 +66,18 @@ class PhasesMixin:
         return "advanced"
 
     def reset_phase_tracker(self, return_stack_sources=True):
+        preferences = {
+            "enabled": bool(self.rules_engine.get("enabled")),
+            "autoSkipPhases": bool(
+                self.rules_engine.get("autoSkipPhases", True)
+            ),
+            "autoSkipOffPlayerIds": list(
+                self.rules_engine.get("autoSkipOffPlayerIds") or []
+            ),
+            "passAllPlayerIds": list(
+                self.rules_engine.get("passAllPlayerIds") or []
+            ),
+        }
         if return_stack_sources:
             for action in self.rules_engine.get("actionStack") or []:
                 source = action.get("source") or {}
@@ -82,46 +96,9 @@ class PhasesMixin:
         self.score_history = []
         self.final_summary = None
         self.phase_passes.clear()
-        self.rules_engine["recoveryDrawTurn"] = None
-        self.rules_engine["recoveryMulliganTurn"] = None
-        self.rules_engine["recoveryMulliganPlayerIds"] = []
-        self.rules_engine["recoveryMulliganRequiredPlayerIds"] = []
-        self.rules_engine["recoveryMulliganFailedPlayerIds"] = []
-        self.rules_engine["beginningTriggersTurn"] = None
-        self.rules_engine["beginningPermissionsTurn"] = None
-        self.rules_engine["playPermissions"] = []
-        self.rules_engine["deckConfirmedPlayerIds"] = []
-        self.rules_engine["openingHandPlayerIds"] = []
-        self.rules_engine["mulliganPlayerIds"] = []
-        self.rules_engine["openingMulliganRequiredPlayerIds"] = []
-        self.rules_engine["openingMulliganFailedPlayerIds"] = []
-        self.rules_engine["readyPlayerIds"] = []
-        self.rules_engine["outcome"] = None
-        self.rules_engine["priorityPasses"] = []
-        self.rules_engine["actionStack"] = []
-        self.rules_engine["deferredSimultaneousActions"] = []
-        self.rules_engine["deferredAfterImmediateActions"] = []
-        self.rules_engine["lastResolvedAction"] = None
-        self.rules_engine["ongoingEffects"] = []
-        self.rules_engine["effectMemories"] = []
-        self.rules_engine["turnTributeReturns"] = []
-        self.rules_engine["skipEndPhaseTurns"] = {}
-        self.rules_engine["supportLocks"] = []
-        self.rules_engine["tributeLog"] = []
-        self.rules_engine["drawnOutsideRecovery"] = {}
-        self.rules_engine["_handEntries"] = {}
-        self.rules_engine["_vesselEntries"] = {}
-        self.rules_engine["supportEntries"] = []
-        self.rules_engine["playRestrictions"] = []
-        self.rules_engine["zoneEntryTurns"] = {}
-        self.rules_engine["zoneEntryVersions"] = {}
-        self.rules_engine["recentLimboEntries"] = []
-        self.rules_engine["handLimitEffects"] = []
-        self.rules_engine["drawLocks"] = []
-        self.rules_engine["pendingChoice"] = None
-        self.rules_engine["rematchPending"] = None
+        self.rules_engine = make_rules_engine(preferences["enabled"])
+        self.rules_engine.update(preferences)
         self.reset_rules_confrontation_turn()
-        self.rules_engine["lastConfrontationWinnerId"] = None
         self.rules_engine["priorityPlayerId"] = next(iter(self.players), None)
 
     def serialize_phase_tracker(self):

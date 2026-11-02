@@ -434,3 +434,44 @@ distincts et quatre suites client, toutes réussies. Le registre strict atteint
 sans certification exhaustive. Le bouton d'installation Android et son guide
 sont vérifiés sur 14 contrôles, avec rendu mobile émulé dans Chrome ; aucun
 téléphone physique ni Safari réel n'est certifié.
+
+## Registre strict et inventaire des lacunes
+
+Le registre courant se régénère uniquement à partir d'une suite unitaire
+complète dont l'empreinte correspond exactement aux sources :
+
+```powershell
+$env:PYTHONPATH='server;tests;tools'
+py -c "from pathlib import Path; import run_card_audit as r; r.audit.OUT=Path('reports/systematic-audit/coverage-expansion-followup'); raise SystemExit(r.units())"
+py tools/card_coverage_status.py --units reports/systematic-audit/coverage-expansion-followup/unit-tests.json --write
+```
+
+La seconde commande écrit ensemble :
+
+- `reports/systematic-audit/coverage-status.json`, qui ne compte qu'une carte
+  possédant une clause imprimée explicitement reliée à des tests réussis ;
+- `reports/systematic-audit/coverage-gaps.json`, complément exact du registre,
+  avec clauses et oracles de branches restant à relier ;
+- `reports/systematic-audit/COVERAGE_GAPS.md`, vue humaine et lots mécaniques
+  gloutons sans duplication de cartes.
+
+`tests/test_coverage_gap_inventory.py` vérifie que cartes couvertes et cartes
+hors registre forment exactement les 450 cartes. La matrice multi-étapes
+`tests/test_rules_transition_matrix.py` couvre les transitions qui échappent
+aux tests de primitives : annulation puis nouvelle tentative dans la Pile,
+retour de Support en Interzone au tour suivant, activation depuis un Vaisseau
+adverse et défaite conservée pendant Rematch!.
+
+La passe suivante certifie les seize Manifestations sans texte d'effet par un
+contrat négatif explicite, puis dix cartes partageant les primitives de Tribut
+depuis l'Interzone. Le registre atteint **255/450 cartes (56,7 %)**. L'inventaire
+restant contient 195 cartes, 300 paragraphes et 983 oracles de branches. Les
+seize contrats sans effet sont les premières cartes marquées
+`allBranchesCertified`, uniquement pour l'absence d'effet et leurs
+comportements de base vérifiés.
+
+Les lots suivants relient seize conditions imprimées d'entrée en
+Confrontation/Interzone et quatorze montants de Tribut Hollow. Les matrices
+communes vérifient les refus de zone, face cachée, effets désactivés, paiement
+insuffisant et mutation atomique. Le registre atteint **285/450 cartes
+(63,3 %)** ; il reste 165 cartes, 248 paragraphes et 814 oracles de branches.

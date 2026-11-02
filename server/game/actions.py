@@ -9,6 +9,26 @@ from .common import (
 
 
 class ActionsMixin:
+    def rules_receptacle_activated_sources(self, player_id):
+        """Yield abilities the player owns in an opponent's Vessel."""
+        if player_id not in self.players:
+            return
+        for container_id, container in self.players.items():
+            if container_id == player_id:
+                continue
+            for card_id in set(container["zones"].get("receptacle", [])):
+                if (
+                    self.card_owner_in_zone(
+                        container_id, "receptacle", card_id
+                    ) != player_id
+                ):
+                    continue
+                for ability in self.card_rules.get(
+                    card_id, {}
+                ).get("activatedAbilities") or []:
+                    if "receptacle" in (ability.get("sourceZones") or []):
+                        yield container_id, card_id, ability
+
     def rules_action_source(self, player_id, kind, source, as_support=False,
                             ability_id=None):
         source = source if isinstance(source, dict) else {}
@@ -16,12 +36,21 @@ class ActionsMixin:
         zone = str(source.get("zone") or "")
         item_id = str(source.get("itemId") or "")
         container_id = str(source.get("containerId") or player_id)
+        battlefield_item = self.find_battlefield_item(item_id) if zone == "battlefield" else None
+        token_support_source = bool(
+            kind == "play_card" and as_support
+            and battlefield_item is not None and battlefield_item.get("isTokenCard")
+        )
         if not card_id:
             if kind == "manual":
                 return None, None
-            return "Choose the card that creates this action.", None
-        metadata = self.card_rules.get(card_id)
-        if metadata is None:
+            if not token_support_source:
+                return "Choose the card that creates this action.", None
+        metadata = (
+            self.rules_item_card_rules(battlefield_item)
+            if token_support_source else self.card_rules.get(card_id)
+        )
+        if not metadata:
             return "Unknown source card.", None
         if kind == "play_card" and self.rules_is_trap_card(card_id):
             return "A Trap can only be played at the Revelation, in place of the First Manifestation.", None
@@ -59,7 +88,7 @@ class ActionsMixin:
                 if support_error:
                     return support_error, None
         elif zone == "battlefield":
-            item = self.find_battlefield_item(item_id)
+            item = battlefield_item
             metadata = self.rules_item_card_rules(item) if item is not None else metadata
             ability = next((
                 entry for entry in metadata.get("activatedAbilities") or []
@@ -77,7 +106,7 @@ class ActionsMixin:
                     self.rules_item_controller_id(item) != player_id
                     and not any_player
                 )
-                or item.get("cardId") != card_id
+                or str(item.get("cardId") or "") != card_id
             ):
                 return "The source card is not on your side of the field.", None
             if (
@@ -178,18 +207,21 @@ class ActionsMixin:
             if permission is None and not limbo_hollow:
                 return "You have no effect letting you play a Will from your Limbo.", None
         elif zone == "receptacle" and kind == "activated_effect":
-            activated_ability = next((
+            declared_ability = next((
                 entry for entry in metadata.get("activatedAbilities") or []
                 if entry.get("id") == ability_id
                 and "receptacle" in (entry.get("sourceZones") or [])
             ), None)
-            if activated_ability is None:
+            if declared_ability is None:
                 return "This card has no effect usable from a Vessel.", None
-            if (
-                container_id not in self.players or container_id == player_id
-                or card_id not in self.players[container_id]["zones"].get("receptacle", [])
-                or self.card_owner_in_zone(container_id, "receptacle", card_id) != player_id
-            ):
+            activated_ability = next((
+                entry for candidate_container_id, candidate_card_id, entry
+                in self.rules_receptacle_activated_sources(player_id)
+                if candidate_container_id == container_id
+                and candidate_card_id == card_id
+                and entry.get("id") == ability_id
+            ), None)
+            if activated_ability is None:
                 return "This card must be in an opponent's Vessel and belong to you.", None
         elif zone == "suspended":
             suspension = next((
@@ -291,10 +323,14 @@ class ActionsMixin:
 
     @staticmethod
     def rules_stack_target_matches(action, target_kind):
-        if not isinstance(action, dict) or not (action.get("source") or {}).get("cardId"):
+        if not isinstance(action, dict):
             return False
         if target_kind == "stack_action":
-            return action.get("kind") == "play_card" and bool(action.get("sourceOnStack") or action.get("isStackCopy"))
+            return (
+                action.get("kind") == "play_card"
+                and bool(action.get("sourceOnStack") or action.get("isStackCopy"))
+                and bool((action.get("source") or {}).get("cardId"))
+            )
         if target_kind == "stack_effect":
             return action.get("kind") in {"activated_effect", "triggered_effect"} or bool(action.get("sourceRemainsOnField"))
         return False

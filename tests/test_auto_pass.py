@@ -154,6 +154,19 @@ class AutoPassTests(unittest.TestCase):
         self.assertFalse(session.rules_confrontation_resolve_prompt())
         self.assertEqual(session.rules_auto_pass_player(), "p2")
 
+    def test_a_permanent_support_token_in_the_interzone_prevents_auto_pass(self):
+        session, _p1, _p2 = self.make_session()
+        self.goto(session, "confrontation_reaction")
+        session.battlefield = [{
+            "id": "brood-token", "ownerId": "p1", "controllerId": "p1", "cardId": None,
+            "isTokenCard": True, "hasSupport": True, "isSupport": False, "permanent": True,
+            "power": 1, "temperament": "phlegmatic", "faceUp": True, "fieldZone": "interzone",
+            "x": 0, "y": 0, "rotation": 0, "counters": {}, "stackedOn": None,
+        }]
+        self.assertTrue(session.rules_player_can_act("p1"))
+        self.assertIsNone(session.rules_auto_pass_player())
+        self.assertFalse(session.rules_confrontation_resolve_prompt())
+
     def test_a_field_ability_without_enough_counters_is_not_an_action(self):
         session, p1, p2 = self.make_session()
         session.card_rules["counter-card"] = {

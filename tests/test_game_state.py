@@ -1304,14 +1304,48 @@ class AssistedRulesTests(unittest.TestCase):
 
     def test_reset_clears_stack_and_restores_first_player_priority(self):
         session, _p1, _p2 = self.make_session()
+        initial_keys = set(session.rules_engine)
         session.declare_rules_action("p1", "Pending action")
+        session.rules_engine.update({
+            "confrontationLosses": {"1": "p1"},
+            "confrontationStalemates": {"1": True},
+            "limboRecoveryDecided": {"p1": 1},
+            "supportEntryBonuses": [{"turn": 1, "playerId": "p1"}],
+            "oncePerTurnFired": {"ability:p1": 1},
+            "willsPlayed": {"turn": 1, "p1": 2},
+            "_offboardEntries": {"p1": {"graveyard": {}}},
+            "leftVesselCards": ["p1:m-0"],
+            "destroyNextEntries": [{"playerId": "p1"}],
+            "limboExitTurn": 1,
+            "unexpectedStaleState": {"must": "disappear"},
+        })
+        session.rules_engine["autoSkipPhases"] = False
+        session.rules_engine["autoSkipOffPlayerIds"] = ["p1"]
+        session.rules_engine["passAllPlayerIds"] = ["p2"]
 
         session.reset_phase_tracker()
 
+        self.assertEqual(set(session.rules_engine), initial_keys)
+        self.assertNotIn("unexpectedStaleState", session.rules_engine)
         self.assertEqual(session.rules_engine["actionStack"], [])
         self.assertEqual(session.rules_engine["priorityPasses"], [])
         self.assertIsNone(session.rules_engine["lastResolvedAction"])
         self.assertEqual(session.rules_engine["priorityPlayerId"], "p1")
+        self.assertFalse(session.rules_engine["autoSkipPhases"])
+        self.assertEqual(session.rules_engine["autoSkipOffPlayerIds"], ["p1"])
+        self.assertEqual(session.rules_engine["passAllPlayerIds"], ["p2"])
+        for key in (
+            "confrontationLosses", "confrontationStalemates",
+            "limboRecoveryDecided", "oncePerTurnFired", "willsPlayed",
+            "_offboardEntries",
+        ):
+            self.assertEqual(session.rules_engine[key], {})
+        for key in (
+            "supportEntryBonuses", "leftVesselCards", "destroyNextEntries",
+        ):
+            self.assertEqual(session.rules_engine[key], [])
+        self.assertIsNone(session.rules_engine["limboExitTurn"])
+        self.assertFalse(session.rules_player_lost_confrontation_this_turn("p1"))
 
     def test_structured_play_reveals_only_declared_source_target_and_tribute(self):
         session, p1, _p2 = self.make_session()
@@ -4897,11 +4931,13 @@ class AssistedRulesTests(unittest.TestCase):
             "id": "first-p1", "ownerId": "p1", "cardId": "m-0",
             "faceUp": True, "fieldZone": "confrontation",
             "confrontationOrder": 1, "counters": {},
+            "x": 0, "y": 0, "rotation": 0,
         }
         first_p2 = {
             "id": "first-p2", "ownerId": "p2", "cardId": "m-2",
             "faceUp": True, "fieldZone": "confrontation",
             "confrontationOrder": 2, "counters": {},
+            "x": 0, "y": 0, "rotation": 0,
         }
         session.battlefield = [first_p1, first_p2]
         session.rules_engine["firstManifestationItemIds"] = {
@@ -4914,6 +4950,7 @@ class AssistedRulesTests(unittest.TestCase):
             "participantItemIds": ["first-p1", "first-p2"],
             "captured": [], "returned": [],
         }
+        session.rules_engine["confrontationLosses"] = {"1": "p1"}
         p1["zones"]["hand"] = ["rematch", "m-3"]
         p1["zoneOwners"]["hand"] = {"rematch": "p1", "m-3": "p1"}
 
@@ -4943,6 +4980,16 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertEqual(self.session_turn(session), 1)
         self.assertIsNotNone(session.find_battlefield_item("first-p1"))
         self.assertIsNotNone(session.find_battlefield_item("first-p2"))
+        self.assertTrue(
+            session.serialize_for("p1", "player")["rulesEngine"][
+                "lostConfrontationThisTurn"
+            ]
+        )
+        self.assertFalse(
+            session.serialize_for("p2", "player")["rulesEngine"][
+                "lostConfrontationThisTurn"
+            ]
+        )
 
     @staticmethod
     def session_turn(session):
@@ -7184,6 +7231,13 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertEqual(required["choiceKind"], "skip_confrontation_payment")
         self.assertIsNone(error)
         self.assertEqual(skipped["phaseId"], "resolution_compare")
+        self.assertEqual(
+            skipped["confrontationResult"]["winnerId"], "p1"
+        )
+        self.assertEqual(
+            session.rules_engine["confrontationResult"]["totals"],
+            {"p1": 4, "p2": 2},
+        )
 
     def test_last_entry_loudmouth_forces_stalemate(self):
         session, _p1, _p2 = self.make_session()
@@ -14282,6 +14336,13 @@ class LotTwentyTwoTests(RealCardRulesCase):
         session.battlefield = [target]
         session.rules_engine["priorityPlayerId"] = "p1"
         source = {"cardId": self.GNARLIPUFF, "zone": "receptacle", "containerId": "p2"}
+        available = list(session.rules_receptacle_activated_sources("p1"))
+        self.assertEqual(
+            [(container, card, ability["id"]) for container, card, ability in available],
+            [("p2", self.GNARLIPUFF, "gnarlipuff-return-interzone-manifestation")],
+        )
+        self.assertTrue(session.rules_player_can_act("p1"))
+        self.assertIsNone(session.rules_auto_pass_player())
         error, action = session.declare_rules_action(
             "p1", "Return", kind="activated_effect", source=source,
             targets=[{"kind": "card", "itemId": "t", "cardId": "m-7"}],
@@ -14293,8 +14354,13 @@ class LotTwentyTwoTests(RealCardRulesCase):
         self.assertIsNone(session.find_battlefield_item("t"))
         self.assertEqual(p2["zones"]["deck"][0], "m-7")
         # Not usable from your own Vessel, or on a card you do not own.
+        self.put(p2, "receptacle", [])
         self.put(p1, "receptacle", {self.GNARLIPUFF: "p1"})
         session.rules_engine["priorityPlayerId"] = "p1"
+        self.assertEqual(
+            list(session.rules_receptacle_activated_sources("p1")), []
+        )
+        self.assertFalse(session.rules_player_can_act("p1"))
         error, _ = session.declare_rules_action(
             "p1", "Return", kind="activated_effect", source={**source, "containerId": "p1"},
             ability_id="gnarlipuff-return-interzone-manifestation")

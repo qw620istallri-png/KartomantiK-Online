@@ -467,15 +467,10 @@ class ChainMixin:
             "stackedOn": None,
             "createdByItemId": source_item_id,
         }
-        if not is_manifestation:
-            item["fieldZone"] = "field"
-        else:
-            # a token entering is the latest Confrontation entry (Unpredictable Loudmouth)
-            self.mark_rules_confrontation_entry(item)
-            item["isSupport"] = True
         if generic_power is not None:
             item.update({
                 "isTokenCard": True,
+                "hasSupport": True,
                 "power": max(0, int(generic_power)),
                 "temperament": generic_temperament if generic_temperament in RULES_TEMPERAMENTS else "hollow" if hollow else (
                     next(iter(metadata.get("temperaments") or []), "hollow")
@@ -490,8 +485,11 @@ class ChainMixin:
             item["effectsDisabled"] = True
         if field_zone == "interzone":
             item["fieldZone"] = "interzone"
-        elif item.get("isSupport"):
+            item["isSupport"] = False
+        elif is_manifestation:
             self.mark_rules_support_entry(item)
+        else:
+            item["fieldZone"] = "field"
         if item.get("isTokenCard") or metadata.get("type") == "manifestation":
             self.apply_rules_entering_manifestation_replacements(item)
         self.battlefield.append(item)

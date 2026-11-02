@@ -344,6 +344,12 @@ function runRulesVfxQueue() {
   const beat = rulesVfxQueue.shift();
   if (!beat) {
     rulesVfxQueueBusyUntil = 0;
+    if (
+      typeof renderRulesChoice === "function"
+      && latestState?.rulesEngine?.pendingChoice?.playerId === myPlayerId
+    ) {
+      queueMicrotask(() => renderRulesChoice(true));
+    }
     return;
   }
   let length = 0;

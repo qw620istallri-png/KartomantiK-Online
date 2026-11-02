@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "3be8aca621631e1115fc9cb9d5ef0bf3a52bc28f4741be395359d988905bd462",
+  "published": false,
+  "finishedAt": "2026-11-02T22:32:59.548868+00:00",
+  "summary": {
+    "executed": 3,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 14,
+    "cardsWithSelectedClauseProof": 14,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "b5ge92hr33pdwc7_en",
+      "name": "Rinq, Shameless Slacker",
+      "paragraphIndex": null,
+      "printedParagraph": "pay {H}{H}",
+      "paragraphSha256": "1b2f54c74b83a2d3ea5c9d3205f9ccc783a1ee9f2bbbea439a45bfe467f1086c",
+      "expectedBehavior": "The ability requires exactly 2 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "5liq0tcj7m9ebqr_en",
+      "name": "Intoxicating Blossom",
+      "paragraphIndex": null,
+      "printedParagraph": "Pay {H}{H}",
+      "paragraphSha256": "f7390da0a71005478bcac57ffb1b0fde121a57d62df784123e2b7cf0ded19a95",
+      "expectedBehavior": "The ability requires exactly 2 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ufujqhwlpmaw12y_en",
+      "name": "Nullifying Hat",
+      "paragraphIndex": null,
+      "printedParagraph": "pay {H}{H}",
+      "paragraphSha256": "1b2f54c74b83a2d3ea5c9d3205f9ccc783a1ee9f2bbbea439a45bfe467f1086c",
+      "expectedBehavior": "The ability requires exactly 2 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "pekwxpsy3c0ro3l_en",
+      "name": "Urolong, Rueful Necromancer",
+      "paragraphIndex": null,
+      "printedParagraph": "pay {H}{H}",
+      "paragraphSha256": "1b2f54c74b83a2d3ea5c9d3205f9ccc783a1ee9f2bbbea439a45bfe467f1086c",
+      "expectedBehavior": "The ability requires exactly 2 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "pwsjhnw4vpvqgkv_en",
+      "name": "Mimer",
+      "paragraphIndex": null,
+      "printedParagraph": "Pay {H}",
+      "paragraphSha256": "b8c63d8d3612be78eeb3dc1f7a78438308fbfe50dc67725c689de324a55aa653",
+      "expectedBehavior": "The ability requires exactly 1 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "lk1xxhvwvrie2r2_en",
+      "name": "Bratto, Tyrannical Scoundrel",
+      "paragraphIndex": null,
+      "printedParagraph": "pay {H}{H}",
+      "paragraphSha256": "1b2f54c74b83a2d3ea5c9d3205f9ccc783a1ee9f2bbbea439a45bfe467f1086c",
+      "expectedBehavior": "The ability requires exactly 2 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "az5wblp5x1div9e_en",
+      "name": "Gornagor, the Magnificent",
+      "paragraphIndex": null,
+      "printedParagraph": "pay {H}{H}{H}",
+      "paragraphSha256": "57d8c4827e3db2c3b04bdf25a5fd1d33082abeed067e1b68cbbfe6efc843a289",
+      "expectedBehavior": "The ability requires exactly 3 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "w8364ml7m6erl8s_en",
+      "name": "Gorte, Timeless",
+      "paragraphIndex": null,
+      "printedParagraph": "pay {H}{H}{H}{H}",
+      "paragraphSha256": "d2bbcf89fff068dff976cdc29f2c0f611b759fbdde1d66b89586d7ea2c0f237a",
+      "expectedBehavior": "The ability requires exactly 4 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "1ixfmjkfewc0o42_en",
+      "name": "Empathic Mask",
+      "paragraphIndex": null,
+      "printedParagraph": "Pay {H}",
+      "paragraphSha256": "b8c63d8d3612be78eeb3dc1f7a78438308fbfe50dc67725c689de324a55aa653",
+      "expectedBehavior": "The ability requires exactly 1 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "e049wxg2j24nczl_en",
+      "name": "Karmapult",
+      "paragraphIndex": null,
+      "printedParagraph": "Pay {H}",
+      "paragraphSha256": "b8c63d8d3612be78eeb3dc1f7a78438308fbfe50dc67725c689de324a55aa653",
+      "expectedBehavior": "The ability requires exactly 1 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "2xqczn7vzkm5n50_en",
+      "name": "Volcano",
+      "paragraphIndex": null,
+      "printedParagraph": "Pay {H}{H}{H}{H}",
+      "paragraphSha256": "f5f87e29f4794bf62265a256f455c90f6e2550a1041a5cde72df1f02f22ee202",
+      "expectedBehavior": "The ability requires exactly 4 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-022",
+      "name": "Psychowall",
+      "paragraphIndex": null,
+      "printedParagraph": "pay 4 🔘",
+      "paragraphSha256": "4cdef227864b4065622ef551c2e7c9215fd42015b41eecdef39fc2a4292df589",
+      "expectedBehavior": "The ability requires exactly 4 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-100",
+      "name": "Juggernut, the Overwhelming",
+      "paragraphIndex": null,
+      "printedParagraph": "pay 🔘🔘",
+      "paragraphSha256": "432bc2fc934d8c990f2a75d6b86a99f53c56aaedb211a4fc36fc42a8e9eebf39",
+      "expectedBehavior": "The ability requires exactly 2 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-141",
+      "name": "Explosive Rancor",
+      "paragraphIndex": null,
+      "printedParagraph": "Pay 🔘🔘🔘🔘",
+      "paragraphSha256": "b4a01eea2113869a358c9558ac2aacfdf4dd9d895910ac9b7c731cb3a98aaec1",
+      "expectedBehavior": "The ability requires exactly 4 Hollow Tribute. Exact payment declares the action and insufficient payment leaves source, players and Stack unchanged.",
+      "testIds": [
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+        "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_exact_tribute_is_spent_and_action_enters_the_stack",
+      "status": "pass",
+      "durationSeconds": 0.2237
+    },
+    {
+      "testId": "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_missing_tribute_rejects_without_mutating_source_or_stack",
+      "status": "pass",
+      "durationSeconds": 0.2238
+    },
+    {
+      "testId": "test_tribute_cost_family_clauses.TributeCostFamilyClauses.test_printed_and_encoded_tribute_amounts_match_exactly",
+      "status": "pass",
+      "durationSeconds": 0.0012
+    }
+  ],
+  "limits": [
+    "This proof certifies the printed Tribute amount and payment atomicity, not every branch of the resulting effect.",
+    "Targets, durations and destinations remain covered by card-specific tests."
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "3be8aca621631e1115fc9cb9d5ef0bf3a52bc28f4741be395359d988905bd462",
+  "published": false,
+  "finishedAt": "2026-11-02T22:32:59.781996+00:00",
+  "summary": {
+    "executed": 3,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 16,
+    "cardsWithSelectedClauseProof": 16,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "46id1c09q8inlkz_en",
+      "name": "Advocate of Catharsis",
+      "paragraphIndex": null,
+      "printedParagraph": "When Advocate of Catharsis enters the Confrontation Zone",
+      "paragraphSha256": "e2f9227967ce5b9e1b05245db421c6856cd7592877bdb641efbd31dab4530a92",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "qapv47r7rz6gqah_en",
+      "name": "Ju Lien, the Provocateur",
+      "paragraphIndex": null,
+      "printedParagraph": "When Ju Lien enters the Confrontation Zone",
+      "paragraphSha256": "6c9313377f320d9e765d3b22a1708b1dd83ba938e3875384cb35d4d00f30dd1b",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "fw18tebi26jwiqb_en",
+      "name": "Juggling Amphora",
+      "paragraphIndex": null,
+      "printedParagraph": "When Juggling Amphora enters the Confrontation Zone",
+      "paragraphSha256": "35345064939642098cfa18b3d5926f732f17cb503b011253578b431fbd8cb23b",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ymcx9cg62eg0vgm_en",
+      "name": "Thought Saboteur",
+      "paragraphIndex": null,
+      "printedParagraph": "When the Thought Saboteur enters the Interzone",
+      "paragraphSha256": "7ef6d49562bb5259c9a48c8f938faf7a6a8a8010fc006d228a9e0dd307491ba0",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "qairavs7la5qg39_en",
+      "name": "Perfidious Baranchio",
+      "paragraphIndex": null,
+      "printedParagraph": "When Perfidious Baranchio enters the Confrontation Zone",
+      "paragraphSha256": "077da644619d02a392b7819ac5b7211a606b5ef985752d03647e91b973134a37",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "0um05ree31uu6e2_en",
+      "name": "Fintus, the Spectacular",
+      "paragraphIndex": null,
+      "printedParagraph": "When Fintus enters the Confrontation Zone",
+      "paragraphSha256": "54f5ac668552750a318dc516c12ce949143c8315c9d6a43f4e3e3c2fc09d02a0",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "02y2r5cvbw1mauv_en",
+      "name": "Jija, Matron Bomb",
+      "paragraphIndex": null,
+      "printedParagraph": "When Jija enters the Confrontation Zone",
+      "paragraphSha256": "389ef3df9c752d3d587cf790ee00eef8fd6524f086ab1e61ecf7d662afb4e2ec",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "chj7vmavn3d5c4s_en",
+      "name": "Plinius, Risk-taker",
+      "paragraphIndex": null,
+      "printedParagraph": "When Plinius enters the Confrontation Zone",
+      "paragraphSha256": "dd6464b88d4f4321acd4f7dbd44fac537667015b613fe766e5d5a75e11666a50",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "0e7afy7zmyhbfal_en",
+      "name": "Mirrorbeast",
+      "paragraphIndex": null,
+      "printedParagraph": "When Mirrorbeast is about to enter the Confrontation Zone",
+      "paragraphSha256": "bd382311146136f88a75e7397f24e643e9cfbc56e2c01c7de13bc46e23e7599f",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "g02zvmqx3loxlcv_en",
+      "name": "Buddhan the Dark",
+      "paragraphIndex": null,
+      "printedParagraph": "When Buddhan the Dark enters the Confrontation Zone",
+      "paragraphSha256": "ba81a4ccde60a12ac70602b32f7766aef31ba153f9889b6f88ccb07d7b46fd81",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-060",
+      "name": "Tebebe, Taken by the Dunes",
+      "paragraphIndex": null,
+      "printedParagraph": "When Tebebe enters your Interzone",
+      "paragraphSha256": "609e5a0e0c5fd89421b0206cdac734bee12963483f7d968f2d429b175b76a0da",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-081",
+      "name": "Mollino, the Repeller",
+      "paragraphIndex": null,
+      "printedParagraph": "When Mollino enters the Confrontation Zone",
+      "paragraphSha256": "32df0ce76a513d10defb4cde8feb344d43cb1e7a1bade1ef216d2add058f4f94",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-083",
+      "name": "Auction Profiteer",
+      "paragraphIndex": null,
+      "printedParagraph": "When Auction Profiteer enters the Confrontation Zone",
+      "paragraphSha256": "afcb8ed23269eccdd9e4e2425d0863ba0e9f0efa5f606f7e4f82c2f6d7e3e4e8",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-086",
+      "name": "Thoughtcutter",
+      "paragraphIndex": null,
+      "printedParagraph": "When it enters the Confrontation Zone",
+      "paragraphSha256": "bbe2c35767dd8cf74909b7b2dabe58a4d210e647c0d5b313ffb26cbfebf20409",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-103",
+      "name": "Punitive Tripod",
+      "paragraphIndex": null,
+      "printedParagraph": "When the Punitive Tripod loses a confrontation, the power of all manifestations currently in each Interzone",
+      "paragraphSha256": "f877fd1ea8124731aae07ef2c45cd11c59b645f36e46df0f1b78b4530a3dd571",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-126",
+      "name": "Jodorosk, the Psychomage",
+      "paragraphIndex": null,
+      "printedParagraph": "When Jodorosk enters the Confrontation Zone",
+      "paragraphSha256": "029359e71c7683528367793b70692299b1a7ac9235b616634648c900ffda9e27",
+      "expectedBehavior": "This trigger is queued exactly for the encoded entry zone, only from a live face-up source with active effects, and its real resolution path begins without an invalid target set.",
+      "testIds": [
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+        "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_all_sixteen_compile_one_exact_zone_entry_trigger",
+      "status": "pass",
+      "durationSeconds": 0.0006
+    },
+    {
+      "testId": "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_each_zone_entry_effect_begins_real_resolution",
+      "status": "pass",
+      "durationSeconds": 0.4308
+    },
+    {
+      "testId": "test_zone_entry_family_clauses.ZoneEntryFamilyClauses.test_trigger_requires_the_exact_zone_and_a_live_face_up_source",
+      "status": "pass",
+      "durationSeconds": 0.2565
+    }
+  ],
+  "limits": [
+    "This proof certifies the shared printed zone-entry trigger condition, not every branch of each resulting effect.",
+    "Card-specific outcomes remain protected by their existing dedicated regressions."
+  ]
+}

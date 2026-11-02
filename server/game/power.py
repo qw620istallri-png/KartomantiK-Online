@@ -89,11 +89,17 @@ class PowerMixin:
                     ):
                         modifier += value
                 elif kind == "friendly_support_flat":
-                    if self.rules_item_controller_id(item) == self.rules_item_controller_id(source) and item.get("isSupport"):
+                    if (
+                        self.rules_item_controller_id(item)
+                        == self.rules_item_controller_id(source)
+                        and self.rules_field_zone(item) == "confrontation"
+                        and item.get("isSupport")
+                    ):
                         modifier += value
                 elif kind == "friendly_support_per_other_non_token_confrontation":
                     if (
                         self.rules_item_controller_id(item) == self.rules_item_controller_id(source)
+                        and self.rules_field_zone(item) == "confrontation"
                         and item.get("isSupport")
                         and not item.get("isTokenCard")
                         and not item.get("isCopy")
@@ -108,7 +114,12 @@ class PowerMixin:
                             and not candidate.get("isCopy")
                         )
                         modifier += value * others
-                elif kind == "self_only_friendly_support" and source is item and item.get("isSupport"):
+                elif (
+                    kind == "self_only_friendly_support"
+                    and source is item
+                    and self.rules_field_zone(item) == "confrontation"
+                    and item.get("isSupport")
+                ):
                     support_count = sum(
                         1 for candidate in self.rules_confrontation_items(
                             self.rules_item_controller_id(item)

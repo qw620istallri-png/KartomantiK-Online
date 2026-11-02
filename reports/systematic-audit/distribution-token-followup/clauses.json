@@ -1,11 +1,11 @@
 {
   "schemaVersion": 1,
-  "sourceDigest": "e7ff61ad97354a3dc0c1b40f09dcdb98e09b53c2724b286571ea2505e0c6d605",
+  "sourceDigest": "6bb8879eaaee7e66cdc8ebe8cacc3085c15fe0339b249e60cb4c2dcf8e06708d",
   "published": false,
-  "finishedAt": "2026-10-26T09:10:35.894906+00:00",
+  "finishedAt": "2026-11-02T22:14:00.395990+00:00",
   "summary": {
-    "executed": 19,
-    "passed": 19,
+    "executed": 23,
+    "passed": 23,
     "failed": 0,
     "skipped": 0,
     "selectedParagraphs": 2,
@@ -50,6 +50,10 @@
         "test_distribution_token_clauses.DistributionTokenClauses.test_brood_tokens_belong_to_owner_not_vessel_container",
         "test_distribution_token_clauses.DistributionTokenClauses.test_brood_own_vessel_and_other_zones_do_not_trigger",
         "test_distribution_token_clauses.DistributionTokenClauses.test_brood_interzone_tokens_survive_resolution_and_next_turn",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_brood_token_can_enter_support_from_the_interzone",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_brood_token_keeps_support_after_winning_and_returning_to_interzone",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_brood_token_in_interzone_does_not_receive_support_power_bonus",
+        "test_distribution_token_clauses.DistributionTokenClauses.test_ignore_can_target_a_brood_token_entering_support",
         "test_distribution_token_clauses.DistributionTokenClauses.test_brood_token_choice_cannot_be_replayed",
         "test_distribution_token_clauses.DistributionTokenClauses.test_brood_interzone_creation_does_not_bypass_support_prohibition_into_cz"
       ],
@@ -75,17 +79,17 @@
           "status": "pass"
         }
       ],
-      "durationSeconds": 0.063
+      "durationSeconds": 0.0428
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_interzone_creation_does_not_bypass_support_prohibition_into_cz",
       "status": "pass",
-      "durationSeconds": 0.031
+      "durationSeconds": 0.0137
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_interzone_tokens_survive_resolution_and_next_turn",
       "status": "pass",
-      "durationSeconds": 0.015
+      "durationSeconds": 0.0142
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_invalid_count_and_wrong_player_leave_state_unchanged",
@@ -104,7 +108,7 @@
           "status": "pass"
         }
       ],
-      "durationSeconds": 0.032
+      "durationSeconds": 0.0128
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_own_vessel_and_other_zones_do_not_trigger",
@@ -123,17 +127,32 @@
           "status": "pass"
         }
       ],
-      "durationSeconds": 0.078
+      "durationSeconds": 0.0407
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_token_can_enter_support_from_the_interzone",
+      "status": "pass",
+      "durationSeconds": 0.0142
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_token_choice_cannot_be_replayed",
       "status": "pass",
-      "durationSeconds": 0.015
+      "durationSeconds": 0.0162
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_token_in_interzone_does_not_receive_support_power_bonus",
+      "status": "pass",
+      "durationSeconds": 0.0173
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_token_keeps_support_after_winning_and_returning_to_interzone",
+      "status": "pass",
+      "durationSeconds": 0.0153
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_tokens_belong_to_owner_not_vessel_container",
       "status": "pass",
-      "durationSeconds": 0.016
+      "durationSeconds": 0.0161
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_brood_zero_one_two_are_real_choices_with_exact_characteristics",
@@ -152,7 +171,7 @@
           "status": "pass"
         }
       ],
-      "durationSeconds": 0.063
+      "durationSeconds": 0.0433
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_cleanse_and_field_exit_remove_the_modifier",
@@ -167,12 +186,12 @@
           "status": "pass"
         }
       ],
-      "durationSeconds": 0.046
+      "durationSeconds": 0.0318
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_disappeared_target_does_not_receive_a_modifier",
       "status": "pass",
-      "durationSeconds": 0.032
+      "durationSeconds": 0.0154
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_invalid_extra_target_and_wrong_player_do_not_mutate_choice",
@@ -187,27 +206,27 @@
           "status": "pass"
         }
       ],
-      "durationSeconds": 0.015
+      "durationSeconds": 0.0152
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_loss_target_selection_enters_stack_before_power_is_applied",
       "status": "pass",
-      "durationSeconds": 0.032
+      "durationSeconds": 0.0142
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_modifier_survives_next_turn_and_source_departure",
       "status": "pass",
-      "durationSeconds": 0.015
+      "durationSeconds": 0.0143
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_no_legal_interzone_target_does_not_request_a_choice",
       "status": "pass",
-      "durationSeconds": 0.031
+      "durationSeconds": 0.0123
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_one_target_receives_all_three_without_a_choice",
       "status": "pass",
-      "durationSeconds": 0.032
+      "durationSeconds": 0.0154
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_only_defeat_of_a_participant_triggers",
@@ -230,7 +249,7 @@
           "status": "pass"
         }
       ],
-      "durationSeconds": 0.109
+      "durationSeconds": 0.059
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_targets_require_controller_interzone_and_one_to_three_cards",
@@ -253,12 +272,12 @@
           "status": "pass"
         }
       ],
-      "durationSeconds": 0.031
+      "durationSeconds": 0.0136
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_three_targets_each_receive_one",
       "status": "pass",
-      "durationSeconds": 0.032
+      "durationSeconds": 0.0179
     },
     {
       "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_echo_two_targets_player_chooses_which_receives_two",
@@ -273,7 +292,12 @@
           "status": "pass"
         }
       ],
-      "durationSeconds": 0.046
+      "durationSeconds": 0.0302
+    },
+    {
+      "testId": "test_distribution_token_clauses.DistributionTokenClauses.test_ignore_can_target_a_brood_token_entering_support",
+      "status": "pass",
+      "durationSeconds": 0.0138
     }
   ],
   "limits": [

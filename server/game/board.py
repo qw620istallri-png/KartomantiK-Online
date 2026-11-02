@@ -566,6 +566,8 @@ class BoardMixin:
             return bool(metadata.get("supportFromStalemate"))
         counter_name = metadata.get("supportWhenNoCounter")
         return bool(
+            (item.get("isTokenCard") and item.get("hasSupport"))
+            or
             metadata.get("supportFromInterzone")
             or self.rules_support_condition_met(item, metadata.get("supportCondition"))
             or int(item.get("supportUntilTurn") or 0) == self.phase_tracker["turn"]

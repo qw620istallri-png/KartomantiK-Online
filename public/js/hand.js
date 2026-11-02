@@ -103,7 +103,7 @@ function handCardUnplayableReason(cardId) {
     const phases = rulesEphemeralPhasesClient(card);
     if (!phases.includes(phaseId)) return wrongPhase(phases);
     const ability = (playedAbilitiesByCard.get(cardId) || [])[0];
-    if (ability?.condition === "controller_lost_confrontation" && rules.confrontationResult?.loserId !== myPlayerId) {
+    if (ability?.condition === "controller_lost_confrontation" && rules.lostConfrontationThisTurn !== true) {
       return t("unplayableLostConfrontation");
     }
     return payable() || t("rulesBoardCardNotPlayable");
@@ -196,7 +196,7 @@ function handCardIsPlayable(cardId, source = null) {
     const ability = (playedAbilitiesByCard.get(cardId) || [])[0];
     if (
       ability?.condition === "controller_lost_confrontation"
-      && rules.confrontationResult?.loserId !== myPlayerId
+      && rules.lostConfrontationThisTurn !== true
     ) return false;
     const draft = ability ? buildRulesActionDraft(source || { cardId, zone: "hand" }, ability) : null;
     if (!draft) return true;
@@ -326,7 +326,8 @@ function rulesBattlefieldSupportAvailableClient(item) {
     return /can enter in Support from the Stalemate Zone/i.test(effect);
   }
   if (item?.fieldZone !== "interzone") return false;
-  return /^Support[.;]/.test(effect)
+  return Boolean(item?.isTokenCard && item?.hasSupport)
+    || /^Support[.;]/.test(effect)
     || Number(item.supportUntilTurn || 0) === Number(latestState?.phaseTracker?.turn || 0)
     || item.canEnterSupport === true
     || (

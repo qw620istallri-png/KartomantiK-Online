@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "6bb8879eaaee7e66cdc8ebe8cacc3085c15fe0339b249e60cb4c2dcf8e06708d",
+  "published": false,
+  "finishedAt": "2026-11-02T22:13:59.048514+00:00",
+  "summary": {
+    "executed": 3,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "selectedParagraphs": 6,
+    "cardsWithSelectedClauseProof": 6,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "je9rwgrjwk97oes_en",
+      "name": "Stampeding Brood",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Stampeding Brood enters the Empathic Vessel of an opponent, the owner of this card puts up to two tokens with 1 power {G} and Support in their Interzone. Those tokens are not lost at the Resolution.",
+      "paragraphSha256": "df6d3b39708f7658d8cdd4ab0d128f46a0f06c7718f8d13afaa0ea6987d388cb",
+      "expectedBehavior": "The permanent Support token can be canceled while entering Support, retried, resolved, returned to Interzone after a win, and played again next turn.",
+      "testIds": [
+        "test_rules_transition_matrix.RulesTransitionMatrix.test_token_support_cancel_retry_resolve_return_and_next_turn"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ey6fuk5gguasrb0_en",
+      "name": "Ignore",
+      "paragraphIndex": 0,
+      "printedParagraph": "Cancel a target effect on the stack unless its controller pays {H}{H}.",
+      "paragraphSha256": "f33ef5ee0a3d29cf3e372f0166593493998d7c3eeac5a2318a8d3775a38034aa",
+      "expectedBehavior": "The payment choice cancels a target Token Support effect on the Stack when its controller declines.",
+      "testIds": [
+        "test_rules_transition_matrix.RulesTransitionMatrix.test_token_support_cancel_retry_resolve_return_and_next_turn"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "57ahe6ngzq5c013_en",
+      "name": "Herbaceous Whisperer",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Herbaceous Whisperer is on the field, the manifestations in Support you control get +1 power.",
+      "paragraphSha256": "72a2fd8927d7b2b91322a51b07e03ff2538e021254b4d9d8d1b0ea65e2be8d18",
+      "expectedBehavior": "Its +1 applies while the friendly token is actually in Support, not while that token waits in Interzone.",
+      "testIds": [
+        "test_rules_transition_matrix.RulesTransitionMatrix.test_token_support_cancel_retry_resolve_return_and_next_turn"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "dq529rojumn98fp_en",
+      "name": "Gnarlipuff, the Slimy",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Gnarlipuff is in an opponent's Empathic Vessel, you can pay {H}{H}{H}: A target manifestation in that player's Interzone returns to the top of its owner's deck.",
+      "paragraphSha256": "9204f755c43e2680a5271823dc7db1f026508a208a55b39b4393270aee54b5d1",
+      "expectedBehavior": "The owner can activate it from an opponent's Vessel; availability, auto-pass, declaration, payment and destination agree.",
+      "testIds": [
+        "test_rules_transition_matrix.RulesTransitionMatrix.test_receptacle_activation_availability_declaration_and_resolution_agree"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "s6mezxrq1zp2958_en",
+      "name": "Rematch!",
+      "paragraphIndex": 0,
+      "printedParagraph": "You can play Rematch! only during the Resolution, if you lost the confrontation.\r\nAll First Manifestations remain in the Confrontation Zone. Then, after the Resolution Phase, a new Confrontation Phase begins in the same turn.",
+      "paragraphSha256": "b4a2881bcd467131b0595e6ebc1aba83a9a897df381730ba2237d585464f9801",
+      "expectedBehavior": "The same-turn rematch preserves the recorded loss while restarting Reaction with both First Manifestations.",
+      "testIds": [
+        "test_rules_transition_matrix.RulesTransitionMatrix.test_rematch_preserves_loss_for_recall_then_reset_clears_it"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "cnqaie6oq458qgq_en",
+      "name": "Recall",
+      "paragraphIndex": 0,
+      "printedParagraph": "If you lost the confrontation this turn, search your deck for a card. Reveal it and put it into your hand, then shuffle your deck.",
+      "paragraphSha256": "b9cb9332f3d8665b17c79515422ce7edb044e6f7721f734965a1c7c15e47e6c5",
+      "expectedBehavior": "Recall remains legal after a same-turn rematch because the prior confrontation loss is still authoritative.",
+      "testIds": [
+        "test_rules_transition_matrix.RulesTransitionMatrix.test_rematch_preserves_loss_for_recall_then_reset_clears_it"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_rules_transition_matrix.RulesTransitionMatrix.test_receptacle_activation_availability_declaration_and_resolution_agree",
+      "status": "pass",
+      "durationSeconds": 0.0158
+    },
+    {
+      "testId": "test_rules_transition_matrix.RulesTransitionMatrix.test_rematch_preserves_loss_for_recall_then_reset_clears_it",
+      "status": "pass",
+      "durationSeconds": 0.0166
+    },
+    {
+      "testId": "test_rules_transition_matrix.RulesTransitionMatrix.test_token_support_cancel_retry_resolve_return_and_next_turn",
+      "status": "pass",
+      "durationSeconds": 0.0172
+    }
+  ],
+  "limits": [
+    "Selected transition branches only; no whole-card certification.",
+    "Reset is asserted as the final boundary but is not itself a printed card clause.",
+    "Browser playability remains covered by the separate client/server parity suite."
+  ]
+}

@@ -1,0 +1,262 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "6bb8879eaaee7e66cdc8ebe8cacc3085c15fe0339b249e60cb4c2dcf8e06708d",
+  "published": false,
+  "finishedAt": "2026-11-02T22:14:01.215070+00:00",
+  "summary": {
+    "executed": 3,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "noEffectContracts": 16,
+    "cardsWithSelectedClauseProof": 16,
+    "fullCatalogSemanticCertification": false
+  },
+  "cards": [
+    {
+      "cardId": "l4suqymyd2ehsue_en",
+      "name": "Sated Swineheart",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "gbvulprmpw89ohr_en",
+      "name": "Tiptup, the Whistler",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "nu1ycheygeru344_en",
+      "name": "Amiable Blockhead",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "fro1wz8eln9t49l_en",
+      "name": "Isolated Wordsmith",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "vus7jchkjhws8lu_en",
+      "name": "Hurlon, Thought-implanter",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "rm8d0h0v6eu7ho7_en",
+      "name": "Rigid Omen",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "h3qquea83b813t9_en",
+      "name": "Repudiated Orphan",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "o2vng99wk76o072_en",
+      "name": "Yurfuq, Sad Lily",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "wbyjru9luc175ak_en",
+      "name": "Underground Snail",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "easl4l3aiiim2qg_en",
+      "name": "Roly-polymancer",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "girck4py9u1vrke_en",
+      "name": "Pok, the Teaser",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "o6fsczgrftd88lz_en",
+      "name": "Incoherent Pard",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "qs29rt3f6w1jx4o_en",
+      "name": "Ancient Bicep",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "jfzgsewuzsgn7hu_en",
+      "name": "Fiery Furybeast",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "1a0vuhn4xwybszo_en",
+      "name": "Titan of the Blazing Womb",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "1bbl0f2xi1u5rgi_en",
+      "name": "Migmomirf",
+      "noEffectTextContract": true,
+      "printedText": "",
+      "expectedBehavior": "No printed ability. Base characteristics compile exactly; the card uses normal Tribute and First Manifestation rules, has no Support permission, and creates no entry trigger.",
+      "testIds": [
+        "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+        "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers"
+      ],
+      "status": "all-branches-pass",
+      "allBranchesCertified": true
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_vanilla_card_clauses.VanillaCardClauses.test_catalog_contains_exact_sixteen_vanilla_manifestations",
+      "status": "pass",
+      "durationSeconds": 0.0005
+    },
+    {
+      "testId": "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_compilation_contains_only_base_characteristics",
+      "status": "pass",
+      "durationSeconds": 0.0003
+    },
+    {
+      "testId": "test_vanilla_card_clauses.VanillaCardClauses.test_vanilla_runtime_uses_default_first_tribute_and_no_support_or_triggers",
+      "status": "pass",
+      "durationSeconds": 0.0082
+    }
+  ],
+  "limits": [
+    "Certification is complete for the absence of printed effects and default base behavior only.",
+    "Interactions caused by other cards targeting these Manifestations remain covered by their own clauses."
+  ]
+}
