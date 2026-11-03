@@ -17,6 +17,13 @@ from session import ADVANCED_PHASES
 
 
 class SoloModeIntegrationTests(unittest.IsolatedAsyncioTestCase):
+    STARTER_DECKS = json.loads(
+        open(
+            os.path.join(SERVER_DIR, "..", "public", "starter-decks.json"),
+            encoding="utf-8",
+        ).read()
+    )
+
     async def asyncSetUp(self):
         server_main.sessions.clear()
         server_main.connections.clear()
@@ -134,6 +141,41 @@ class SoloModeIntegrationTests(unittest.IsolatedAsyncioTestCase):
             and entry.get("rulesEngine", {}).get("priorityPlayerId") == p1,
         )
         self.assertEqual(state["rulesEngine"]["priorityPasses"], [p2])
+
+    async def test_solo_can_import_and_confirm_a_deck_for_each_seat(self):
+        websocket, joined, session = await self.create_solo()
+        p1, p2 = joined["controlledPlayerIds"]
+        for player_id, deck in zip((p1, p2), self.STARTER_DECKS[:2]):
+            await websocket.send(json.dumps({
+                "type": "import_deck",
+                "actingPlayerId": player_id,
+                "deck": deck,
+                "name": deck["name"],
+                "confirmDeck": True,
+            }))
+            response = await self.receive_until(
+                websocket,
+                lambda entry: entry.get("type") in {"state", "error"},
+            )
+            self.assertEqual(response.get("type"), "state", response)
+            self.assertIn(
+                player_id,
+                response.get("rulesEngine", {}).get(
+                    "deckConfirmedPlayerIds", []
+                ),
+            )
+        self.assertEqual(
+            set(session.rules_engine["deckConfirmedPlayerIds"]), {p1, p2}
+        )
+        self.assertTrue(session.players[p1]["deckDefinition"])
+        self.assertTrue(session.players[p2]["deckDefinition"])
+        self.assertEqual(
+            [
+                len(session.players[player_id]["zones"]["hand"])
+                for player_id in (p1, p2)
+            ],
+            [7, 7],
+        )
 
     async def test_normal_session_rejects_acting_as_the_other_player(self):
         websocket, joined = await self.join({

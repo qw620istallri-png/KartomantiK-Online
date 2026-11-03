@@ -470,6 +470,21 @@ function renderRulesStack() {
     : "";
 }
 
+function soloPregameDeckButton(player) {
+  if (!soloModeActive() || !soloControlsPlayer(player.id)) return "";
+  const label = t(player.deckDefinition ? "editDeck" : "importDeck");
+  return `<button type="button" class="rules-pregame-player-deck" data-solo-pregame-deck="${esc(player.id)}" style="--player-tone:${esc(playerColor(player.id))}">${esc(label)}</button>`;
+}
+
+function wireSoloPregameDeckButtons() {
+  document.querySelectorAll("[data-solo-pregame-deck]").forEach((button) => {
+    button.onclick = () => {
+      beginSoloInteraction(button.dataset.soloPregameDeck);
+      openImportDeckPanel();
+    };
+  });
+}
+
 function renderRulesPregame() {
   const panel = $("#rulesPregamePanel");
   const rules = latestState?.rulesEngine;
@@ -510,17 +525,21 @@ function renderRulesPregame() {
     $("#rulesPregameHint").textContent = t("rulesDeckSetupHint");
     $("#rulesPregamePlayers").innerHTML = Object.values(latestState.players || {}).map((player) => {
       const hasDeck = Boolean(player.deckDefinition);
-      const isConfirmed = latestState.mode === "casual" ? deckConfirmed.has(player.id) : hasDeck;
+      const isConfirmed = ["casual", "solo"].includes(latestState.mode)
+        ? deckConfirmed.has(player.id)
+        : hasDeck;
       const statusKey = isConfirmed
         ? "rulesDeckConfirmedState"
         : (hasDeck ? "rulesDeckSelectedState" : "rulesDeckMissingState");
-      return `<div class="rules-pregame-player ${isConfirmed ? "ready" : ""}">
+      return `<div class="rules-pregame-player ${isConfirmed ? "ready" : ""}${soloModeActive() ? " has-deck-action" : ""}" style="--player-tone:${esc(playerColor(player.id))}">
         <span class="rules-pregame-player-mark" style="--player-tone:${esc(playerColor(player.id))}">${esc((player.name || "?").slice(0, 1).toUpperCase())}</span>
         <span><strong>${esc(player.name || player.id)}</strong><small>${esc(t(statusKey))}</small></span>
         <span class="rules-pregame-check" aria-hidden="true">${isConfirmed ? "✓" : ""}</span>
+        ${soloPregameDeckButton(player)}
       </div>`;
     }).join("");
-    $("#rulesPregameActions").classList.remove("hidden");
+    wireSoloPregameDeckButtons();
+    $("#rulesPregameActions").classList.toggle("hidden", soloModeActive());
     $("#rulesPregameActions").classList.add("deck-stage");
     $("#rulesOpeningHandBtn").classList.remove("hidden");
     $("#rulesOpeningHandBtn").textContent = t("importDeck");
@@ -630,12 +649,14 @@ function renderRulesPregame() {
               : "rulesPregameWaitingState";
     const checked = decksReady ? ready.has(player.id) : deckConfirmed.has(player.id);
     const attention = mulliganRequired.has(player.id) || mulliganFailed.has(player.id);
-    return `<div class="rules-pregame-player ${checked ? "ready" : ""}${attention ? " attention" : ""}">
+    return `<div class="rules-pregame-player ${checked ? "ready" : ""}${attention ? " attention" : ""}${soloModeActive() && !decksReady ? " has-deck-action" : ""}" style="--player-tone:${esc(playerColor(player.id))}">
       <span class="rules-pregame-player-mark" style="--player-tone:${esc(playerColor(player.id))}">${esc((player.name || "?").slice(0, 1).toUpperCase())}</span>
       <span><strong>${esc(player.name || player.id)}</strong><small>${esc(t(statusKey))}</small></span>
       <span class="rules-pregame-check" aria-hidden="true">${checked ? "✓" : attention ? "!" : ""}</span>
+      ${!decksReady ? soloPregameDeckButton(player) : ""}
     </div>`;
   }).join("");
+  wireSoloPregameDeckButtons();
 
   const mineDeckConfirmed = deckConfirmed.has(myPlayerId);
   const mineHasDeck = Boolean(latestState.players?.[myPlayerId]?.deckDefinition);
@@ -643,7 +664,10 @@ function renderRulesPregame() {
   const controlsHidden = isObserver || !latestState.players?.[myPlayerId];
   const canMulligan = decksReady && mineOpened && !mineMulliganed && !mineReady && !mulliganFailed.has(myPlayerId);
   const canKeepHand = decksReady && mineOpened && !mineNeedsMulligan && !mineReady && !mulliganFailed.has(myPlayerId);
-  $("#rulesPregameActions").classList.toggle("hidden", controlsHidden || (decksReady && !canMulligan && !canKeepHand));
+  $("#rulesPregameActions").classList.toggle(
+    "hidden",
+    controlsHidden || (soloModeActive() && !decksReady) || (decksReady && !canMulligan && !canKeepHand),
+  );
   $("#rulesPregameActions").classList.toggle("deck-stage", !decksReady);
   $("#rulesPregameActions").classList.toggle("mulligan-stage", decksReady);
   $("#rulesOpeningHandBtn").classList.toggle("hidden", decksReady);

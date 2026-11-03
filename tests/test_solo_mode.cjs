@@ -123,6 +123,32 @@ const mime = {
         document.querySelector("#gameScreen").classList.remove("hidden");
 
         renderAll();
+        latestState.phaseTracker.turn = 1;
+        latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "recovery_start");
+        latestState.rulesEngine.deckConfirmedPlayerIds = [];
+        latestState.rulesEngine.readyPlayerIds = [];
+        renderAll();
+        const pregameButtons = [...document.querySelectorAll("[data-solo-pregame-deck]")].map((button) => ({
+          playerId: button.dataset.soloPregameDeck,
+          label: button.textContent.trim(),
+          tone: button.style.getPropertyValue("--player-tone"),
+        }));
+        const pregameGenericHidden = document.querySelector("#rulesPregameActions").classList.contains("hidden");
+        document.querySelector('[data-solo-pregame-deck="solo:p2"]').click();
+        const pregameP2Editor = {
+          open: !document.querySelector("#importPanel").classList.contains("hidden"),
+          playerId: myPlayerId,
+          target: document.querySelector("#importDeckPlayer").textContent.trim(),
+        };
+        window.__sent = [];
+        importDeckPayload({ name: "P2 test", groups: [] }, "P2 test", false, false);
+        const pregameP2Import = window.__sent.at(-1);
+        document.querySelector("#importCancelBtn").click();
+        latestState.phaseTracker.turn = 2;
+        latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "confrontation_reaction");
+        latestState.rulesEngine.deckConfirmedPlayerIds = ["solo:p1", "solo:p2"];
+        latestState.rulesEngine.readyPlayerIds = ["solo:p1", "solo:p2"];
+        renderAll();
         const topCard = document.querySelector("#opponentHandFan [data-opponent-hand-card]");
         const initialTopCards = document.querySelectorAll("#opponentHandFan [data-opponent-hand-card]").length;
         const initialBottomCards = document.querySelectorAll("#myHandTray [data-hand-card]").length;
@@ -197,6 +223,10 @@ const mime = {
           topUpright: Number(new DOMMatrix(topStyle.transform).a) > 0,
           deckEditor,
           panelControls,
+          pregameButtons,
+          pregameGenericHidden,
+          pregameP2Editor,
+          pregameP2Import,
           sent: manualSent,
           topInactiveAfter,
           bottomActiveAfter,
@@ -209,6 +239,23 @@ const mime = {
         fs.mkdirSync(process.env.SCREENSHOT_DIR, { recursive: true });
         await page.screenshot({
           path: path.join(process.env.SCREENSHOT_DIR, `solo-${viewport.width}.png`),
+        });
+        await page.evaluate(() => {
+          latestState.phaseTracker.turn = 1;
+          latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "recovery_start");
+          latestState.rulesEngine.deckConfirmedPlayerIds = [];
+          latestState.rulesEngine.readyPlayerIds = [];
+          renderAll();
+        });
+        await page.screenshot({
+          path: path.join(process.env.SCREENSHOT_DIR, `solo-decks-${viewport.width}.png`),
+        });
+        await page.evaluate(() => {
+          latestState.phaseTracker.turn = 2;
+          latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "confrontation_reaction");
+          latestState.rulesEngine.deckConfirmedPlayerIds = ["solo:p1", "solo:p2"];
+          latestState.rulesEngine.readyPlayerIds = ["solo:p1", "solo:p2"];
+          renderAll();
         });
         await page.locator("[data-ub-solo-edit-deck]").click();
         await page.screenshot({
@@ -228,6 +275,19 @@ const mime = {
         closed: true,
       });
       assert.equal(result.panelControls, 3);
+      assert.deepEqual(result.pregameButtons.map(({ playerId, label }) => ({ playerId, label })), [
+        { playerId: "solo:p1", label: "Importer un deck" },
+        { playerId: "solo:p2", label: "Importer un deck" },
+      ]);
+      assert.notEqual(result.pregameButtons[0].tone, result.pregameButtons[1].tone);
+      assert.equal(result.pregameGenericHidden, true);
+      assert.deepEqual(result.pregameP2Editor, {
+        open: true,
+        playerId: "solo:p2",
+        target: "Deck du joueur P2",
+      });
+      assert.equal(result.pregameP2Import.type, "import_deck");
+      assert.equal(result.pregameP2Import.actingPlayerId, "solo:p2");
       assert.equal(result.sent.actingPlayerId, "solo:p2");
       assert.equal(result.sent.type, "move_card");
       assert.equal(result.topInactiveAfter, true);

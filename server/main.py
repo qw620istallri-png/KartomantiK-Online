@@ -1334,7 +1334,7 @@ async def handle_message(ws, info, data):
                     return await send_error(ws, error)
                 session.add_log(actor_id, "rules_deck_confirmed", {})
                 log_rules_opening_sequence(session, result, actor_id)
-            elif session.mode == "casual":
+            elif session.mode in {"casual", "solo"}:
                 error, result = session.confirm_casual_deck(actor_id, HAND_LIMIT)
                 if error:
                     return await send_error(ws, error)

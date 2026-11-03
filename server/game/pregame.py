@@ -237,7 +237,7 @@ class PregameMixin:
 
     def casual_deck_setup_active(self):
         return bool(
-            self.mode == "casual"
+            self.mode in {"casual", "solo"}
             and not self.rules_engine["enabled"]
             and not self.ended
             and self.phase_tracker["turn"] == 1

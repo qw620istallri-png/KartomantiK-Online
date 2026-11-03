@@ -436,7 +436,7 @@ function renderImportPanelActions() {
   const candidate = importValidationCandidate();
   const mineConfirmed = (latestState?.rulesEngine?.deckConfirmedPlayerIds || []).includes(myPlayerId);
   validationButton.disabled = !primaryActionAvailable
-    || (validationMode && mineConfirmed)
+    || (validationMode && mineConfirmed && !soloModeActive())
     || !deckImportValidation(candidate).valid;
 }
 
