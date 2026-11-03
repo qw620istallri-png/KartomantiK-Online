@@ -6,6 +6,19 @@
 function openImportDeckPanel() {
   pendingDeckImport = null;
   resetImportDeckValidationArm();
+  const player = latestState?.players?.[myPlayerId];
+  const playerLabel = $("#importDeckPlayer");
+  if (soloModeActive() && player) {
+    const seat = Number(player.seat) === 1 ? "P2" : "P1";
+    const name = player.name || seat;
+    playerLabel.textContent = String(t("soloDeckTarget")).replace("{seat}", seat)
+      + (name.toLocaleLowerCase() === seat.toLocaleLowerCase() ? "" : ` · ${name}`);
+    playerLabel.style.setProperty("--player-tone", playerColor(myPlayerId));
+    playerLabel.classList.remove("hidden");
+  } else {
+    playerLabel.textContent = "";
+    playerLabel.classList.add("hidden");
+  }
   $("#importSideboardBtn").disabled = !(latestState?.players?.[myPlayerId]);
   $("#importSelectionStatus").textContent = "";
   $("#importPanel").classList.remove("hidden");

@@ -1202,7 +1202,7 @@ function renderBattlefield() {
   const bf = $("#battlefield");
   bf.querySelectorAll(".bf-card, .bf-token").forEach((el) => el.remove());
   const boardLayout = new Map();
-  // UI beta places cards by zone (see ui-beta.js); null on the classic table
+  // The table places cards by zone (see ui-beta.js).
   const betaPlacement = window.uiBeta?.active() ? window.uiBeta.placement() : null;
 
   latestState.battlefield.forEach((item) => {

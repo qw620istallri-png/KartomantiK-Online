@@ -47,7 +47,7 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
           };
           window.__sent = []; send = (payload) => window.__sent.push(payload);
           document.querySelector("#joinScreen").classList.add("hidden"); document.querySelector("#gameScreen").classList.remove("hidden");
-          window.uiBeta.setEnabled(true); renderAll();
+           renderAll();
         };
       });
 

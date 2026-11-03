@@ -45,7 +45,7 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
         ].map(item => ({ ...item, faceUp: true, fieldZone: "stalemate", x: 500, y: 300, counters: {}, rotation: 0 }));
         document.querySelector("#joinScreen").classList.add("hidden");
         document.querySelector("#gameScreen").classList.remove("hidden");
-        window.uiBeta.setEnabled(true); renderAll();
+         renderAll();
       });
       const prefix = process.env.BASELINE ? "stalemate-before" : "stalemate";
       await page.screenshot({ path: path.join(output, `${prefix}-${viewport.width}.png`) });

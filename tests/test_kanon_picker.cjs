@@ -42,7 +42,7 @@ const out = path.join(root, 'reports/systematic-audit/kanon-events-followup');
               readyPlayerIds: ['p1', 'p2'], deckConfirmedPlayerIds: ['p1', 'p2'], firstManifestationComplete: true } };
           document.querySelector('#joinScreen').classList.add('hidden');
           document.querySelector('#gameScreen').classList.remove('hidden');
-          uiBeta.setEnabled(true); renderAll();
+           renderAll();
           window.__kanonSent = [];
           send = payload => window.__kanonSent.push(payload);
           const repeated = cid('Wind Sprout');

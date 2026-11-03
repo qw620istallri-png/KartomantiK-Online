@@ -65,7 +65,7 @@ const mime = { '.js': 'text/javascript', '.css': 'text/css', '.json': 'applicati
         };
         document.querySelector('#joinScreen').classList.add('hidden');
         document.querySelector('#gameScreen').classList.remove('hidden');
-        window.uiBeta.setEnabled(true);
+
         __seedChoice();
       });
       await page.screenshot({ path: path.join(artifacts, `grimoire-${viewport.width}.png`) });

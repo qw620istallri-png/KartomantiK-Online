@@ -2301,6 +2301,25 @@ body:has(#revealPanel:not(.hidden)) #inspectPanel { z-index: 95; }
 .deckomantik-link:hover { background: #e3bc59; }
 
 .import-subhead { margin: 14px 0 6px; font-size: 14px; text-transform: uppercase; letter-spacing: .05em; color: var(--gold-deep); }
+.import-deck-player {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  margin: -4px 0 14px;
+  color: color-mix(in srgb, var(--player-tone) 55%, var(--ink));
+  font-size: 14px;
+  font-weight: 800;
+}
+.import-deck-player::before {
+  content: "";
+  width: 10px;
+  height: 10px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--player-tone);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--player-tone) 24%, transparent);
+}
 .deck-pick-list { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 6px; }
 .deck-pick { padding: 6px 10px; font-size: 14px; }
 .deck-pick-temperament {

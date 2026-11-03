@@ -160,7 +160,7 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
       await page.evaluate(() => {
         document.querySelector("#joinScreen").classList.add("hidden");
         document.querySelector("#gameScreen").classList.remove("hidden");
-        window.uiBeta.setEnabled(true);
+
         for (const card of cardsById.values()) card.image = "card-back.webp";
         latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "confrontation_reaction");
         latestState.rulesEngine.actionStack = [{ id: "semantic-duel", kind: "play_card", controllerId: "p1",

@@ -33,10 +33,6 @@ function startServer() {
   const port = server.address().port;
   const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || "chrome", headless: true });
   const page = await browser.newPage({ viewport: { width: 1280, height: 800 } });
-  // these regressions cover the classic table; the new table (now the default) is switched on where needed
-  await page.addInitScript(() => {
-    try { localStorage.setItem("ko_ui_default_v2", "1"); localStorage.setItem("ko_ui_beta", "0"); } catch (error) { /* ignore */ }
-  });
   try {
     await page.goto(`http://127.0.0.1:${port}/`, { waitUntil: "networkidle" });
     await page.waitForFunction(() => typeof toggleHandHidden === "function");
@@ -99,16 +95,14 @@ function startServer() {
       document.querySelector("#spaceShortcutProbe").remove();
       handHiddenByUser = false;
       applyHandVisibility(myPlayerId);
-      chatState = "open";
-      applyChatState();
-      document.querySelector("#chatPanel").classList.remove("hidden");
+      document.querySelector('[data-ub-tab="chat"]').click();
     });
-    await page.locator("#chatInput").fill("hello");
-    await page.locator("#chatInput").focus();
+    await page.locator("#ubChatInput").fill("hello");
+    await page.locator("#ubChatInput").focus();
     await page.keyboard.press("Space");
     await page.keyboard.type("world");
     const chatResult = await page.evaluate(() => ({
-      value: document.querySelector("#chatInput").value,
+      value: document.querySelector("#ubChatInput").value,
       handVisible: !document.querySelector("#myHandTray").classList.contains("hidden"),
     }));
     assert.equal(chatResult.value, "hello world");
@@ -116,7 +110,7 @@ function startServer() {
 
     const foldLabel = await page.evaluate(() => {
       document.getElementById("gameScreen").classList.add("hidden");
-      window.uiBeta.setEnabled(true);
+
       const button = document.querySelector("#ubChatFold");
       return { label: button?.getAttribute("aria-label"), title: button?.title };
     });

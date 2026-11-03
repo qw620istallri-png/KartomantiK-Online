@@ -39,7 +39,7 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
         window.__sent = []; send = (payload) => window.__sent.push(payload);
         document.querySelector("#joinScreen").classList.add("hidden");
         document.querySelector("#gameScreen").classList.remove("hidden");
-        window.uiBeta.setEnabled(true);
+
         window.__setChoice = (choice) => {
           latestState.rulesEngine.pendingChoice = { playerId: "p1", sourceCardId: "inner-deserts-064", ...choice };
           window.__sent = [];

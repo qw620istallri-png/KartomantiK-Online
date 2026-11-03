@@ -663,7 +663,25 @@ function wireCardHoverZoom(el, cloneClassName) {
     // source's immediate parent or sending it a mouseleave.
     removalObserver.observe(document.body, { childList: true, subtree: true });
     window.addEventListener("blur", clearClone);
-    requestAnimationFrame(() => clone && clone.classList.add("zoomed"));
+    requestAnimationFrame(() => {
+      if (!clone) return;
+      clone.classList.add("zoomed");
+      if (cloneClassName !== "hand-card-hover-clone") return;
+      requestAnimationFrame(() => {
+        if (!clone) return;
+        const margin = 22;
+        const bounds = clone.getBoundingClientRect();
+        const dx = bounds.left < margin
+          ? margin - bounds.left
+          : Math.min(0, window.innerWidth - margin - bounds.right);
+        const dy = bounds.top < margin
+          ? margin - bounds.top
+          : Math.min(0, window.innerHeight - margin - bounds.bottom);
+        if (!dx && !dy) return;
+        clone.style.left = `${(Number.parseFloat(clone.style.left) || 0) + dx}px`;
+        clone.style.top = `${(Number.parseFloat(clone.style.top) || 0) + dy}px`;
+      });
+    });
   });
   el.addEventListener("mousemove", (event) => {
     if (clone) updateRarityPointer(clone, event, true, el);

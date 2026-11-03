@@ -1,5 +1,4 @@
-/* UI beta: alternative table layout (see ui-beta.js). Every rule is scoped to
-   #gameScreen.ui-beta, so the classic table is untouched when it is off. */
+/* Permanent table layout (see ui-beta.js). */
 
 #gameScreen.ui-beta,
 #gameScreen.ui-beta:not(.hidden) ~ :is(#revealPanel, #handRequestPanel, #rulesChoicePanel, .rules-vfx-top-reveal) {
@@ -575,11 +574,8 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 #gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .inspect-history-card { flex: none; width: 38px; }
 #gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .inspect-resize-handle { display: none; }
 
-/* ---------- top bar menu entries ---------- */
-.ui-beta-menu-btn { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.ui-beta-menu-btn.active .phase-mode-switch span { transform: translateX(14px); }
+/* ---------- top bar theme picker ---------- */
 .ui-beta-theme-row { display: grid; gap: 4px; padding: 4px 0 6px; border-bottom: 1px solid #ffffff1f; margin-bottom: 2px; }
-.ui-beta-theme-row.hidden { display: none; }
 .ui-beta-theme-row > span { font-size: 11px; text-transform: uppercase; letter-spacing: .12em; opacity: .7; }
 .ui-beta-theme-row button { display: flex; align-items: center; gap: 12px; justify-content: flex-start; text-align: left; }
 .ui-beta-theme-row button[aria-pressed="true"] { border-color: #d3a942; background: #d3a94226; }
@@ -1121,8 +1117,7 @@ body.ub-hand-drawing #gameScreen.ui-beta #myHandTray { pointer-events: none; }
 #gameScreen.ui-beta .ub-piles .zone-popover .reveal-n-group button { border: 0; border-left: 1px solid var(--ub-line-soft); border-radius: 0; }
 @media (pointer: coarse) { #gameScreen.ui-beta .ub-piles .zone-popover button { min-height: 36px; } }
 
-/* the classic table shrinks field cards under 900 px wide; this table sizes every
-   card itself from a 150 x 210 card, so it keeps that base size on phones too */
+/* The table sizes every card from a 150 x 210 base, including on phones. */
 #gameScreen.ui-beta .bf-card { width: 150px; height: 210px; }
 
 /* phone: no player icons, only the points, kept above the opponent's hand fan;

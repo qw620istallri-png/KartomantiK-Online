@@ -42,7 +42,7 @@ const fixtures = JSON.parse(fs.readFileSync(path.join(out, 'picker-fixtures.json
               readyPlayerIds: ['p1', 'p2'], deckConfirmedPlayerIds: ['p1', 'p2'], firstManifestationComplete: true } };
           document.querySelector('#joinScreen').classList.add('hidden');
           document.querySelector('#gameScreen').classList.remove('hidden');
-          uiBeta.setEnabled(true); renderAll();
+           renderAll();
           send = payload => window.__deckSent.push(payload);
         }, language);
         for (const [scenario, choice] of Object.entries(fixtures)) {

@@ -8,9 +8,9 @@ const tests=[];
 async function check(id,fn){if(process.env.MOTION_CASE&&!id.includes(process.env.MOTION_CASE))return;try{await fn();tests.push({testId:id,status:'pass'});}catch(e){tests.push({testId:id,status:'fail',detail:e.stack});console.log(e.message);}console.log(id,tests.at(-1).status);}
 async function drag(page,source,target,touch){
  const a=await source.boundingBox(),b=await target.boundingBox();assert.ok(a&&b);
- const x=a.x+a.width/2,y=Math.min(page.viewportSize().height-12,a.y+a.height*.3),tx=b.x+b.width/2,ty=b.y+b.height*.45;
- const hit=await page.evaluate(({x,y})=>{const el=document.elementFromPoint(x,y);return {id:el?.closest('.bf-card,[data-hand-card]')?.dataset.itemId||el?.closest('[data-hand-card]')?.dataset.handCard,html:el?.outerHTML.slice(0,450)};},{x,y});
- assert.ok(hit.id,'Card origin occluded: '+JSON.stringify({a,b,x,y,hit}));
+ const origin=await page.evaluate(({a})=>{for(const fy of [.05,.15,.3,.5,.75])for(const fx of [.5,.35,.65]){const x=a.x+a.width*fx,y=Math.max(2,Math.min(innerHeight-2,a.y+a.height*fy)),el=document.elementFromPoint(x,y),card=el?.closest('.bf-card,[data-hand-card]');if(card)return{x,y,id:card.dataset.itemId||card.dataset.handCard};}return null;},{a});
+ assert.ok(origin.id,'Card origin occluded: '+JSON.stringify({a,b,origin}));
+ const {x,y}=origin,tx=b.x+b.width/2,ty=b.y+b.height*.45;
  if(!touch){await page.mouse.move(x,y);await page.mouse.down();await page.mouse.move(tx,ty,{steps:14});await page.mouse.up();return;}
  const c=await page.context().newCDPSession(page);
  try{await c.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x,y}]});
@@ -36,14 +36,14 @@ async function drag(page,source,target,touch){
    await page.goto(url);await page.waitForFunction(()=>cardsById.size===450);
    await page.evaluate(code=>{for(const c of cardsById.values())c.image='card-back.webp';connectAndJoin({code,name:clientId});},info.code);
    await page.waitForFunction(()=>latestState&&Object.keys(latestState.players).length===2&&ws.readyState===1);
-   await page.evaluate(()=>{uiBeta.setEnabled(true);showGameScreen();window.motionFlights=[];window.motionAnimations=[];window.motionSent=[];const originalSend=send;send=p=>{motionSent.push(p);return originalSend(p);};
+   await page.evaluate(()=>{showGameScreen();window.motionFlights=[];window.motionAnimations=[];window.motionSent=[];const originalSend=send;send=p=>{motionSent.push(p);return originalSend(p);};
     const fly=playRulesVfxFlight;playRulesVfxFlight=(kind,origin,target,options={})=>{motionFlights.push({kind,origin,target,options});return fly(kind,origin,target,options);};
     const anim=Element.prototype.animate;Element.prototype.animate=function(frames,options){if(this.matches('.bf-card,.rules-vfx-flight'))motionAnimations.push({className:this.className,itemId:this.dataset.itemId,frames,options});return anim.call(this,frames,options);};});
    pages.push(page);
   }
   for(const actorIndex of [0,1]){
    const actor=pages[actorIndex],peer=pages[1-actorIndex],pid='p'+(actorIndex+1),peerId='p'+(2-actorIndex),key=`${pair}-${pid}`;
-   const reset=async()=>{await fetch(`${url}/__fixture?pid=${pid}`);for(const page of pages){await page.waitForFunction(pid=>latestState.battlefield.some(i=>i.id==='motion-source'&&i.ownerId===pid),pid);await page.waitForTimeout(150);await page.evaluate(async()=>{removeRulesVfx();pendingBoardArrivals.clear();lastBoardLayout=null;renderAll();motionFlights=[];motionAnimations=[];motionSent=[];await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});}};
+   const reset=async()=>{await fetch(`${url}/__fixture?pid=${pid}`);for(const page of pages){await page.waitForFunction(pid=>latestState.battlefield.some(i=>i.id==='motion-source'&&i.ownerId===pid),pid);await page.waitForTimeout(150);await page.evaluate(async()=>{removeRulesVfx();uiBeta.resetTransient();pendingBoardArrivals.clear();lastBoardLayout=null;renderAll();motionFlights=[];motionAnimations=[];motionSent=[];await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));});}};
    for(const zone of ['deck','graveyard','exile','hand','receptacle'])await check(`${key}-field-to-${zone}`,async()=>{
     await reset();const dest=zone==='receptacle'?peerId:pid;
     const origin=await peer.locator('[data-item-id="motion-source"]').evaluate(el=>{const r=el.getBoundingClientRect();return{x:r.x+r.width/2,y:r.y+r.height/2};});

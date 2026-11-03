@@ -43,7 +43,7 @@ const before = process.argv.includes('--before');
               readyPlayerIds: ['p1', 'p2'], deckConfirmedPlayerIds: ['p1', 'p2'], firstManifestationComplete: true } };
           document.querySelector('#joinScreen').classList.add('hidden');
           document.querySelector('#gameScreen').classList.remove('hidden');
-          uiBeta.setEnabled(true); renderAll();
+           renderAll();
           window.__limboSent = [];
           send = payload => window.__limboSent.push(payload);
           window.__limboChoice = (owner, cards) => {

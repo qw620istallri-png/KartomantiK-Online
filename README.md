@@ -32,9 +32,9 @@ They are always lost when the process restarts.
 
 Static client assets use versioned URLs and long-lived browser/CDN caching.
 
-Current assisted-rules asset version: `20261103-rules-beta-150`.
+Current assisted-rules asset version: `20261103-rules-beta-150-1`.
 
-When replacing a local asset, bump `20261103-rules-beta-150` in `public/index.html`
+When replacing a local asset, bump `20261103-rules-beta-150-1` in `public/index.html`
 (every `<script>` tag), `public/app.js` and `public/sw.js` together (the service worker's
 version is what tells installed apps that a new release is out).
 

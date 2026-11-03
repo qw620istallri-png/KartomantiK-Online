@@ -1,6 +1,5 @@
-// UI beta: an alternative table layout ("football pitch": me on the left, the
-// opponent on the right), toggled from the home options or the in-game menu.
-// It is a relayout of the existing table, not a second client: every panel,
+// Main table layout ("football pitch": me on the left, the opponent on the
+// right). It is a relayout of the existing table, not a second client: every panel,
 // pile, card and handler of app.js stays the one doing the work. This file
 // only (1) moves the existing panels into two side columns, (2) places the
 // battlefield cards by zone instead of by their x/y, (3) turns a drop on the
@@ -9,7 +8,6 @@
 (() => {
   "use strict";
 
-  const ENABLED_KEY = "ko_ui_beta";
   const THEME_KEY = "ko_ui_beta_theme";
   const THEMES = ["current", "sand", "dark"];
   const CARD_W = 150;
@@ -38,9 +36,6 @@
     ubDragToDeck: "Glisse une carte en surbrillance sur ton deck (ou clique dessus).",
     ubShowChoicePanel: "Voir les options",
     ubHideChoicePanel: "Choisir sur le terrain",
-    ubOption: "Nouvelle table",
-    ubOptionHint: "Table par défaut : moi à gauche, l’adversaire à droite. Décocher pour revenir à l’ancienne table (aussi depuis le menu de la partie).",
-    ubMenuToggle: "Nouvelle table",
     ubTheme: "Thème",
     ubThemeCurrent: "Actuel",
     ubThemeSand: "Crème / sable",
@@ -116,9 +111,6 @@
     ubDragToDeck: "Drag a highlighted card onto your deck (or click it).",
     ubShowChoicePanel: "See the options",
     ubHideChoicePanel: "Choose on the field",
-    ubOption: "New table",
-    ubOptionHint: "Default table: me on the left, the opponent on the right. Untick to go back to the classic table (also from the game menu).",
-    ubMenuToggle: "New table",
     ubTheme: "Theme",
     ubThemeCurrent: "Current",
     ubThemeSand: "Cream / sand",
@@ -194,9 +186,6 @@
     ubDragToDeck: "Trascina una carta evidenziata sul tuo mazzo (o cliccala).",
     ubShowChoicePanel: "Vedi le opzioni",
     ubHideChoicePanel: "Scegli sul campo",
-    ubOption: "Nuovo tavolo",
-    ubOptionHint: "Tavolo predefinito: io a sinistra, l’avversario a destra. Togli la spunta per tornare al tavolo classico (anche dal menu della partita).",
-    ubMenuToggle: "Nuovo tavolo",
     ubTheme: "Tema",
     ubThemeCurrent: "Attuale",
     ubThemeSand: "Crema / sabbia",
@@ -296,13 +285,11 @@
     oppPilesOpen: null,
     geometry: null,
     placement: null,
-    homes: new Map(),
     built: false,
     peekTimer: null,
     peekEl: null,
     resizeFrame: 0,
     system: [],
-    iconSwaps: [],
     choice: null,
     choiceKey: "",
     choicePanelShown: "",
@@ -322,22 +309,7 @@
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
   const qs = (selector, root = document) => root.querySelector(selector);
 
-  // the new table is the default UI (players, tournament players and spectators):
-  // only an explicit choice made since it became the default switches it off
-  const DEFAULT_KEY = "ko_ui_default_v2";
-  function enabled() {
-    try {
-      if (localStorage.getItem(DEFAULT_KEY) !== "1") {
-        // an opt-out from the beta era does not survive the switch
-        localStorage.removeItem(ENABLED_KEY);
-        localStorage.setItem(DEFAULT_KEY, "1");
-      }
-      return localStorage.getItem(ENABLED_KEY) !== "0";
-    } catch (error) { return true; }
-  }
-  function setEnabled(on) {
-    try { localStorage.setItem(ENABLED_KEY, on ? "1" : "0"); } catch (error) { /* private mode: session only */ }
-  }
+  function enabled() { return true; }
   function theme() {
     let value = "current";
     try { value = localStorage.getItem(THEME_KEY) || "current"; } catch (error) { /* default */ }
@@ -469,18 +441,6 @@
       priority.style.fontSize = "";
       if (document.getElementById("gameScreen").classList.contains("ub-phone")) fitName(priority, 8);
     }
-  }
-
-  // back on the classic table: full texts, no inline sizes
-  function unfitLabels() {
-    document.querySelectorAll("#gameScreen [data-fit]").forEach((node) => {
-      const spec = FIT_LABELS[node.dataset.fit]?.();
-      node.classList.remove("ub-fit-icon");
-      node.removeAttribute("title");
-      if (spec) node.textContent = spec.full;
-      delete node.dataset.fit;
-    });
-    document.querySelectorAll("#gameScreen .ub-name, #ubOppBar .v").forEach((node) => { node.style.fontSize = ""; });
   }
 
   // ------------------------------------------------------------ last opponent action
@@ -1512,33 +1472,10 @@
 
   // ------------------------------------------------------------ relocation
 
-  // existing panels move into the columns; a placeholder remembers where they
-  // came from so switching the beta off puts everything back
+  // Existing panels move into the permanent table columns.
   function adopt(node, container, before = null) {
     if (!node || !container) return;
-    if (!local.homes.has(node)) {
-      const marker = document.createComment(`ub-home:${node.id || node.className}`);
-      node.parentNode.insertBefore(marker, node);
-      local.homes.set(node, marker);
-    }
     if (node.parentNode !== container || (before && node.nextSibling !== before)) container.insertBefore(node, before);
-  }
-  function restoreAll() {
-    setStackExpanded(false);
-    local.homes.forEach((marker, node) => {
-      if (marker.parentNode) marker.parentNode.insertBefore(node, marker);
-      marker.remove();
-    });
-    local.homes.clear();
-    local.iconSwaps.forEach(([button, html]) => {
-      button.innerHTML = html;
-      delete button.dataset.ubIcon;
-    });
-    local.iconSwaps = [];
-    closeToolMenus();
-    // piles go back onto the board
-    const board = document.getElementById("battlefield");
-    document.querySelectorAll("#ubMyPiles .field-pile, #ubOppPiles .field-pile").forEach((pile) => board.appendChild(pile));
   }
 
   // phone: "Auto-skip" is one icon of the tool row (bottom left), sized like
@@ -1586,7 +1523,6 @@
     Object.entries(icons).forEach(([id, icon]) => {
       const button = document.getElementById(id);
       if (!button || button.dataset.ubIcon) return;
-      local.iconSwaps.push([button, button.innerHTML]);
       button.dataset.ubIcon = icon;
       button.innerHTML = ICONS[icon];
     });
@@ -2357,7 +2293,7 @@
   // ------------------------------------------------------------ toggles
 
   function applyTheme() {
-    const value = active() ? theme() : "current";
+    const value = theme();
     if (value === "current") delete document.documentElement.dataset.ubTheme;
     else document.documentElement.dataset.ubTheme = value;
     document.querySelectorAll("[data-ub-theme]").forEach((button) => {
@@ -2366,69 +2302,22 @@
   }
 
   function apply() {
-    const on = enabled();
     const screen = document.getElementById("gameScreen");
     if (!screen) return;
-    if (on) {
-      build();
-      localizeToggles();
-      screen.classList.add("ui-beta");
-      relocate();
-      lockHandSize(true);
-    } else if (screen.classList.contains("ui-beta")) {
-      screen.classList.remove("ui-beta", "ub-rules", "ub-compact", "ub-phone", "ub-stale-open");
-      unfitLabels();
-      restoreAll();
-      lockHandSize(false);
-      syncBoardChoice();
-      local.placement = null;
-      local.geometry = null;
-    }
+    build();
+    localizeTable();
+    screen.classList.add("ui-beta");
+    relocate();
+    lockHandSize(true);
     applyTheme();
-    syncToggles();
     if (latestState && !screen.classList.contains("hidden")) {
-      if (!on) centerBoardInView();
       renderAll();
     }
   }
 
-  function syncToggles() {
-    const on = enabled();
-    const home = document.getElementById("uiBetaInput");
-    if (home) home.checked = on;
-    const menu = document.getElementById("uiBetaMenuBtn");
-    if (menu) {
-      menu.classList.toggle("active", on);
-      menu.setAttribute("aria-pressed", String(on));
-    }
-    document.getElementById("uiBetaThemeRow")?.classList.toggle("hidden", !on);
-  }
-
-  function installToggles() {
-    const options = document.getElementById("tournamentLauncherOptions");
-    if (options && !document.getElementById("uiBetaInput")) {
-      const label = document.createElement("label");
-      label.className = "rules-beta-option ui-beta-option";
-      label.htmlFor = "uiBetaInput";
-      label.innerHTML = `<input type="checkbox" id="uiBetaInput"><span><strong id="uiBetaLabel"></strong><small id="uiBetaHint"></small></span>`;
-      const rulesOption = options.querySelector("label[for='rulesBetaInput']");
-      options.insertBefore(label, rulesOption ? rulesOption.nextSibling : null);
-      label.querySelector("input").addEventListener("change", (event) => {
-        setEnabled(event.target.checked);
-        apply();
-      });
-    }
+  function installThemePicker() {
     const popover = document.querySelector("#gameMoreMenu .game-more-popover");
-    if (popover && !document.getElementById("uiBetaMenuBtn")) {
-      const button = document.createElement("button");
-      button.type = "button";
-      button.id = "uiBetaMenuBtn";
-      button.className = "ui-beta-menu-btn";
-      button.innerHTML = `<span id="uiBetaMenuLabel"></span><span class="phase-mode-switch" aria-hidden="true"><span></span></span>`;
-      button.onclick = () => {
-        setEnabled(!enabled());
-        apply();
-      };
+    if (popover && !document.getElementById("uiBetaThemeRow")) {
       const row = document.createElement("div");
       row.id = "uiBetaThemeRow";
       row.className = "ui-beta-theme-row";
@@ -2440,27 +2329,21 @@
         applyTheme();
       });
       popover.insertBefore(row, popover.firstChild);
-      popover.insertBefore(button, row);
     }
-    localizeToggles();
-    syncToggles();
+    localizeTable();
   }
 
-  function localizeToggles() {
+  function localizeTable() {
     const set = (id, key) => {
       const node = document.getElementById(id);
       if (node) node.textContent = t(key);
     };
-    set("uiBetaLabel", "ubOption");
-    set("uiBetaHint", "ubOptionHint");
-    set("uiBetaMenuLabel", "ubMenuToggle");
     set("uiBetaThemeLabel", "ubTheme");
     const names = { current: "ubThemeCurrent", sand: "ubThemeSand", dark: "ubThemeDark" };
     document.querySelectorAll("[data-ub-theme-label]").forEach((node) => {
       node.textContent = t(names[node.dataset.ubThemeLabel]);
     });
-    const menu = document.getElementById("uiBetaMenuBtn");
-    if (menu) menu.title = t("ubOptionHint");    const rotate = document.querySelector("#ubRotate p");
+    const rotate = document.querySelector("#ubRotate p");
     if (rotate) rotate.textContent = t("ubRotate");
   }
 
@@ -3534,6 +3417,7 @@
   window.uiBeta = {
     active,
     enabled,
+    activate: apply,
     placement,
     fieldZone(item) { return active() ? classify(item, firstManifestationIds()).zone : null; },
     manualPlacement(item) { return inferZone(item?.x, item?.y); },
@@ -3575,10 +3459,9 @@
       document.querySelectorAll(".ub-draw-pop, .ub-choice-arrow, .ub-spotlight, #ubChoiceBanner").forEach((node) => node.remove());
       document.querySelectorAll(".ub-draw-pending, .ub-choice-lifted, .ub-drop-over").forEach((node) => node.classList.remove("ub-draw-pending", "ub-choice-lifted", "ub-drop-over"));
     },
-    setEnabled(on) { setEnabled(on); apply(); },
   };
 
-  installToggles();
+  installThemePicker();
   installTouch();
   apply();
 })();

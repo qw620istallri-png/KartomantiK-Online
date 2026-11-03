@@ -34,7 +34,7 @@ const { chromium } = require("playwright");
       window.__sent = []; send = (payload) => window.__sent.push(payload);
       document.querySelector("#joinScreen").classList.add("hidden");
       document.querySelector("#gameScreen").classList.remove("hidden");
-      window.uiBeta.setEnabled(true);
+
       renderAll();
       if (!document.querySelector("#ubOppBlock").classList.contains("open")) document.querySelector("#ubOppBar").click();
     }); await page.waitForTimeout(400); };

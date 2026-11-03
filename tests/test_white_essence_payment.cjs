@@ -44,7 +44,7 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
         send = (payload) => window.__sent.push(payload);
         document.querySelector("#joinScreen").classList.add("hidden");
         document.querySelector("#gameScreen").classList.remove("hidden");
-        window.uiBeta.setEnabled(true);
+
         renderAll();
         const hand = latestState.players.p1.zones.hand.cards;
         latestState.players.p1.zones.hand.cards = [will.id, "test-red"];

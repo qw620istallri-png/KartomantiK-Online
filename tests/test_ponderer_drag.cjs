@@ -35,7 +35,7 @@ const { chromium } = require("playwright");
         window.__sent = []; send = (payload) => window.__sent.push(payload);
         document.querySelector("#joinScreen").classList.add("hidden");
         document.querySelector("#gameScreen").classList.remove("hidden");
-        window.uiBeta.setEnabled(true);
+
         document.documentElement.dataset.ubTheme = theme;
         const source = [...cardsById.values()].find((card) => card.name === "Expansive Ponderer");
         latestState.rulesEngine.pendingChoice = { id: "ponderer", kind: "deck_reorder", playerId: "p1", sourceCardId: source.id,

@@ -121,7 +121,7 @@ const mime = {
         };
         document.querySelector("#joinScreen").classList.add("hidden");
         document.querySelector("#gameScreen").classList.remove("hidden");
-        window.uiBeta.setEnabled(true);
+
         renderAll();
         const topCard = document.querySelector("#opponentHandFan [data-opponent-hand-card]");
         const initialTopCards = document.querySelectorAll("#opponentHandFan [data-opponent-hand-card]").length;
@@ -134,6 +134,7 @@ const mime = {
         const deckEditor = {
           open: !document.querySelector("#importPanel").classList.contains("hidden"),
           playerId: myPlayerId,
+          target: document.querySelector("#importDeckPlayer").textContent.trim(),
         };
         document.querySelector("#importCancelBtn").click();
         deckEditor.closed = document.querySelector("#importPanel").classList.contains("hidden");
@@ -209,13 +210,23 @@ const mime = {
         await page.screenshot({
           path: path.join(process.env.SCREENSHOT_DIR, `solo-${viewport.width}.png`),
         });
+        await page.locator("[data-ub-solo-edit-deck]").click();
+        await page.screenshot({
+          path: path.join(process.env.SCREENSHOT_DIR, `solo-import-${viewport.width}.png`),
+        });
+        await page.locator("#importCancelBtn").click();
       }
       assert.equal(result.topCards, 2);
       assert.equal(result.bottomCards, 2);
       assert.equal(result.topActive, true);
       assert.equal(result.bottomInactive, true);
       assert.equal(result.topUpright, true);
-      assert.deepEqual(result.deckEditor, { open: true, playerId: "solo:p2", closed: true });
+      assert.deepEqual(result.deckEditor, {
+        open: true,
+        playerId: "solo:p2",
+        target: "Deck du joueur P2",
+        closed: true,
+      });
       assert.equal(result.panelControls, 3);
       assert.equal(result.sent.actingPlayerId, "solo:p2");
       assert.equal(result.sent.type, "move_card");

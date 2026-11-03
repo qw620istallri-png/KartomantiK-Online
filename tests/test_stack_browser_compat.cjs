@@ -36,7 +36,7 @@ const sourceHashes = () => Object.fromEntries(sourceFiles.map(file => [file,
       const browser = await type.launch(engine === "chromium" ? { channel: process.env.BROWSER_CHANNEL || "chrome", headless: true } : { headless: true });
       try {
         for (const viewport of [{ width: 1440, height: 1000 }, { width: 1280, height: 720 }]) {
-          for (const flavor of ["classic-assisted", "beta-assisted", "beta-manual"]) {
+          for (const flavor of ["assisted", "manual"]) {
           for (const profile of ["local", "remote-delayed-expanded"]) {
             const context = await browser.newContext({ viewport, locale: "fr-FR" });
             const page = await context.newPage();
@@ -65,7 +65,7 @@ const sourceHashes = () => Object.fromEntries(sourceFiles.map(file => [file,
                 document.querySelector("#gameScreen").classList.remove("hidden");
                 connectionMode = "casual"; connectionRole = "player"; myPlayerId = "p1"; isObserver = false;
                 const zones = () => Object.fromEntries(ZONES.map(zone => [zone, { cards: [], owners: {}, entryVersions: {} }]));
-                const assisted = flavor !== "beta-manual";
+                const assisted = flavor === "assisted";
                 const ids = Array.from({ length: 4 }, (_, n) => `stack-compat-${n}`);
                 ids.forEach((id, n) => cardsById.set(id, {
                   id, name: `Carte de pile ${n + 1}`, type: "ephemeral_will", typeLabel: "Volonté Éphémère",
@@ -85,15 +85,15 @@ const sourceHashes = () => Object.fromEntries(sourceFiles.map(file => [file,
                     actionStack: assisted ? ids.map((cardId, n) => ({ id: `action-${n}`, kind: "play_card", controllerId: n % 2 ? "p2" : "p1",
                       source: { cardId, zone: "hand" }, targets: [], turn: 2, phaseId: "confrontation_reaction" })) : [] },
                 };
-                uiBeta.setEnabled(flavor !== "classic-assisted");
+
                 renderAll();
               }, { flavor, profile, artUrls: [...artUrls] });
-              const selector = flavor === "beta-manual" ? "#ubManualStack .ub-mstack-card" : "#rulesStackList [data-stack-action-id]";
+              const selector = flavor === "manual" ? "#ubManualStack .ub-mstack-card" : "#rulesStackList [data-stack-action-id]";
               await page.waitForFunction(selector => document.querySelectorAll(selector).length === 4, selector);
               if (profile !== "local") {
                 // Re-render while cold images are in flight, then expand using the real control.
                 await page.evaluate(() => renderAll());
-                if (flavor !== "classic-assisted") await page.locator("#ubStack > header").click();
+                await page.locator("#ubStack > header").click();
               }
               await page.waitForFunction(selector => [...document.querySelectorAll(`${selector} img`)].every(img => img.complete && img.naturalWidth > 0), selector);
               await page.waitForTimeout(500);
@@ -123,7 +123,7 @@ const sourceHashes = () => Object.fromEntries(sourceFiles.map(file => [file,
             } catch (error) {
               row.error = error.stack;
             }
-            if (row.status === "fail" || (viewport.width === 1440 && flavor === "beta-assisted")) {
+            if (row.status === "fail" || (viewport.width === 1440 && flavor === "assisted")) {
               const filename = `${engine}-${flavor}-${viewport.width}-${profile}.png`;
               await page.screenshot({ path: path.join(out, filename) });
               row.screenshot = filename;
@@ -145,6 +145,6 @@ const sourceHashes = () => Object.fromEntries(sourceFiles.map(file => [file,
     console.log(JSON.stringify(report.summary));
     for (const row of report.cases.filter(c => c.status !== "pass")) console.log(row.engine, row.flavor, row.viewport.width, row.error);
   }
-  assert.equal(report.summary.executed, 24);
+  assert.equal(report.summary.executed, 16);
   assert.equal(report.summary.failed, 0);
 })().catch(error => { console.error(error); process.exitCode = 1; });

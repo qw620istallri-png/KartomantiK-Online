@@ -568,6 +568,7 @@ function showGameScreen() {
   $("#joinScreen").classList.add("hidden");
   $("#tournamentScreen").classList.add("hidden");
   $("#gameScreen").classList.remove("hidden");
+  window.uiBeta?.activate();
   // #battlefieldWrap is zero-sized while #gameScreen is display:none, so the
   // fit-and-centre math only works once it's actually visible
   centerBoardInView();

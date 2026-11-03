@@ -48,7 +48,7 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
           rulesEngine: { enabled: true, priorityPlayerId: "p1", priorityPasses: [], actionStack: [], ongoingEffects: [], playPermissions: [],
             firstManifestationComplete: true, firstManifestationItemIds: {}, readyPlayerIds: ["p1", "p2"], deckConfirmedPlayerIds: ["p1", "p2"] } };
           pendingRulesBoardFlow = null;
-          uiBeta.setEnabled(true);
+
           renderAll();
           window.__deckSent = [];
           send = payload => window.__deckSent.push(payload);

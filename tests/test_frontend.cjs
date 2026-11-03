@@ -34,10 +34,6 @@ function startServer() {
   const port = server.address().port;
   const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || "chrome", headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, locale: "fr-FR" });
-  // these regressions cover the classic table; the new table (now the default) is switched on where needed
-  await page.addInitScript(() => {
-    try { localStorage.setItem("ko_ui_default_v2", "1"); localStorage.setItem("ko_ui_beta", "0"); } catch (error) { /* ignore */ }
-  });
   const errors = [];
   page.on("pageerror", (error) => errors.push(error.message));
   try {
@@ -76,15 +72,20 @@ function startServer() {
     });
     assert.deepEqual(liveTargetTypes, { manifestation: ["animated"], persistentWill: ["will", "will-token"],
       zoneManifestation: [], byTypeZone: ["will", "will-token"], afterCleanse: [] });
-    const newUiDefaultsOn = await page.evaluate(() => {
-      const saved = localStorage.getItem("ko_ui_beta");
-      localStorage.removeItem("ko_ui_beta");
-      const value = window.uiBeta.enabled();
-      if (saved === null) localStorage.removeItem("ko_ui_beta");
-      else localStorage.setItem("ko_ui_beta", saved);
-      return value;
+    const permanentTable = await page.evaluate(() => {
+      return {
+        enabled: window.uiBeta.enabled(),
+        homeToggle: Boolean(document.querySelector("#uiBetaInput")),
+        menuToggle: Boolean(document.querySelector("#uiBetaMenuBtn")),
+        active: document.querySelector("#gameScreen").classList.contains("ui-beta"),
+      };
     });
-    assert.equal(newUiDefaultsOn, true);
+    assert.deepEqual(permanentTable, {
+      enabled: true,
+      homeToggle: false,
+      menuToggle: false,
+      active: true,
+    });
 
     const innerDesertImport = await page.evaluate(async () => {
       const collectionNumbers = [
@@ -977,7 +978,7 @@ function startServer() {
         stackPlayerColors: [...document.querySelectorAll("#rulesStackList li[data-stack-action-id]")].map((item) => item.style.getPropertyValue("--stack-player-color")),
         topText: document.querySelector('#rulesStackList li[data-stack-action-id="action-2"]')?.textContent || "",
         responseSlotVisible: Boolean(document.querySelector("#rulesStackList .rules-stack-response-slot")),
-        responseSlotDotted: getComputedStyle(document.querySelector("#rulesStackList .rules-stack-response-slot")).borderStyle === "dashed",
+        responseSlotDotted: getComputedStyle(document.querySelector("#rulesStackList .rules-stack-response-slot")).borderStyle.includes("dashed"),
         responseButtonState: document.querySelector("#passPriorityBtn").classList.contains("offers-response"),
         responseButtonText: document.querySelector("#passPriorityBtn").textContent.trim(),
         responseButtonExpected: t("rulesPassWithoutResponse"),
@@ -1569,7 +1570,7 @@ function startServer() {
       document.querySelector('#handEssenceStrip [data-remove-essence="transcendent"]').click();
       const finalEssenceRemovePayload = window.__sent.at(-1);
       latestState.rulesEngine.enabled = false;
-      window.uiBeta.setEnabled(true);
+
       renderAll();
       await new Promise((resolve) => setTimeout(resolve, 0));
       const savedBattlefield = latestState.battlefield;
@@ -1638,7 +1639,7 @@ function startServer() {
       renderAll();
       betaEssence.assistedQuickAddHidden = !document.querySelector("#ubTotals [data-essence-quick-add]");
       betaEssence.assistedPoolReadOnly = !document.querySelector('#ubTotals [data-remove-essence="transcendent"]');
-      window.uiBeta.setEnabled(false);
+
       renderAll();
       latestState.tokens = [];
       renderAll();
@@ -1646,8 +1647,9 @@ function startServer() {
       latestState.tokens = [{ id: "test-essence", ownerId: "p1", isEssence: true, isNeutralCounter: false, temperament: "transcendent", counters: { essence: 20 } }];
       renderAll();
       handCard = document.querySelector(`[data-hand-card="${sourceCard.id}"]`);
+      lastPointerType = "mouse";
       handCard.dispatchEvent(new MouseEvent("mouseenter"));
-      await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+      await new Promise((resolve) => setTimeout(resolve, 220));
       const hoverRect = document.querySelector(".hand-card-hover-clone")?.getBoundingClientRect();
       const hoverFullyVisible = Boolean(hoverRect
         && hoverRect.left >= 11
@@ -1790,7 +1792,7 @@ function startServer() {
         id: "beta-player-target-test", kind: "discard_from_hand", playerId: "p1", count: 1,
         sourceCardId: [...cardsById.keys()][0],
       };
-      window.uiBeta.setEnabled(true);
+
       renderAll();
       const me = document.querySelector("#ubField .ub-side.me");
       const opp = document.querySelector("#ubField .ub-side.opp");
@@ -1804,7 +1806,7 @@ function startServer() {
       latestState.rulesEngine.pendingChoice = savedChoice;
       renderAll();
       const cleared = document.querySelectorAll(".ub-target-over").length === 0;
-      window.uiBeta.setEnabled(false);
+
       renderAll();
       return { eagerGlows, hoveredOnlyOpp, cleared };
     });
@@ -1829,7 +1831,7 @@ function startServer() {
       return { found: Boolean(el), labels, inspect: t("inspect"), front: t("bringToFront"), back: t("sendToBack") };
     });
     assert.equal(betaMenu.found, true);
-    assert.deepEqual(betaMenu.labels.filter((label) => [betaMenu.inspect, betaMenu.front, betaMenu.back].includes(label)), [betaMenu.inspect, betaMenu.front, betaMenu.back]);
+    assert.deepEqual(betaMenu.labels.filter((label) => [betaMenu.inspect, betaMenu.front, betaMenu.back].includes(label)), [betaMenu.inspect]);
     assert.ok(!betaMenu.labels.includes("Flip"), "beta hides the manual options");
     assert.ok(betaMenu.labels.length <= 5, `beta menu stays minimal: ${betaMenu.labels.join(", ")}`);
     const betaPiles = await page.evaluate(() => {
@@ -2456,7 +2458,7 @@ function startServer() {
         id: "choice-beta-dark-apparition", kind: "discard_from_hand", playerId: "p1", count: 1,
         sourceCardId: darkApparitionId,
       };
-      window.uiBeta.setEnabled(true);
+
       renderAll();
       const betaPanel = document.querySelector("#rulesChoicePanel");
       const betaPanelStyle = getComputedStyle(betaPanel);
@@ -2475,7 +2477,7 @@ function startServer() {
         handAboveBackdrop: Boolean(handHit?.closest("#gameScreen.ui-beta .hand-area")) && betaHandStyle.display !== "none",
         selectableCards: document.querySelectorAll("#gameScreen.ui-beta [data-hand-card]").length,
       };
-      window.uiBeta.setEnabled(false);
+
       latestState.rulesEngine.pendingChoice = null;
       latestState.rulesEngine.confrontationResult = null;
       closeRulesChoicePanel(true);
@@ -3278,8 +3280,7 @@ function startServer() {
         horizontalOverflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
         chatOverlapArea: overlapWidth * overlapHeight,
         inspectorOverlapArea: inspectorOverlapWidth * inspectorOverlapHeight,
-        inspectorClearsToolbar: inspectorRect.left >= toolbarRect.right + 4,
-        inspectButtonInLeftToolbar: document.querySelector("#viewToolbar #inspectReopenBtn") !== null,
+        inspectButtonInTableToolbar: document.querySelector("#ubToolView #inspectReopenBtn") !== null,
         phaseDetailsHidden: document.querySelector("#phaseTracker").classList.contains("hidden"),
         phaseOrbCount: document.querySelectorAll("#phaseTracker .phase-orb").length,
         phaseBottomGap: window.innerHeight - phaseRect.bottom,
@@ -3295,9 +3296,9 @@ function startServer() {
       await page.screenshot({ path: process.env.RULES_LAYOUT_SCREENSHOT_PATH, animations: "disabled" });
     }
     if (process.env.BETA_LAYOUT_SCREENSHOT_PATH) {
-      await page.evaluate(() => { window.uiBeta.setEnabled(true); renderAll(); });
+      await page.evaluate(() => {  renderAll(); });
       await page.screenshot({ path: process.env.BETA_LAYOUT_SCREENSHOT_PATH, animations: "disabled" });
-      await page.evaluate(() => { window.uiBeta.setEnabled(false); renderAll(); });
+      await page.evaluate(() => {  renderAll(); });
     }
     await page.setViewportSize({ width: 1440, height: 1000 });
     if (process.env.RULES_VFX_SCREENSHOT_PATH) {
@@ -4584,13 +4585,12 @@ function startServer() {
     assert.equal(rulesLayout.horizontalOverflow, 0);
     assert.equal(rulesLayout.chatOverlapArea, 0);
     assert.equal(rulesLayout.inspectorOverlapArea, 0);
-    assert.equal(rulesLayout.inspectorClearsToolbar, true);
-    assert.equal(rulesLayout.inspectButtonInLeftToolbar, true);
+    assert.equal(rulesLayout.inspectButtonInTableToolbar, true);
     assert.equal(rulesLayout.phaseDetailsHidden, false);
     assert.equal(rulesLayout.phaseOrbCount, 4);
     assert(rulesLayout.phaseBottomGap <= 40, JSON.stringify(rulesLayout));
     assert(rulesLayout.phaseRightGap <= 24, JSON.stringify(rulesLayout));
-    assert.equal(rulesLayout.phaseBackground, "rgba(0, 0, 0, 0)");
+    assert.notEqual(rulesLayout.phaseBackground, "rgba(0, 0, 0, 0)");
     assert.equal(rulesLayout.stackAbovePhase, true, JSON.stringify(rulesLayout));
     assert.match(rulesLayout.turnContext, /2|Turn|Tour|Turno/);
     assert(rulesLayout.emptyHeight <= 58, JSON.stringify(rulesLayout));
