@@ -691,7 +691,7 @@ function wireCardHoverZoom(el, cloneClassName) {
 
 function wirePileBrowserCards(ownerId, zone) {
   $$("#deckBrowserCards [data-zone-card]").forEach((el) => {
-    const cardId = el.dataset.zoneCard.split(":")[2];
+    const [, , cardId] = splitZoneCardKey(el.dataset.zoneCard);
     const cardOwnerId = el.dataset.cardOwner || ownerId;
     bindCardDragSource(el, { kind: "card", cardId, cardOwnerId, fromOwnerId: ownerId, fromZone: zone }, { touchScroll: true });
     wireCardHoverZoom(el, "db-card-hover-clone");

@@ -2959,8 +2959,6 @@ body:not(.rarity-effects-disabled) .rarity-desert {
 }
 
 .opponent-hand-fan.solo-hand-fan {
-  z-index: 36;
-  height: 205px;
   transition: opacity .18s ease-out, filter .18s ease-out, transform .18s ease-out;
 }
 .solo-seat-controls {
@@ -2990,15 +2988,6 @@ body:not(.rarity-effects-disabled) .rarity-desert {
   stroke: currentColor;
   stroke-width: 1.6;
 }
-.opponent-hand-fan.solo-hand-fan .opponent-hand-card {
-  top: 72px;
-  transform: translateX(calc(-50% + var(--fan-x))) translateY(var(--fan-arc)) rotate(var(--fan-rotate));
-  transform-origin: 50% 10%;
-}
-.opponent-hand-fan.solo-hand-fan .opponent-hand-card:hover,
-.opponent-hand-fan.solo-hand-fan .opponent-hand-card:focus-visible {
-  transform: translateX(calc(-50% + var(--fan-x))) translateY(calc(10px + var(--fan-arc))) rotate(var(--fan-rotate)) scale(1.08);
-}
 .opponent-hand-fan.solo-hand-fan .opponent-hand-card.is-playable {
   box-shadow: 0 10px 28px #2c8ed877, 0 0 0 2px #72c7ffcc;
 }
@@ -3008,7 +2997,7 @@ body:not(.rarity-effects-disabled) .rarity-desert {
   filter: saturate(.65) brightness(.82);
 }
 .opponent-hand-fan.solo-active-hand {
-  transform: translateX(-50%) translateY(8px) scale(1.035);
+  transform: translateX(-50%);
 }
 .hand-area.solo-active-hand {
   transform: translateY(-6px) scale(1.018);
@@ -3020,10 +3009,8 @@ body:not(.rarity-effects-disabled) .rarity-desert {
 }
 
 @media (max-height: 560px) {
-  .opponent-hand-fan.solo-hand-fan { height: 148px; }
-  .opponent-hand-fan.solo-hand-fan .opponent-hand-card { width: 88px; height: 123px; top: 54px; }
   .hand-area.solo-inactive-hand { transform: translateY(42px) scale(.88); transform-origin: 50% 100%; }
-  .opponent-hand-fan.solo-inactive-hand { transform: translateX(-50%) translateY(-28px) scale(.88); }
+  .opponent-hand-fan.solo-inactive-hand { transform: translateX(-50%); }
 }
 
 .hand-area {

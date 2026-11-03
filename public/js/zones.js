@@ -336,6 +336,20 @@ function bindPileCalibration() {
 // gone: a TRUE 180° rotation — see rotateForSeat — needs no tuning at all,
 // it's exact by construction around the board's own centre.)
 
+function splitOwnerSuffixKey(key) {
+  const value = String(key || "");
+  const separator = value.lastIndexOf(":");
+  return separator < 0
+    ? [value, ""]
+    : [value.slice(0, separator), value.slice(separator + 1)];
+}
+
+function splitZoneCardKey(key) {
+  const [ownerAndZone, cardId] = splitOwnerSuffixKey(key);
+  const [ownerId, zone] = splitOwnerSuffixKey(ownerAndZone);
+  return [ownerId, zone, cardId];
+}
+
 function renderPiles() {
   const bf = $("#battlefield");
   bf.querySelectorAll(".field-pile").forEach((el) => el.remove());
@@ -354,7 +368,7 @@ function renderPiles() {
   wireZoneButtons();
   $$("[data-pile-trigger]").forEach((el) => {
     el.onclick = () => {
-      const [ownerId, zone] = el.dataset.pileTrigger.split(":");
+      const [ownerId, zone] = splitOwnerSuffixKey(el.dataset.pileTrigger);
       // beta table: a click on a public pile opens its search at once (decks keep their menu)
       if (window.uiBeta?.active() && zone !== "deck" && latestState?.players?.[ownerId]?.zones?.[zone]?.cards) {
         searchPile(ownerId, zone);
@@ -365,7 +379,7 @@ function renderPiles() {
   });
   $$("[data-pile-top-card]").forEach((el) => {
     const pile = el.closest("[data-field-pile]");
-    const [fromOwnerId, fromZone] = pile.dataset.fieldPile.split(":");
+    const [fromOwnerId, fromZone] = splitOwnerSuffixKey(pile.dataset.fieldPile);
     bindCardDragSource(el, {
       kind: "card", cardId: el.dataset.pileTopCard, cardOwnerId: el.dataset.cardOwner || fromOwnerId,
       fromOwnerId, fromZone,
@@ -404,7 +418,7 @@ function renderPiles() {
   $$("[data-score-delta]").forEach((btn) => {
     btn.onclick = (event) => {
       event.stopPropagation();
-      const [pid, delta] = btn.dataset.scoreDelta.split(":");
+      const [pid, delta] = splitOwnerSuffixKey(btn.dataset.scoreDelta);
       send({ type: "set_score", playerId: pid, delta: Number(delta) });
     };
   });

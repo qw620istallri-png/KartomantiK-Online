@@ -103,7 +103,7 @@ function wireZoneButtons() {
     };
   });
   $$("[data-discard-random]").forEach((btn) => {
-    const [ownerId, zone] = btn.dataset.discardRandom.split(":");
+    const [ownerId, zone] = splitOwnerSuffixKey(btn.dataset.discardRandom);
     btn.onclick = (e) => {
       e.stopPropagation();
       send({ type: "move_card", fromOwnerId: ownerId, fromZone: zone, toOwnerId: ownerId, toZone: "graveyard", random: true, toCardOwner: true });
@@ -111,11 +111,11 @@ function wireZoneButtons() {
     };
   });
   $$("[data-shuffle]").forEach((btn) => {
-    const [ownerId, zone] = btn.dataset.shuffle.split(":");
+    const [ownerId, zone] = splitOwnerSuffixKey(btn.dataset.shuffle);
     btn.onclick = (e) => { e.stopPropagation(); send({ type: "shuffle", ownerId, zone }); pulseZone(ownerId, zone); };
   });
   $$("[data-reveal-n]").forEach((btn) => {
-    const [ownerId, zone] = btn.dataset.revealN.split(":");
+    const [ownerId, zone] = splitOwnerSuffixKey(btn.dataset.revealN);
     btn.onclick = (e) => {
       e.stopPropagation();
       const input = document.querySelector(`[data-reveal-n-input="${ownerId}:${zone}"]`);
@@ -143,7 +143,7 @@ function wireZoneButtons() {
   $$("[data-open-pile-browser]").forEach((btn) => {
     btn.onclick = (e) => {
       e.stopPropagation();
-      const [ownerId, zone] = btn.dataset.openPileBrowser.split(":");
+      const [ownerId, zone] = splitOwnerSuffixKey(btn.dataset.openPileBrowser);
       searchPile(ownerId, zone);
     };
   });
@@ -151,7 +151,7 @@ function wireZoneButtons() {
   // its own (larger) copies of these same [data-zone-card] cards itself (see
   // wirePileBrowserCards), since it isn't re-rendered by this function
   $$(".zone-list [data-zone-card]").forEach((el) => {
-    const [ownerId, zone, cardId] = el.dataset.zoneCard.split(":");
+    const [ownerId, zone, cardId] = splitZoneCardKey(el.dataset.zoneCard);
     const cardOwnerId = el.dataset.cardOwner || ownerId;
     bindCardDragSource(el, { kind: "card", cardId, cardOwnerId, fromOwnerId: ownerId, fromZone: zone });
     el.addEventListener("contextmenu", (event) => {
@@ -378,7 +378,7 @@ function resolveDrop(ctx, clientX, clientY) {
       return;
     }
     if (zoneEl) {
-      const [toOwnerId, toZone] = zoneEl.dataset.dropZone.split(":");
+      const [toOwnerId, toZone] = splitOwnerSuffixKey(zoneEl.dataset.dropZone);
       if (battlefieldItem && !battlefieldItem.isTokenCard && !cardDestinationAllowed(battlefieldItem.ownerId, toOwnerId, toZone)) {
         showToast(t("invalidCardDestination"), true);
         return;
@@ -434,7 +434,7 @@ function resolveDrop(ctx, clientX, clientY) {
   }
   const cardOwnerId = ctx.cardOwnerId || ctx.fromOwnerId;
   if (zoneEl) {
-    const [toOwnerId, toZone] = zoneEl.dataset.dropZone.split(":");
+    const [toOwnerId, toZone] = splitOwnerSuffixKey(zoneEl.dataset.dropZone);
     if (toOwnerId === ctx.fromOwnerId && toZone === ctx.fromZone) return;
     if (!cardDestinationAllowed(cardOwnerId, toOwnerId, toZone)) {
       showToast(t("invalidCardDestination"), true);

@@ -548,7 +548,9 @@
 
   // The -10..+10 buttons of a Vessel open from a "±" button on its tile (a finger
   // cannot hover), float over the page, and stay open while points are added.
-  const scoreOwner = (adjust) => adjust.querySelector("[data-score-delta]")?.dataset.scoreDelta.split(":")[0];
+  const scoreOwner = (adjust) => splitOwnerSuffixKey(
+    adjust.querySelector("[data-score-delta]")?.dataset.scoreDelta,
+  )[0];
   function decorateScoreAdjust() {
     document.querySelectorAll(".ub-piles .field-pile").forEach((pile) => {
       const adjust = pile.querySelector(":scope > .pile-score-adjust");
@@ -586,7 +588,8 @@
   // the left half belongs to me; an observer gets the first seat on the left
   function sidePlayers() {
     const players = Object.values(latestState?.players || {});
-    let me = !isObserver && myPlayerId ? players.find((player) => player.id === myPlayerId) : null;
+    const tablePlayerId = soloModeActive() ? soloPrimaryPlayerId : myPlayerId;
+    let me = !isObserver && tablePlayerId ? players.find((player) => player.id === tablePlayerId) : null;
     if (!me) me = players.find((player) => (player.seat || 0) === mySeat()) || players[0] || null;
     const opp = players.find((player) => player !== me) || null;
     return { me, opp };
@@ -1539,7 +1542,7 @@
     const piles = [...document.querySelectorAll("#battlefield .field-pile")];
     piles.sort((a, b) => order.indexOf(a.dataset.zone) - order.indexOf(b.dataset.zone));
     piles.forEach((pile) => {
-      const ownerId = pile.dataset.fieldPile.split(":")[0];
+      const [ownerId] = splitOwnerSuffixKey(pile.dataset.fieldPile);
       const target = ownerId === players.me?.id ? mine : theirs;
       const player = latestState.players[ownerId];
       pile.style.setProperty("--pc", playerColor(ownerId));

@@ -974,7 +974,7 @@ function renderRulesBoardFlow() {
 
   if (flow.mode === "chain") {
     $$('[data-zone-card]').forEach((element) => {
-      const [containerId, zone, cardId] = String(element.dataset.zoneCard || "").split(":");
+      const [containerId, zone, cardId] = splitZoneCardKey(element.dataset.zoneCard);
       element.classList.toggle("is-chain-candidate", (
         containerId === myPlayerId
         && zone === flow.fromZone

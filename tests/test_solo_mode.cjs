@@ -148,11 +148,51 @@ const mime = {
         latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "confrontation_reaction");
         latestState.rulesEngine.deckConfirmedPlayerIds = ["solo:p1", "solo:p2"];
         latestState.rulesEngine.readyPlayerIds = ["solo:p1", "solo:p2"];
+        latestState.players["solo:p1"].zones.deck.count = 11;
+        latestState.players["solo:p2"].zones.deck.count = 23;
+        renderAll();
+        beginSoloInteraction("solo:p2");
+        renderAll();
+        const pileLayout = {
+          left: [...document.querySelectorAll("#ubMyPiles [data-field-pile]")].map((pile) => pile.dataset.fieldPile),
+          right: [...document.querySelectorAll("#ubOppPiles [data-field-pile]")].map((pile) => pile.dataset.fieldPile),
+        };
+        const originalSearchPile = searchPile;
+        window.__soloPileSearch = null;
+        searchPile = (ownerId, zoneName) => { window.__soloPileSearch = { ownerId, zone: zoneName }; };
+        document.querySelector('[data-pile-trigger="solo:p2:graveyard"]').click();
+        const pileSearch = window.__soloPileSearch;
+        searchPile = originalSearchPile;
+        const parsedPileKey = splitOwnerSuffixKey("solo:p2:graveyard");
+        const parsedZoneCardKey = splitZoneCardKey(`solo:p2:graveyard:${cardIds[2]}`);
+        endSoloInteraction();
         renderAll();
         const topCard = document.querySelector("#opponentHandFan [data-opponent-hand-card]");
         const initialTopCards = document.querySelectorAll("#opponentHandFan [data-opponent-hand-card]").length;
         const initialBottomCards = document.querySelectorAll("#myHandTray [data-hand-card]").length;
         const topStyle = getComputedStyle(topCard);
+        const fan = document.querySelector("#opponentHandFan");
+        const soloFanRect = fan.getBoundingClientRect();
+        const soloCardRect = topCard.getBoundingClientRect();
+        const savedFanClasses = fan.className;
+        fan.classList.remove("solo-hand-fan", "solo-active-hand", "solo-inactive-hand");
+        const normalFanRect = fan.getBoundingClientRect();
+        const normalCardRect = topCard.getBoundingClientRect();
+        fan.className = savedFanClasses;
+        const zcMeRect = document.querySelector("#ubZcMe").getBoundingClientRect();
+        const zcOppRect = document.querySelector("#ubZcOpp").getBoundingClientRect();
+        const totalMeRect = document.querySelector("#ubTotals .ub-total.me").getBoundingClientRect();
+        const totalOppRect = document.querySelector("#ubTotals .ub-total.opp").getBoundingClientRect();
+        const confrontationUiAtOuterSides = (
+          totalMeRect.left + totalMeRect.width / 2 < zcMeRect.left + zcMeRect.width / 2
+          && totalOppRect.left + totalOppRect.width / 2 > zcOppRect.left + zcOppRect.width / 2
+        );
+        const confrontationUiPositions = {
+          me: totalMeRect.left + totalMeRect.width / 2,
+          meZone: zcMeRect.left + zcMeRect.width / 2,
+          opp: totalOppRect.left + totalOppRect.width / 2,
+          oppZone: zcOppRect.left + zcOppRect.width / 2,
+        };
         const topActive = document.querySelector("#opponentHandFan").classList.contains("solo-active-hand");
         const bottomInactive = document.querySelector("#handArea").classList.contains("solo-inactive-hand");
         const panelControls = document.querySelectorAll("#ubWhoOpp .ub-solo-controls button").length;
@@ -227,6 +267,20 @@ const mime = {
           pregameGenericHidden,
           pregameP2Editor,
           pregameP2Import,
+          pileLayout,
+          pileSearch,
+          parsedPileKey,
+          parsedZoneCardKey,
+          handLayoutMatchesNormal: {
+            fanTop: Math.abs(soloFanRect.top - normalFanRect.top) < 1,
+            fanWidth: Math.abs(soloFanRect.width - normalFanRect.width) < 1,
+            fanHeight: Math.abs(soloFanRect.height - normalFanRect.height) < 1,
+            cardTop: Math.abs(soloCardRect.top - normalCardRect.top) < 1,
+            cardWidth: Math.abs(soloCardRect.width - normalCardRect.width) < 1,
+            cardHeight: Math.abs(soloCardRect.height - normalCardRect.height) < 1,
+          },
+          confrontationUiAtOuterSides,
+          confrontationUiPositions,
           sent: manualSent,
           topInactiveAfter,
           bottomActiveAfter,
@@ -288,6 +342,31 @@ const mime = {
       });
       assert.equal(result.pregameP2Import.type, "import_deck");
       assert.equal(result.pregameP2Import.actingPlayerId, "solo:p2");
+      assert.deepEqual(result.pileLayout.left, [
+        "solo:p1:deck",
+        "solo:p1:graveyard",
+        "solo:p1:exile",
+        "solo:p1:receptacle",
+      ]);
+      assert.deepEqual(result.pileLayout.right, [
+        "solo:p2:deck",
+        "solo:p2:graveyard",
+        "solo:p2:exile",
+        "solo:p2:receptacle",
+      ]);
+      assert.deepEqual(result.pileSearch, { ownerId: "solo:p2", zone: "graveyard" });
+      assert.deepEqual(result.parsedPileKey, ["solo:p2", "graveyard"]);
+      assert.deepEqual(result.parsedZoneCardKey.slice(0, 2), ["solo:p2", "graveyard"]);
+      assert.ok(result.parsedZoneCardKey[2]);
+      assert.deepEqual(result.handLayoutMatchesNormal, {
+        fanTop: true,
+        fanWidth: true,
+        fanHeight: true,
+        cardTop: true,
+        cardWidth: true,
+        cardHeight: true,
+      });
+      assert.equal(result.confrontationUiAtOuterSides, true, JSON.stringify(result.confrontationUiPositions));
       assert.equal(result.sent.actingPlayerId, "solo:p2");
       assert.equal(result.sent.type, "move_card");
       assert.equal(result.topInactiveAfter, true);

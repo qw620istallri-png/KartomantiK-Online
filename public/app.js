@@ -2,7 +2,7 @@
 // (see index.html); this file keeps every statement that runs at load, in order.
 
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261103-rules-beta-150-1-1";
+const STATIC_ASSET_VERSION = "20261103-rules-beta-150-1-2";
 
 {
   const versionEl = document.getElementById("appVersion");
@@ -73,7 +73,7 @@ document.addEventListener("mouseover", (event) => {
   const zone = event.target.closest("[data-zone-card]");
   const board = event.target.closest(".bf-card[data-item-id]");
   const opponent = event.target.closest("[data-opponent-hand-card]");
-  let cardId = hand?.dataset.handCard || zone?.dataset.zoneCard?.split(":")[2] || opponent?.dataset.opponentHandCard || null;
+  let cardId = hand?.dataset.handCard || (zone ? splitZoneCardKey(zone.dataset.zoneCard)[2] : null) || opponent?.dataset.opponentHandCard || null;
   if (!cardId && board) {
     const item = (latestState?.battlefield || []).find((candidate) => candidate.id === board.dataset.itemId);
     if (item && (item.faceUp || (item.ownerId === myPlayerId && !isObserver))) cardId = item.cardId;
