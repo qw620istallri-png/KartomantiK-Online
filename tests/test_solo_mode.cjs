@@ -176,6 +176,23 @@ const mime = {
         const initialTopCards = document.querySelectorAll("#opponentHandFan [data-opponent-hand-card]").length;
         const initialBottomCards = document.querySelectorAll("#myHandTray [data-hand-card]").length;
         const topStyle = getComputedStyle(topCard);
+        const bottomPlayableCard = document.createElement("div");
+        bottomPlayableCard.className = "hand-card is-playable";
+        const topPlayableCard = document.createElement("button");
+        topPlayableCard.className = "opponent-hand-card is-playable";
+        document.body.append(bottomPlayableCard, topPlayableCard);
+        const playableHighlight = (element) => ({
+          borderColor: getComputedStyle(element).borderColor,
+          boxShadow: getComputedStyle(element).boxShadow,
+          innerBorderColor: getComputedStyle(element, "::after").borderColor,
+          innerBoxShadow: getComputedStyle(element, "::after").boxShadow,
+        });
+        const matchingPlayableHighlight = {
+          p1: playableHighlight(bottomPlayableCard),
+          p2: playableHighlight(topPlayableCard),
+        };
+        bottomPlayableCard.remove();
+        topPlayableCard.remove();
         const fan = document.querySelector("#opponentHandFan");
         const soloFanRect = fan.getBoundingClientRect();
         const soloCardRect = topCard.getBoundingClientRect();
@@ -286,6 +303,7 @@ const mime = {
           },
           confrontationUiAtOuterSides,
           confrontationUiPositions,
+          matchingPlayableHighlight,
           sent: manualSent,
           topInactiveAfter,
           bottomActiveAfter,
@@ -374,6 +392,7 @@ const mime = {
         cardHeight: true,
       });
       assert.equal(result.confrontationUiAtOuterSides, true, JSON.stringify(result.confrontationUiPositions));
+      assert.deepEqual(result.matchingPlayableHighlight.p2, result.matchingPlayableHighlight.p1);
       assert.equal(result.sent.actingPlayerId, "solo:p2");
       assert.equal(result.sent.type, "move_card");
       assert.equal(result.topInactiveAfter, true);

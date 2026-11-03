@@ -1647,15 +1647,20 @@ function startServer() {
       latestState.tokens = [{ id: "test-essence", ownerId: "p1", isEssence: true, isNeutralCounter: false, temperament: "transcendent", counters: { essence: 20 } }];
       renderAll();
       handCard = document.querySelector(`[data-hand-card="${sourceCard.id}"]`);
+      const handCardRect = handCard.getBoundingClientRect();
       lastPointerType = "mouse";
       handCard.dispatchEvent(new MouseEvent("mouseenter"));
       await new Promise((resolve) => setTimeout(resolve, 220));
       const hoverRect = document.querySelector(".hand-card-hover-clone")?.getBoundingClientRect();
-      const hoverFullyVisible = Boolean(hoverRect
+      const hoverAnchored = Boolean(hoverRect
         && hoverRect.left >= 11
         && hoverRect.top >= 11
         && hoverRect.right <= window.innerWidth - 11
-        && hoverRect.bottom <= window.innerHeight - 11);
+        && handCardRect.top - hoverRect.top <= 40
+        && handCardRect.left + handCardRect.width / 2 >= hoverRect.left
+        && handCardRect.left + handCardRect.width / 2 <= hoverRect.right
+        && handCardRect.top + handCardRect.height * .3 >= hoverRect.top
+        && handCardRect.top + handCardRect.height * .3 <= hoverRect.bottom);
       handCard.dispatchEvent(new MouseEvent("mouseleave"));
       const supportKeywordCard = [...cardsById.values()].find((card) => (
         card.type === "manifestation" && String(card.effect || "").startsWith("Support.")
@@ -1719,7 +1724,7 @@ function startServer() {
       peroperoDeckHand.willHidden = !document.querySelector('#myHandTray [data-ghost-zone="deck"]');
       return {
         initial, voluntaryMulligan, recoveryMulligan, requestedUx, deckEditSummary, unaffordableAura, playableAura, essenceStripShown, essenceStripText, essenceStripBesideToggle, essenceStripRemovePayload, finalEssenceRemovePayload, betaEssence, essenceStripHiddenWhenEmpty,
-        hoverFullyVisible, manualStackHoverPreview, supportKeywordPlayableFromHand, gorbBlocksController, gorbLeavesOpponentFree, peroperoDeckHand,
+        hoverAnchored, manualStackHoverPreview, supportKeywordPlayableFromHand, gorbBlocksController, gorbLeavesOpponentFree, peroperoDeckHand,
       };
     });
     const newChoiceScreens = await page.evaluate(() => {
@@ -4484,7 +4489,7 @@ function startServer() {
       boardHidden: true, assistedQuickAddHidden: true, assistedPoolReadOnly: true,
     });
     assert.equal(pregameUi.essenceStripHiddenWhenEmpty, true);
-    assert.equal(pregameUi.hoverFullyVisible, true);
+    assert.equal(pregameUi.hoverAnchored, true);
     assert.equal(pregameUi.manualStackHoverPreview.shown, true);
     assert.equal(pregameUi.manualStackHoverPreview.image, pregameUi.manualStackHoverPreview.expectedImage);
     assert.equal(pregameUi.manualStackHoverPreview.height, pregameUi.manualStackHoverPreview.expectedHeight);

@@ -1,0 +1,219 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "28bf1fc6d707cd1e8d157ee95d6327aa0874cf00b07ccb9c7646525a3a4ecb57",
+  "published": false,
+  "finishedAt": "2026-11-03T15:51:12.082708+00:00",
+  "summary": {
+    "executed": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 11,
+    "cardsWithSelectedClauseProof": 11,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "inner-deserts-125",
+      "name": "Haltan, the Favored",
+      "paragraphIndex": null,
+      "printedParagraph": "As long as Haltan is on the field, you may Exhaust it: Make a target player gain or lose 10 Points.",
+      "paragraphSha256": "924d61f82a7b5033bf52eba2da7f9386129ae8b1e1b05e56513e26db7b9f9a19",
+      "expectedBehavior": "The printed effect requires exactly one current player target. Text naming an opponent rejects the controller; other player-target clauses allow either current player. Card targets, absent players and missing targets are rejected without changing game state.",
+      "testIds": [
+        "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+        "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+        "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self",
+        "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-088",
+      "name": "Gobres, the Collector",
+      "paragraphIndex": null,
+      "printedParagraph": "As long as Gobres is in the Interzone, before the Revelation a target opponent chooses a Will from their hand and Suspends it until the end of the turn. As long as it is Suspended, the opponent cannot play it.",
+      "paragraphSha256": "3d7fd50a424ea9f4ca156737a5f12e202cc97c1c393f8b42904ad3d4e879f8c9",
+      "expectedBehavior": "The printed effect requires exactly one current player target. Text naming an opponent rejects the controller; other player-target clauses allow either current player. Card targets, absent players and missing targets are rejected without changing game state.",
+      "testIds": [
+        "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+        "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+        "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self",
+        "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "0r7k88v71vvx7kk_en",
+      "name": "Suspend Judgment",
+      "paragraphIndex": null,
+      "printedParagraph": "If the manifestations of a target player have won the confrontation this turn, they remain in the Confrontation Zone until the next Resolution.",
+      "paragraphSha256": "efeab6ed61e660e27503af89c687244e09b3433637a821fc47f4d3ee6088eea7",
+      "expectedBehavior": "The printed effect requires exactly one current player target. Text naming an opponent rejects the controller; other player-target clauses allow either current player. Card targets, absent players and missing targets are rejected without changing game state.",
+      "testIds": [
+        "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+        "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+        "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self",
+        "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "n0natbzt0nfylml_en",
+      "name": "Shymon, the Mastermind",
+      "paragraphIndex": null,
+      "printedParagraph": "As long as it is on the field, you can exhaust Shymon and reduce its power by 2: Next turn, a target opponent cannot draw cards outside of the Recovery Phase until the end of that turn.",
+      "paragraphSha256": "57858b6a4b11cb9a907169f6fc9cc131ad3b0851e901df6d2132308c631e4b76",
+      "expectedBehavior": "The printed effect requires exactly one current player target. Text naming an opponent rejects the controller; other player-target clauses allow either current player. Card targets, absent players and missing targets are rejected without changing game state.",
+      "testIds": [
+        "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+        "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+        "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self",
+        "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "uycbbilf0zlttb9_en",
+      "name": "Rogue Tadpole",
+      "paragraphIndex": null,
+      "printedParagraph": "If Rogue Tadpole wins the confrontation, choose a target player. All manifestations in that player's Interzone return to the top of their respective owners' decks in the order they prefer.",
+      "paragraphSha256": "2778fd942421438bde8a34e00ebec532236e8def8908236af99478a7fe10e52f",
+      "expectedBehavior": "The printed effect requires exactly one current player target. Text naming an opponent rejects the controller; other player-target clauses allow either current player. Card targets, absent players and missing targets are rejected without changing game state.",
+      "testIds": [
+        "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+        "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+        "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self",
+        "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "mxbi84phhueeolc_en",
+      "name": "Tardigramo",
+      "paragraphIndex": null,
+      "printedParagraph": "If Tardigramo wins the confrontation, a target opponent exiles a random manifestation in their Empathic Vessel.",
+      "paragraphSha256": "8f4d1a499b6ecb77e5aa234ff3630523bcddeb46ecf95abefdc261385f74683d",
+      "expectedBehavior": "The printed effect requires exactly one current player target. Text naming an opponent rejects the controller; other player-target clauses allow either current player. Card targets, absent players and missing targets are rejected without changing game state.",
+      "testIds": [
+        "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+        "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+        "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self",
+        "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "unk0z0mamdx1el5_en",
+      "name": "Rude Exterminator",
+      "paragraphIndex": null,
+      "printedParagraph": "If Rude Exterminator wins the confrontation, a target opponent destroys a random manifestation in their Interzone.",
+      "paragraphSha256": "193ff9f249150390041fdd73e7c2aaabcbaba9c281263693f75607bff29e282e",
+      "expectedBehavior": "The printed effect requires exactly one current player target. Text naming an opponent rejects the controller; other player-target clauses allow either current player. Card targets, absent players and missing targets are rejected without changing game state.",
+      "testIds": [
+        "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+        "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+        "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self",
+        "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-042",
+      "name": "Ababash, the Ambassador",
+      "paragraphIndex": null,
+      "printedParagraph": "As long as Ababash is on the field, you may Exhaust it: Look at the top 3 cards of a target player's deck. You may exile one of those cards. Distribute any number of the remaining cards on the top and bottom of the deck.",
+      "paragraphSha256": "f13da7ac32830bbe6ec9e8dfe9065018b816e24b2326851b8a62936f89cd1de8",
+      "expectedBehavior": "The printed effect requires exactly one current player target. Text naming an opponent rejects the controller; other player-target clauses allow either current player. Card targets, absent players and missing targets are rejected without changing game state.",
+      "testIds": [
+        "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+        "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+        "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self",
+        "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "36l7iw5m5hk1pmr_en",
+      "name": "Nullify Reason",
+      "paragraphIndex": null,
+      "printedParagraph": "Until the end of the turn, all manifestations that are about to enter the Interzone, the deck and the Limbo of a target player are exiled instead.",
+      "paragraphSha256": "0523135de888d1e3f0e0d13b7be37f80751d8630b0f3c6df52277369817aee3c",
+      "expectedBehavior": "The printed effect requires exactly one current player target. Text naming an opponent rejects the controller; other player-target clauses allow either current player. Card targets, absent players and missing targets are rejected without changing game state.",
+      "testIds": [
+        "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+        "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+        "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self",
+        "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "dey791sghwx2ee3_en",
+      "name": "Remove by Chance",
+      "paragraphIndex": null,
+      "printedParagraph": "A target player destroys a random manifestation in their Empathic Vessel.",
+      "paragraphSha256": "d7dbf271ccf7e9041c13dffeb2f8bf9c30705e6cb4eb806bfd2363f03937465f",
+      "expectedBehavior": "The printed effect requires exactly one current player target. Text naming an opponent rejects the controller; other player-target clauses allow either current player. Card targets, absent players and missing targets are rejected without changing game state.",
+      "testIds": [
+        "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+        "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+        "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self",
+        "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-071",
+      "name": "Walk the Oblivion",
+      "paragraphIndex": null,
+      "printedParagraph": "A target opponent discards any number of cards from their hand, then loses 5 Points for each card in their hand.",
+      "paragraphSha256": "438237dfc187e764e7928fa64c904869e58fcd2171fede19376a04cee0d197fb",
+      "expectedBehavior": "The printed effect requires exactly one current player target. Text naming an opponent rejects the controller; other player-target clauses allow either current player. Card targets, absent players and missing targets are rejected without changing game state.",
+      "testIds": [
+        "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+        "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+        "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self",
+        "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+      "status": "pass",
+      "durationSeconds": 0.0005
+    },
+    {
+      "testId": "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+      "status": "pass",
+      "durationSeconds": 0.1525
+    },
+    {
+      "testId": "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation",
+      "status": "pass",
+      "durationSeconds": 0.1581
+    },
+    {
+      "testId": "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self",
+      "status": "pass",
+      "durationSeconds": 0.1443
+    }
+  ],
+  "limits": [
+    "This proof certifies player-target selection and relation constraints, not each card-specific result.",
+    "Immunity, choices and resulting zone or score changes remain covered by their dedicated families."
+  ]
+}

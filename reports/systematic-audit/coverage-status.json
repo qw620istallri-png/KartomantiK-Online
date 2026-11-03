@@ -1,21 +1,40 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-03T15:34:11.399320+00:00",
-  "sourceDigest": "ed36cc2bfff3153decf52d386ec8b8a96513287ea00284c4bd0095e1bd9d2000",
-  "unitEvidence": "reports/systematic-audit/release-150-1-3/unit-tests.json",
-  "unitEvidenceSourceDigest": "ed36cc2bfff3153decf52d386ec8b8a96513287ea00284c4bd0095e1bd9d2000",
+  "generatedAt": "2026-11-03T16:02:20.250608+00:00",
+  "sourceDigest": "28bf1fc6d707cd1e8d157ee95d6327aa0874cf00b07ccb9c7646525a3a4ecb57",
+  "unitEvidence": "reports/systematic-audit/release-150-2/unit-tests.json",
+  "unitEvidenceSourceDigest": "28bf1fc6d707cd1e8d157ee95d6327aa0874cf00b07ccb9c7646525a3a4ecb57",
   "currentUnitEvidence": true,
   "unitEvidencePassed": true,
   "duplicateUnitTestIds": [],
   "summary": {
     "catalogCards": 450,
-    "cardsWithSelectedClauseProof": 309,
-    "percentageWithSelectedClauseProof": 68.7,
-    "cardsOutsideThisStrictRegister": 141,
+    "cardsWithSelectedClauseProof": 320,
+    "percentageWithSelectedClauseProof": 71.1,
+    "cardsOutsideThisStrictRegister": 130,
     "fullCatalogSemanticCertification": false
   },
   "countingRule": "At least one explicit printed clause or explicit no-effect contract linked to tests that all passed in the named full unit run. Unique card IDs; interaction-only references excluded. Selected clauses do not certify all branches unless explicitly marked.",
   "cards": [
+    {
+      "cardId": "inner-deserts-042",
+      "name": "Ababash, the Ambassador",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/player-target-followup/clauses.json",
+          "testIds": [
+            "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+            "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+            "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation",
+            "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "f13da7ac32830bbe6ec9e8dfe9065018b816e24b2326851b8a62936f89cd1de8"
+        }
+      ],
+      "allBranchesCertified": false
+    },
     {
       "cardId": "knnq85hihrxuafj_en",
       "name": "Abandon",
@@ -3186,6 +3205,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-088",
+      "name": "Gobres, the Collector",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/player-target-followup/clauses.json",
+          "testIds": [
+            "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+            "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+            "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation",
+            "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "3d7fd50a424ea9f4ca156737a5f12e202cc97c1c393f8b42904ad3d4e879f8c9"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "o4p1r7347u6sff2_en",
       "name": "Gorb, the Musclebound",
       "proofs": [
@@ -3467,6 +3505,25 @@
           "paragraphIndex": 1,
           "proofKind": "printed-clause",
           "printedClauseSha256": "d67218b3aabe61df3dbfe3592231b9d6d0cafa907711588f903f2668af9e57f4"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-125",
+      "name": "Haltan, the Favored",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/player-target-followup/clauses.json",
+          "testIds": [
+            "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+            "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+            "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation",
+            "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "924d61f82a7b5033bf52eba2da7f9386129ae8b1e1b05e56513e26db7b9f9a19"
         }
       ],
       "allBranchesCertified": false
@@ -5917,6 +5974,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "36l7iw5m5hk1pmr_en",
+      "name": "Nullify Reason",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/player-target-followup/clauses.json",
+          "testIds": [
+            "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+            "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+            "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation",
+            "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "0523135de888d1e3f0e0d13b7be37f80751d8630b0f3c6df52277369817aee3c"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "ufujqhwlpmaw12y_en",
       "name": "Nullifying Hat",
       "proofs": [
@@ -7524,6 +7600,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "dey791sghwx2ee3_en",
+      "name": "Remove by Chance",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/player-target-followup/clauses.json",
+          "testIds": [
+            "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+            "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+            "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation",
+            "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "d7dbf271ccf7e9041c13dffeb2f8bf9c30705e6cb4eb806bfd2363f03937465f"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "86nfr2vhox3l6y2_en",
       "name": "Repelling Urn",
       "proofs": [
@@ -7730,6 +7825,25 @@
       "allBranchesCertified": true
     },
     {
+      "cardId": "uycbbilf0zlttb9_en",
+      "name": "Rogue Tadpole",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/player-target-followup/clauses.json",
+          "testIds": [
+            "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+            "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+            "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation",
+            "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "2778fd942421438bde8a34e00ebec532236e8def8908236af99478a7fe10e52f"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "easl4l3aiiim2qg_en",
       "name": "Roly-polymancer",
       "proofs": [
@@ -7746,6 +7860,25 @@
         }
       ],
       "allBranchesCertified": true
+    },
+    {
+      "cardId": "unk0z0mamdx1el5_en",
+      "name": "Rude Exterminator",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/player-target-followup/clauses.json",
+          "testIds": [
+            "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+            "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+            "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation",
+            "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "193ff9f249150390041fdd73e7c2aaabcbaba9c281263693f75607bff29e282e"
+        }
+      ],
+      "allBranchesCertified": false
     },
     {
       "cardId": "xeeg6rdiy9xeew5_en",
@@ -8027,6 +8160,25 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "c509acfebffcfa57fd04c3f8124df8d7257b2d2ce3f82f2d1f0ffec857d61c2e"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "n0natbzt0nfylml_en",
+      "name": "Shymon, the Mastermind",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/player-target-followup/clauses.json",
+          "testIds": [
+            "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+            "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+            "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation",
+            "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "57858b6a4b11cb9a907169f6fc9cc131ad3b0851e901df6d2132308c631e4b76"
         }
       ],
       "allBranchesCertified": false
@@ -8544,6 +8696,44 @@
           "paragraphIndex": 1,
           "proofKind": "printed-clause",
           "printedClauseSha256": "3cd7abaae7943cea29cd5dcef1f7ea2259be3fbfa152b8bfb33d9c0cf196d202"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "0r7k88v71vvx7kk_en",
+      "name": "Suspend Judgment",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/player-target-followup/clauses.json",
+          "testIds": [
+            "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+            "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+            "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation",
+            "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "efeab6ed61e660e27503af89c687244e09b3433637a821fc47f4d3ee6088eea7"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "mxbi84phhueeolc_en",
+      "name": "Tardigramo",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/player-target-followup/clauses.json",
+          "testIds": [
+            "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+            "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+            "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation",
+            "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "8f4d1a499b6ecb77e5aa234ff3630523bcddeb46ecf95abefdc261385f74683d"
         }
       ],
       "allBranchesCertified": false
@@ -9214,6 +9404,25 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "f5f87e29f4794bf62265a256f455c90f6e2550a1041a5cde72df1f02f22ee202"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-071",
+      "name": "Walk the Oblivion",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/player-target-followup/clauses.json",
+          "testIds": [
+            "test_player_target_family.PlayerTargetFamily.test_all_eleven_compile_one_exact_single_player_target",
+            "test_player_target_family.PlayerTargetFamily.test_each_accepts_a_valid_player_and_rejects_a_card_target",
+            "test_player_target_family.PlayerTargetFamily.test_missing_and_unknown_player_targets_are_rejected_without_mutation",
+            "test_player_target_family.PlayerTargetFamily.test_opponent_only_contracts_reject_self_and_open_contracts_allow_self"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "438237dfc187e764e7928fa64c904869e58fcd2171fede19376a04cee0d197fb"
         }
       ],
       "allBranchesCertified": false

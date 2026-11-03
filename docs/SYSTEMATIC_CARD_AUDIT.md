@@ -490,3 +490,11 @@ Tribut et peut couvrir plusieurs couleurs, sans modifier son Tempérament hors
 paiement. Les contrats et résultats sont dans
 `reports/systematic-audit/alternate-tribute-followup/clauses.json`. Le registre
 strict atteint **309/450 cartes (68,7 %)** après validation complète.
+
+Le lot suivant relie onze clauses imposant une cible joueur. Il vérifie une
+cible actuelle unique, la relation adversaire lorsque le texte la précise, le
+refus des cibles carte, absentes ou manquantes, ainsi que l'atomicité de ces
+refus. Les résultats propres à chaque carte restent hors de cette preuve
+partagée. Les contrats sont dans
+`reports/systematic-audit/player-target-followup/clauses.json`. Le registre
+strict atteint **320/450 cartes (71,1 %)** après validation complète.

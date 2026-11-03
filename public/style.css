@@ -1281,7 +1281,7 @@ body.hand-drawing #myHandTray .hand-card { cursor: progress; }
   position: fixed; z-index: 60; pointer-events: none; border-radius: 8px; overflow: visible;
   border: 2px solid var(--carbon); box-shadow: 2px 8px 16px #0005; transition: transform .12s ease; transform: translateY(0) scale(var(--hand-hover-from, 1));
 }
-.hand-card-hover-clone.zoomed { transform: translateY(-10px) scale(var(--hand-hover-scale, 1.3)); }
+.hand-card-hover-clone.zoomed { transform: translateY(-3px) scale(var(--hand-hover-scale, 1.3)); }
 .hand-card-hover-clone img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .hand-card-revealed-icon {
   position: absolute; top: 4px; right: 4px; background: #171714cc; color: var(--gold-pale); border-radius: 50%;
@@ -2576,17 +2576,17 @@ body:has(#revealPanel:not(.hidden)) #inspectPanel { z-index: 95; }
 }
 .hand-card-revealed-icon { z-index: 7; }
 .hand-card-hover-clone.ko-rarity-card { transform-style: preserve-3d; }
-.hand-card-hover-clone.ko-rarity-card.zoomed { transform: perspective(760px) translateY(-10px) scale(var(--hand-hover-scale,1.3)) rotateX(var(--rarity-tilt-y,0deg)) rotateY(var(--rarity-tilt-x,0deg)); }
+.hand-card-hover-clone.ko-rarity-card.zoomed { transform: perspective(760px) translateY(-3px) scale(var(--hand-hover-scale,1.3)) rotateX(var(--rarity-tilt-y,0deg)) rotateY(var(--rarity-tilt-x,0deg)); }
 .rarity-effects-disabled .ko-rarity-card { animation: none !important; outline: 0 !important; filter: none !important; box-shadow: 2px 4px 8px #0004 !important; }
 .rarity-effects-disabled .ko-rarity-card::before,
 .rarity-effects-disabled .ko-rarity-card::after,
 .rarity-effects-disabled .rarity-glitter-layer,
 .rarity-effects-disabled .rarity-zen-holo,
 .rarity-effects-disabled .rarity-zen-secret { display: none; }
-.rarity-effects-disabled .hand-card-hover-clone.ko-rarity-card.zoomed { transform: translateY(-10px) scale(var(--hand-hover-scale,1.3)); }
+.rarity-effects-disabled .hand-card-hover-clone.ko-rarity-card.zoomed { transform: translateY(-3px) scale(var(--hand-hover-scale,1.3)); }
 @media (prefers-reduced-motion: reduce) {
   .rarity-galaxy,.rarity-void,.rarity-galaxy::after,.rarity-void::after,.rarity-glitter-layer { animation: none; }
-  .hand-card-hover-clone.ko-rarity-card.zoomed { transform: translateY(-10px) scale(var(--hand-hover-scale,1.3)); }
+  .hand-card-hover-clone.ko-rarity-card.zoomed { transform: translateY(-3px) scale(var(--hand-hover-scale,1.3)); }
   .rules-vfx-flight { display: none; }
   .rules-effect-link-flow { animation: none; stroke-dasharray: 7 7; }
   .rules-target-arrow-line,
@@ -2988,9 +2988,6 @@ body:not(.rarity-effects-disabled) .rarity-desert {
   stroke: currentColor;
   stroke-width: 1.6;
 }
-.opponent-hand-fan.solo-hand-fan .opponent-hand-card.is-playable {
-  box-shadow: 0 10px 28px #2c8ed877, 0 0 0 2px #72c7ffcc;
-}
 .opponent-hand-fan.solo-inactive-hand,
 .hand-area.solo-inactive-hand {
   opacity: .58;
@@ -3118,11 +3115,13 @@ body:not(.rarity-effects-disabled) .rarity-desert {
 }
 .hand-card:first-child { margin-left: 0; }
 .hand-card:hover { z-index: 32; }
-.hand-card.is-playable {
+.hand-card.is-playable,
+.opponent-hand-card.is-playable {
   border-color: #7ed7ff;
   box-shadow: 0 0 0 2px #62c6ff66, 0 0 18px 5px #36a8ff9c, 2px 8px 14px #0008;
 }
-.hand-card.is-playable::after {
+.hand-card.is-playable::after,
+.opponent-hand-card.is-playable::after {
   content: "";
   position: absolute;
   z-index: 8;

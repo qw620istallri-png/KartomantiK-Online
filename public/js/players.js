@@ -613,6 +613,8 @@ function wireCardHoverZoom(el, cloneClassName) {
     clone.style.height = cloneHeight + "px";
     if (cloneClassName === "hand-card-hover-clone") {
       const margin = 22;
+      const lift = 3;
+      const maxUpwardShift = 36;
       const configuredScale = Number.parseFloat(
         getComputedStyle(document.documentElement).getPropertyValue("--hand-hover-scale")
       ) || 1.3;
@@ -627,10 +629,16 @@ function wireCardHoverZoom(el, cloneClassName) {
         window.innerWidth - margin - halfWidth,
         Math.max(margin + halfWidth, rect.left + rect.width / 2),
       );
-      const centerY = Math.min(
-        window.innerHeight - margin - halfHeight,
-        Math.max(margin + halfHeight, rect.top + rect.height / 2 - 10),
+      const naturalTop = rect.top + rect.height / 2 - halfHeight;
+      const fullyVisibleTop = Math.min(
+        window.innerHeight - margin - cloneHeight * scale,
+        Math.max(margin, naturalTop),
       );
+      const cloneTop = Math.max(margin, Math.max(
+        fullyVisibleTop,
+        naturalTop - maxUpwardShift,
+      ));
+      const centerY = cloneTop + halfHeight;
       // The clone is laid out at its zoomed size and starts scaled down, so the
       // zoomed card is drawn at full resolution instead of an upscaled (blurry) one.
       clone.style.setProperty("--hand-hover-scale", "1");
@@ -638,14 +646,12 @@ function wireCardHoverZoom(el, cloneClassName) {
       clone.style.width = `${cloneWidth * scale}px`;
       clone.style.height = `${cloneHeight * scale}px`;
       clone.style.left = `${centerX - cloneWidth * scale / 2}px`;
-      // The zoom transform includes translateY(-10px); offset the base box so
-      // the final card is clamped.
-      clone.style.top = `${centerY - cloneHeight * scale / 2 + 10}px`;
+      clone.style.top = `${cloneTop + lift}px`;
       if ($("#gameScreen")?.classList.contains("ui-beta")) {
         // beta table: the hand card itself grows out of its place in the fan
         const rotation = getComputedStyle(el).getPropertyValue("--hand-rotate").trim() || "0deg";
         clone.style.setProperty("--hover-dx", `${rect.left + rect.width / 2 - centerX}px`);
-        clone.style.setProperty("--hover-dy", `${rect.top + rect.height / 2 - (centerY + 10)}px`);
+        clone.style.setProperty("--hover-dy", `${rect.top + rect.height / 2 - (centerY + lift)}px`);
         clone.style.setProperty("--hover-rot", rotation);
         clone.classList.add("ub-grow");
         el.classList.add("ub-hover-src");
@@ -674,9 +680,7 @@ function wireCardHoverZoom(el, cloneClassName) {
         const dx = bounds.left < margin
           ? margin - bounds.left
           : Math.min(0, window.innerWidth - margin - bounds.right);
-        const dy = bounds.top < margin
-          ? margin - bounds.top
-          : Math.min(0, window.innerHeight - margin - bounds.bottom);
+        const dy = bounds.top < margin ? margin - bounds.top : 0;
         if (!dx && !dy) return;
         clone.style.left = `${(Number.parseFloat(clone.style.left) || 0) + dx}px`;
         clone.style.top = `${(Number.parseFloat(clone.style.top) || 0) + dy}px`;

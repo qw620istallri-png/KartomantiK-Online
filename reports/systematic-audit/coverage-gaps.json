@@ -1,41 +1,29 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-03T15:34:11.428733+00:00",
-  "sourceDigest": "ed36cc2bfff3153decf52d386ec8b8a96513287ea00284c4bd0095e1bd9d2000",
-  "unitEvidence": "reports/systematic-audit/release-150-1-3/unit-tests.json",
+  "generatedAt": "2026-11-03T16:02:20.277513+00:00",
+  "sourceDigest": "28bf1fc6d707cd1e8d157ee95d6327aa0874cf00b07ccb9c7646525a3a4ecb57",
+  "unitEvidence": "reports/systematic-audit/release-150-2/unit-tests.json",
   "summary": {
     "catalogCards": 450,
-    "strictlyCoveredCards": 309,
-    "uncoveredCards": 141,
-    "uncoveredClauses": 209,
-    "uncoveredBranchOracles": 659,
-    "greedyMechanicBatches": 65
+    "strictlyCoveredCards": 320,
+    "uncoveredCards": 130,
+    "uncoveredClauses": 193,
+    "uncoveredBranchOracles": 603,
+    "greedyMechanicBatches": 64
   },
   "uncoveredByType": {
-    "ephemeral_will": 31,
-    "manifestation": 88,
+    "ephemeral_will": 27,
+    "manifestation": 81,
     "persistent_will": 22
   },
   "uncoveredByMechanic": [
-    {
-      "mechanic": "target:player",
-      "cardCount": 11
-    },
     {
       "mechanic": "target:zone_card",
       "cardCount": 11
     },
     {
-      "mechanic": "trigger:wins_confrontation",
-      "cardCount": 10
-    },
-    {
       "mechanic": "trigger:beginning_of_turn",
       "cardCount": 8
-    },
-    {
-      "mechanic": "cost:sacrificeSource",
-      "cardCount": 7
     },
     {
       "mechanic": "result:move_target",
@@ -46,7 +34,11 @@
       "cardCount": 7
     },
     {
-      "mechanic": "result:reorder_top_decks",
+      "mechanic": "trigger:wins_confrontation",
+      "cardCount": 7
+    },
+    {
+      "mechanic": "cost:sacrificeSource",
       "cardCount": 6
     },
     {
@@ -62,15 +54,7 @@
       "cardCount": 6
     },
     {
-      "mechanic": "cost:exhaustSource",
-      "cardCount": 5
-    },
-    {
-      "mechanic": "float",
-      "cardCount": 5
-    },
-    {
-      "mechanic": "support-from-hand",
+      "mechanic": "result:reorder_top_decks",
       "cardCount": 5
     },
     {
@@ -78,7 +62,7 @@
       "cardCount": 5
     },
     {
-      "mechanic": "adamant",
+      "mechanic": "float",
       "cardCount": 4
     },
     {
@@ -88,6 +72,14 @@
     {
       "mechanic": "result:create_effect_memory",
       "cardCount": 4
+    },
+    {
+      "mechanic": "support-from-hand",
+      "cardCount": 4
+    },
+    {
+      "mechanic": "adamant",
+      "cardCount": 3
     },
     {
       "mechanic": "ongoing:lose_effects",
@@ -114,6 +106,10 @@
       "cardCount": 3
     },
     {
+      "mechanic": "cost:exhaustSource",
+      "cardCount": 2
+    },
+    {
       "mechanic": "first-restriction",
       "cardCount": 2
     },
@@ -134,19 +130,11 @@
       "cardCount": 2
     },
     {
-      "mechanic": "result:move_random_zone_card",
-      "cardCount": 2
-    },
-    {
       "mechanic": "result:roll_d6_target_table",
       "cardCount": 2
     },
     {
       "mechanic": "result:set_field_power",
-      "cardCount": 2
-    },
-    {
-      "mechanic": "trigger:before_revelation",
       "cardCount": 2
     },
     {
@@ -186,10 +174,6 @@
       "cardCount": 1
     },
     {
-      "mechanic": "ongoing:exile_incoming_manifestations",
-      "cardCount": 1
-    },
-    {
       "mechanic": "ongoing:grant_persist",
       "cardCount": 1
     },
@@ -203,10 +187,6 @@
     },
     {
       "mechanic": "ongoing:power_set_maximum",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "ongoing:prevent_point_changes",
       "cardCount": 1
     },
     {
@@ -342,10 +322,6 @@
       "cardCount": 1
     },
     {
-      "mechanic": "result:choose_target_score_delta",
-      "cardCount": 1
-    },
-    {
       "mechanic": "result:cleanse_target",
       "cardCount": 1
     },
@@ -374,19 +350,11 @@
       "cardCount": 1
     },
     {
-      "mechanic": "result:destroy_random_interzone_target_player",
-      "cardCount": 1
-    },
-    {
       "mechanic": "result:destroy_random_vessel_manifestations",
       "cardCount": 1
     },
     {
       "mechanic": "result:destroy_vessel_target_owner_sacrifices",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "result:discard_any_then_lose_per_remaining",
       "cardCount": 1
     },
     {
@@ -466,14 +434,6 @@
       "cardCount": 1
     },
     {
-      "mechanic": "result:hold_winner_manifestations",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "result:lock_next_turn_draws",
-      "cardCount": 1
-    },
-    {
       "mechanic": "result:lose_excess_essence_or_points",
       "cardCount": 1
     },
@@ -526,10 +486,6 @@
       "cardCount": 1
     },
     {
-      "mechanic": "result:return_target_player_interzone_to_deck_top",
-      "cardCount": 1
-    },
-    {
       "mechanic": "result:return_turn_tributes_end_turn",
       "cardCount": 1
     },
@@ -571,10 +527,6 @@
     },
     {
       "mechanic": "result:stalemate_unless_opponent_pays",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "result:suspend_opponent_hand_will",
       "cardCount": 1
     },
     {
@@ -622,6 +574,10 @@
       "cardCount": 1
     },
     {
+      "mechanic": "trigger:before_revelation",
+      "cardCount": 1
+    },
+    {
       "mechanic": "trigger:persistent_will_enters_field",
       "cardCount": 1
     },
@@ -643,36 +599,6 @@
     }
   ],
   "recommendedBatches": [
-    {
-      "mechanic": "target:player",
-      "cardCount": 11,
-      "cardIds": [
-        "n0natbzt0nfylml_en",
-        "0r7k88v71vvx7kk_en",
-        "uycbbilf0zlttb9_en",
-        "mxbi84phhueeolc_en",
-        "unk0z0mamdx1el5_en",
-        "36l7iw5m5hk1pmr_en",
-        "dey791sghwx2ee3_en",
-        "inner-deserts-042",
-        "inner-deserts-071",
-        "inner-deserts-088",
-        "inner-deserts-125"
-      ],
-      "cards": [
-        "Shymon, the Mastermind",
-        "Suspend Judgment",
-        "Rogue Tadpole",
-        "Tardigramo",
-        "Rude Exterminator",
-        "Nullify Reason",
-        "Remove by Chance",
-        "Ababash, the Ambassador",
-        "Walk the Oblivion",
-        "Gobres, the Collector",
-        "Haltan, the Favored"
-      ]
-    },
     {
       "mechanic": "target:zone_card",
       "cardCount": 11,
@@ -1516,26 +1442,6 @@
       "priorityScore": 22
     },
     {
-      "cardId": "inner-deserts-125",
-      "collectionNumber": 425,
-      "name": "Haltan, the Favored",
-      "type": "manifestation",
-      "clauseCount": 3,
-      "branchOracleCount": 15,
-      "abilityCount": 2,
-      "mechanics": [
-        "cost:exhaustSource",
-        "cost:sacrificeSource",
-        "float",
-        "ongoing:prevent_point_changes",
-        "result:choose_target_score_delta",
-        "support-from-hand",
-        "target:player"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 20
-    },
-    {
       "cardId": "odqcx9kkqe029se_en",
       "collectionNumber": 274,
       "name": "Mutate Uncontrollably",
@@ -1599,23 +1505,6 @@
       ],
       "reviewStatus": "reviewed-match",
       "priorityScore": 16
-    },
-    {
-      "cardId": "inner-deserts-088",
-      "collectionNumber": 388,
-      "name": "Gobres, the Collector",
-      "type": "manifestation",
-      "clauseCount": 3,
-      "branchOracleCount": 15,
-      "abilityCount": 1,
-      "mechanics": [
-        "adamant",
-        "result:suspend_opponent_hand_will",
-        "target:player",
-        "trigger:before_revelation"
-      ],
-      "reviewStatus": "reviewed-defect",
-      "priorityScore": 15
     },
     {
       "cardId": "2hszv736kwwmi7n_en",
@@ -1866,21 +1755,6 @@
         "trigger:card_played"
       ],
       "reviewStatus": "reviewed-match",
-      "priorityScore": 10
-    },
-    {
-      "cardId": "0r7k88v71vvx7kk_en",
-      "collectionNumber": 91,
-      "name": "Suspend Judgment",
-      "type": "ephemeral_will",
-      "clauseCount": 2,
-      "branchOracleCount": 8,
-      "abilityCount": 1,
-      "mechanics": [
-        "result:hold_winner_manifestations",
-        "target:player"
-      ],
-      "reviewStatus": "reviewed-defect",
       "priorityScore": 10
     },
     {
@@ -2154,22 +2028,6 @@
       "priorityScore": 9
     },
     {
-      "cardId": "n0natbzt0nfylml_en",
-      "collectionNumber": 76,
-      "name": "Shymon, the Mastermind",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 5,
-      "abilityCount": 1,
-      "mechanics": [
-        "cost:exhaustSource",
-        "result:lock_next_turn_draws",
-        "target:player"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 8
-    },
-    {
       "cardId": "icxqhki0ivfgqu0_en",
       "collectionNumber": 108,
       "name": "Solenero, the Contrite",
@@ -2218,22 +2076,6 @@
       "priorityScore": 8
     },
     {
-      "cardId": "uycbbilf0zlttb9_en",
-      "collectionNumber": 155,
-      "name": "Rogue Tadpole",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 1,
-      "abilityCount": 1,
-      "mechanics": [
-        "result:return_target_player_interzone_to_deck_top",
-        "target:player",
-        "trigger:wins_confrontation"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 8
-    },
-    {
       "cardId": "fdnhc537c4xu2wo_en",
       "collectionNumber": 161,
       "name": "Ranba, Silent Abductor",
@@ -2266,38 +2108,6 @@
       "priorityScore": 8
     },
     {
-      "cardId": "mxbi84phhueeolc_en",
-      "collectionNumber": 209,
-      "name": "Tardigramo",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 1,
-      "abilityCount": 1,
-      "mechanics": [
-        "result:move_random_zone_card",
-        "target:player",
-        "trigger:wins_confrontation"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 8
-    },
-    {
-      "cardId": "unk0z0mamdx1el5_en",
-      "collectionNumber": 212,
-      "name": "Rude Exterminator",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 1,
-      "abilityCount": 1,
-      "mechanics": [
-        "result:destroy_random_interzone_target_player",
-        "target:player",
-        "trigger:wins_confrontation"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 8
-    },
-    {
       "cardId": "inner-deserts-039",
       "collectionNumber": 339,
       "name": "Denegath, the Regulator",
@@ -2309,22 +2119,6 @@
         "cost:exhaustSource",
         "phase-window",
         "result:return_first_then_chain"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 8
-    },
-    {
-      "cardId": "inner-deserts-042",
-      "collectionNumber": 342,
-      "name": "Ababash, the Ambassador",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 4,
-      "abilityCount": 1,
-      "mechanics": [
-        "cost:exhaustSource",
-        "result:reorder_top_decks",
-        "target:player"
       ],
       "reviewStatus": "reviewed-match",
       "priorityScore": 8
@@ -2678,21 +2472,6 @@
       "priorityScore": 7
     },
     {
-      "cardId": "36l7iw5m5hk1pmr_en",
-      "collectionNumber": 224,
-      "name": "Nullify Reason",
-      "type": "ephemeral_will",
-      "clauseCount": 1,
-      "branchOracleCount": 1,
-      "abilityCount": 1,
-      "mechanics": [
-        "ongoing:exile_incoming_manifestations",
-        "target:player"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 7
-    },
-    {
       "cardId": "wx7y64eaa0wlvuk_en",
       "collectionNumber": 242,
       "name": "Melancholic Mirror",
@@ -2768,21 +2547,6 @@
       "priorityScore": 7
     },
     {
-      "cardId": "dey791sghwx2ee3_en",
-      "collectionNumber": 293,
-      "name": "Remove by Chance",
-      "type": "ephemeral_will",
-      "clauseCount": 1,
-      "branchOracleCount": 1,
-      "abilityCount": 1,
-      "mechanics": [
-        "result:move_random_zone_card",
-        "target:player"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 7
-    },
-    {
       "cardId": "inner-deserts-013",
       "collectionNumber": 313,
       "name": "Ycar, the Fleeting Flow",
@@ -2838,21 +2602,6 @@
       "mechanics": [
         "result:destroy_vessel_target_owner_sacrifices",
         "target:zone_card"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 7
-    },
-    {
-      "cardId": "inner-deserts-071",
-      "collectionNumber": 371,
-      "name": "Walk the Oblivion",
-      "type": "ephemeral_will",
-      "clauseCount": 1,
-      "branchOracleCount": 4,
-      "abilityCount": 1,
-      "mechanics": [
-        "result:discard_any_then_lose_per_remaining",
-        "target:player"
       ],
       "reviewStatus": "reviewed-match",
       "priorityScore": 7
