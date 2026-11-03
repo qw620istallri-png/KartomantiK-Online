@@ -2788,20 +2788,21 @@ async def handle_join(ws, data):
             for solo_player_id in controlled_player_ids:
                 player = session.players[solo_player_id]
                 player["connected"] = True
-        elif session.mode == "tournament":
-            claimed_by = session.seat_claims.get(seat)
-            if claimed_by and claimed_by != client_id:
-                return await send_error(ws, "This tournament seat has already been claimed.")
-            if client_id in session.players and session.players[client_id].get("seat") != seat:
-                return await send_error(ws, "This browser is already assigned to the other tournament seat.")
-            session.seat_claims[seat] = client_id
-        elif client_id not in session.players and len(session.players) >= 2:
-            return await send_error(ws, "This session already has 2 players.")
-        player = session.get_or_create_player(client_id, name, seat=seat)
-        player["connected"] = True
-        player_id = client_id
-        if getattr(session, "sandbox", None) and client_id == getattr(session, "sandbox_me", None):
-            session.players[sandbox.OPPONENT_ID]["connected"] = True  # the tester plays both seats
+        else:
+            if session.mode == "tournament":
+                claimed_by = session.seat_claims.get(seat)
+                if claimed_by and claimed_by != client_id:
+                    return await send_error(ws, "This tournament seat has already been claimed.")
+                if client_id in session.players and session.players[client_id].get("seat") != seat:
+                    return await send_error(ws, "This browser is already assigned to the other tournament seat.")
+                session.seat_claims[seat] = client_id
+            elif client_id not in session.players and len(session.players) >= 2:
+                return await send_error(ws, "This session already has 2 players.")
+            player = session.get_or_create_player(client_id, name, seat=seat)
+            player["connected"] = True
+            player_id = client_id
+            if getattr(session, "sandbox", None) and client_id == getattr(session, "sandbox_me", None):
+                session.players[sandbox.OPPONENT_ID]["connected"] = True  # the tester plays both seats
 
     previous_stream = (connections.get(ws) or {}).get("_state_stream")
     delta_enabled = type(data.get("stateDeltaVersion")) is int and data["stateDeltaVersion"] == 1 and os.environ.get("KKO_STATE_DELTAS", "1") != "0"

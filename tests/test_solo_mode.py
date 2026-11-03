@@ -78,6 +78,7 @@ class SoloModeIntegrationTests(unittest.IsolatedAsyncioTestCase):
         p1, p2 = joined["controlledPlayerIds"]
         self.assertTrue(joined["solo"])
         self.assertEqual(joined["mode"], "solo")
+        self.assertEqual(list(session.players), [p1, p2])
         self.assertEqual([session.players[p1]["seat"], session.players[p2]["seat"]], [0, 1])
         session.put_zone_card(p1, "hand", "p1-secret", p1)
         session.put_zone_card(p2, "hand", "p2-secret", p2)
@@ -159,7 +160,7 @@ class SoloModeIntegrationTests(unittest.IsolatedAsyncioTestCase):
         self.assertIn("cannot act", error["message"])
 
     async def test_solo_reconnect_requires_the_original_browser_identity(self):
-        websocket, joined, _session = await self.create_solo()
+        websocket, joined, session = await self.create_solo()
         code = joined["codePlayer"]
         await websocket.close()
         reconnect, rejoined = await self.join({
@@ -168,6 +169,7 @@ class SoloModeIntegrationTests(unittest.IsolatedAsyncioTestCase):
             "clientId": "solo-browser",
         })
         self.assertEqual(rejoined["controlledPlayerIds"], joined["controlledPlayerIds"])
+        self.assertEqual(list(session.players), joined["controlledPlayerIds"])
         await reconnect.close()
         _other, rejected = await self.join({
             "code": code,
