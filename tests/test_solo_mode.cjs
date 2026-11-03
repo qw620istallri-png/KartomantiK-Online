@@ -140,6 +140,11 @@ const mime = {
           playerId: myPlayerId,
           target: document.querySelector("#importDeckPlayer").textContent.trim(),
         };
+        const activityRoundTrip = structuredClone(latestState);
+        activityRoundTrip.players["solo:p2"].activity = "importing";
+        handleServerMessage(activityRoundTrip);
+        pregameP2Editor.playerIdAfterState = myPlayerId;
+        pregameP2Editor.targetAfterState = document.querySelector("#importDeckPlayer").textContent.trim();
         window.__sent = [];
         importDeckPayload({ name: "P2 test", groups: [] }, "P2 test", false, false);
         const pregameP2Import = window.__sent.at(-1);
@@ -339,6 +344,8 @@ const mime = {
         open: true,
         playerId: "solo:p2",
         target: "Deck du joueur P2",
+        playerIdAfterState: "solo:p2",
+        targetAfterState: "Deck du joueur P2",
       });
       assert.equal(result.pregameP2Import.type, "import_deck");
       assert.equal(result.pregameP2Import.actingPlayerId, "solo:p2");

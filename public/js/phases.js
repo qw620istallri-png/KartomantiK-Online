@@ -499,7 +499,8 @@ function renderRulesPregame() {
   panel.classList.remove("mulligan-required");
   $("#gameScreen").classList.toggle("rules-pregame-active", active);
   if (!active) {
-    if (soloModeActive()) endSoloInteraction();
+    if (soloDeckImportActive()) beginSoloInteraction(deckImportPlayerId);
+    else if (soloModeActive()) endSoloInteraction();
     return;
   }
   if (soloModeActive()) {
@@ -510,7 +511,8 @@ function renderRulesPregame() {
     ]);
     const ready = new Set(rules?.readyPlayerIds || []);
     const confirmed = new Set(rules?.deckConfirmedPlayerIds || []);
-    const nextPlayerId = controlled.find((playerId) => (
+    const importPlayerId = soloDeckImportActive() ? deckImportPlayerId : null;
+    const nextPlayerId = importPlayerId || controlled.find((playerId) => (
       standardDeckSetup
         ? !confirmed.has(playerId)
         : required.has(playerId) || !ready.has(playerId)

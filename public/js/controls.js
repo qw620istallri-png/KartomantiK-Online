@@ -4,22 +4,28 @@
 // ---------------------------------------------------------------- deck import
 
 function openImportDeckPanel() {
+  deckImportPlayerId = soloModeActive()
+    ? (soloControlsPlayer(soloInteractionPlayerId)
+      ? soloInteractionPlayerId
+      : soloPrimaryPlayerId)
+    : myPlayerId;
+  if (soloModeActive()) beginSoloInteraction(deckImportPlayerId);
   pendingDeckImport = null;
   resetImportDeckValidationArm();
-  const player = latestState?.players?.[myPlayerId];
+  const player = latestState?.players?.[deckImportPlayerId];
   const playerLabel = $("#importDeckPlayer");
   if (soloModeActive() && player) {
     const seat = Number(player.seat) === 1 ? "P2" : "P1";
     const name = player.name || seat;
     playerLabel.textContent = String(t("soloDeckTarget")).replace("{seat}", seat)
       + (name.toLocaleLowerCase() === seat.toLocaleLowerCase() ? "" : ` · ${name}`);
-    playerLabel.style.setProperty("--player-tone", playerColor(myPlayerId));
+    playerLabel.style.setProperty("--player-tone", playerColor(deckImportPlayerId));
     playerLabel.classList.remove("hidden");
   } else {
     playerLabel.textContent = "";
     playerLabel.classList.add("hidden");
   }
-  $("#importSideboardBtn").disabled = !(latestState?.players?.[myPlayerId]);
+  $("#importSideboardBtn").disabled = !(latestState?.players?.[deckImportPlayerId]);
   $("#importSelectionStatus").textContent = "";
   $("#importPanel").classList.remove("hidden");
   setMyActivity("importing");
@@ -35,8 +41,11 @@ function initImportPanel() {
     resetImportDeckValidationArm();
     setMyActivity(null);
     if (soloModeActive()) {
+      deckImportPlayerId = null;
       endSoloInteraction();
       renderAll();
+    } else {
+      deckImportPlayerId = null;
     }
   };
   $("#importDeckText").addEventListener("input", () => {
@@ -103,6 +112,13 @@ function initImportPanel() {
     $("#importPanel").classList.add("hidden");
     resetImportDeckValidationArm();
     setMyActivity(null);
+    if (soloModeActive()) {
+      deckImportPlayerId = null;
+      endSoloInteraction();
+      renderAll();
+    } else {
+      deckImportPlayerId = null;
+    }
   };
   document.addEventListener("pointerdown", (event) => {
     if (importDeckValidationArmed && !event.target.closest("#importConfirmBtn")) resetImportDeckValidationArm();

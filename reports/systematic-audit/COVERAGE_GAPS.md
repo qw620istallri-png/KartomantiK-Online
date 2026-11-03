@@ -1,6 +1,6 @@
 # Lacunes de couverture sémantique stricte
 
-Empreinte source : `7b7fb32b30a21df0d142e276ca01afbe55179e5b77c3714f17a01df2c13b2f66`
+Empreinte source : `ed36cc2bfff3153decf52d386ec8b8a96513287ea00284c4bd0095e1bd9d2000`
 
 - Cartes couvertes : **309/450**
 - Cartes hors registre : **141**

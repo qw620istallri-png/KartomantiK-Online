@@ -240,6 +240,7 @@ function renderRulesChoice(force = false) {
   const choice = latestState?.rulesEngine?.pendingChoice;
   if (choice && pendingTriggeredPlacement) pendingTriggeredPlacement = null;
   if (choice?.playerId && soloControlsPlayer(choice.playerId)) beginSoloInteraction(choice.playerId);
+  else if (!choice && soloDeckImportActive()) beginSoloInteraction(deckImportPlayerId);
   else if (!choice && soloModeActive()) endSoloInteraction();
   if (rulesChoiceAnswerPending && (rulesChoiceAnswerPending.choiceId !== choice?.id || rulesChoiceAnswerPending.playerId !== choice?.playerId)) {
     rulesChoiceAnswerPending = null;

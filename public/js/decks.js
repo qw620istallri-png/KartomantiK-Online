@@ -201,7 +201,15 @@ function forgetDeckFromLibrary(name) {
 }
 
 function importDeckPayload(deck, name, persist = true, confirmDeck = false) {
-  send({ type: "import_deck", deck, resetOwnBoard: Boolean(pendingDeckImport?.resetOwnBoard), confirmDeck });
+  send({
+    type: "import_deck",
+    deck,
+    resetOwnBoard: Boolean(pendingDeckImport?.resetOwnBoard),
+    confirmDeck,
+    ...(soloControlsPlayer(deckImportPlayerId)
+      ? { actingPlayerId: deckImportPlayerId }
+      : {}),
+  });
   if (persist) saveDeckToLibrary(name || deck.name || "Deck", deck);
   $("#sideboardPanel").classList.add("hidden");
   $("#importDeckText").value = "";
@@ -316,6 +324,16 @@ const PHASE_VISIBILITY_KEY = "ko_phase_tracker_visible.v3";
 let pendingDeckImport = null;
 
 let importDeckValidationArmed = false;
+
+let deckImportPlayerId = null;
+
+function soloDeckImportActive() {
+  return Boolean(
+    soloModeActive()
+    && !$("#importPanel").classList.contains("hidden")
+    && soloControlsPlayer(deckImportPlayerId)
+  );
+}
 
 function uniqueCardIds(cardIds) {
   return [...new Set((cardIds || []).filter((cardId) => typeof cardId === "string"))];
