@@ -26,6 +26,9 @@ KKO combines a free-form tabletop with server-filtered hidden information and an
 ## Operating Context
 
 - A casual match has two players and the existing observer access.
+- A Solo beta training match has one browser controlling two fixed seats. P1
+  remains at the bottom, P2 at the top, all hidden information is visible, and
+  both hands are interactive without rotating or switching the table.
 - A tournament match has dedicated Player 1, Player 2, spectator, judge, and organizer roles.
 - The creator remains in an organizer console rather than entering the game table.
 - A spectator sees the public board, revealed cards, public counts, phases, scores, and public activity, but never receives hands, deck contents, sideboards, or face-down identities.

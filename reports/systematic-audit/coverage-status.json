@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-02T22:44:08.405291+00:00",
-  "sourceDigest": "3be8aca621631e1115fc9cb9d5ef0bf3a52bc28f4741be395359d988905bd462",
-  "unitEvidence": "reports/systematic-audit/zone-tribute-final-followup/unit-tests.json",
-  "unitEvidenceSourceDigest": "3be8aca621631e1115fc9cb9d5ef0bf3a52bc28f4741be395359d988905bd462",
+  "generatedAt": "2026-11-03T10:58:46.347690+00:00",
+  "sourceDigest": "8aebab96ee6d06b30d8d30ada10a58e588647532e46a109b4cbd3bcc1f493968",
+  "unitEvidence": "reports/systematic-audit/release-150/unit-tests.json",
+  "unitEvidenceSourceDigest": "8aebab96ee6d06b30d8d30ada10a58e588647532e46a109b4cbd3bcc1f493968",
   "currentUnitEvidence": true,
   "unitEvidencePassed": true,
   "duplicateUnitTestIds": [],
   "summary": {
     "catalogCards": 450,
-    "cardsWithSelectedClauseProof": 285,
-    "percentageWithSelectedClauseProof": 63.3,
-    "cardsOutsideThisStrictRegister": 165,
+    "cardsWithSelectedClauseProof": 309,
+    "percentageWithSelectedClauseProof": 68.7,
+    "cardsOutsideThisStrictRegister": 141,
     "fullCatalogSemanticCertification": false
   },
   "countingRule": "At least one explicit printed clause or explicit no-effect contract linked to tests that all passed in the named full unit run. Unique card IDs; interaction-only references excluded. Selected clauses do not certify all branches unless explicitly marked.",
@@ -997,6 +997,24 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-093",
+      "name": "Bizarre Mechanism",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/field-entry-family-followup/clauses.json",
+          "testIds": [
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "d7b2f01f4feb0206d6e60f050de8bc7d32ad7125c984e1dda51ae614a8158129"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "vt30v1v8anw5hib_en",
       "name": "Bloatuba",
       "proofs": [
@@ -1030,6 +1048,24 @@
         }
       ],
       "allBranchesCertified": false
+    },
+    {
+      "cardId": "zo4rbgcnww4pxg0_en",
+      "name": "Blunt Leaf",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/alternate-tribute-followup/clauses.json",
+          "testIds": [
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "adc0c7251b50714600a2886d3cfd1dcc72d4431f62163519f952d22301e8f3dc"
+        }
+      ],
+      "allBranchesCertified": true
     },
     {
       "cardId": "pgvrly9397pua77_en",
@@ -2473,6 +2509,24 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "zdn6urrd7eo3idt_en",
+      "name": "Exalted Jester",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/alternate-tribute-followup/clauses.json",
+          "testIds": [
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "540a12fc4c2700ccfe3ab2fa0879390f56c7abf50a7c12204c4bc49559125c89"
+        }
+      ],
+      "allBranchesCertified": true
+    },
+    {
       "cardId": "1q6crbc7nwugrgs_en",
       "name": "Exile",
       "proofs": [
@@ -2932,6 +2986,24 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-142",
+      "name": "Flower of Evil",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/field-entry-family-followup/clauses.json",
+          "testIds": [
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "023f74ed16ba576b43c912c60a17c88eb1e05d01c2555d68a6ddf80ca2dd48e8"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "ibf2epfw6eap5x3_en",
       "name": "Forest Guide",
       "proofs": [
@@ -3109,6 +3181,24 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "9204f755c43e2680a5271823dc7db1f026508a208a55b39b4393270aee54b5d1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "o4p1r7347u6sff2_en",
+      "name": "Gorb, the Musclebound",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/field-entry-family-followup/clauses.json",
+          "testIds": [
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "4966b15ee55837672f0b1f00add17aeddebae1f8e640350ef35f4594488437c5"
         }
       ],
       "allBranchesCertified": false
@@ -3929,6 +4019,24 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "3oiehnpbub1byg6_en",
+      "name": "Inert Anchorstone",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/field-entry-family-followup/clauses.json",
+          "testIds": [
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "50784f4142ba1a527bf93463a7b8c56710984577df5ce1cfbfdb983bc1dde7b0"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "5liq0tcj7m9ebqr_en",
       "name": "Intoxicating Blossom",
       "proofs": [
@@ -4648,6 +4756,24 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-008",
+      "name": "Larman Doz, the Upright",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/field-entry-family-followup/clauses.json",
+          "testIds": [
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "d624ff28fbcc9d6b427c418256d74f96345bd5e57e6dcaee876f279f53fffba1"
         }
       ],
       "allBranchesCertified": false
@@ -5454,6 +5580,24 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-087",
+      "name": "Moaning Consul",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/field-entry-family-followup/clauses.json",
+          "testIds": [
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "9975f7165071120cbc137438ea764e22e8326573fa2f7318a72d68974c38e30c"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "276sz8daqngt2dh_en",
       "name": "Mobile Sanctuary",
       "proofs": [
@@ -6184,6 +6328,24 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "cwgofw6qsn7aplc_en",
+      "name": "Parasitic Drill",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/field-entry-family-followup/clauses.json",
+          "testIds": [
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "b5e07e31f3decb8dfacee5d1d213d3f090805d7c0e679248b0d89683396b2380"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-046",
       "name": "Pass Judgment",
       "proofs": [
@@ -6198,6 +6360,24 @@
         }
       ],
       "allBranchesCertified": false
+    },
+    {
+      "cardId": "mqkrekbfu4tybu9_en",
+      "name": "Peevish Sapling",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/alternate-tribute-followup/clauses.json",
+          "testIds": [
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "cd3d846c64ebc553e99fcdb564cee88c7afdc24883f7d97b6d7b7c784dac1964"
+        }
+      ],
+      "allBranchesCertified": true
     },
     {
       "cardId": "inner-deserts-079",
@@ -6441,6 +6621,24 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "29b70f9ea1de7c5dba42d31b50db96231ac520f3f0c188f1a092865cb065ad78"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-128",
+      "name": "Pillarpede",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/field-entry-family-followup/clauses.json",
+          "testIds": [
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "43b6e6bab8457996b9875f83dadd7bb83bfb1fb31fcc5f6723d200249c664a2d"
         }
       ],
       "allBranchesCertified": false
@@ -7035,6 +7233,24 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "201ug66mqu6gslx_en",
+      "name": "Quorum, the Untouchable",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/field-entry-family-followup/clauses.json",
+          "testIds": [
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "e43b2c7a38bd0f2dd23b1e5f45fc9e4101148322d0398e7bfdad8ee4d2366f9d"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "oq88mu68bnbqe0w_en",
       "name": "Rajas, Great Aegis",
       "proofs": [
@@ -7441,6 +7657,24 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "yd24yzcekygt7v4_en",
+      "name": "Ridiculous Persecutor",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/alternate-tribute-followup/clauses.json",
+          "testIds": [
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "b020a85a1475559a052223caebbe832f534f681d42b847205627dfd601254892"
+        }
+      ],
+      "allBranchesCertified": true
+    },
+    {
       "cardId": "rm8d0h0v6eu7ho7_en",
       "name": "Rigid Omen",
       "proofs": [
@@ -7475,6 +7709,25 @@
         }
       ],
       "allBranchesCertified": false
+    },
+    {
+      "cardId": "8te5ovk08ul6fve_en",
+      "name": "Rocky Heartcrystal",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/alternate-tribute-followup/clauses.json",
+          "testIds": [
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_rocky_is_transcendent_only_while_used_as_tribute"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "5fd45417c01c7903f6f453fd2c73ca72836e6a996d8ce0144514c23cc46f5e99"
+        }
+      ],
+      "allBranchesCertified": true
     },
     {
       "cardId": "easl4l3aiiim2qg_en",
@@ -7624,6 +7877,24 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "2mmrj3qrziaf9w2_en",
+      "name": "Scrutinizing Figure",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/alternate-tribute-followup/clauses.json",
+          "testIds": [
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "6885889407dab30dee90be2bdef208f61d318abd5221fd574c4c49105779468b"
+        }
+      ],
+      "allBranchesCertified": true
+    },
+    {
       "cardId": "inner-deserts-150",
       "name": "Sever the Ascent",
       "proofs": [
@@ -7712,6 +7983,24 @@
         }
       ],
       "allBranchesCertified": false
+    },
+    {
+      "cardId": "29iv35lxz08ygim_en",
+      "name": "Shimmering Seaguide",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/alternate-tribute-followup/clauses.json",
+          "testIds": [
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "c3bcac07c723a2750051d18e3e1da880067853d6f4496a43629ca70d06adb960"
+        }
+      ],
+      "allBranchesCertified": true
     },
     {
       "cardId": "16hmmz3fw32r27q_en",
@@ -7884,6 +8173,60 @@
         }
       ],
       "allBranchesCertified": false
+    },
+    {
+      "cardId": "2kz0soujsn2nitf_en",
+      "name": "Skin-shifting Tearer",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/alternate-tribute-followup/clauses.json",
+          "testIds": [
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "9e91ab27f1a38d5fd5e93efda85319b58394e0acfc2601b211cf389433350482"
+        }
+      ],
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "7g0495fr3188or9_en",
+      "name": "Skysailing Triad",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/field-entry-family-followup/clauses.json",
+          "testIds": [
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "9235ad9ce9d640d915351a640115db8805c1d5a95189758aef1c24879391b53a"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "raqiu9b3kwaw622_en",
+      "name": "Slumber Planner",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/alternate-tribute-followup/clauses.json",
+          "testIds": [
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "42a4dd3ab6a9c9bebeec1629254e8d15c8c1351e1aea51030ec97813c2ff522f"
+        }
+      ],
+      "allBranchesCertified": true
     },
     {
       "cardId": "wfxxi0znaojxiti_en",
@@ -8224,6 +8567,24 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-143",
+      "name": "Temperamental Splendor",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/field-entry-family-followup/clauses.json",
+          "testIds": [
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "16a47ef754ac29885382bf8795615e98654d3d3712d22dd77e8fbe4d9383423f"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "kl0n8mt9m1fwly0_en",
       "name": "Tenebro, Night Assailant",
       "proofs": [
@@ -8235,6 +8596,24 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "bc518fb9bae512db7898b9c693fd3daddcf03c11743da88347bdd609d4854269"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "nlbgn1ranlrd09r_en",
+      "name": "The Slumberer",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/field-entry-family-followup/clauses.json",
+          "testIds": [
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "04f932be1c1cb39ecc65aaa2c82a2aac2aaa35000ef8ac2a066377ad5b303702"
         }
       ],
       "allBranchesCertified": false
@@ -8300,6 +8679,24 @@
         }
       ],
       "allBranchesCertified": false
+    },
+    {
+      "cardId": "vlpn4livpqnoid1_en",
+      "name": "Tidying Torment",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/alternate-tribute-followup/clauses.json",
+          "testIds": [
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "7448bb7c7e48431fa1fa3dc4bd187437b07812b8bbd408233edb932253e09c6a"
+        }
+      ],
+      "allBranchesCertified": true
     },
     {
       "cardId": "xw1fbhs6hwz6thc_en",
@@ -9049,6 +9446,24 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "yaisrjb3a26wr7r_en",
+      "name": "Witty Scribe",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/alternate-tribute-followup/clauses.json",
+          "testIds": [
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+            "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "7d58a3b03d566ef920f57b69a6e4ab4cccac56775fb933b044515626bfc6c438"
+        }
+      ],
+      "allBranchesCertified": true
+    },
+    {
       "cardId": "jh2nsqxr9x2ii1l_en",
       "name": "World Spore",
       "proofs": [
@@ -9230,6 +9645,24 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "b7c8f6c8b1649638b24c2161a5dd9d257804400eae53fdf6abcbccd9e12133b4"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "k4m0j5h0l3f61hs_en",
+      "name": "Zrutrug, the Indebted",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/field-entry-family-followup/clauses.json",
+          "testIds": [
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+            "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "cb2cabc2ccc3e4668be68b041898c2604d160d81221c75bda2f140e711df0567"
         }
       ],
       "allBranchesCertified": false

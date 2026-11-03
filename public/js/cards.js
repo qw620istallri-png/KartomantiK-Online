@@ -330,6 +330,12 @@ let starterDecks = [];
 
 let myPlayerId = null;
 
+let soloPrimaryPlayerId = null;
+
+let soloControlledPlayerIds = [];
+
+let soloInteractionPlayerId = null;
+
 let isObserver = false;
 
 let connectionRole = "player";

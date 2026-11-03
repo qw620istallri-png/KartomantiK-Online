@@ -10,11 +10,22 @@ function visibleFieldZone(item) {
   return item.fieldZone || window.uiBeta?.fieldZone?.(item) || "field";
 }
 
+function confrontationPlayerId(item) {
+  if (latestState?.rulesEngine?.enabled) {
+    return item.controllerId || item.ownerId;
+  }
+  const placement = window.uiBeta?.manualPlacement?.(item);
+  if (placement?.zone !== "confrontation") return null;
+  return Object.values(latestState?.players || {}).find(
+    (player) => Number(player.seat || 0) === Number(placement.seat || 0),
+  )?.id || null;
+}
+
 // Total Power of a player's face-up Manifestations in the Confrontation Zone
 function confrontationPowerOf(playerId) {
   return (latestState?.battlefield || []).reduce((total, item) => {
     if (!item.faceUp || item.pendingSupportActionId || visibleFieldZone(item) !== "confrontation") return total;
-    if ((item.controllerId || item.ownerId) !== playerId) return total;
+    if (confrontationPlayerId(item) !== playerId) return total;
     if (!fieldItemIsManifestation(item)) return total;
     // the server's own count when it sends one (never below 0, ignored Power = 0)
     const manualModifiers = latestState?.rulesEngine?.enabled ? 0 : Number(item.counters?.power || 0) + Number(item.counters?.tempCounter || 0);
@@ -139,12 +150,24 @@ function renderOppRows() {
   const phaseLabel = [phaseLines.phase, phaseLines.step].filter(Boolean).join(" · ");
   const myPassIsActive = passed.has(myPlayerId);
   const canPassNow = !rules?.enabled || rules.priorityPlayerId === myPlayerId;
+  const primaryPlayerId = soloModeActive()
+    ? soloPrimaryPlayerId
+    : myPlayerId;
   rows.innerHTML = Object.values(latestState.players)
-    .filter((p) => isObserver || p.id !== myPlayerId)
+    .filter((p) => isObserver || p.id !== primaryPlayerId)
     .map((p) => {
       const handZone = p.zones.hand;
       const handCount = handZone.count !== undefined ? handZone.count : (handZone.cards || []).length;
       const viewHandTitle = isObserver ? `${p.name}: ${t("viewHand")} (${handCount})` : `${t("opponentHand")} ${handCount}`;
+      const soloSeatControls = soloModeActive() && soloControlsPlayer(p.id)
+        ? `<span class="solo-seat-controls" style="--owner-color:${esc(playerColor(p.id))}">
+            <button type="button" data-solo-draw-one="${esc(p.id)}" title="${esc(t("handDrawOneBtn"))}">+1</button>
+            <button type="button" data-solo-draw-limit="${esc(p.id)}" title="${esc(t("handDrawHandBtn"))}">↥</button>
+            <button type="button" data-solo-edit-deck="${esc(p.id)}" title="${esc(t("editDeck"))}">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="11" height="15" rx="2"/><path d="m9 5 2-2h7a2 2 0 0 1 2 2v11l-5 4"/></svg>
+            </button>
+          </span>`
+        : "";
       const vesselPoints = receptaclePoints(p.zones.receptacle, p.score);
       const recent = (latestState.recentLog || []).filter((e) => e.actorId === p.id && isPlayerLogRelevant(e)).slice(-3);
       const collapsed = rules?.enabled ? !recentLogCollapsed.has(p.id) : recentLogCollapsed.has(p.id);
@@ -166,6 +189,7 @@ function renderOppRows() {
       return `<div class="opp-info-row">
         <div class="opp-info-main">
           <span class="hand-mini"><span class="mini-back" style="--owner-color:${playerColor(p.id)}"></span><span>${esc(p.name)}</span>${passedBadge}</span>
+          ${soloSeatControls}
           ${!isObserver ? `<button type="button" class="opponent-hand-visibility" data-toggle-opponent-hand title="${esc(t(opponentHandHiddenByUser ? "showOpponentHand" : "hideOpponentHand"))}" aria-label="${esc(t(opponentHandHiddenByUser ? "showOpponentHand" : "hideOpponentHand"))}" aria-pressed="${opponentHandHiddenByUser}">${eyeCardIconSvg(!opponentHandHiddenByUser)}</button>` : ""}
           <button class="hand-stack-btn" data-view-hand="${esc(p.id)}" title="${esc(viewHandTitle)}">
             <span class="hand-stack-icon" style="--owner-color:${playerColor(p.id)}">
@@ -211,6 +235,25 @@ function renderOppRows() {
       renderOppRows();
     };
   });
+  $$("[data-solo-draw-one]").forEach((button) => {
+    button.onclick = () => send({
+      type: "draw",
+      count: 1,
+      actingPlayerId: button.dataset.soloDrawOne,
+    });
+  });
+  $$("[data-solo-draw-limit]").forEach((button) => {
+    button.onclick = () => send({
+      type: "draw_to_limit",
+      actingPlayerId: button.dataset.soloDrawLimit,
+    });
+  });
+  $$("[data-solo-edit-deck]").forEach((button) => {
+    button.onclick = () => {
+      beginSoloInteraction(button.dataset.soloEditDeck);
+      openImportDeckPanel();
+    };
+  });
   wirePhasePassControls(rows);
   wirePlayerLogCardNames(rows);
   renderOpponentHandFan();
@@ -220,7 +263,9 @@ function renderOpponentHandFan() {
   const fan = $("#opponentHandFan");
   if (!fan) return;
   const opponent = !isObserver
-    ? Object.values(latestState?.players || {}).find((player) => player.id !== myPlayerId)
+    ? Object.values(latestState?.players || {}).find((player) => (
+      player.id !== (soloModeActive() ? soloPrimaryPlayerId : myPlayerId)
+    ))
     : null;
   if (!opponent || opponentHandHiddenByUser) {
     fan.innerHTML = "";
@@ -231,6 +276,11 @@ function renderOpponentHandFan() {
   const hand = opponent.zones?.hand || {};
   const count = hand.count !== undefined ? hand.count : (hand.cards || []).length;
   const slots = hand.cards !== undefined ? [...hand.cards] : revealedHandSlots(hand, count);
+  const solo = soloModeActive() && soloControlsPlayer(opponent.id);
+  const activePlayerId = soloActivePlayerId();
+  fan.classList.toggle("solo-hand-fan", solo);
+  fan.classList.toggle("solo-active-hand", solo && activePlayerId === opponent.id);
+  fan.classList.toggle("solo-inactive-hand", solo && activePlayerId && activePlayerId !== opponent.id);
   fan.classList.toggle("hidden", count === 0);
   fan.setAttribute("aria-label", `${t("opponentHand")} ${count}`);
   fan.title = `${opponent.name}: ${t("viewHand")} (${count})`;
@@ -242,13 +292,96 @@ function renderOpponentHandFan() {
     if (!cardId) {
       return `<button type="button" class="opponent-hand-card is-hidden" data-opponent-hand-slot="${index}" style="--fan-rotate:${rotate}deg;--fan-arc:${arc}px;--fan-x:${offset}px;--fan-z:${index};--owner-color:${esc(playerColor(opponent.id))}" aria-label="${esc(t("cards"))}"></button>`;
     }
-    return `<button type="button" class="opponent-hand-card is-known" data-opponent-hand-slot="${index}" data-opponent-hand-card="${esc(cardId)}" style="--fan-rotate:${rotate}deg;--fan-arc:${arc}px;--fan-x:${offset}px;--fan-z:${index};--owner-color:${esc(playerColor(opponent.id))}" title="${esc(cardName(cardId))}"><img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"></button>`;
+    const playable = solo && evaluateForSoloPlayer(
+      opponent.id,
+      () => handCardIsPlayable(cardId) || handCardHasHandAction(cardId),
+    );
+    return `<button type="button" class="opponent-hand-card is-known${playable ? " is-playable" : ""}" data-opponent-hand-slot="${index}" data-opponent-hand-card="${esc(cardId)}" data-solo-player-id="${solo ? esc(opponent.id) : ""}" style="--fan-rotate:${rotate}deg;--fan-arc:${arc}px;--fan-x:${offset}px;--fan-z:${index};--owner-color:${esc(playerColor(opponent.id))}" title="${esc(cardName(cardId))}"><img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"></button>`;
   }).join("");
-  fan.onclick = (event) => {
-    const card = event.target.closest("[data-opponent-hand-card]")?.dataset.opponentHandCard;
-    if (card) showInspect(card);
-    else openHandView(opponent.id);
-  };
+  if (solo) {
+    fan.onclick = null;
+    fan.querySelectorAll("[data-opponent-hand-card]").forEach((element) => {
+      const cardId = element.dataset.opponentHandCard;
+      element.onclick = () => showInspect(cardId);
+      bindCardDragSource(element, {
+        kind: "card",
+        cardId,
+        handIndex: Number(element.dataset.opponentHandSlot),
+        cardOwnerId: opponent.id,
+        fromOwnerId: opponent.id,
+        fromZone: "hand",
+        actingPlayerId: opponent.id,
+      });
+      wireCardHoverZoom(element, "hand-card-hover-clone");
+      element.addEventListener("contextmenu", (event) => {
+        event.preventDefault();
+        const rulesItem = evaluateForSoloPlayer(
+          opponent.id,
+          () => rulesActionContextItem({
+            cardId,
+            zone: "hand",
+            handIndex: Number(element.dataset.opponentHandSlot),
+            actingPlayerId: opponent.id,
+          }),
+        );
+        const items = [
+          { keepInBeta: true, label: t("inspect"), onSelect: () => showInspect(cardId) },
+        ];
+        if (rulesItem) {
+          const originalSelect = rulesItem.onSelect;
+          items.push({
+            ...rulesItem,
+            keepInBeta: !rulesItem.debug,
+            onSelect: () => {
+              beginSoloInteraction(opponent.id);
+              if (originalSelect) originalSelect();
+              else beginRulesBoardAction({
+                  cardId,
+                  zone: "hand",
+                  handIndex: Number(element.dataset.opponentHandSlot),
+                  actingPlayerId: opponent.id,
+                });
+            },
+          });
+        }
+        items.push(
+          { separator: true },
+          {
+            label: t("playFaceUp"),
+            onSelect: () => {
+              beginSoloInteraction(opponent.id);
+              playFromHand(cardId, true);
+            },
+          },
+          {
+            label: t("playFaceDown"),
+            onSelect: () => {
+              beginSoloInteraction(opponent.id);
+              playFromHand(cardId, false);
+            },
+          },
+          { separator: true },
+          {
+            label: t("handDiscard"),
+            onSelect: () => send({
+              type: "move_card",
+              fromZone: "hand",
+              toZone: "graveyard",
+              cardId,
+              actingPlayerId: opponent.id,
+            }),
+          },
+        );
+        showContextMenu(event.clientX, event.clientY, betaMenuItems(items));
+      });
+    });
+  } else {
+    fan.onclick = (event) => {
+      const card = event.target.closest("[data-opponent-hand-card]")?.dataset.opponentHandCard;
+      if (card) showInspect(card);
+      else openHandView(opponent.id);
+    };
+  }
 }
 
 // Approximates the opponent's hand for a regular player: we only ever learn
@@ -261,7 +394,9 @@ function openHandView(playerId) {
   const player = latestState.players[playerId];
   if (!player) return;
   const handZone = player.zones.hand;
-  const isMine = playerId === myPlayerId && !isObserver;
+  const isMine = !isObserver && (
+    playerId === myPlayerId || soloControlsPlayer(playerId)
+  );
   const canRequest = !isObserver && !isMine;
   const hvCardHtml = (i, cid) =>
     `<div class="hv-card revealed" data-hv-index="${i}" data-hv-card="${esc(cid)}" style="--owner-color:${playerColor(playerId)}"><img src="${esc(cardImage(cid))}" alt="${esc(cardName(cid))}" title="${esc(cardName(cid))}"></div>`;

@@ -2331,7 +2331,7 @@ function startServer() {
           .map((element) => parseFloat(getComputedStyle(element).fontSize))
           .filter(Number.isFinite)),
       };
-      document.querySelector('[data-rules-player-target="p2"]').click();
+      resolveTriggeredPlacementPlayer("p2");
       targetStep.payload = window.__sent.find((payload) => payload.asSupport === true);
 
       window.__sent = [];

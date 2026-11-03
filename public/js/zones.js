@@ -6,7 +6,7 @@ function renderHeaderCodes() {
     <span class="code-item-label">${esc(t(labelKey))}</span>
     <button data-copy-code="${esc(code || "")}">${codesHidden ? "••••••" : esc(code || "")}</button>
   </div>`;
-  if (connectionMode === "tournament") {
+  if (["tournament", "solo"].includes(connectionMode)) {
     $("#headerCodes").innerHTML = `<span class="count" id="headerCounts"></span>`;
   } else $("#headerCodes").innerHTML = isObserver
     ? `${codeItemHtml(codeObserver, "observerCode")}<span class="count" id="headerCounts"></span>`
@@ -344,7 +344,7 @@ function renderPiles() {
     pileZones.forEach((zone) => {
       const zoneData = player.zones[zone];
       const canView = zoneData.cards !== undefined;
-      const isMine = player.id === myPlayerId;
+      const isMine = player.id === myPlayerId || soloControlsPlayer(player.id);
       const canAct = !isObserver && (isMine || !PRIVATE_ZONES.has(zone));
       const overrideKey = `${mySeat()}:${player.seat}:${zone}`;
       const pos = pileOverrides[overrideKey] || PILE_SCREEN_POS[mySeat()][player.seat][zone];
@@ -369,6 +369,7 @@ function renderPiles() {
     bindCardDragSource(el, {
       kind: "card", cardId: el.dataset.pileTopCard, cardOwnerId: el.dataset.cardOwner || fromOwnerId,
       fromOwnerId, fromZone,
+      actingPlayerId: soloControlsPlayer(fromOwnerId) ? fromOwnerId : null,
     });
   });
   $$("[data-limbo-play-open]").forEach((el) => {
@@ -393,8 +394,10 @@ function renderPiles() {
     });
     if (el.dataset.rulesZonePlayEnabled === "true") {
       bindCardDragSource(el, {
-        kind: "card", cardId, cardOwnerId: myPlayerId,
+        kind: "card", cardId, cardOwnerId: el.dataset.rulesZonePlayOwner,
         fromOwnerId: el.dataset.rulesZonePlayOwner, fromZone: "graveyard",
+        actingPlayerId: soloControlsPlayer(el.dataset.rulesZonePlayOwner)
+          ? el.dataset.rulesZonePlayOwner : null,
       });
     }
   });

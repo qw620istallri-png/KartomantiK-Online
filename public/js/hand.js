@@ -432,9 +432,21 @@ function handCurveStyle(position, total) {
 }
 
 function renderHandTray() {
+  const playerId = isObserver
+    ? null
+    : soloModeActive() ? soloPrimaryPlayerId : myPlayerId;
+  return evaluateForSoloPlayer(
+    playerId,
+    () => renderHandTrayForPlayer(playerId),
+  );
+}
+
+function renderHandTrayForPlayer(meId) {
   const tray = $("#myHandTray");
   tray.dataset.emptyHint = t("handEmptyHint");
-  const meId = isObserver ? null : myPlayerId;
+  const activePlayerId = soloActivePlayerId();
+  $("#handArea").classList.toggle("solo-active-hand", soloModeActive() && activePlayerId === soloPrimaryPlayerId);
+  $("#handArea").classList.toggle("solo-inactive-hand", soloModeActive() && activePlayerId && activePlayerId !== soloPrimaryPlayerId);
   applyHandVisibility(meId);
   if (!meId || !latestState.players[meId]) {
     tray.innerHTML = "";
@@ -653,16 +665,17 @@ function toggleHandHidden() {
 let pendingTriggeredPlacement = null;
 
 function placementEntersSupport(payload, source) {
+  const playerId = source?.actingPlayerId || myPlayerId;
   if (payload.type === "set_rules_field_zone") return payload.fieldZone === "confrontation";
   if (payload.type !== "place_card" || !payload.faceUp || rulesFirstManifestationActive()) return false;
   if (cardsById.get(payload.cardId)?.type !== "manifestation") return false;
   if (currentPhaseUi().phase?.id !== "confrontation_reaction") return false;
   if (source?.zone === "hand") return rulesSupportFromHandAvailableClient(payload.cardId);
-  if (source?.zone === "deck" && latestState?.rulesEngine?.uncoveredTops?.[myPlayerId] === payload.cardId) {
+  if (source?.zone === "deck" && latestState?.rulesEngine?.uncoveredTops?.[playerId] === payload.cardId) {
     return rulesSupportFromHandAvailableClient(payload.cardId);
   }
   return (latestState?.rulesEngine?.playPermissions || []).some((permission) => (
-    permission.playerId === myPlayerId
+    permission.playerId === playerId
     && permission.cardId === payload.cardId
     && permission.fromZone === source?.zone
     && permission.asSupport
@@ -711,9 +724,11 @@ function sendCardPlacementNow(payload, source, triggerTargets = []) {
   if (!latestState?.rulesEngine?.enabled || !placementEntersSupport(payload, source)) {
     send({
       ...payload,
+      ...(source?.actingPlayerId ? { actingPlayerId: source.actingPlayerId } : {}),
       ...(triggerTargets.length ? { triggerTargets } : {}),
       ...(triggerTargets[0]?.kind === "player" ? { triggerTargetPlayerId: triggerTargets[0].playerId } : {}),
     });
+    if (source?.actingPlayerId) endSoloInteraction();
     return;
   }
   send({
@@ -725,7 +740,8 @@ function sendCardPlacementNow(payload, source, triggerTargets = []) {
       cardId: source.cardId,
       zone: source.zone,
       itemId: source.itemId || null,
-      containerId: source.containerId || payload.ownerId || myPlayerId,
+      containerId: source.containerId || payload.ownerId || source.actingPlayerId || myPlayerId,
+      ...(source.actingPlayerId ? { actingPlayerId: source.actingPlayerId } : {}),
     },
     target: "",
     targets: triggerTargets,
@@ -736,7 +752,9 @@ function sendCardPlacementNow(payload, source, triggerTargets = []) {
       x: Number(payload.x) || 0,
       y: Number(payload.y) || 0,
     },
+    ...(source.actingPlayerId ? { actingPlayerId: source.actingPlayerId } : {}),
   });
+  if (source.actingPlayerId) endSoloInteraction();
 }
 
 function placementTargetTrigger(payload, source) {

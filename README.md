@@ -32,9 +32,9 @@ They are always lost when the process restarts.
 
 Static client assets use versioned URLs and long-lived browser/CDN caching.
 
-Current assisted-rules asset version: `20261102-rules-beta-141-7`.
+Current assisted-rules asset version: `20261103-rules-beta-150`.
 
-When replacing a local asset, bump `20261102-rules-beta-141-7` in `public/index.html`
+When replacing a local asset, bump `20261103-rules-beta-150` in `public/index.html`
 (every `<script>` tag), `public/app.js` and `public/sw.js` together (the service worker's
 version is what tells installed apps that a new release is out).
 
@@ -42,6 +42,7 @@ version is what tells installed apps that a new release is out).
 
 - [Engine architecture and handoff](docs/ASSISTED_RULES_ENGINE.md)
 - [Adding card automation](docs/ADDING_CARD_AUTOMATION.md)
+- [Solo beta mode](docs/SOLO_MODE.md)
 - `public/automation-coverage.json` is the generated per-card coverage registry.
 
 ## How it works

@@ -3,22 +3,28 @@
 
 // ---------------------------------------------------------------- deck import
 
+function openImportDeckPanel() {
+  pendingDeckImport = null;
+  resetImportDeckValidationArm();
+  $("#importSideboardBtn").disabled = !(latestState?.players?.[myPlayerId]);
+  $("#importSelectionStatus").textContent = "";
+  $("#importPanel").classList.remove("hidden");
+  setMyActivity("importing");
+  renderSavedDecks();
+  renderCurrentDeckSummary();
+  renderImportPanelActions();
+}
+
 function initImportPanel() {
-  $("#importDeckBtn").onclick = () => {
-    pendingDeckImport = null;
-    resetImportDeckValidationArm();
-    $("#importSideboardBtn").disabled = !(latestState?.players?.[myPlayerId]);
-    $("#importSelectionStatus").textContent = "";
-    $("#importPanel").classList.remove("hidden");
-    setMyActivity("importing");
-    renderSavedDecks();
-    renderCurrentDeckSummary();
-    renderImportPanelActions();
-  };
+  $("#importDeckBtn").onclick = openImportDeckPanel;
   $("#importCancelBtn").onclick = () => {
     $("#importPanel").classList.add("hidden");
     resetImportDeckValidationArm();
     setMyActivity(null);
+    if (soloModeActive()) {
+      endSoloInteraction();
+      renderAll();
+    }
   };
   $("#importDeckText").addEventListener("input", () => {
     pendingDeckImport = null;

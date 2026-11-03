@@ -2922,6 +2922,74 @@ body:not(.rarity-effects-disabled) .rarity-desert {
   transform: translateX(calc(-50% + var(--fan-x))) translateY(var(--fan-arc)) rotate(calc(180deg + var(--fan-rotate))) scale(1.06);
 }
 
+.opponent-hand-fan.solo-hand-fan {
+  z-index: 36;
+  height: 205px;
+  transition: opacity .18s ease-out, filter .18s ease-out, transform .18s ease-out;
+}
+.solo-seat-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 2px;
+}
+.solo-seat-controls button {
+  width: 27px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--owner-color) 65%, #efe1b9);
+  border-radius: 8px;
+  background: #100e0acc;
+  color: #f6edcf;
+  font: inherit;
+}
+.solo-seat-controls button:hover,
+.solo-seat-controls button:focus-visible {
+  background: color-mix(in srgb, var(--owner-color) 36%, #100e0a);
+}
+.solo-seat-controls svg {
+  width: 17px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+}
+.opponent-hand-fan.solo-hand-fan .opponent-hand-card {
+  top: 72px;
+  transform: translateX(calc(-50% + var(--fan-x))) translateY(var(--fan-arc)) rotate(var(--fan-rotate));
+  transform-origin: 50% 10%;
+}
+.opponent-hand-fan.solo-hand-fan .opponent-hand-card:hover,
+.opponent-hand-fan.solo-hand-fan .opponent-hand-card:focus-visible {
+  transform: translateX(calc(-50% + var(--fan-x))) translateY(calc(10px + var(--fan-arc))) rotate(var(--fan-rotate)) scale(1.08);
+}
+.opponent-hand-fan.solo-hand-fan .opponent-hand-card.is-playable {
+  box-shadow: 0 10px 28px #2c8ed877, 0 0 0 2px #72c7ffcc;
+}
+.opponent-hand-fan.solo-inactive-hand,
+.hand-area.solo-inactive-hand {
+  opacity: .58;
+  filter: saturate(.65) brightness(.82);
+}
+.opponent-hand-fan.solo-active-hand {
+  transform: translateX(-50%) translateY(8px) scale(1.035);
+}
+.hand-area.solo-active-hand {
+  transform: translateY(-6px) scale(1.018);
+  transform-origin: 50% 100%;
+}
+.hand-area.solo-active-hand,
+.hand-area.solo-inactive-hand {
+  transition: opacity .18s ease-out, filter .18s ease-out, transform .18s ease-out;
+}
+
+@media (max-height: 560px) {
+  .opponent-hand-fan.solo-hand-fan { height: 148px; }
+  .opponent-hand-fan.solo-hand-fan .opponent-hand-card { width: 88px; height: 123px; top: 54px; }
+  .hand-area.solo-inactive-hand { transform: translateY(42px) scale(.88); transform-origin: 50% 100%; }
+  .opponent-hand-fan.solo-inactive-hand { transform: translateX(-50%) translateY(-28px) scale(.88); }
+}
+
 .hand-area {
   height: 235px;
   background: none;

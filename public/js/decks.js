@@ -396,7 +396,7 @@ function standardDeckSetupActiveClient() {
   const playerIds = Object.keys(latestState?.players || {});
   const confirmed = new Set(latestState?.rulesEngine?.deckConfirmedPlayerIds || []);
   const allCasualDecksConfirmed = playerIds.length >= 2 && playerIds.every((playerId) => confirmed.has(playerId));
-  const setupIncomplete = latestState?.mode === "casual"
+  const setupIncomplete = ["casual", "solo"].includes(latestState?.mode)
     ? !allCasualDecksConfirmed
     : !latestState?.players?.[myPlayerId]?.deckDefinition;
   return Boolean(

@@ -68,6 +68,8 @@ class ViewMixin:
         role = normalize_role(role)
         if zone in SHARED_ZONES:
             return True
+        if self.mode == "solo" and viewer_id in self.solo_player_ids:
+            return True
         # private zone: the owner, or a trusted read-only observer, but never another player
         if role in PRIVILEGED_VIEW_ROLES:
             return True
@@ -169,7 +171,10 @@ class ViewMixin:
     # -- serialization (permission-filtered per viewer) ------------------
     def serialize_for(self, viewer_id, role):
         role = normalize_role(role)
-        can_view_hidden = role in PRIVILEGED_VIEW_ROLES
+        can_view_hidden = (
+            role in PRIVILEGED_VIEW_ROLES
+            or self.mode == "solo" and viewer_id in self.solo_player_ids
+        )
         pending_choice = self.rules_engine.get("pendingChoice")
         pending_choice_view = (
             {
@@ -410,6 +415,10 @@ class ViewMixin:
 
         return {
             "type": "state",
+            "solo": {
+                "enabled": self.mode == "solo",
+                "controlledPlayerIds": list(self.solo_player_ids),
+            },
             "players": players_view,
             "battlefield": battlefield_view,
             "tokens": list(self.tokens),

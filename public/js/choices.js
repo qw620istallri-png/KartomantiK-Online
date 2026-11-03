@@ -4,6 +4,29 @@
 let rulesChoiceRenderKey = null;
 let rulesChoiceContentVisible = false;
 let rulesChoiceAnswerPending = null;
+let rulesPlayerTargetDelegateBound = false;
+
+function resolveTriggeredPlacementPlayer(playerId) {
+  if (!pendingTriggeredPlacement) return false;
+  const placement = pendingTriggeredPlacement;
+  pendingTriggeredPlacement = null;
+  $("#rulesChoicePanel").classList.add("hidden");
+  sendCardPlacement(placement.payload, placement.source, [{
+    kind: "player", playerId,
+  }]);
+  return true;
+}
+
+function bindRulesPlayerTargetDelegate() {
+  if (rulesPlayerTargetDelegateBound) return;
+  rulesPlayerTargetDelegateBound = true;
+  document.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-rules-player-target]");
+    if (!button || !pendingTriggeredPlacement) return;
+    event.preventDefault();
+    resolveTriggeredPlacementPlayer(button.dataset.rulesPlayerTarget);
+  });
+}
 
 function resetRulesChoiceInteraction() {
   rulesChoiceRenderKey = null;
@@ -14,7 +37,8 @@ function resetRulesChoiceInteraction() {
 
 function lockRulesChoiceAnswer() {
   const choice = latestState?.rulesEngine?.pendingChoice;
-  const waiting = rulesChoiceAnswerPending?.choiceId === choice?.id && rulesChoiceAnswerPending?.playerId === myPlayerId;
+  const waiting = rulesChoiceAnswerPending?.choiceId === choice?.id
+    && rulesChoiceAnswerPending?.playerId === choice?.playerId;
   $("#rulesChoiceOptions")?.setAttribute("aria-busy", waiting ? "true" : "false");
   if (waiting) $$("#rulesChoiceOptions button, #rulesChoiceOptions input, #rulesChoiceOptions select, #rulesChoiceOptions textarea")
     .forEach((control) => { control.disabled = true; });
@@ -22,19 +46,22 @@ function lockRulesChoiceAnswer() {
 
 function sendRulesChoiceAnswer(payload) {
   const choice = latestState?.rulesEngine?.pendingChoice;
-  if (!latestState?.rulesEngine?.enabled || !choice || choice.id !== payload.choiceId || choice.playerId !== myPlayerId || isObserver || latestState?.ended) return false;
-  if (rulesChoiceAnswerPending?.choiceId === choice.id && rulesChoiceAnswerPending?.playerId === myPlayerId) return false;
-  rulesChoiceAnswerPending = { choiceId: choice.id, playerId: myPlayerId };
-  send(payload);
+  const controlled = choice && (choice.playerId === myPlayerId || soloControlsPlayer(choice.playerId));
+  if (!latestState?.rulesEngine?.enabled || !choice || choice.id !== payload.choiceId || !controlled || isObserver || latestState?.ended) return false;
+  if (rulesChoiceAnswerPending?.choiceId === choice.id && rulesChoiceAnswerPending?.playerId === choice.playerId) return false;
+  rulesChoiceAnswerPending = { choiceId: choice.id, playerId: choice.playerId };
+  send({ ...payload, ...(soloControlsPlayer(choice.playerId) ? { actingPlayerId: choice.playerId } : {}) });
+  if (soloModeActive()) endSoloInteraction();
   lockRulesChoiceAnswer();
   return true;
 }
 
 function closeRulesChoicePanel(force = false) {
   const mandatoryChoice = latestState?.rulesEngine?.pendingChoice;
-  if (mandatoryChoice?.playerId === myPlayerId && !force) return;
+  if ((mandatoryChoice?.playerId === myPlayerId || soloControlsPlayer(mandatoryChoice?.playerId)) && !force) return;
   resetRulesChoiceInteraction();
   pendingTriggeredPlacement = null;
+  endSoloInteraction();
   $("#rulesChoicePanel").classList.add("hidden");
 }
 
@@ -96,7 +123,9 @@ function renderOpponentDecidingBanner() {
     document.body.appendChild(banner);
   }
   const choice = latestState?.rulesEngine?.enabled ? latestState.rulesEngine.pendingChoice : null;
-  const waiting = Boolean(choice && choice.playerId && (isObserver || choice.playerId !== myPlayerId));
+  const waiting = Boolean(choice && choice.playerId && (
+    isObserver || choice.playerId !== myPlayerId && !soloControlsPlayer(choice.playerId)
+  ));
   banner.classList.toggle("hidden", !waiting);
   if (!waiting) return;
   const cardId = choice.sourceCardId || choice.targetCardId || choice.cardId;
@@ -125,7 +154,8 @@ function renderResolvePrompt() {
   const rules = latestState?.rulesEngine;
   const show = Boolean(
     rules?.enabled && rules.resolvePrompt && !isObserver
-    && rules.priorityPlayerId === myPlayerId && !rules.pendingChoice,
+    && (rules.priorityPlayerId === myPlayerId || soloControlsPlayer(rules.priorityPlayerId))
+    && !rules.pendingChoice,
   );
   prompt.classList.toggle("hidden", !show);
   if (!show) return;
@@ -208,10 +238,18 @@ let rulesChoiceRetry = null;
 
 function renderRulesChoice(force = false) {
   const choice = latestState?.rulesEngine?.pendingChoice;
-  if (rulesChoiceAnswerPending && (rulesChoiceAnswerPending.choiceId !== choice?.id || rulesChoiceAnswerPending.playerId !== myPlayerId))
+  if (choice && pendingTriggeredPlacement) pendingTriggeredPlacement = null;
+  if (choice?.playerId && soloControlsPlayer(choice.playerId)) beginSoloInteraction(choice.playerId);
+  else if (!choice && soloModeActive()) endSoloInteraction();
+  if (rulesChoiceAnswerPending && (rulesChoiceAnswerPending.choiceId !== choice?.id || rulesChoiceAnswerPending.playerId !== choice?.playerId)) {
     rulesChoiceAnswerPending = null;
+    force = true;
+  }
   const waiting = rulesAnimationsBusyFor();
-  if (waiting > 0 && latestState?.rulesEngine?.pendingChoice?.playerId === myPlayerId) {
+  if (waiting > 0 && (
+    latestState?.rulesEngine?.pendingChoice?.playerId === myPlayerId
+    || soloControlsPlayer(latestState?.rulesEngine?.pendingChoice?.playerId)
+  )) {
     $("#rulesChoicePanel").classList.add("hidden");
     clearTimeout(rulesChoiceFlipTimer);
     rulesChoiceFlipTimer = setTimeout(() => { rulesChoiceFlipTimer = null; renderRulesChoice(); }, Math.min(waiting + 30, 2500));
@@ -356,6 +394,7 @@ function renderRulesChoiceScreen() {
   );
   panel.classList.remove("cards-screen", "destination-screen", "hand-drop", "replace-screen", "chain-screen", "player-screen", "hand-swap", "temperament-screen", "deck-reorder-screen");
   if (pendingTriggeredPlacement) {
+    bindRulesPlayerTargetDelegate();
     const { payload } = pendingTriggeredPlacement;
     $("#rulesChoiceHeading").textContent = t("rulesChooseTriggerTargetHeading");
     $("#rulesChoiceText").textContent = rulesText("rulesChooseTriggerTargetText", { card: cardName(payload.cardId) });
@@ -365,15 +404,10 @@ function renderRulesChoiceScreen() {
       <button type="button" class="rules-choice-player" data-rules-player-target="${esc(playerId)}" style="--player-tone:${esc(playerColor(playerId))}">
         ${esc(playerId === myPlayerId ? t("rulesTargetSelf") : t("rulesTargetOpponent"))} · ${esc(rulesPlayerName(playerId))}
       </button>`).join("");
-    $$('[data-rules-player-target]').forEach((button) => {
-      button.onclick = () => {
-        const placement = pendingTriggeredPlacement;
-        pendingTriggeredPlacement = null;
-        panel.classList.add("hidden");
-        sendCardPlacement(placement.payload, placement.source, [{
-          kind: "player", playerId: button.dataset.rulesPlayerTarget,
-        }]);
-      };
+    options.querySelectorAll("[data-rules-player-target]").forEach((button) => {
+      button.addEventListener("click", () => {
+        resolveTriggeredPlacementPlayer(button.dataset.rulesPlayerTarget);
+      });
     });
     panel.classList.remove("hidden");
     return;

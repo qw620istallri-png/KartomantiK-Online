@@ -75,9 +75,9 @@ class Session(
 ):
     def __init__(self, mode="casual", tournament_policy=None, card_points=None, card_labels=None,
                  manifestation_ids=None, card_rules=None, rules_beta=False, ban_list_enabled=False):
-        self.mode = "tournament" if mode == "tournament" else "casual"
+        self.mode = mode if mode in {"casual", "tournament", "solo"} else "casual"
         self.status = "lobby" if self.mode == "tournament" else "active"
-        self.code_player = gen_code() if self.mode == "casual" else None
+        self.code_player = gen_code() if self.mode in {"casual", "solo"} else None
         self.code_observer = gen_code() if self.mode == "casual" else None
         self.code_player1 = gen_code(8) if self.mode == "tournament" else None
         self.code_player2 = gen_code(8) if self.mode == "tournament" else None
@@ -85,6 +85,8 @@ class Session(
         self.code_judge = gen_code(8) if self.mode == "tournament" else None
         self.code_organizer = gen_code(10) if self.mode == "tournament" else None
         self.seat_claims = {0: None, 1: None}
+        self.solo_controller_id = None
+        self.solo_player_ids = []
         self.tournament_policy = tournament_policy or {"bannedCardIds": [], "restrictedGroups": []}
         self.ban_list_enabled = self.mode == "tournament" or bool(ban_list_enabled)
         self.card_points = None if card_points is None else dict(card_points)

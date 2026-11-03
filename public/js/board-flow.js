@@ -55,6 +55,7 @@ function closeRulesBoardFlow() {
   document.body.classList.remove("flow-uses-hand");
   clearRulesBoardTargets();
   pendingRulesBoardFlow = null;
+  endSoloInteraction();
   $("#rulesBoardFlow")?.classList.add("hidden");
   $$('[data-hand-card]').forEach((element) => {
     element.classList.remove("is-tribute-candidate", "is-tribute-selected", "is-chain-candidate");

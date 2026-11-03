@@ -38,6 +38,19 @@ function initLanguageSwitch() {
       const index = KO_LANGUAGES.indexOf(currentLanguage);
       setInterfaceLanguage(KO_LANGUAGES[(index + 1) % KO_LANGUAGES.length]);
     };
+
+    $("#createSoloBtn").onclick = () => {
+      const name = $("#createName").value.trim() || "P1";
+      localStorage.setItem("ko_name", name);
+      connectAndJoin({
+        createSolo: true,
+        name,
+        opponentName: "P2",
+        rulesBeta: $("#rulesBetaInput").checked,
+        banListEnabled: $("#banListInput").checked,
+        deckPolicy: homePolicyDraft || defaultHomeDeckPolicy(),
+      });
+    };
   });
 }
 
@@ -63,7 +76,9 @@ function paintStaticText() {
   $("#homeBannedCardAddBtn").textContent = t("add");
   $("#homeRestrictedGroupAddBtn").textContent = t("addRestrictedGroup");
   $("#homePolicyDoneBtn").textContent = t("confirm");
-  $("#tournamentToggleLabel").textContent = t("tournamentMode");
+  $("#tournamentToggleLabel").textContent = t("betaModes");
+  $("#createSoloLabel").textContent = t("createSolo");
+  $("#createSoloHint").textContent = t("createSoloHint");
   $("#createTournamentLabel").textContent = t("createTournament");
   $("#createTournamentHint").textContent = t("createTournamentHint");
   $("#playerCodeLabel").textContent = t("playerCode");
@@ -198,6 +213,70 @@ function setStatus(message, kind = "") {
   el.textContent = message || "";
   el.classList.remove("error", "warning", "success");
   if (kind) el.classList.add(kind);
+}
+
+function soloModeActive() {
+  return connectionMode === "solo" && soloControlledPlayerIds.length === 2;
+}
+
+function soloOpponentPlayerId() {
+  return soloControlledPlayerIds.find((playerId) => playerId !== soloPrimaryPlayerId) || null;
+}
+
+function soloControlsPlayer(playerId) {
+  return soloModeActive() && soloControlledPlayerIds.includes(playerId);
+}
+
+function beginSoloInteraction(playerId) {
+  if (!soloControlsPlayer(playerId)) return false;
+  soloInteractionPlayerId = playerId;
+  myPlayerId = playerId;
+  return true;
+}
+
+function evaluateForSoloPlayer(playerId, callback) {
+  if (!soloControlsPlayer(playerId)) return callback();
+  const previousPlayerId = myPlayerId;
+  const previousInteraction = soloInteractionPlayerId;
+  myPlayerId = playerId;
+  soloInteractionPlayerId = playerId;
+  try {
+    return callback();
+  } finally {
+    myPlayerId = previousPlayerId;
+    soloInteractionPlayerId = previousInteraction;
+  }
+}
+
+function endSoloInteraction() {
+  if (!soloModeActive()) return;
+  soloInteractionPlayerId = null;
+  myPlayerId = soloPrimaryPlayerId;
+}
+
+function soloActivePlayerId() {
+  if (!soloModeActive()) return myPlayerId;
+  const rules = latestState?.rulesEngine;
+  const passed = new Set(
+    rules?.enabled
+      ? rules.priorityPasses || []
+      : latestState?.phaseTracker?.passedPlayerIds || [],
+  );
+  const firstManifestationPlayerId = (
+    rules?.enabled
+    && !rules.firstManifestationComplete
+    && currentPhaseUi().phase?.id === "confrontation_choose"
+  )
+    ? soloControlledPlayerIds.find((playerId) => (
+      !(rules.firstManifestationValidatedPlayerIds || []).includes(playerId)
+    ))
+    : null;
+  return rules?.pendingChoice?.playerId
+    || firstManifestationPlayerId
+    || (rules?.enabled ? rules.priorityPlayerId : null)
+    || soloControlledPlayerIds.find((playerId) => !passed.has(playerId))
+    || soloInteractionPlayerId
+    || soloPrimaryPlayerId;
 }
 
 function initJoinScreen() {
@@ -388,10 +467,15 @@ function connectAndJoin(joinPayload) {
   joinedCode = joinPayload.code || null;
   joinedName = joinPayload.name;
   const createNew = Boolean(joinPayload.createNew);
+  const createSolo = Boolean(joinPayload.createSolo);
   const createTournament = Boolean(joinPayload.createTournament);
   const rulesBeta = Boolean(joinPayload.rulesBeta);
   const banListEnabled = Boolean(joinPayload.banListEnabled);
-  pendingCreateFlow = createTournament ? "tournament" : (createNew ? "casual" : null);
+  pendingCreateFlow = createTournament
+    ? "tournament"
+    : createSolo
+      ? "solo"
+      : createNew ? "casual" : null;
 
   const proto = location.protocol === "https:" ? "wss:" : "ws:";
   const socket = new WebSocket(`${proto}//${location.host}/ws`);
@@ -401,7 +485,14 @@ function connectAndJoin(joinPayload) {
   });
   socket.onopen = () => {
     if (ws !== socket) return;
-    socket.send(JSON.stringify({ type: "join", stateDeltaVersion: 1, createNew, createTournament, rulesBeta, banListEnabled, deckPolicy: joinPayload.deckPolicy, code: joinedCode, name: joinedName, clientId, sandbox: joinPayload.sandbox }));
+    socket.send(JSON.stringify({
+      type: "join", stateDeltaVersion: 1,
+      createNew, createSolo, createTournament,
+      rulesBeta, banListEnabled, deckPolicy: joinPayload.deckPolicy,
+      code: joinedCode, name: joinedName,
+      opponentName: joinPayload.opponentName,
+      clientId, sandbox: joinPayload.sandbox,
+    }));
   };
   socket.onmessage = (event) => {
     if (ws !== socket) return;
@@ -512,6 +603,9 @@ function leaveSession() {
   ws = null;
   latestState = null;
   myPlayerId = null;
+  soloPrimaryPlayerId = null;
+  soloControlledPlayerIds = [];
+  soloInteractionPlayerId = null;
   isObserver = false;
   connectionRole = "player";
   connectionMode = "casual";
@@ -548,6 +642,11 @@ function leaveSession() {
 function handleServerMessage(msg) {
   if (msg.type === "joined") {
     myPlayerId = msg.playerId;
+    soloPrimaryPlayerId = msg.solo ? msg.playerId : null;
+    soloControlledPlayerIds = msg.solo
+      ? [...(msg.controlledPlayerIds || [])]
+      : [];
+    soloInteractionPlayerId = null;
     connectionRole = msg.role || (msg.isObserver ? "observer" : "player");
     connectionMode = msg.mode || "casual";
     rulesBetaActivated = Boolean(msg.rulesBeta);
@@ -581,6 +680,9 @@ function handleServerMessage(msg) {
       $("#playerCodeValue").textContent = codePlayer;
       $("#observerCodeValue").textContent = codeObserver;
       $("#codesBox").classList.remove("hidden");
+    } else if (pendingCreateFlow === "solo") {
+      pendingCreateFlow = null;
+      showGameScreen();
     } else if (pendingCreateFlow === "tournament" || connectionRole === "organizer" || connectionRole === "judge") {
       pendingCreateFlow = null;
       showTournamentScreen();
@@ -835,6 +937,27 @@ function showScryPopup(cardIds) {
 // ---------------------------------------------------------------- actions (send)
 
 function send(payload) {
+  if (soloModeActive() && !payload.actingPlayerId) {
+    const actorId = payload.source?.actingPlayerId
+      || payload.actingPlayerId
+      || (soloControlsPlayer(payload.fromOwnerId) ? payload.fromOwnerId : null)
+      || (soloControlsPlayer(payload.ownerId) ? payload.ownerId : null)
+      || pendingRulesBoardFlow?.actingPlayerId
+      || pendingRulesActionSource?.actingPlayerId
+      || (
+        payload.type === "resolve_rules_choice"
+          ? latestState?.rulesEngine?.pendingChoice?.playerId
+          : null
+      )
+      || (
+        ["pass_priority", "set_rules_pass_all", "set_rules_auto_skip"].includes(payload.type)
+          ? latestState?.rulesEngine?.priorityPlayerId
+          : null
+      )
+      || soloInteractionPlayerId
+      || soloPrimaryPlayerId;
+    if (soloControlsPlayer(actorId)) payload = { ...payload, actingPlayerId: actorId };
+  }
   if (latestState?.rulesEngine?.enabled && !isObserver
       && ["declare_rules_action", "pass_priority", "pass_phase"].includes(payload.type)
       && !("rulesContext" in payload)) {

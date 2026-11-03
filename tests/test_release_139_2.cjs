@@ -699,9 +699,18 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
       const manual = await page.evaluate(() => {
         window.__setup139({ auto: false });
         latestState.battlefield[0].counters = { power: 2 }; latestState.battlefield.forEach((item) => delete item.fieldZone); renderAll();
-        return { total: confrontationPowerOf("p1"), opponent: confrontationPowerOf("p2"), priority: document.querySelector("#ubField").dataset.prio };
+        const initial = { total: confrontationPowerOf("p1"), opponent: confrontationPowerOf("p2") };
+        latestState.battlefield.find((item) => item.id === "mine").y = 525;
+        latestState.battlefield.find((item) => item.id === "theirs").y = 800;
+        renderAll();
+        return {
+          ...initial,
+          crossedTotal: confrontationPowerOf("p1"),
+          crossedOpponent: confrontationPowerOf("p2"),
+          priority: document.querySelector("#ubField").dataset.prio,
+        };
       });
-      assert.deepEqual(manual, { total: 5, opponent: 4, priority: "opp" });
+      assert.deepEqual(manual, { total: 5, opponent: 4, crossedTotal: 4, crossedOpponent: 5, priority: "me" });
 
       await page.evaluate(() => {
         window.__setup139();

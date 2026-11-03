@@ -264,6 +264,59 @@
   box-shadow: 0 14px 34px rgba(0, 0, 0, .6), 0 0 0 1px rgba(240, 217, 143, .4);
 }
 
+#gameScreen.ui-beta .opponent-hand-fan.solo-hand-fan {
+  z-index: 58;
+  width: min(660px, 72vw);
+  height: 220px;
+}
+#gameScreen.ui-beta .opponent-hand-fan.solo-hand-fan .opponent-hand-card {
+  --ub-back-w: clamp(88px, 7vw, 118px);
+  top: 66px;
+  transform: translateX(calc(-50% + var(--fan-x))) translateY(var(--fan-arc)) rotate(var(--fan-rotate));
+  transform-origin: 50% 10%;
+}
+#gameScreen.ui-beta .opponent-hand-fan.solo-hand-fan .opponent-hand-card:hover,
+#gameScreen.ui-beta .opponent-hand-fan.solo-hand-fan .opponent-hand-card:focus-visible {
+  transform: translateX(calc(-50% + var(--fan-x))) translateY(calc(10px + var(--fan-arc))) rotate(var(--fan-rotate)) scale(1.12);
+}
+.ub-solo-controls {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: auto;
+}
+.ub-solo-controls button {
+  width: 25px;
+  height: 23px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--pc) 72%, var(--ub-text));
+  border-radius: 7px;
+  background: color-mix(in srgb, var(--pc) 22%, var(--ub-panel));
+  color: var(--ub-text);
+  font: 800 11px/1 var(--ub-font);
+}
+.ub-solo-controls button:hover,
+.ub-solo-controls button:focus-visible {
+  background: color-mix(in srgb, var(--pc) 38%, var(--ub-panel));
+}
+.ub-solo-controls svg {
+  width: 14px;
+  height: 14px;
+}
+#gameScreen.ui-beta.ub-compact .opponent-hand-fan.solo-hand-fan {
+  height: 155px;
+}
+#gameScreen.ui-beta.ub-compact .opponent-hand-fan.solo-hand-fan .opponent-hand-card {
+  --ub-back-w: 80px;
+  top: 50px;
+}
+#gameScreen.ui-beta.ub-compact .opponent-hand-fan.solo-hand-fan .opponent-hand-card:hover,
+#gameScreen.ui-beta.ub-compact .opponent-hand-fan.solo-hand-fan .opponent-hand-card:focus-visible {
+  transform: translateX(calc(-50% + var(--fan-x))) translateY(calc(6px + var(--fan-arc))) rotate(var(--fan-rotate)) scale(1.06);
+}
+
 /* ---------- hand: between the interzones, cards peek from the bottom ---------- */
 #gameScreen.ui-beta .hand-area {
   position: fixed;

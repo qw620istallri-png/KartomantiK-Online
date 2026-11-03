@@ -70,20 +70,49 @@ function toggleMyPhasePass() {
   const tracker = latestState?.phaseTracker;
   if (isObserver || !tracker?.enabled) return;
   const rules = latestState?.rulesEngine;
+  const actionPlayerId = soloModeActive()
+    ? (
+      rulesFirstManifestationActive()
+        ? soloControlledPlayerIds.find((playerId) => (
+          !(rules.firstManifestationValidatedPlayerIds || []).includes(playerId)
+        ))
+        : rules?.priorityPlayerId
+    )
+      || soloControlledPlayerIds.find(
+        (playerId) => !(tracker.passedPlayerIds || []).includes(playerId),
+      )
+      || soloPrimaryPlayerId
+    : myPlayerId;
   if (rules?.enabled) {
     if (rulesFirstManifestationActive()) {
       // a placed first Manifestation is final: validating cannot be undone
-      if ((rules.firstManifestationValidatedPlayerIds || []).includes(myPlayerId)) return;
-      send({ type: "validate_first_manifestation", validated: true });
+      if ((rules.firstManifestationValidatedPlayerIds || []).includes(actionPlayerId)) return;
+      send({
+        type: "validate_first_manifestation",
+        validated: true,
+        ...(soloModeActive() ? { actingPlayerId: actionPlayerId } : {}),
+      });
       return;
     }
-    const alreadyPassed = (rules.priorityPasses || []).includes(myPlayerId);
-    if (alreadyPassed) send({ type: "pass_priority", passed: false });
-    else if (rules.priorityPlayerId === myPlayerId) send({ type: "pass_priority", passed: true });
+    const alreadyPassed = (rules.priorityPasses || []).includes(actionPlayerId);
+    if (alreadyPassed) send({
+      type: "pass_priority",
+      passed: false,
+      ...(soloModeActive() ? { actingPlayerId: actionPlayerId } : {}),
+    });
+    else if (rules.priorityPlayerId === actionPlayerId) send({
+      type: "pass_priority",
+      passed: true,
+      ...(soloModeActive() ? { actingPlayerId: actionPlayerId } : {}),
+    });
     return;
   }
   const passed = new Set(tracker.passedPlayerIds || []);
-  send({ type: "pass_phase", passed: !passed.has(myPlayerId) });
+  send({
+    type: "pass_phase",
+    passed: !passed.has(actionPlayerId),
+    ...(soloModeActive() ? { actingPlayerId: actionPlayerId } : {}),
+  });
 }
 
 function rulesFirstManifestationActive() {
@@ -180,8 +209,19 @@ function renderPhaseTracker() {
 
   const activeGroupId = activeGroup?.id || activePhase?.parent || activePhase?.id;
   const passedPlayerIds = new Set(rules?.enabled ? (rules.priorityPasses || []) : (tracker.passedPlayerIds || []));
-  const passIsActive = passedPlayerIds.has(myPlayerId);
-  const opponentPassIsActive = !isObserver && [...passedPlayerIds].some((playerId) => playerId !== myPlayerId);
+  const focusPlayerId = soloModeActive()
+    ? (
+      rulesFirstManifestationActive()
+        ? soloControlledPlayerIds.find((playerId) => (
+          !(rules.firstManifestationValidatedPlayerIds || []).includes(playerId)
+        ))
+        : rules?.priorityPlayerId
+    )
+      || soloControlledPlayerIds.find((playerId) => !passedPlayerIds.has(playerId))
+      || soloPrimaryPlayerId
+    : myPlayerId;
+  const passIsActive = passedPlayerIds.has(focusPlayerId);
+  const opponentPassIsActive = !isObserver && [...passedPlayerIds].some((playerId) => playerId !== focusPlayerId);
   $("#phaseSequence").classList.toggle("advanced", tracker.advanced);
   $("#phaseSequence").innerHTML = PHASE_GROUPS.map((group) => {
     const active = group.id === activeGroupId;
@@ -294,13 +334,21 @@ function renderRulesStack() {
   const firstManifestation = rulesFirstManifestationActive();
   const firstItemIds = rules.firstManifestationItemIds || {};
   const firstValidated = rules.firstManifestationValidatedPlayerIds || [];
-  const mineHasFirstManifestation = Boolean(firstItemIds[myPlayerId]);
-  const mineFirstValidated = firstValidated.includes(myPlayerId);
-  const opponentFirstValidated = firstValidated.some((playerId) => playerId !== myPlayerId);
+  const focusPlayerId = soloModeActive()
+    ? (
+      firstManifestation
+        ? soloControlledPlayerIds.find((playerId) => !firstValidated.includes(playerId))
+        : priorityPlayerId
+    ) || soloPrimaryPlayerId
+    : myPlayerId;
+  const mineHasFirstManifestation = Boolean(firstItemIds[focusPlayerId]);
+  const mineFirstValidated = firstValidated.includes(focusPlayerId);
+  const opponentFirstValidated = firstValidated.some((playerId) => playerId !== focusPlayerId);
   const priorityPasses = rules.priorityPasses || [];
-  const myPassActive = priorityPasses.includes(myPlayerId);
+  const myPassActive = priorityPasses.includes(focusPlayerId);
   const immediatePending = rulesImmediateEffectPendingClient();
-  const myPriority = playersReady && !pendingChoice && !immediatePending && !firstManifestation && !isObserver && priorityPlayerId === myPlayerId;
+  const myPriority = playersReady && !pendingChoice && !immediatePending && !firstManifestation && !isObserver
+    && (priorityPlayerId === myPlayerId || soloControlsPlayer(priorityPlayerId));
   const canCancelPass = playersReady && !pendingChoice && !immediatePending && !isObserver && myPassActive;
   const stack = Array.isArray(rules.actionStack) ? rules.actionStack : [];
   const resolutionArmed = stack.length > 0 && priorityPasses.length > 0;
@@ -321,7 +369,11 @@ function renderRulesStack() {
   priority.textContent = firstManifestation
     ? t(isObserver ? "rulesFirstManifestationObserver" : mineFirstValidated ? "rulesFirstManifestationWaiting" : "rulesFirstManifestationChoose")
     : pendingChoice
-    ? (pendingChoice.playerId === myPlayerId ? t("rulesYourChoice") : rulesText("rulesWaitingChoice", { player: rulesPlayerName(pendingChoice.playerId) }))
+    ? (
+      pendingChoice.playerId === myPlayerId || soloControlsPlayer(pendingChoice.playerId)
+        ? rulesText("rulesYourChoice", { player: rulesPlayerName(pendingChoice.playerId) })
+        : rulesText("rulesWaitingChoice", { player: rulesPlayerName(pendingChoice.playerId) })
+    )
     : immediatePending
     ? t("rulesImmediateResolving")
     : !playersReady || !priorityPlayerId
@@ -431,7 +483,25 @@ function renderRulesPregame() {
   panel.classList.toggle("hidden", !active);
   panel.classList.remove("mulligan-required");
   $("#gameScreen").classList.toggle("rules-pregame-active", active);
-  if (!active) return;
+  if (!active) {
+    if (soloModeActive()) endSoloInteraction();
+    return;
+  }
+  if (soloModeActive()) {
+    const controlled = soloControlledPlayerIds;
+    const required = new Set([
+      ...(rules?.openingMulliganRequiredPlayerIds || []),
+      ...(rules?.recoveryMulliganRequiredPlayerIds || []),
+    ]);
+    const ready = new Set(rules?.readyPlayerIds || []);
+    const confirmed = new Set(rules?.deckConfirmedPlayerIds || []);
+    const nextPlayerId = controlled.find((playerId) => (
+      standardDeckSetup
+        ? !confirmed.has(playerId)
+        : required.has(playerId) || !ready.has(playerId)
+    )) || controlled[0];
+    beginSoloInteraction(nextPlayerId);
+  }
 
   if (standardDeckSetup) {
     const deckConfirmed = new Set(rules?.deckConfirmedPlayerIds || []);

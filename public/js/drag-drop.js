@@ -7,6 +7,10 @@ function requestCardPlacement(payload, source = null) {
     zone: payload.fromZone || (payload.type === "set_rules_field_zone" ? "battlefield" : "hand"),
     itemId: payload.itemId || null,
   };
+  if (placementSource.actingPlayerId) {
+    beginSoloInteraction(placementSource.actingPlayerId);
+    payload = { ...payload, actingPlayerId: placementSource.actingPlayerId };
+  }
   const ability = placementTargetTrigger(payload, placementSource);
   if (!ability) {
     sendCardPlacement(payload, placementSource);
@@ -72,7 +76,11 @@ function playFromHand(cardId, faceUp) {
   requestCardPlacement({
     type: "place_card", fromZone: "hand", cardId, faceUp,
     x: center.x - 75 + Math.random() * 60 - 30, y: center.y - 105 + Math.random() * 60 - 30,
-  });
+  }, soloInteractionPlayerId ? {
+    cardId,
+    zone: "hand",
+    actingPlayerId: soloInteractionPlayerId,
+  } : null);
 }
 
 function wireZoneButtons() {
@@ -518,7 +526,12 @@ function resolveDrop(ctx, clientX, clientY) {
     }
     const faceUp = latestState?.rulesEngine?.enabled && rulesFirstManifestationActive() ? false : true;
     const requestDraggedPlacement = (payload) => {
-      const source = { cardId: ctx.cardId, zone: ctx.fromZone, handIndex: ctx.handIndex };
+      const source = {
+        cardId: ctx.cardId,
+        zone: ctx.fromZone,
+        handIndex: ctx.handIndex,
+        actingPlayerId: ctx.actingPlayerId,
+      };
       if (!beginRulesBoardPlacementTarget(payload, source)) requestCardPlacement(payload, source);
     };
     if (anchor) {

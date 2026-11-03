@@ -17,8 +17,11 @@ const PILE_SCREEN_POS = {
 };
 
 function mySeat() {
-  if (isObserver || !myPlayerId || !latestState) return 0;
-  return latestState.players[myPlayerId]?.seat || 0;
+  const playerId = connectionMode === "solo"
+    ? soloPrimaryPlayerId || myPlayerId
+    : myPlayerId;
+  if (isObserver || !playerId || !latestState) return 0;
+  return latestState.players[playerId]?.seat || 0;
 }
 
 function rotateForSeat(x, y, w = 0, h = 0) {
@@ -899,6 +902,18 @@ function rulesActivateMarkerMarkup(item) {
   </div>`;
 }
 
+function soloRulesMenuItem(item, playerId) {
+  if (!item || !soloControlsPlayer(playerId)) return item;
+  const originalSelect = item.onSelect;
+  return {
+    ...item,
+    onSelect: () => {
+      beginSoloInteraction(playerId);
+      originalSelect?.();
+    },
+  };
+}
+
 let rulesActivationDismiss = null;
 
 function closeRulesActivationConfirmation() {
@@ -911,12 +926,14 @@ function closeRulesActivationConfirmation() {
 }
 
 function wireRulesActivateMarker(cardElement, item) {
+  const controllerId = battlefieldItemControllerId(item);
   cardElement.querySelectorAll("[data-gem-essence]").forEach((counter) => {
     counter.addEventListener("pointerdown", (event) => event.stopPropagation());
     counter.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
       cardElement.querySelectorAll("[data-gem-essence]").forEach((button) => { button.disabled = true; });
+      if (soloControlsPlayer(controllerId)) beginSoloInteraction(controllerId);
       beginRulesBoardActivatedAction(item, counter.dataset.gemEssence);
     });
   });
@@ -959,6 +976,7 @@ function wireRulesActivateMarker(cardElement, item) {
         event.preventDefault();
         event.stopPropagation();
         closeRulesActivationConfirmation();
+        if (soloControlsPlayer(controllerId)) beginSoloInteraction(controllerId);
         beginRulesBoardActivatedAction(
           item, confirmButton.dataset.rulesActivateConfirm,
         );
@@ -1208,9 +1226,12 @@ function renderBattlefield() {
     });
     animateBoardCard(el, item, pos);
     el.style.setProperty("--owner-color", playerColor(item.ownerId));
-    const isMine = !isObserver && battlefieldItemControllerId(item) === myPlayerId;
+    const controllerId = battlefieldItemControllerId(item);
+    const isMine = !isObserver && (
+      controllerId === myPlayerId || soloControlsPlayer(controllerId)
+    );
     // a trusted observer gets the same "owner peek" as the actual owner
-    const canPeek = isMine || isObserver;
+    const canPeek = isMine || isObserver || soloModeActive();
     let inner;
     if (item.isTokenCard) {
       inner = `<div class="bf-card-face" style="background:${esc(temperamentInk(item.temperament))}">${tokenCardFaceHtml(item)}</div>`;
@@ -1232,8 +1253,16 @@ function renderBattlefield() {
     const printedPower = item.isTokenCard
       ? item.power
       : item.willManifestation ? 0 : cardsById.get(item.cardId)?.power;
-    el.innerHTML = `<div class="bf-card-inner" style="transform:rotate(${item.rotation || 0}deg)">${inner}${item.faceUp && item.cardId ? automationCoverageBadgeHtml(item.cardId) : ""}${rulesTemperamentMarkerMarkup(item, ongoingEffects)}${item.effectsDisabled ? `<span class="rules-effects-disabled-badge" title="${esc(t("rulesEffectsDisabled"))}" aria-label="${esc(t("rulesEffectsDisabled"))}">Ø</span>` : ""}${item.isCopy ? `<span class="copy-card-stamp">${esc(t("copyStamp"))}</span>` : ""}</div><div class="counters">${rulesCardCountersMarkup(item, ongoingEffects, printedPower)}</div>${rulesFieldZoneMarkerMarkup(item.fieldZone)}${rulesControllerMarkerMarkup(item)}${item.isSupport ? `<span class="rules-support-badge" title="${esc(t("playInSupport"))}" aria-label="${esc(t("playInSupport"))}">S</span>` : ""}${rulesEffectMarkerMarkup(ongoingEffects)}${rulesActivateMarkerMarkup(item)}`;
-    if (!isObserver) bindCardDragSource(el, { kind: "battlefield", itemId: item.id });
+    const activationMarkup = evaluateForSoloPlayer(
+      controllerId,
+      () => rulesActivateMarkerMarkup(item),
+    );
+    el.innerHTML = `<div class="bf-card-inner" style="transform:rotate(${item.rotation || 0}deg)">${inner}${item.faceUp && item.cardId ? automationCoverageBadgeHtml(item.cardId) : ""}${rulesTemperamentMarkerMarkup(item, ongoingEffects)}${item.effectsDisabled ? `<span class="rules-effects-disabled-badge" title="${esc(t("rulesEffectsDisabled"))}" aria-label="${esc(t("rulesEffectsDisabled"))}">Ø</span>` : ""}${item.isCopy ? `<span class="copy-card-stamp">${esc(t("copyStamp"))}</span>` : ""}</div><div class="counters">${rulesCardCountersMarkup(item, ongoingEffects, printedPower)}</div>${rulesFieldZoneMarkerMarkup(item.fieldZone)}${rulesControllerMarkerMarkup(item)}${item.isSupport ? `<span class="rules-support-badge" title="${esc(t("playInSupport"))}" aria-label="${esc(t("playInSupport"))}">S</span>` : ""}${rulesEffectMarkerMarkup(ongoingEffects)}${activationMarkup}`;
+    if (!isObserver) bindCardDragSource(el, {
+      kind: "battlefield",
+      itemId: item.id,
+      actingPlayerId: soloControlsPlayer(controllerId) ? controllerId : null,
+    });
     el.addEventListener("contextmenu", (event) => {
       event.preventDefault();
       if (isObserver) {
@@ -1294,9 +1323,15 @@ function renderBattlefield() {
       if (item.isCopy) {
         const copyItems = [{ keepInBeta: true, label: t("inspect"), onSelect: () => showInspect(item.cardId, false) }];
         const rulesItem = isMine && item.faceUp
-          ? rulesActionContextItem({ cardId: item.cardId, zone: "battlefield", itemId: item.id })
+          ? evaluateForSoloPlayer(controllerId, () => rulesActionContextItem({
+            cardId: item.cardId, zone: "battlefield", itemId: item.id,
+            actingPlayerId: controllerId,
+          }))
           : null;
-        if (rulesItem) copyItems.push({ ...rulesItem, keepInBeta: !rulesItem.debug });
+        if (rulesItem) copyItems.push({
+          ...soloRulesMenuItem(rulesItem, controllerId),
+          keepInBeta: !rulesItem.debug,
+        });
         copyItems.push(
           { separator: true },
           ...zOrderItems,
@@ -1320,9 +1355,15 @@ function renderBattlefield() {
         items.push({ label: t("ubSendToStalemate"), onSelect: () => sendItemToManualStalemate(item) });
       }
       const rulesItem = isMine && item.faceUp
-        ? rulesActionContextItem({ cardId: item.cardId, zone: "battlefield", itemId: item.id })
+        ? evaluateForSoloPlayer(controllerId, () => rulesActionContextItem({
+          cardId: item.cardId, zone: "battlefield", itemId: item.id,
+          actingPlayerId: controllerId,
+        }))
         : null;
-      if (rulesItem) items.push({ ...rulesItem, keepInBeta: !rulesItem.debug });
+      if (rulesItem) items.push({
+        ...soloRulesMenuItem(rulesItem, controllerId),
+        keepInBeta: !rulesItem.debug,
+      });
       if (isMine && (passiveEffectsByCard.get(item.cardId) || []).some((effect) => effect.kind === "swap_with_targeted_confrontation_manifestation")) {
         items.push({
           keepInBeta: true,

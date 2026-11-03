@@ -1980,7 +1980,14 @@
       const eye = "";
       const passBadge = passed.has(player.id) && latestState.phaseTracker?.enabled ? `<span class="ub-passed" title="${esc(t("phasePassed"))}">✓</span>` : "";
       const activity = player.activity ? `<span class="ub-activity">${esc(t("activity_" + player.activity))}</span>` : "";
-      node.innerHTML = `<span class="ub-dot" title="${esc(priorityId === player.id ? t("ubPriority") : "")}"></span><span class="ub-name" title="${esc(player.name)}">${esc(player.name)}</span>${passBadge}${activity}${handChip}${eye}`;
+      const soloControls = side === "opp" && soloModeActive() && soloControlsPlayer(player.id)
+        ? `<span class="ub-solo-controls">
+            <button type="button" data-ub-solo-draw-one="${esc(player.id)}" title="${esc(t("handDrawOneBtn"))}">+1</button>
+            <button type="button" data-ub-solo-draw-limit="${esc(player.id)}" title="${esc(t("handDrawHandBtn"))}">↥</button>
+            <button type="button" data-ub-solo-edit-deck="${esc(player.id)}" title="${esc(t("editDeck"))}">${ICONS.deck}</button>
+          </span>`
+        : "";
+      node.innerHTML = `<span class="ub-dot" title="${esc(priorityId === player.id ? t("ubPriority") : "")}"></span><span class="ub-name" title="${esc(player.name)}">${esc(player.name)}</span>${soloControls}${passBadge}${activity}${handChip}${eye}`;
     }
     document.querySelectorAll("[data-ub-view-hand]").forEach((button) => {
       button.onclick = () => openHandView(button.dataset.ubViewHand);
@@ -1990,6 +1997,25 @@
         opponentHandHiddenByUser = !opponentHandHiddenByUser;
         renderOppRows();
         renderChrome();
+      };
+    });
+    document.querySelectorAll("[data-ub-solo-draw-one]").forEach((button) => {
+      button.onclick = (event) => {
+        event.stopPropagation();
+        send({ type: "draw", count: 1, actingPlayerId: button.dataset.ubSoloDrawOne });
+      };
+    });
+    document.querySelectorAll("[data-ub-solo-draw-limit]").forEach((button) => {
+      button.onclick = (event) => {
+        event.stopPropagation();
+        send({ type: "draw_to_limit", actingPlayerId: button.dataset.ubSoloDrawLimit });
+      };
+    });
+    document.querySelectorAll("[data-ub-solo-edit-deck]").forEach((button) => {
+      button.onclick = (event) => {
+        event.stopPropagation();
+        beginSoloInteraction(button.dataset.ubSoloEditDeck);
+        openImportDeckPanel();
       };
     });
   }
@@ -3510,6 +3536,7 @@
     enabled,
     placement,
     fieldZone(item) { return active() ? classify(item, firstManifestationIds()).zone : null; },
+    manualPlacement(item) { return inferZone(item?.x, item?.y); },
     decorateCard,
     dropLogical,
     clearTouchDropPreview() {

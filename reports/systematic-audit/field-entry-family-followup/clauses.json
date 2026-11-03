@@ -1,0 +1,233 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "98053d598f6205ba96d2c15eabacf2a26d2866f7b6933a0afae9f1c9741069de",
+  "published": false,
+  "finishedAt": "2026-11-03T10:18:41.029279+00:00",
+  "summary": {
+    "executed": 3,
+    "passed": 3,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 13,
+    "cardsWithSelectedClauseProof": 13,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "nlbgn1ranlrd09r_en",
+      "name": "The Slumberer",
+      "paragraphIndex": null,
+      "printedParagraph": "When The Slumberer enters the field, put 3 Sleep counters on it.",
+      "paragraphSha256": "04f932be1c1cb39ecc65aaa2c82a2aac2aaa35000ef8ac2a066377ad5b303702",
+      "expectedBehavior": "The printed entry trigger queues when the source enters face up and begins its real resolution path without an invalid target set.",
+      "testIds": [
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "7g0495fr3188or9_en",
+      "name": "Skysailing Triad",
+      "paragraphIndex": null,
+      "printedParagraph": "When the Skysailing Triad enters the field, uncover the top card of your deck.",
+      "paragraphSha256": "9235ad9ce9d640d915351a640115db8805c1d5a95189758aef1c24879391b53a",
+      "expectedBehavior": "The printed entry trigger queues when the source enters face up and begins its real resolution path without an invalid target set.",
+      "testIds": [
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "3oiehnpbub1byg6_en",
+      "name": "Inert Anchorstone",
+      "paragraphIndex": null,
+      "printedParagraph": "The Inert Anchorstone enters the field with 4 Block counters on it.",
+      "paragraphSha256": "50784f4142ba1a527bf93463a7b8c56710984577df5ce1cfbfdb983bc1dde7b0",
+      "expectedBehavior": "The printed entry trigger queues when the source enters face up and begins its real resolution path without an invalid target set.",
+      "testIds": [
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "k4m0j5h0l3f61hs_en",
+      "name": "Zrutrug, the Indebted",
+      "paragraphIndex": null,
+      "printedParagraph": "When Zrutrug enters the field, you can Chain from your hand.",
+      "paragraphSha256": "cb2cabc2ccc3e4668be68b041898c2604d160d81221c75bda2f140e711df0567",
+      "expectedBehavior": "The printed entry trigger queues when the source enters face up and begins its real resolution path without an invalid target set.",
+      "testIds": [
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "cwgofw6qsn7aplc_en",
+      "name": "Parasitic Drill",
+      "paragraphIndex": null,
+      "printedParagraph": "When Parasitic Drill enters the field, choose a target persistent Will on the field.",
+      "paragraphSha256": "b5e07e31f3decb8dfacee5d1d213d3f090805d7c0e679248b0d89683396b2380",
+      "expectedBehavior": "The printed entry trigger queues when the source enters face up and begins its real resolution path without an invalid target set.",
+      "testIds": [
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "o4p1r7347u6sff2_en",
+      "name": "Gorb, the Musclebound",
+      "paragraphIndex": null,
+      "printedParagraph": "When Gorb enters the field, you cannot put manifestations in Support under your control until the end of the turn.",
+      "paragraphSha256": "4966b15ee55837672f0b1f00add17aeddebae1f8e640350ef35f4594488437c5",
+      "expectedBehavior": "The printed entry trigger queues when the source enters face up and begins its real resolution path without an invalid target set.",
+      "testIds": [
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "201ug66mqu6gslx_en",
+      "name": "Quorum, the Untouchable",
+      "paragraphIndex": null,
+      "printedParagraph": "When Quorum enters the field, you may discard any number of Wills from your hand.",
+      "paragraphSha256": "e43b2c7a38bd0f2dd23b1e5f45fc9e4101148322d0398e7bfdad8ee4d2366f9d",
+      "expectedBehavior": "The printed entry trigger queues when the source enters face up and begins its real resolution path without an invalid target set.",
+      "testIds": [
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-008",
+      "name": "Larman Doz, the Upright",
+      "paragraphIndex": null,
+      "printedParagraph": "When Larman Doz enters the field, you may Chain from your hand.",
+      "paragraphSha256": "d624ff28fbcc9d6b427c418256d74f96345bd5e57e6dcaee876f279f53fffba1",
+      "expectedBehavior": "The printed entry trigger queues when the source enters face up and begins its real resolution path without an invalid target set.",
+      "testIds": [
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-087",
+      "name": "Moaning Consul",
+      "paragraphIndex": null,
+      "printedParagraph": "When the Moaning Consul enters the field, Chain from your hand.",
+      "paragraphSha256": "9975f7165071120cbc137438ea764e22e8326573fa2f7318a72d68974c38e30c",
+      "expectedBehavior": "The printed entry trigger queues when the source enters face up and begins its real resolution path without an invalid target set.",
+      "testIds": [
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-093",
+      "name": "Bizarre Mechanism",
+      "paragraphIndex": null,
+      "printedParagraph": "When the Bizarre Mechanism enters the field, put an Enigma counter on it.",
+      "paragraphSha256": "d7b2f01f4feb0206d6e60f050de8bc7d32ad7125c984e1dda51ae614a8158129",
+      "expectedBehavior": "The printed entry trigger queues when the source enters face up and begins its real resolution path without an invalid target set.",
+      "testIds": [
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-128",
+      "name": "Pillarpede",
+      "paragraphIndex": null,
+      "printedParagraph": "When Pillarpede enters the field, roll 5 D6.",
+      "paragraphSha256": "43b6e6bab8457996b9875f83dadd7bb83bfb1fb31fcc5f6723d200249c664a2d",
+      "expectedBehavior": "The printed entry trigger queues when the source enters face up and begins its real resolution path without an invalid target set.",
+      "testIds": [
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-142",
+      "name": "Flower of Evil",
+      "paragraphIndex": null,
+      "printedParagraph": "Flower of Evil enters the field with 5 Berry Counters.",
+      "paragraphSha256": "023f74ed16ba576b43c912c60a17c88eb1e05d01c2555d68a6ddf80ca2dd48e8",
+      "expectedBehavior": "The printed entry trigger queues when the source enters face up and begins its real resolution path without an invalid target set.",
+      "testIds": [
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-143",
+      "name": "Temperamental Splendor",
+      "paragraphIndex": null,
+      "printedParagraph": "When Temperamental Splendor enters the field, put 2 Gem Counters on it and choose a base Temperament.",
+      "paragraphSha256": "16a47ef754ac29885382bf8795615e98654d3d3712d22dd77e8fbe4d9383423f",
+      "expectedBehavior": "The printed entry trigger queues when the source enters face up and begins its real resolution path without an invalid target set.",
+      "testIds": [
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+        "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_all_thirteen_compile_one_exact_field_entry_trigger",
+      "status": "pass",
+      "durationSeconds": 0.0005
+    },
+    {
+      "testId": "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_each_field_entry_effect_begins_real_resolution",
+      "status": "pass",
+      "durationSeconds": 0.3295
+    },
+    {
+      "testId": "test_field_entry_family_clauses.FieldEntryFamilyClauses.test_field_entry_requires_the_source_to_enter_face_up",
+      "status": "pass",
+      "durationSeconds": 0.192
+    }
+  ],
+  "limits": [
+    "This proof certifies the shared field-entry trigger condition, not every branch of each resulting effect.",
+    "Card-specific outcomes remain protected by dedicated regressions."
+  ]
+}

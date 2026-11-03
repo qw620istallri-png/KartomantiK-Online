@@ -192,9 +192,15 @@ function rulesPlayType(card) {
 }
 
 function beginRulesBoardAction(source) {
-  if (rulesEndActionsSkippedClient()) return false;
+  const soloActor = source?.actingPlayerId;
+  if (soloActor && !beginSoloInteraction(soloActor)) return false;
+  const abort = (result = false) => {
+    if (soloActor) endSoloInteraction();
+    return result;
+  };
+  if (rulesEndActionsSkippedClient()) return abort();
   const draft = buildRulesActionDraft(source);
-  if (!draft.card || !(source.tebebe || ["ephemeral_will", "persistent_will"].includes(rulesPlayType(draft.card)))) return false;
+  if (!draft.card || !(source.tebebe || ["ephemeral_will", "persistent_will"].includes(rulesPlayType(draft.card)))) return abort();
   const playable = source.tebebe
     ? tebebeManifestationIsPlayable(latestState?.battlefield?.find((entry) => entry.id === source.itemId))
     : source.playFromField
@@ -205,11 +211,12 @@ function beginRulesBoardAction(source) {
   if (!playable) {
     if (source.zone === "hand" && !source.tebebe && !source.playFromField) refuseHandCard(source.cardId, source.handIndex ?? null);
     else showToast(t("rulesBoardCardNotPlayable"), true);
-    return true;
+    return abort(true);
   }
   closeRulesActionPanel();
   pendingRulesBoardFlow = {
     mode: "action",
+    actingPlayerId: soloActor || myPlayerId,
     source,
     draft,
     selectedPaymentIndexes: new Set(),

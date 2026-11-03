@@ -1,0 +1,209 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "8aebab96ee6d06b30d8d30ada10a58e588647532e46a109b4cbd3bcc1f493968",
+  "published": false,
+  "finishedAt": "2026-11-03T10:47:01.168544+00:00",
+  "summary": {
+    "executed": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 11,
+    "cardsWithSelectedClauseProof": 11,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "raqiu9b3kwaw622_en",
+      "name": "Slumber Planner",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Slumber Planner is used as tribute, it can also be considered of {B} temperament.",
+      "paragraphSha256": "42a4dd3ab6a9c9bebeec1629254e8d15c8c1351e1aea51030ec97813c2ff522f",
+      "expectedBehavior": "While this manifestation is used as Tribute, its full power uses the printed alternate temperament. The ten 'can also' cards retain their printed option without splitting one card between both colors; Rocky is Transcendent for Tribute and may cover mixed requirements.",
+      "testIds": [
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "vlpn4livpqnoid1_en",
+      "name": "Tidying Torment",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Tidying Torment is used as tribute, it can also be considered of {P} temperament.",
+      "paragraphSha256": "7448bb7c7e48431fa1fa3dc4bd187437b07812b8bbd408233edb932253e09c6a",
+      "expectedBehavior": "While this manifestation is used as Tribute, its full power uses the printed alternate temperament. The ten 'can also' cards retain their printed option without splitting one card between both colors; Rocky is Transcendent for Tribute and may cover mixed requirements.",
+      "testIds": [
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "2mmrj3qrziaf9w2_en",
+      "name": "Scrutinizing Figure",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Scrutinizing Figure is used as tribute, it can also be considered of {P} temperament.",
+      "paragraphSha256": "6885889407dab30dee90be2bdef208f61d318abd5221fd574c4c49105779468b",
+      "expectedBehavior": "While this manifestation is used as Tribute, its full power uses the printed alternate temperament. The ten 'can also' cards retain their printed option without splitting one card between both colors; Rocky is Transcendent for Tribute and may cover mixed requirements.",
+      "testIds": [
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "yaisrjb3a26wr7r_en",
+      "name": "Witty Scribe",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Witty Scribe is used as tribute, it can also be considered of {Y} temperament.",
+      "paragraphSha256": "7d58a3b03d566ef920f57b69a6e4ab4cccac56775fb933b044515626bfc6c438",
+      "expectedBehavior": "While this manifestation is used as Tribute, its full power uses the printed alternate temperament. The ten 'can also' cards retain their printed option without splitting one card between both colors; Rocky is Transcendent for Tribute and may cover mixed requirements.",
+      "testIds": [
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "2kz0soujsn2nitf_en",
+      "name": "Skin-shifting Tearer",
+      "paragraphIndex": 0,
+      "printedParagraph": "When the Skin-Shifting Tearer is used as tribute, it can also be considered of {R} temperament.",
+      "paragraphSha256": "9e91ab27f1a38d5fd5e93efda85319b58394e0acfc2601b211cf389433350482",
+      "expectedBehavior": "While this manifestation is used as Tribute, its full power uses the printed alternate temperament. The ten 'can also' cards retain their printed option without splitting one card between both colors; Rocky is Transcendent for Tribute and may cover mixed requirements.",
+      "testIds": [
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "yd24yzcekygt7v4_en",
+      "name": "Ridiculous Persecutor",
+      "paragraphIndex": 0,
+      "printedParagraph": "When the Ridiculous Persecutor is used as tribute, it can also be considered of {Y} temperament.",
+      "paragraphSha256": "b020a85a1475559a052223caebbe832f534f681d42b847205627dfd601254892",
+      "expectedBehavior": "While this manifestation is used as Tribute, its full power uses the printed alternate temperament. The ten 'can also' cards retain their printed option without splitting one card between both colors; Rocky is Transcendent for Tribute and may cover mixed requirements.",
+      "testIds": [
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "zdn6urrd7eo3idt_en",
+      "name": "Exalted Jester",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Exalted Jester is used as tribute, it can also be considered of {R} temperament.",
+      "paragraphSha256": "540a12fc4c2700ccfe3ab2fa0879390f56c7abf50a7c12204c4bc49559125c89",
+      "expectedBehavior": "While this manifestation is used as Tribute, its full power uses the printed alternate temperament. The ten 'can also' cards retain their printed option without splitting one card between both colors; Rocky is Transcendent for Tribute and may cover mixed requirements.",
+      "testIds": [
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "mqkrekbfu4tybu9_en",
+      "name": "Peevish Sapling",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Peevish Sapling is used as tribute, it can also be considered of {G} temperament.",
+      "paragraphSha256": "cd3d846c64ebc553e99fcdb564cee88c7afdc24883f7d97b6d7b7c784dac1964",
+      "expectedBehavior": "While this manifestation is used as Tribute, its full power uses the printed alternate temperament. The ten 'can also' cards retain their printed option without splitting one card between both colors; Rocky is Transcendent for Tribute and may cover mixed requirements.",
+      "testIds": [
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "29iv35lxz08ygim_en",
+      "name": "Shimmering Seaguide",
+      "paragraphIndex": 0,
+      "printedParagraph": "When the Shimmering Seaguide is used as tribute, it can also be considered of {B} temperament.",
+      "paragraphSha256": "c3bcac07c723a2750051d18e3e1da880067853d6f4496a43629ca70d06adb960",
+      "expectedBehavior": "While this manifestation is used as Tribute, its full power uses the printed alternate temperament. The ten 'can also' cards retain their printed option without splitting one card between both colors; Rocky is Transcendent for Tribute and may cover mixed requirements.",
+      "testIds": [
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "zo4rbgcnww4pxg0_en",
+      "name": "Blunt Leaf",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Blunt Leaf is used as tribute, it can also be considered of {G} temperament.",
+      "paragraphSha256": "adc0c7251b50714600a2886d3cfd1dcc72d4431f62163519f952d22301e8f3dc",
+      "expectedBehavior": "While this manifestation is used as Tribute, its full power uses the printed alternate temperament. The ten 'can also' cards retain their printed option without splitting one card between both colors; Rocky is Transcendent for Tribute and may cover mixed requirements.",
+      "testIds": [
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": true
+    },
+    {
+      "cardId": "8te5ovk08ul6fve_en",
+      "name": "Rocky Heartcrystal",
+      "paragraphIndex": 0,
+      "printedParagraph": "When Rocky Heartcrystal is used as tribute, it is considered of {T} temperament.",
+      "paragraphSha256": "5fd45417c01c7903f6f453fd2c73ca72836e6a996d8ce0144514c23cc46f5e99",
+      "expectedBehavior": "While this manifestation is used as Tribute, its full power uses the printed alternate temperament. The ten 'can also' cards retain their printed option without splitting one card between both colors; Rocky is Transcendent for Tribute and may cover mixed requirements.",
+      "testIds": [
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split",
+        "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_rocky_is_transcendent_only_while_used_as_tribute"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": true
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_additional_temperament_remains_a_choice_and_cannot_be_split",
+      "status": "pass",
+      "durationSeconds": 0.004
+    },
+    {
+      "testId": "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_all_eleven_compile_the_exact_printed_tribute_contract",
+      "status": "pass",
+      "durationSeconds": 0.0002
+    },
+    {
+      "testId": "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_each_card_pays_a_real_will_with_its_alternate_temperament",
+      "status": "pass",
+      "durationSeconds": 0.0021
+    },
+    {
+      "testId": "test_alternate_tribute_temperaments.AlternateTributeTemperaments.test_rocky_is_transcendent_only_while_used_as_tribute",
+      "status": "pass",
+      "durationSeconds": 0.0001
+    }
+  ],
+  "limits": [
+    "This proof covers the complete printed alternate-temperament clause for the eleven selected cards.",
+    "Interactions with unrelated Tribute modifiers remain covered by their own families."
+  ]
+}

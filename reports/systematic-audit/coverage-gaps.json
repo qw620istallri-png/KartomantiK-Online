@@ -1,30 +1,22 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-02T22:44:08.436083+00:00",
-  "sourceDigest": "3be8aca621631e1115fc9cb9d5ef0bf3a52bc28f4741be395359d988905bd462",
-  "unitEvidence": "reports/systematic-audit/zone-tribute-final-followup/unit-tests.json",
+  "generatedAt": "2026-11-03T10:58:46.379377+00:00",
+  "sourceDigest": "8aebab96ee6d06b30d8d30ada10a58e588647532e46a109b4cbd3bcc1f493968",
+  "unitEvidence": "reports/systematic-audit/release-150/unit-tests.json",
   "summary": {
     "catalogCards": 450,
-    "strictlyCoveredCards": 285,
-    "uncoveredCards": 165,
-    "uncoveredClauses": 248,
-    "uncoveredBranchOracles": 814,
-    "greedyMechanicBatches": 67
+    "strictlyCoveredCards": 309,
+    "uncoveredCards": 141,
+    "uncoveredClauses": 209,
+    "uncoveredBranchOracles": 659,
+    "greedyMechanicBatches": 65
   },
   "uncoveredByType": {
     "ephemeral_will": 31,
-    "manifestation": 108,
-    "persistent_will": 26
+    "manifestation": 88,
+    "persistent_will": 22
   },
   "uncoveredByMechanic": [
-    {
-      "mechanic": "trigger:enters_field",
-      "cardCount": 13
-    },
-    {
-      "mechanic": "alternate-tribute-temperament",
-      "cardCount": 11
-    },
     {
       "mechanic": "target:player",
       "cardCount": 11
@@ -35,14 +27,10 @@
     },
     {
       "mechanic": "trigger:wins_confrontation",
-      "cardCount": 11
+      "cardCount": 10
     },
     {
       "mechanic": "trigger:beginning_of_turn",
-      "cardCount": 9
-    },
-    {
-      "mechanic": "target:card",
       "cardCount": 8
     },
     {
@@ -50,11 +38,11 @@
       "cardCount": 7
     },
     {
-      "mechanic": "result:add_counter_source",
+      "mechanic": "result:move_target",
       "cardCount": 7
     },
     {
-      "mechanic": "result:move_target",
+      "mechanic": "target:card",
       "cardCount": 7
     },
     {
@@ -98,31 +86,15 @@
       "cardCount": 4
     },
     {
-      "mechanic": "result:chain_from_zone",
-      "cardCount": 4
-    },
-    {
       "mechanic": "result:create_effect_memory",
       "cardCount": 4
-    },
-    {
-      "mechanic": "trigger:player_loses_confrontation",
-      "cardCount": 4
-    },
-    {
-      "mechanic": "trigger:will_played",
-      "cardCount": 4
-    },
-    {
-      "mechanic": "first-restriction",
-      "cardCount": 3
     },
     {
       "mechanic": "ongoing:lose_effects",
       "cardCount": 3
     },
     {
-      "mechanic": "result:create_essence",
+      "mechanic": "result:add_counter_source",
       "cardCount": 3
     },
     {
@@ -134,11 +106,27 @@
       "cardCount": 3
     },
     {
+      "mechanic": "trigger:player_loses_confrontation",
+      "cardCount": 3
+    },
+    {
+      "mechanic": "trigger:will_played",
+      "cardCount": 3
+    },
+    {
+      "mechanic": "first-restriction",
+      "cardCount": 2
+    },
+    {
       "mechanic": "passive:conditional_support",
       "cardCount": 2
     },
     {
       "mechanic": "passive:extend_interzone",
+      "cardCount": 2
+    },
+    {
+      "mechanic": "result:create_essence",
       "cardCount": 2
     },
     {
@@ -155,14 +143,6 @@
     },
     {
       "mechanic": "result:set_field_power",
-      "cardCount": 2
-    },
-    {
-      "mechanic": "result:shuffle_owner_deck",
-      "cardCount": 2
-    },
-    {
-      "mechanic": "support-win:exile",
       "cardCount": 2
     },
     {
@@ -198,19 +178,11 @@
       "cardCount": 2
     },
     {
-      "mechanic": "trigger:player_wins_confrontation",
-      "cardCount": 2
-    },
-    {
       "mechanic": "condition:last_opponent_support_low_power",
       "cardCount": 1
     },
     {
       "mechanic": "conditional-support",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "ongoing:drill_link",
       "cardCount": 1
     },
     {
@@ -354,11 +326,11 @@
       "cardCount": 1
     },
     {
-      "mechanic": "result:bottom_hand_card_remove_counters",
+      "mechanic": "result:bullyboo_reveal",
       "cardCount": 1
     },
     {
-      "mechanic": "result:bullyboo_reveal",
+      "mechanic": "result:chain_from_zone",
       "cardCount": 1
     },
     {
@@ -370,19 +342,11 @@
       "cardCount": 1
     },
     {
-      "mechanic": "result:choose_source_temperament",
-      "cardCount": 1
-    },
-    {
       "mechanic": "result:choose_target_score_delta",
       "cardCount": 1
     },
     {
       "mechanic": "result:cleanse_target",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "result:consul_wins",
       "cardCount": 1
     },
     {
@@ -482,10 +446,6 @@
       "cardCount": 1
     },
     {
-      "mechanic": "result:flower_of_evil_burst",
-      "cardCount": 1
-    },
-    {
       "mechanic": "result:force_win_if_highest_base_first",
       "cardCount": 1
     },
@@ -514,10 +474,6 @@
       "cardCount": 1
     },
     {
-      "mechanic": "result:lock_support_entries",
-      "cardCount": 1
-    },
-    {
       "mechanic": "result:lose_excess_essence_or_points",
       "cardCount": 1
     },
@@ -542,14 +498,6 @@
       "cardCount": 1
     },
     {
-      "mechanic": "result:optional_discard_wills_for_power",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "result:peek_top_swap",
-      "cardCount": 1
-    },
-    {
       "mechanic": "result:persuasion_force",
       "cardCount": 1
     },
@@ -563,10 +511,6 @@
     },
     {
       "mechanic": "result:resolve_target_stack_immediately",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "result:resolve_top_deck_by_type",
       "cardCount": 1
     },
     {
@@ -594,23 +538,15 @@
       "cardCount": 1
     },
     {
-      "mechanic": "result:roll_multiple_even_power_odd_discard",
-      "cardCount": 1
-    },
-    {
       "mechanic": "result:shuffle_limbo_targets_into_deck",
       "cardCount": 1
     },
     {
+      "mechanic": "result:shuffle_owner_deck",
+      "cardCount": 1
+    },
+    {
       "mechanic": "result:skip_confrontation_unless_points",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "result:slumberer_wakes",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "result:source_to_winner_vessel",
       "cardCount": 1
     },
     {
@@ -662,6 +598,10 @@
       "cardCount": 1
     },
     {
+      "mechanic": "support-win:exile",
+      "cardCount": 1
+    },
+    {
       "mechanic": "suspension-thresholds",
       "cardCount": 1
     },
@@ -682,11 +622,11 @@
       "cardCount": 1
     },
     {
-      "mechanic": "trigger:confrontation_stalemate",
+      "mechanic": "trigger:persistent_will_enters_field",
       "cardCount": 1
     },
     {
-      "mechanic": "trigger:persistent_will_enters_field",
+      "mechanic": "trigger:player_wins_confrontation",
       "cardCount": 1
     },
     {
@@ -703,70 +643,6 @@
     }
   ],
   "recommendedBatches": [
-    {
-      "mechanic": "trigger:enters_field",
-      "cardCount": 13,
-      "cardIds": [
-        "nlbgn1ranlrd09r_en",
-        "7g0495fr3188or9_en",
-        "3oiehnpbub1byg6_en",
-        "k4m0j5h0l3f61hs_en",
-        "cwgofw6qsn7aplc_en",
-        "o4p1r7347u6sff2_en",
-        "201ug66mqu6gslx_en",
-        "inner-deserts-008",
-        "inner-deserts-087",
-        "inner-deserts-093",
-        "inner-deserts-128",
-        "inner-deserts-142",
-        "inner-deserts-143"
-      ],
-      "cards": [
-        "The Slumberer",
-        "Skysailing Triad",
-        "Inert Anchorstone",
-        "Zrutrug, the Indebted",
-        "Parasitic Drill",
-        "Gorb, the Musclebound",
-        "Quorum, the Untouchable",
-        "Larman Doz, the Upright",
-        "Moaning Consul",
-        "Bizarre Mechanism",
-        "Pillarpede",
-        "Flower of Evil",
-        "Temperamental Splendor"
-      ]
-    },
-    {
-      "mechanic": "alternate-tribute-temperament",
-      "cardCount": 11,
-      "cardIds": [
-        "raqiu9b3kwaw622_en",
-        "vlpn4livpqnoid1_en",
-        "2mmrj3qrziaf9w2_en",
-        "yaisrjb3a26wr7r_en",
-        "2kz0soujsn2nitf_en",
-        "yd24yzcekygt7v4_en",
-        "zdn6urrd7eo3idt_en",
-        "mqkrekbfu4tybu9_en",
-        "29iv35lxz08ygim_en",
-        "zo4rbgcnww4pxg0_en",
-        "8te5ovk08ul6fve_en"
-      ],
-      "cards": [
-        "Slumber Planner",
-        "Tidying Torment",
-        "Scrutinizing Figure",
-        "Witty Scribe",
-        "Skin-shifting Tearer",
-        "Ridiculous Persecutor",
-        "Exalted Jester",
-        "Peevish Sapling",
-        "Shimmering Seaguide",
-        "Blunt Leaf",
-        "Rocky Heartcrystal"
-      ]
-    },
     {
       "mechanic": "target:player",
       "cardCount": 11,
@@ -1572,24 +1448,6 @@
   ],
   "cards": [
     {
-      "cardId": "inner-deserts-093",
-      "collectionNumber": 393,
-      "name": "Bizarre Mechanism",
-      "type": "persistent_will",
-      "clauseCount": 5,
-      "branchOracleCount": 25,
-      "abilityCount": 4,
-      "mechanics": [
-        "result:add_counter_source",
-        "result:bottom_hand_card_remove_counters",
-        "result:peek_top_swap",
-        "result:shuffle_owner_deck",
-        "trigger:enters_field"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 28
-    },
-    {
       "cardId": "inner-deserts-134",
       "collectionNumber": 434,
       "name": "BOB",
@@ -1605,28 +1463,6 @@
       ],
       "reviewStatus": "reviewed-match",
       "priorityScore": 27
-    },
-    {
-      "cardId": "nlbgn1ranlrd09r_en",
-      "collectionNumber": 9,
-      "name": "The Slumberer",
-      "type": "manifestation",
-      "clauseCount": 2,
-      "branchOracleCount": 16,
-      "abilityCount": 5,
-      "mechanics": [
-        "first-restriction",
-        "result:add_counter_source",
-        "result:slumberer_wakes",
-        "result:source_to_winner_vessel",
-        "trigger:beginning_of_turn",
-        "trigger:confrontation_stalemate",
-        "trigger:enters_field",
-        "trigger:player_loses_confrontation",
-        "trigger:player_wins_confrontation"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 25
     },
     {
       "cardId": "rqvzo3iji2a1l65_en",
@@ -1782,56 +1618,6 @@
       "priorityScore": 15
     },
     {
-      "cardId": "3oiehnpbub1byg6_en",
-      "collectionNumber": 67,
-      "name": "Inert Anchorstone",
-      "type": "manifestation",
-      "clauseCount": 2,
-      "branchOracleCount": 8,
-      "abilityCount": 2,
-      "mechanics": [
-        "result:add_counter_source",
-        "support-win:exile",
-        "trigger:enters_field",
-        "trigger:will_played"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 14
-    },
-    {
-      "cardId": "cwgofw6qsn7aplc_en",
-      "collectionNumber": 137,
-      "name": "Parasitic Drill",
-      "type": "persistent_will",
-      "clauseCount": 3,
-      "branchOracleCount": 12,
-      "abilityCount": 1,
-      "mechanics": [
-        "ongoing:drill_link",
-        "target:card",
-        "trigger:enters_field"
-      ],
-      "reviewStatus": "ruling-required",
-      "priorityScore": 14
-    },
-    {
-      "cardId": "inner-deserts-087",
-      "collectionNumber": 387,
-      "name": "Moaning Consul",
-      "type": "manifestation",
-      "clauseCount": 2,
-      "branchOracleCount": 10,
-      "abilityCount": 2,
-      "mechanics": [
-        "result:chain_from_zone",
-        "result:consul_wins",
-        "trigger:enters_field",
-        "trigger:wins_confrontation"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 14
-    },
-    {
       "cardId": "2hszv736kwwmi7n_en",
       "collectionNumber": 215,
       "name": "Grudge Weaver",
@@ -1925,53 +1711,6 @@
         "trigger:beginning_of_turn"
       ],
       "reviewStatus": "ruling-required",
-      "priorityScore": 13
-    },
-    {
-      "cardId": "inner-deserts-128",
-      "collectionNumber": 428,
-      "name": "Pillarpede",
-      "type": "manifestation",
-      "clauseCount": 3,
-      "branchOracleCount": 15,
-      "abilityCount": 1,
-      "mechanics": [
-        "result:roll_multiple_even_power_odd_discard",
-        "trigger:enters_field"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 13
-    },
-    {
-      "cardId": "inner-deserts-142",
-      "collectionNumber": 442,
-      "name": "Flower of Evil",
-      "type": "persistent_will",
-      "clauseCount": 2,
-      "branchOracleCount": 8,
-      "abilityCount": 2,
-      "mechanics": [
-        "result:add_counter_source",
-        "result:flower_of_evil_burst",
-        "trigger:enters_field"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 13
-    },
-    {
-      "cardId": "inner-deserts-143",
-      "collectionNumber": 443,
-      "name": "Temperamental Splendor",
-      "type": "persistent_will",
-      "clauseCount": 2,
-      "branchOracleCount": 12,
-      "abilityCount": 2,
-      "mechanics": [
-        "result:choose_source_temperament",
-        "result:create_essence",
-        "trigger:enters_field"
-      ],
-      "reviewStatus": "reviewed-defect",
       "priorityScore": 13
     },
     {
@@ -2160,21 +1899,6 @@
       "priorityScore": 10
     },
     {
-      "cardId": "k4m0j5h0l3f61hs_en",
-      "collectionNumber": 118,
-      "name": "Zrutrug, the Indebted",
-      "type": "manifestation",
-      "clauseCount": 2,
-      "branchOracleCount": 8,
-      "abilityCount": 1,
-      "mechanics": [
-        "result:chain_from_zone",
-        "trigger:enters_field"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 10
-    },
-    {
       "cardId": "om4qbiofb0ihq6p_en",
       "collectionNumber": 167,
       "name": "The Stomper",
@@ -2246,21 +1970,6 @@
         "passive:play_attached_wills",
         "result:grimoire_place",
         "trigger:end_of_turn"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 10
-    },
-    {
-      "cardId": "inner-deserts-008",
-      "collectionNumber": 308,
-      "name": "Larman Doz, the Upright",
-      "type": "manifestation",
-      "clauseCount": 2,
-      "branchOracleCount": 8,
-      "abilityCount": 1,
-      "mechanics": [
-        "result:chain_from_zone",
-        "trigger:enters_field"
       ],
       "reviewStatus": "reviewed-match",
       "priorityScore": 10
@@ -2729,21 +2438,6 @@
       "priorityScore": 7
     },
     {
-      "cardId": "7g0495fr3188or9_en",
-      "collectionNumber": 66,
-      "name": "Skysailing Triad",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 5,
-      "abilityCount": 1,
-      "mechanics": [
-        "result:resolve_top_deck_by_type",
-        "trigger:enters_field"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 7
-    },
-    {
       "cardId": "i7h2c7ku2gt1yvg_en",
       "collectionNumber": 68,
       "name": "Shababba, Divining Cube",
@@ -2954,21 +2648,6 @@
       "priorityScore": 7
     },
     {
-      "cardId": "o4p1r7347u6sff2_en",
-      "collectionNumber": 206,
-      "name": "Gorb, the Musclebound",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 1,
-      "abilityCount": 1,
-      "mechanics": [
-        "result:lock_support_entries",
-        "trigger:enters_field"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 7
-    },
-    {
       "cardId": "wer3o71zo9myece_en",
       "collectionNumber": 208,
       "name": "Numbi, the Irritating",
@@ -2979,21 +2658,6 @@
       "mechanics": [
         "result:chain_from_zone",
         "trigger:revelation"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 7
-    },
-    {
-      "cardId": "201ug66mqu6gslx_en",
-      "collectionNumber": 211,
-      "name": "Quorum, the Untouchable",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 1,
-      "abilityCount": 1,
-      "mechanics": [
-        "result:optional_discard_wills_for_power",
-        "trigger:enters_field"
       ],
       "reviewStatus": "reviewed-match",
       "priorityScore": 7
@@ -3810,160 +3474,6 @@
       ],
       "reviewStatus": "reviewed-match",
       "priorityScore": 6
-    },
-    {
-      "cardId": "raqiu9b3kwaw622_en",
-      "collectionNumber": 5,
-      "name": "Slumber Planner",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 3,
-      "abilityCount": 0,
-      "mechanics": [
-        "alternate-tribute-temperament"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 4
-    },
-    {
-      "cardId": "vlpn4livpqnoid1_en",
-      "collectionNumber": 6,
-      "name": "Tidying Torment",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 3,
-      "abilityCount": 0,
-      "mechanics": [
-        "alternate-tribute-temperament"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 4
-    },
-    {
-      "cardId": "2mmrj3qrziaf9w2_en",
-      "collectionNumber": 51,
-      "name": "Scrutinizing Figure",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 3,
-      "abilityCount": 0,
-      "mechanics": [
-        "alternate-tribute-temperament"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 4
-    },
-    {
-      "cardId": "yaisrjb3a26wr7r_en",
-      "collectionNumber": 53,
-      "name": "Witty Scribe",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 3,
-      "abilityCount": 0,
-      "mechanics": [
-        "alternate-tribute-temperament"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 4
-    },
-    {
-      "cardId": "2kz0soujsn2nitf_en",
-      "collectionNumber": 99,
-      "name": "Skin-shifting Tearer",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 3,
-      "abilityCount": 0,
-      "mechanics": [
-        "alternate-tribute-temperament"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 4
-    },
-    {
-      "cardId": "yd24yzcekygt7v4_en",
-      "collectionNumber": 100,
-      "name": "Ridiculous Persecutor",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 2,
-      "abilityCount": 0,
-      "mechanics": [
-        "alternate-tribute-temperament"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 4
-    },
-    {
-      "cardId": "zdn6urrd7eo3idt_en",
-      "collectionNumber": 145,
-      "name": "Exalted Jester",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 3,
-      "abilityCount": 0,
-      "mechanics": [
-        "alternate-tribute-temperament"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 4
-    },
-    {
-      "cardId": "mqkrekbfu4tybu9_en",
-      "collectionNumber": 147,
-      "name": "Peevish Sapling",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 3,
-      "abilityCount": 0,
-      "mechanics": [
-        "alternate-tribute-temperament"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 4
-    },
-    {
-      "cardId": "29iv35lxz08ygim_en",
-      "collectionNumber": 192,
-      "name": "Shimmering Seaguide",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 1,
-      "abilityCount": 0,
-      "mechanics": [
-        "alternate-tribute-temperament"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 4
-    },
-    {
-      "cardId": "zo4rbgcnww4pxg0_en",
-      "collectionNumber": 194,
-      "name": "Blunt Leaf",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 1,
-      "abilityCount": 0,
-      "mechanics": [
-        "alternate-tribute-temperament"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 4
-    },
-    {
-      "cardId": "8te5ovk08ul6fve_en",
-      "collectionNumber": 257,
-      "name": "Rocky Heartcrystal",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 1,
-      "abilityCount": 0,
-      "mechanics": [
-        "alternate-tribute-temperament"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 4
     },
     {
       "cardId": "inner-deserts-027",

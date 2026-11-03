@@ -475,3 +475,18 @@ Confrontation/Interzone et quatorze montants de Tribut Hollow. Les matrices
 communes vérifient les refus de zone, face cachée, effets désactivés, paiement
 insuffisant et mutation atomique. Le registre atteint **285/450 cartes
 (63,3 %)** ; il reste 165 cartes, 248 paragraphes et 814 oracles de branches.
+
+La passe suivante ajoute treize clauses « enters the field » et porte le
+registre à **298/450 cartes (66,2 %)**. Elle accompagne une régression du mode
+manuel : le total de Confrontation est attribué au côté physique de la table,
+pas au propriétaire ou contrôleur enregistré sur la carte. Le mode assisté
+continue d'utiliser le contrôleur autoritaire.
+
+La famille suivante certifie les onze Manifestations dont le Tempérament change
+pendant leur utilisation comme Tribut. Les dix textes « can also » conservent
+le choix entre le Tempérament imprimé et l'alternative, sans répartir une même
+carte entre les deux couleurs. Rocky Heartcrystal devient Transcendant pour le
+Tribut et peut couvrir plusieurs couleurs, sans modifier son Tempérament hors
+paiement. Les contrats et résultats sont dans
+`reports/systematic-audit/alternate-tribute-followup/clauses.json`. Le registre
+strict atteint **309/450 cartes (68,7 %)** après validation complète.

@@ -732,10 +732,10 @@ def find_session_by_code(code):
     if not code:
         return None, None, None
     for session in sessions.values():
-        if session.mode == "casual":
+        if session.mode in {"casual", "solo"}:
             if session.code_player == code:
                 return session, "player", None
-            if session.code_observer == code:
+            if session.mode == "casual" and session.code_observer == code:
                 return session, "observer", None
         else:
             role_codes = {
@@ -1186,7 +1186,15 @@ def rules_command_context_matches(session, context):
 
 async def handle_message(ws, info, data):
     session = info["session"]
-    actor_id = info["playerId"]
+    requested_actor_id = data.get("actingPlayerId")
+    controlled_player_ids = info.get("controlledPlayerIds") or [info["playerId"]]
+    if requested_actor_id is not None:
+        if session.mode != "solo" or requested_actor_id not in controlled_player_ids:
+            return await send_error(ws, "You cannot act for that player.")
+        actor_id = requested_actor_id
+    else:
+        actor_id = info["playerId"]
+    info["_lastActorId"] = actor_id
     if data.get("type") == "request_state":
         await broadcast_state(session, force_ws=ws)
         return False
@@ -2550,6 +2558,18 @@ async def handle_message(ws, info, data):
         # that actually frees the seat for a different browser to take
         if is_observer:
             return
+        if session.mode == "solo":
+            for solo_player_id in session.solo_player_ids:
+                if solo_player_id in session.players:
+                    session.players[solo_player_id]["connected"] = False
+            info["left"] = True
+            session.add_log(
+                actor_id, "leave_session", {},
+                actor_name=(session.players.get(actor_id) or {}).get("name"),
+            )
+            session.touch()
+            await broadcast_state(session)
+            return
         if actor_id in session.players:
             leaving_player = session.players[actor_id]
             seat = leaving_player.get("seat")
@@ -2714,6 +2734,28 @@ async def handle_join(ws, data):
         role = "player"
         seat = None
         log.info("Sandbox session %s: %s", session.code_player, scenario["id"])
+    elif data.get("createSolo"):
+        session = Session(
+            mode="solo",
+            tournament_policy=normalized_deck_policy(data.get("deckPolicy")) if data.get("banListEnabled") else None,
+            card_points=CARD_POINTS,
+            card_labels=CARD_LABELS,
+            manifestation_ids=CARD_MANIFESTATION_IDS,
+            card_rules=CARD_RULES,
+            rules_beta=bool(data.get("rulesBeta")),
+            ban_list_enabled=bool(data.get("banListEnabled")),
+        )
+        session.solo_controller_id = client_id
+        p1_id = f"{client_id}:p1"
+        p2_id = f"{client_id}:p2"
+        session.solo_player_ids = [p1_id, p2_id]
+        session.get_or_create_player(p1_id, name or "P1", seat=0)["connected"] = True
+        opponent_name = str(data.get("opponentName") or "P2")[:30]
+        session.get_or_create_player(p2_id, opponent_name, seat=1)["connected"] = True
+        sessions[session.code_player] = session
+        role = "player"
+        seat = 0
+        log.info("Solo session created: player=%s", session.code_player)
     elif data.get("createNew"):
         session = Session(
             tournament_policy=normalized_deck_policy(data.get("deckPolicy")) if data.get("banListEnabled") else None,
@@ -2734,10 +2776,19 @@ async def handle_join(ws, data):
             return await send_error(ws, "No session found for that code.", code="session_not_found")
 
     is_observer = role != "player"
+    controlled_player_ids = None
     if is_observer:
         player_id = client_id
     else:
-        if session.mode == "tournament":
+        if session.mode == "solo":
+            if session.solo_controller_id != client_id:
+                return await send_error(ws, "This Solo training session belongs to another browser.")
+            player_id = session.solo_player_ids[0]
+            controlled_player_ids = list(session.solo_player_ids)
+            for solo_player_id in controlled_player_ids:
+                player = session.players[solo_player_id]
+                player["connected"] = True
+        elif session.mode == "tournament":
             claimed_by = session.seat_claims.get(seat)
             if claimed_by and claimed_by != client_id:
                 return await send_error(ws, "This tournament seat has already been claimed.")
@@ -2760,6 +2811,7 @@ async def handle_join(ws, data):
         "displayName": name,
         "role": role,
         "isObserver": is_observer,
+        "controlledPlayerIds": controlled_player_ids or [player_id],
         "_state_stream": StateStream(delta_enabled, previous_stream.lock if previous_stream else None),
     }
     session.add_log(player_id, "role_joined", {"role": role, "seat": seat}, actor_name=name)
@@ -2772,6 +2824,8 @@ async def handle_join(ws, data):
         "isObserver": is_observer,
         "role": role,
         "mode": session.mode,
+        "solo": session.mode == "solo",
+        "controlledPlayerIds": controlled_player_ids or [player_id],
         "rulesBeta": session.rules_engine["enabled"],
         "codePlayer": session.code_player if not is_observer else None,
         "codeObserver": session.code_observer,
@@ -2918,7 +2972,9 @@ async def handler(ws):
             if (
                 handled is not False and data.get("type") in AUTO_PASS_MESSAGE_TYPES
                 and session.rules_engine.get("enabled")
-                and await auto_advance_rules_phases(session, info["playerId"])
+                and await auto_advance_rules_phases(
+                    session, info.pop("_lastActorId", info["playerId"])
+                )
             ):
                 session.touch()
                 await broadcast_state(session)
@@ -2928,16 +2984,25 @@ async def handler(ws):
         info = connections.pop(ws, None)
         if info:
             if info.get("role") == "player" and not info.get("left"):
-                player = info["session"].players.get(info["playerId"])
+                player_ids = (
+                    info.get("controlledPlayerIds") or [info["playerId"]]
+                )
                 still_connected = any(
                     peer.get("session") is info["session"]
-                    and peer.get("playerId") == info["playerId"]
+                    and set(peer.get("controlledPlayerIds") or [peer.get("playerId")])
+                    & set(player_ids)
                     and peer.get("role") == "player" and not peer.get("left")
                     for peer in connections.values()
                 )
-                if player and not still_connected:
-                    player["connected"] = False
-                    info["session"].add_log(info["playerId"], "player_disconnected", {"seat": player.get("seat")})
+                if not still_connected:
+                    for player_id in player_ids:
+                        player = info["session"].players.get(player_id)
+                        if player:
+                            player["connected"] = False
+                            info["session"].add_log(
+                                player_id, "player_disconnected",
+                                {"seat": player.get("seat")},
+                            )
             await broadcast_state(info["session"])
 
 
