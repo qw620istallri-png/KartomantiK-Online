@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "60a84cc163fcc60fb52cf908dba1b8df04b758e83def768e7afd4aaef99d5b8f",
+  "published": false,
+  "finishedAt": "2026-11-05T13:24:40.774554+00:00",
+  "summary": {
+    "executed": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 6,
+    "cardsWithSelectedClauseProof": 6,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "24pwcptuijem6tw_en",
+      "name": "Refrain Repeater",
+      "paragraphIndex": null,
+      "printedParagraph": "If Refrain Repeater is used as tribute, at the end of that turn it returns from the Limbo to its owner's hand unless an opponent pays {H}.",
+      "paragraphSha256": "c420c217e09dad68ff29c6712f20161e6021d2b97ef6767e36f55a7664df126a",
+      "expectedBehavior": "A real Tribute payment moves the card to its authoritative destination and fires its used-as-Tribute trigger exactly once. A discard does not fire it; paid-Will memories require an actual Will play. The valid trigger begins the printed memory, shuffle or retained-essence result.",
+      "testIds": [
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_all_six_compile_the_exact_used_as_tribute_contract",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_real_will_payment_moves_each_tribute_and_fires_exactly_once",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_discard_is_not_tribute_and_paid_will_memories_require_a_will_play",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_each_card_specific_first_transition_is_authoritative"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "qn8r98kyqqma972_en",
+      "name": "Coral Skull",
+      "paragraphIndex": null,
+      "printedParagraph": "If the Coral Skull is used as tribute to pay the cost of a Will, you can return that Will to your hand from the Limbo at the end of the turn.",
+      "paragraphSha256": "1df6b89fcb4749388f2beb3fcee29cabc6011764a85171b0ac2700ba2652a6a9",
+      "expectedBehavior": "A real Tribute payment moves the card to its authoritative destination and fires its used-as-Tribute trigger exactly once. A discard does not fire it; paid-Will memories require an actual Will play. The valid trigger begins the printed memory, shuffle or retained-essence result.",
+      "testIds": [
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_all_six_compile_the_exact_used_as_tribute_contract",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_real_will_payment_moves_each_tribute_and_fires_exactly_once",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_discard_is_not_tribute_and_paid_will_memories_require_a_will_play",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_each_card_specific_first_transition_is_authoritative"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "1a8wzhi7xhbcenj_en",
+      "name": "Loop, the Insistent",
+      "paragraphIndex": null,
+      "printedParagraph": "If you lost the confrontation this turn and you used Loop as tribute for a Will, at the end of the turn you can return that Will from your Limbo to your hand.",
+      "paragraphSha256": "20f372565862376e7ff44f0ca334819a72598fdfdf19312dd674bb4ca01733ef",
+      "expectedBehavior": "A real Tribute payment moves the card to its authoritative destination and fires its used-as-Tribute trigger exactly once. A discard does not fire it; paid-Will memories require an actual Will play. The valid trigger begins the printed memory, shuffle or retained-essence result.",
+      "testIds": [
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_all_six_compile_the_exact_used_as_tribute_contract",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_real_will_payment_moves_each_tribute_and_fires_exactly_once",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_discard_is_not_tribute_and_paid_will_memories_require_a_will_play",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_each_card_specific_first_transition_is_authoritative"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "rf5srmnqyh235tm_en",
+      "name": "Qu Lom, Haphazard Martyr",
+      "paragraphIndex": null,
+      "printedParagraph": "When Qu Lom is used as tribute, at the end of that turn roll a D6. If the result of the roll is even, Qu Lom returns to its owner's hand from the Limbo. If the result of the roll is odd, it is exiled instead.",
+      "paragraphSha256": "ac73ce195e267720ccb8f7b6af200c51eb6fbca2b1544ff04f55251a3c44ef0c",
+      "expectedBehavior": "A real Tribute payment moves the card to its authoritative destination and fires its used-as-Tribute trigger exactly once. A discard does not fire it; paid-Will memories require an actual Will play. The valid trigger begins the printed memory, shuffle or retained-essence result.",
+      "testIds": [
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_all_six_compile_the_exact_used_as_tribute_contract",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_real_will_payment_moves_each_tribute_and_fires_exactly_once",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_discard_is_not_tribute_and_paid_will_memories_require_a_will_play",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_each_card_specific_first_transition_is_authoritative"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-098",
+      "name": "Crickelob, the Vile",
+      "paragraphIndex": null,
+      "printedParagraph": "When Crickelob is used as tribute, shuffle your deck.",
+      "paragraphSha256": "b8efa23d655d64ed25c1f6300ede725ad4190289b95f949d92dd607d2638ed04",
+      "expectedBehavior": "A real Tribute payment moves the card to its authoritative destination and fires its used-as-Tribute trigger exactly once. A discard does not fire it; paid-Will memories require an actual Will play. The valid trigger begins the printed memory, shuffle or retained-essence result.",
+      "testIds": [
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_all_six_compile_the_exact_used_as_tribute_contract",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_real_will_payment_moves_each_tribute_and_fires_exactly_once",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_discard_is_not_tribute_and_paid_will_memories_require_a_will_play",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_each_card_specific_first_transition_is_authoritative"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-130",
+      "name": "Zozok, the Void",
+      "paragraphIndex": null,
+      "printedParagraph": "When Zozok is used as tribute, roll a D6. You gain a number of 🌈 essences equal to half the result of the roll, rounded up.\nYou do not lose those essences at the end of the turn.",
+      "paragraphSha256": "164372217a536585c56ab1bf21dfb2f0b9ce3e3484338cf56683536bcbbbe024",
+      "expectedBehavior": "A real Tribute payment moves the card to its authoritative destination and fires its used-as-Tribute trigger exactly once. A discard does not fire it; paid-Will memories require an actual Will play. The valid trigger begins the printed memory, shuffle or retained-essence result.",
+      "testIds": [
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_all_six_compile_the_exact_used_as_tribute_contract",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_real_will_payment_moves_each_tribute_and_fires_exactly_once",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_discard_is_not_tribute_and_paid_will_memories_require_a_will_play",
+        "test_used_as_tribute_family.UsedAsTributeFamily.test_each_card_specific_first_transition_is_authoritative"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_used_as_tribute_family.UsedAsTributeFamily.test_all_six_compile_the_exact_used_as_tribute_contract",
+      "status": "pass",
+      "durationSeconds": 0.015
+    },
+    {
+      "testId": "test_used_as_tribute_family.UsedAsTributeFamily.test_discard_is_not_tribute_and_paid_will_memories_require_a_will_play",
+      "status": "pass",
+      "durationSeconds": 0.188
+    },
+    {
+      "testId": "test_used_as_tribute_family.UsedAsTributeFamily.test_each_card_specific_first_transition_is_authoritative",
+      "status": "pass",
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_used_as_tribute_family.UsedAsTributeFamily.test_real_will_payment_moves_each_tribute_and_fires_exactly_once",
+      "status": "pass",
+      "durationSeconds": 0.125
+    }
+  ],
+  "limits": [
+    "This proof certifies real Tribute-event eligibility and the first card-specific transition, not every delayed end-of-turn branch.",
+    "Opponent payment, optional acceptance, Loop's later confrontation history and Qu Lom's final parity destinations remain covered by their dedicated delayed-memory family."
+  ]
+}

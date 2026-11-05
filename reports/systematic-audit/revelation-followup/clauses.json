@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "20b80b38e2250c035581828a1807c07f8da6b4755ec02e52541b31b232b523ca",
+  "published": false,
+  "finishedAt": "2026-11-05T11:50:26.061062+00:00",
+  "summary": {
+    "executed": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 6,
+    "cardsWithSelectedClauseProof": 6,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "om4qbiofb0ihq6p_en",
+      "name": "The Stomper",
+      "paragraphIndex": null,
+      "printedParagraph": "Immediate Effect - If at the Revelation the Stomper is the First Manifestation with the highest base power, the player who controls it wins the confrontation.",
+      "paragraphSha256": "754e2ad4cd0b3c8e6c3cf7f8412cc35261df0072734d578ef8f3ed64b60b5e8b",
+      "expectedBehavior": "At Revelation, the shipped trigger is eligible only from a live face-up source and its exact printed zone. A hidden, disabled, absent or wrongly placed source does not trigger, and a valid trigger begins the printed card-specific result.",
+      "testIds": [
+        "test_revelation_family.RevelationFamily.test_all_six_compile_the_exact_revelation_contract",
+        "test_revelation_family.RevelationFamily.test_each_live_face_up_source_queues_its_revelation_action",
+        "test_revelation_family.RevelationFamily.test_hidden_disabled_absent_and_wrong_zone_sources_do_not_trigger",
+        "test_revelation_family.RevelationFamily.test_each_card_specific_result_begins_after_the_valid_revelation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "wer3o71zo9myece_en",
+      "name": "Numbi, the Irritating",
+      "paragraphIndex": null,
+      "printedParagraph": "As long as Numbi is in the Interzone, after the Revelation you may force a target opponent to Chain from their hand. If the opponent can do so, the First Manifestation you control gets +2 power until the end of the turn. If the opponent cannot do so, they reveal their hand.",
+      "paragraphSha256": "c2ab66fa307e816ae4d2f43f4305a72902437f803377ba577189a4c38371758a",
+      "expectedBehavior": "At Revelation, the shipped trigger is eligible only from a live face-up source and its exact printed zone. A hidden, disabled, absent or wrongly placed source does not trigger, and a valid trigger begins the printed card-specific result.",
+      "testIds": [
+        "test_revelation_family.RevelationFamily.test_all_six_compile_the_exact_revelation_contract",
+        "test_revelation_family.RevelationFamily.test_each_live_face_up_source_queues_its_revelation_action",
+        "test_revelation_family.RevelationFamily.test_hidden_disabled_absent_and_wrong_zone_sources_do_not_trigger",
+        "test_revelation_family.RevelationFamily.test_each_card_specific_result_begins_after_the_valid_revelation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ny6t2mdwbxfvwxw_en",
+      "name": "Sermon, Obscene Quadrumane",
+      "paragraphIndex": null,
+      "printedParagraph": "Immediate Effect - As long as Sermon is on the field, if upon Revelation the First Manifestation you control has a higher base power than the First Manifestation controlled by an opponent, that player skips the Confrontation Phase unless they decide to lose 10 points.",
+      "paragraphSha256": "25e704335bdbb828f6bd072802819f6c27db79af25215b9e673c672307d1fc15",
+      "expectedBehavior": "At Revelation, the shipped trigger is eligible only from a live face-up source and its exact printed zone. A hidden, disabled, absent or wrongly placed source does not trigger, and a valid trigger begins the printed card-specific result.",
+      "testIds": [
+        "test_revelation_family.RevelationFamily.test_all_six_compile_the_exact_revelation_contract",
+        "test_revelation_family.RevelationFamily.test_each_live_face_up_source_queues_its_revelation_action",
+        "test_revelation_family.RevelationFamily.test_hidden_disabled_absent_and_wrong_zone_sources_do_not_trigger",
+        "test_revelation_family.RevelationFamily.test_each_card_specific_result_begins_after_the_valid_revelation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "lmx5uff1z53fo0g_en",
+      "name": "Hermetic Hourglass",
+      "paragraphIndex": null,
+      "printedParagraph": "Immediate Effect - If the First Manifestation under your control is the one with the lowest base power, the confrontation ends in a stalemate unless an opponent pays {H}{H}.",
+      "paragraphSha256": "62155639e17ac38dcfbc54c4a0035e645c63023bbab03ad4472374722710a807",
+      "expectedBehavior": "At Revelation, the shipped trigger is eligible only from a live face-up source and its exact printed zone. A hidden, disabled, absent or wrongly placed source does not trigger, and a valid trigger begins the printed card-specific result.",
+      "testIds": [
+        "test_revelation_family.RevelationFamily.test_all_six_compile_the_exact_revelation_contract",
+        "test_revelation_family.RevelationFamily.test_each_live_face_up_source_queues_its_revelation_action",
+        "test_revelation_family.RevelationFamily.test_hidden_disabled_absent_and_wrong_zone_sources_do_not_trigger",
+        "test_revelation_family.RevelationFamily.test_each_card_specific_result_begins_after_the_valid_revelation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-020",
+      "name": "Healing Bond",
+      "paragraphIndex": null,
+      "printedParagraph": "After the Revelation, each First Manifestation that does not have the highest base power gains +2 power until the end of the turn. Their controllers gain 10 Points.",
+      "paragraphSha256": "f7ffa2f3cc09ac3dbef685fc04a93bbc77abb3703c1bcaf50fb500207ce2dd82",
+      "expectedBehavior": "At Revelation, the shipped trigger is eligible only from a live face-up source and its exact printed zone. A hidden, disabled, absent or wrongly placed source does not trigger, and a valid trigger begins the printed card-specific result.",
+      "testIds": [
+        "test_revelation_family.RevelationFamily.test_all_six_compile_the_exact_revelation_contract",
+        "test_revelation_family.RevelationFamily.test_each_live_face_up_source_queues_its_revelation_action",
+        "test_revelation_family.RevelationFamily.test_hidden_disabled_absent_and_wrong_zone_sources_do_not_trigger",
+        "test_revelation_family.RevelationFamily.test_each_card_specific_result_begins_after_the_valid_revelation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-120",
+      "name": "Overwhelming Persuasion",
+      "paragraphIndex": null,
+      "printedParagraph": "After the Revelation, a target opponent puts a Will from their hand face up on the field. The chosen Will can be played by that player as if it were in their hand and costs 2 🔘 essences more to play. That player loses 5 points at the end of each turn for each Will that remains on the field due to this effect.",
+      "paragraphSha256": "0b29178a4232fc9cea847d472ef7392ba1f287e8362eb99fa86e25119c28f6cb",
+      "expectedBehavior": "At Revelation, the shipped trigger is eligible only from a live face-up source and its exact printed zone. A hidden, disabled, absent or wrongly placed source does not trigger, and a valid trigger begins the printed card-specific result.",
+      "testIds": [
+        "test_revelation_family.RevelationFamily.test_all_six_compile_the_exact_revelation_contract",
+        "test_revelation_family.RevelationFamily.test_each_live_face_up_source_queues_its_revelation_action",
+        "test_revelation_family.RevelationFamily.test_hidden_disabled_absent_and_wrong_zone_sources_do_not_trigger",
+        "test_revelation_family.RevelationFamily.test_each_card_specific_result_begins_after_the_valid_revelation"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_revelation_family.RevelationFamily.test_all_six_compile_the_exact_revelation_contract",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_revelation_family.RevelationFamily.test_each_card_specific_result_begins_after_the_valid_revelation",
+      "status": "pass",
+      "durationSeconds": 0.266
+    },
+    {
+      "testId": "test_revelation_family.RevelationFamily.test_each_live_face_up_source_queues_its_revelation_action",
+      "status": "pass",
+      "durationSeconds": 0.25
+    },
+    {
+      "testId": "test_revelation_family.RevelationFamily.test_hidden_disabled_absent_and_wrong_zone_sources_do_not_trigger",
+      "status": "pass",
+      "durationSeconds": 0.828
+    }
+  ],
+  "limits": [
+    "This proof certifies Revelation eligibility and the first card-specific transition, not every downstream choice branch.",
+    "Payment acceptance or refusal, completed Chain resolution, end-of-turn cleanup and Persuasion's later penalty remain covered by their dedicated families."
+  ]
+}

@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "411f3163246ab10eea47c31cc0ac13a0a5c2ca36df1ea1813b1226202b6ee65c",
+  "published": false,
+  "finishedAt": "2026-11-05T18:25:16.208296+00:00",
+  "summary": {
+    "executed": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 5,
+    "cardsWithSelectedClauseProof": 5,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "i7h2c7ku2gt1yvg_en",
+      "name": "Shababba, Divining Cube",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Shababba is in the Interzone, at the end of the turn look at the top 4 cards of your deck, then distribute any number of those cards on the top and bottom of your deck in any order.",
+      "paragraphSha256": "fed07ac611b972167811504df66cec462c09f6ba8e8c24f9138307d26dcad987",
+      "expectedBehavior": "Only an Interzone Shababba triggers at end of turn; it exposes exactly the top four cards of its controller's Deck and applies the chosen top and bottom order.",
+      "testIds": [
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_all_five_compile_the_exact_reorder_contract",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_shababba_and_dissect_reorder_the_printed_decks_atomically",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_tut_pays_one_hollow_and_enforces_two_top_one_bottom",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_glimpse_draws_and_eviscerate_discards_after_the_chosen_order"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "9yylrq6xancbn0m_en",
+      "name": "Glimpse the Omens",
+      "paragraphIndex": 0,
+      "printedParagraph": "Look at the top 4 cards of your deck. Distribute any number of those cards on the top and on the bottom of your deck in any order, then draw 1 card.",
+      "paragraphSha256": "6eb0f4c27c8e9ab6a44a9582366abdecc1e01ae15bb8905d4ef0a63b204f9298",
+      "expectedBehavior": "Glimpse exposes exactly the top four cards of its controller's Deck, applies any valid top and bottom order, then draws the new top card.",
+      "testIds": [
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_all_five_compile_the_exact_reorder_contract",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_shababba_and_dissect_reorder_the_printed_decks_atomically",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_tut_pays_one_hollow_and_enforces_two_top_one_bottom",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_glimpse_draws_and_eviscerate_discards_after_the_chosen_order"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-037",
+      "name": "Tut, Rhythmic Whirlwind",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Tut is on the field, you may pay 🔘: Look at the top 3 cards of your deck. Put one on the bottom of your deck and the others on top of your deck in any order.",
+      "paragraphSha256": "9ba73e3d572f253ba9e7b4d117cc9c71f7ec0b8f1ed54d9786411b0f062d4647",
+      "expectedBehavior": "Tut's field activation spends one Hollow Essence, exposes up to three cards, and requires exactly two on top and one on the bottom when three are available.",
+      "testIds": [
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_all_five_compile_the_exact_reorder_contract",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_shababba_and_dissect_reorder_the_printed_decks_atomically",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_tut_pays_one_hollow_and_enforces_two_top_one_bottom",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_glimpse_draws_and_eviscerate_discards_after_the_chosen_order"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-047",
+      "name": "Dissect",
+      "paragraphIndex": 0,
+      "printedParagraph": "Look at the top 3 cards of each player's deck. Distribute any number of those cards on the top and bottom of their owner's deck in any order.",
+      "paragraphSha256": "847fb64426338b743754b7ad1b356b19318d36a7fe28c53c1d542888025fb52b",
+      "expectedBehavior": "Dissect exposes the top three cards of every player's Deck and commits every owner's chosen top and bottom order atomically.",
+      "testIds": [
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_all_five_compile_the_exact_reorder_contract",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_shababba_and_dissect_reorder_the_printed_decks_atomically",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_tut_pays_one_hollow_and_enforces_two_top_one_bottom",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_glimpse_draws_and_eviscerate_discards_after_the_chosen_order"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-068",
+      "name": "Eviscerate Morality",
+      "paragraphIndex": 0,
+      "printedParagraph": "Look at the top 4 cards of your deck. Distribute any number of those cards on the top and bottom of your deck in any order, then discard 2 cards from the top of your deck.",
+      "paragraphSha256": "9349355c4783abd61e1c00215ee67c0124461c785b5167bce7a9a0b3df3b38cb",
+      "expectedBehavior": "Eviscerate Morality exposes exactly the top four cards of its controller's Deck, applies the chosen order, then discards the resulting top two cards.",
+      "testIds": [
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_all_five_compile_the_exact_reorder_contract",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_shababba_and_dissect_reorder_the_printed_decks_atomically",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_tut_pays_one_hollow_and_enforces_two_top_one_bottom",
+        "test_reorder_top_decks_family.ReorderTopDecksFamily.test_glimpse_draws_and_eviscerate_discards_after_the_chosen_order"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_reorder_top_decks_family.ReorderTopDecksFamily.test_all_five_compile_the_exact_reorder_contract",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_reorder_top_decks_family.ReorderTopDecksFamily.test_glimpse_draws_and_eviscerate_discards_after_the_chosen_order",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_reorder_top_decks_family.ReorderTopDecksFamily.test_shababba_and_dissect_reorder_the_printed_decks_atomically",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_reorder_top_decks_family.ReorderTopDecksFamily.test_tut_pays_one_hollow_and_enforces_two_top_one_bottom",
+      "status": "pass",
+      "durationSeconds": 0.047
+    }
+  ],
+  "limits": [
+    "This proof certifies the five printed reorder clauses, their legal choice shape and their first authoritative continuation.",
+    "It does not re-certify generic Deck privacy, reconnect persistence or unrelated draw and discard replacement families."
+  ]
+}

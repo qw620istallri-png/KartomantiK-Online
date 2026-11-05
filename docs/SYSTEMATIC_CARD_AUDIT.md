@@ -498,3 +498,114 @@ refus. Les résultats propres à chaque carte restent hors de cette preuve
 partagée. Les contrats sont dans
 `reports/systematic-audit/player-target-followup/clauses.json`. Le registre
 strict atteint **320/450 cartes (71,1 %)** après validation complète.
+
+La passe suivante relie onze clauses `target:zone_card`. Elle vérifie les zones
+publiques et la Main propre, la cardinalité, le type, le propriétaire, le
+conteneur, les contraintes temporelles, la déduplication et la version d'entrée
+de zone. Chaque carte exécute aussi sa première transition de résultat réelle ;
+les choix et conséquences ultérieures restent séparés. Les contrats et la suite
+complète sont dans `reports/systematic-audit/zone-card-target-followup/`. Le
+registre strict atteint **331/450 cartes (73,6 %)** ; il reste 119 cartes, 178
+paragraphes et 546 oracles de branches.
+
+La passe `trigger:beginning_of_turn` relie ensuite huit cartes. Elle vérifie la
+zone exacte, la visibilité, le Réceptacle adverse, le seuil de compteurs et
+l'unicité du balayage par tour, puis exécute la première transition propre à
+chaque carte. Le contrat de Red Plague a été resserré pour ne s'activer que dans
+le Réceptacle d'un adversaire, conformément à son texte imprimé. Les preuves et
+la suite complète sont dans
+`reports/systematic-audit/beginning-of-turn-followup/`. Le registre strict
+atteint **339/450 cartes (75,3 %)** ; il reste 111 cartes, 154 paragraphes et
+459 oracles de branches.
+
+La passe `target:card` relie ensuite sept cartes et huit capacités. Elle vérifie
+la nature et la cardinalité de la cible, ses zones et emplacements autorisés,
+son contrôleur, son résultat de confrontation et son seuil de puissance. Elle
+refuse aussi sans mutation une cible devenue obsolète et exclut la Zone d'Ex
+æquo du Champ quand le texte ne la nomme pas. Chaque capacité exécute sa
+première transition réelle ; ses conséquences ultérieures restent séparées.
+Les preuves et la suite complète sont dans
+`reports/systematic-audit/card-target-followup/`. Le registre strict atteint
+**346/450 cartes (76,9 %)** ; il reste 104 cartes, 143 paragraphes et 432
+oracles de branches.
+
+La passe `trigger:revelation` relie ensuite six cartes. Elle vérifie l'évènement
+et la zone exacts, le caractère immédiat lorsque le texte l'impose, ainsi que
+l'inactivité d'une source cachée, désactivée, absente ou mal placée. Chaque
+carte exécute sa première transition réelle : victoire forcée, Chaîne adverse,
+paiement pour éviter de sauter la Confrontation, paiement contre l'Ex æquo,
+bonus de Healing Bond ou placement de Persuasion. Les choix et conséquences
+ultérieurs restent séparés. Les preuves et la suite complète sont dans
+`reports/systematic-audit/revelation-followup/`. Le registre strict atteint
+**352/450 cartes (78,2 %)** ; il reste 98 cartes, 135 paragraphes et 418 oracles
+de branches.
+
+La passe `trigger:used_as_tribute` relie ensuite six cartes. Elle vérifie un
+paiement réel de Will, le déplacement de la source au Cimetière et un unique
+déclenchement, tout en distinguant une simple défausse et le paiement d'une
+activation de Will. Chaque carte exécute sa première transition réelle :
+création de la mémoire attachée correcte, mélange du deck propriétaire ou
+lancer de dé et gain d'Essence transcendante conservée. La résolution
+ultérieure des mémoires reste séparée. Les preuves et la suite complète sont
+dans `reports/systematic-audit/used-as-tribute-followup/`. Le registre strict
+atteint **358/450 cartes (79,6 %)** ; il reste 92 cartes, 128 paragraphes et 396
+oracles de branches.
+
+La passe `trigger:wins_confrontation` relie ensuite six cartes. Elle vérifie la
+participation réelle du côté gagnant, l'unicité du déclenchement et
+l'inactivité d'un perdant, d'un non-participant ou d'une source cachée ou
+désactivée. Chaque carte exécute sa première transition réelle : Essence
+transcendante conservée, retour différé des Tributs, choix de Manifestation,
+exil et prise de contrôle, révélation de Will ou échange avec le Réceptacle.
+Les choix et résolutions différées ultérieurs restent séparés. Les preuves et
+la suite complète sont dans
+`reports/systematic-audit/wins-confrontation-followup/`. Le registre strict
+atteint **364/450 cartes (80,9 %)** ; il reste 86 cartes, 122 paragraphes et 379
+oracles de branches.
+
+La passe suivante part du lot résiduel `unclassified` et relie huit paragraphes
+de six cartes à leurs règles intrinsèques ou statiques compilées. Elle exerce
+les paiements réels de Forgotten Pile et Solar Apparition depuis leur zone
+imprimée, les conditions temporelles d'Alakazim et Palgonphio, le sacrifice de
+Kanopo, ainsi que le seuil de six Wills et la conservation de l'excédent de
+Zizek. Solar Apparition applique aussi sa perte de puissance supplémentaire à
+une Will éphémère réelle. Les preuves et la suite complète sont dans
+`reports/systematic-audit/intrinsic-rules-followup/`. Le registre strict atteint
+**370/450 cartes (82,2 %)** ; il reste 80 cartes, 114 paragraphes et 359 oracles
+de branches.
+
+La passe `result:reorder_top_decks` relie ensuite cinq cartes. Elle vérifie les
+zones et fenêtres de Shababba, le traitement atomique de tous les Decks par
+Dissect, le paiement réel et la répartition imposée de Tut, puis les
+continuations après réordonnancement : pioche pour Glimpse the Omens et
+défausse des deux nouvelles premières cartes pour Eviscerate Morality. Les
+choix incomplets ou de cardinalité incorrecte sont refusés sans mutation. Les
+preuves et la suite complète sont dans
+`reports/systematic-audit/reorder-top-decks-followup/`. Le registre strict
+atteint **375/450 cartes (83,3 %)** ; il reste 75 cartes, 109 paragraphes et 339
+oracles de branches.
+
+La passe `cost:sacrificeSource` relie ensuite les cinq paragraphes de Gusted
+Nebula, Cirrocumulus et Rah-kio. Elle vérifie l'entrée gratuite en Soutien et la
+Flottaison des deux Nébuleuses, leurs contraintes de source ou de cible, puis
+le paiement réel du sacrifice avant la résolution. Gusted renvoie les Soutiens
+et augmente les Premières Manifestations ; Cirrocumulus résout immédiatement
+une cible contrôlée de la Pile. Rah-kio paie épuisement et sacrifice avant de
+détruire les Jetons du champ, tout en préservant les cartes physiques et les
+Jetons en Zone d'Ex æquo, ce qui confirme son correctif historique. Les preuves
+et la suite complète sont dans
+`reports/systematic-audit/sacrifice-source-followup/`. Le registre strict
+atteint **378/450 cartes (84,0 %)** ; il reste 72 cartes, 104 paragraphes et 316
+oracles de branches.
+
+La passe `phase-window` relie ensuite Timid Brain, Ranba et Denegath. Elle
+vérifie leur fenêtre exacte de Réaction et les refus atomiques dans une phase
+voisine, puis paie réellement les défausses, l'épuisement et les deux Essences
+creuses. Timid Brain entre en Soutien par une action normale et répondable sans
+permission résiduelle. Ranba distingue la puissance de base, le contrôle et la
+propriété de la dernière entrée en Soutien. Denegath renvoie la Première
+Manifestation, applique son interdiction de rejouer et ne propose à la Chaîne
+que l'autre carte légale. Les preuves et la suite complète sont dans
+`reports/systematic-audit/phase-window-followup/`. Le registre strict atteint
+**381/450 cartes (84,7 %)** ; il reste 69 cartes, 101 paragraphes et 307 oracles
+de branches.

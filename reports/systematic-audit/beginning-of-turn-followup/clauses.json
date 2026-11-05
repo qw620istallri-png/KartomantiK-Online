@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "44a571ac0fa28d634cc76fed353718d00cfb4cae8d7c1f8aeb53cc0cd6480a27",
+  "published": false,
+  "finishedAt": "2026-11-05T08:34:41.114547+00:00",
+  "summary": {
+    "executed": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 8,
+    "cardsWithSelectedClauseProof": 8,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "oftdgsrobaqgst7_en",
+      "name": "Lerxur, the Black Moon",
+      "paragraphIndex": null,
+      "printedParagraph": "As long as Lerxur is in an opponent's Empathic Vessel, at the beginning of each turn that player discards 2 cards from the top of the deck unless they pay {H}{H}.",
+      "paragraphSha256": "ec17a1fc70d7777c557bce6fc0f43ad5dcaa7aafec5a52dd4169e9250513d1cf",
+      "expectedBehavior": "At the beginning of a turn, the shipped trigger is eligible only from its exact live zone, vessel relationship and source counter threshold. It queues once per turn, remains inactive when face down or otherwise ineligible, and a valid trigger begins the printed card-specific result or ongoing effect.",
+      "testIds": [
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "acf0sr2crn8bykg_en",
+      "name": "Red Plague",
+      "paragraphIndex": null,
+      "printedParagraph": "As long as Red Plague is in an opponent's Empathic Vessel, at the beginning of each turn that player may decide to lose 10 points. If they do not, until the end of the turn their hand is limited to 5 cards and any excess card inside it must be immediately discarded.",
+      "paragraphSha256": "941288dc9d7e1b8c5bd9b9cf4bb96f18eeceb3497928bca0b9e475adf4f1e914",
+      "expectedBehavior": "At the beginning of a turn, the shipped trigger is eligible only from its exact live zone, vessel relationship and source counter threshold. It queues once per turn, remains inactive when face down or otherwise ineligible, and a valid trigger begins the printed card-specific result or ongoing effect.",
+      "testIds": [
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "rqvzo3iji2a1l65_en",
+      "name": "Atavic Volatility",
+      "paragraphIndex": null,
+      "printedParagraph": "As long as there are 10 or more Coil counters on the Atavic Volatility, at the beginning of the turn you can choose a target manifestation on the field. That manifestation loses its effects until the end of the turn.",
+      "paragraphSha256": "033ea9893379f9e9b10508fd843231ccd8071dcbc6b366ad05af9339a5e78d8c",
+      "expectedBehavior": "At the beginning of a turn, the shipped trigger is eligible only from its exact live zone, vessel relationship and source counter threshold. It queues once per turn, remains inactive when face down or otherwise ineligible, and a valid trigger begins the printed card-specific result or ongoing effect.",
+      "testIds": [
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "dc44xrlrhikfvlr_en",
+      "name": "Soul-devouring Dunes",
+      "paragraphIndex": null,
+      "printedParagraph": "At the beginning of the turn, each player chooses one of these effects:",
+      "paragraphSha256": "805822d818da8fbf5d11bf28041dbce34b65c39d2a213a3c1fb4afd68e8ba810",
+      "expectedBehavior": "At the beginning of a turn, the shipped trigger is eligible only from its exact live zone, vessel relationship and source counter threshold. It queues once per turn, remains inactive when face down or otherwise ineligible, and a valid trigger begins the printed card-specific result or ongoing effect.",
+      "testIds": [
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ivx8jr1o6utm32a_en",
+      "name": "Essence Forager",
+      "paragraphIndex": null,
+      "printedParagraph": "At the beginning of each turn you gain 1 {T} essence.",
+      "paragraphSha256": "9118f88fa8acdcfd1c2632e4f0be05edfe5a333792aeaf154aa5259a61e3d50b",
+      "expectedBehavior": "At the beginning of a turn, the shipped trigger is eligible only from its exact live zone, vessel relationship and source counter threshold. It queues once per turn, remains inactive when face down or otherwise ineligible, and a valid trigger begins the printed card-specific result or ongoing effect.",
+      "testIds": [
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-085",
+      "name": "Fee-fee, the Afflicted",
+      "paragraphIndex": null,
+      "printedParagraph": "• At the beginning of the turn, put 1 Spite counter on Fee-fee. Then pay 🔘 for each Spite counter, otherwise put Fee-fee into the Empathic Vessel of an opponent of your choice.",
+      "paragraphSha256": "2d9917caa9e9d971a4f706d784e5a9cb95c04e240e3c77b3c39f287a4e105592",
+      "expectedBehavior": "At the beginning of a turn, the shipped trigger is eligible only from its exact live zone, vessel relationship and source counter threshold. It queues once per turn, remains inactive when face down or otherwise ineligible, and a valid trigger begins the printed card-specific result or ongoing effect.",
+      "testIds": [
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-096",
+      "name": "Lunar Liturgy",
+      "paragraphIndex": null,
+      "printedParagraph": "At the beginning of the turn, put a Manifestation from your Empathic Vessel or Interzone into the Stalemate Zone.",
+      "paragraphSha256": "fc75c2cd12129713f325e1a652d7783e4f1f16187ecdcac39e3cbe89af3b1b2d",
+      "expectedBehavior": "At the beginning of a turn, the shipped trigger is eligible only from its exact live zone, vessel relationship and source counter threshold. It queues once per turn, remains inactive when face down or otherwise ineligible, and a valid trigger begins the printed card-specific result or ongoing effect.",
+      "testIds": [
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-134",
+      "name": "BOB",
+      "paragraphIndex": null,
+      "printedParagraph": "As long as BOB is in the Confrontation Zone, it gets +3 power at the beginning of each turn; it additionally gains all the following effects based on its power:",
+      "paragraphSha256": "e5e2114bb4709862e7b020b7afc51867b8bd6f6b4bf699f28c6b72f0981def6f",
+      "expectedBehavior": "At the beginning of a turn, the shipped trigger is eligible only from its exact live zone, vessel relationship and source counter threshold. It queues once per turn, remains inactive when face down or otherwise ineligible, and a valid trigger begins the printed card-specific result or ongoing effect.",
+      "testIds": [
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger",
+        "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger",
+      "status": "pass",
+      "durationSeconds": 0.219
+    },
+    {
+      "testId": "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+      "status": "pass",
+      "durationSeconds": 0.171
+    },
+    {
+      "testId": "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger",
+      "status": "pass",
+      "durationSeconds": 0.329
+    }
+  ],
+  "limits": [
+    "This proof certifies beginning-of-turn eligibility, once-per-turn queuing and the first card-specific transition, not every downstream choice branch.",
+    "Payment acceptance or refusal, later hand-limit enforcement, multi-player follow-up choices and complete end-of-turn cleanup remain covered by their dedicated families."
+  ]
+}

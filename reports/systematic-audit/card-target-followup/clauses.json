@@ -1,0 +1,167 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "d9b8303392dcbbf5d42fef879bec5c0dbe5fa4c51726eed05e2056f1e4cdd2c4",
+  "published": false,
+  "finishedAt": "2026-11-05T10:52:23.186508+00:00",
+  "summary": {
+    "executed": 5,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 7,
+    "cardsWithSelectedClauseProof": 7,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "411u4asiunisv9l_en",
+      "name": "Logos, the Lost",
+      "paragraphIndex": null,
+      "printedParagraph": "· When you win a confrontation, you may choose a target manifestation in an Interzone and put it into stalemate. That manifestation cannot change zone until the end of the turn.\n· When you lose a confrontation, Logos and a target manifestation among those that won the confrontation enter into stalemate. Both cannot change zone until the end of the turn.",
+      "paragraphSha256": "4ed233c36cbb002d9a02c9c5f6a96336c0572bb42e5a24e8206edef8dc76eb19",
+      "expectedBehavior": "The printed live-card target accepts exactly one authoritative card on the field and enforces its declared card type, field zone, controller, confrontation outcome and power threshold. The Stalemate Zone is excluded unless named, stale or malformed targets are rejected without mutation, and a valid target begins the printed card-specific result.",
+      "testIds": [
+        "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+        "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+        "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+        "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints",
+        "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "x15xumjqqhrnrds_en",
+      "name": "Glabron, the Oppressing",
+      "paragraphIndex": null,
+      "printedParagraph": "As long as Glabron is in hand or in the Interzone, you can put into stalemate a manifestation in your Interzone: Glabron gains Support until the end of the turn.",
+      "paragraphSha256": "52acb56333f0e88d700c0001f7c0c8fa08f04488c05b78cbe6962ed838bcf299",
+      "expectedBehavior": "The printed live-card target accepts exactly one authoritative card on the field and enforces its declared card type, field zone, controller, confrontation outcome and power threshold. The Stalemate Zone is excluded unless named, stale or malformed targets are rejected without mutation, and a valid target begins the printed card-specific result.",
+      "testIds": [
+        "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+        "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+        "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+        "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints",
+        "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "op83bq67vaf368q_en",
+      "name": "Censor",
+      "paragraphIndex": null,
+      "printedParagraph": "Destroy a target manifestation in the Confrontation Zone with base power equal to or lower than that of the revealed manifestation.",
+      "paragraphSha256": "52d377ac21309ba652e9d9fff73eb906d9d49d4123f3edf84c313ac388baf750",
+      "expectedBehavior": "The printed live-card target accepts exactly one authoritative card on the field and enforces its declared card type, field zone, controller, confrontation outcome and power threshold. The Stalemate Zone is excluded unless named, stale or malformed targets are rejected without mutation, and a valid target begins the printed card-specific result.",
+      "testIds": [
+        "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+        "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+        "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+        "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints",
+        "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-077",
+      "name": "Swindley, the Festive",
+      "paragraphIndex": null,
+      "printedParagraph": "During Reaction, you may put Swindley into the Stalemate Zone from your hand: A target Manifestation in the Stalemate Zone returns to its owner's hand.",
+      "paragraphSha256": "f9906f4338ae571e16064b06102d8bf238628176b3db8710862c8aeaa8fcc543",
+      "expectedBehavior": "The printed live-card target accepts exactly one authoritative card on the field and enforces its declared card type, field zone, controller, confrontation outcome and power threshold. The Stalemate Zone is excluded unless named, stale or malformed targets are rejected without mutation, and a valid target begins the printed card-specific result.",
+      "testIds": [
+        "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+        "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+        "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+        "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints",
+        "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-107",
+      "name": "Lugione, the Hungry",
+      "paragraphIndex": null,
+      "printedParagraph": "As long as Lugione is in the Interzone, you may Sacrifice it: Destroy a target manifestation on the field with 4 power or more.",
+      "paragraphSha256": "39f16600875fc4f5ec9a255083a917eb32de49c118461c23c7cace5d3e5b694b",
+      "expectedBehavior": "The printed live-card target accepts exactly one authoritative card on the field and enforces its declared card type, field zone, controller, confrontation outcome and power threshold. The Stalemate Zone is excluded unless named, stale or malformed targets are rejected without mutation, and a valid target begins the printed card-specific result.",
+      "testIds": [
+        "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+        "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+        "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+        "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints",
+        "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-119",
+      "name": "Drain the Substance",
+      "paragraphIndex": null,
+      "printedParagraph": "Immediate Effect - Remove all excess essence of each player. A target manifestation on the field gets +1 power until the end of the turn for each essence removed this way.",
+      "paragraphSha256": "b358d0462aae37a2f8a7c241a80f1635792b18cde3d6c68e33a786b74ab460b9",
+      "expectedBehavior": "The printed live-card target accepts exactly one authoritative card on the field and enforces its declared card type, field zone, controller, confrontation outcome and power threshold. The Stalemate Zone is excluded unless named, stale or malformed targets are rejected without mutation, and a valid target begins the printed card-specific result.",
+      "testIds": [
+        "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+        "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+        "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+        "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints",
+        "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-145",
+      "name": "Cleanse",
+      "paragraphIndex": null,
+      "printedParagraph": "Remove all modifiers on a target card on the field.",
+      "paragraphSha256": "98532b2c534224a17ffb0e41e43b0a48ad0030393cfa74125ffdcd051018247b",
+      "expectedBehavior": "The printed live-card target accepts exactly one authoritative card on the field and enforces its declared card type, field zone, controller, confrontation outcome and power threshold. The Stalemate Zone is excluded unless named, stale or malformed targets are rejected without mutation, and a valid target begins the printed card-specific result.",
+      "testIds": [
+        "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+        "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+        "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+        "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints",
+        "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+      "status": "pass",
+      "durationSeconds": 0.187
+    },
+    {
+      "testId": "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+      "status": "pass",
+      "durationSeconds": 0.172
+    },
+    {
+      "testId": "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target",
+      "status": "pass",
+      "durationSeconds": 0.188
+    },
+    {
+      "testId": "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints",
+      "status": "pass",
+      "durationSeconds": 0.172
+    }
+  ],
+  "limits": [
+    "This proof certifies the live-card target boundary and the first card-specific transition, not every downstream cost, replacement or trigger branch.",
+    "Censor's complete additional-cost lifecycle, later confrontation consequences and end-of-turn cleanup remain covered by their dedicated families."
+  ]
+}

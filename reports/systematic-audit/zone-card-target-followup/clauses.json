@@ -1,0 +1,235 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "f4b38c66ff416049560bb3b3eccfdc8095cb19a9c667b52fd840c7955cc40861",
+  "published": false,
+  "finishedAt": "2026-11-04T20:57:06.308557+00:00",
+  "summary": {
+    "executed": 5,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 11,
+    "cardsWithSelectedClauseProof": 11,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "icxqhki0ivfgqu0_en",
+      "name": "Solenero, the Contrite",
+      "paragraphIndex": null,
+      "printedParagraph": "If Solenero loses the confrontation, you can return a target card from your Limbo to your hand.",
+      "paragraphSha256": "b9eb05e53de2644e834b6dc2d0d0c102577309011419924f09903394769a2aa6",
+      "expectedBehavior": "The printed effect accepts only the declared public-zone card or the controller's own Hand card, with exact cardinality, type, owner, container and temporal constraints. Missing, private, stale, duplicate or otherwise invalid targets are rejected without mutation. A valid target begins the printed card-specific result and its first authoritative state change.",
+      "testIds": [
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "bu1y6jwy7iaywqu_en",
+      "name": "Zombieswing",
+      "paragraphIndex": null,
+      "printedParagraph": "When the Zombieswing enters Limbo, you can return another target manifestation from your Limbo to your hand.",
+      "paragraphSha256": "efde02704619a6895204ca163eb2d548b7be4813c1fc901726a218a38133e5f9",
+      "expectedBehavior": "The printed effect accepts only the declared public-zone card or the controller's own Hand card, with exact cardinality, type, owner, container and temporal constraints. Missing, private, stale, duplicate or otherwise invalid targets are rejected without mutation. A valid target begins the printed card-specific result and its first authoritative state change.",
+      "testIds": [
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "gpxqooqq57loyb8_en",
+      "name": "Reviving Cage",
+      "paragraphIndex": null,
+      "printedParagraph": "As long as the Reviving Cage is in the Interzone, you can exile it: Put a target manifestation from your Limbo into the Interzone.",
+      "paragraphSha256": "e867cb49ef1a8a3b12ee44123836df12368d5e00ce0a40fe81391867cc8b5c44",
+      "expectedBehavior": "The printed effect accepts only the declared public-zone card or the controller's own Hand card, with exact cardinality, type, owner, container and temporal constraints. Missing, private, stale, duplicate or otherwise invalid targets are rejected without mutation. A valid target begins the printed card-specific result and its first authoritative state change.",
+      "testIds": [
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "rgjdtrcaw4o9381_en",
+      "name": "Sallow Thief",
+      "paragraphIndex": null,
+      "printedParagraph": "If the Sallow Thief wins the confrontation, you may return to your hand a target manifestation of which you are the owner from the Empathic Vessel of an opponent.",
+      "paragraphSha256": "021c684584939e790ca49c9f8f1e419faac835b52409a728ed48a8b287cd7dee",
+      "expectedBehavior": "The printed effect accepts only the declared public-zone card or the controller's own Hand card, with exact cardinality, type, owner, container and temporal constraints. Missing, private, stale, duplicate or otherwise invalid targets are rejected without mutation. A valid target begins the printed card-specific result and its first authoritative state change.",
+      "testIds": [
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "u9blfiufeef8djr_en",
+      "name": "Reveal the Hidden",
+      "paragraphIndex": null,
+      "printedParagraph": "Put a manifestation from your hand into your Interzone.",
+      "paragraphSha256": "65dd0287f78b116a500fcc9c688ad6d616e79db9dd4fff30e08d326358ba19d1",
+      "expectedBehavior": "The printed effect accepts only the declared public-zone card or the controller's own Hand card, with exact cardinality, type, owner, container and temporal constraints. Missing, private, stale, duplicate or otherwise invalid targets are rejected without mutation. A valid target begins the printed card-specific result and its first authoritative state change.",
+      "testIds": [
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "0coh7nrbvcvan1i_en",
+      "name": "Recover from the Abyss",
+      "paragraphIndex": null,
+      "printedParagraph": "Return a target card from your Limbo to your hand.",
+      "paragraphSha256": "8556415606a12d37dd9ab308b27573b7f97f5f918e8ddb6da928d060f94f71a5",
+      "expectedBehavior": "The printed effect accepts only the declared public-zone card or the controller's own Hand card, with exact cardinality, type, owner, container and temporal constraints. Missing, private, stale, duplicate or otherwise invalid targets are rejected without mutation. A valid target begins the printed card-specific result and its first authoritative state change.",
+      "testIds": [
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-019",
+      "name": "Dissolve and Coagulate",
+      "paragraphIndex": null,
+      "printedParagraph": "Shuffle up to 2 target manifestations from your Empathic Vessel into their owners' decks.",
+      "paragraphSha256": "baddc3cfe50950f16c55350df1a57426b533ef948a4ef3a6cb61c9e23dd220cc",
+      "expectedBehavior": "The printed effect accepts only the declared public-zone card or the controller's own Hand card, with exact cardinality, type, owner, container and temporal constraints. Missing, private, stale, duplicate or otherwise invalid targets are rejected without mutation. A valid target begins the printed card-specific result and its first authoritative state change.",
+      "testIds": [
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-058",
+      "name": "Leadenshroud",
+      "paragraphIndex": null,
+      "printedParagraph": "As long as Leadenshroud is in the Interzone, you may sacrifice it: Put a target Manifestation destroyed or discarded this turn in Support from the Limbo under your control.",
+      "paragraphSha256": "806641e43b6eb250aee6c8df385bc2dba3c424d167475f88b8d8abc74977c38f",
+      "expectedBehavior": "The printed effect accepts only the declared public-zone card or the controller's own Hand card, with exact cardinality, type, owner, container and temporal constraints. Missing, private, stale, duplicate or otherwise invalid targets are rejected without mutation. A valid target begins the printed card-specific result and its first authoritative state change.",
+      "testIds": [
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-063",
+      "name": "Memento, the Fallen",
+      "paragraphIndex": null,
+      "printedParagraph": "When Memento enters the Limbo, you may shuffle up to 3 target cards other than Memento from your Limbo into your deck.",
+      "paragraphSha256": "15ec235d14a4827cce12845f47f5b2afcd0ecabbf507ab9c9e2eaa1b347259c2",
+      "expectedBehavior": "The printed effect accepts only the declared public-zone card or the controller's own Hand card, with exact cardinality, type, owner, container and temporal constraints. Missing, private, stale, duplicate or otherwise invalid targets are rejected without mutation. A valid target begins the printed card-specific result and its first authoritative state change.",
+      "testIds": [
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-070",
+      "name": "Cradle the Putrescence",
+      "paragraphIndex": null,
+      "printedParagraph": "Destroy a target Manifestation in your Empathic Vessel. Its owner sacrifices a Manifestation they control on the field.",
+      "paragraphSha256": "396ee4e57774fdbff8c3a175a23b58c8932c12f5e04a32cfb89756258f902477",
+      "expectedBehavior": "The printed effect accepts only the declared public-zone card or the controller's own Hand card, with exact cardinality, type, owner, container and temporal constraints. Missing, private, stale, duplicate or otherwise invalid targets are rejected without mutation. A valid target begins the printed card-specific result and its first authoritative state change.",
+      "testIds": [
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-095",
+      "name": "Mock Fate",
+      "paragraphIndex": null,
+      "printedParagraph": "Put into the Stalemate Zone a target Manifestation from a player's Limbo that entered that Limbo this turn.",
+      "paragraphSha256": "9b01887fd5c63165c671de220ff393b2206e499bf3d75be4665cea51924e22ac",
+      "expectedBehavior": "The printed effect accepts only the declared public-zone card or the controller's own Hand card, with exact cardinality, type, owner, container and temporal constraints. Missing, private, stale, duplicate or otherwise invalid targets are rejected without mutation. A valid target begins the printed card-specific result and its first authoritative state change.",
+      "testIds": [
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+        "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+      "status": "pass",
+      "durationSeconds": 0.391
+    },
+    {
+      "testId": "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+      "status": "pass",
+      "durationSeconds": 0.218
+    },
+    {
+      "testId": "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target",
+      "status": "pass",
+      "durationSeconds": 0.25
+    },
+    {
+      "testId": "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative",
+      "status": "pass",
+      "durationSeconds": 0.016
+    }
+  ],
+  "limits": [
+    "This proof certifies the zone-card target contract and the first card-specific result transition, not every downstream trigger or replacement.",
+    "Later choices, confrontation outcomes, immunity interactions and complete multi-step aftermath remain covered by their dedicated families."
+  ]
+}

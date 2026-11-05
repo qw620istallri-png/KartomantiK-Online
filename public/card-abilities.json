@@ -1084,7 +1084,8 @@
       "id": "choose-points-or-five-card-hand",
       "trigger": {
         "event": "beginning_of_turn",
-        "zone": "receptacle"
+        "zone": "receptacle",
+        "container": "opponent"
       },
       "result": {
         "kind": "choose_points_or_hand_limit",

@@ -1,0 +1,133 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "7249c95c2e1ba3d934d1b9d861a4b5b2647cf85b957a123da296daa66660bca1",
+  "published": false,
+  "finishedAt": "2026-11-05T19:01:06.494582+00:00",
+  "summary": {
+    "executed": 5,
+    "passed": 5,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 5,
+    "cardsWithSelectedClauseProof": 3,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "inner-deserts-010",
+      "name": "Gusted Nebula",
+      "paragraphIndex": 0,
+      "printedParagraph": "Support from hand; Float.",
+      "paragraphSha256": "c5297dd18614b947fbe7c640f8104557cb14288684098c5c0ee2ddcb1d3effc2",
+      "expectedBehavior": "Gusted Nebula may be played from Hand into Support without Tribute and has active Float semantics when it occupies the Interzone.",
+      "testIds": [
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_all_three_compile_the_exact_sacrifice_contract",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_nebulas_enter_support_from_hand_and_really_have_float",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_gusted_nebula_sacrifices_from_interzone_then_returns_supports",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_cirrocumulus_rejects_a_foreign_stack_item_then_resolves_its_own",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_rah_kio_pays_both_costs_then_destroys_only_field_tokens"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-010",
+      "name": "Gusted Nebula",
+      "paragraphIndex": 1,
+      "printedParagraph": "As long as Gusted Nebula is in the Interzone, you may Sacrifice it: Each player puts the manifestations in Support they control on top of their respective owner's deck in any order, then each First Manifestation gains +1 power until the end of the turn for each manifestation moved this way by its controller.",
+      "paragraphSha256": "14df248a36dc0d8856dd739df2967023d84db72f5e16a77aff10fba53c2f7fdc",
+      "expectedBehavior": "Only an Interzone Gusted Nebula may pay its sacrifice cost; after payment, each controlled Support returns to its owner's Deck and each controller's First Manifestation gains the matching power.",
+      "testIds": [
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_all_three_compile_the_exact_sacrifice_contract",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_nebulas_enter_support_from_hand_and_really_have_float",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_gusted_nebula_sacrifices_from_interzone_then_returns_supports",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_cirrocumulus_rejects_a_foreign_stack_item_then_resolves_its_own",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_rah_kio_pays_both_costs_then_destroys_only_field_tokens"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-080",
+      "name": "Cirrocumulus",
+      "paragraphIndex": 0,
+      "printedParagraph": "Support from hand; Float.",
+      "paragraphSha256": "c5297dd18614b947fbe7c640f8104557cb14288684098c5c0ee2ddcb1d3effc2",
+      "expectedBehavior": "Cirrocumulus may be played from Hand into Support without Tribute and has active Float semantics when it occupies the Interzone.",
+      "testIds": [
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_all_three_compile_the_exact_sacrifice_contract",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_nebulas_enter_support_from_hand_and_really_have_float",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_gusted_nebula_sacrifices_from_interzone_then_returns_supports",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_cirrocumulus_rejects_a_foreign_stack_item_then_resolves_its_own",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_rah_kio_pays_both_costs_then_destroys_only_field_tokens"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-080",
+      "name": "Cirrocumulus",
+      "paragraphIndex": 1,
+      "printedParagraph": "As long as Cirrocumulus is in the Interzone, you may sacrifice it: Resolve as an Immediate Effect a target card or effect you control on the Stack.",
+      "paragraphSha256": "d61e2afeae7ba193f307a448e5ba4882cf0dcd44febf34aaddfdce0d8035fa29",
+      "expectedBehavior": "Only an Interzone Cirrocumulus may sacrifice itself to resolve one controlled Stack item immediately; a foreign Stack item is rejected before payment.",
+      "testIds": [
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_all_three_compile_the_exact_sacrifice_contract",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_nebulas_enter_support_from_hand_and_really_have_float",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_gusted_nebula_sacrifices_from_interzone_then_returns_supports",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_cirrocumulus_rejects_a_foreign_stack_item_then_resolves_its_own",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_rah_kio_pays_both_costs_then_destroys_only_field_tokens"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-109",
+      "name": "Rah-kio, the Flyswatter",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Rah-kio is on the field, you may Exhaust it and Sacrifice it: Destroy all Tokens on the field.",
+      "paragraphSha256": "65ebcaa7515ce0b8d782bbb6edb752defeb9b33562e1c3d7c0236afd8bd56dae",
+      "expectedBehavior": "A ready field Rah-kio exhausts and sacrifices itself as the activation cost, then destroys generic, copied and persistent-Will Tokens on the field while preserving physical Manifestations and Tokens in Stalemate.",
+      "testIds": [
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_all_three_compile_the_exact_sacrifice_contract",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_nebulas_enter_support_from_hand_and_really_have_float",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_gusted_nebula_sacrifices_from_interzone_then_returns_supports",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_cirrocumulus_rejects_a_foreign_stack_item_then_resolves_its_own",
+        "test_sacrifice_source_family.SacrificeSourceFamily.test_rah_kio_pays_both_costs_then_destroys_only_field_tokens"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_sacrifice_source_family.SacrificeSourceFamily.test_all_three_compile_the_exact_sacrifice_contract",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_sacrifice_source_family.SacrificeSourceFamily.test_cirrocumulus_rejects_a_foreign_stack_item_then_resolves_its_own",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_sacrifice_source_family.SacrificeSourceFamily.test_gusted_nebula_sacrifices_from_interzone_then_returns_supports",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_sacrifice_source_family.SacrificeSourceFamily.test_nebulas_enter_support_from_hand_and_really_have_float",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_sacrifice_source_family.SacrificeSourceFamily.test_rah_kio_pays_both_costs_then_destroys_only_field_tokens",
+      "status": "pass",
+      "durationSeconds": 0.047
+    }
+  ],
+  "limits": [
+    "This proof certifies the five printed paragraphs, their source costs, legal source or target gates and first authoritative results.",
+    "It does not re-certify every destruction watcher, immunity replacement, Support ordering permutation or generic Stack interaction owned by other families."
+  ]
+}

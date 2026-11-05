@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-03T16:02:20.250608+00:00",
-  "sourceDigest": "28bf1fc6d707cd1e8d157ee95d6327aa0874cf00b07ccb9c7646525a3a4ecb57",
-  "unitEvidence": "reports/systematic-audit/release-150-2/unit-tests.json",
-  "unitEvidenceSourceDigest": "28bf1fc6d707cd1e8d157ee95d6327aa0874cf00b07ccb9c7646525a3a4ecb57",
+  "generatedAt": "2026-11-05T19:53:20.348717+00:00",
+  "sourceDigest": "495724125ab34d6afc7052b4e94995c7d1b6b0a8bd2921664d5d621a4647bcb4",
+  "unitEvidence": "reports/systematic-audit/phase-window-followup/unit-tests.json",
+  "unitEvidenceSourceDigest": "495724125ab34d6afc7052b4e94995c7d1b6b0a8bd2921664d5d621a4647bcb4",
   "currentUnitEvidence": true,
   "unitEvidencePassed": true,
   "duplicateUnitTestIds": [],
   "summary": {
     "catalogCards": 450,
-    "cardsWithSelectedClauseProof": 320,
-    "percentageWithSelectedClauseProof": 71.1,
-    "cardsOutsideThisStrictRegister": 130,
+    "cardsWithSelectedClauseProof": 381,
+    "percentageWithSelectedClauseProof": 84.7,
+    "cardsOutsideThisStrictRegister": 69,
     "fullCatalogSemanticCertification": false
   },
   "countingRule": "At least one explicit printed clause or explicit no-effect contract linked to tests that all passed in the named full unit run. Unique card IDs; interaction-only references excluded. Selected clauses do not certify all branches unless explicitly marked.",
@@ -184,6 +184,25 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "195375267c63b394efcb29534d89e6ae85f2751b7be0476a34c1f0aecaa2acf9"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-028",
+      "name": "Alakazim, the Magician",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/intrinsic-rules-followup/clauses.json",
+          "testIds": [
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "a7dd18b2a9551386ca3bee386c2eeed2862c6af3e8c920dad88071aa5aa0c5e4"
         }
       ],
       "allBranchesCertified": false
@@ -729,6 +748,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "rqvzo3iji2a1l65_en",
+      "name": "Atavic Volatility",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/beginning-of-turn-followup/clauses.json",
+          "testIds": [
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "033ea9893379f9e9b10508fd843231ccd8071dcbc6b366ad05af9339a5e78d8c"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "erkwir53va9m8gm_en",
       "name": "Atavic Welcome",
       "proofs": [
@@ -816,6 +854,25 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-134",
+      "name": "BOB",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/beginning-of-turn-followup/clauses.json",
+          "testIds": [
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "e5e2114bb4709862e7b020b7afc51867b8bd6f6b4bf699f28c6b72f0981def6f"
         }
       ],
       "allBranchesCertified": false
@@ -1221,6 +1278,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "gz2zjrxqc2rbcwq_en",
+      "name": "Bullyboo",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/wins-confrontation-followup/clauses.json",
+          "testIds": [
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_all_six_compile_the_exact_wins_confrontation_contract",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_each_actual_winning_participant_queues_exactly_once",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_each_card_specific_first_transition_is_authoritative",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_loser_nonparticipant_hidden_and_disabled_sources_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "34833f34da50d12f3566ba23dfdc20b79a5e231b4935c0e56a06697ab7cef214"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-002",
       "name": "Buuz, the Helicoidal",
       "proofs": [
@@ -1394,6 +1470,26 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "752d7330895592b9dab049488863099a7c2a0ad2a16bdd7da5d111afc0098dc6"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "op83bq67vaf368q_en",
+      "name": "Censor",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/card-target-followup/clauses.json",
+          "testIds": [
+            "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+            "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+            "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+            "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target",
+            "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "52d377ac21309ba652e9d9fff73eb906d9d49d4123f3edf84c313ac388baf750"
         }
       ],
       "allBranchesCertified": false
@@ -1635,6 +1731,39 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-080",
+      "name": "Cirrocumulus",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/sacrifice-source-followup/clauses.json",
+          "testIds": [
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_all_three_compile_the_exact_sacrifice_contract",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_cirrocumulus_rejects_a_foreign_stack_item_then_resolves_its_own",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_gusted_nebula_sacrifices_from_interzone_then_returns_supports",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_nebulas_enter_support_from_hand_and_really_have_float",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_rah_kio_pays_both_costs_then_destroys_only_field_tokens"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "c5297dd18614b947fbe7c640f8104557cb14288684098c5c0ee2ddcb1d3effc2"
+        },
+        {
+          "source": "reports/systematic-audit/sacrifice-source-followup/clauses.json",
+          "testIds": [
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_all_three_compile_the_exact_sacrifice_contract",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_cirrocumulus_rejects_a_foreign_stack_item_then_resolves_its_own",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_gusted_nebula_sacrifices_from_interzone_then_returns_supports",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_nebulas_enter_support_from_hand_and_really_have_float",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_rah_kio_pays_both_costs_then_destroys_only_field_tokens"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "d61e2afeae7ba193f307a448e5ba4882cf0dcd44febf34aaddfdce0d8035fa29"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "zd6h16he0m4kuwb_en",
       "name": "Claim the Forsaken",
       "proofs": [
@@ -1657,6 +1786,26 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "c1641ca2347db418be4d0f4ea012a7abe8e1eed17301a26bc17ec2b4da20f529"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-145",
+      "name": "Cleanse",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/card-target-followup/clauses.json",
+          "testIds": [
+            "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+            "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+            "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+            "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target",
+            "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "98532b2c534224a17ffb0e41e43b0a48ad0030393cfa74125ffdcd051018247b"
         }
       ],
       "allBranchesCertified": false
@@ -1923,6 +2072,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "qn8r98kyqqma972_en",
+      "name": "Coral Skull",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/used-as-tribute-followup/clauses.json",
+          "testIds": [
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_all_six_compile_the_exact_used_as_tribute_contract",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_discard_is_not_tribute_and_paid_will_memories_require_a_will_play",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_each_card_specific_first_transition_is_authoritative",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_real_will_payment_moves_each_tribute_and_fires_exactly_once"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "1df6b89fcb4749388f2beb3fcee29cabc6011764a85171b0ac2700ba2652a6a9"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "w3jt07uuk00nmaj_en",
       "name": "Corrode",
       "proofs": [
@@ -1934,6 +2102,45 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "973efadda8560949849f5980633a8456b581cd37f7afc65c3ebe5d66b6f18fe6"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-070",
+      "name": "Cradle the Putrescence",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-card-target-followup/clauses.json",
+          "testIds": [
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "396ee4e57774fdbff8c3a175a23b58c8932c12f5e04a32cfb89756258f902477"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-098",
+      "name": "Crickelob, the Vile",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/used-as-tribute-followup/clauses.json",
+          "testIds": [
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_all_six_compile_the_exact_used_as_tribute_contract",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_discard_is_not_tribute_and_paid_will_memories_require_a_will_play",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_each_card_specific_first_transition_is_authoritative",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_real_will_payment_moves_each_tribute_and_fires_exactly_once"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "b8efa23d655d64ed25c1f6300ede725ad4190289b95f949d92dd607d2638ed04"
         }
       ],
       "allBranchesCertified": false
@@ -2009,6 +2216,27 @@
           "paragraphIndex": 2,
           "proofKind": "printed-clause",
           "printedClauseSha256": "e2371f959acf65c053048f78672b76d3bd37c776ed485966fe3e9f15a3751760"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-039",
+      "name": "Denegath, the Regulator",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/phase-window-followup/clauses.json",
+          "testIds": [
+            "test_phase_window_family.PhaseWindowFamily.test_all_three_compile_the_exact_reaction_contract",
+            "test_phase_window_family.PhaseWindowFamily.test_denegath_gates_source_and_payment_then_returns_and_chains",
+            "test_phase_window_family.PhaseWindowFamily.test_neighbor_phase_rejections_are_atomic_for_all_three_cards",
+            "test_phase_window_family.PhaseWindowFamily.test_ranba_discards_but_does_not_abduct_a_card_you_own",
+            "test_phase_window_family.PhaseWindowFamily.test_ranba_rejects_a_strong_last_support_then_takes_a_weak_one",
+            "test_phase_window_family.PhaseWindowFamily.test_timid_brain_pays_a_distinct_will_then_plays_as_support"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "fd5dc355b3fdaad81115d626a76b8bcbcf9ac43c6157b71ed4df1fef6438d033"
         }
       ],
       "allBranchesCertified": false
@@ -2130,6 +2358,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "nt0bixroxp0ftnk_en",
+      "name": "Dew Invoker",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/wins-confrontation-followup/clauses.json",
+          "testIds": [
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_all_six_compile_the_exact_wins_confrontation_contract",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_each_actual_winning_participant_queues_exactly_once",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_each_card_specific_first_transition_is_authoritative",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_loser_nonparticipant_hidden_and_disabled_sources_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "123d72c3cb003f38914f1d1290a346d49e91f9a91f66f9ec6183ea8e9faa1d86"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "jy05w4j8zcuvezq_en",
       "name": "Disfigure",
       "proofs": [
@@ -2156,6 +2403,45 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "2d7fe85bd9fa0854bd201331df7a24f5009b7b0ce7233ba24883782fb582bd96"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-047",
+      "name": "Dissect",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/reorder-top-decks-followup/clauses.json",
+          "testIds": [
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_all_five_compile_the_exact_reorder_contract",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_glimpse_draws_and_eviscerate_discards_after_the_chosen_order",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_shababba_and_dissect_reorder_the_printed_decks_atomically",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_tut_pays_one_hollow_and_enforces_two_top_one_bottom"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "847fb64426338b743754b7ad1b356b19318d36a7fe28c53c1d542888025fb52b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-019",
+      "name": "Dissolve and Coagulate",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-card-target-followup/clauses.json",
+          "testIds": [
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "baddc3cfe50950f16c55350df1a57426b533ef948a4ef3a6cb61c9e23dd220cc"
         }
       ],
       "allBranchesCertified": false
@@ -2265,6 +2551,26 @@
           "paragraphIndex": 2,
           "proofKind": "printed-clause",
           "printedClauseSha256": "cafb8d62e6a5e2fb1e12a6177382eeb98edeaccc4198d8494be05bf1685e611e"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-119",
+      "name": "Drain the Substance",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/card-target-followup/clauses.json",
+          "testIds": [
+            "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+            "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+            "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+            "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target",
+            "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "b358d0462aae37a2f8a7c241a80f1635792b18cde3d6c68e33a786b74ab460b9"
         }
       ],
       "allBranchesCertified": false
@@ -2499,6 +2805,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "ivx8jr1o6utm32a_en",
+      "name": "Essence Forager",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/beginning-of-turn-followup/clauses.json",
+          "testIds": [
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "9118f88fa8acdcfd1c2632e4f0be05edfe5a333792aeaf154aa5259a61e3d50b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "67009ud077sgz7b_en",
       "name": "Everspring",
       "proofs": [
@@ -2523,6 +2848,25 @@
           "paragraphIndex": 1,
           "proofKind": "printed-clause",
           "printedClauseSha256": "f2f6f74ee19aa995c58be96bd3eef8905d70404153619f0b7a29e4d7448876a8"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-068",
+      "name": "Eviscerate Morality",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/reorder-top-decks-followup/clauses.json",
+          "testIds": [
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_all_five_compile_the_exact_reorder_contract",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_glimpse_draws_and_eviscerate_discards_after_the_chosen_order",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_shababba_and_dissect_reorder_the_printed_decks_atomically",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_tut_pays_one_hollow_and_enforces_two_top_one_bottom"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "9349355c4783abd61e1c00215ee67c0124461c785b5167bce7a9a0b3df3b38cb"
         }
       ],
       "allBranchesCertified": false
@@ -2668,6 +3012,25 @@
           "paragraphIndex": 1,
           "proofKind": "printed-clause",
           "printedClauseSha256": "eb6e19325ac5d4179964af6ceb4c286c137414ffa2dc3d98df1914f912c9085b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-085",
+      "name": "Fee-fee, the Afflicted",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/beginning-of-turn-followup/clauses.json",
+          "testIds": [
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "2d9917caa9e9d971a4f706d784e5a9cb95c04e240e3c77b3c39f287a4e105592"
         }
       ],
       "allBranchesCertified": false
@@ -3122,6 +3485,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "g3zumpyf623hto6_en",
+      "name": "Forgotten Pile",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/intrinsic-rules-followup/clauses.json",
+          "testIds": [
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "817ceb367a8cb04b4de921f3616bb7338223c16f3f3cb04ca10d934ecfe8f879"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "l6ragmkyw5oyued_en",
       "name": "Friendly Presence",
       "proofs": [
@@ -3133,6 +3515,25 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "bbebab09b3858d0144f0155ab976539ffe519cc51a8312779bb87e9dc96a4e6f"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "rl4ppd0wsyov7lw_en",
+      "name": "Gar Fild, the Malleable",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/wins-confrontation-followup/clauses.json",
+          "testIds": [
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_all_six_compile_the_exact_wins_confrontation_contract",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_each_actual_winning_participant_queues_exactly_once",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_each_card_specific_first_transition_is_authoritative",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_loser_nonparticipant_hidden_and_disabled_sources_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "8dc20e491c4ca5f970739265e2e82411675a298113184af0ac8e2aeb88cf4e27"
         }
       ],
       "allBranchesCertified": false
@@ -3166,6 +3567,26 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "x15xumjqqhrnrds_en",
+      "name": "Glabron, the Oppressing",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/card-target-followup/clauses.json",
+          "testIds": [
+            "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+            "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+            "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+            "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target",
+            "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "52acb56333f0e88d700c0001f7c0c8fa08f04488c05b78cbe6962ed838bcf299"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-033",
       "name": "Gladionimbus",
       "proofs": [
@@ -3184,6 +3605,25 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "9733734db0470d7954b9f74eaf9a38c4793a59d13fafefbc6c192cfc3829c82f"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "9yylrq6xancbn0m_en",
+      "name": "Glimpse the Omens",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/reorder-top-decks-followup/clauses.json",
+          "testIds": [
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_all_five_compile_the_exact_reorder_contract",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_glimpse_draws_and_eviscerate_discards_after_the_chosen_order",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_shababba_and_dissect_reorder_the_printed_decks_atomically",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_tut_pays_one_hollow_and_enforces_two_top_one_bottom"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "6eb0f4c27c8e9ab6a44a9582366abdecc1e01ae15bb8905d4ef0a63b204f9298"
         }
       ],
       "allBranchesCertified": false
@@ -3484,6 +3924,39 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-010",
+      "name": "Gusted Nebula",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/sacrifice-source-followup/clauses.json",
+          "testIds": [
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_all_three_compile_the_exact_sacrifice_contract",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_cirrocumulus_rejects_a_foreign_stack_item_then_resolves_its_own",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_gusted_nebula_sacrifices_from_interzone_then_returns_supports",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_nebulas_enter_support_from_hand_and_really_have_float",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_rah_kio_pays_both_costs_then_destroys_only_field_tokens"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "c5297dd18614b947fbe7c640f8104557cb14288684098c5c0ee2ddcb1d3effc2"
+        },
+        {
+          "source": "reports/systematic-audit/sacrifice-source-followup/clauses.json",
+          "testIds": [
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_all_three_compile_the_exact_sacrifice_contract",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_cirrocumulus_rejects_a_foreign_stack_item_then_resolves_its_own",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_gusted_nebula_sacrifices_from_interzone_then_returns_supports",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_nebulas_enter_support_from_hand_and_really_have_float",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_rah_kio_pays_both_costs_then_destroys_only_field_tokens"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "14df248a36dc0d8856dd739df2967023d84db72f5e16a77aff10fba53c2f7fdc"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "de3meyzl13rpqo5_en",
       "name": "Half Han, the Renegade",
       "proofs": [
@@ -3524,6 +3997,25 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "924d61f82a7b5033bf52eba2da7f9386129ae8b1e1b05e56513e26db7b9f9a19"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-020",
+      "name": "Healing Bond",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/revelation-followup/clauses.json",
+          "testIds": [
+            "test_revelation_family.RevelationFamily.test_all_six_compile_the_exact_revelation_contract",
+            "test_revelation_family.RevelationFamily.test_each_card_specific_result_begins_after_the_valid_revelation",
+            "test_revelation_family.RevelationFamily.test_each_live_face_up_source_queues_its_revelation_action",
+            "test_revelation_family.RevelationFamily.test_hidden_disabled_absent_and_wrong_zone_sources_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "f7ffa2f3cc09ac3dbef685fc04a93bbc77abb3703c1bcaf50fb500207ce2dd82"
         }
       ],
       "allBranchesCertified": false
@@ -3613,6 +4105,25 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "72a2fd8927d7b2b91322a51b07e03ff2538e021254b4d9d8d1b0ea65e2be8d18"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "lmx5uff1z53fo0g_en",
+      "name": "Hermetic Hourglass",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/revelation-followup/clauses.json",
+          "testIds": [
+            "test_revelation_family.RevelationFamily.test_all_six_compile_the_exact_revelation_contract",
+            "test_revelation_family.RevelationFamily.test_each_card_specific_result_begins_after_the_valid_revelation",
+            "test_revelation_family.RevelationFamily.test_each_live_face_up_source_queues_its_revelation_action",
+            "test_revelation_family.RevelationFamily.test_hidden_disabled_absent_and_wrong_zone_sources_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "62155639e17ac38dcfbc54c4a0035e645c63023bbab03ad4472374722710a807"
         }
       ],
       "allBranchesCertified": false
@@ -4413,6 +4924,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "t9yazjrbj1d37yu_en",
+      "name": "Jurat, the Strategist",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/wins-confrontation-followup/clauses.json",
+          "testIds": [
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_all_six_compile_the_exact_wins_confrontation_contract",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_each_actual_winning_participant_queues_exactly_once",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_each_card_specific_first_transition_is_authoritative",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_loser_nonparticipant_hidden_and_disabled_sources_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "e1dd6d16cc014f0c7ea01fc13f7a31716699a8feac17d85213d2088990fb5579"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-064",
       "name": "Kanon, the Deathdealer",
       "proofs": [
@@ -4462,6 +4992,25 @@
           "paragraphIndex": 2,
           "proofKind": "printed-clause",
           "printedClauseSha256": "583ec263974ffcdd33ff9a04c2f852e212643e16b7e1f579a7fa7f6023508c63"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-052",
+      "name": "Kanopo, the Headless",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/intrinsic-rules-followup/clauses.json",
+          "testIds": [
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "77031aff2746a86676b38744893a67e50f911426787051f4297dd5839e1a5b54"
         }
       ],
       "allBranchesCertified": false
@@ -4836,6 +5385,45 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-058",
+      "name": "Leadenshroud",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-card-target-followup/clauses.json",
+          "testIds": [
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "806641e43b6eb250aee6c8df385bc2dba3c424d167475f88b8d8abc74977c38f"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "oftdgsrobaqgst7_en",
+      "name": "Lerxur, the Black Moon",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/beginning-of-turn-followup/clauses.json",
+          "testIds": [
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "ec17a1fc70d7777c557bce6fc0f43ad5dcaa7aafec5a52dd4169e9250513d1cf"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-113",
       "name": "Lilitha, the Dismemberer",
       "proofs": [
@@ -4980,6 +5568,26 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "411u4asiunisv9l_en",
+      "name": "Logos, the Lost",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/card-target-followup/clauses.json",
+          "testIds": [
+            "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+            "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+            "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+            "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target",
+            "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "4ed233c36cbb002d9a02c9c5f6a96336c0572bb42e5a24e8206edef8dc76eb19"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-014",
       "name": "Lombriculpop",
       "proofs": [
@@ -5045,6 +5653,25 @@
           "paragraphIndex": 1,
           "proofKind": "printed-clause",
           "printedClauseSha256": "d1f29d722aeb1ae2d4a97fac2bd5d01691404b1a21301e1dc3478df07af4a1d7"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "1a8wzhi7xhbcenj_en",
+      "name": "Loop, the Insistent",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/used-as-tribute-followup/clauses.json",
+          "testIds": [
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_all_six_compile_the_exact_used_as_tribute_contract",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_discard_is_not_tribute_and_paid_will_memories_require_a_will_play",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_each_card_specific_first_transition_is_authoritative",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_real_will_payment_moves_each_tribute_and_fires_exactly_once"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "20f372565862376e7ff44f0ca334819a72598fdfdf19312dd674bb4ca01733ef"
         }
       ],
       "allBranchesCertified": false
@@ -5121,6 +5748,45 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "38b67fed1b8100512d36d03151bde0b2ef6ba16001a70ee6ee85691d727a4e36"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-107",
+      "name": "Lugione, the Hungry",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/card-target-followup/clauses.json",
+          "testIds": [
+            "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+            "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+            "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+            "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target",
+            "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "39f16600875fc4f5ec9a255083a917eb32de49c118461c23c7cace5d3e5b694b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-096",
+      "name": "Lunar Liturgy",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/beginning-of-turn-followup/clauses.json",
+          "testIds": [
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "fc75c2cd12129713f325e1a652d7783e4f1f16187ecdcac39e3cbe89af3b1b2d"
         }
       ],
       "allBranchesCertified": false
@@ -5501,6 +6167,26 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-063",
+      "name": "Memento, the Fallen",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-card-target-followup/clauses.json",
+          "testIds": [
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "15ec235d14a4827cce12845f47f5b2afcd0ecabbf507ab9c9e2eaa1b347259c2"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "8lion52jjnmxvko_en",
       "name": "Merciful Pago",
       "proofs": [
@@ -5672,6 +6358,26 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "913d48eea788a5488418e0163f37cd828ec6fa1096b9ac747dc27b845f39e325"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-095",
+      "name": "Mock Fate",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-card-target-followup/clauses.json",
+          "testIds": [
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "9b01887fd5c63165c671de220ff393b2206e499bf3d75be4665cea51924e22ac"
         }
       ],
       "allBranchesCertified": false
@@ -6040,6 +6746,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "wer3o71zo9myece_en",
+      "name": "Numbi, the Irritating",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/revelation-followup/clauses.json",
+          "testIds": [
+            "test_revelation_family.RevelationFamily.test_all_six_compile_the_exact_revelation_contract",
+            "test_revelation_family.RevelationFamily.test_each_card_specific_result_begins_after_the_valid_revelation",
+            "test_revelation_family.RevelationFamily.test_each_live_face_up_source_queues_its_revelation_action",
+            "test_revelation_family.RevelationFamily.test_hidden_disabled_absent_and_wrong_zone_sources_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "c2ab66fa307e816ae4d2f43f4305a72902437f803377ba577189a4c38371758a"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "bx0uyxxb3c6pas2_en",
       "name": "Ohmom, the Azure",
       "proofs": [
@@ -6219,6 +6944,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-120",
+      "name": "Overwhelming Persuasion",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/revelation-followup/clauses.json",
+          "testIds": [
+            "test_revelation_family.RevelationFamily.test_all_six_compile_the_exact_revelation_contract",
+            "test_revelation_family.RevelationFamily.test_each_card_specific_result_begins_after_the_valid_revelation",
+            "test_revelation_family.RevelationFamily.test_each_live_face_up_source_queues_its_revelation_action",
+            "test_revelation_family.RevelationFamily.test_hidden_disabled_absent_and_wrong_zone_sources_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "0b29178a4232fc9cea847d472ef7392ba1f287e8362eb99fa86e25119c28f6cb"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-075",
       "name": "Ozzit, the Unwary",
       "proofs": [
@@ -6378,6 +7122,25 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "0a46cd8fbe439d5a25a7f744144a25e2e00d3ff4e19f42e06bfc6ea2a08d0d6b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-099",
+      "name": "Palgonphio",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/intrinsic-rules-followup/clauses.json",
+          "testIds": [
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "1a3b6813ce77cd78d5d0d34319a4d6b713954c24a59fc6a52bbfecd618bc3b15"
         }
       ],
       "allBranchesCertified": false
@@ -7282,6 +8045,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "rf5srmnqyh235tm_en",
+      "name": "Qu Lom, Haphazard Martyr",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/used-as-tribute-followup/clauses.json",
+          "testIds": [
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_all_six_compile_the_exact_used_as_tribute_contract",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_discard_is_not_tribute_and_paid_will_memories_require_a_will_play",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_each_card_specific_first_transition_is_authoritative",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_real_will_payment_moves_each_tribute_and_fires_exactly_once"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "ac73ce195e267720ccb8f7b6af200c51eb6fbca2b1544ff04f55251a3c44ef0c"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-054",
       "name": "Quasimolg, the Hunched",
       "proofs": [
@@ -7322,6 +8104,26 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "e43b2c7a38bd0f2dd23b1e5f45fc9e4101148322d0398e7bfdad8ee4d2366f9d"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-109",
+      "name": "Rah-kio, the Flyswatter",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/sacrifice-source-followup/clauses.json",
+          "testIds": [
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_all_three_compile_the_exact_sacrifice_contract",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_cirrocumulus_rejects_a_foreign_stack_item_then_resolves_its_own",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_gusted_nebula_sacrifices_from_interzone_then_returns_supports",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_nebulas_enter_support_from_hand_and_really_have_float",
+            "test_sacrifice_source_family.SacrificeSourceFamily.test_rah_kio_pays_both_costs_then_destroys_only_field_tokens"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "65ebcaa7515ce0b8d782bbb6edb752defeb9b33562e1c3d7c0236afd8bd56dae"
         }
       ],
       "allBranchesCertified": false
@@ -7403,6 +8205,27 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "fdnhc537c4xu2wo_en",
+      "name": "Ranba, Silent Abductor",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/phase-window-followup/clauses.json",
+          "testIds": [
+            "test_phase_window_family.PhaseWindowFamily.test_all_three_compile_the_exact_reaction_contract",
+            "test_phase_window_family.PhaseWindowFamily.test_denegath_gates_source_and_payment_then_returns_and_chains",
+            "test_phase_window_family.PhaseWindowFamily.test_neighbor_phase_rejections_are_atomic_for_all_three_cards",
+            "test_phase_window_family.PhaseWindowFamily.test_ranba_discards_but_does_not_abduct_a_card_you_own",
+            "test_phase_window_family.PhaseWindowFamily.test_ranba_rejects_a_strong_last_support_then_takes_a_weak_one",
+            "test_phase_window_family.PhaseWindowFamily.test_timid_brain_pays_a_distinct_will_then_plays_as_support"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "aef36dc0b16d20ba4c75f9e1a0c5d956e55bd3e5661e3cd227450bb1ceb8a729"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "8xi4zh0ekdl42me_en",
       "name": "Reap What You’ve Sown",
       "proofs": [
@@ -7446,6 +8269,45 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "b9cb9332f3d8665b17c79515422ce7edb044e6f7721f734965a1c7c15e47e6c5"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "0coh7nrbvcvan1i_en",
+      "name": "Recover from the Abyss",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-card-target-followup/clauses.json",
+          "testIds": [
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "8556415606a12d37dd9ab308b27573b7f97f5f918e8ddb6da928d060f94f71a5"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "acf0sr2crn8bykg_en",
+      "name": "Red Plague",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/beginning-of-turn-followup/clauses.json",
+          "testIds": [
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "941288dc9d7e1b8c5bd9b9cf4bb96f18eeceb3497928bca0b9e475adf4f1e914"
         }
       ],
       "allBranchesCertified": false
@@ -7538,6 +8400,25 @@
           "paragraphIndex": 1,
           "proofKind": "printed-clause",
           "printedClauseSha256": "14541f74ef9f7bdf5b73db72fb3620c86d895972ae880775ed2712e4249bdc9b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "24pwcptuijem6tw_en",
+      "name": "Refrain Repeater",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/used-as-tribute-followup/clauses.json",
+          "testIds": [
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_all_six_compile_the_exact_used_as_tribute_contract",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_discard_is_not_tribute_and_paid_will_memories_require_a_will_play",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_each_card_specific_first_transition_is_authoritative",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_real_will_payment_moves_each_tribute_and_fires_exactly_once"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "c420c217e09dad68ff29c6712f20161e6021d2b97ef6767e36f55a7664df126a"
         }
       ],
       "allBranchesCertified": false
@@ -7723,6 +8604,26 @@
       "allBranchesCertified": true
     },
     {
+      "cardId": "u9blfiufeef8djr_en",
+      "name": "Reveal the Hidden",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-card-target-followup/clauses.json",
+          "testIds": [
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "65dd0287f78b116a500fcc9c688ad6d616e79db9dd4fff30e08d326358ba19d1"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "uin3dxt3bc50z6q_en",
       "name": "Revive",
       "proofs": [
@@ -7747,6 +8648,26 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "9057359deb4c9d0e537d9afc763385bcd17f2729ff1b7edbd8ba5c288c37307c"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "gpxqooqq57loyb8_en",
+      "name": "Reviving Cage",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-card-target-followup/clauses.json",
+          "testIds": [
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "e867cb49ef1a8a3b12ee44123836df12368d5e00ce0a40fe81391867cc8b5c44"
         }
       ],
       "allBranchesCertified": false
@@ -7876,6 +8797,26 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "193ff9f249150390041fdd73e7c2aaabcbaba9c281263693f75607bff29e282e"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "rgjdtrcaw4o9381_en",
+      "name": "Sallow Thief",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-card-target-followup/clauses.json",
+          "testIds": [
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "021c684584939e790ca49c9f8f1e419faac835b52409a728ed48a8b287cd7dee"
         }
       ],
       "allBranchesCertified": false
@@ -8028,6 +8969,25 @@
       "allBranchesCertified": true
     },
     {
+      "cardId": "ny6t2mdwbxfvwxw_en",
+      "name": "Sermon, Obscene Quadrumane",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/revelation-followup/clauses.json",
+          "testIds": [
+            "test_revelation_family.RevelationFamily.test_all_six_compile_the_exact_revelation_contract",
+            "test_revelation_family.RevelationFamily.test_each_card_specific_result_begins_after_the_valid_revelation",
+            "test_revelation_family.RevelationFamily.test_each_live_face_up_source_queues_its_revelation_action",
+            "test_revelation_family.RevelationFamily.test_hidden_disabled_absent_and_wrong_zone_sources_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "25e704335bdbb828f6bd072802819f6c27db79af25215b9e673c672307d1fc15"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-150",
       "name": "Sever the Ascent",
       "proofs": [
@@ -8039,6 +8999,25 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "253f459408b257bf282df9205ed61db784f9da4fde8c9f7be7edaee19d940fd7"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "i7h2c7ku2gt1yvg_en",
+      "name": "Shababba, Divining Cube",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/reorder-top-decks-followup/clauses.json",
+          "testIds": [
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_all_five_compile_the_exact_reorder_contract",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_glimpse_draws_and_eviscerate_discards_after_the_chosen_order",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_shababba_and_dissect_reorder_the_printed_decks_atomically",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_tut_pays_one_hollow_and_enforces_two_top_one_bottom"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "fed07ac611b972167811504df66cec462c09f6ba8e8c24f9138307d26dcad987"
         }
       ],
       "allBranchesCertified": false
@@ -8381,6 +9360,57 @@
       "allBranchesCertified": true
     },
     {
+      "cardId": "7j3udrfh5t8vl25_en",
+      "name": "Solar Apparition",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/intrinsic-rules-followup/clauses.json",
+          "testIds": [
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "ade98f537d1361e179d4427afc69a2921a310a131c306b1fac2c7bcb06f3bfa2"
+        },
+        {
+          "source": "reports/systematic-audit/intrinsic-rules-followup/clauses.json",
+          "testIds": [
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "a44d261819a7dab58f683e612d46c35a3ee583d70b2115484a825600a39d0f76"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "icxqhki0ivfgqu0_en",
+      "name": "Solenero, the Contrite",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-card-target-followup/clauses.json",
+          "testIds": [
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "b9eb05e53de2644e834b6dc2d0d0c102577309011419924f09903394769a2aa6"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "wfxxi0znaojxiti_en",
       "name": "Soul-borer",
       "proofs": [
@@ -8401,6 +9431,25 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "bfac4f7d103c4605522bd6a8c20220915c320f98b9964e6304b9c89fc8164300"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "dc44xrlrhikfvlr_en",
+      "name": "Soul-devouring Dunes",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/beginning-of-turn-followup/clauses.json",
+          "testIds": [
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_all_eight_compile_the_exact_beginning_of_turn_contract",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_card_specific_result_begins_after_the_valid_trigger",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_each_queues_once_from_its_exact_live_zone",
+            "test_beginning_of_turn_family.BeginningOfTurnFamily.test_wrong_zone_face_down_owner_vessel_and_counter_threshold_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "805822d818da8fbf5d11bf28041dbce34b65c39d2a213a3c1fb4afd68e8ba810"
         }
       ],
       "allBranchesCertified": false
@@ -8720,6 +9769,26 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-077",
+      "name": "Swindley, the Festive",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/card-target-followup/clauses.json",
+          "testIds": [
+            "test_card_target_family.CardTargetFamily.test_all_eight_abilities_compile_the_exact_card_target_contract",
+            "test_card_target_family.CardTargetFamily.test_cardinality_staleness_and_stalemate_field_boundary_are_authoritative",
+            "test_card_target_family.CardTargetFamily.test_each_accepts_its_canonical_live_target_and_rejects_wrong_kind",
+            "test_card_target_family.CardTargetFamily.test_each_card_specific_result_begins_from_a_valid_card_target",
+            "test_card_target_family.CardTargetFamily.test_zone_controller_outcome_type_and_power_constraints"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "f9906f4338ae571e16064b06102d8bf238628176b3db8710862c8aeaa8fcc543"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "mxbi84phhueeolc_en",
       "name": "Tardigramo",
       "proofs": [
@@ -8804,6 +9873,25 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "04f932be1c1cb39ecc65aaa2c82a2aac2aaa35000ef8ac2a066377ad5b303702"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "om4qbiofb0ihq6p_en",
+      "name": "The Stomper",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/revelation-followup/clauses.json",
+          "testIds": [
+            "test_revelation_family.RevelationFamily.test_all_six_compile_the_exact_revelation_contract",
+            "test_revelation_family.RevelationFamily.test_each_card_specific_result_begins_after_the_valid_revelation",
+            "test_revelation_family.RevelationFamily.test_each_live_face_up_source_queues_its_revelation_action",
+            "test_revelation_family.RevelationFamily.test_hidden_disabled_absent_and_wrong_zone_sources_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "754e2ad4cd0b3c8e6c3cf7f8412cc35261df0072734d578ef8f3ed64b60b5e8b"
         }
       ],
       "allBranchesCertified": false
@@ -8911,6 +9999,27 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "96ff9ccf1e00f31df26597f3a1057d0476f334557a39941c7d2dc4d211bf61fa"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "5zgq2zcogt4g4d0_en",
+      "name": "Timid Brain",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/phase-window-followup/clauses.json",
+          "testIds": [
+            "test_phase_window_family.PhaseWindowFamily.test_all_three_compile_the_exact_reaction_contract",
+            "test_phase_window_family.PhaseWindowFamily.test_denegath_gates_source_and_payment_then_returns_and_chains",
+            "test_phase_window_family.PhaseWindowFamily.test_neighbor_phase_rejections_are_atomic_for_all_three_cards",
+            "test_phase_window_family.PhaseWindowFamily.test_ranba_discards_but_does_not_abduct_a_card_you_own",
+            "test_phase_window_family.PhaseWindowFamily.test_ranba_rejects_a_strong_last_support_then_takes_a_weak_one",
+            "test_phase_window_family.PhaseWindowFamily.test_timid_brain_pays_a_distinct_will_then_plays_as_support"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "96e2bb03de3a82ada66910b0e7fe638bcf885b867c16f05648fe15b554b9e1d8"
         }
       ],
       "allBranchesCertified": false
@@ -9120,6 +10229,25 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "c47225398e524391548157a11034f8a42048322db9c2c5b88dd53b3eb7b4bb9e"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-037",
+      "name": "Tut, Rhythmic Whirlwind",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/reorder-top-decks-followup/clauses.json",
+          "testIds": [
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_all_five_compile_the_exact_reorder_contract",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_glimpse_draws_and_eviscerate_discards_after_the_chosen_order",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_shababba_and_dissect_reorder_the_printed_decks_atomically",
+            "test_reorder_top_decks_family.ReorderTopDecksFamily.test_tut_pays_one_hollow_and_enforces_two_top_one_bottom"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "9ba73e3d572f253ba9e7b4d117cc9c71f7ec0b8f1ed54d9786411b0f062d4647"
         }
       ],
       "allBranchesCertified": false
@@ -9773,6 +10901,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-013",
+      "name": "Ycar, the Fleeting Flow",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/wins-confrontation-followup/clauses.json",
+          "testIds": [
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_all_six_compile_the_exact_wins_confrontation_contract",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_each_actual_winning_participant_queues_exactly_once",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_each_card_specific_first_transition_is_authoritative",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_loser_nonparticipant_hidden_and_disabled_sources_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "5295e5f4b31bf440515d2b2cc9e53b11987ff9bb3159209493dfb3ad2e654eb8"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "o2vng99wk76o072_en",
       "name": "Yurfuq, Sad Lily",
       "proofs": [
@@ -9836,6 +10983,25 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "l9enna0sfy13yab_en",
+      "name": "Zaguor, Greedy Pedal",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/wins-confrontation-followup/clauses.json",
+          "testIds": [
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_all_six_compile_the_exact_wins_confrontation_contract",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_each_actual_winning_participant_queues_exactly_once",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_each_card_specific_first_transition_is_authoritative",
+            "test_wins_confrontation_family.WinsConfrontationFamily.test_loser_nonparticipant_hidden_and_disabled_sources_do_not_trigger"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "b3ee11d221aa1bad89baae3a6bb2fd0fb586d20169838318f1ab0bc94a34704e"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-003",
       "name": "Zam-za, the Prosperous",
       "proofs": [
@@ -9854,6 +11020,76 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "b7c8f6c8b1649638b24c2161a5dd9d257804400eae53fdf6abcbccd9e12133b4"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ir09smkker8rgxd_en",
+      "name": "Zizek, the Immolated",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/intrinsic-rules-followup/clauses.json",
+          "testIds": [
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "abcc2dd835c1cca139ce0c536096f2875fec14b448147530ba02e55852d87c88"
+        },
+        {
+          "source": "reports/systematic-audit/intrinsic-rules-followup/clauses.json",
+          "testIds": [
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+            "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "d55427b5d73631ced55fc0ad15513ee5cbf44a88dacbb3bc53d3ac80c534a7d8"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "bu1y6jwy7iaywqu_en",
+      "name": "Zombieswing",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/zone-card-target-followup/clauses.json",
+          "testIds": [
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_all_eleven_compile_the_exact_zone_card_contract",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_cardinality_owner_container_type_and_temporal_constraints",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_accepts_its_canonical_zone_target_and_rejects_wrong_kind",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_each_card_specific_result_begins_from_a_valid_zone_target",
+            "test_zone_card_target_family.ZoneCardTargetFamily.test_zone_visibility_versions_and_duplicate_normalization_are_authoritative"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "efde02704619a6895204ca163eb2d548b7be4813c1fc901726a218a38133e5f9"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-130",
+      "name": "Zozok, the Void",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/used-as-tribute-followup/clauses.json",
+          "testIds": [
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_all_six_compile_the_exact_used_as_tribute_contract",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_discard_is_not_tribute_and_paid_will_memories_require_a_will_play",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_each_card_specific_first_transition_is_authoritative",
+            "test_used_as_tribute_family.UsedAsTributeFamily.test_real_will_payment_moves_each_tribute_and_fires_exactly_once"
+          ],
+          "paragraphIndex": null,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "164372217a536585c56ab1bf21dfb2f0b9ce3e3484338cf56683536bcbbbe024"
         }
       ],
       "allBranchesCertified": false

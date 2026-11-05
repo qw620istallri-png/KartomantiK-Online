@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "23b51305732e2100b9892858cd4573404bca32699453b2f05c525a46d81d9cc7",
+  "published": false,
+  "finishedAt": "2026-11-05T13:53:16.886477+00:00",
+  "summary": {
+    "executed": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 6,
+    "cardsWithSelectedClauseProof": 6,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "rl4ppd0wsyov7lw_en",
+      "name": "Gar Fild, the Malleable",
+      "paragraphIndex": null,
+      "printedParagraph": "If Gar Fild wins the confrontation, gain 4 {T} essences. These essences are not lost at the end of the turn.",
+      "paragraphSha256": "8dc20e491c4ca5f970739265e2e82411675a298113184af0ac8e2aeb88cf4e27",
+      "expectedBehavior": "A live face-up Manifestation that actually participated on the winning side queues its wins-confrontation trigger exactly once. A loser, non-participant, hidden or disabled source does not trigger. The valid action begins the printed retained-Essence, delayed return, choice, control, reveal or exchange result.",
+      "testIds": [
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_all_six_compile_the_exact_wins_confrontation_contract",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_each_actual_winning_participant_queues_exactly_once",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_loser_nonparticipant_hidden_and_disabled_sources_do_not_trigger",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_each_card_specific_first_transition_is_authoritative"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "t9yazjrbj1d37yu_en",
+      "name": "Jurat, the Strategist",
+      "paragraphIndex": null,
+      "printedParagraph": "If Jurat wins the confrontation, at the end of the turn all manifestations used as tribute by you this turn return to the hands of their respective owners.",
+      "paragraphSha256": "e1dd6d16cc014f0c7ea01fc13f7a31716699a8feac17d85213d2088990fb5579",
+      "expectedBehavior": "A live face-up Manifestation that actually participated on the winning side queues its wins-confrontation trigger exactly once. A loser, non-participant, hidden or disabled source does not trigger. The valid action begins the printed retained-Essence, delayed return, choice, control, reveal or exchange result.",
+      "testIds": [
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_all_six_compile_the_exact_wins_confrontation_contract",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_each_actual_winning_participant_queues_exactly_once",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_loser_nonparticipant_hidden_and_disabled_sources_do_not_trigger",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_each_card_specific_first_transition_is_authoritative"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "nt0bixroxp0ftnk_en",
+      "name": "Dew Invoker",
+      "paragraphIndex": null,
+      "printedParagraph": "If the Dew Invoker wins the confrontation, you can put a manifestation from your hand into your Interzone.",
+      "paragraphSha256": "123d72c3cb003f38914f1d1290a346d49e91f9a91f66f9ec6183ea8e9faa1d86",
+      "expectedBehavior": "A live face-up Manifestation that actually participated on the winning side queues its wins-confrontation trigger exactly once. A loser, non-participant, hidden or disabled source does not trigger. The valid action begins the printed retained-Essence, delayed return, choice, control, reveal or exchange result.",
+      "testIds": [
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_all_six_compile_the_exact_wins_confrontation_contract",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_each_actual_winning_participant_queues_exactly_once",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_loser_nonparticipant_hidden_and_disabled_sources_do_not_trigger",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_each_card_specific_first_transition_is_authoritative"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "l9enna0sfy13yab_en",
+      "name": "Zaguor, Greedy Pedal",
+      "paragraphIndex": null,
+      "printedParagraph": "When Zaguor wins the confrontation, you may exile it: Take control of a target manifestation in the Empathic Vessel or in the Interzone of an opponent and put it into your Interzone.",
+      "paragraphSha256": "b3ee11d221aa1bad89baae3a6bb2fd0fb586d20169838318f1ab0bc94a34704e",
+      "expectedBehavior": "A live face-up Manifestation that actually participated on the winning side queues its wins-confrontation trigger exactly once. A loser, non-participant, hidden or disabled source does not trigger. The valid action begins the printed retained-Essence, delayed return, choice, control, reveal or exchange result.",
+      "testIds": [
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_all_six_compile_the_exact_wins_confrontation_contract",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_each_actual_winning_participant_queues_exactly_once",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_loser_nonparticipant_hidden_and_disabled_sources_do_not_trigger",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_each_card_specific_first_transition_is_authoritative"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "gz2zjrxqc2rbcwq_en",
+      "name": "Bullyboo",
+      "paragraphIndex": null,
+      "printedParagraph": "If Bullyboo wins the confrontation, you may reveal a Will from your hand. If you do, a target opponent must pay the tribute for that Will if they can do so. If they can, you play that Will. If instead they cannot, that player reveals their hand and loses 10 points, then you discard the revealed Will without resolving it.",
+      "paragraphSha256": "34833f34da50d12f3566ba23dfdc20b79a5e231b4935c0e56a06697ab7cef214",
+      "expectedBehavior": "A live face-up Manifestation that actually participated on the winning side queues its wins-confrontation trigger exactly once. A loser, non-participant, hidden or disabled source does not trigger. The valid action begins the printed retained-Essence, delayed return, choice, control, reveal or exchange result.",
+      "testIds": [
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_all_six_compile_the_exact_wins_confrontation_contract",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_each_actual_winning_participant_queues_exactly_once",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_loser_nonparticipant_hidden_and_disabled_sources_do_not_trigger",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_each_card_specific_first_transition_is_authoritative"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-013",
+      "name": "Ycar, the Fleeting Flow",
+      "paragraphIndex": null,
+      "printedParagraph": "When Ycar wins a confrontation, you may put a manifestation from your Interzone into the Empathic Vessel of a target opponent who is not its owner. If you do, search your deck for a manifestation and put it into your Interzone, then shuffle your deck.",
+      "paragraphSha256": "5295e5f4b31bf440515d2b2cc9e53b11987ff9bb3159209493dfb3ad2e654eb8",
+      "expectedBehavior": "A live face-up Manifestation that actually participated on the winning side queues its wins-confrontation trigger exactly once. A loser, non-participant, hidden or disabled source does not trigger. The valid action begins the printed retained-Essence, delayed return, choice, control, reveal or exchange result.",
+      "testIds": [
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_all_six_compile_the_exact_wins_confrontation_contract",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_each_actual_winning_participant_queues_exactly_once",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_loser_nonparticipant_hidden_and_disabled_sources_do_not_trigger",
+        "test_wins_confrontation_family.WinsConfrontationFamily.test_each_card_specific_first_transition_is_authoritative"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_wins_confrontation_family.WinsConfrontationFamily.test_all_six_compile_the_exact_wins_confrontation_contract",
+      "status": "pass",
+      "durationSeconds": 0.0
+    },
+    {
+      "testId": "test_wins_confrontation_family.WinsConfrontationFamily.test_each_actual_winning_participant_queues_exactly_once",
+      "status": "pass",
+      "durationSeconds": 0.266
+    },
+    {
+      "testId": "test_wins_confrontation_family.WinsConfrontationFamily.test_each_card_specific_first_transition_is_authoritative",
+      "status": "pass",
+      "durationSeconds": 0.25
+    },
+    {
+      "testId": "test_wins_confrontation_family.WinsConfrontationFamily.test_loser_nonparticipant_hidden_and_disabled_sources_do_not_trigger",
+      "status": "pass",
+      "durationSeconds": 1.031
+    }
+  ],
+  "limits": [
+    "This proof certifies win-event eligibility and the first card-specific transition, not every later choice or delayed branch.",
+    "Jurat's final end-turn return, Dew's placement, Bullyboo's opponent-payment branches and Ycar's completed search remain covered by their dedicated behavior families."
+  ]
+}

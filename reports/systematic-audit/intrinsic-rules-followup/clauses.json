@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "e483428587bdc835125ee2d1671c86ab0d2e2c21fec09fe58d316d9ec105ed62",
+  "published": false,
+  "finishedAt": "2026-11-05T14:16:01.320040+00:00",
+  "summary": {
+    "executed": 4,
+    "passed": 4,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 8,
+    "cardsWithSelectedClauseProof": 6,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "g3zumpyf623hto6_en",
+      "name": "Forgotten Pile",
+      "paragraphIndex": 0,
+      "printedParagraph": "The Forgotten Pile can be used as tribute from Limbo. If it is used as tribute in this way, exile it.",
+      "paragraphSha256": "817ceb367a8cb04b4de921f3616bb7338223c16f3f3cb04ca10d934ecfe8f879",
+      "expectedBehavior": "Forgotten Pile may pay Tribute from Limbo and is exiled by that real payment; an ordinary Limbo Manifestation has no such permission.",
+      "testIds": [
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "7j3udrfh5t8vl25_en",
+      "name": "Solar Apparition",
+      "paragraphIndex": 0,
+      "printedParagraph": "Solar Apparition can be used as tribute from the Interzone.",
+      "paragraphSha256": "ade98f537d1361e179d4427afc69a2921a310a131c306b1fac2c7bcb06f3bfa2",
+      "expectedBehavior": "Solar Apparition may pay Tribute from its controller's Interzone; an ordinary Interzone Manifestation has no such intrinsic permission.",
+      "testIds": [
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "7j3udrfh5t8vl25_en",
+      "name": "Solar Apparition",
+      "paragraphIndex": 1,
+      "printedParagraph": "If Solar Apparition is used as tribute for an ephemeral Will that would reduce the power of one or more manifestations, that Will reduces it by an additional -2.",
+      "paragraphSha256": "a44d261819a7dab58f683e612d46c35a3ee583d70b2115484a825600a39d0f76",
+      "expectedBehavior": "When that real payment funds a power-reducing ephemeral Will, Solar Apparition adds exactly -2 to the power reduction.",
+      "testIds": [
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ir09smkker8rgxd_en",
+      "name": "Zizek, the Immolated",
+      "paragraphIndex": 0,
+      "printedParagraph": "Zizek cannot enter the Confrontation Zone unless you have at least 6 Wills in your Limbo.",
+      "paragraphSha256": "abcc2dd835c1cca139ce0c536096f2875fec14b448147530ba02e55852d87c88",
+      "expectedBehavior": "Zizek is blocked from entering the Confrontation Zone with five Limbo Wills and becomes eligible at exactly six.",
+      "testIds": [
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ir09smkker8rgxd_en",
+      "name": "Zizek, the Immolated",
+      "paragraphIndex": 1,
+      "printedParagraph": "When used as tribute, you do not lose Zizek's excess essence at the end of the turn.",
+      "paragraphSha256": "d55427b5d73631ced55fc0ad15513ee5cbf44a88dacbb3bc53d3ac80c534a7d8",
+      "expectedBehavior": "A real Tribute payment with Zizek marks its three excess Essences as retained so end-of-turn expiry does not remove them.",
+      "testIds": [
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-028",
+      "name": "Alakazim, the Magician",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as you have played at least 2 Wills this turn, if Alakazim is used as tribute, it is considered to have a base power of 🌈🌈🌈.",
+      "paragraphSha256": "a7dd18b2a9551386ca3bee386c2eeed2862c6af3e8c920dad88071aa5aa0c5e4",
+      "expectedBehavior": "Alakazim contributes base power 3 as Tribute only after its controller has played at least two Wills during the current turn.",
+      "testIds": [
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-052",
+      "name": "Kanopo, the Headless",
+      "paragraphIndex": 0,
+      "printedParagraph": "While you are using Kanopo as tribute, you may sacrifice a Manifestation in your Interzone. If you do, Kanopo is considered to have a base power of 6.",
+      "paragraphSha256": "77031aff2746a86676b38744893a67e50f911426787051f4297dd5839e1a5b54",
+      "expectedBehavior": "Kanopo contributes base power 6 only with the additional sacrifice of a controlled Interzone Manifestation; a foreign donor is rejected.",
+      "testIds": [
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-099",
+      "name": "Palgonphio",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as you lost a Confrontation or a Confrontation ended in a Stalemate during the previous turn, if Palgonphio is used as tribute, it is considered to have a base power of 🔥🔥🔥🔥.",
+      "paragraphSha256": "1a3b6813ce77cd78d5d0d34319a4d6b713954c24a59fc6a52bbfecd618bc3b15",
+      "expectedBehavior": "Palgonphio contributes base power 4 only after its controller lost a Confrontation or any Confrontation stalemated during the previous turn.",
+      "testIds": [
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+        "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_intrinsic_rules_family.IntrinsicRulesFamily.test_all_six_compile_the_exact_intrinsic_contract",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_intrinsic_rules_family.IntrinsicRulesFamily.test_conditional_tribute_values_require_the_exact_printed_history",
+      "status": "pass",
+      "durationSeconds": 0.172
+    },
+    {
+      "testId": "test_intrinsic_rules_family.IntrinsicRulesFamily.test_forgotten_pile_and_solar_use_their_printed_tribute_zones",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_intrinsic_rules_family.IntrinsicRulesFamily.test_zizek_requires_six_limbo_wills_and_retains_its_excess",
+      "status": "pass",
+      "durationSeconds": 0.047
+    }
+  ],
+  "limits": [
+    "This proof certifies the eight printed intrinsic clauses and their first authoritative payment or eligibility transition.",
+    "It does not re-certify every downstream Will resolution, Confrontation sequence or generic Tribute interaction already owned by dedicated families."
+  ]
+}
