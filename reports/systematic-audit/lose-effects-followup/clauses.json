@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "26fb3b3c7dd5a1d58e84cb79877523d8682949a1a0fe0cae72279d5ef469072b",
+  "published": false,
+  "finishedAt": "2026-11-06T14:00:08.369868+00:00",
+  "summary": {
+    "executed": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 2,
+    "cardsWithSelectedClauseProof": 2,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "3bq6ahxkf9435k5_en",
+      "name": "Vexing Thorn",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Vexing Thorn is in the Interzone, you may reduce its power by 2: A target manifestation on the field loses its effects.",
+      "paragraphSha256": "975574960c58a6de1e76f01fa560413b285cc4b1481127621ef24017c49ec5d0",
+      "expectedBehavior": "While Vexing Thorn is active in its controller's Interzone, its controller may immediately reduce its power by exactly 2 to target a Manifestation on the field. On resolution that exact field occurrence loses its effects until it leaves the field; an invalid source or target is rejected without payment, while a target that leaves in response does not refund the paid reduction.",
+      "testIds": [
+        "test_lose_effects_family.LoseEffectsFamily.test_both_compile_the_exact_printed_contract",
+        "test_lose_effects_family.LoseEffectsFamily.test_invalid_sources_and_targets_are_rejected_without_payment",
+        "test_lose_effects_family.LoseEffectsFamily.test_thorn_pays_two_power_then_disables_the_live_target",
+        "test_lose_effects_family.LoseEffectsFamily.test_thorn_cost_remains_paid_when_the_target_leaves_in_response",
+        "test_lose_effects_family.LoseEffectsFamily.test_embottle_pays_four_and_disables_each_printed_card_type",
+        "test_lose_effects_family.LoseEffectsFamily.test_resolved_silence_survives_its_source_but_not_target_reentry"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-091",
+      "name": "Embottle",
+      "paragraphIndex": 0,
+      "printedParagraph": "A target Manifestation or Persistent Will on the field loses all its current effects.",
+      "paragraphSha256": "c6a14354912acb934daeacac3535845552a9074fcea5e20e8dcc9a3b884fa33c",
+      "expectedBehavior": "After its four Capricious Tributes are paid, Embottle may target exactly one Manifestation or Persistent Will on the field. That exact field occurrence loses its effects independently of Embottle until it leaves the field; Ephemeral Wills and cards in Stalemate are rejected atomically, and a later occurrence of the same physical card is active again.",
+      "testIds": [
+        "test_lose_effects_family.LoseEffectsFamily.test_both_compile_the_exact_printed_contract",
+        "test_lose_effects_family.LoseEffectsFamily.test_invalid_sources_and_targets_are_rejected_without_payment",
+        "test_lose_effects_family.LoseEffectsFamily.test_thorn_pays_two_power_then_disables_the_live_target",
+        "test_lose_effects_family.LoseEffectsFamily.test_thorn_cost_remains_paid_when_the_target_leaves_in_response",
+        "test_lose_effects_family.LoseEffectsFamily.test_embottle_pays_four_and_disables_each_printed_card_type",
+        "test_lose_effects_family.LoseEffectsFamily.test_resolved_silence_survives_its_source_but_not_target_reentry"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_lose_effects_family.LoseEffectsFamily.test_both_compile_the_exact_printed_contract",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_lose_effects_family.LoseEffectsFamily.test_embottle_pays_four_and_disables_each_printed_card_type",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_lose_effects_family.LoseEffectsFamily.test_invalid_sources_and_targets_are_rejected_without_payment",
+      "status": "pass",
+      "durationSeconds": 0.204
+    },
+    {
+      "testId": "test_lose_effects_family.LoseEffectsFamily.test_resolved_silence_survives_its_source_but_not_target_reentry",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_lose_effects_family.LoseEffectsFamily.test_thorn_cost_remains_paid_when_the_target_leaves_in_response",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_lose_effects_family.LoseEffectsFamily.test_thorn_pays_two_power_then_disables_the_live_target",
+      "status": "pass",
+      "durationSeconds": 0.047
+    }
+  ],
+  "limits": [
+    "This proof certifies the two printed paragraphs, their legal source and target contracts, payment timing, first lose-effects transition and target-occurrence lifetime.",
+    "It does not re-certify every card whose effects can be blanked, all generic Stack neutralization paths or other cards sharing the lose_effects engine primitive."
+  ]
+}

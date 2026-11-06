@@ -1,0 +1,197 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "ea6e163808ed57a37b9d84cf192d0fd4a32c8b086ed49f3971b240c8ebf911ec",
+  "published": false,
+  "finishedAt": "2026-11-06T09:52:01.704571+00:00",
+  "summary": {
+    "executed": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 8,
+    "cardsWithSelectedClauseProof": 3,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "nbms08jb9t9eqbh_en",
+      "name": "Blue Entity",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as the Blue Entity is in the Confrontation Zone, whenever you play a Will, all other manifestations in the Confrontation Zone you control get +1 power until the end of the turn.",
+      "paragraphSha256": "29cb7fa378335153464dd04790fb9e416105370b892a899e0b4416a49d7b2c90",
+      "expectedBehavior": "Only an active Blue Entity in its controller's Confrontation Zone reacts to that controller actually playing a Will; every other friendly Confrontation manifestation gets +1 power until end of turn while Blue Entity, other zones and opposing cards remain unchanged.",
+      "testIds": [
+        "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+        "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity",
+        "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+        "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "9phkl58pqrs2j2f_en",
+      "name": "Greed Trap",
+      "paragraphIndex": 0,
+      "printedParagraph": "If a manifestation on the field controlled by an opponent reaches exactly 0 power, it is not destroyed but enters your Empathic Vessel.",
+      "paragraphSha256": "b489357a3d594d4cb6d08b235584b37797f55653a7c512cb7ce43bd7e4c84d8a",
+      "expectedBehavior": "An active Greed Trap replaces destruction only for an opposing field manifestation at exactly zero power, moving that card into Greed Trap's current controller's Empathic Vessel; negative-power, friendly or inactive-source cases are destroyed normally.",
+      "testIds": [
+        "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+        "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity",
+        "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+        "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "9phkl58pqrs2j2f_en",
+      "name": "Greed Trap",
+      "paragraphIndex": 1,
+      "printedParagraph": "Whenever an opponent plays a Will, you can choose a target manifestation in the Confrontation Zone controlled by that opponent and roll a D6.",
+      "paragraphSha256": "a0d2df42469960cd64e317ef9fa529629abec9a8cde7e10a44ff96cc5400763f",
+      "expectedBehavior": "When an opponent actually plays a Will, an active Greed Trap offers its controller the optional effect and requires exactly one manifestation controlled by that opponent in the Confrontation Zone.",
+      "testIds": [
+        "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+        "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity",
+        "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+        "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "9phkl58pqrs2j2f_en",
+      "name": "Greed Trap",
+      "paragraphIndex": 2,
+      "printedParagraph": "1-2: Nothing happens.",
+      "paragraphSha256": "47821702b5e59a2c6e73817bf6a9e49d79eb158a342df936a53785d6f1ef4a40",
+      "expectedBehavior": "On a Greed Trap roll of 1 or 2 the target receives no power modifier.",
+      "testIds": [
+        "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+        "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity",
+        "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+        "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "9phkl58pqrs2j2f_en",
+      "name": "Greed Trap",
+      "paragraphIndex": 3,
+      "printedParagraph": "3-4: The manifestation gets -1 power.",
+      "paragraphSha256": "82ce381fc95f9091b1acede25f8a7d53a655ebfe070dd414b6dbdfdcddbf8b12",
+      "expectedBehavior": "On a Greed Trap roll of 3 or 4 the target permanently gets -1 power while it remains on the field.",
+      "testIds": [
+        "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+        "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity",
+        "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+        "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "9phkl58pqrs2j2f_en",
+      "name": "Greed Trap",
+      "paragraphIndex": 4,
+      "printedParagraph": "5-6: The manifestation gets -2 power.",
+      "paragraphSha256": "5552f05a111c522287d0778617b117b68a08d6baa9d1106a45dcc82eafdd7909",
+      "expectedBehavior": "On a Greed Trap roll of 5 or 6 the target permanently gets -2 power while it remains on the field.",
+      "testIds": [
+        "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+        "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity",
+        "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+        "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-040",
+      "name": "Ippokridal, of Icy Fervor",
+      "paragraphIndex": 0,
+      "printedParagraph": "Adamant.",
+      "paragraphSha256": "1df94dd314d4b4c35f3a799a83cc5c624904a68bbc038b524441249014dd6d0f",
+      "expectedBehavior": "Adamant prevents a non-destroy movement caused by an opponent while leaving destruction legal.",
+      "testIds": [
+        "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+        "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity",
+        "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+        "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-040",
+      "name": "Ippokridal, of Icy Fervor",
+      "paragraphIndex": 1,
+      "printedParagraph": "As long as Ippokridal is on the field, whenever you play a Will during Reaction, put a Token with 1 💧 power in Support under your control.",
+      "paragraphSha256": "562db522e3434416b69619bee751d9ab7f65e251bb8ac85647889c900fd97b02",
+      "expectedBehavior": "Only an active Ippokridal reacts to its controller actually playing a Will during Reaction, creating under that controller a Support Token with 1 vitreous power.",
+      "testIds": [
+        "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+        "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity",
+        "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+        "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+        "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+      "status": "pass",
+      "durationSeconds": 0.203
+    },
+    {
+      "testId": "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+      "status": "pass",
+      "durationSeconds": 0.266
+    },
+    {
+      "testId": "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves",
+      "status": "pass",
+      "durationSeconds": 0.109
+    },
+    {
+      "testId": "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity",
+      "status": "pass",
+      "durationSeconds": 0.657
+    }
+  ],
+  "limits": [
+    "This proof certifies the eight printed paragraphs, their actual Will-played carriers, source activity gates, target restrictions and first authoritative transitions.",
+    "It does not re-certify generic Will payment, Stack ordering, all movement replacements or every global Power interaction owned by other families."
+  ]
+}

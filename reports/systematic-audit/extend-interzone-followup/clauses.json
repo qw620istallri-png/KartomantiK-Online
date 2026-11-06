@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "43786db67a4d392fbbd8acf150989f179143f37efef3ef7feef7acb342b37f28",
+  "published": false,
+  "finishedAt": "2026-11-06T15:09:28.295880+00:00",
+  "summary": {
+    "executed": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 2,
+    "cardsWithSelectedClauseProof": 2,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "5enwyodanyu1it8_en",
+      "name": "Tong, the Expansive",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Tong is on the field, increase the spaces in your Interzone by 3.",
+      "paragraphSha256": "1b5d67c30c8115b25a3312efd273b6ab8bcba17c51011a07eb27b02ee93e3e67",
+      "expectedBehavior": "While an active Tong is on the field, its current controller's Interzone capacity rises from three to six and really admits exactly three extra occupied spaces. The bonus applies in Confrontation, Support or Interzone, follows control, stacks with other extensions, and stops if Tong leaves the field, enters Stalemate, is face down or loses its effects.",
+      "testIds": [
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_both_compile_the_exact_printed_contract",
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_bonuses_are_additive_and_only_help_their_controller",
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_tong_works_anywhere_on_the_field_but_not_in_stalemate",
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_inactive_or_blanked_sources_stop_extending_immediately",
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_bonus_follows_current_control_not_immutable_ownership",
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_cozy_bunk_real_play_opens_and_departure_closes_one_space",
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_each_bonus_really_admits_exactly_its_printed_extra_spaces"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "gybb0ktsth7clz5_en",
+      "name": "Cozy Bunk",
+      "paragraphIndex": 0,
+      "printedParagraph": "Increase the spaces in your Interzone by 1.",
+      "paragraphSha256": "4193f0de2ce6040fb0d7cc80b981bdc8d7f5831d2475dd5e55ea613f6f97c2b2",
+      "expectedBehavior": "After Cozy Bunk is really played and resolves as an active Persistent Will, its current controller's Interzone capacity rises from three to four and really admits exactly one extra occupied space. The bonus follows control, stacks with other extensions, and stops when the source leaves or loses its effects without evicting cards already present.",
+      "testIds": [
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_both_compile_the_exact_printed_contract",
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_bonuses_are_additive_and_only_help_their_controller",
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_tong_works_anywhere_on_the_field_but_not_in_stalemate",
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_inactive_or_blanked_sources_stop_extending_immediately",
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_bonus_follows_current_control_not_immutable_ownership",
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_cozy_bunk_real_play_opens_and_departure_closes_one_space",
+        "test_extend_interzone_family.ExtendInterzoneFamily.test_each_bonus_really_admits_exactly_its_printed_extra_spaces"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_extend_interzone_family.ExtendInterzoneFamily.test_bonus_follows_current_control_not_immutable_ownership",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_extend_interzone_family.ExtendInterzoneFamily.test_bonuses_are_additive_and_only_help_their_controller",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_extend_interzone_family.ExtendInterzoneFamily.test_both_compile_the_exact_printed_contract",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_extend_interzone_family.ExtendInterzoneFamily.test_cozy_bunk_real_play_opens_and_departure_closes_one_space",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_extend_interzone_family.ExtendInterzoneFamily.test_each_bonus_really_admits_exactly_its_printed_extra_spaces",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_extend_interzone_family.ExtendInterzoneFamily.test_inactive_or_blanked_sources_stop_extending_immediately",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_extend_interzone_family.ExtendInterzoneFamily.test_tong_works_anywhere_on_the_field_but_not_in_stalemate",
+      "status": "pass",
+      "durationSeconds": 0.156
+    }
+  ],
+  "limits": [
+    "This proof certifies both printed capacity increases, active-source lifetime, current control, addition and real entry limits at four and six occupied spaces.",
+    "It does not re-certify every card that enters or counts the Interzone, generic Persistent Will payment rules, or all effects that can blank or change control of a source."
+  ]
+}

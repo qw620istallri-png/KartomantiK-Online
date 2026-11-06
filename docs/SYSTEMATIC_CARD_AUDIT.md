@@ -609,3 +609,78 @@ que l'autre carte légale. Les preuves et la suite complète sont dans
 `reports/systematic-audit/phase-window-followup/`. Le registre strict atteint
 **381/450 cartes (84,7 %)** ; il reste 69 cartes, 101 paragraphes et 307 oracles
 de branches.
+
+La passe `trigger:end_of_turn` relie ensuite Ergorath, Grimoire et Tax of the
+Malignant. Elle vérifie leurs zones actives exactes et la suppression des
+déclenchements pendant une fin de tour sautée. Ergorath joue réellement des
+Wills de son Limbo pour une Essence creuse, applique leur remplacement vers
+l'Exil, pénalise son contrôleur courant puis rejoint le Deck de son
+propriétaire. Grimoire place les Wills de la Main, permet de les jouer et les
+exile à son départ. Tax traite séparément Résolution et fin de tour, ainsi que
+la perte d'Essence excédentaire et la perte de cinq points. Les preuves et la
+suite complète sont dans `reports/systematic-audit/end-of-turn-followup/`. Le
+registre strict atteint **384/450 cartes (85,3 %)** ; il reste 66 cartes, 96
+paragraphes et 287 oracles de branches.
+
+La passe `trigger:will_played` relie ensuite Blue Entity, Greed Trap et
+Ippokridal. Elle part d'une Will réellement jouée et vérifie le contrôleur, la
+zone, la phase et l'activité de chaque source. Blue Entity limite son bonus
+temporaire aux autres Manifestations alliées en Confrontation. Greed Trap
+valide son choix optionnel, ses six faces de D6 et sa capture réservée à une
+Manifestation adverse exactement à 0 puissance. Ippokridal crée le Jeton
+vitreux imprimé en Soutien pendant la Réaction ; son mot-clé Inamovible bloque
+un déplacement adverse sans empêcher la destruction. Les preuves et la suite
+complète sont dans `reports/systematic-audit/will-played-followup/`. Le
+registre strict atteint **387/450 cartes (86,0 %)** ; il reste 63 cartes, 88
+paragraphes et 269 oracles de branches.
+
+La passe des restrictions de Première Manifestation relie ensuite Diabolical
+Giant et Brioski, the Aerial. Elle vérifie leur refus atomique comme Première
+Manifestation, sans empoisonner le reste de la Main. Le Géant paie réellement
+dix points depuis la Main ou l'Interzone avant d'entrer en Soutien, uniquement
+pendant la Réaction ; ce contrôle a révélé et corrigé une déclaration directe
+qui pouvait auparavant payer le coût hors de cette fenêtre malgré
+l'auto-passage. Brioski entre en Soutien depuis ses deux zones autorisées et sa
+Flottaison partage correctement un emplacement d'Interzone occupé au
+nettoyage. Les preuves et la suite complète sont dans
+`reports/systematic-audit/first-restriction-followup/`. Le registre strict
+atteint **389/450 cartes (86,4 %)** ; il reste 61 cartes, 84 paragraphes et 255
+oracles de branches.
+
+La passe `ongoing:lose_effects` relie ensuite Vexing Thorn et Embottle. Elle
+vérifie les sources, types et zones de cible exacts, puis les paiements réels :
+réduction immédiate de deux points de puissance pour Vexing Thorn et quatre
+Tributs capricieux pour Embottle. Le coût de Vexing reste payé si la cible
+disparaît en réponse. Après résolution, le silence empêche réellement
+l'activation des capacités et survit au départ de sa source ; il est supprimé
+quand l'occurrence ciblée quitte le champ, de sorte qu'une nouvelle occurrence
+de la même carte retrouve ses effets. Les preuves et la suite complète sont
+dans `reports/systematic-audit/lose-effects-followup/`. Le registre strict
+atteint **391/450 cartes (86,9 %)** ; il reste 59 cartes, 82 paragraphes et 250
+oracles de branches.
+
+La passe `passive:conditional_support` relie ensuite Mourning Offal et
+Twin-headed Druid. Elle vérifie leurs entrées réelles en Soutien depuis la Main
+et l'Interzone, les contrôleurs et les frontières de tour. Mourning Offal
+distingue une vraie sortie ou un jeu depuis n'importe quels Limbes d'une
+entrée, d'un déplacement refusé et d'un simple réordonnancement interne ; ce
+dernier cas a révélé puis corrigé un faux marquage de sortie des Limbes. Le
+Druide exige exactement la défaite de son contrôleur au tour précédent, et non
+une défaite courante, plus ancienne, adverse ou un Ex æquo. Les preuves et la
+suite complète sont dans
+`reports/systematic-audit/conditional-support-followup/`. Le registre strict
+atteint **393/450 cartes (87,3 %)** ; il reste 57 cartes, 80 paragraphes et 245
+oracles de branches.
+
+La passe `passive:extend_interzone` relie ensuite Tong, the Expansive et Cozy
+Bunk. Elle vérifie leur compilation exacte, le cumul des bonus et leur
+attribution au contrôleur courant. Tong ouvre réellement trois espaces depuis
+les différentes zones du champ, mais pas depuis la Zone d'Ex æquo. Cozy Bunk
+est réellement joué et payé comme Volonté persistante avant d'ouvrir un
+espace. Une source retournée, neutralisée, privée de ses effets ou retirée
+cesse immédiatement d'augmenter la capacité, sans expulser les cartes déjà
+présentes. Les limites de six et quatre espaces sont exercées par de vraies
+entrées, avec refus atomique de la suivante. Les preuves et la suite complète
+sont dans `reports/systematic-audit/extend-interzone-followup/`. Le registre
+strict atteint **395/450 cartes (87,8 %)** ; il reste 55 cartes, 78 paragraphes
+et 239 oracles de branches.

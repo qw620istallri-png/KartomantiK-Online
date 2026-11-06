@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "9192569aeb9a2fb83a27de39b071ef2ca5a57eefd7e59caeb4ac5bb3c30d0543",
+  "published": false,
+  "finishedAt": "2026-11-06T10:30:44.649036+00:00",
+  "summary": {
+    "executed": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 4,
+    "cardsWithSelectedClauseProof": 2,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "0kcy08a6jd7ez7k_en",
+      "name": "Diabolical Giant",
+      "paragraphIndex": 0,
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "paragraphSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1",
+      "expectedBehavior": "Diabolical Giant is never a legal First Manifestation; rejecting it leaves the simultaneous choice unchanged and does not make another legal card in the same hand unavailable.",
+      "testIds": [
+        "test_first_restriction_family.FirstRestrictionFamily.test_both_compile_the_exact_printed_contracts",
+        "test_first_restriction_family.FirstRestrictionFamily.test_both_are_rejected_atomically_as_first_but_do_not_poison_the_hand",
+        "test_first_restriction_family.FirstRestrictionFamily.test_giant_rejects_neighbor_phase_and_wrong_field_zone_without_payment",
+        "test_first_restriction_family.FirstRestrictionFamily.test_giant_pays_once_then_really_enters_support_from_hand_or_interzone",
+        "test_first_restriction_family.FirstRestrictionFamily.test_brioski_really_enters_support_from_hand_and_interzone",
+        "test_first_restriction_family.FirstRestrictionFamily.test_brioski_float_shares_a_full_interzone_slot_on_cleanup"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "0kcy08a6jd7ez7k_en",
+      "name": "Diabolical Giant",
+      "paragraphIndex": 1,
+      "printedParagraph": "If the Diabolical Giant is in hand or in the Interzone, you can lose 10 points: The Diabolical Giant gains Support until the end of the turn.",
+      "paragraphSha256": "82000ed82760839c5a79fb611e2df9d778b94045c4be5cc3e27a9718ceef452a",
+      "expectedBehavior": "During Reaction, Diabolical Giant may pay exactly 10 points from its controller's Hand or active Interzone to gain Support until end of turn, after which it can really enter Support without paying the cost again; neighboring phases and other field zones are rejected atomically.",
+      "testIds": [
+        "test_first_restriction_family.FirstRestrictionFamily.test_both_compile_the_exact_printed_contracts",
+        "test_first_restriction_family.FirstRestrictionFamily.test_both_are_rejected_atomically_as_first_but_do_not_poison_the_hand",
+        "test_first_restriction_family.FirstRestrictionFamily.test_giant_rejects_neighbor_phase_and_wrong_field_zone_without_payment",
+        "test_first_restriction_family.FirstRestrictionFamily.test_giant_pays_once_then_really_enters_support_from_hand_or_interzone",
+        "test_first_restriction_family.FirstRestrictionFamily.test_brioski_really_enters_support_from_hand_and_interzone",
+        "test_first_restriction_family.FirstRestrictionFamily.test_brioski_float_shares_a_full_interzone_slot_on_cleanup"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-031",
+      "name": "Brioski, the Aerial",
+      "paragraphIndex": 0,
+      "printedParagraph": "Support; Float.",
+      "paragraphSha256": "cb4b7d0ddb54da852b2e82c144fcb3b63fa22d1bc092648a9eb13e631c3e4f83",
+      "expectedBehavior": "Brioski may really enter Support from either Hand or Interzone during Reaction, and Float lets it share an occupied slot when cleanup returns it to a full Interzone.",
+      "testIds": [
+        "test_first_restriction_family.FirstRestrictionFamily.test_both_compile_the_exact_printed_contracts",
+        "test_first_restriction_family.FirstRestrictionFamily.test_both_are_rejected_atomically_as_first_but_do_not_poison_the_hand",
+        "test_first_restriction_family.FirstRestrictionFamily.test_giant_rejects_neighbor_phase_and_wrong_field_zone_without_payment",
+        "test_first_restriction_family.FirstRestrictionFamily.test_giant_pays_once_then_really_enters_support_from_hand_or_interzone",
+        "test_first_restriction_family.FirstRestrictionFamily.test_brioski_really_enters_support_from_hand_and_interzone",
+        "test_first_restriction_family.FirstRestrictionFamily.test_brioski_float_shares_a_full_interzone_slot_on_cleanup"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-031",
+      "name": "Brioski, the Aerial",
+      "paragraphIndex": 1,
+      "printedParagraph": "Cannot be played as First Manifestation.",
+      "paragraphSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1",
+      "expectedBehavior": "Brioski is never a legal First Manifestation; rejecting it leaves the simultaneous choice unchanged and does not make another legal card in the same hand unavailable.",
+      "testIds": [
+        "test_first_restriction_family.FirstRestrictionFamily.test_both_compile_the_exact_printed_contracts",
+        "test_first_restriction_family.FirstRestrictionFamily.test_both_are_rejected_atomically_as_first_but_do_not_poison_the_hand",
+        "test_first_restriction_family.FirstRestrictionFamily.test_giant_rejects_neighbor_phase_and_wrong_field_zone_without_payment",
+        "test_first_restriction_family.FirstRestrictionFamily.test_giant_pays_once_then_really_enters_support_from_hand_or_interzone",
+        "test_first_restriction_family.FirstRestrictionFamily.test_brioski_really_enters_support_from_hand_and_interzone",
+        "test_first_restriction_family.FirstRestrictionFamily.test_brioski_float_shares_a_full_interzone_slot_on_cleanup"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_first_restriction_family.FirstRestrictionFamily.test_both_are_rejected_atomically_as_first_but_do_not_poison_the_hand",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_first_restriction_family.FirstRestrictionFamily.test_both_compile_the_exact_printed_contracts",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_first_restriction_family.FirstRestrictionFamily.test_brioski_float_shares_a_full_interzone_slot_on_cleanup",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_first_restriction_family.FirstRestrictionFamily.test_brioski_really_enters_support_from_hand_and_interzone",
+      "status": "pass",
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_first_restriction_family.FirstRestrictionFamily.test_giant_pays_once_then_really_enters_support_from_hand_or_interzone",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_first_restriction_family.FirstRestrictionFamily.test_giant_rejects_neighbor_phase_and_wrong_field_zone_without_payment",
+      "status": "pass",
+      "durationSeconds": 0.078
+    }
+  ],
+  "limits": [
+    "This proof certifies the four printed paragraphs, the simultaneous First Manifestation refusals and each card's first authoritative Support or Float transition.",
+    "It does not re-certify generic priority, all Support cleanup destinations, every opening-hand mulligan sequence or other cards sharing the same keywords."
+  ]
+}

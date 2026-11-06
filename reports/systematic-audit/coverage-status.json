@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-05T19:53:20.348717+00:00",
-  "sourceDigest": "495724125ab34d6afc7052b4e94995c7d1b6b0a8bd2921664d5d621a4647bcb4",
-  "unitEvidence": "reports/systematic-audit/phase-window-followup/unit-tests.json",
-  "unitEvidenceSourceDigest": "495724125ab34d6afc7052b4e94995c7d1b6b0a8bd2921664d5d621a4647bcb4",
+  "generatedAt": "2026-11-06T15:21:44.460412+00:00",
+  "sourceDigest": "43786db67a4d392fbbd8acf150989f179143f37efef3ef7feef7acb342b37f28",
+  "unitEvidence": "reports/systematic-audit/extend-interzone-followup/unit-tests.json",
+  "unitEvidenceSourceDigest": "43786db67a4d392fbbd8acf150989f179143f37efef3ef7feef7acb342b37f28",
   "currentUnitEvidence": true,
   "unitEvidencePassed": true,
   "duplicateUnitTestIds": [],
   "summary": {
     "catalogCards": 450,
-    "cardsWithSelectedClauseProof": 381,
-    "percentageWithSelectedClauseProof": 84.7,
-    "cardsOutsideThisStrictRegister": 69,
+    "cardsWithSelectedClauseProof": 395,
+    "percentageWithSelectedClauseProof": 87.8,
+    "cardsOutsideThisStrictRegister": 55,
     "fullCatalogSemanticCertification": false
   },
   "countingRule": "At least one explicit printed clause or explicit no-effect contract linked to tests that all passed in the named full unit run. Unique card IDs; interaction-only references excluded. Selected clauses do not certify all branches unless explicitly marked.",
@@ -1126,6 +1126,27 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "nbms08jb9t9eqbh_en",
+      "name": "Blue Entity",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/will-played-followup/clauses.json",
+          "testIds": [
+            "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+            "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+            "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves",
+            "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "29cb7fa378335153464dd04790fb9e416105370b892a899e0b4416a49d7b2c90"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "zo4rbgcnww4pxg0_en",
       "name": "Blunt Leaf",
       "proofs": [
@@ -1216,6 +1237,41 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "1b2f54c74b83a2d3ea5c9d3205f9ccc783a1ee9f2bbbea439a45bfe467f1086c"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-031",
+      "name": "Brioski, the Aerial",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/first-restriction-followup/clauses.json",
+          "testIds": [
+            "test_first_restriction_family.FirstRestrictionFamily.test_both_are_rejected_atomically_as_first_but_do_not_poison_the_hand",
+            "test_first_restriction_family.FirstRestrictionFamily.test_both_compile_the_exact_printed_contracts",
+            "test_first_restriction_family.FirstRestrictionFamily.test_brioski_float_shares_a_full_interzone_slot_on_cleanup",
+            "test_first_restriction_family.FirstRestrictionFamily.test_brioski_really_enters_support_from_hand_and_interzone",
+            "test_first_restriction_family.FirstRestrictionFamily.test_giant_pays_once_then_really_enters_support_from_hand_or_interzone",
+            "test_first_restriction_family.FirstRestrictionFamily.test_giant_rejects_neighbor_phase_and_wrong_field_zone_without_payment"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "cb4b7d0ddb54da852b2e82c144fcb3b63fa22d1bc092648a9eb13e631c3e4f83"
+        },
+        {
+          "source": "reports/systematic-audit/first-restriction-followup/clauses.json",
+          "testIds": [
+            "test_first_restriction_family.FirstRestrictionFamily.test_both_are_rejected_atomically_as_first_but_do_not_poison_the_hand",
+            "test_first_restriction_family.FirstRestrictionFamily.test_both_compile_the_exact_printed_contracts",
+            "test_first_restriction_family.FirstRestrictionFamily.test_brioski_float_shares_a_full_interzone_slot_on_cleanup",
+            "test_first_restriction_family.FirstRestrictionFamily.test_brioski_really_enters_support_from_hand_and_interzone",
+            "test_first_restriction_family.FirstRestrictionFamily.test_giant_pays_once_then_really_enters_support_from_hand_or_interzone",
+            "test_first_restriction_family.FirstRestrictionFamily.test_giant_rejects_neighbor_phase_and_wrong_field_zone_without_payment"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
         }
       ],
       "allBranchesCertified": false
@@ -2107,6 +2163,28 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "gybb0ktsth7clz5_en",
+      "name": "Cozy Bunk",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/extend-interzone-followup/clauses.json",
+          "testIds": [
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_bonus_follows_current_control_not_immutable_ownership",
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_bonuses_are_additive_and_only_help_their_controller",
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_both_compile_the_exact_printed_contract",
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_cozy_bunk_real_play_opens_and_departure_closes_one_space",
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_each_bonus_really_admits_exactly_its_printed_extra_spaces",
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_inactive_or_blanked_sources_stop_extending_immediately",
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_tong_works_anywhere_on_the_field_but_not_in_stalemate"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "4193f0de2ce6040fb0d7cc80b981bdc8d7f5831d2475dd5e55ea613f6f97c2b2"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-070",
       "name": "Cradle the Putrescence",
       "proofs": [
@@ -2372,6 +2450,41 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "123d72c3cb003f38914f1d1290a346d49e91f9a91f66f9ec6183ea8e9faa1d86"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "0kcy08a6jd7ez7k_en",
+      "name": "Diabolical Giant",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/first-restriction-followup/clauses.json",
+          "testIds": [
+            "test_first_restriction_family.FirstRestrictionFamily.test_both_are_rejected_atomically_as_first_but_do_not_poison_the_hand",
+            "test_first_restriction_family.FirstRestrictionFamily.test_both_compile_the_exact_printed_contracts",
+            "test_first_restriction_family.FirstRestrictionFamily.test_brioski_float_shares_a_full_interzone_slot_on_cleanup",
+            "test_first_restriction_family.FirstRestrictionFamily.test_brioski_really_enters_support_from_hand_and_interzone",
+            "test_first_restriction_family.FirstRestrictionFamily.test_giant_pays_once_then_really_enters_support_from_hand_or_interzone",
+            "test_first_restriction_family.FirstRestrictionFamily.test_giant_rejects_neighbor_phase_and_wrong_field_zone_without_payment"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "197c9d7e5df828e0130a5ed755b25eccea360c41cd7c65f2b9c85778f0ad3ca1"
+        },
+        {
+          "source": "reports/systematic-audit/first-restriction-followup/clauses.json",
+          "testIds": [
+            "test_first_restriction_family.FirstRestrictionFamily.test_both_are_rejected_atomically_as_first_but_do_not_poison_the_hand",
+            "test_first_restriction_family.FirstRestrictionFamily.test_both_compile_the_exact_printed_contracts",
+            "test_first_restriction_family.FirstRestrictionFamily.test_brioski_float_shares_a_full_interzone_slot_on_cleanup",
+            "test_first_restriction_family.FirstRestrictionFamily.test_brioski_really_enters_support_from_hand_and_interzone",
+            "test_first_restriction_family.FirstRestrictionFamily.test_giant_pays_once_then_really_enters_support_from_hand_or_interzone",
+            "test_first_restriction_family.FirstRestrictionFamily.test_giant_rejects_neighbor_phase_and_wrong_field_zone_without_payment"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "82000ed82760839c5a79fb611e2df9d778b94045c4be5cc3e27a9718ceef452a"
         }
       ],
       "allBranchesCertified": false
@@ -2767,6 +2880,27 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-091",
+      "name": "Embottle",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/lose-effects-followup/clauses.json",
+          "testIds": [
+            "test_lose_effects_family.LoseEffectsFamily.test_both_compile_the_exact_printed_contract",
+            "test_lose_effects_family.LoseEffectsFamily.test_embottle_pays_four_and_disables_each_printed_card_type",
+            "test_lose_effects_family.LoseEffectsFamily.test_invalid_sources_and_targets_are_rejected_without_payment",
+            "test_lose_effects_family.LoseEffectsFamily.test_resolved_silence_survives_its_source_but_not_target_reentry",
+            "test_lose_effects_family.LoseEffectsFamily.test_thorn_cost_remains_paid_when_the_target_leaves_in_response",
+            "test_lose_effects_family.LoseEffectsFamily.test_thorn_pays_two_power_then_disables_the_live_target"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "c6a14354912acb934daeacac3535845552a9074fcea5e20e8dcc9a3b884fa33c"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "1ixfmjkfewc0o42_en",
       "name": "Empathic Mask",
       "proofs": [
@@ -2800,6 +2934,55 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "688f2707aa4f7ff0de34639b427aac3cfdc85d0a963ffcfed12b83b019a1810f"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "e1zg2gsn0tfqo1y_en",
+      "name": "Ergorath, Scribe of the Limbo",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/end-of-turn-followup/clauses.json",
+          "testIds": [
+            "test_end_of_turn_family.EndOfTurnFamily.test_all_three_compile_the_exact_printed_contracts",
+            "test_end_of_turn_family.EndOfTurnFamily.test_end_trigger_source_zones_activity_and_skipped_phase_are_exact",
+            "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_end_trigger_penalizes_controller_then_shuffles_to_owner",
+            "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_plays_limbo_wills_for_one_hollow_and_exiles_them",
+            "test_end_of_turn_family.EndOfTurnFamily.test_grimoire_places_plays_and_exiles_its_attached_wills",
+            "test_end_of_turn_family.EndOfTurnFamily.test_tax_applies_both_printed_events_and_both_payment_branches"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "678e50de3acf3cc6cd3596a2daebe664291924c4c420855f64a392397b1d1ca1"
+        },
+        {
+          "source": "reports/systematic-audit/end-of-turn-followup/clauses.json",
+          "testIds": [
+            "test_end_of_turn_family.EndOfTurnFamily.test_all_three_compile_the_exact_printed_contracts",
+            "test_end_of_turn_family.EndOfTurnFamily.test_end_trigger_source_zones_activity_and_skipped_phase_are_exact",
+            "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_end_trigger_penalizes_controller_then_shuffles_to_owner",
+            "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_plays_limbo_wills_for_one_hollow_and_exiles_them",
+            "test_end_of_turn_family.EndOfTurnFamily.test_grimoire_places_plays_and_exiles_its_attached_wills",
+            "test_end_of_turn_family.EndOfTurnFamily.test_tax_applies_both_printed_events_and_both_payment_branches"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "36b8ff5900b52fca21784946e776f3344ae818e40114f97b94620aa4b1c02182"
+        },
+        {
+          "source": "reports/systematic-audit/end-of-turn-followup/clauses.json",
+          "testIds": [
+            "test_end_of_turn_family.EndOfTurnFamily.test_all_three_compile_the_exact_printed_contracts",
+            "test_end_of_turn_family.EndOfTurnFamily.test_end_trigger_source_zones_activity_and_skipped_phase_are_exact",
+            "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_end_trigger_penalizes_controller_then_shuffles_to_owner",
+            "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_plays_limbo_wills_for_one_hollow_and_exiles_them",
+            "test_end_of_turn_family.EndOfTurnFamily.test_grimoire_places_plays_and_exiles_its_attached_wills",
+            "test_end_of_turn_family.EndOfTurnFamily.test_tax_applies_both_printed_events_and_both_payment_branches"
+          ],
+          "paragraphIndex": 2,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "51f7eda7896d791e7499f0a7609d370570aab0706240f47b8f58194b056e6963"
         }
       ],
       "allBranchesCertified": false
@@ -3848,6 +4031,104 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "9phkl58pqrs2j2f_en",
+      "name": "Greed Trap",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/will-played-followup/clauses.json",
+          "testIds": [
+            "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+            "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+            "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves",
+            "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "b489357a3d594d4cb6d08b235584b37797f55653a7c512cb7ce43bd7e4c84d8a"
+        },
+        {
+          "source": "reports/systematic-audit/will-played-followup/clauses.json",
+          "testIds": [
+            "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+            "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+            "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves",
+            "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "a0d2df42469960cd64e317ef9fa529629abec9a8cde7e10a44ff96cc5400763f"
+        },
+        {
+          "source": "reports/systematic-audit/will-played-followup/clauses.json",
+          "testIds": [
+            "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+            "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+            "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves",
+            "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity"
+          ],
+          "paragraphIndex": 2,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "47821702b5e59a2c6e73817bf6a9e49d79eb158a342df936a53785d6f1ef4a40"
+        },
+        {
+          "source": "reports/systematic-audit/will-played-followup/clauses.json",
+          "testIds": [
+            "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+            "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+            "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves",
+            "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity"
+          ],
+          "paragraphIndex": 3,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "82ce381fc95f9091b1acede25f8a7d53a655ebfe070dd414b6dbdfdcddbf8b12"
+        },
+        {
+          "source": "reports/systematic-audit/will-played-followup/clauses.json",
+          "testIds": [
+            "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+            "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+            "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves",
+            "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity"
+          ],
+          "paragraphIndex": 4,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "5552f05a111c522287d0778617b117b68a08d6baa9d1106a45dcc82eafdd7909"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "omhqwnu5tvwlzzg_en",
+      "name": "Grimoire",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/end-of-turn-followup/clauses.json",
+          "testIds": [
+            "test_end_of_turn_family.EndOfTurnFamily.test_all_three_compile_the_exact_printed_contracts",
+            "test_end_of_turn_family.EndOfTurnFamily.test_end_trigger_source_zones_activity_and_skipped_phase_are_exact",
+            "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_end_trigger_penalizes_controller_then_shuffles_to_owner",
+            "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_plays_limbo_wills_for_one_hollow_and_exiles_them",
+            "test_end_of_turn_family.EndOfTurnFamily.test_grimoire_places_plays_and_exiles_its_attached_wills",
+            "test_end_of_turn_family.EndOfTurnFamily.test_tax_applies_both_printed_events_and_both_payment_branches"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "d0741e587cbb590a25ff307581a420238b7010f7f19ae02a2252c0b665df505b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "xzb2jwtkunq5tys_en",
       "name": "Guart, the Slinger",
       "proofs": [
@@ -4644,6 +4925,41 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "b7d62bac879bba14f5a6571a367e665437a0ea363a93ed82ba651f0c34fa6ec4"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-040",
+      "name": "Ippokridal, of Icy Fervor",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/will-played-followup/clauses.json",
+          "testIds": [
+            "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+            "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+            "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves",
+            "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "1df94dd314d4b4c35f3a799a83cc5c624904a68bbc038b524441249014dd6d0f"
+        },
+        {
+          "source": "reports/systematic-audit/will-played-followup/clauses.json",
+          "testIds": [
+            "test_will_played_family.WillPlayedFamily.test_all_three_compile_the_exact_printed_contracts",
+            "test_will_played_family.WillPlayedFamily.test_blue_entity_buffs_only_other_friendly_confrontation_manifestations_until_end",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_captures_only_opposing_manifestations_at_exactly_zero",
+            "test_will_played_family.WillPlayedFamily.test_greed_trap_choice_is_atomic_and_all_six_rolls_are_exact",
+            "test_will_played_family.WillPlayedFamily.test_ippokridal_creates_the_printed_token_and_adamant_blocks_only_moves",
+            "test_will_played_family.WillPlayedFamily.test_real_will_carriers_require_exact_controller_zone_phase_and_activity"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "562db522e3434416b69619bee751d9ab7f65e251bb8ac85647889c900fd97b02"
         }
       ],
       "allBranchesCertified": false
@@ -6396,6 +6712,28 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "32df0ce76a513d10defb4cde8feb344d43cb1e7a1bade1ef216d2add058f4f94"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "k7bnhqhxkij5lsl_en",
+      "name": "Mourning Offal",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/conditional-support-followup/clauses.json",
+          "testIds": [
+            "test_conditional_support_family.ConditionalSupportFamily.test_actual_previous_confrontation_loss_lets_druid_enter_support",
+            "test_conditional_support_family.ConditionalSupportFamily.test_both_compile_the_exact_printed_contract",
+            "test_conditional_support_family.ConditionalSupportFamily.test_druid_requires_its_controllers_loss_on_exactly_the_previous_turn",
+            "test_conditional_support_family.ConditionalSupportFamily.test_limbo_entry_reorder_failure_and_old_exit_do_not_activate_offal",
+            "test_conditional_support_family.ConditionalSupportFamily.test_offal_follows_any_real_limbo_exit_and_really_enters_support",
+            "test_conditional_support_family.ConditionalSupportFamily.test_playing_a_will_from_limbo_activates_offal_for_this_turn_only",
+            "test_conditional_support_family.ConditionalSupportFamily.test_without_the_exact_history_neither_card_has_support"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "f6cc929214f6c036fce80619bf7a23d0f6b914ccafb609ab20c61514bf476238"
         }
       ],
       "allBranchesCertified": false
@@ -9808,6 +10146,27 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-069",
+      "name": "Tax of the Malignant",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/end-of-turn-followup/clauses.json",
+          "testIds": [
+            "test_end_of_turn_family.EndOfTurnFamily.test_all_three_compile_the_exact_printed_contracts",
+            "test_end_of_turn_family.EndOfTurnFamily.test_end_trigger_source_zones_activity_and_skipped_phase_are_exact",
+            "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_end_trigger_penalizes_controller_then_shuffles_to_owner",
+            "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_plays_limbo_wills_for_one_hollow_and_exiles_them",
+            "test_end_of_turn_family.EndOfTurnFamily.test_grimoire_places_plays_and_exiles_its_attached_wills",
+            "test_end_of_turn_family.EndOfTurnFamily.test_tax_applies_both_printed_events_and_both_payment_branches"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "3c22521613f6ca7dc8aa4fd73eb475b57b171ad1137f68656217020b75bc28e7"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-060",
       "name": "Tebebe, Taken by the Dunes",
       "proofs": [
@@ -10207,6 +10566,28 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "5enwyodanyu1it8_en",
+      "name": "Tong, the Expansive",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/extend-interzone-followup/clauses.json",
+          "testIds": [
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_bonus_follows_current_control_not_immutable_ownership",
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_bonuses_are_additive_and_only_help_their_controller",
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_both_compile_the_exact_printed_contract",
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_cozy_bunk_real_play_opens_and_departure_closes_one_space",
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_each_bonus_really_admits_exactly_its_printed_extra_spaces",
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_inactive_or_blanked_sources_stop_extending_immediately",
+            "test_extend_interzone_family.ExtendInterzoneFamily.test_tong_works_anywhere_on_the_field_but_not_in_stalemate"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "1b5d67c30c8115b25a3312efd273b6ab8bcba17c51011a07eb27b02ee93e3e67"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "5r7g2e0r6q17lur_en",
       "name": "Traumatize",
       "proofs": [
@@ -10248,6 +10629,28 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "9ba73e3d572f253ba9e7b4d117cc9c71f7ec0b8f1ed54d9786411b0f062d4647"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ymsp3bnm3142ji3_en",
+      "name": "Twin-headed Druid",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/conditional-support-followup/clauses.json",
+          "testIds": [
+            "test_conditional_support_family.ConditionalSupportFamily.test_actual_previous_confrontation_loss_lets_druid_enter_support",
+            "test_conditional_support_family.ConditionalSupportFamily.test_both_compile_the_exact_printed_contract",
+            "test_conditional_support_family.ConditionalSupportFamily.test_druid_requires_its_controllers_loss_on_exactly_the_previous_turn",
+            "test_conditional_support_family.ConditionalSupportFamily.test_limbo_entry_reorder_failure_and_old_exit_do_not_activate_offal",
+            "test_conditional_support_family.ConditionalSupportFamily.test_offal_follows_any_real_limbo_exit_and_really_enters_support",
+            "test_conditional_support_family.ConditionalSupportFamily.test_playing_a_will_from_limbo_activates_offal_for_this_turn_only",
+            "test_conditional_support_family.ConditionalSupportFamily.test_without_the_exact_history_neither_card_has_support"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "af3d734d36e80437069465198d2aea46968a2ea6dfc10b834ae47cb04b8d83b7"
         }
       ],
       "allBranchesCertified": false
@@ -10487,6 +10890,27 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "3bbd1cd38f93d601285f598102f5587f917052800e66715fb430438c73d4a034"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "3bq6ahxkf9435k5_en",
+      "name": "Vexing Thorn",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/lose-effects-followup/clauses.json",
+          "testIds": [
+            "test_lose_effects_family.LoseEffectsFamily.test_both_compile_the_exact_printed_contract",
+            "test_lose_effects_family.LoseEffectsFamily.test_embottle_pays_four_and_disables_each_printed_card_type",
+            "test_lose_effects_family.LoseEffectsFamily.test_invalid_sources_and_targets_are_rejected_without_payment",
+            "test_lose_effects_family.LoseEffectsFamily.test_resolved_silence_survives_its_source_but_not_target_reentry",
+            "test_lose_effects_family.LoseEffectsFamily.test_thorn_cost_remains_paid_when_the_target_leaves_in_response",
+            "test_lose_effects_family.LoseEffectsFamily.test_thorn_pays_two_power_then_disables_the_live_target"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "975574960c58a6de1e76f01fa560413b285cc4b1481127621ef24017c49ec5d0"
         }
       ],
       "allBranchesCertified": false

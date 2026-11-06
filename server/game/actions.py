@@ -1469,6 +1469,16 @@ class ActionsMixin:
         if phase_ids and self.current_phase_id() not in phase_ids:
             return "This ability cannot be activated during the current phase.", None
 
+        result_kind = str((ability.get("result") or {}).get("kind") or "")
+        if (
+            result_kind in {
+                "grant_source_support_until_end_turn",
+                "stalemate_target_grant_source_support",
+            }
+            and self.current_phase_id() != "confrontation_reaction"
+        ):
+            return "This ability cannot be activated during the current phase.", None
+
         required_source_field_zone = str(ability.get("sourceFieldZone") or "")
         if (ability.get("result") or {}).get("kind") in {"field_becomes_first_manifestation", "interzone_becomes_first_manifestation"} and self.rules_first_manifestation_slot_taken(player_id):
             return "You already have a First Manifestation in the Confrontation Zone.", None

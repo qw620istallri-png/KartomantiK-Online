@@ -1,60 +1,24 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-05T19:53:20.383505+00:00",
-  "sourceDigest": "495724125ab34d6afc7052b4e94995c7d1b6b0a8bd2921664d5d621a4647bcb4",
-  "unitEvidence": "reports/systematic-audit/phase-window-followup/unit-tests.json",
+  "generatedAt": "2026-11-06T15:21:44.497626+00:00",
+  "sourceDigest": "43786db67a4d392fbbd8acf150989f179143f37efef3ef7feef7acb342b37f28",
+  "unitEvidence": "reports/systematic-audit/extend-interzone-followup/unit-tests.json",
   "summary": {
     "catalogCards": 450,
-    "strictlyCoveredCards": 381,
-    "uncoveredCards": 69,
-    "uncoveredClauses": 101,
-    "uncoveredBranchOracles": 307,
-    "greedyMechanicBatches": 54
+    "strictlyCoveredCards": 395,
+    "uncoveredCards": 55,
+    "uncoveredClauses": 78,
+    "uncoveredBranchOracles": 239,
+    "greedyMechanicBatches": 48
   },
   "uncoveredByType": {
-    "ephemeral_will": 16,
-    "manifestation": 38,
-    "persistent_will": 15
+    "ephemeral_will": 15,
+    "manifestation": 29,
+    "persistent_will": 11
   },
   "uncoveredByMechanic": [
     {
-      "mechanic": "trigger:end_of_turn",
-      "cardCount": 3
-    },
-    {
-      "mechanic": "trigger:will_played",
-      "cardCount": 3
-    },
-    {
-      "mechanic": "adamant",
-      "cardCount": 2
-    },
-    {
-      "mechanic": "first-restriction",
-      "cardCount": 2
-    },
-    {
-      "mechanic": "ongoing:lose_effects",
-      "cardCount": 2
-    },
-    {
-      "mechanic": "passive:conditional_support",
-      "cardCount": 2
-    },
-    {
-      "mechanic": "passive:extend_interzone",
-      "cardCount": 2
-    },
-    {
-      "mechanic": "result:grant_source_support_until_end_turn",
-      "cardCount": 2
-    },
-    {
       "mechanic": "result:move_target",
-      "cardCount": 2
-    },
-    {
-      "mechanic": "result:roll_d6_target_table",
       "cardCount": 2
     },
     {
@@ -82,11 +46,11 @@
       "cardCount": 2
     },
     {
-      "mechanic": "conditional-support",
+      "mechanic": "adamant",
       "cardCount": 1
     },
     {
-      "mechanic": "float",
+      "mechanic": "conditional-support",
       "cardCount": 1
     },
     {
@@ -98,19 +62,11 @@
       "cardCount": 1
     },
     {
-      "mechanic": "ongoing:power_modifier",
-      "cardCount": 1
-    },
-    {
       "mechanic": "ongoing:power_set_maximum",
       "cardCount": 1
     },
     {
       "mechanic": "passive:balance_points",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "passive:capture_opponent_exact_zero",
       "cardCount": 1
     },
     {
@@ -147,14 +103,6 @@
     },
     {
       "mechanic": "passive:persistent_wills_as_ephemeral",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "passive:play_attached_wills",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "passive:play_wills_from_limbo_hollow_tribute",
       "cardCount": 1
     },
     {
@@ -226,10 +174,6 @@
       "cardCount": 1
     },
     {
-      "mechanic": "result:create_support_token",
-      "cardCount": 1
-    },
-    {
       "mechanic": "result:destroy_matching_on_field",
       "cardCount": 1
     },
@@ -282,15 +226,7 @@
       "cardCount": 1
     },
     {
-      "mechanic": "result:grimoire_place",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "result:lose_excess_essence_or_points",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "result:lose_points_shuffle_source_into_deck",
+      "mechanic": "result:grant_source_support_until_end_turn",
       "cardCount": 1
     },
     {
@@ -306,6 +242,10 @@
       "cardCount": 1
     },
     {
+      "mechanic": "result:roll_d6_target_table",
+      "cardCount": 1
+    },
+    {
       "mechanic": "result:split_targeted_limbo_cards",
       "cardCount": 1
     },
@@ -315,14 +255,6 @@
     },
     {
       "mechanic": "result:unless_payment_exile_source",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "support-from-hand",
-      "cardCount": 1
-    },
-    {
-      "mechanic": "support-from-interzone",
       "cardCount": 1
     },
     {
@@ -362,91 +294,11 @@
       "cardCount": 1
     },
     {
-      "mechanic": "trigger:resolution",
-      "cardCount": 1
-    },
-    {
       "mechanic": "trigger:vessel_revelation",
       "cardCount": 1
     }
   ],
   "recommendedBatches": [
-    {
-      "mechanic": "trigger:end_of_turn",
-      "cardCount": 3,
-      "cardIds": [
-        "e1zg2gsn0tfqo1y_en",
-        "omhqwnu5tvwlzzg_en",
-        "inner-deserts-069"
-      ],
-      "cards": [
-        "Ergorath, Scribe of the Limbo",
-        "Grimoire",
-        "Tax of the Malignant"
-      ]
-    },
-    {
-      "mechanic": "trigger:will_played",
-      "cardCount": 3,
-      "cardIds": [
-        "nbms08jb9t9eqbh_en",
-        "9phkl58pqrs2j2f_en",
-        "inner-deserts-040"
-      ],
-      "cards": [
-        "Blue Entity",
-        "Greed Trap",
-        "Ippokridal, of Icy Fervor"
-      ]
-    },
-    {
-      "mechanic": "first-restriction",
-      "cardCount": 2,
-      "cardIds": [
-        "0kcy08a6jd7ez7k_en",
-        "inner-deserts-031"
-      ],
-      "cards": [
-        "Diabolical Giant",
-        "Brioski, the Aerial"
-      ]
-    },
-    {
-      "mechanic": "ongoing:lose_effects",
-      "cardCount": 2,
-      "cardIds": [
-        "3bq6ahxkf9435k5_en",
-        "inner-deserts-091"
-      ],
-      "cards": [
-        "Vexing Thorn",
-        "Embottle"
-      ]
-    },
-    {
-      "mechanic": "passive:conditional_support",
-      "cardCount": 2,
-      "cardIds": [
-        "k7bnhqhxkij5lsl_en",
-        "ymsp3bnm3142ji3_en"
-      ],
-      "cards": [
-        "Mourning Offal",
-        "Twin-headed Druid"
-      ]
-    },
-    {
-      "mechanic": "passive:extend_interzone",
-      "cardCount": 2,
-      "cardIds": [
-        "5enwyodanyu1it8_en",
-        "gybb0ktsth7clz5_en"
-      ],
-      "cards": [
-        "Tong, the Expansive",
-        "Cozy Bunk"
-      ]
-    },
     {
       "mechanic": "result:move_target",
       "cardCount": 2,
@@ -944,22 +796,6 @@
   ],
   "cards": [
     {
-      "cardId": "9phkl58pqrs2j2f_en",
-      "collectionNumber": 243,
-      "name": "Greed Trap",
-      "type": "persistent_will",
-      "clauseCount": 5,
-      "branchOracleCount": 5,
-      "abilityCount": 2,
-      "mechanics": [
-        "passive:capture_opponent_exact_zero",
-        "result:roll_d6_target_table",
-        "trigger:will_played"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 22
-    },
-    {
       "cardId": "odqcx9kkqe029se_en",
       "collectionNumber": 274,
       "name": "Mutate Uncontrollably",
@@ -972,22 +808,6 @@
       ],
       "reviewStatus": "reviewed-match",
       "priorityScore": 18
-    },
-    {
-      "cardId": "e1zg2gsn0tfqo1y_en",
-      "collectionNumber": 128,
-      "name": "Ergorath, Scribe of the Limbo",
-      "type": "manifestation",
-      "clauseCount": 3,
-      "branchOracleCount": 15,
-      "abilityCount": 2,
-      "mechanics": [
-        "passive:play_wills_from_limbo_hollow_tribute",
-        "result:lose_points_shuffle_source_into_deck",
-        "trigger:end_of_turn"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 16
     },
     {
       "cardId": "2hszv736kwwmi7n_en",
@@ -1080,22 +900,6 @@
       "priorityScore": 11
     },
     {
-      "cardId": "inner-deserts-040",
-      "collectionNumber": 340,
-      "name": "Ippokridal, of Icy Fervor",
-      "type": "manifestation",
-      "clauseCount": 2,
-      "branchOracleCount": 8,
-      "abilityCount": 1,
-      "mechanics": [
-        "adamant",
-        "result:create_support_token",
-        "trigger:will_played"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 11
-    },
-    {
       "cardId": "xfgbjv2gjb09fj9_en",
       "collectionNumber": 75,
       "name": "Gomeran, Echo Mistress",
@@ -1126,21 +930,6 @@
       "priorityScore": 10
     },
     {
-      "cardId": "0kcy08a6jd7ez7k_en",
-      "collectionNumber": 111,
-      "name": "Diabolical Giant",
-      "type": "manifestation",
-      "clauseCount": 2,
-      "branchOracleCount": 8,
-      "abilityCount": 1,
-      "mechanics": [
-        "first-restriction",
-        "result:grant_source_support_until_end_turn"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 10
-    },
-    {
       "cardId": "iwpmdq754ew0mw7_en",
       "collectionNumber": 197,
       "name": "Wandering Veteran",
@@ -1166,55 +955,6 @@
       "mechanics": [
         "result:obelisk_gift",
         "trigger:reaction"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 10
-    },
-    {
-      "cardId": "omhqwnu5tvwlzzg_en",
-      "collectionNumber": 297,
-      "name": "Grimoire",
-      "type": "persistent_will",
-      "clauseCount": 1,
-      "branchOracleCount": 1,
-      "abilityCount": 2,
-      "mechanics": [
-        "passive:play_attached_wills",
-        "result:grimoire_place",
-        "trigger:end_of_turn"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 10
-    },
-    {
-      "cardId": "inner-deserts-031",
-      "collectionNumber": 331,
-      "name": "Brioski, the Aerial",
-      "type": "manifestation",
-      "clauseCount": 2,
-      "branchOracleCount": 6,
-      "abilityCount": 0,
-      "mechanics": [
-        "first-restriction",
-        "float",
-        "support-from-hand",
-        "support-from-interzone"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 10
-    },
-    {
-      "cardId": "inner-deserts-069",
-      "collectionNumber": 369,
-      "name": "Tax of the Malignant",
-      "type": "persistent_will",
-      "clauseCount": 1,
-      "branchOracleCount": 4,
-      "abilityCount": 2,
-      "mechanics": [
-        "result:lose_excess_essence_or_points",
-        "trigger:end_of_turn",
-        "trigger:resolution"
       ],
       "reviewStatus": "reviewed-match",
       "priorityScore": 10
@@ -1331,21 +1071,6 @@
       "mechanics": [
         "result:grant_free_will_play",
         "trigger:enters_zone"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 7
-    },
-    {
-      "cardId": "nbms08jb9t9eqbh_en",
-      "collectionNumber": 80,
-      "name": "Blue Entity",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 5,
-      "abilityCount": 1,
-      "mechanics": [
-        "ongoing:power_modifier",
-        "trigger:will_played"
       ],
       "reviewStatus": "reviewed-match",
       "priorityScore": 7
@@ -1471,20 +1196,6 @@
       "priorityScore": 7
     },
     {
-      "cardId": "5enwyodanyu1it8_en",
-      "collectionNumber": 33,
-      "name": "Tong, the Expansive",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 3,
-      "abilityCount": 1,
-      "mechanics": [
-        "passive:extend_interzone"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 6
-    },
-    {
       "cardId": "ud9clfoj2c6x96o_en",
       "collectionNumber": 40,
       "name": "Entrust",
@@ -1499,20 +1210,6 @@
       "priorityScore": 6
     },
     {
-      "cardId": "gybb0ktsth7clz5_en",
-      "collectionNumber": 43,
-      "name": "Cozy Bunk",
-      "type": "persistent_will",
-      "clauseCount": 1,
-      "branchOracleCount": 3,
-      "abilityCount": 1,
-      "mechanics": [
-        "passive:extend_interzone"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 6
-    },
-    {
       "cardId": "pxp1zvyxfv16bdd_en",
       "collectionNumber": 62,
       "name": "Arcane Teapot",
@@ -1522,20 +1219,6 @@
       "abilityCount": 1,
       "mechanics": [
         "passive:reduce_will_tribute"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 6
-    },
-    {
-      "cardId": "k7bnhqhxkij5lsl_en",
-      "collectionNumber": 98,
-      "name": "Mourning Offal",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 4,
-      "abilityCount": 1,
-      "mechanics": [
-        "passive:conditional_support"
       ],
       "reviewStatus": "reviewed-match",
       "priorityScore": 6
@@ -1625,20 +1308,6 @@
       "priorityScore": 6
     },
     {
-      "cardId": "3bq6ahxkf9435k5_en",
-      "collectionNumber": 172,
-      "name": "Vexing Thorn",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 1,
-      "abilityCount": 1,
-      "mechanics": [
-        "ongoing:lose_effects"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 6
-    },
-    {
       "cardId": "t42gc95tma8uhzm_en",
       "collectionNumber": 177,
       "name": "Trim the Excess",
@@ -1664,20 +1333,6 @@
         "result:set_field_power"
       ],
       "reviewStatus": "reviewed-defect",
-      "priorityScore": 6
-    },
-    {
-      "cardId": "ymsp3bnm3142ji3_en",
-      "collectionNumber": 193,
-      "name": "Twin-headed Druid",
-      "type": "manifestation",
-      "clauseCount": 1,
-      "branchOracleCount": 1,
-      "abilityCount": 1,
-      "mechanics": [
-        "passive:conditional_support"
-      ],
-      "reviewStatus": "reviewed-match",
       "priorityScore": 6
     },
     {
@@ -1830,20 +1485,6 @@
       "abilityCount": 1,
       "mechanics": [
         "result:exile_limbos_create_token_copies"
-      ],
-      "reviewStatus": "reviewed-match",
-      "priorityScore": 6
-    },
-    {
-      "cardId": "inner-deserts-091",
-      "collectionNumber": 391,
-      "name": "Embottle",
-      "type": "ephemeral_will",
-      "clauseCount": 1,
-      "branchOracleCount": 4,
-      "abilityCount": 1,
-      "mechanics": [
-        "ongoing:lose_effects"
       ],
       "reviewStatus": "reviewed-match",
       "priorityScore": 6

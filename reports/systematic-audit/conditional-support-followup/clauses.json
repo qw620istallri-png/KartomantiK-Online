@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "b0fc642f0f79c5470d088458cd5c9fdf3674ae69741e8468a9d1d8e9a564d440",
+  "published": false,
+  "finishedAt": "2026-11-06T14:53:02.417317+00:00",
+  "summary": {
+    "executed": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 2,
+    "cardsWithSelectedClauseProof": 2,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "k7bnhqhxkij5lsl_en",
+      "name": "Mourning Offal",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as a card has left or has been played from a Limbo this turn, the Mourning Offal has Support.",
+      "paragraphSha256": "f6cc929214f6c036fce80619bf7a23d0f6b914ccafb609ab20c61514bf476238",
+      "expectedBehavior": "A real card exit or Will play from any Limbo during the current turn gives Mourning Offal Support from Hand or Interzone. A Limbo entry, an in-Limbo reorder, a failed move or an exit on an earlier turn does not, and the permission expires on the next turn.",
+      "testIds": [
+        "test_conditional_support_family.ConditionalSupportFamily.test_both_compile_the_exact_printed_contract",
+        "test_conditional_support_family.ConditionalSupportFamily.test_without_the_exact_history_neither_card_has_support",
+        "test_conditional_support_family.ConditionalSupportFamily.test_offal_follows_any_real_limbo_exit_and_really_enters_support",
+        "test_conditional_support_family.ConditionalSupportFamily.test_playing_a_will_from_limbo_activates_offal_for_this_turn_only",
+        "test_conditional_support_family.ConditionalSupportFamily.test_limbo_entry_reorder_failure_and_old_exit_do_not_activate_offal",
+        "test_conditional_support_family.ConditionalSupportFamily.test_druid_requires_its_controllers_loss_on_exactly_the_previous_turn",
+        "test_conditional_support_family.ConditionalSupportFamily.test_actual_previous_confrontation_loss_lets_druid_enter_support"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ymsp3bnm3142ji3_en",
+      "name": "Twin-headed Druid",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as you lost the confrontation the previous turn, Twin-Headed Druid has Support.",
+      "paragraphSha256": "af3d734d36e80437069465198d2aea46968a2ea6dfc10b834ae47cb04b8d83b7",
+      "expectedBehavior": "Twin-headed Druid has Support from Hand or Interzone exactly when its controller lost the previous turn's confrontation; a current-turn or older loss, the opponent's loss and a Stalemate do not qualify.",
+      "testIds": [
+        "test_conditional_support_family.ConditionalSupportFamily.test_both_compile_the_exact_printed_contract",
+        "test_conditional_support_family.ConditionalSupportFamily.test_without_the_exact_history_neither_card_has_support",
+        "test_conditional_support_family.ConditionalSupportFamily.test_offal_follows_any_real_limbo_exit_and_really_enters_support",
+        "test_conditional_support_family.ConditionalSupportFamily.test_playing_a_will_from_limbo_activates_offal_for_this_turn_only",
+        "test_conditional_support_family.ConditionalSupportFamily.test_limbo_entry_reorder_failure_and_old_exit_do_not_activate_offal",
+        "test_conditional_support_family.ConditionalSupportFamily.test_druid_requires_its_controllers_loss_on_exactly_the_previous_turn",
+        "test_conditional_support_family.ConditionalSupportFamily.test_actual_previous_confrontation_loss_lets_druid_enter_support"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_conditional_support_family.ConditionalSupportFamily.test_actual_previous_confrontation_loss_lets_druid_enter_support",
+      "status": "pass",
+      "durationSeconds": 0.093
+    },
+    {
+      "testId": "test_conditional_support_family.ConditionalSupportFamily.test_both_compile_the_exact_printed_contract",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_conditional_support_family.ConditionalSupportFamily.test_druid_requires_its_controllers_loss_on_exactly_the_previous_turn",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_conditional_support_family.ConditionalSupportFamily.test_limbo_entry_reorder_failure_and_old_exit_do_not_activate_offal",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_conditional_support_family.ConditionalSupportFamily.test_offal_follows_any_real_limbo_exit_and_really_enters_support",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_conditional_support_family.ConditionalSupportFamily.test_playing_a_will_from_limbo_activates_offal_for_this_turn_only",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_conditional_support_family.ConditionalSupportFamily.test_without_the_exact_history_neither_card_has_support",
+      "status": "pass",
+      "durationSeconds": 0.078
+    }
+  ],
+  "limits": [
+    "This proof certifies both printed Support conditions, their turn boundaries, real Hand and Interzone entries, and the distinction between leaving Limbo and merely entering or reordering it.",
+    "It does not re-certify generic Support cleanup, all possible card effects that move cards out of Limbo, or every confrontation-resolution branch."
+  ]
+}

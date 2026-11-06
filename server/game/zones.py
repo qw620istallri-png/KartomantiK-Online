@@ -479,6 +479,11 @@ class ZonesMixin:
         offboard_entries = list(self.rules_offboard_card_entries(from_container_id, from_zone)) if (
             self.rules_engine.get("enabled") and from_zone == to_zone and from_zone in {"graveyard", "exile"} and from_container_id == to_container_id
         ) else None
+        previous_limbo_exit_turn = self.rules_engine.get("limboExitTurn") if (
+            self.rules_engine.get("enabled")
+            and from_container_id == to_container_id
+            and from_zone == to_zone == "graveyard"
+        ) else None
         offboard_pick = getattr(self, "_rules_offboard_pick", None)
         self.take_zone_card(from_container_id, from_zone, card_id)
         to_container_id, to_zone, position = self.rules_zone_move_destination(
@@ -499,6 +504,8 @@ class ZonesMixin:
                 offboard_entries.remove(picked)
                 offboard_entries.insert(0, picked) if position != "bottom" else offboard_entries.append(picked)
                 self.rules_engine["_offboardEntries"][to_container_id][to_zone] = offboard_entries
+            if from_zone == "graveyard":
+                self.rules_engine["limboExitTurn"] = previous_limbo_exit_turn
         if (
             self.rules_engine.get("enabled")
             and intended_zone == "graveyard"

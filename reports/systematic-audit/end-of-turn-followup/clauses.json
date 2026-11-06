@@ -1,0 +1,143 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "fbd732ef8a3b313d0880502e39c02b52319dede113c053f3ec10ddb7e28be633",
+  "published": false,
+  "finishedAt": "2026-11-06T09:33:27.657566+00:00",
+  "summary": {
+    "executed": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 5,
+    "cardsWithSelectedClauseProof": 3,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "e1zg2gsn0tfqo1y_en",
+      "name": "Ergorath, Scribe of the Limbo",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Ergorath is on the field, you may play Wills from your Limbo by paying 1 {H} instead of their normal tribute cost.",
+      "paragraphSha256": "678e50de3acf3cc6cd3596a2daebe664291924c4c420855f64a392397b1d1ca1",
+      "expectedBehavior": "While an active Ergorath is on the field, its controller may play a Will from their Limbo for one Hollow Tribute instead of its printed Tribute.",
+      "testIds": [
+        "test_end_of_turn_family.EndOfTurnFamily.test_all_three_compile_the_exact_printed_contracts",
+        "test_end_of_turn_family.EndOfTurnFamily.test_end_trigger_source_zones_activity_and_skipped_phase_are_exact",
+        "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_plays_limbo_wills_for_one_hollow_and_exiles_them",
+        "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_end_trigger_penalizes_controller_then_shuffles_to_owner",
+        "test_end_of_turn_family.EndOfTurnFamily.test_grimoire_places_plays_and_exiles_its_attached_wills",
+        "test_end_of_turn_family.EndOfTurnFamily.test_tax_applies_both_printed_events_and_both_payment_branches"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "e1zg2gsn0tfqo1y_en",
+      "name": "Ergorath, Scribe of the Limbo",
+      "paragraphIndex": 1,
+      "printedParagraph": "If the Wills played this way are about to enter a Limbo, a hand or a deck, exile them instead.",
+      "paragraphSha256": "36b8ff5900b52fca21784946e776f3344ae818e40114f97b94620aa4b1c02182",
+      "expectedBehavior": "A Will played through Ergorath is marked so any later move toward a Limbo, Hand or Deck is replaced by exile, including resolution, neutralization and departure from the field.",
+      "testIds": [
+        "test_end_of_turn_family.EndOfTurnFamily.test_all_three_compile_the_exact_printed_contracts",
+        "test_end_of_turn_family.EndOfTurnFamily.test_end_trigger_source_zones_activity_and_skipped_phase_are_exact",
+        "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_plays_limbo_wills_for_one_hollow_and_exiles_them",
+        "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_end_trigger_penalizes_controller_then_shuffles_to_owner",
+        "test_end_of_turn_family.EndOfTurnFamily.test_grimoire_places_plays_and_exiles_its_attached_wills",
+        "test_end_of_turn_family.EndOfTurnFamily.test_tax_applies_both_printed_events_and_both_payment_branches"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "e1zg2gsn0tfqo1y_en",
+      "name": "Ergorath, Scribe of the Limbo",
+      "paragraphIndex": 2,
+      "printedParagraph": "If at the end of the turn Ergorath is in the Interzone, its controller loses 10 points, then it is shuffled into its owner's deck.",
+      "paragraphSha256": "51f7eda7896d791e7499f0a7609d370570aab0706240f47b8f58194b056e6963",
+      "expectedBehavior": "At end of turn only an active Interzone Ergorath triggers; on resolution its current controller loses 10 points, then Ergorath is shuffled into its owner's Deck.",
+      "testIds": [
+        "test_end_of_turn_family.EndOfTurnFamily.test_all_three_compile_the_exact_printed_contracts",
+        "test_end_of_turn_family.EndOfTurnFamily.test_end_trigger_source_zones_activity_and_skipped_phase_are_exact",
+        "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_plays_limbo_wills_for_one_hollow_and_exiles_them",
+        "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_end_trigger_penalizes_controller_then_shuffles_to_owner",
+        "test_end_of_turn_family.EndOfTurnFamily.test_grimoire_places_plays_and_exiles_its_attached_wills",
+        "test_end_of_turn_family.EndOfTurnFamily.test_tax_applies_both_printed_events_and_both_payment_branches"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "omhqwnu5tvwlzzg_en",
+      "name": "Grimoire",
+      "paragraphIndex": 0,
+      "printedParagraph": "At the end of the turn you can place the Wills in your hand face up on the Grimoire. The Wills placed on the Grimoire can be played as if they were in your hand. If the Grimoire leaves the Field, exile the Wills placed on it.",
+      "paragraphSha256": "d0741e587cbb590a25ff307581a420238b7010f7f19ae02a2252c0b665df505b",
+      "expectedBehavior": "At end of turn an active Field Grimoire may receive any number of Wills from its controller's Hand; attached Wills remain playable with their own abilities and costs as if in Hand, and only Wills still attached are exiled when Grimoire leaves the field.",
+      "testIds": [
+        "test_end_of_turn_family.EndOfTurnFamily.test_all_three_compile_the_exact_printed_contracts",
+        "test_end_of_turn_family.EndOfTurnFamily.test_end_trigger_source_zones_activity_and_skipped_phase_are_exact",
+        "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_plays_limbo_wills_for_one_hollow_and_exiles_them",
+        "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_end_trigger_penalizes_controller_then_shuffles_to_owner",
+        "test_end_of_turn_family.EndOfTurnFamily.test_grimoire_places_plays_and_exiles_its_attached_wills",
+        "test_end_of_turn_family.EndOfTurnFamily.test_tax_applies_both_printed_events_and_both_payment_branches"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-069",
+      "name": "Tax of the Malignant",
+      "paragraphIndex": 0,
+      "printedParagraph": "Upon Resolution and at the end of the turn, each player loses their excess essence. If a player has no excess essence, they lose 5 Points instead.",
+      "paragraphSha256": "3c22521613f6ca7dc8aa4fd73eb475b57b171ad1137f68656217020b75bc28e7",
+      "expectedBehavior": "An active Tax triggers both upon Resolution and at end of turn; for each player independently it removes all excess Essence when any exists, otherwise that player loses 5 points.",
+      "testIds": [
+        "test_end_of_turn_family.EndOfTurnFamily.test_all_three_compile_the_exact_printed_contracts",
+        "test_end_of_turn_family.EndOfTurnFamily.test_end_trigger_source_zones_activity_and_skipped_phase_are_exact",
+        "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_plays_limbo_wills_for_one_hollow_and_exiles_them",
+        "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_end_trigger_penalizes_controller_then_shuffles_to_owner",
+        "test_end_of_turn_family.EndOfTurnFamily.test_grimoire_places_plays_and_exiles_its_attached_wills",
+        "test_end_of_turn_family.EndOfTurnFamily.test_tax_applies_both_printed_events_and_both_payment_branches"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_end_of_turn_family.EndOfTurnFamily.test_all_three_compile_the_exact_printed_contracts",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_end_of_turn_family.EndOfTurnFamily.test_end_trigger_source_zones_activity_and_skipped_phase_are_exact",
+      "status": "pass",
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_end_trigger_penalizes_controller_then_shuffles_to_owner",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_end_of_turn_family.EndOfTurnFamily.test_ergorath_plays_limbo_wills_for_one_hollow_and_exiles_them",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_end_of_turn_family.EndOfTurnFamily.test_grimoire_places_plays_and_exiles_its_attached_wills",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_end_of_turn_family.EndOfTurnFamily.test_tax_applies_both_printed_events_and_both_payment_branches",
+      "status": "pass",
+      "durationSeconds": 0.078
+    }
+  ],
+  "limits": [
+    "This proof certifies the five printed paragraphs, their exact end-of-turn or Resolution carriers, source activity gates and first authoritative transitions.",
+    "It does not re-certify every generic Tribute allocation, random shuffle ordering, simultaneous-trigger order or movement replacement owned by other families."
+  ]
+}
