@@ -1434,6 +1434,13 @@ class ActionsMixin:
             return ("Unknown played ability." if kind == "play_card" else "Unknown activated ability."), None
         if ability.get("reduceSourcePower") and self.rules_modifiers_prevented(source_item):
             return "This card cannot receive the power reduction required by its cost.", None
+        source_power_reduction = int(ability.get("reduceSourcePower") or 0)
+        if source_power_reduction and (
+            source_item is None
+            or self.rules_manifestation_characteristics(source_item)["power"]
+            < source_power_reduction
+        ):
+            return "This card does not have enough power to pay this cost.", None
         if (
             source.get("zone") == "battlefield"
             and not (kind == "play_card" and source_item and (

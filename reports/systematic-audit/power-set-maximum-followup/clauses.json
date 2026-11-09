@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "21ca7d07382368e354784e944471b6a378753e0feaf993c7d9b8953dce090897",
+  "published": false,
+  "finishedAt": "2026-11-08T20:43:42.202528+00:00",
+  "summary": {
+    "executed": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 2,
+    "cardsWithSelectedClauseProof": 1,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "inner-deserts-118",
+      "name": "Inflate the Ego",
+      "paragraphIndex": 0,
+      "printedParagraph": "The cost of this Will is reduced by an amount equal to half the base power of the First Manifestation you control, rounded down.",
+      "paragraphSha256": "4020abee0b3fdebdd8c746c10c67a8208096c5b864b52b19959203c103504c09",
+      "expectedBehavior": "Inflate the Ego costs five choleric Tribute less half the modified base power of its controller's current First Manifestation, rounded down, with the final cost floored at zero. The printed cost is never mutated. Without a legal own First Manifestation, declaration is rejected atomically.",
+      "testIds": [
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_compiles_the_exact_two_paragraph_contract",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_requires_the_controllers_current_first_manifestation_atomically",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_base_five_discount_sets_current_four_to_ten_without_mutating_printed_cost",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_discount_uses_modified_base_power_and_never_makes_cost_negative",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_later_malus_lowers_power_but_later_bonus_is_capped_at_ten",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_new_first_between_payment_and_resolution_invalidates_the_old_target",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_cleanse_removes_the_cap_and_resets_other_power_changes",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_turn_end_expiration_restores_the_underlying_power"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-118",
+      "name": "Inflate the Ego",
+      "paragraphIndex": 1,
+      "printedParagraph": "Until the end of the turn, the power of the First Manifestation you control becomes 10 and its power is limited to a maximum of 10.",
+      "paragraphSha256": "5ba1c21a378902f4508b4336a674536e5fd355af8a39e349610243e009da7945",
+      "expectedBehavior": "On resolution, the selected own First Manifestation's current power becomes exactly 10 and is capped at 10 until turn end. Later maluses can lower it and later bonuses cannot raise it above 10. If the selected card is no longer the controller's First Manifestation at resolution, no modifier is created. Cleanse removes the cap together with the target's other removable power changes; normal turn expiry removes only the temporary cap and restores the underlying power.",
+      "testIds": [
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_compiles_the_exact_two_paragraph_contract",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_requires_the_controllers_current_first_manifestation_atomically",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_base_five_discount_sets_current_four_to_ten_without_mutating_printed_cost",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_discount_uses_modified_base_power_and_never_makes_cost_negative",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_later_malus_lowers_power_but_later_bonus_is_capped_at_ten",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_new_first_between_payment_and_resolution_invalidates_the_old_target",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_cleanse_removes_the_cap_and_resets_other_power_changes",
+        "test_inflate_the_ego_family.InflateTheEgoFamily.test_turn_end_expiration_restores_the_underlying_power"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_inflate_the_ego_family.InflateTheEgoFamily.test_base_five_discount_sets_current_four_to_ten_without_mutating_printed_cost",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_inflate_the_ego_family.InflateTheEgoFamily.test_cleanse_removes_the_cap_and_resets_other_power_changes",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_inflate_the_ego_family.InflateTheEgoFamily.test_compiles_the_exact_two_paragraph_contract",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_inflate_the_ego_family.InflateTheEgoFamily.test_discount_uses_modified_base_power_and_never_makes_cost_negative",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_inflate_the_ego_family.InflateTheEgoFamily.test_later_malus_lowers_power_but_later_bonus_is_capped_at_ten",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_inflate_the_ego_family.InflateTheEgoFamily.test_new_first_between_payment_and_resolution_invalidates_the_old_target",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_inflate_the_ego_family.InflateTheEgoFamily.test_requires_the_controllers_current_first_manifestation_atomically",
+      "status": "pass",
+      "durationSeconds": 0.156
+    },
+    {
+      "testId": "test_inflate_the_ego_family.InflateTheEgoFamily.test_turn_end_expiration_restores_the_underlying_power",
+      "status": "pass",
+      "durationSeconds": 0.032
+    }
+  ],
+  "limits": [
+    "This proof certifies Inflate the Ego's two paragraphs: modified-base discount, rounding and zero floor, unchanged printed cost, own-First targeting, resolution-time revalidation, set-to-10 behavior, maximum 10, later modifiers, Cleanse, and turn expiry.",
+    "It does not re-certify every base-power modifier, every generic target replacement, Cleanse's complete independent contract, or all interactions with effects that prevent modifiers."
+  ]
+}

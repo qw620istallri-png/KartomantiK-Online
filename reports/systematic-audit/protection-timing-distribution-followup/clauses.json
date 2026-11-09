@@ -1,0 +1,248 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "9f4743e68a80be214a385c9765e876ed5ad85d2097ca210dd371380c6229fdc0",
+  "published": false,
+  "finishedAt": "2026-11-09T10:04:53.638741+00:00",
+  "summary": {
+    "executed": 16,
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 9,
+    "cardsWithSelectedClauseProof": 5,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "l3ne0zha51w387z_en",
+      "name": "Purifying Ritual",
+      "paragraphIndex": 0,
+      "printedParagraph": "The cards in your hand are Immune to cards and effects controlled by opponents.",
+      "paragraphSha256": "5c2036e7ab0c508d6e93948183e11d461efb6f463558a3c1bc093aad4dcef635",
+      "expectedBehavior": "While Purifying Ritual is active, an opponent-controlled effect cannot inspect, discard, steal, or otherwise affect the controller's Hand; the protection is not global and does not protect the opponent's Hand.",
+      "testIds": [
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_compiles_all_five_exact_contracts",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_ritual_blocks_hostile_discard_but_not_self_discard",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_ritual_protects_only_its_controller_hand"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "l3ne0zha51w387z_en",
+      "name": "Purifying Ritual",
+      "paragraphIndex": 1,
+      "printedParagraph": "You cannot discard cards due to cards or effects controlled by opponents.",
+      "paragraphSha256": "75e93464e9d81ced07da93f8ff84f7bfdb231d67ca82674fbc7ffdffc8fe397f",
+      "expectedBehavior": "The controller's own effects and rule procedures, including a chosen hand-limit overflow, can still discard or move cards from that Hand.",
+      "testIds": [
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_compiles_all_five_exact_contracts",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_ritual_blocks_hostile_discard_but_not_self_discard",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_ritual_protects_only_its_controller_hand"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "xzh48oy0ramirce_en",
+      "name": "Trap",
+      "paragraphIndex": 0,
+      "printedParagraph": "This Will can only be played at Revelation, in place of the First Manifestation.",
+      "paragraphSha256": "a681d49d6203f3d6f6a910797ff2eddb8581d633bdbd7a8ba5081b0f6fe4468b",
+      "expectedBehavior": "Trap can only replace its controller's First Manifestation during Revelation. It cannot be declared as an ordinary Reaction play, even when another effect grants a generic play permission.",
+      "testIds": [
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_compiles_all_five_exact_contracts",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_trap_waits_hidden_then_reveals_after_opponent_first",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_trap_cannot_be_played_as_an_ordinary_reaction_even_with_permission"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "xzh48oy0ramirce_en",
+      "name": "Trap",
+      "paragraphIndex": 1,
+      "printedParagraph": "Play the First Manifestation after this card, then lose 5 points.",
+      "paragraphSha256": "f1a5cbbd72ee86e835063603200e411d15675ea0b98e5c4b46387dbcdbc8ff28",
+      "expectedBehavior": "Trap waits face down and hidden from the opponent. After the opponent validates and reveals their First Manifestation, Trap is revealed, enters its owner's Limbo, costs 5 points, and its controller then plays and reveals their First Manifestation.",
+      "testIds": [
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_compiles_all_five_exact_contracts",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_trap_waits_hidden_then_reveals_after_opponent_first",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_trap_cannot_be_played_as_an_ordinary_reaction_even_with_permission"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-024",
+      "name": "Caress the Dawn",
+      "paragraphIndex": 0,
+      "printedParagraph": "Choose up to 4 target cards in a player's Limbo that entered that Limbo this turn.",
+      "paragraphSha256": "dc47192b962ef5982e7dd58d105f2fad650133e3ffa1090c0d79773046a34a3b",
+      "expectedBehavior": "Choose zero to four eligible cards that entered one player's Limbo during the current turn; five cards, stale entries, and cards from mixed Limbos are illegal.",
+      "testIds": [
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_compiles_all_five_exact_contracts",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_zero_and_four_targets_are_legal_but_five_mixed_or_stale_are_not",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_splits_three_and_four_with_exact_order",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_with_zero_targets_resolves_without_a_choice",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_invalid_order_is_atomic",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_returns_foreign_owned_card_to_its_owners_deck"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-024",
+      "name": "Caress the Dawn",
+      "paragraphIndex": 1,
+      "printedParagraph": "Put half of them, rounded up, on the bottom of their owner's deck in any order, then put the rest on top in any order.",
+      "paragraphSha256": "5bd52fba6fb56a118f8bde328734b77a31aeacdc37d909c54ada5bd623c4e9cd",
+      "expectedBehavior": "Move the rounded-up half to the bottoms of the physical cards' owners' Decks in the submitted order and the rest to the tops in the submitted order. Invalid partitions are atomic, and a foreign-owned card in the selected Limbo returns to its owner's Deck.",
+      "testIds": [
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_compiles_all_five_exact_contracts",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_zero_and_four_targets_are_legal_but_five_mixed_or_stale_are_not",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_splits_three_and_four_with_exact_order",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_with_zero_targets_resolves_without_a_choice",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_invalid_order_is_atomic",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_returns_foreign_owned_card_to_its_owners_deck"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-144",
+      "name": "Palm Coercer",
+      "paragraphIndex": 0,
+      "printedParagraph": "Each player's hand is limited to 6 cards.",
+      "paragraphSha256": "9d4e0e39836625e935c827b8e865c7017c10082d194f3645a5236dd15a28e083",
+      "expectedBehavior": "While Palm Coercer is active, every player's Hand limit is six cards.",
+      "testIds": [
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_compiles_all_five_exact_contracts",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_palm_applies_to_both_players_but_only_after_a_draw",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_palm_overflow_uses_deck_entry_replacements",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_palm_sequences_each_players_post_draw_overflow",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_palm_overflow_choice_keeps_the_hand_private"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-144",
+      "name": "Palm Coercer",
+      "paragraphIndex": 1,
+      "printedParagraph": "Each player, after drawing, must put the excess cards in their hand at the bottom of their deck in any order.",
+      "paragraphSha256": "03b1e0a42405a4e19b7a21d56feeae6cfe15e6469f20ae884ffc7c112e74c4c7",
+      "expectedBehavior": "After each actual draw, that player privately chooses exactly the excess cards and their order for the bottom of their Deck. Ordered multi-player draws pause for each player in turn, and Deck-entry replacement effects still apply.",
+      "testIds": [
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_compiles_all_five_exact_contracts",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_palm_applies_to_both_players_but_only_after_a_draw",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_palm_overflow_uses_deck_entry_replacements",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_palm_sequences_each_players_post_draw_overflow",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_palm_overflow_choice_keeps_the_hand_private"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "7badn4v9w72srad_en",
+      "name": "Static Scuttler",
+      "paragraphIndex": 0,
+      "printedParagraph": "If Static Scuttler loses the confrontation, the manifestations in the Confrontation Zone controlled by the opponent who won that confrontation are put into a stalemate. Those manifestations cannot change zone until the end of the turn.",
+      "paragraphSha256": "943783780fad610c3b92195cf4b6a49337a6ddbcbf7c33a15893cab7c0b897a3",
+      "expectedBehavior": "Only when Static Scuttler loses, every winner-controlled Manifestation in the Confrontation Zone moves to the Stalemate Zone and is protected from zone changes for the rest of that turn. Loser-controlled cards stay put, no loss queues no trigger, and the lock expires on the next turn.",
+      "testIds": [
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_compiles_all_five_exact_contracts",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_scuttler_loss_queues_only_its_trigger_and_stalemates_winner",
+        "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_scuttler_does_not_trigger_without_a_loss_and_lock_expires_next_turn"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_invalid_order_is_atomic",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_returns_foreign_owned_card_to_its_owners_deck",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_splits_three_and_four_with_exact_order",
+      "status": "pass",
+      "durationMs": 93.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_with_zero_targets_resolves_without_a_choice",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_caress_zero_and_four_targets_are_legal_but_five_mixed_or_stale_are_not",
+      "status": "pass",
+      "durationMs": 32.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_compiles_all_five_exact_contracts",
+      "status": "pass",
+      "durationMs": 62.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_palm_applies_to_both_players_but_only_after_a_draw",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_palm_overflow_choice_keeps_the_hand_private",
+      "status": "pass",
+      "durationMs": 31.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_palm_overflow_uses_deck_entry_replacements",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_palm_sequences_each_players_post_draw_overflow",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_ritual_blocks_hostile_discard_but_not_self_discard",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_ritual_protects_only_its_controller_hand",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_scuttler_does_not_trigger_without_a_loss_and_lock_expires_next_turn",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_scuttler_loss_queues_only_its_trigger_and_stalemates_winner",
+      "status": "pass",
+      "durationMs": 46.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_trap_cannot_be_played_as_an_ordinary_reaction_even_with_permission",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_protection_timing_distribution_family.ProtectionTimingDistributionFamily.test_trap_waits_hidden_then_reveals_after_opponent_first",
+      "status": "pass",
+      "durationMs": 47.0
+    }
+  ],
+  "limits": [
+    "This proof certifies the nine printed paragraphs of Purifying Ritual, Trap, Caress the Dawn, Palm Coercer, and Static Scuttler across the selected strict branches and interactions.",
+    "It does not independently re-certify every generic Hand effect, Stack permission, Revelation protocol, zone-movement replacement, draw replacement, or Confrontation cleanup contract."
+  ]
+}

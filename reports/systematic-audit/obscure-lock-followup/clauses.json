@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "5e7cea754b2d0bae5d18b85a407be62f51080638928c386985f5b96f94c6b0e0",
+  "published": false,
+  "finishedAt": "2026-11-08T20:21:30.328479+00:00",
+  "summary": {
+    "executed": 9,
+    "passed": 9,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 3,
+    "cardsWithSelectedClauseProof": 1,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "inner-deserts-043",
+      "name": "Obscure",
+      "paragraphIndex": 0,
+      "printedParagraph": "A target card on the field loses its effects and is Immune to cards and effects until the end of the turn.",
+      "paragraphSha256": "ec24a485d66ce269960b53152a8b433c76334c40710ceba9aa76ef23cd91c6d0",
+      "expectedBehavior": "On resolution, one legal Manifestation or Persistent Will on the field loses its effects and becomes Immune to cards and effects from every controller until the end of the turn. A missing, unsupported-type, Stalemate, or already Immune target is illegal; a target that becomes illegal before resolution receives no lock. Cleanse removes the modifier without undoing already completed source movement.",
+      "testIds": [
+        "test_obscure_lock_family.ObscureLockFamily.test_compiles_the_exact_three_paragraph_contract",
+        "test_obscure_lock_family.ObscureLockFamily.test_invalid_targets_are_rejected_without_payment",
+        "test_obscure_lock_family.ObscureLockFamily.test_manifestation_loses_effects_is_fully_immune_and_contributes_zero",
+        "test_obscure_lock_family.ObscureLockFamily.test_persistent_will_loses_effects_and_is_immune_without_manifestation_power_rule",
+        "test_obscure_lock_family.ObscureLockFamily.test_immunity_blocks_both_controllers_after_obscure_resolves",
+        "test_obscure_lock_family.ObscureLockFamily.test_late_invalid_target_fizzles_but_obscure_still_exiles_itself",
+        "test_obscure_lock_family.ObscureLockFamily.test_cleanse_removes_the_modifier_without_undoing_obscures_exile",
+        "test_obscure_lock_family.ObscureLockFamily.test_turn_expiry_restores_effects_immunity_and_confrontation_power",
+        "test_obscure_lock_family.ObscureLockFamily.test_neutralized_obscure_goes_to_limbo_and_creates_no_lock"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-043",
+      "name": "Obscure",
+      "paragraphIndex": 1,
+      "printedParagraph": "If it is a Manifestation, in addition its power is not considered for the resolution of the confrontation until the end of the turn.",
+      "paragraphSha256": "e106a433cd3682051d4eaab56d851e53bfc8ba9692cf1a587d22a2e3a52d944f",
+      "expectedBehavior": "If the resolved target is a Manifestation, its current power contributes exactly zero to confrontation resolution until turn end, without changing its printed or effective power. This extra rule does not apply to a Persistent Will. Cleanse or normal turn expiry restores the Manifestation's contribution.",
+      "testIds": [
+        "test_obscure_lock_family.ObscureLockFamily.test_compiles_the_exact_three_paragraph_contract",
+        "test_obscure_lock_family.ObscureLockFamily.test_invalid_targets_are_rejected_without_payment",
+        "test_obscure_lock_family.ObscureLockFamily.test_manifestation_loses_effects_is_fully_immune_and_contributes_zero",
+        "test_obscure_lock_family.ObscureLockFamily.test_persistent_will_loses_effects_and_is_immune_without_manifestation_power_rule",
+        "test_obscure_lock_family.ObscureLockFamily.test_immunity_blocks_both_controllers_after_obscure_resolves",
+        "test_obscure_lock_family.ObscureLockFamily.test_late_invalid_target_fizzles_but_obscure_still_exiles_itself",
+        "test_obscure_lock_family.ObscureLockFamily.test_cleanse_removes_the_modifier_without_undoing_obscures_exile",
+        "test_obscure_lock_family.ObscureLockFamily.test_turn_expiry_restores_effects_immunity_and_confrontation_power",
+        "test_obscure_lock_family.ObscureLockFamily.test_neutralized_obscure_goes_to_limbo_and_creates_no_lock"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-043",
+      "name": "Obscure",
+      "paragraphIndex": 2,
+      "printedParagraph": "Exile this Will.",
+      "paragraphSha256": "e5e4dee9b0e5e685ecb641b2321e31d08cdb3e1c1b401a2f223abbbae938adeb",
+      "expectedBehavior": "A resolving Obscure moves to its immutable owner's Exile even if its only target became illegal in response. If Obscure itself is neutralized instead of resolving, it enters its owner's Limbo, creates no lock, and its already-paid cost remains paid.",
+      "testIds": [
+        "test_obscure_lock_family.ObscureLockFamily.test_compiles_the_exact_three_paragraph_contract",
+        "test_obscure_lock_family.ObscureLockFamily.test_invalid_targets_are_rejected_without_payment",
+        "test_obscure_lock_family.ObscureLockFamily.test_manifestation_loses_effects_is_fully_immune_and_contributes_zero",
+        "test_obscure_lock_family.ObscureLockFamily.test_persistent_will_loses_effects_and_is_immune_without_manifestation_power_rule",
+        "test_obscure_lock_family.ObscureLockFamily.test_immunity_blocks_both_controllers_after_obscure_resolves",
+        "test_obscure_lock_family.ObscureLockFamily.test_late_invalid_target_fizzles_but_obscure_still_exiles_itself",
+        "test_obscure_lock_family.ObscureLockFamily.test_cleanse_removes_the_modifier_without_undoing_obscures_exile",
+        "test_obscure_lock_family.ObscureLockFamily.test_turn_expiry_restores_effects_immunity_and_confrontation_power",
+        "test_obscure_lock_family.ObscureLockFamily.test_neutralized_obscure_goes_to_limbo_and_creates_no_lock"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_obscure_lock_family.ObscureLockFamily.test_cleanse_removes_the_modifier_without_undoing_obscures_exile",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_obscure_lock_family.ObscureLockFamily.test_compiles_the_exact_three_paragraph_contract",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_obscure_lock_family.ObscureLockFamily.test_immunity_blocks_both_controllers_after_obscure_resolves",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_obscure_lock_family.ObscureLockFamily.test_invalid_targets_are_rejected_without_payment",
+      "status": "pass",
+      "durationSeconds": 0.14
+    },
+    {
+      "testId": "test_obscure_lock_family.ObscureLockFamily.test_late_invalid_target_fizzles_but_obscure_still_exiles_itself",
+      "status": "pass",
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_obscure_lock_family.ObscureLockFamily.test_manifestation_loses_effects_is_fully_immune_and_contributes_zero",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_obscure_lock_family.ObscureLockFamily.test_neutralized_obscure_goes_to_limbo_and_creates_no_lock",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_obscure_lock_family.ObscureLockFamily.test_persistent_will_loses_effects_and_is_immune_without_manifestation_power_rule",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_obscure_lock_family.ObscureLockFamily.test_turn_expiry_restores_effects_immunity_and_confrontation_power",
+      "status": "pass",
+      "durationSeconds": 0.032
+    }
+  ],
+  "limits": [
+    "This proof certifies Obscure's three paragraphs: target types and field scope, loss of effects, full Immunity, Manifestation-only confrontation-power suppression, turn lifetime, Cleanse removal, source Exile, late target invalidation, and neutralization.",
+    "It does not re-certify every card whose printed effect may be blanked, every replacement that could alter source movement, simultaneous modifier ordering beyond Immunity and loss of effects, or Cleanse's complete independent contract."
+  ]
+}

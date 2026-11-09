@@ -786,8 +786,11 @@ class CardsEffectsMixin:
                 ):
                     skipped_source = True
                     continue
+                owner_id = self.card_owner_in_zone(
+                    current_id, "graveyard", card_id
+                )
                 error, _owner_id, replacement = self.move_zone_card_by_effect(
-                    current_id, "graveyard", current_id, "exile",
+                    current_id, "graveyard", owner_id, "exile",
                     card_id, "top",
                 )
                 if not error and not replacement:
@@ -952,6 +955,10 @@ class CardsEffectsMixin:
             "topCount": len(card_ids) - bottom_count,
             "bottomCount": bottom_count,
             "fromZone": "graveyard",
+            # Caress the Dawn names the cards' owners' Decks, not the
+            # Limbo container. This matters for cards owned by another
+            # player that were legally put in this Limbo.
+            "toOwnerDecks": True,
         }]
         self.rules_engine["pendingChoice"] = {
             "id": choice_id,
@@ -1004,8 +1011,11 @@ class CardsEffectsMixin:
             for card_id in list(current["zones"]["graveyard"]):
                 if self.card_rules.get(card_id, {}).get("type") != "manifestation":
                     continue
+                owner_id = self.card_owner_in_zone(
+                    current_id, "graveyard", card_id
+                )
                 error, _owner_id, replacement = self.move_zone_card_by_effect(
-                    current_id, "graveyard", current_id, "exile",
+                    current_id, "graveyard", owner_id, "exile",
                     card_id, "top",
                 )
                 if error or replacement:

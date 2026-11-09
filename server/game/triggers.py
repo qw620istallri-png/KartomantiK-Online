@@ -492,6 +492,13 @@ class TriggersMixin:
                 fired[fired_key] = self.phase_tracker["turn"]
             raw_result = ability.get("result") or {}
             if (
+                raw_result.get("kind") == "copy_related_tribute_if_exhaust"
+                and int(round(float((self.find_battlefield_item(item_id) or {}).get("rotation") or 0))) % 180
+            ):
+                # Melancholic Mirror can be offered only while it can actually
+                # pay the printed exhaust cost.
+                continue
+            if (
                 raw_result.get("kind") == "force_win_if_highest_base_first"
                 and not self.rules_is_strictly_highest_base_first(trigger_source_item)
             ):
@@ -1264,7 +1271,7 @@ class TriggersMixin:
                         "id": simultaneous_action_id,
                         "source": {
                             "cardId": card_id,
-                            "ownerId": owner_id,
+                            "ownerId": tribute_owner_id,
                         },
                     },
                 ))

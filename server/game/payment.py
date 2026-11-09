@@ -231,6 +231,11 @@ class PaymentMixin:
             ).get("passiveEffects") or []
             if passive.get("kind") == "increase_will_tribute"
         )
+        # Global Will taxes and controller reductions modify the same Tribute
+        # before its zero floor. A zero-cost Will under Fog and Teapot therefore
+        # stays at zero instead of retaining a late-added Hollow requirement.
+        if increase > 0:
+            requirements["hollow"] = requirements.get("hollow", 0) + increase
         for _index in range(max(0, reduction)):
             payable = max(
                 requirements,
@@ -240,9 +245,11 @@ class PaymentMixin:
             if payable is None or requirements[payable] <= 0:
                 break
             requirements[payable] -= 1
-        increase += int(source.get("extraTribute") or 0)
-        if increase > 0:
-            requirements["hollow"] = requirements.get("hollow", 0) + increase
+        extra_tribute = int(source.get("extraTribute") or 0)
+        if extra_tribute > 0:
+            requirements["hollow"] = (
+                requirements.get("hollow", 0) + extra_tribute
+            )
         requirements = {
             temperament: amount
             for temperament, amount in requirements.items() if amount > 0
@@ -252,6 +259,13 @@ class PaymentMixin:
     def rules_essence_payment_plan(self, player_id, requirements,
                                    already_spent=None, transcendent_payment=None):
         remaining = dict(requirements)
+        all_hollow = bool(
+            self.rules_active_passive_sources("excess_essence_as_hollow")
+        )
+
+        def payment_temperament(token):
+            return "hollow" if all_hollow else token.get("temperament")
+
         essence_tokens = [
             token for token in self.tokens
             if token.get("ownerId") == player_id
@@ -298,17 +312,21 @@ class PaymentMixin:
             if temperament == "hollow":
                 continue
             consume(temperament, [
-                token for token in essence_tokens if token.get("temperament") == temperament
+                token for token in essence_tokens
+                if payment_temperament(token) == temperament
             ])
         if "hollow" in requirements:
             hollow_order = [
                 token for token in essence_tokens
-                if token.get("temperament") not in {"transcendent"}
+                if payment_temperament(token) != "transcendent"
             ]
-            hollow_order.sort(key=lambda token: token.get("temperament") != "hollow")
+            hollow_order.sort(
+                key=lambda token: payment_temperament(token) != "hollow"
+            )
             consume("hollow", hollow_order)
         transcendent = [
-            token for token in essence_tokens if token.get("temperament") == "transcendent"
+            token for token in essence_tokens
+            if payment_temperament(token) == "transcendent"
         ]
         for temperament in requirements:
             consume(temperament, transcendent, None if transcendent_payment is None
@@ -320,7 +338,10 @@ class PaymentMixin:
         remaining, spent = self.rules_essence_payment_plan(
             player_id, requirements, transcendent_payment={},
         )
-        available = sum(
+        all_hollow = bool(
+            self.rules_active_passive_sources("excess_essence_as_hollow")
+        )
+        available = 0 if all_hollow else sum(
             int(token.get("counters", {}).get("essence") or 0)
             for token in self.tokens
             if token.get("ownerId") == player_id and token.get("isEssence")
@@ -1071,9 +1092,8 @@ class PaymentMixin:
     def add_rules_excess_essence(self, player_id, generated):
         seat = self.players[player_id].get("seat")
         created = []
-        all_hollow = bool(self.rules_active_passive_sources("excess_essence_as_hollow"))
         for index, entry in enumerate(generated):
-            temperament = "hollow" if all_hollow else entry["temperament"]
+            temperament = entry["temperament"]
             amount = int(entry["amount"])
             expires_turn = 0 if entry.get("retained") else self.phase_tracker["turn"]
             token = next((

@@ -316,9 +316,11 @@ class BoardMixin:
 
     def _rules_effects_blanked_by_other(self, item):
         """Discombobulator: while on the field, every other card has no effects."""
+        if self.rules_field_zone(item) == "stalemate":
+            return False
         for other in self.battlefield:
             if (
-                other is item or not other.get("faceUp") or other.get("effectsDisabled")
+                not other.get("faceUp") or other.get("effectsDisabled")
                 or self.rules_field_zone(other) == "stalemate"
                 or not any(
                     passive.get("kind") == "disable_other_effects"
@@ -327,13 +329,18 @@ class BoardMixin:
             ):
                 continue
             if any(
-                effect.get("kind") == "lose_effects"
+                effect.get("kind") in {
+                    "lose_effects", "obscure_lock", "interzone_lock",
+                }
                 and effect.get("target", {}).get("itemId") == other.get("id")
                 and self.rules_ongoing_effect_active(effect)
                 for effect in self.rules_engine.get("ongoingEffects") or []
             ):
                 continue
-            return True
+            # Continuous blanking effects depend on one another. Battlefield
+            # order is timestamp order: the first active Discombobulator
+            # blanks later copies before their own passive can apply.
+            return other is not item
         return False
 
     def rules_interzone_item_replaceable(self, item):

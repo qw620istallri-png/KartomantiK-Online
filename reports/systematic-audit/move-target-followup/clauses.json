@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "b664b5b341a21b7f1deaab700eed8ba459688c1294a42d778ff04e6e3b696cef",
+  "published": false,
+  "finishedAt": "2026-11-07T10:35:42.614591+00:00",
+  "summary": {
+    "executed": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 2,
+    "cardsWithSelectedClauseProof": 2,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "f2cj2wys3jhbzci_en",
+      "name": "Destroy",
+      "paragraphIndex": 0,
+      "printedParagraph": "Destroy a target Will on the field or a target manifestation in an Interzone.",
+      "paragraphSha256": "33d498b9485d021def2610d8c255b2430665b1d4897ea6c89f4b119ce59e2099",
+      "expectedBehavior": "Destroy pays three Hollow Tributes and targets exactly one Persistent or Ephemeral Will on the field, or one Manifestation in either player's Interzone. On resolution the target enters its owner's Limbo with destruction semantics; other field zones and card types are rejected atomically, while a target that leaves in response makes the effect do nothing without refunding the paid cost.",
+      "testIds": [
+        "test_move_target_family.MoveTargetFamily.test_both_compile_the_exact_printed_contract",
+        "test_move_target_family.MoveTargetFamily.test_destroy_rejects_every_other_type_zone_and_cardinality_atomically",
+        "test_move_target_family.MoveTargetFamily.test_eliminate_rejects_non_manifestations_and_non_vessel_zones_atomically",
+        "test_move_target_family.MoveTargetFamily.test_destroy_really_destroys_each_printed_target_category",
+        "test_move_target_family.MoveTargetFamily.test_eliminate_reaches_any_players_vessel_and_routes_to_the_owner",
+        "test_move_target_family.MoveTargetFamily.test_destroy_cost_stays_paid_when_field_target_leaves_in_response",
+        "test_move_target_family.MoveTargetFamily.test_eliminate_cost_stays_paid_when_vessel_target_leaves_in_response"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "5x4aca4v6w9ma1f_en",
+      "name": "Eliminate the Profane",
+      "paragraphIndex": 0,
+      "printedParagraph": "Destroy a target manifestation in a player's Empathic Vessel.",
+      "paragraphSha256": "ca5fd3fb3f15b61f3426b7f82099b398195e4c22d1c2fc138db051ae5ab5afb6",
+      "expectedBehavior": "Eliminate the Profane pays four Hollow Tributes and targets exactly one Manifestation in any player's Empathic Vessel, regardless of its owner. On resolution the target enters its owner's Limbo with destruction semantics; Wills and non-Vessel zones are rejected atomically, while a target that leaves in response makes the effect do nothing without refunding the paid cost.",
+      "testIds": [
+        "test_move_target_family.MoveTargetFamily.test_both_compile_the_exact_printed_contract",
+        "test_move_target_family.MoveTargetFamily.test_destroy_rejects_every_other_type_zone_and_cardinality_atomically",
+        "test_move_target_family.MoveTargetFamily.test_eliminate_rejects_non_manifestations_and_non_vessel_zones_atomically",
+        "test_move_target_family.MoveTargetFamily.test_destroy_really_destroys_each_printed_target_category",
+        "test_move_target_family.MoveTargetFamily.test_eliminate_reaches_any_players_vessel_and_routes_to_the_owner",
+        "test_move_target_family.MoveTargetFamily.test_destroy_cost_stays_paid_when_field_target_leaves_in_response",
+        "test_move_target_family.MoveTargetFamily.test_eliminate_cost_stays_paid_when_vessel_target_leaves_in_response"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_move_target_family.MoveTargetFamily.test_both_compile_the_exact_printed_contract",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_move_target_family.MoveTargetFamily.test_destroy_cost_stays_paid_when_field_target_leaves_in_response",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_move_target_family.MoveTargetFamily.test_destroy_really_destroys_each_printed_target_category",
+      "status": "pass",
+      "durationSeconds": 0.156
+    },
+    {
+      "testId": "test_move_target_family.MoveTargetFamily.test_destroy_rejects_every_other_type_zone_and_cardinality_atomically",
+      "status": "pass",
+      "durationSeconds": 0.266
+    },
+    {
+      "testId": "test_move_target_family.MoveTargetFamily.test_eliminate_cost_stays_paid_when_vessel_target_leaves_in_response",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_move_target_family.MoveTargetFamily.test_eliminate_reaches_any_players_vessel_and_routes_to_the_owner",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_move_target_family.MoveTargetFamily.test_eliminate_rejects_non_manifestations_and_non_vessel_zones_atomically",
+      "status": "pass",
+      "durationSeconds": 0.172
+    }
+  ],
+  "limits": [
+    "This proof certifies both printed target domains, real Hollow Tribute payment, destruction into the immutable owner's Limbo, atomic invalid declarations and stale-target resolution.",
+    "It does not re-certify every generic destruction replacement, all Protection or Immunity sources, or other cards that share the move_target primitive."
+  ]
+}

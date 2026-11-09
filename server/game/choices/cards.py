@@ -339,7 +339,14 @@ class CardsChoicesMixin:
                 )
                 remaining.remove(card_id)
             transfers = (
-                [(card_id, target_id, "deck") for card_id in top + bottom]
+                [
+                    (
+                        card_id,
+                        owners[card_id] if group.get("toOwnerDecks") else target_id,
+                        "deck",
+                    )
+                    for card_id in top + bottom
+                ]
                 if from_zone != "deck" else []
             )
             transfers.extend(
@@ -377,8 +384,12 @@ class CardsChoicesMixin:
             else:
                 for side, ordered in [("top", reversed(top)), ("bottom", bottom)]:
                     for card_id in ordered:
+                        recipient = (
+                            owners[card_id]
+                            if group.get("toOwnerDecks") else target_id
+                        )
                         error, _owner, replacement = self.move_zone_card_by_effect(
-                            target_id, from_zone, target_id, "deck", card_id, side,
+                            target_id, from_zone, recipient, "deck", card_id, side,
                         )
                         if error:
                             return error, None
@@ -736,12 +747,15 @@ class CardsChoicesMixin:
         destination = choice.get("destination")
         zone = "deck" if destination == "deck_bottom" else "graveyard"
         position = "bottom" if destination == "deck_bottom" else "top"
+        replacements = []
         for card_id in card_ids:
-            error, _owner_id = self.move_zone_card(
+            error, _owner_id, replacement = self.move_zone_card_by_effect(
                 player_id, "hand", player_id, zone, card_id, position
             )
             if error:
                 return error, None
+            if replacement:
+                replacements.append(replacement)
         remaining = list(choice.get("remainingPlayerIds") or [])
         self.rules_engine["pendingChoice"] = None
         next_choice = self.set_rules_hand_overflow_choice(remaining)
@@ -753,6 +767,7 @@ class CardsChoicesMixin:
             "nextPlayerId": (
                 next_choice.get("playerId") if next_choice else None
             ),
+            **({"replacements": replacements} if replacements else {}),
         }
 
     def _rules_choice_draw_replacement(self, player_id, choice_id, choice, card_ids, option, item_id, placement, targets):

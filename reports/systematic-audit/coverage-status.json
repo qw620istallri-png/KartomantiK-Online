@@ -1,17 +1,17 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-11-06T15:21:44.460412+00:00",
-  "sourceDigest": "43786db67a4d392fbbd8acf150989f179143f37efef3ef7feef7acb342b37f28",
-  "unitEvidence": "reports/systematic-audit/extend-interzone-followup/unit-tests.json",
-  "unitEvidenceSourceDigest": "43786db67a4d392fbbd8acf150989f179143f37efef3ef7feef7acb342b37f28",
+  "generatedAt": "2026-11-08T20:56:15.738947+00:00",
+  "sourceDigest": "21ca7d07382368e354784e944471b6a378753e0feaf993c7d9b8953dce090897",
+  "unitEvidence": "reports/systematic-audit/power-set-maximum-followup/unit-tests.json",
+  "unitEvidenceSourceDigest": "21ca7d07382368e354784e944471b6a378753e0feaf993c7d9b8953dce090897",
   "currentUnitEvidence": true,
   "unitEvidencePassed": true,
   "duplicateUnitTestIds": [],
   "summary": {
     "catalogCards": 450,
-    "cardsWithSelectedClauseProof": 395,
-    "percentageWithSelectedClauseProof": 87.8,
-    "cardsOutsideThisStrictRegister": 55,
+    "cardsWithSelectedClauseProof": 412,
+    "percentageWithSelectedClauseProof": 91.6,
+    "cardsOutsideThisStrictRegister": 38,
     "fullCatalogSemanticCertification": false
   },
   "countingRule": "At least one explicit printed clause or explicit no-effect contract linked to tests that all passed in the named full unit run. Unique card IDs; interaction-only references excluded. Selected clauses do not certify all branches unless explicitly marked.",
@@ -2383,6 +2383,28 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "f2cj2wys3jhbzci_en",
+      "name": "Destroy",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/move-target-followup/clauses.json",
+          "testIds": [
+            "test_move_target_family.MoveTargetFamily.test_both_compile_the_exact_printed_contract",
+            "test_move_target_family.MoveTargetFamily.test_destroy_cost_stays_paid_when_field_target_leaves_in_response",
+            "test_move_target_family.MoveTargetFamily.test_destroy_really_destroys_each_printed_target_category",
+            "test_move_target_family.MoveTargetFamily.test_destroy_rejects_every_other_type_zone_and_cardinality_atomically",
+            "test_move_target_family.MoveTargetFamily.test_eliminate_cost_stays_paid_when_vessel_target_leaves_in_response",
+            "test_move_target_family.MoveTargetFamily.test_eliminate_reaches_any_players_vessel_and_routes_to_the_owner",
+            "test_move_target_family.MoveTargetFamily.test_eliminate_rejects_non_manifestations_and_non_vessel_zones_atomically"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "33d498b9485d021def2610d8c255b2430665b1d4897ea6c89f4b119ce59e2099"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "ynp0apjx1risrpt_en",
       "name": "Deviate",
       "proofs": [
@@ -2880,6 +2902,28 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "5x4aca4v6w9ma1f_en",
+      "name": "Eliminate the Profane",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/move-target-followup/clauses.json",
+          "testIds": [
+            "test_move_target_family.MoveTargetFamily.test_both_compile_the_exact_printed_contract",
+            "test_move_target_family.MoveTargetFamily.test_destroy_cost_stays_paid_when_field_target_leaves_in_response",
+            "test_move_target_family.MoveTargetFamily.test_destroy_really_destroys_each_printed_target_category",
+            "test_move_target_family.MoveTargetFamily.test_destroy_rejects_every_other_type_zone_and_cardinality_atomically",
+            "test_move_target_family.MoveTargetFamily.test_eliminate_cost_stays_paid_when_vessel_target_leaves_in_response",
+            "test_move_target_family.MoveTargetFamily.test_eliminate_reaches_any_players_vessel_and_routes_to_the_owner",
+            "test_move_target_family.MoveTargetFamily.test_eliminate_rejects_non_manifestations_and_non_vessel_zones_atomically"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "ca5fd3fb3f15b61f3426b7f82099b398195e4c22d1c2fc138db051ae5ab5afb6"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-091",
       "name": "Embottle",
       "proofs": [
@@ -2934,6 +2978,28 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "688f2707aa4f7ff0de34639b427aac3cfdc85d0a963ffcfed12b83b019a1810f"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "qahv0guk18jyo6i_en",
+      "name": "Equalize",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/set-field-power-followup/clauses.json",
+          "testIds": [
+            "test_set_field_power_family.SetFieldPowerFamily.test_both_compile_the_exact_printed_contract",
+            "test_set_field_power_family.SetFieldPowerFamily.test_both_prevent_new_modifiers_on_each_affected_occurrence",
+            "test_set_field_power_family.SetFieldPowerFamily.test_both_resolve_and_pay_normally_with_no_field_manifestation",
+            "test_set_field_power_family.SetFieldPowerFamily.test_equalize_uses_the_lowest_live_base_on_the_field_not_stalemate",
+            "test_set_field_power_family.SetFieldPowerFamily.test_modifier_lock_expires_on_the_next_turn",
+            "test_set_field_power_family.SetFieldPowerFamily.test_only_manifestations_present_at_resolution_are_locked",
+            "test_set_field_power_family.SetFieldPowerFamily.test_trim_really_restores_each_current_field_manifestation_to_its_base"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "9d66139e0d3a1aa727c2fd7b192e4c7873633365a7ef5d92411c0a6b953c9a09"
         }
       ],
       "allBranchesCertified": false
@@ -3750,6 +3816,61 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "inner-deserts-062",
+      "name": "Gigabonblade",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/grant-persist-followup/clauses.json",
+          "testIds": [
+            "test_grant_persist_family.GrantPersistFamily.test_activation_scope_and_insufficient_power_are_atomic",
+            "test_grant_persist_family.GrantPersistFamily.test_cannot_be_used_as_tribute_from_hand",
+            "test_grant_persist_family.GrantPersistFamily.test_compiles_the_exact_three_paragraph_contract",
+            "test_grant_persist_family.GrantPersistFamily.test_effect_departure_exiles_and_weakens_each_current_field_manifestation",
+            "test_grant_persist_family.GrantPersistFamily.test_natural_confrontation_loss_captures_without_exile_or_penalty",
+            "test_grant_persist_family.GrantPersistFamily.test_pays_two_power_and_grants_persist_only_until_turn_end",
+            "test_grant_persist_family.GrantPersistFamily.test_suspension_or_inactive_text_prevents_exile_rider_and_penalty",
+            "test_grant_persist_family.GrantPersistFamily.test_winning_with_persist_keeps_gigabonblade_as_next_first"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "9f83157a1ec7554ed2c8fe98d0bb23cc9f6e81440d29325b5c8b49d5653450b1"
+        },
+        {
+          "source": "reports/systematic-audit/grant-persist-followup/clauses.json",
+          "testIds": [
+            "test_grant_persist_family.GrantPersistFamily.test_activation_scope_and_insufficient_power_are_atomic",
+            "test_grant_persist_family.GrantPersistFamily.test_cannot_be_used_as_tribute_from_hand",
+            "test_grant_persist_family.GrantPersistFamily.test_compiles_the_exact_three_paragraph_contract",
+            "test_grant_persist_family.GrantPersistFamily.test_effect_departure_exiles_and_weakens_each_current_field_manifestation",
+            "test_grant_persist_family.GrantPersistFamily.test_natural_confrontation_loss_captures_without_exile_or_penalty",
+            "test_grant_persist_family.GrantPersistFamily.test_pays_two_power_and_grants_persist_only_until_turn_end",
+            "test_grant_persist_family.GrantPersistFamily.test_suspension_or_inactive_text_prevents_exile_rider_and_penalty",
+            "test_grant_persist_family.GrantPersistFamily.test_winning_with_persist_keeps_gigabonblade_as_next_first"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "1b6b64c1022f8466274f74a4a069d66029cc72a6f42d947fd7093fe450146a8f"
+        },
+        {
+          "source": "reports/systematic-audit/grant-persist-followup/clauses.json",
+          "testIds": [
+            "test_grant_persist_family.GrantPersistFamily.test_activation_scope_and_insufficient_power_are_atomic",
+            "test_grant_persist_family.GrantPersistFamily.test_cannot_be_used_as_tribute_from_hand",
+            "test_grant_persist_family.GrantPersistFamily.test_compiles_the_exact_three_paragraph_contract",
+            "test_grant_persist_family.GrantPersistFamily.test_effect_departure_exiles_and_weakens_each_current_field_manifestation",
+            "test_grant_persist_family.GrantPersistFamily.test_natural_confrontation_loss_captures_without_exile_or_penalty",
+            "test_grant_persist_family.GrantPersistFamily.test_pays_two_power_and_grants_persist_only_until_turn_end",
+            "test_grant_persist_family.GrantPersistFamily.test_suspension_or_inactive_text_prevents_exile_rider_and_penalty",
+            "test_grant_persist_family.GrantPersistFamily.test_winning_with_persist_keeps_gigabonblade_as_next_first"
+          ],
+          "paragraphIndex": 2,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "3693e0afee405238fb0ac63b3a061ced8780694d6ffad50a5eb7aa57fcab64ea"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "x15xumjqqhrnrds_en",
       "name": "Glabron, the Oppressing",
       "proofs": [
@@ -3842,6 +3963,29 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "3d7fd50a424ea9f4ca156737a5f12e202cc97c1c393f8b42904ad3d4e879f8c9"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "xfgbjv2gjb09fj9_en",
+      "name": "Gomeran, Echo Mistress",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/enters-support-followup/clauses.json",
+          "testIds": [
+            "test_enters_support_family.EntersSupportFamily.test_both_compile_the_exact_selected_support_contract",
+            "test_enters_support_family.EntersSupportFamily.test_flail_really_enters_support_without_tribute_and_neutralizes_the_chosen_will",
+            "test_enters_support_family.EntersSupportFamily.test_flail_support_is_available_for_exactly_an_eligible_opposing_will",
+            "test_enters_support_family.EntersSupportFamily.test_flail_triggers_only_for_its_own_entry_from_hand",
+            "test_enters_support_family.EntersSupportFamily.test_gomeran_really_copies_an_allied_non_token_support_entry",
+            "test_enters_support_family.EntersSupportFamily.test_gomeran_requires_an_active_source_in_the_confrontation_zone",
+            "test_enters_support_family.EntersSupportFamily.test_gomeran_requires_its_controller_and_a_non_token_entry",
+            "test_enters_support_family.EntersSupportFamily.test_gomerans_created_token_does_not_copy_itself_again"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "c259d8d644480e9ea9db458f096b1814408a217c38a9b5aba3f1a2e7ea60e43f"
         }
       ],
       "allBranchesCertified": false
@@ -4124,6 +4268,43 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "d0741e587cbb590a25ff307581a420238b7010f7f19ae02a2252c0b665df505b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "2hszv736kwwmi7n_en",
+      "name": "Grudge Weaver",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/player-loses-confrontation-followup/clauses.json",
+          "testIds": [
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_both_compile_the_exact_selected_contracts",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_adds_exactly_one_counter_per_loss",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_spends_two_counters_for_support_this_turn_only",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_real_loss_queues_both_global_interzone_triggers",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_triggers_follow_current_controller_after_control_change",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_wrong_outcome_zone_or_inactive_source_does_not_trigger",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_zborh_returns_to_immutable_owner_hand_after_controller_loses"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "71cb31f3d40c8bfdb5fead1b556b7998d56603292a9c24a2e3c92657a767228c"
+        },
+        {
+          "source": "reports/systematic-audit/player-loses-confrontation-followup/clauses.json",
+          "testIds": [
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_both_compile_the_exact_selected_contracts",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_adds_exactly_one_counter_per_loss",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_spends_two_counters_for_support_this_turn_only",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_real_loss_queues_both_global_interzone_triggers",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_triggers_follow_current_controller_after_control_change",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_wrong_outcome_zone_or_inactive_source_does_not_trigger",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_zborh_returns_to_immutable_owner_hand_after_controller_loses"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "5712de865b9f1eb14194d670b11863e27072c4f4ac7664b1f17bdfebb0749da4"
         }
       ],
       "allBranchesCertified": false
@@ -4881,6 +5062,67 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "50784f4142ba1a527bf93463a7b8c56710984577df5ce1cfbfdb983bc1dde7b0"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-118",
+      "name": "Inflate the Ego",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/power-set-maximum-followup/clauses.json",
+          "testIds": [
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_base_five_discount_sets_current_four_to_ten_without_mutating_printed_cost",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_cleanse_removes_the_cap_and_resets_other_power_changes",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_compiles_the_exact_two_paragraph_contract",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_discount_uses_modified_base_power_and_never_makes_cost_negative",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_later_malus_lowers_power_but_later_bonus_is_capped_at_ten",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_new_first_between_payment_and_resolution_invalidates_the_old_target",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_requires_the_controllers_current_first_manifestation_atomically",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_turn_end_expiration_restores_the_underlying_power"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "4020abee0b3fdebdd8c746c10c67a8208096c5b864b52b19959203c103504c09"
+        },
+        {
+          "source": "reports/systematic-audit/power-set-maximum-followup/clauses.json",
+          "testIds": [
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_base_five_discount_sets_current_four_to_ten_without_mutating_printed_cost",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_cleanse_removes_the_cap_and_resets_other_power_changes",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_compiles_the_exact_two_paragraph_contract",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_discount_uses_modified_base_power_and_never_makes_cost_negative",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_later_malus_lowers_power_but_later_bonus_is_capped_at_ten",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_new_first_between_payment_and_resolution_invalidates_the_old_target",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_requires_the_controllers_current_first_manifestation_atomically",
+            "test_inflate_the_ego_family.InflateTheEgoFamily.test_turn_end_expiration_restores_the_underlying_power"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "5ba1c21a378902f4508b4336a674536e5fd355af8a39e349610243e009da7945"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "shiox5powdvu5nl_en",
+      "name": "Inspired Nimbus",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/enters-zone-followup/clauses.json",
+          "testIds": [
+            "test_enters_zone_family.EntersZoneFamily.test_both_compile_the_exact_printed_contract",
+            "test_enters_zone_family.EntersZoneFamily.test_both_trigger_only_when_they_enter_an_opponents_vessel",
+            "test_enters_zone_family.EntersZoneFamily.test_nimbus_grants_the_card_owner_one_free_hand_will_this_turn",
+            "test_enters_zone_family.EntersZoneFamily.test_nimbus_permission_cannot_be_reused_or_carried_to_the_next_turn",
+            "test_enters_zone_family.EntersZoneFamily.test_unreachable_pillar_suppresses_both_vessel_entry_effects",
+            "test_enters_zone_family.EntersZoneFamily.test_worm_bomb_destroys_all_available_manifestations_up_to_three",
+            "test_enters_zone_family.EntersZoneFamily.test_worm_bomb_destroys_exactly_three_other_random_manifestations"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "ab235c47e8ee50b737ad4f767596e5f0c196d368ef7e74bfcfad0434283c5781"
         }
       ],
       "allBranchesCertified": false
@@ -6483,6 +6725,28 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "wx7y64eaa0wlvuk_en",
+      "name": "Melancholic Mirror",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/manifestation-used-as-tribute-followup/clauses.json",
+          "testIds": [
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_both_compile_the_exact_printed_contract",
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_inactive_sources_do_not_observe_tributes",
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_accept_exhausts_and_creates_one_support_token_copy",
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_decline_does_not_exhaust_or_create_a_copy",
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_only_follows_its_controller_and_only_while_ready",
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mountain_exiles_the_immutable_owner_card_and_scores_other_players",
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_real_will_payment_queues_both_with_exact_tribute_metadata"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "c4cb45344b52d96ce9f5244540b1a1500932189b13756ef9c2455268380b19cc"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-063",
       "name": "Memento, the Fallen",
       "proofs": [
@@ -7098,6 +7362,64 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "c2ab66fa307e816ae4d2f43f4305a72902437f803377ba577189a4c38371758a"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-043",
+      "name": "Obscure",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/obscure-lock-followup/clauses.json",
+          "testIds": [
+            "test_obscure_lock_family.ObscureLockFamily.test_cleanse_removes_the_modifier_without_undoing_obscures_exile",
+            "test_obscure_lock_family.ObscureLockFamily.test_compiles_the_exact_three_paragraph_contract",
+            "test_obscure_lock_family.ObscureLockFamily.test_immunity_blocks_both_controllers_after_obscure_resolves",
+            "test_obscure_lock_family.ObscureLockFamily.test_invalid_targets_are_rejected_without_payment",
+            "test_obscure_lock_family.ObscureLockFamily.test_late_invalid_target_fizzles_but_obscure_still_exiles_itself",
+            "test_obscure_lock_family.ObscureLockFamily.test_manifestation_loses_effects_is_fully_immune_and_contributes_zero",
+            "test_obscure_lock_family.ObscureLockFamily.test_neutralized_obscure_goes_to_limbo_and_creates_no_lock",
+            "test_obscure_lock_family.ObscureLockFamily.test_persistent_will_loses_effects_and_is_immune_without_manifestation_power_rule",
+            "test_obscure_lock_family.ObscureLockFamily.test_turn_expiry_restores_effects_immunity_and_confrontation_power"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "ec24a485d66ce269960b53152a8b433c76334c40710ceba9aa76ef23cd91c6d0"
+        },
+        {
+          "source": "reports/systematic-audit/obscure-lock-followup/clauses.json",
+          "testIds": [
+            "test_obscure_lock_family.ObscureLockFamily.test_cleanse_removes_the_modifier_without_undoing_obscures_exile",
+            "test_obscure_lock_family.ObscureLockFamily.test_compiles_the_exact_three_paragraph_contract",
+            "test_obscure_lock_family.ObscureLockFamily.test_immunity_blocks_both_controllers_after_obscure_resolves",
+            "test_obscure_lock_family.ObscureLockFamily.test_invalid_targets_are_rejected_without_payment",
+            "test_obscure_lock_family.ObscureLockFamily.test_late_invalid_target_fizzles_but_obscure_still_exiles_itself",
+            "test_obscure_lock_family.ObscureLockFamily.test_manifestation_loses_effects_is_fully_immune_and_contributes_zero",
+            "test_obscure_lock_family.ObscureLockFamily.test_neutralized_obscure_goes_to_limbo_and_creates_no_lock",
+            "test_obscure_lock_family.ObscureLockFamily.test_persistent_will_loses_effects_and_is_immune_without_manifestation_power_rule",
+            "test_obscure_lock_family.ObscureLockFamily.test_turn_expiry_restores_effects_immunity_and_confrontation_power"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "e106a433cd3682051d4eaab56d851e53bfc8ba9692cf1a587d22a2e3a52d944f"
+        },
+        {
+          "source": "reports/systematic-audit/obscure-lock-followup/clauses.json",
+          "testIds": [
+            "test_obscure_lock_family.ObscureLockFamily.test_cleanse_removes_the_modifier_without_undoing_obscures_exile",
+            "test_obscure_lock_family.ObscureLockFamily.test_compiles_the_exact_three_paragraph_contract",
+            "test_obscure_lock_family.ObscureLockFamily.test_immunity_blocks_both_controllers_after_obscure_resolves",
+            "test_obscure_lock_family.ObscureLockFamily.test_invalid_targets_are_rejected_without_payment",
+            "test_obscure_lock_family.ObscureLockFamily.test_late_invalid_target_fizzles_but_obscure_still_exiles_itself",
+            "test_obscure_lock_family.ObscureLockFamily.test_manifestation_loses_effects_is_fully_immune_and_contributes_zero",
+            "test_obscure_lock_family.ObscureLockFamily.test_neutralized_obscure_goes_to_limbo_and_creates_no_lock",
+            "test_obscure_lock_family.ObscureLockFamily.test_persistent_will_loses_effects_and_is_immune_without_manifestation_power_rule",
+            "test_obscure_lock_family.ObscureLockFamily.test_turn_expiry_restores_effects_immunity_and_confrontation_power"
+          ],
+          "paragraphIndex": 2,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "e5e4dee9b0e5e685ecb641b2321e31d08cdb3e1c1b401a2f223abbbae938adeb"
         }
       ],
       "allBranchesCertified": false
@@ -7769,6 +8091,50 @@
           "paragraphIndex": 1,
           "proofKind": "printed-clause",
           "printedClauseSha256": "b27d9a014897c36a768423c74ff5b4ea7bc9f63db8d5578d3b8d109a3f8fce77"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-035",
+      "name": "Phimosino",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/end-of-game-followup/clauses.json",
+          "testIds": [
+            "test_end_of_game_family.EndOfGameFamily.test_both_compile_the_exact_printed_contract",
+            "test_end_of_game_family.EndOfGameFamily.test_each_players_end_game_adjustment_is_independent_and_additive",
+            "test_end_of_game_family.EndOfGameFamily.test_phimosino_gives_fifty_points_only_from_its_owners_deck",
+            "test_end_of_game_family.EndOfGameFamily.test_phimosino_scores_for_whichever_owner_has_it_in_their_deck",
+            "test_end_of_game_family.EndOfGameFamily.test_piercing_lover_counts_only_manifestations_with_base_power_at_most_two",
+            "test_end_of_game_family.EndOfGameFamily.test_piercing_lover_requires_an_opponents_empathic_vessel",
+            "test_end_of_game_family.EndOfGameFamily.test_unreachable_pillar_suppresses_the_lover_only_while_active"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "bb1ca9a6da5bbb459b52c109da079618e437a2adbe4602e3a4a526fee67edc19"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "2z1svoyvo77ta03_en",
+      "name": "Piercing Lover",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/end-of-game-followup/clauses.json",
+          "testIds": [
+            "test_end_of_game_family.EndOfGameFamily.test_both_compile_the_exact_printed_contract",
+            "test_end_of_game_family.EndOfGameFamily.test_each_players_end_game_adjustment_is_independent_and_additive",
+            "test_end_of_game_family.EndOfGameFamily.test_phimosino_gives_fifty_points_only_from_its_owners_deck",
+            "test_end_of_game_family.EndOfGameFamily.test_phimosino_scores_for_whichever_owner_has_it_in_their_deck",
+            "test_end_of_game_family.EndOfGameFamily.test_piercing_lover_counts_only_manifestations_with_base_power_at_most_two",
+            "test_end_of_game_family.EndOfGameFamily.test_piercing_lover_requires_an_opponents_empathic_vessel",
+            "test_end_of_game_family.EndOfGameFamily.test_unreachable_pillar_suppresses_the_lover_only_while_active"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "02f2e27f2b5467ace43bb405946021513f481149da1e3bbcf0b065f634a2f361"
         }
       ],
       "allBranchesCertified": false
@@ -9135,6 +9501,28 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "193ff9f249150390041fdd73e7c2aaabcbaba9c281263693f75607bff29e282e"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-123",
+      "name": "Sacred Mountain",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/manifestation-used-as-tribute-followup/clauses.json",
+          "testIds": [
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_both_compile_the_exact_printed_contract",
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_inactive_sources_do_not_observe_tributes",
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_accept_exhausts_and_creates_one_support_token_copy",
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_decline_does_not_exhaust_or_create_a_copy",
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_only_follows_its_controller_and_only_while_ready",
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mountain_exiles_the_immutable_owner_card_and_scores_other_players",
+            "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_real_will_payment_queues_both_with_exact_tribute_metadata"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "f6812abbdde85d17adeaad220391888fd2927aa168521668fa7476626969b3f2"
         }
       ],
       "allBranchesCertified": false
@@ -10615,6 +11003,28 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "t42gc95tma8uhzm_en",
+      "name": "Trim the Excess",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/set-field-power-followup/clauses.json",
+          "testIds": [
+            "test_set_field_power_family.SetFieldPowerFamily.test_both_compile_the_exact_printed_contract",
+            "test_set_field_power_family.SetFieldPowerFamily.test_both_prevent_new_modifiers_on_each_affected_occurrence",
+            "test_set_field_power_family.SetFieldPowerFamily.test_both_resolve_and_pay_normally_with_no_field_manifestation",
+            "test_set_field_power_family.SetFieldPowerFamily.test_equalize_uses_the_lowest_live_base_on_the_field_not_stalemate",
+            "test_set_field_power_family.SetFieldPowerFamily.test_modifier_lock_expires_on_the_next_turn",
+            "test_set_field_power_family.SetFieldPowerFamily.test_only_manifestations_present_at_resolution_are_locked",
+            "test_set_field_power_family.SetFieldPowerFamily.test_trim_really_restores_each_current_field_manifestation_to_its_base"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "b98481bf7546707adb58a5699db54548072a33618b7ea8f8b700921aa24afd5b"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "inner-deserts-037",
       "name": "Tut, Rhythmic Whirlwind",
       "proofs": [
@@ -10766,6 +11176,29 @@
           "paragraphIndex": null,
           "proofKind": "printed-clause",
           "printedClauseSha256": "52008c706714efbcfbcbb31ca0d28339dc55a02cff42a9cabda73ac8341d66c0"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "tdy2112mspb7u97_en",
+      "name": "Unruly Flail",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/enters-support-followup/clauses.json",
+          "testIds": [
+            "test_enters_support_family.EntersSupportFamily.test_both_compile_the_exact_selected_support_contract",
+            "test_enters_support_family.EntersSupportFamily.test_flail_really_enters_support_without_tribute_and_neutralizes_the_chosen_will",
+            "test_enters_support_family.EntersSupportFamily.test_flail_support_is_available_for_exactly_an_eligible_opposing_will",
+            "test_enters_support_family.EntersSupportFamily.test_flail_triggers_only_for_its_own_entry_from_hand",
+            "test_enters_support_family.EntersSupportFamily.test_gomeran_really_copies_an_allied_non_token_support_entry",
+            "test_enters_support_family.EntersSupportFamily.test_gomeran_requires_an_active_source_in_the_confrontation_zone",
+            "test_enters_support_family.EntersSupportFamily.test_gomeran_requires_its_controller_and_a_non_token_entry",
+            "test_enters_support_family.EntersSupportFamily.test_gomerans_created_token_does_not_copy_itself_again"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "2e9c86d87b616ef3069a3abab403c955b901e29c6237a0ca78927bbb1d1490fe"
         }
       ],
       "allBranchesCertified": false
@@ -11251,6 +11684,28 @@
       "allBranchesCertified": false
     },
     {
+      "cardId": "7jaany95hy1h5pz_en",
+      "name": "Worm Bomb",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/enters-zone-followup/clauses.json",
+          "testIds": [
+            "test_enters_zone_family.EntersZoneFamily.test_both_compile_the_exact_printed_contract",
+            "test_enters_zone_family.EntersZoneFamily.test_both_trigger_only_when_they_enter_an_opponents_vessel",
+            "test_enters_zone_family.EntersZoneFamily.test_nimbus_grants_the_card_owner_one_free_hand_will_this_turn",
+            "test_enters_zone_family.EntersZoneFamily.test_nimbus_permission_cannot_be_reused_or_carried_to_the_next_turn",
+            "test_enters_zone_family.EntersZoneFamily.test_unreachable_pillar_suppresses_both_vessel_entry_effects",
+            "test_enters_zone_family.EntersZoneFamily.test_worm_bomb_destroys_all_available_manifestations_up_to_three",
+            "test_enters_zone_family.EntersZoneFamily.test_worm_bomb_destroys_exactly_three_other_random_manifestations"
+          ],
+          "paragraphIndex": 0,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "b4212ad82305a6524432e00285bc9d418cc37407c5cece49760595ff695002e7"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
       "cardId": "ypvac71teuck2za_en",
       "name": "Worn Old Shape",
       "proofs": [
@@ -11444,6 +11899,28 @@
           "paragraphIndex": 0,
           "proofKind": "printed-clause",
           "printedClauseSha256": "b7c8f6c8b1649638b24c2161a5dd9d257804400eae53fdf6abcbccd9e12133b4"
+        }
+      ],
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-015",
+      "name": "Zborh, the Eternal",
+      "proofs": [
+        {
+          "source": "reports/systematic-audit/player-loses-confrontation-followup/clauses.json",
+          "testIds": [
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_both_compile_the_exact_selected_contracts",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_adds_exactly_one_counter_per_loss",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_spends_two_counters_for_support_this_turn_only",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_real_loss_queues_both_global_interzone_triggers",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_triggers_follow_current_controller_after_control_change",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_wrong_outcome_zone_or_inactive_source_does_not_trigger",
+            "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_zborh_returns_to_immutable_owner_hand_after_controller_loses"
+          ],
+          "paragraphIndex": 1,
+          "proofKind": "printed-clause",
+          "printedClauseSha256": "e6dea8168e31a36edd098eb7d309033b7cad550691583241a416577e1e65fa6e"
         }
       ],
       "allBranchesCertified": false

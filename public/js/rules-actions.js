@@ -876,13 +876,6 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
     const first = latestState?.battlefield?.find((item) => item.id === firstId);
     reduction += Math.floor(Number(cardsById.get(first?.cardId)?.power || 0) / 2);
   }
-  while (reduction > 0) {
-    const payable = Object.keys(paymentRequirements)
-      .sort((a, b) => Number(paymentRequirements[b]) - Number(paymentRequirements[a]))[0];
-    if (!payable || Number(paymentRequirements[payable]) <= 0) break;
-    paymentRequirements[payable] -= 1;
-    reduction -= 1;
-  }
   if (printedWillTribute) {
     const increase = passiveSources.reduce((total, item) => (
       total + (passiveEffectsByCard.get(item.cardId) || [])
@@ -892,6 +885,13 @@ function rulesActionPaymentDraft(source, card, encodedAbility, transcendentPayme
     if (increase > 0) {
       paymentRequirements.hollow = Number(paymentRequirements.hollow || 0) + increase;
     }
+  }
+  while (reduction > 0) {
+    const payable = Object.keys(paymentRequirements)
+      .sort((a, b) => Number(paymentRequirements[b]) - Number(paymentRequirements[a]))[0];
+    if (!payable || Number(paymentRequirements[payable]) <= 0) break;
+    paymentRequirements[payable] -= 1;
+    reduction -= 1;
   }
   if (source.playFromField && Number(source.surcharge || 0) > 0) {
     paymentRequirements.hollow = Number(paymentRequirements.hollow || 0) + Number(source.surcharge);

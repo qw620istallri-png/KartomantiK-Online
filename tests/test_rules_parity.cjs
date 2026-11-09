@@ -100,7 +100,16 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
         { key: "same", targetGroupIndex: 0 }, { key: "other", targetGroupIndex: 0 }, { key: "same", targetGroupIndex: 1 },
       ];
       const noGroupDeadEnd = !rulesDraftHasTargetsClient(grouped, [grouped.structuredTargets[0]]) && rulesDraftHasTargetsClient(grouped, [grouped.structuredTargets[1]]);
-      return { lateTribute, cannotReuse, distinctCost, suspendedCost, formulaLimited, formulaEnough, sevenCardLimit, boundedSearch, distinctTargets, completeGroups, noGroupDeadEnd };
+      const zeroWill = { id: "parity-zero-will", type: "ephemeral_will", powerCost: "", cost: 0, effect: "" };
+      cardsById.set(zeroWill.id, zeroWill);
+      latestState.battlefield = [
+        { id: "parity-teapot", ownerId: "p1", controllerId: "p1", cardId: "pxp1zvyxfv16bdd_en", faceUp: true, fieldZone: "interzone", counters: {} },
+        { id: "parity-fog", ownerId: "p2", controllerId: "p2", cardId: "ul1tffi1wn5l3q5_en", faceUp: true, fieldZone: "field", counters: {} },
+      ];
+      const combined = rulesActionPaymentDraft({ cardId: zeroWill.id, zone: "hand" }, zeroWill, null);
+      const fogTeapotFloor = Object.values(combined.paymentRequirements)
+        .reduce((sum, amount) => sum + Number(amount || 0), 0) === 0;
+      return { lateTribute, cannotReuse, distinctCost, suspendedCost, formulaLimited, formulaEnough, sevenCardLimit, boundedSearch, distinctTargets, completeGroups, noGroupDeadEnd, fogTeapotFloor };
     });
     assert.ok(Object.values(payments).every(Boolean), JSON.stringify(payments));
     const flowCases = fixtures.filter((test) => test.label.endsWith("/ready") && (

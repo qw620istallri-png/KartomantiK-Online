@@ -11632,11 +11632,18 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
             "targets": [], "ability": {"result": self.ABILITIES[zamza][0]["result"]},
         })
         self.assertEqual((p1["score"], p2["score"]), (scores[0], scores[1] + 5))
-        # Tricephalous Oil-Dog turns every excess essence Hollow.
+        # Tricephalous Oil-Dog makes every excess essence count as Hollow
+        # without overwriting its stored temperament.
         session.card_rules[oildog]["passiveEffects"] = [self.ABILITIES[oildog][0]["passiveEffect"]]
         session.battlefield = [self.field_item("dog", "p2", oildog, field_zone="interzone")]
         created = session.add_rules_excess_essence("p1", [{"temperament": "capricious", "amount": 2}])
-        self.assertEqual(created[0]["temperament"], "hollow")
+        self.assertEqual(created[0]["temperament"], "capricious")
+        remaining, spent = session.rules_essence_payment_plan(
+            "p1", {"hollow": 2},
+        )
+        self.assertEqual((remaining, sum(x["amount"] for x in spent)), (
+            {"hollow": 0}, 2,
+        ))
         # Zizek: needs six Wills in Limbo to enter and keeps its excess essence when used as tribute.
         session.card_rules[zizek] = {
             "type": "manifestation", "power": 5, "temperaments": ["melancholic"],

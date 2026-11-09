@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "9f5689df0f1e9e38ae21ff08fc89eecd17807da84cf3cd8acfc6bf83050d5201",
+  "published": false,
+  "finishedAt": "2026-11-08T14:53:43.420823+00:00",
+  "summary": {
+    "executed": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 2,
+    "cardsWithSelectedClauseProof": 2,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "shiox5powdvu5nl_en",
+      "name": "Inspired Nimbus",
+      "paragraphIndex": 0,
+      "printedParagraph": "When the Inspired Nimbus enters an opponent's Empathic Vessel, the owner of this card can play a Will without paying its tribute cost until the end of the turn.",
+      "paragraphSha256": "ab235c47e8ee50b737ad4f767596e5f0c196d368ef7e74bfcfad0434283c5781",
+      "expectedBehavior": "When Inspired Nimbus enters an opponent's Empathic Vessel, its immutable owner receives one permission for the current turn to play any Will from hand without Tribute. The Vessel player receives no permission, the permission is consumed by one declaration and cannot carry into the next turn, and Unreachable Pillar suppresses the Vessel entry effect while active.",
+      "testIds": [
+        "test_enters_zone_family.EntersZoneFamily.test_both_compile_the_exact_printed_contract",
+        "test_enters_zone_family.EntersZoneFamily.test_both_trigger_only_when_they_enter_an_opponents_vessel",
+        "test_enters_zone_family.EntersZoneFamily.test_nimbus_grants_the_card_owner_one_free_hand_will_this_turn",
+        "test_enters_zone_family.EntersZoneFamily.test_nimbus_permission_cannot_be_reused_or_carried_to_the_next_turn",
+        "test_enters_zone_family.EntersZoneFamily.test_worm_bomb_destroys_exactly_three_other_random_manifestations",
+        "test_enters_zone_family.EntersZoneFamily.test_worm_bomb_destroys_all_available_manifestations_up_to_three",
+        "test_enters_zone_family.EntersZoneFamily.test_unreachable_pillar_suppresses_both_vessel_entry_effects"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "7jaany95hy1h5pz_en",
+      "name": "Worm Bomb",
+      "paragraphIndex": 0,
+      "printedParagraph": "When the Worm Bomb enters the Empathic Vessel of an opponent, that player destroys up to 3 random manifestations other than the Worm Bomb in their Empathic Vessel.",
+      "paragraphSha256": "b4212ad82305a6524432e00285bc9d418cc37407c5cece49760595ff695002e7",
+      "expectedBehavior": "When Worm Bomb enters an opponent's Empathic Vessel, up to three random other Manifestations in that Vessel are destroyed to their respective owners' Limbo. Worm Bomb itself and all Wills are excluded, fewer than three eligible cards are all destroyed, and Unreachable Pillar suppresses the Vessel entry effect while active.",
+      "testIds": [
+        "test_enters_zone_family.EntersZoneFamily.test_both_compile_the_exact_printed_contract",
+        "test_enters_zone_family.EntersZoneFamily.test_both_trigger_only_when_they_enter_an_opponents_vessel",
+        "test_enters_zone_family.EntersZoneFamily.test_nimbus_grants_the_card_owner_one_free_hand_will_this_turn",
+        "test_enters_zone_family.EntersZoneFamily.test_nimbus_permission_cannot_be_reused_or_carried_to_the_next_turn",
+        "test_enters_zone_family.EntersZoneFamily.test_worm_bomb_destroys_exactly_three_other_random_manifestations",
+        "test_enters_zone_family.EntersZoneFamily.test_worm_bomb_destroys_all_available_manifestations_up_to_three",
+        "test_enters_zone_family.EntersZoneFamily.test_unreachable_pillar_suppresses_both_vessel_entry_effects"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_enters_zone_family.EntersZoneFamily.test_both_compile_the_exact_printed_contract",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_enters_zone_family.EntersZoneFamily.test_both_trigger_only_when_they_enter_an_opponents_vessel",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_enters_zone_family.EntersZoneFamily.test_nimbus_grants_the_card_owner_one_free_hand_will_this_turn",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_enters_zone_family.EntersZoneFamily.test_nimbus_permission_cannot_be_reused_or_carried_to_the_next_turn",
+      "status": "pass",
+      "durationSeconds": 0.094
+    },
+    {
+      "testId": "test_enters_zone_family.EntersZoneFamily.test_unreachable_pillar_suppresses_both_vessel_entry_effects",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_enters_zone_family.EntersZoneFamily.test_worm_bomb_destroys_all_available_manifestations_up_to_three",
+      "status": "pass",
+      "durationSeconds": 0.125
+    },
+    {
+      "testId": "test_enters_zone_family.EntersZoneFamily.test_worm_bomb_destroys_exactly_three_other_random_manifestations",
+      "status": "pass",
+      "durationSeconds": 0.031
+    }
+  ],
+  "limits": [
+    "This proof certifies both printed opponent-Vessel entry clauses, exact zone and ownership relations, Nimbus permission scope, consumption and lifetime, Worm Bomb's random pool, maximum count and owner destinations, and Unreachable Pillar suppression.",
+    "It does not re-certify all confrontation-cleanup ordering, every Will playable through Nimbus, or all destruction replacements that may alter a Worm Bomb destination."
+  ]
+}

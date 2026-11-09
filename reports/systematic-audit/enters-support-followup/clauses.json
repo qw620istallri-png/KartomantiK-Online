@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "80301bc8cc6919a6adbdc432a1bb15c3b3d234f20a93f1fa93d12244d5e00b26",
+  "published": false,
+  "finishedAt": "2026-11-07T16:28:13.719110+00:00",
+  "summary": {
+    "executed": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 2,
+    "cardsWithSelectedClauseProof": 2,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "xfgbjv2gjb09fj9_en",
+      "name": "Gomeran, Echo Mistress",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Gomeran is in the Confrontation Zone, whenever a non-token manifestation enters in Support under your control, put a token copy of that manifestation in Support.",
+      "paragraphSha256": "c259d8d644480e9ea9db458f096b1814408a217c38a9b5aba3f1a2e7ea60e43f",
+      "expectedBehavior": "While an active Gomeran is in its controller's Confrontation Zone, each non-token Manifestation that enters Support under that controller creates exactly one token copy of itself in Support. Opposing and token entries do not trigger it, the created copy preserves the entering card and controller, and the copy cannot recursively trigger Gomeran.",
+      "testIds": [
+        "test_enters_support_family.EntersSupportFamily.test_both_compile_the_exact_selected_support_contract",
+        "test_enters_support_family.EntersSupportFamily.test_gomeran_really_copies_an_allied_non_token_support_entry",
+        "test_enters_support_family.EntersSupportFamily.test_gomeran_requires_its_controller_and_a_non_token_entry",
+        "test_enters_support_family.EntersSupportFamily.test_gomeran_requires_an_active_source_in_the_confrontation_zone",
+        "test_enters_support_family.EntersSupportFamily.test_gomerans_created_token_does_not_copy_itself_again",
+        "test_enters_support_family.EntersSupportFamily.test_flail_support_is_available_for_exactly_an_eligible_opposing_will",
+        "test_enters_support_family.EntersSupportFamily.test_flail_really_enters_support_without_tribute_and_neutralizes_the_chosen_will",
+        "test_enters_support_family.EntersSupportFamily.test_flail_triggers_only_for_its_own_entry_from_hand"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "tdy2112mspb7u97_en",
+      "name": "Unruly Flail",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as an opponent controls at least one Will in the stack that targets a manifestation in the Confrontation Zone, you may play the Unruly Flail in Support from hand. If you do, neutralize a target Will chosen among them.",
+      "paragraphSha256": "2e9c86d87b616ef3069a3abab403c955b901e29c6237a0ca78927bbb1d1490fe",
+      "expectedBehavior": "Unruly Flail may be played from hand in Support only while an opponent controls a Will anywhere in the Stack that currently targets a Manifestation in the Confrontation Zone. As a Manifestation it enters without Tribute, triggers only from its own hand entry, and neutralizes exactly one chosen eligible opposing Will.",
+      "testIds": [
+        "test_enters_support_family.EntersSupportFamily.test_both_compile_the_exact_selected_support_contract",
+        "test_enters_support_family.EntersSupportFamily.test_gomeran_really_copies_an_allied_non_token_support_entry",
+        "test_enters_support_family.EntersSupportFamily.test_gomeran_requires_its_controller_and_a_non_token_entry",
+        "test_enters_support_family.EntersSupportFamily.test_gomeran_requires_an_active_source_in_the_confrontation_zone",
+        "test_enters_support_family.EntersSupportFamily.test_gomerans_created_token_does_not_copy_itself_again",
+        "test_enters_support_family.EntersSupportFamily.test_flail_support_is_available_for_exactly_an_eligible_opposing_will",
+        "test_enters_support_family.EntersSupportFamily.test_flail_really_enters_support_without_tribute_and_neutralizes_the_chosen_will",
+        "test_enters_support_family.EntersSupportFamily.test_flail_triggers_only_for_its_own_entry_from_hand"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_enters_support_family.EntersSupportFamily.test_both_compile_the_exact_selected_support_contract",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_enters_support_family.EntersSupportFamily.test_flail_really_enters_support_without_tribute_and_neutralizes_the_chosen_will",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_enters_support_family.EntersSupportFamily.test_flail_support_is_available_for_exactly_an_eligible_opposing_will",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_enters_support_family.EntersSupportFamily.test_flail_triggers_only_for_its_own_entry_from_hand",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_enters_support_family.EntersSupportFamily.test_gomeran_really_copies_an_allied_non_token_support_entry",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_enters_support_family.EntersSupportFamily.test_gomeran_requires_an_active_source_in_the_confrontation_zone",
+      "status": "pass",
+      "durationSeconds": 0.297
+    },
+    {
+      "testId": "test_enters_support_family.EntersSupportFamily.test_gomeran_requires_its_controller_and_a_non_token_entry",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_enters_support_family.EntersSupportFamily.test_gomerans_created_token_does_not_copy_itself_again",
+      "status": "pass",
+      "durationSeconds": 0.047
+    }
+  ],
+  "limits": [
+    "This proof certifies Gomeran's first printed paragraph and Unruly Flail's printed paragraph, including real Support entry, Flail's no-Tribute Manifestation play, source and event scope, token non-recursion, conditional availability, target eligibility and neutralization.",
+    "It does not certify Gomeran's separate bottom-deck shuffle paragraph, every other enters-Support watcher, or every global replacement that can prohibit Support entry."
+  ]
+}

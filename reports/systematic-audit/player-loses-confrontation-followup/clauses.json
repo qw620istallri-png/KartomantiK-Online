@@ -1,0 +1,115 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "8c5fd83651dc0480240654eb651131cf9526a30dc2dcf0dd3c8837ccd052a353",
+  "published": false,
+  "finishedAt": "2026-11-08T19:41:43.812365+00:00",
+  "summary": {
+    "executed": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 3,
+    "cardsWithSelectedClauseProof": 2,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "2hszv736kwwmi7n_en",
+      "name": "Grudge Weaver",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Grudge Weaver is in the Interzone, every time you lose a confrontation put a Grudge counter on it.",
+      "paragraphSha256": "71cb31f3d40c8bfdb5fead1b556b7998d56603292a9c24a2e3c92657a767228c",
+      "expectedBehavior": "While active in the Interzone, Grudge Weaver receives exactly one Grudge counter whenever its current controller loses a non-stalemate confrontation. A win, stalemate, inactive source, wrong zone, or loss by a different player adds nothing.",
+      "testIds": [
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_both_compile_the_exact_selected_contracts",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_real_loss_queues_both_global_interzone_triggers",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_wrong_outcome_zone_or_inactive_source_does_not_trigger",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_triggers_follow_current_controller_after_control_change",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_adds_exactly_one_counter_per_loss",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_spends_two_counters_for_support_this_turn_only",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_zborh_returns_to_immutable_owner_hand_after_controller_loses"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "2hszv736kwwmi7n_en",
+      "name": "Grudge Weaver",
+      "paragraphIndex": 1,
+      "printedParagraph": "Remove 2 Grudge counters: Grudge Weaver gains Support until the end of the turn.",
+      "paragraphSha256": "5712de865b9f1eb14194d670b11863e27072c4f4ac7664b1f17bdfebb0749da4",
+      "expectedBehavior": "During the Reaction, removing exactly two Grudge counters from an active Grudge Weaver in any field zone grants that occurrence Support for the current turn only. Insufficient counters reject the declaration atomically.",
+      "testIds": [
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_both_compile_the_exact_selected_contracts",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_real_loss_queues_both_global_interzone_triggers",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_wrong_outcome_zone_or_inactive_source_does_not_trigger",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_triggers_follow_current_controller_after_control_change",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_adds_exactly_one_counter_per_loss",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_spends_two_counters_for_support_this_turn_only",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_zborh_returns_to_immutable_owner_hand_after_controller_loses"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-015",
+      "name": "Zborh, the Eternal",
+      "paragraphIndex": 1,
+      "printedParagraph": "As long as Zborh is in the Interzone, when its controller loses a confrontation, upon Resolution Zborh returns to its owner's hand.",
+      "paragraphSha256": "e6dea8168e31a36edd098eb7d309033b7cad550691583241a416577e1e65fa6e",
+      "expectedBehavior": "While active in the Interzone, Zborh triggers when its current controller loses a non-stalemate confrontation and, upon resolution, returns that same occurrence to its immutable owner's hand. It does not trigger on a win, stalemate, wrong zone, inactive source, or another player's loss.",
+      "testIds": [
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_both_compile_the_exact_selected_contracts",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_real_loss_queues_both_global_interzone_triggers",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_wrong_outcome_zone_or_inactive_source_does_not_trigger",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_triggers_follow_current_controller_after_control_change",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_adds_exactly_one_counter_per_loss",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_spends_two_counters_for_support_this_turn_only",
+        "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_zborh_returns_to_immutable_owner_hand_after_controller_loses"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_both_compile_the_exact_selected_contracts",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_adds_exactly_one_counter_per_loss",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_grudge_spends_two_counters_for_support_this_turn_only",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_real_loss_queues_both_global_interzone_triggers",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_triggers_follow_current_controller_after_control_change",
+      "status": "pass",
+      "durationSeconds": 0.079
+    },
+    {
+      "testId": "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_wrong_outcome_zone_or_inactive_source_does_not_trigger",
+      "status": "pass",
+      "durationSeconds": 0.156
+    },
+    {
+      "testId": "test_player_loses_confrontation_family.PlayerLosesConfrontationFamily.test_zborh_returns_to_immutable_owner_hand_after_controller_loses",
+      "status": "pass",
+      "durationSeconds": 0.031
+    }
+  ],
+  "limits": [
+    "This proof certifies both Grudge Weaver paragraphs and Zborh's controller-loss paragraph, including real confrontation outcomes, Interzone and active-source scope, current controller after control change, Grudge count and activation cost, Support lifetime, and Zborh's immutable-owner destination.",
+    "It does not re-certify Zborh's separate Adamant keyword, every confrontation cleanup order, simultaneous ordering among multiple copies, or all movement replacements that may replace a return to hand."
+  ]
+}

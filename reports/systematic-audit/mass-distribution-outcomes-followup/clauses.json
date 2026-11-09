@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "5c915f4af67340103fd1b34bb6dbc06c01e9a23f89565eaf1076d8bd05f2cb3f",
+  "published": false,
+  "finishedAt": "2026-11-09T15:18:33.486582+00:00",
+  "summary": {
+    "executed": 14,
+    "passed": 14,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 5,
+    "cardsWithSelectedClauseProof": 5,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "ud9clfoj2c6x96o_en",
+      "name": "Entrust",
+      "paragraphIndex": 0,
+      "printedParagraph": "Double the base power of a target manifestation on the field.",
+      "paragraphSha256": "269f1edd66ac857d4148c2bdfe82678e3abefd781157f69408b04e67428204f8",
+      "expectedBehavior": "Double the target field Manifestation's current base power. Repeated Entrust effects double the already-doubled base without multiplying additive bonuses; generic Token bases are valid, and Cleanse removes the doubling.",
+      "testIds": [
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_entrust_doubles_current_base_repeatedly_without_doubling_bonus",
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_entrust_doubles_a_generic_token_base"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "nupb1i59d98g3md_en",
+      "name": "Punish the Winners",
+      "paragraphIndex": 0,
+      "printedParagraph": "All manifestations on the field that won the confrontation this turn are destroyed.",
+      "paragraphSha256": "f6d24e21f4ad664afbd846b6a44b0e99d914f431c0bdb23100887b0b9875d29e",
+      "expectedBehavior": "Destroy each face-up Manifestation still on the field whose item participated under this turn's confrontation winner. New cards and departed participants are not chased. Protection against targeting does not stop this mass effect, while Immunity does.",
+      "testIds": [
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_punish_destroys_only_present_winning_participants_of_this_turn",
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_punish_is_mass_nontargeting_but_respects_immunity"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "goxjkkrwos0lhx4_en",
+      "name": "Damage",
+      "paragraphIndex": 0,
+      "printedParagraph": "Distribute a total of -3 power among any number of target manifestations in the Interzone of an opponent.",
+      "paragraphSha256": "1d5f191049808b833de191198bd3d8b5ca8791121f3fe99304edeb31d1fa0089",
+      "expectedBehavior": "Choose one to three opponent-controlled Interzone Manifestations and distribute exactly three lasting points of power loss: -3; -1/-2 in the chosen extra-point order; or -1 each. Wrong zones/controllers and invalid extra choices are rejected atomically.",
+      "testIds": [
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_damage_distributes_exactly_three_across_one_two_or_three_targets",
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_damage_rejects_wrong_zone_controller_and_invalid_extra_choice_atomically",
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_damage_modifier_persists_while_target_stays_on_field"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-072",
+      "name": "Recall the Consumed",
+      "paragraphIndex": 0,
+      "printedParagraph": "Exile all Manifestations in each Limbo. Each player puts in Support under their control a Token copy of each Manifestation exiled this way from their Limbo. Tokens created this way are Hollow and have no effects.",
+      "paragraphSha256": "7c1dc8c3002596244dc4bb86525d89be2fd8af869c4cf34a6961659410b94123",
+      "expectedBehavior": "Exile every Manifestation actually leaving every Limbo and create one Hollow, effectless Support Token copy under that Limbo player's control. Wills remain; replacement-prevented exiles create no copy; copies use printed base and no points; physical cards enter their immutable owners' Exiles.",
+      "testIds": [
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_recall_exiles_manifestations_and_creates_hollow_effectless_supports_per_limbo",
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_recall_replacement_prevents_exile_and_copy",
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_recall_foreign_owned_card_exiles_to_owner_but_copy_stays_with_limbo_player"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-115",
+      "name": "Extinguish Nostalgia",
+      "paragraphIndex": 0,
+      "printedParagraph": "Immediate Effect - Exile all cards in each player's Limbo.",
+      "paragraphSha256": "1886c35be7b5db86fd04e7801ff6745678659406a220981c2d2e56f2abe53a1a",
+      "expectedBehavior": "Resolve immediately with no response window and exile every card actually leaving every player's Limbo, except the resolving source itself. Limbo-exit replacements still apply, and each physical card enters its immutable owner's Exile.",
+      "testIds": [
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_extinguish_is_immediate_exiles_every_limbo_but_not_its_resolving_source",
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_extinguish_limbo_exit_replacement_prevents_exile",
+        "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_extinguish_foreign_owned_card_exiles_to_immutable_owner"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_compiles_all_five_exact_contracts",
+      "status": "pass",
+      "durationMs": 62.0
+    },
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_damage_distributes_exactly_three_across_one_two_or_three_targets",
+      "status": "pass",
+      "durationMs": 141.0
+    },
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_damage_modifier_persists_while_target_stays_on_field",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_damage_rejects_wrong_zone_controller_and_invalid_extra_choice_atomically",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_entrust_doubles_a_generic_token_base",
+      "status": "pass",
+      "durationMs": 46.0
+    },
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_entrust_doubles_current_base_repeatedly_without_doubling_bonus",
+      "status": "pass",
+      "durationMs": 63.0
+    },
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_extinguish_foreign_owned_card_exiles_to_immutable_owner",
+      "status": "pass",
+      "durationMs": 31.0
+    },
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_extinguish_is_immediate_exiles_every_limbo_but_not_its_resolving_source",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_extinguish_limbo_exit_replacement_prevents_exile",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_punish_destroys_only_present_winning_participants_of_this_turn",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_punish_is_mass_nontargeting_but_respects_immunity",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_recall_exiles_manifestations_and_creates_hollow_effectless_supports_per_limbo",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_recall_foreign_owned_card_exiles_to_owner_but_copy_stays_with_limbo_player",
+      "status": "pass",
+      "durationMs": 46.0
+    },
+    {
+      "testId": "test_mass_distribution_outcomes_family.MassDistributionOutcomesFamily.test_recall_replacement_prevents_exile_and_copy",
+      "status": "pass",
+      "durationMs": 47.0
+    }
+  ],
+  "limits": [
+    "This proof certifies the five printed paragraphs of Entrust, Punish the Winners, Damage, Recall the Consumed, and Extinguish Nostalgia across the selected strict branches.",
+    "It does not independently re-certify every generic modifier, destruction replacement, Immediate protocol, token-entry trigger, or zone-movement contract."
+  ]
+}

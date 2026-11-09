@@ -1,0 +1,123 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "08ad1feaa62add39dbb82fd8cf9da6f34a96f8aa589f94317b0086040ba869a7",
+  "published": false,
+  "finishedAt": "2026-11-08T20:03:01.975456+00:00",
+  "summary": {
+    "executed": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 3,
+    "cardsWithSelectedClauseProof": 1,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "inner-deserts-062",
+      "name": "Gigabonblade",
+      "paragraphIndex": 0,
+      "printedParagraph": "Cannot be used as tribute.",
+      "paragraphSha256": "9f83157a1ec7554ed2c8fe98d0bb23cc9f6e81440d29325b5c8b49d5653450b1",
+      "expectedBehavior": "Gigabonblade can never be selected as Tribute, including from its owner's Hand; rejection is atomic.",
+      "testIds": [
+        "test_grant_persist_family.GrantPersistFamily.test_compiles_the_exact_three_paragraph_contract",
+        "test_grant_persist_family.GrantPersistFamily.test_cannot_be_used_as_tribute_from_hand",
+        "test_grant_persist_family.GrantPersistFamily.test_activation_scope_and_insufficient_power_are_atomic",
+        "test_grant_persist_family.GrantPersistFamily.test_pays_two_power_and_grants_persist_only_until_turn_end",
+        "test_grant_persist_family.GrantPersistFamily.test_winning_with_persist_keeps_gigabonblade_as_next_first",
+        "test_grant_persist_family.GrantPersistFamily.test_natural_confrontation_loss_captures_without_exile_or_penalty",
+        "test_grant_persist_family.GrantPersistFamily.test_effect_departure_exiles_and_weakens_each_current_field_manifestation",
+        "test_grant_persist_family.GrantPersistFamily.test_suspension_or_inactive_text_prevents_exile_rider_and_penalty"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-062",
+      "name": "Gigabonblade",
+      "paragraphIndex": 1,
+      "printedParagraph": "As long as Gigabonblade is in the Confrontation Zone, you may reduce its power by 2: It gains Persist until the end of the turn.",
+      "paragraphSha256": "1b6b64c1022f8466274f74a4a069d66029cc72a6f42d947fd7093fe450146a8f",
+      "expectedBehavior": "Only while active in the Confrontation Zone, Gigabonblade may target its own occurrence and reduce its current power by exactly 2 as an activation cost. Insufficient power, another target, another zone, or inactive text rejects without mutation. On resolution it gains Persist only until the end of that turn; after a win it remains in the Confrontation Zone and becomes its controller's next First Manifestation.",
+      "testIds": [
+        "test_grant_persist_family.GrantPersistFamily.test_compiles_the_exact_three_paragraph_contract",
+        "test_grant_persist_family.GrantPersistFamily.test_cannot_be_used_as_tribute_from_hand",
+        "test_grant_persist_family.GrantPersistFamily.test_activation_scope_and_insufficient_power_are_atomic",
+        "test_grant_persist_family.GrantPersistFamily.test_pays_two_power_and_grants_persist_only_until_turn_end",
+        "test_grant_persist_family.GrantPersistFamily.test_winning_with_persist_keeps_gigabonblade_as_next_first",
+        "test_grant_persist_family.GrantPersistFamily.test_natural_confrontation_loss_captures_without_exile_or_penalty",
+        "test_grant_persist_family.GrantPersistFamily.test_effect_departure_exiles_and_weakens_each_current_field_manifestation",
+        "test_grant_persist_family.GrantPersistFamily.test_suspension_or_inactive_text_prevents_exile_rider_and_penalty"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-062",
+      "name": "Gigabonblade",
+      "paragraphIndex": 2,
+      "printedParagraph": "If Gigabonblade would leave the Confrontation Zone due to cards or effects, exile it instead. If it is exiled this way, all Manifestations currently on the field get -2 power.",
+      "paragraphSha256": "3693e0afee405238fb0ac63b3a061ced8780694d6ffad50a5eb7aa57fcab64ea",
+      "expectedBehavior": "When active Gigabonblade would leave the Confrontation Zone because of a card or effect, that movement is replaced by Exile. Only if it is actually exiled this way, every Manifestation currently on the field, including Support, loses exactly 2 power; the Stalemate Zone is outside the field. Natural confrontation capture, inactive text, or a competing Suspension replacement neither invokes this exile rider nor applies the penalty.",
+      "testIds": [
+        "test_grant_persist_family.GrantPersistFamily.test_compiles_the_exact_three_paragraph_contract",
+        "test_grant_persist_family.GrantPersistFamily.test_cannot_be_used_as_tribute_from_hand",
+        "test_grant_persist_family.GrantPersistFamily.test_activation_scope_and_insufficient_power_are_atomic",
+        "test_grant_persist_family.GrantPersistFamily.test_pays_two_power_and_grants_persist_only_until_turn_end",
+        "test_grant_persist_family.GrantPersistFamily.test_winning_with_persist_keeps_gigabonblade_as_next_first",
+        "test_grant_persist_family.GrantPersistFamily.test_natural_confrontation_loss_captures_without_exile_or_penalty",
+        "test_grant_persist_family.GrantPersistFamily.test_effect_departure_exiles_and_weakens_each_current_field_manifestation",
+        "test_grant_persist_family.GrantPersistFamily.test_suspension_or_inactive_text_prevents_exile_rider_and_penalty"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_grant_persist_family.GrantPersistFamily.test_activation_scope_and_insufficient_power_are_atomic",
+      "status": "pass",
+      "durationSeconds": 0.156
+    },
+    {
+      "testId": "test_grant_persist_family.GrantPersistFamily.test_cannot_be_used_as_tribute_from_hand",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grant_persist_family.GrantPersistFamily.test_compiles_the_exact_three_paragraph_contract",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grant_persist_family.GrantPersistFamily.test_effect_departure_exiles_and_weakens_each_current_field_manifestation",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_grant_persist_family.GrantPersistFamily.test_natural_confrontation_loss_captures_without_exile_or_penalty",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grant_persist_family.GrantPersistFamily.test_pays_two_power_and_grants_persist_only_until_turn_end",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grant_persist_family.GrantPersistFamily.test_suspension_or_inactive_text_prevents_exile_rider_and_penalty",
+      "status": "pass",
+      "durationSeconds": 0.078
+    },
+    {
+      "testId": "test_grant_persist_family.GrantPersistFamily.test_winning_with_persist_keeps_gigabonblade_as_next_first",
+      "status": "pass",
+      "durationSeconds": 0.047
+    }
+  ],
+  "limits": [
+    "This proof certifies Gigabonblade's three paragraphs: Tribute prohibition, legal activation scope and cost, Persist lifetime and winning outcome, effect-departure Exile replacement, field-wide penalty, natural capture, inactive text, Stalemate exclusion, and competing Suspension replacement.",
+    "It does not re-certify the separate Persist Ephemeral Will, multiple simultaneous Persist choices, every possible movement replacement ordering, or unrelated global power-loss prevention effects."
+  ]
+}

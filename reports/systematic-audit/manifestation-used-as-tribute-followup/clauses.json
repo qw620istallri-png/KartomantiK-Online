@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "9087e7492b80fc27e338334268faa4e8633bc8077ef6de9e265854bf24f226ce",
+  "published": false,
+  "finishedAt": "2026-11-08T16:16:36.290372+00:00",
+  "summary": {
+    "executed": 7,
+    "passed": 7,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 2,
+    "cardsWithSelectedClauseProof": 2,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "wx7y64eaa0wlvuk_en",
+      "name": "Melancholic Mirror",
+      "paragraphIndex": 0,
+      "printedParagraph": "While you are using a manifestation as tribute, you can exhaust this card. If you do, put a token copy of that manifestation in Support.",
+      "paragraphSha256": "c4cb45344b52d96ce9f5244540b1a1500932189b13756ef9c2455268380b19cc",
+      "expectedBehavior": "While its ready, active card is on the field, Melancholic Mirror offers its current controller an optional trigger only when that controller uses a Manifestation as Tribute. Declining changes nothing; accepting exhausts the Mirror and creates exactly one Support token copy of the paid Manifestation under that controller. An exhausted, disabled, or inactive Mirror offers no trigger.",
+      "testIds": [
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_both_compile_the_exact_printed_contract",
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_real_will_payment_queues_both_with_exact_tribute_metadata",
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_only_follows_its_controller_and_only_while_ready",
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_inactive_sources_do_not_observe_tributes",
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_decline_does_not_exhaust_or_create_a_copy",
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_accept_exhausts_and_creates_one_support_token_copy",
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mountain_exiles_the_immutable_owner_card_and_scores_other_players"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-123",
+      "name": "Sacred Mountain",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Sacred Mountain is on the field, whenever a player uses a Manifestation as tribute, Exile that Manifestation. Then each other player gains 5 Points.",
+      "paragraphSha256": "f6812abbdde85d17adeaad220391888fd2927aa168521668fa7476626969b3f2",
+      "expectedBehavior": "While active on the field, Sacred Mountain observes every player's Manifestation Tribute. It exiles the paid card from its immutable owner's Limbo, including when its payer differs from that owner, then grants 5 Points to every player other than the payer. An inactive Mountain does not trigger.",
+      "testIds": [
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_both_compile_the_exact_printed_contract",
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_real_will_payment_queues_both_with_exact_tribute_metadata",
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_only_follows_its_controller_and_only_while_ready",
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_inactive_sources_do_not_observe_tributes",
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_decline_does_not_exhaust_or_create_a_copy",
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_accept_exhausts_and_creates_one_support_token_copy",
+        "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mountain_exiles_the_immutable_owner_card_and_scores_other_players"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_both_compile_the_exact_printed_contract",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_inactive_sources_do_not_observe_tributes",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_accept_exhausts_and_creates_one_support_token_copy",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_decline_does_not_exhaust_or_create_a_copy",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mirror_only_follows_its_controller_and_only_while_ready",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_mountain_exiles_the_immutable_owner_card_and_scores_other_players",
+      "status": "pass",
+      "durationSeconds": 0.079
+    },
+    {
+      "testId": "test_manifestation_used_as_tribute_family.ManifestationUsedAsTributeFamily.test_real_will_payment_queues_both_with_exact_tribute_metadata",
+      "status": "pass",
+      "durationSeconds": 0.046
+    }
+  ],
+  "limits": [
+    "This proof certifies both printed Manifestation-as-Tribute clauses, real Will-payment metadata, Mirror controller/readiness and accept/decline branches, inactive-source suppression, Mountain immutable ownership, exile, and payer-relative scoring.",
+    "It does not re-certify every alternate Tribute source, simultaneous Stack ordering among multiple copies, token-copy entry watchers, or every global Point replacement."
+  ]
+}

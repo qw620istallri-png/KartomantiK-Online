@@ -1,0 +1,166 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "30f29b1d4aa261942f0f2bcdbc327120926b973da331336bbcc205b441c4f478",
+  "published": false,
+  "finishedAt": "2026-11-09T14:40:02.681265+00:00",
+  "summary": {
+    "executed": 13,
+    "passed": 13,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 5,
+    "cardsWithSelectedClauseProof": 5,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "pxp1zvyxfv16bdd_en",
+      "name": "Arcane Teapot",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as the Arcane Teapot is in the Interzone, you can play Wills paying 1 less tribute.",
+      "paragraphSha256": "be895ca3ab00674f5008b9461d6bd59d367942ac207bb74f052bacaebca5d59a",
+      "expectedBehavior": "Only while an active Arcane Teapot is in its controller's Interzone, that controller pays one fewer Tribute for a printed Will. The reduction cannot make a cost negative, never changes a Manifestation cost, and combines with Cognitive Fog before applying the zero floor.",
+      "testIds": [
+        "test_tribute_economy_family.TributeEconomyFamily.test_compiles_all_five_exact_contracts",
+        "test_tribute_economy_family.TributeEconomyFamily.test_teapot_reduces_only_its_controllers_wills_from_the_interzone",
+        "test_tribute_economy_family.TributeEconomyFamily.test_teapot_never_makes_a_zero_cost_will_negative_or_changes_manifestations",
+        "test_tribute_economy_family.TributeEconomyFamily.test_teapot_and_fog_combine_before_the_zero_floor"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "ul1tffi1wn5l3q5_en",
+      "name": "Cognitive Fog",
+      "paragraphIndex": 0,
+      "printedParagraph": "All Wills require 1 {H} more essence to be played.",
+      "paragraphSha256": "13aa6369fcd9d4c2b81d8b5e41848e58bd8acce4ca10b0e44fc16560ae67966d",
+      "expectedBehavior": "While Cognitive Fog is active, each player's printed Will costs one additional Hollow Tribute. Manifestations and explicit free-play permissions remain untaxed; Arcane Teapot can offset the added Tribute for its controller before the zero floor.",
+      "testIds": [
+        "test_tribute_economy_family.TributeEconomyFamily.test_compiles_all_five_exact_contracts",
+        "test_tribute_economy_family.TributeEconomyFamily.test_fog_adds_one_hollow_to_every_players_printed_will",
+        "test_tribute_economy_family.TributeEconomyFamily.test_fog_does_not_tax_manifestations_or_an_explicit_free_permission",
+        "test_tribute_economy_family.TributeEconomyFamily.test_teapot_and_fog_combine_before_the_zero_floor"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "birhlimm9e8lq3d_en",
+      "name": "Orator of the Absurd",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as the Orator of the Absurd is on the field, all players can use as tribute the manifestations on the field they control.",
+      "paragraphSha256": "a540e22bbdc4df3948dd110a263801c89178a6f887eb98a8fae2f9e0e978f914",
+      "expectedBehavior": "While an active Orator is on the field, every player may use a Manifestation they control in a Confrontation Zone or Interzone as Tribute, even when another player owns it. Opponent-controlled and Stalemate cards are illegal, and a paid card enters its immutable owner's Limbo.",
+      "testIds": [
+        "test_tribute_economy_family.TributeEconomyFamily.test_compiles_all_five_exact_contracts",
+        "test_tribute_economy_family.TributeEconomyFamily.test_orator_globally_allows_each_players_controlled_field_tribute",
+        "test_tribute_economy_family.TributeEconomyFamily.test_orator_rejects_opponent_controlled_stalemate_and_inactive_sources"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "zhzp6kenpqrym9h_en",
+      "name": "Brabataba, the Unambitious",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Brabataba is on the field, you can use as tribute the manifestations in your Empathic Vessel and consider them as if they were of {T} temperament. Exile the manifestations used as tribute in this way.",
+      "paragraphSha256": "f24b760727321c8f9c552b53c1af386ef49691f009fb1330f87ec725eb2199a0",
+      "expectedBehavior": "While an active Brabataba is on the field, its controller may use Manifestations in that controller's own Empathic Vessel as Transcendent Tribute. The paid physical card is exiled under its immutable owner; an opponent's Vessel and a blanked Brabataba grant no permission.",
+      "testIds": [
+        "test_tribute_economy_family.TributeEconomyFamily.test_compiles_all_five_exact_contracts",
+        "test_tribute_economy_family.TributeEconomyFamily.test_brabataba_makes_own_vessel_manifestation_transcendent_and_exiles_it",
+        "test_tribute_economy_family.TributeEconomyFamily.test_brabataba_is_controller_scoped_and_blanking_removes_permission"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "90cwtv2us78k76w_en",
+      "name": "Essence Cauldron",
+      "paragraphIndex": 0,
+      "printedParagraph": "You do not lose excess essences at the end of the turn.",
+      "paragraphSha256": "3e4914757c07ded610f327cc1d62b3136c0eb6a32ab398dc6adf3177929da75a",
+      "expectedBehavior": "At end-of-turn cleanup, an active Essence Cauldron preserves exactly its controller's existing excess Essence. It creates no additional Essence, does not preserve an opponent's excess, and cannot preserve anything after leaving the field or losing its effect.",
+      "testIds": [
+        "test_tribute_economy_family.TributeEconomyFamily.test_compiles_all_five_exact_contracts",
+        "test_tribute_economy_family.TributeEconomyFamily.test_cauldron_retains_only_its_controllers_excess_at_end_of_turn",
+        "test_tribute_economy_family.TributeEconomyFamily.test_cauldron_source_must_still_be_active_at_cleanup",
+        "test_tribute_economy_family.TributeEconomyFamily.test_cauldron_does_not_create_extra_essence"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_tribute_economy_family.TributeEconomyFamily.test_brabataba_is_controller_scoped_and_blanking_removes_permission",
+      "status": "pass",
+      "durationMs": 94.0
+    },
+    {
+      "testId": "test_tribute_economy_family.TributeEconomyFamily.test_brabataba_makes_own_vessel_manifestation_transcendent_and_exiles_it",
+      "status": "pass",
+      "durationMs": 31.0
+    },
+    {
+      "testId": "test_tribute_economy_family.TributeEconomyFamily.test_cauldron_does_not_create_extra_essence",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_tribute_economy_family.TributeEconomyFamily.test_cauldron_retains_only_its_controllers_excess_at_end_of_turn",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_tribute_economy_family.TributeEconomyFamily.test_cauldron_source_must_still_be_active_at_cleanup",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_tribute_economy_family.TributeEconomyFamily.test_compiles_all_five_exact_contracts",
+      "status": "pass",
+      "durationMs": 63.0
+    },
+    {
+      "testId": "test_tribute_economy_family.TributeEconomyFamily.test_fog_adds_one_hollow_to_every_players_printed_will",
+      "status": "pass",
+      "durationMs": 46.0
+    },
+    {
+      "testId": "test_tribute_economy_family.TributeEconomyFamily.test_fog_does_not_tax_manifestations_or_an_explicit_free_permission",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_tribute_economy_family.TributeEconomyFamily.test_orator_globally_allows_each_players_controlled_field_tribute",
+      "status": "pass",
+      "durationMs": 63.0
+    },
+    {
+      "testId": "test_tribute_economy_family.TributeEconomyFamily.test_orator_rejects_opponent_controlled_stalemate_and_inactive_sources",
+      "status": "pass",
+      "durationMs": 125.0
+    },
+    {
+      "testId": "test_tribute_economy_family.TributeEconomyFamily.test_teapot_and_fog_combine_before_the_zero_floor",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_tribute_economy_family.TributeEconomyFamily.test_teapot_never_makes_a_zero_cost_will_negative_or_changes_manifestations",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_tribute_economy_family.TributeEconomyFamily.test_teapot_reduces_only_its_controllers_wills_from_the_interzone",
+      "status": "pass",
+      "durationMs": 46.0
+    }
+  ],
+  "limits": [
+    "This proof certifies the five printed paragraphs of Arcane Teapot, Cognitive Fog, Orator of the Absurd, Brabataba, and Essence Cauldron across the selected strict branches and interactions.",
+    "It does not independently re-certify every generic Tribute allocator, alternate payment source, Stack declaration, end-turn cleanup, or browser interaction contract."
+  ]
+}

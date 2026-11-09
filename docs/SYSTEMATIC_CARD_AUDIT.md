@@ -684,3 +684,148 @@ entrées, avec refus atomique de la suivante. Les preuves et la suite complète
 sont dans `reports/systematic-audit/extend-interzone-followup/`. Le registre
 strict atteint **395/450 cartes (87,8 %)** ; il reste 55 cartes, 78 paragraphes
 et 239 oracles de branches.
+
+La passe `result:move_target` relie ensuite Destroy et Eliminate the Profane.
+Elle paie réellement leurs trois et quatre Tributs creux, puis vérifie les
+domaines de cible exacts. Destroy atteint une Volonté éphémère ou persistante
+sur le champ, ou une Manifestation dans l'Interzone de l'un ou l'autre joueur.
+Eliminate atteint une Manifestation dans le Réceptacle Empathique de n'importe
+quel joueur. Les types, zones et cardinalités non imprimés sont refusés sans
+mutation ni paiement. Une destruction réussie rejoint les Limbes du
+propriétaire immuable ; si la cible quitte sa zone en réponse, l'effet devient
+inopérant sans rembourser le coût. Les preuves et la suite complète sont dans
+`reports/systematic-audit/move-target-followup/`. Le registre strict atteint
+**397/450 cartes (88,2 %)** ; il reste 53 cartes, 76 paragraphes et 237 oracles
+de branches.
+
+La passe `result:set_field_power` relie ensuite Trim the Excess et Equalize.
+Elle paie réellement leurs deux Tributs capricieux. Trim ramène chaque
+Manifestation déjà présente sur le champ à sa propre puissance de base
+courante ; Equalize les fixe toutes à la plus faible puissance de base
+courante du champ. Les Volontés et la Zone d'Ex æquo sont exclues. Les deux
+effets bloquent ensuite tout nouveau modificateur sur les occurrences
+affectées jusqu'à la fin du tour, sans toucher une arrivée ultérieure ni une
+carte revenue sous une nouvelle occurrence. Au tour suivant, le verrou expire
+et les modificateurs antérieurs réapparaissent. Les deux Volontés se paient et
+se résolvent aussi normalement sur un champ vide. Les preuves et la suite
+complète sont dans `reports/systematic-audit/set-field-power-followup/`. Le
+registre strict atteint **399/450 cartes (88,7 %)** ; il reste 51 cartes, 74
+paragraphes et 235 oracles de branches.
+
+La passe `trigger:end_of_game` relie ensuite Phimosino et Piercing Lover.
+Phimosino donne exactement 50 Points au propriétaire dont le Deck le contient,
+et rien depuis une autre zone ; ce bonus reste additif avec les autres
+composantes du score final. Piercing Lover pénalise uniquement le joueur dont
+le Réceptacle Empathique adverse le contient : 5 Points par Manifestation de
+puissance de base inférieure ou égale à 2 dans ce Réceptacle, indépendamment
+de leur propriétaire, sans compter les Volontés ni les puissances supérieures.
+Unreachable Pillar neutralise bien cette pénalité tant qu'il retire les effets
+du Réceptacle. Les preuves et la suite complète sont dans
+`reports/systematic-audit/end-of-game-followup/`. Le registre strict atteint
+**401/450 cartes (89,1 %)** ; il reste 49 cartes, 72 paragraphes et 230 oracles
+de branches.
+
+La passe `trigger:enters_support` relie ensuite le premier paragraphe de
+Gomeran, Echo Mistress et le paragraphe d'Unruly Flail. Une Gomeran active en
+Zone de Confrontation crée exactement une copie-token en Soutien lorsqu'une
+Manifestation non-token entre en Soutien sous son contrôle ; les entrées
+adverses et token sont exclues, et la copie ne déclenche pas de boucle. Unruly
+Flail n'est jouable depuis la Main en Soutien que si une Volonté adverse dans
+la Pile vise une Manifestation en Confrontation. Flail entre sans Tribut puis
+neutralise exactement la Volonté éligible choisie. Le paragraphe séparé de
+Gomeran sur le mélange après placement sous le Deck n'est pas certifié par ce
+lot. Les preuves et la suite complète sont dans
+`reports/systematic-audit/enters-support-followup/`. Le registre strict atteint
+**403/450 cartes (89,6 %)** ; il reste 47 cartes, 69 paragraphes et 221 oracles
+de branches.
+
+La passe `trigger:enters_zone` relie ensuite Inspired Nimbus et Worm Bomb.
+Les deux effets ne se déclenchent qu'à l'entrée dans le Réceptacle Empathique
+adverse et sont neutralisés par Unreachable Pillar. Inspired Nimbus donne à
+son propriétaire immuable une permission, valable pour le tour courant et
+consommée à la première déclaration, de jouer gratuitement une Volonté depuis
+sa Main ; le joueur du Réceptacle n'en bénéficie pas. Worm Bomb détruit
+aléatoirement jusqu'à trois autres Manifestations de ce Réceptacle, sans se
+compter lui-même ni compter les Volontés ; chaque carte rejoint le Limbo de
+son propriétaire immuable. Les preuves et la suite complète sont dans
+`reports/systematic-audit/enters-zone-followup/`. Le registre strict atteint
+**405/450 cartes (90,0 %)** ; il reste 45 cartes, 67 paragraphes et 215 oracles
+de branches.
+
+La passe `trigger:manifestation_used_as_tribute` relie ensuite Melancholic
+Mirror et Sacred Mountain. Un Mirror actif et prêt ne propose son effet
+optionnel que lorsque son contrôleur utilise une Manifestation comme Tribut :
+refuser ne change rien, tandis qu'accepter l'épuise et crée exactement une
+copie-token de cette Manifestation en Soutien. Sacred Mountain observe les
+Tributs de tous les joueurs, exile la carte depuis le Limbo de son
+propriétaire immuable puis donne 5 Points à tous les joueurs autres que le
+payeur. Le lot corrige deux défauts : le faux choix d'un Mirror déjà épuisé et
+la perte du propriétaire immuable de la carte à exiler lorsqu'elle était
+contrôlée par un autre joueur. Les preuves et la suite complète sont dans
+`reports/systematic-audit/manifestation-used-as-tribute-followup/`. Le registre
+strict atteint **407/450 cartes (90,4 %)** ; il reste 43 cartes, 65 paragraphes
+et 209 oracles de branches.
+
+La passe `trigger:player_loses_confrontation` relie ensuite les deux
+paragraphes de Grudge Weaver et le paragraphe de retour de Zborh, the Eternal.
+Grudge Weaver reçoit exactement un marqueur Grudge lorsque son contrôleur
+courant perd une confrontation, uniquement s'il est actif dans l'Interzone ;
+deux marqueurs peuvent ensuite être retirés pendant la Réaction depuis toute
+zone active du champ pour lui donner Support jusqu'à la fin du tour. Zborh
+suit également son contrôleur courant et, si celui-ci perd, retourne à la main
+de son propriétaire immuable, y compris après un changement de contrôle. Les
+victoires, égalités, mauvaises zones et sources inactives sont exclues. Le
+paragraphe séparé `Adamant` de Zborh n'est pas recertifié par ce lot. Les
+preuves et la suite complète sont dans
+`reports/systematic-audit/player-loses-confrontation-followup/`. Le registre
+strict atteint **409/450 cartes (90,9 %)** ; il reste 41 cartes, 61 paragraphes
+et 201 oracles de branches.
+
+La passe `ongoing:grant_persist` relie ensuite les trois paragraphes de
+Gigabonblade. Elle vérifie l'interdiction réelle de l'utiliser comme Tribut,
+son activation uniquement depuis la Zone de Confrontation sur sa propre
+occurrence active, le paiement exact de 2 puissance et le refus atomique si
+elle n'en possède pas assez. Ténacité expire bien en fin de tour et conserve
+une Gigabonblade victorieuse comme prochaine Première Manifestation. Une
+sortie causée par une carte ou un effet est remplacée par l'Exil et retire 2
+puissance à toutes les Manifestations actuellement sur le champ, Soutiens
+compris, mais jamais à la Zone d'Ex æquo. Une capture naturelle, une source
+inactive ou une Suspension prioritaire ne déclenche ni l'exil propre à la
+carte ni son malus. Le lot corrige deux défauts : le paiement possible d'une
+réduction de puissance supérieure à la puissance courante et l'application
+du malus à la Zone d'Ex æquo. Les preuves et la suite complète sont dans
+`reports/systematic-audit/grant-persist-followup/`. Le registre strict atteint
+**410/450 cartes (91,1 %)** ; il reste 40 cartes, 58 paragraphes et 189 oracles
+de branches.
+
+La passe `ongoing:obscure_lock` relie ensuite les trois paragraphes
+d'Obscure. Elle vérifie le ciblage exclusif d'une Manifestation ou d'une
+Volonté Persistante sur le champ, la perte des effets et l'Immunité complète
+jusqu'à la fin du tour, ainsi que la contribution nulle d'une Manifestation
+ciblée à la confrontation. Les cartes éphémères, la Zone d'Ex æquo, les
+cibles absentes ou déjà Immunisées sont exclues. Obscure est exilée à la
+résolution même si sa cible devient invalide ensuite ; neutralisée avant sa
+résolution, elle rejoint plutôt le Limbo et n'applique aucun verrou. La
+Dissipation retire bien le modificateur sans annuler cet exil, et l'expiration
+restaure les effets, la vulnérabilité et la puissance de confrontation. Aucun
+défaut moteur n'a été découvert. Les preuves et la suite complète sont dans
+`reports/systematic-audit/obscure-lock-followup/`. Le registre strict atteint
+**411/450 cartes (91,3 %)** ; il reste 39 cartes, 55 paragraphes et 177 oracles
+de branches.
+
+La passe `ongoing:power_set_maximum` relie ensuite les deux paragraphes
+d'Inflate the Ego. Elle vérifie que son coût de cinq Tributs cholériques est
+réduit de la moitié, arrondie à l'inférieur, de la puissance de base modifiée
+de la Première Manifestation de son contrôleur, sans jamais devenir négatif
+ni modifier le coût imprimé. La déclaration exige cette Première
+Manifestation ; si elle change entre paiement et résolution, le coût reste
+payé et la Volonté rejoint le Limbo, mais aucun modificateur n'est créé. Une
+résolution valide fixe immédiatement la puissance courante à 10 puis la
+plafonne à 10 jusqu'à la fin du tour : les malus ultérieurs peuvent la
+réduire, les bonus ne peuvent pas dépasser le plafond. L'expiration restaure
+la puissance sous-jacente et la Dissipation retire le plafond avec les autres
+changements qu'elle nettoie. Aucun défaut moteur n'a été découvert. Les
+preuves et la suite complète sont dans
+`reports/systematic-audit/power-set-maximum-followup/`. Le registre strict
+atteint **412/450 cartes (91,6 %)** ; il reste 38 cartes, 53 paragraphes et
+167 oracles de branches.

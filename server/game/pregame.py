@@ -82,7 +82,10 @@ class PregameMixin:
                     and self.rules_field_zone(source) == "interzone"
                 ):
                     occupied = self.rules_interzone_slot_count(player_id)
-                    extra += max(0, 3 - occupied)
+                    extra += max(
+                        0,
+                        self.rules_interzone_capacity(player_id) - occupied,
+                    )
             limit += extra
         return max(0, limit)
 

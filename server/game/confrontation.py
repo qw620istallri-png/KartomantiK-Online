@@ -343,7 +343,11 @@ class ConfrontationMixin:
         )
         if field_penalty and movement.get("status") == "moved":
             for other in self.battlefield:
-                if self.card_rules.get(other.get("cardId"), {}).get("type") == "manifestation":
+                if (
+                    self.card_rules.get(other.get("cardId"), {}).get("type")
+                    == "manifestation"
+                    and self.rules_field_zone(other) != "stalemate"
+                ):
                     self.adjust_rules_power_counter(other, -field_penalty)
         if (
             movement.get("status") == "moved"

@@ -424,12 +424,21 @@ class ChainMixin:
                     "count": discard_count,
                 }
         drawn = self.draw_rules_cards(player_id, requested)
-        return {
+        payload = {
             "kind": "draw",
             "playerId": player_id,
             "count": len(drawn),
             **({"drawn": drawn} if include_drawn else {}),
         }
+        if (
+            drawn
+            and self.rules_active_passive_sources("hand_limit_all")
+            and self.rules_engine.get("pendingChoice") is None
+        ):
+            overflow = self.set_rules_hand_overflow_choice([player_id])
+            if overflow is not None:
+                payload["overflowChoiceId"] = overflow["id"]
+        return payload
 
     def continue_rules_draw_requests(self, requests):
         """Finish ordered draws, pausing through replacement follow-up choices."""

@@ -1,0 +1,228 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "30936b5d68bc642dcc86612d287231202fbcf601b6cf74e08d63dd7dab26ec00",
+  "published": false,
+  "finishedAt": "2026-11-09T09:13:16.296400+00:00",
+  "summary": {
+    "executed": 18,
+    "passed": 18,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 7,
+    "cardsWithSelectedClauseProof": 5,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "inner-deserts-137",
+      "name": "Balance of the Spirit",
+      "paragraphIndex": 0,
+      "printedParagraph": "Whenever the player with the most Points in their Empathic Vessel is about to gain Points, prevent that gain. Then all other players gain an equal amount.",
+      "paragraphSha256": "b36136b8d261fdc0d5f36fae7272d9b7fcee0c97432bf53980d09a932f0fafca",
+      "expectedBehavior": "A strictly richest Vessel cannot gain points: its gain is prevented and every other player gains exactly that amount once. Vessel totals include both score and printed points of Vessel cards; tied totals are not redirected; a global point-change prevention effect takes precedence.",
+      "testIds": [
+        "test_grouped_passives_family.GroupedPassivesFamily.test_compiles_all_five_exact_contracts",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_balance_redirects_only_strict_richest_gain_and_poorest_loss",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_balance_uses_vessel_card_points_and_ties_do_not_redirect",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_global_point_prevention_runs_before_balance"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-137",
+      "name": "Balance of the Spirit",
+      "paragraphIndex": 1,
+      "printedParagraph": "Whenever the player with the fewest Points in their Empathic Vessel is about to lose Points, prevent that loss. Then all other players lose an equal amount.",
+      "paragraphSha256": "222a3f224e5c3b068ff1fb9db2daaa404499b5e24eb912fa31c00196dce2d205",
+      "expectedBehavior": "A strictly poorest Vessel cannot lose points: its loss is prevented and every other player loses exactly that amount once. Ordinary losses by the richest and gains by the poorest are unchanged, and the redirected change cannot recursively invoke Balance.",
+      "testIds": [
+        "test_grouped_passives_family.GroupedPassivesFamily.test_compiles_all_five_exact_contracts",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_balance_redirects_only_strict_richest_gain_and_poorest_loss",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_balance_uses_vessel_card_points_and_ties_do_not_redirect",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_global_point_prevention_runs_before_balance"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-092",
+      "name": "Discombobulator",
+      "paragraphIndex": 0,
+      "printedParagraph": "Before the Revelation, pay 🔘🔘🔘🔘. Otherwise Exile the Discombobulator.",
+      "paragraphSha256": "3ec348a2ea600904cb7277383e0e8ad2e2d462d3e56f4c225846c199c7b38f05",
+      "expectedBehavior": "Before Revelation, the active Discombobulator's controller may pay exactly four Hollow Tribute and keep it. Declining exiles that source and immediately releases cards it had blanked; a copy already blanked by an earlier copy does not create an upkeep trigger.",
+      "testIds": [
+        "test_grouped_passives_family.GroupedPassivesFamily.test_compiles_all_five_exact_contracts",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_discombobulator_can_pay_four_hollow_and_remain",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_discombobulator_decline_exiles_it_and_releases_other_cards",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_first_discombobulator_blanks_later_copy_but_keeps_own_upkeep",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_stalemate_is_outside_discombobulators_field_blanking"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-092",
+      "name": "Discombobulator",
+      "paragraphIndex": 1,
+      "printedParagraph": "As long as the Discombobulator is on the field, all other cards on the field have no effects.",
+      "paragraphSha256": "5afd8aa9599323e0ffbe76e7f291afcc9ef79a6a44078208725e2005cbb57a68",
+      "expectedBehavior": "The earliest active Discombobulator in battlefield order keeps its own effects and removes the effects of every other card on the field, including later copies. Stalemate is outside the field: cards there are not blanked and a Discombobulator there does not blank field cards.",
+      "testIds": [
+        "test_grouped_passives_family.GroupedPassivesFamily.test_compiles_all_five_exact_contracts",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_discombobulator_can_pay_four_hollow_and_remain",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_discombobulator_decline_exiles_it_and_releases_other_cards",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_first_discombobulator_blanks_later_copy_but_keeps_own_upkeep",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_stalemate_is_outside_discombobulators_field_blanking"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-135",
+      "name": "Asciugoth, the Absorbent",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Asciugoth is on the field, whenever a Manifestation is about to enter the field, you gain an essence of its Temperament, then that Manifestation becomes Hollow.",
+      "paragraphSha256": "d30a146ed4b8fe616471cfeeae3b470e26e06e051288220e039b49c4c56829c0",
+      "expectedBehavior": "For each entering Manifestation, the earliest active Asciugoth gains one excess essence of the entering card's current Temperament and that card becomes Hollow. Token Manifestations are included, Asciugoth never replaces its own entry, multiple copies do not duplicate the replacement, and Cleanse restores the printed Temperament.",
+      "testIds": [
+        "test_grouped_passives_family.GroupedPassivesFamily.test_compiles_all_five_exact_contracts",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_asciugoth_absorbs_entering_temperament_and_hollows_card_and_token",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_asciugoth_does_not_absorb_itself_and_first_source_wins_ties",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_cleanse_restores_asciugoths_original_temperament"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-133",
+      "name": "Tricephalous Oil-Dog",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Tricephalous Oil-Dog is on the field, all excess essence is considered as Hollow essences.",
+      "paragraphSha256": "f6e08ee3f77f5c42cc1d8ec8b2b9555cc94ba717e9eb4ae9d904339bceb5e373",
+      "expectedBehavior": "While at least one active Oil-Dog is on the field, every stored excess essence has Hollow payment identity without changing its stored Temperament. This removes Transcendent and matching-color flexibility, does not stack across copies, ends when the last source leaves, and never turns an unspent Gem counter into essence.",
+      "testIds": [
+        "test_grouped_passives_family.GroupedPassivesFamily.test_compiles_all_five_exact_contracts",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_oil_dog_changes_payment_view_without_mutating_stored_essence",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_multiple_oil_dogs_do_not_stack_and_one_remaining_keeps_effect",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_oil_dog_does_not_turn_an_unspent_gem_counter_into_essence"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-110",
+      "name": "Solitary Combhand",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Solitary Combhand is in the Interzone, during Recovery draw an extra card for each empty space in your Interzone.",
+      "paragraphSha256": "8d451d21772cd034872bd887cbabe5a9719fa69c5c2a3b2d4711b0db00bef082",
+      "expectedBehavior": "While Solitary Combhand is in its controller's Interzone, Recovery hand size increases by the number of currently empty Interzone slots. Occupancy counts Float stacks once and capacity includes active extensions rather than assuming three slots. A full Interzone or a Combhand outside the Interzone grants no extra draw.",
+      "testIds": [
+        "test_grouped_passives_family.GroupedPassivesFamily.test_compiles_all_five_exact_contracts",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_solitary_combhand_counts_current_empty_interzone_slots",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_solitary_combhand_counts_float_stacks_as_one_slot",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_solitary_combhand_uses_extended_capacity_not_printed_three",
+        "test_grouped_passives_family.GroupedPassivesFamily.test_solitary_combhand_outside_interzone_grants_no_extra_draw"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_asciugoth_absorbs_entering_temperament_and_hollows_card_and_token",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_asciugoth_does_not_absorb_itself_and_first_source_wins_ties",
+      "status": "pass",
+      "durationSeconds": 0.062
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_balance_redirects_only_strict_richest_gain_and_poorest_loss",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_balance_uses_vessel_card_points_and_ties_do_not_redirect",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_cleanse_restores_asciugoths_original_temperament",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_compiles_all_five_exact_contracts",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_discombobulator_can_pay_four_hollow_and_remain",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_discombobulator_decline_exiles_it_and_releases_other_cards",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_first_discombobulator_blanks_later_copy_but_keeps_own_upkeep",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_global_point_prevention_runs_before_balance",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_multiple_oil_dogs_do_not_stack_and_one_remaining_keeps_effect",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_oil_dog_changes_payment_view_without_mutating_stored_essence",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_oil_dog_does_not_turn_an_unspent_gem_counter_into_essence",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_solitary_combhand_counts_current_empty_interzone_slots",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_solitary_combhand_counts_float_stacks_as_one_slot",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_solitary_combhand_outside_interzone_grants_no_extra_draw",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_solitary_combhand_uses_extended_capacity_not_printed_three",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_grouped_passives_family.GroupedPassivesFamily.test_stalemate_is_outside_discombobulators_field_blanking",
+      "status": "pass",
+      "durationSeconds": 0.031
+    }
+  ],
+  "limits": [
+    "This proof certifies the seven printed paragraphs of Balance of the Spirit, Discombobulator, Asciugoth, Tricephalous Oil-Dog, and Solitary Combhand across the selected strict branches and interactions.",
+    "It does not re-certify the complete generic contracts of Cleanse, Float, Interzone extension, point-change prevention, token copying, or the full payment engine independently of these five cards."
+  ]
+}

@@ -1,0 +1,338 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "7e1856c3a5dadc7fc749e4dc80e6452d3bdaba4436c9d97c39db82daeee3f074",
+  "published": false,
+  "finishedAt": "2026-11-09T09:51:22.841053+00:00",
+  "summary": {
+    "executed": 18,
+    "passed": 18,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 14,
+    "cardsWithSelectedClauseProof": 5,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "odqcx9kkqe029se_en",
+      "name": "Mutate Uncontrollably",
+      "paragraphIndex": 0,
+      "printedParagraph": "Roll a D6. A target manifestation on the field receives one of the following effects.",
+      "paragraphSha256": "e87202369ae3c00f29c311d74dbb0c38f2b76340f875d836d371a74260347bfb",
+      "expectedBehavior": "Roll one D6 only after the selected battlefield Manifestation remains a valid target; a missing target changes no game state.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_mutate_all_six_faces_have_exact_permanent_outcomes",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_mutate_missing_target_rolls_but_changes_nothing"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "odqcx9kkqe029se_en",
+      "name": "Mutate Uncontrollably",
+      "paragraphIndex": 1,
+      "printedParagraph": "1-2: The manifestation is destroyed.",
+      "paragraphSha256": "c6a85392628a979221d76b2a77f41a3666324142924ef33af6372343e49ffa0b",
+      "expectedBehavior": "On 1 or 2, destroy the target and move the physical card to its owner's Limbo.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_mutate_all_six_faces_have_exact_permanent_outcomes",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_mutate_missing_target_rolls_but_changes_nothing"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "odqcx9kkqe029se_en",
+      "name": "Mutate Uncontrollably",
+      "paragraphIndex": 2,
+      "printedParagraph": "3: The manifestation becomes of {H} temperament.",
+      "paragraphSha256": "b7f4e33b5143b1ba7e792591839abcd023bb76e6d761d68cdc0764cfd155e84a",
+      "expectedBehavior": "On 3, the target becomes Hollow for as long as that field object remains; normal turn expiry does not restore its printed Temperament.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_mutate_all_six_faces_have_exact_permanent_outcomes",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_mutate_missing_target_rolls_but_changes_nothing"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "odqcx9kkqe029se_en",
+      "name": "Mutate Uncontrollably",
+      "paragraphIndex": 3,
+      "printedParagraph": "4-5: The manifestation gets +2 power.",
+      "paragraphSha256": "9effef4996e322b1e0161d8929c91363b3a132ffd8637b12408f603f8b5db5dd",
+      "expectedBehavior": "On 4 or 5, the target gets a lasting +2 power modifier; normal turn expiry does not remove it.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_mutate_all_six_faces_have_exact_permanent_outcomes",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_mutate_missing_target_rolls_but_changes_nothing"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "odqcx9kkqe029se_en",
+      "name": "Mutate Uncontrollably",
+      "paragraphIndex": 4,
+      "printedParagraph": "6: The manifestation gets +3 power.",
+      "paragraphSha256": "b16d4c18dcaa21d6a60b34a8035bba77cd76dc56cafec816c8263fac3b1ca32e",
+      "expectedBehavior": "On 6, the target gets a lasting +3 power modifier; normal turn expiry does not remove it.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_mutate_all_six_faces_have_exact_permanent_outcomes",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_mutate_missing_target_rolls_but_changes_nothing"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-116",
+      "name": "Kiss of the Myrmillo!",
+      "paragraphIndex": 0,
+      "printedParagraph": "Immediate Effect - The Confrontation Phase ends unless an opponent pays 🔘🔘🔘.",
+      "paragraphSha256": "f443546aec563c63bccd3d5c9ced186a778fb0700c37145c61abfbe22f91635e",
+      "expectedBehavior": "This Immediate effect pauses atomically for an opponent to pay exactly three Hollow Tribute. Paying keeps the Confrontation in Reaction and leaves Kiss in Limbo; declining advances immediately to comparison.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_kiss_payment_is_atomic_and_keeps_phase_and_source",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_kiss_decline_ends_phase_exiles_source_and_uses_base_not_current_power",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_kiss_stalemate_has_no_winner_power_followup_but_still_exiles"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-116",
+      "name": "Kiss of the Myrmillo!",
+      "paragraphIndex": 1,
+      "printedParagraph": "If you lose the confrontation this way, a target manifestation in the Confrontation Zone controlled by the winner loses power equal to the total base power value of the manifestations you control in the Confrontation Zone.",
+      "paragraphSha256": "3c41850c0ae6e3034e608a31980d7ae6bf2ffd0d2797907ec382fea547edfbe0",
+      "expectedBehavior": "If declining makes Kiss's controller the loser, that controller selects one winner-controlled Confrontation Manifestation and it loses power equal to the sum of the controller's modified base powers, not current power. A stalemate creates no follow-up target or power loss.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_kiss_payment_is_atomic_and_keeps_phase_and_source",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_kiss_decline_ends_phase_exiles_source_and_uses_base_not_current_power",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_kiss_stalemate_has_no_winner_power_followup_but_still_exiles"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-116",
+      "name": "Kiss of the Myrmillo!",
+      "paragraphIndex": 2,
+      "printedParagraph": "If the opponent did not pay, Exile this card.",
+      "paragraphSha256": "03ba27b83b958ca0ab746b6fe080a0490533cf1b21755e102d9bfc4623358207",
+      "expectedBehavior": "Declining the payment exiles Kiss from its controller's Limbo; paying never exiles it.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_kiss_payment_is_atomic_and_keeps_phase_and_source",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_kiss_decline_ends_phase_exiles_source_and_uses_base_not_current_power",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_kiss_stalemate_has_no_winner_power_followup_but_still_exiles"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "b6ebpyb30urtas2_en",
+      "name": "Freenya, Heartless Songstress",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Freenya is on the field, whenever you play a Will from hand, you can play a Will from the Limbo without paying its tribute cost.",
+      "paragraphSha256": "ae07bec741b21a06c71ebd2911605d53eea838c78f3dc4ebe9b132f59852e076",
+      "expectedBehavior": "While active on the field, Freenya optionally triggers only from its owner's Will played from hand. Accepting grants exactly one tribute-free Will play from that owner's Limbo in the current phase; the Limbo play cannot recursively trigger Freenya and declining grants nothing.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_freenya_triggers_only_for_owners_will_played_from_hand",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_freenya_optional_trigger_can_be_declined_without_grant",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_freenya_grants_exactly_one_free_limbo_play_without_recursion",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_freenya_persistent_will_exiles_for_hand_limbo_or_deck_but_not_vessel"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "b6ebpyb30urtas2_en",
+      "name": "Freenya, Heartless Songstress",
+      "paragraphIndex": 1,
+      "printedParagraph": "If the Wills played this way from the Limbo would enter a Limbo, a hand or a deck, exile them instead.",
+      "paragraphSha256": "7ba62e89ce123f17df69ff3b527bdd32b832f8cc8b453a4d258f193c17c2c930",
+      "expectedBehavior": "A Will played through Freenya is marked so later movement to a Limbo, hand, or deck is replaced by exile. Movement into an Empathic Vessel remains legal and is not replaced.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_freenya_triggers_only_for_owners_will_played_from_hand",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_freenya_optional_trigger_can_be_declined_without_grant",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_freenya_grants_exactly_one_free_limbo_play_without_recursion",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_freenya_persistent_will_exiles_for_hand_limbo_or_deck_but_not_vessel"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "iwpmdq754ew0mw7_en",
+      "name": "Wandering Veteran",
+      "paragraphIndex": 0,
+      "printedParagraph": "If at the beginning of the turn the Wandering Veteran is in the Limbo, it can be played in Support from the Limbo and, if played this way, it is considered of {H} temperament.",
+      "paragraphSha256": "4b688cb8c17e46440973263ada4c9c3bf0abd6cfb6900f7cf359007fcb043da6",
+      "expectedBehavior": "Presence in its owner's Limbo at the beginning of the turn snapshots a one-turn permission to play Wandering Veteran from that Limbo as Hollow Support during Confrontation Reaction. Entering Limbo later grants nothing and using the permission consumes it.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_veteran_permission_is_snapshotted_at_turn_start_and_used_once",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_veteran_entering_limbo_after_turn_start_gets_no_permission",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_veteran_winning_as_support_exiles_but_winning_normally_does_not"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "iwpmdq754ew0mw7_en",
+      "name": "Wandering Veteran",
+      "paragraphIndex": 1,
+      "printedParagraph": "When the Wandering Veteran wins a confrontation as Support, exile it.",
+      "paragraphSha256": "6ea2c6c10be9102f26454658aaf251cb31ac0a2d448a063d7c13e7deeef8d057",
+      "expectedBehavior": "When Wandering Veteran wins as Support it is exiled directly without a destination choice. Winning as an ordinary non-Support Manifestation does not invoke this destination.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_veteran_permission_is_snapshotted_at_turn_start_and_used_once",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_veteran_entering_limbo_after_turn_start_gets_no_permission",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_veteran_winning_as_support_exiles_but_winning_normally_does_not"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "9bkn03sc9veaa88_en",
+      "name": "Obelisk of Friendship",
+      "paragraphIndex": 0,
+      "printedParagraph": "Every turn, after the Revelation, you can put a face-down manifestation in front of you to gift to a target opponent and, if you do, that player must do the same. Exchange the chosen cards and reveal them, then each card gifted this way enters the Empathic Vessel of the player who received it as a gift.",
+      "paragraphSha256": "979a5066a2a0f0cad59d14f03c9c32f2fbf783f7e5af62e9b43c288c478b8c26",
+      "expectedBehavior": "At Reaction, Obelisk offers an optional normal Stack action. Declining changes nothing. After acceptance, both Manifestation gifts are selected atomically only during resolution; the first choice stays hidden, invalid choices are atomic, and the exchanged physical cards enter the recipient's Vessel with ownership preserved.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_can_be_declined_before_stack_without_revealing_or_moving",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_selects_gifts_only_on_resolution_and_hides_first_choice",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_exchange_preserves_owners_and_boosts_higher_givers_first",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_equal_gifts_exchange_without_any_boost",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_invalid_gift_is_atomic"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "9bkn03sc9veaa88_en",
+      "name": "Obelisk of Friendship",
+      "paragraphIndex": 1,
+      "printedParagraph": "The First Manifestation controlled by the player who gifted the manifestation with the highest base power gets +3 power until the end of the turn.",
+      "paragraphSha256": "1688ea7880af7271fffad4fea54dce739798c6b28baa43f64252d1e291d2b1cb",
+      "expectedBehavior": "Compare the printed base powers of the exchanged gifts. The unique higher giver's current First Manifestation gets +3 until turn end; equal gifts create no bonus, and normal turn expiry removes the bonus.",
+      "testIds": [
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_can_be_declined_before_stack_without_revealing_or_moving",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_selects_gifts_only_on_resolution_and_hides_first_choice",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_exchange_preserves_owners_and_boosts_higher_givers_first",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_equal_gifts_exchange_without_any_boost",
+        "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_invalid_gift_is_atomic"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_compiles_all_five_exact_contracts",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_freenya_grants_exactly_one_free_limbo_play_without_recursion",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_freenya_optional_trigger_can_be_declined_without_grant",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_freenya_persistent_will_exiles_for_hand_limbo_or_deck_but_not_vessel",
+      "status": "pass",
+      "durationSeconds": 0.187
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_freenya_triggers_only_for_owners_will_played_from_hand",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_kiss_decline_ends_phase_exiles_source_and_uses_base_not_current_power",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_kiss_payment_is_atomic_and_keeps_phase_and_source",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_kiss_stalemate_has_no_winner_power_followup_but_still_exiles",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_mutate_all_six_faces_have_exact_permanent_outcomes",
+      "status": "pass",
+      "durationSeconds": 0.281
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_mutate_missing_target_rolls_but_changes_nothing",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_can_be_declined_before_stack_without_revealing_or_moving",
+      "status": "pass",
+      "durationSeconds": 0.031
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_equal_gifts_exchange_without_any_boost",
+      "status": "pass",
+      "durationSeconds": 0.063
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_exchange_preserves_owners_and_boosts_higher_givers_first",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_invalid_gift_is_atomic",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_obelisk_selects_gifts_only_on_resolution_and_hides_first_choice",
+      "status": "pass",
+      "durationSeconds": 0.046
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_veteran_entering_limbo_after_turn_start_gets_no_permission",
+      "status": "pass",
+      "durationSeconds": 0.047
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_veteran_permission_is_snapshotted_at_turn_start_and_used_once",
+      "status": "pass",
+      "durationSeconds": 0.032
+    },
+    {
+      "testId": "test_standalone_outcomes_family.StandaloneOutcomesFamily.test_veteran_winning_as_support_exiles_but_winning_normally_does_not",
+      "status": "pass",
+      "durationSeconds": 0.093
+    }
+  ],
+  "limits": [
+    "This proof certifies the fourteen printed paragraphs of Mutate Uncontrollably, Kiss of the Myrmillo!, Freenya, Wandering Veteran, and Obelisk of Friendship across the selected strict branches and interactions.",
+    "It does not independently re-certify the complete generic contracts of target replacement, confrontation comparison, Stack priority, ownership serialization, Support cleanup, or all zone-movement replacement effects."
+  ]
+}
