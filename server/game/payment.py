@@ -89,7 +89,15 @@ class PaymentMixin:
                 if target.get("kind") == "card" else None
             )
             mass = None
-            if item is not None and self.rules_item_controller_id(item) != controller_id:
+            if (
+                item is not None
+                and self.rules_item_controller_id(item) != controller_id
+                and (
+                    self.rules_item_card_rules(item).get("type")
+                    == "manifestation"
+                    or item.get("isTokenCard")
+                )
+            ):
                 owner_id = self.rules_item_controller_id(item)
                 outcast = next((
                     source for source in self.rules_active_passive_sources(
@@ -1180,20 +1188,31 @@ class PaymentMixin:
                     raise RuntimeError(
                         "Validated Interzone Tribute payment disappeared."
                     )
-                movement = self._rules_remove_field_item(
-                    item, item.get("ownerId"), "graveyard", "top"
+                original_zone = self.rules_field_zone(item)
+                destination = self.card_rules.get(card_id, {}).get(
+                    "tributeDestination", "graveyard"
                 )
-                self.rules_engine["tributeLog"] = [
-                    entry for entry in self.rules_engine.get("tributeLog") or []
-                    if entry.get("turn") == self.phase_tracker["turn"]
-                ] + [{
-                    "turn": self.phase_tracker["turn"], "playerId": player_id,
-                    "cardId": card_id, "ownerId": item.get("ownerId"),
-                }]
+                if destination == "stalemate":
+                    self.rules_stalemate_item(item["id"])
+                    movement = {"status": "moved"}
+                else:
+                    zone = "deck" if destination == "deck_bottom" else "graveyard"
+                    position = "bottom" if destination == "deck_bottom" else "top"
+                    movement = self._rules_remove_field_item(
+                        item, item.get("ownerId"), zone, position
+                    )
+                if destination == "graveyard":
+                    self.rules_engine["tributeLog"] = [
+                        entry for entry in self.rules_engine.get("tributeLog") or []
+                        if entry.get("turn") == self.phase_tracker["turn"]
+                    ] + [{
+                        "turn": self.phase_tracker["turn"], "playerId": player_id,
+                        "cardId": card_id, "ownerId": item.get("ownerId"),
+                    }]
                 movements.append({
                     "cardId": card_id, "ownerId": item.get("ownerId"),
-                    "fromZone": "interzone",
-                    "destination": "graveyard",
+                    "fromZone": original_zone,
+                    "destination": destination,
                     "itemId": item.get("id"),
                     "status": movement.get("status"),
                 })

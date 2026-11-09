@@ -1,0 +1,128 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "95c46fb0151e06cd70fe3f73302b05aa40605be5c4ee250f0afe9aecb7ff9c55",
+  "published": false,
+  "finishedAt": "2026-11-09T16:08:13.449356+00:00",
+  "summary": {
+    "executed": 11,
+    "passed": 11,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 3,
+    "cardsWithSelectedClauseProof": 3,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "v6slubph4q5ijfb_en",
+      "name": "Quasimillenary",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Quasimillenary is in the Interzone, in the Recovery Phase you may choose to shuffle your Limbo and draw cards from it instead of from your deck. Cards drawn from the Limbo this way must remain uncovered in front of you but are considered as cards in hand. If these cards are about to enter the Limbo or the deck or if, after entering the field, they are about to enter a zone that is not an Empathic Vessel, exile them instead.",
+      "paragraphSha256": "3f539223d01f788ad68a59c1fe9ea58f6fc475e20302cf946f67666a342987cd",
+      "expectedBehavior": "During each Recovery draw, the controller of an active Quasimillenary in their Interzone may privately decline and draw normally, or shuffle their nonempty Limbo, draw from it first, and fill any remaining hand slots from the Deck. Limbo-drawn cards stay publicly uncovered and marked after Quasimillenary leaves: entering a Deck or Limbo, or leaving the field for any non-Vessel zone, exiles them instead; entering a Vessel is allowed and clears the mark.",
+      "testIds": [
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_compiles_all_three_exact_contracts",
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_quasi_offers_one_private_recovery_choice_and_decline_draws_from_deck",
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_quasi_yes_shuffles_limbo_draws_it_first_then_fills_from_deck_and_reveals",
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_quasi_requires_its_controllers_active_interzone_source_and_nonempty_limbo",
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_quasi_marked_hand_card_exiles_instead_of_entering_limbo_or_deck",
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_quasi_field_card_exiles_on_nonvessel_exit_but_vessel_clears_mark"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-027",
+      "name": "Glob-glob",
+      "paragraphIndex": 0,
+      "printedParagraph": "If Glob-glob is used as tribute, it is put on the bottom of its owner's deck instead of entering the Limbo.",
+      "paragraphSha256": "5f50379a6283c2f23338395b37b4913065a2369430824d9a00500c8e7747e618",
+      "expectedBehavior": "Only when Glob-glob is actually used as Tribute, from the Hand or legally from the field, its destination is replaced with the bottom of its immutable owner's Deck instead of the Limbo. Current control determines who pays, ordinary moves remain ordinary, and the movement reports its true source zone and replacement destination.",
+      "testIds": [
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_compiles_all_three_exact_contracts",
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_glob_glob_hand_tribute_goes_to_bottom_of_immutable_owners_deck",
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_glob_glob_field_tribute_uses_the_same_owner_deck_replacement",
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_special_tribute_destinations_do_not_apply_to_ordinary_moves"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-074",
+      "name": "Sly Frog",
+      "paragraphIndex": 0,
+      "printedParagraph": "If Sly Frog is used as tribute, it is put into the Stalemate Zone instead of entering the Limbo.",
+      "paragraphSha256": "06abb23e6a662f50cbe604f2e710d191b2d562b8eb0604df7e3951f5fe19181b",
+      "expectedBehavior": "Only when Sly Frog is actually used as Tribute, from the Hand or legally from the field, its existing or newly created occurrence enters the Stalemate Zone instead of the Limbo. Immutable ownership and current control are preserved, ordinary moves remain ordinary, and no duplicate Limbo card is created.",
+      "testIds": [
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_compiles_all_three_exact_contracts",
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_sly_frog_hand_tribute_creates_one_stalemate_occurrence",
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_sly_frog_field_tribute_moves_the_existing_occurrence_to_stalemate",
+        "test_final_three_cards_family.FinalThreeCardsFamily.test_special_tribute_destinations_do_not_apply_to_ordinary_moves"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_final_three_cards_family.FinalThreeCardsFamily.test_compiles_all_three_exact_contracts",
+      "status": "pass",
+      "durationMs": 31.0
+    },
+    {
+      "testId": "test_final_three_cards_family.FinalThreeCardsFamily.test_glob_glob_field_tribute_uses_the_same_owner_deck_replacement",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_final_three_cards_family.FinalThreeCardsFamily.test_glob_glob_hand_tribute_goes_to_bottom_of_immutable_owners_deck",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_final_three_cards_family.FinalThreeCardsFamily.test_quasi_field_card_exiles_on_nonvessel_exit_but_vessel_clears_mark",
+      "status": "pass",
+      "durationMs": 31.0
+    },
+    {
+      "testId": "test_final_three_cards_family.FinalThreeCardsFamily.test_quasi_marked_hand_card_exiles_instead_of_entering_limbo_or_deck",
+      "status": "pass",
+      "durationMs": 94.0
+    },
+    {
+      "testId": "test_final_three_cards_family.FinalThreeCardsFamily.test_quasi_offers_one_private_recovery_choice_and_decline_draws_from_deck",
+      "status": "pass",
+      "durationMs": 31.0
+    },
+    {
+      "testId": "test_final_three_cards_family.FinalThreeCardsFamily.test_quasi_requires_its_controllers_active_interzone_source_and_nonempty_limbo",
+      "status": "pass",
+      "durationMs": 219.0
+    },
+    {
+      "testId": "test_final_three_cards_family.FinalThreeCardsFamily.test_quasi_yes_shuffles_limbo_draws_it_first_then_fills_from_deck_and_reveals",
+      "status": "pass",
+      "durationMs": 31.0
+    },
+    {
+      "testId": "test_final_three_cards_family.FinalThreeCardsFamily.test_sly_frog_field_tribute_moves_the_existing_occurrence_to_stalemate",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_final_three_cards_family.FinalThreeCardsFamily.test_sly_frog_hand_tribute_creates_one_stalemate_occurrence",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_final_three_cards_family.FinalThreeCardsFamily.test_special_tribute_destinations_do_not_apply_to_ordinary_moves",
+      "status": "pass",
+      "durationMs": 78.0
+    }
+  ],
+  "limits": [
+    "This proof closes the three remaining printed paragraphs for Quasimillenary, Glob-glob, and Sly Frog across their selected strict branches.",
+    "It does not independently re-certify every generic Recovery, privacy, zone replacement, field-Tribute permission, Stack payment, or Stalemate contract."
+  ]
+}

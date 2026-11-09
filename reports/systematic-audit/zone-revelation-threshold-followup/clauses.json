@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "08313422174eb55c358f8e90c413a0ccb9786ebda089d80dc08f2769df4b90d8",
+  "published": false,
+  "finishedAt": "2026-11-09T16:00:54.006721+00:00",
+  "summary": {
+    "executed": 15,
+    "passed": 15,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 5,
+    "cardsWithSelectedClauseProof": 5,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "inner-deserts-104",
+      "name": "Dulfer, the Touchy",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Dulfer is in an opponent's Empathic Vessel, upon Revelation that player may lose 10 points. If they do not, the First Manifestation they control gets -2 power.",
+      "paragraphSha256": "41cfd81d5ec937fb56268fd5b6dac721c662ca02a43cfad180ca0703b70d18b0",
+      "expectedBehavior": "At Revelation, Dulfer triggers only from an opponent's unlocked Empathic Vessel. That Vessel's owner atomically chooses either to lose exactly 10 Points or to give their current First Manifestation -2 Power for that occurrence's remaining field lifetime; wrong actors and invalid choices do nothing.",
+      "testIds": [
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_compiles_all_five_exact_contracts",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_dulfer_triggers_only_from_an_opponents_unlocked_vessel",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_dulfer_vessel_owner_can_lose_exactly_ten_points",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_dulfer_weakens_the_current_first_until_that_occurrence_leaves"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-124",
+      "name": "Tuxnu, the Transparent",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Tuxnu is on the field, whenever a non-Token Persistent Will enters the field under a player's control, each other player creates a Token copy of that Will.",
+      "paragraphSha256": "b180560785f2b89e593c6c2af349311d1704fdea752b5a3e16fd8675e8a81ae1",
+      "expectedBehavior": "While each active Tuxnu is on the field, every face-up non-Token Persistent Will entering under a player's control creates one Token copy under every other player's control. Manifestations, Ephemeral Wills, hidden cards, and Token copies do not trigger it, so created copies cannot recurse.",
+      "testIds": [
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_compiles_all_five_exact_contracts",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_tuxnu_copies_a_non_token_persistent_will_for_each_other_player",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_tuxnu_excludes_wrong_types_hidden_cards_and_token_copies",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_each_active_tuxnu_copies_once_without_recursive_growth"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-004",
+      "name": "Quper, the Bestower",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Quper is on the field, when its power reaches 5 or more, Sacrifice it. If it is Sacrificed this way, all manifestations you control currently in the Confrontation Zone gain +2 power until the end of the turn.",
+      "paragraphSha256": "ab421e841db448a2951ac7b0145bfcc9c62a2ea96393af1ed4fd22efe7c16dfc",
+      "expectedBehavior": "While active on the field, Quper reaching at least 5 Power is Sacrificed to its immutable owner's Limbo. Only if that Sacrifice succeeds, every Manifestation its current controller already controls in the Confrontation Zone gets +2 Power until end of turn; later arrivals, other zones, and opponents are excluded, and a replaced Sacrifice grants no bonus.",
+      "testIds": [
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_compiles_all_five_exact_contracts",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_quper_sacrifices_at_five_and_boosts_only_current_allied_confrontation_cards",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_quper_uses_current_controller_and_bonus_expires_at_end_of_turn",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_quper_replaced_sacrifice_grants_no_bonus"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-034",
+      "name": "Bonzai, the Unexpected",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Bonzai is in an Empathic Vessel, before the Revelation that Empathic Vessel’s owner shows you their hand.",
+      "paragraphSha256": "8defa758ca6dfa1ebc9266de80a86b2b2e0052e4288e1a74d1bc66724ca6cb2b",
+      "expectedBehavior": "Before Revelation, Bonzai in an Empathic Vessel reveals that Vessel owner's Hand only to Bonzai's immutable owner. The reveal exists during First selection and the before-Revelation window, ends afterward, and is suppressed while that Vessel's effects are disabled.",
+      "testIds": [
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_compiles_all_five_exact_contracts",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_bonzai_reveals_only_the_vessel_owners_hand_to_its_owner_before_revelation",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_bonzai_uses_immutable_owner_and_stops_when_vessel_effects_are_locked"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "inner-deserts-117",
+      "name": "Spiked Pit",
+      "paragraphIndex": 0,
+      "printedParagraph": "Whenever a manifestation enters an opponent's Interzone, that manifestation gets -1 power.",
+      "paragraphSha256": "b210d51da7d0c3b23f624c523ce3c8fe2198ca25d0b75ee7dc8eb10171954444",
+      "expectedBehavior": "Whenever a Manifestation, including a generic Manifestation Token, enters an opponent's Interzone, each active Spiked Pit controlled by another player gives it -1 Power. Own entries, Wills, inactive sources, sources controlled by the entering player, and cards already present are unaffected.",
+      "testIds": [
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_compiles_all_five_exact_contracts",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_spiked_pit_weakens_only_manifestations_entering_an_opponents_interzone",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_spiked_pits_stack_follow_current_control_and_require_active_sources",
+        "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_spiked_pit_applies_to_generic_manifestation_tokens_but_not_retroactively"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_bonzai_reveals_only_the_vessel_owners_hand_to_its_owner_before_revelation",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_bonzai_uses_immutable_owner_and_stops_when_vessel_effects_are_locked",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_compiles_all_five_exact_contracts",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_dulfer_triggers_only_from_an_opponents_unlocked_vessel",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_dulfer_vessel_owner_can_lose_exactly_ten_points",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_dulfer_weakens_the_current_first_until_that_occurrence_leaves",
+      "status": "pass",
+      "durationMs": 31.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_each_active_tuxnu_copies_once_without_recursive_growth",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_quper_replaced_sacrifice_grants_no_bonus",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_quper_sacrifices_at_five_and_boosts_only_current_allied_confrontation_cards",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_quper_uses_current_controller_and_bonus_expires_at_end_of_turn",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_spiked_pit_applies_to_generic_manifestation_tokens_but_not_retroactively",
+      "status": "pass",
+      "durationMs": 62.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_spiked_pit_weakens_only_manifestations_entering_an_opponents_interzone",
+      "status": "pass",
+      "durationMs": 31.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_spiked_pits_stack_follow_current_control_and_require_active_sources",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_tuxnu_copies_a_non_token_persistent_will_for_each_other_player",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_zone_revelation_threshold_family.ZoneRevelationThresholdFamily.test_tuxnu_excludes_wrong_types_hidden_cards_and_token_copies",
+      "status": "pass",
+      "durationMs": 47.0
+    }
+  ],
+  "limits": [
+    "This proof certifies the five printed paragraphs of Dulfer, Tuxnu, Quper, Bonzai, and Spiked Pit across the selected strict branches.",
+    "It does not independently re-certify every generic Vessel lock, privacy serialization, token-copy entry, Sacrifice replacement, state-action, or Power-modifier contract."
+  ]
+}

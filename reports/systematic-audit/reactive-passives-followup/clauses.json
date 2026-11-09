@@ -1,0 +1,171 @@
+{
+  "schemaVersion": 1,
+  "sourceDigest": "db39caae843de44c63540527be5adbfb3ba486d9a1e627d9ddf1d91a98f36272",
+  "published": false,
+  "finishedAt": "2026-11-09T15:53:49.714651+00:00",
+  "summary": {
+    "executed": 14,
+    "passed": 14,
+    "failed": 0,
+    "skipped": 0,
+    "selectedClauses": 5,
+    "cardsWithSelectedClauseProof": 5,
+    "fullCatalogSemanticCertification": false
+  },
+  "clauses": [
+    {
+      "cardId": "h67753m250gg2h6_en",
+      "name": "Wandering Outcast",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Wandering Outcast is in the Interzone, if a manifestation you control in the Confrontation Zone becomes the target of a card or effect controlled by an opponent, you can swap the position of Wandering Outcast and the targeted manifestation. If you do, change the target of that card or effect to Wandering Outcast.",
+      "paragraphSha256": "f8f2859beb3317e35a8cfc57054cae1799af75bfc2e1fd90f89f9e3c9cddf986",
+      "expectedBehavior": "While an active Wandering Outcast is in its controller's Interzone, that controller may answer an opposing card or effect targeting one of their Confrontation Manifestations by swapping the two complete field positions and retargeting the effect to Outcast. The choice is atomic and optional; own effects, non-Manifestations, other zones, disabled sources, protection, Immunity, and the opt-out preference do not swap.",
+      "testIds": [
+        "test_reactive_passives_family.ReactivePassivesFamily.test_compiles_all_five_exact_contracts",
+        "test_reactive_passives_family.ReactivePassivesFamily.test_outcast_acceptance_swaps_the_complete_position_and_target",
+        "test_reactive_passives_family.ReactivePassivesFamily.test_outcast_real_declaration_can_be_declined_without_mutating_payment",
+        "test_reactive_passives_family.ReactivePassivesFamily.test_outcast_requires_opposing_effect_eligible_source_and_confrontation_target"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "s4dofvhan101mew_en",
+      "name": "Soup, the Graceful",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as Soup is in the Interzone, you can play persistent Wills any time you could play ephemeral Wills.",
+      "paragraphSha256": "a8f96fd5c6b998cf67f4b8d873077049a3a160314a6bacaf5190b515a04cbdc7",
+      "expectedBehavior": "While an active Soup is in its controller's Interzone, only that controller may play a Persistent Will in every timing window where an Ephemeral Will could be played, including as a response. This changes timing only: printed empty-Stack restrictions remain, and a missing, face-down, disabled, or wrongly positioned Soup grants no permission.",
+      "testIds": [
+        "test_reactive_passives_family.ReactivePassivesFamily.test_compiles_all_five_exact_contracts",
+        "test_reactive_passives_family.ReactivePassivesFamily.test_soup_allows_a_real_persistent_will_response_only_for_its_controller",
+        "test_reactive_passives_family.ReactivePassivesFamily.test_soup_requires_an_active_interzone_source_and_keeps_empty_stack_limits"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "6vxm454ffuni41x_en",
+      "name": "Obtrusive Mass",
+      "paragraphIndex": 0,
+      "printedParagraph": "As long as the Obtrusive Mass is on the field, if a manifestation on the field that you control is about to become the target of a card or an effect controlled by an opponent, that card or effect targets the Obtrusive Mass instead.",
+      "paragraphSha256": "ca44276284cdbf137d52514fdd2e147a1d808fc87b8a3c4126cc67b79191b616",
+      "expectedBehavior": "While an active Obtrusive Mass is on its controller's field, an opposing card or effect that would target another Manifestation controlled by that player targets Mass instead. Own effects, opposing cards, Wills, Mass itself, inactive sources, and a Mass protected or Immune from the incoming controller are not redirected; current control governs the effect and duplicate redirected targets collapse to one target.",
+      "testIds": [
+        "test_reactive_passives_family.ReactivePassivesFamily.test_compiles_all_five_exact_contracts",
+        "test_reactive_passives_family.ReactivePassivesFamily.test_mass_redirects_only_opposing_targets_of_allied_manifestations",
+        "test_reactive_passives_family.ReactivePassivesFamily.test_mass_does_not_redirect_a_will_and_deduplicates_multiple_redirects",
+        "test_reactive_passives_family.ReactivePassivesFamily.test_mass_requires_an_active_retargetable_source_and_follows_control"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "y4muuingw5y9l7z_en",
+      "name": "Honor and Respect",
+      "paragraphIndex": 0,
+      "printedParagraph": "When you win a confrontation, if you control only one manifestation in the Confrontation Zone, you gain 10 points.",
+      "paragraphSha256": "e4db962edc5e2bcc1b9dceef7a1d3276d30a0753a90b1ea07ce5546a7a52a1c4",
+      "expectedBehavior": "Each active Honor and Respect controlled by the confrontation winner gives that player exactly 10 Points when, after state actions, they control exactly one Manifestation in the Confrontation Zone. Two winning Manifestations, a losing controller, or an inactive source gives nothing; multiple active copies each apply once.",
+      "testIds": [
+        "test_reactive_passives_family.ReactivePassivesFamily.test_compiles_all_five_exact_contracts",
+        "test_reactive_passives_family.ReactivePassivesFamily.test_honor_scores_ten_only_for_exactly_one_winning_manifestation",
+        "test_reactive_passives_family.ReactivePassivesFamily.test_honor_sources_stack_but_only_for_the_winner_and_while_active"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    },
+    {
+      "cardId": "my6shp6k59b1eig_en",
+      "name": "Life Sustainer",
+      "paragraphIndex": 0,
+      "printedParagraph": "Manifestations that reach exactly 0 power are not destroyed, but lose their effects.",
+      "paragraphSha256": "0950cee9279f90be331ad60ee5d23d5a8ee869eba92fd25d5a2915541a5a7631",
+      "expectedBehavior": "While at least one active Life Sustainer is on the field, every Manifestation, including Tokens and either player's cards, that reaches exactly zero Power remains and permanently loses its effects. A Manifestation below zero is still destroyed; without an active source an exact-zero card is destroyed, and a sustained card still at zero is destroyed when the last source leaves.",
+      "testIds": [
+        "test_reactive_passives_family.ReactivePassivesFamily.test_compiles_all_five_exact_contracts",
+        "test_reactive_passives_family.ReactivePassivesFamily.test_life_sustains_exact_zero_and_permanently_removes_effects",
+        "test_reactive_passives_family.ReactivePassivesFamily.test_life_destroys_below_zero_and_exact_zero_without_an_active_source",
+        "test_reactive_passives_family.ReactivePassivesFamily.test_life_is_global_applies_to_tokens_and_ends_for_sustained_zero_cards"
+      ],
+      "status": "selected-branches-pass",
+      "allBranchesCertified": false
+    }
+  ],
+  "tests": [
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_compiles_all_five_exact_contracts",
+      "status": "pass",
+      "durationMs": 63.0
+    },
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_honor_scores_ten_only_for_exactly_one_winning_manifestation",
+      "status": "pass",
+      "durationMs": 94.0
+    },
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_honor_sources_stack_but_only_for_the_winner_and_while_active",
+      "status": "pass",
+      "durationMs": 46.0
+    },
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_life_destroys_below_zero_and_exact_zero_without_an_active_source",
+      "status": "pass",
+      "durationMs": 204.0
+    },
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_life_is_global_applies_to_tokens_and_ends_for_sustained_zero_cards",
+      "status": "pass",
+      "durationMs": 46.0
+    },
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_life_sustains_exact_zero_and_permanently_removes_effects",
+      "status": "pass",
+      "durationMs": 63.0
+    },
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_mass_does_not_redirect_a_will_and_deduplicates_multiple_redirects",
+      "status": "pass",
+      "durationMs": 62.0
+    },
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_mass_redirects_only_opposing_targets_of_allied_manifestations",
+      "status": "pass",
+      "durationMs": 47.0
+    },
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_mass_requires_an_active_retargetable_source_and_follows_control",
+      "status": "pass",
+      "durationMs": 297.0
+    },
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_outcast_acceptance_swaps_the_complete_position_and_target",
+      "status": "pass",
+      "durationMs": 63.0
+    },
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_outcast_real_declaration_can_be_declined_without_mutating_payment",
+      "status": "pass",
+      "durationMs": 62.0
+    },
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_outcast_requires_opposing_effect_eligible_source_and_confrontation_target",
+      "status": "pass",
+      "durationMs": 281.0
+    },
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_soup_allows_a_real_persistent_will_response_only_for_its_controller",
+      "status": "pass",
+      "durationMs": 94.0
+    },
+    {
+      "testId": "test_reactive_passives_family.ReactivePassivesFamily.test_soup_requires_an_active_interzone_source_and_keeps_empty_stack_limits",
+      "status": "pass",
+      "durationMs": 313.0
+    }
+  ],
+  "limits": [
+    "This proof certifies the five printed paragraphs of Wandering Outcast, Soup, Obtrusive Mass, Honor and Respect, and Life Sustainer across the selected strict branches.",
+    "It does not independently re-certify every generic target, protection, Immunity, Stack timing, confrontation, state-action, or token contract."
+  ]
+}

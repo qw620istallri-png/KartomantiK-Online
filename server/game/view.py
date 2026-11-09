@@ -90,6 +90,8 @@ class ViewMixin:
             "confrontation_choose", "confrontation_before_revelation",
         }:
             return False
+        if self.rules_vessel_locked(owner_id):
+            return False
         container = self.players.get(owner_id)
         if container is None:
             return False
