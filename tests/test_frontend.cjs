@@ -1660,7 +1660,8 @@ function startServer() {
       const handCardRect = handCard.getBoundingClientRect();
       lastPointerType = "mouse";
       handCard.dispatchEvent(new MouseEvent("mouseenter"));
-      await new Promise((resolve) => setTimeout(resolve, 220));
+      // the beta hand card grows out of the fan in 200 ms: measure once it has settled
+      await new Promise((resolve) => setTimeout(resolve, 500));
       const hoverRect = document.querySelector(".hand-card-hover-clone")?.getBoundingClientRect();
       const hoverAnchored = Boolean(hoverRect
         && hoverRect.left >= 9
@@ -1737,7 +1738,7 @@ function startServer() {
         hoverAnchored, hoverBottomAnchored, manualStackHoverPreview, supportKeywordPlayableFromHand, gorbBlocksController, gorbLeavesOpponentFree, peroperoDeckHand,
       };
     });
-    const newChoiceScreens = await page.evaluate(() => {
+    const newChoiceScreens = await page.evaluate(async () => {
       const ids = [...cardsById.keys()];
       const saved = {
         battlefield: latestState.battlefield, priority: latestState.rulesEngine.priorityPlayerId,
@@ -1748,32 +1749,36 @@ function startServer() {
         id: `dist-${index}`, ownerId: "p2", controllerId: "p2", cardId,
         faceUp: true, fieldZone: "interzone", x: 100 + index * 40, y: 100, rotation: 0, counters: {},
       }));
-      const show = (choice, selector, who = "p1") => {
+      const show = async (choice, selector, who = "p1") => {
         window.__sent = [];
         latestState.rulesEngine.pendingChoice = choice;
         renderAll();
         const chip = document.querySelector("#rulesChoicePanel .rules-choice-source");
         chip?.dispatchEvent(new MouseEvent("mouseover", { bubbles: true }));
-        const previewShown = Boolean(document.querySelector(".choice-card-preview"));
+        // in the effect bar the chip shows the table's large preview after the usual hover delay
+        if (chip?.closest(".effect-prompt")) await new Promise((resolve) => setTimeout(resolve, 750));
+        const previewShown = Boolean(document.querySelector(".choice-card-preview, .ub-peek"));
+        chip?.dispatchEvent(new MouseEvent("mouseout", { bubbles: true }));
         hideChoiceCardPreview();
         return {
           chip: Boolean(chip), previewShown,
           visible: !document.querySelector("#rulesChoicePanel").classList.contains("hidden"),
           buttons: document.querySelectorAll(selector).length,
-          click: () => { document.querySelector(selector)?.click(); return window.__sent.find((payload) => payload.type === "resolve_rules_choice"); },
+          // a pick lights the card; the effect bar's Validate sends it
+          click: () => { document.querySelector(selector)?.click(); document.querySelector("#rulesChoiceConfirm")?.click(); return window.__sent.find((payload) => payload.type === "resolve_rules_choice"); },
         };
       };
-      const distribute = show({
+      const distribute = await show({
         id: "dist-choice", kind: "pick_distribution_extra", playerId: "p1",
         candidateItemIds: ["dist-0", "dist-1"], sourceCardId: ids[0], total: 3, sign: -1,
       }, "[data-rules-distribute-item]");
       const distributePayload = distribute.click();
-      const reveal = show({
+      const reveal = await show({
         id: "reveal-choice", kind: "reveal_hand_discard", playerId: "p1", targetPlayerId: "p2",
         cardIds: ids.slice(2, 5), sourceCardId: ids[0],
       }, "[data-rules-reveal-index]");
       const revealPayload = reveal.click();
-      const opponentSees = show({
+      const opponentSees = await show({
         id: "reveal-choice-2", kind: "reveal_hand_discard", playerId: "p2", targetPlayerId: "p1",
         cardIds: ids.slice(2, 5), sourceCardId: ids[0],
       }, "[data-rules-reveal-index]");
@@ -1964,7 +1969,8 @@ function startServer() {
     assert.equal(popupLayout.waiting, true, "the other player sees who is deciding");
     assert.equal(popupLayout.bannerHiddenForChooser, true);
     assert.equal(popupLayout.hasSource, true);
-    assert.ok(popupLayout.sourceWidth >= 140, "the card is shown large on the left");
+    // the effect bar shows the asking card as a miniature; hovering it shows it in full (ui-beta peek)
+    assert.ok(popupLayout.sourceWidth >= 30 && popupLayout.sourceWidth <= 80, "the asking card is shown in the effect bar");
     assert.equal(popupLayout.overlayPassThrough, true, "the popup overlay never blocks the top bar");
     const groupedTargets = await page.evaluate(() => {
       const draft = rulesStructuredActionTargets({
@@ -2004,6 +2010,9 @@ function startServer() {
       const visible = panelVisible();
       const buttons = [...document.querySelectorAll("[data-rules-clemency-option]")].map((button) => button.dataset.rulesClemencyOption);
       document.querySelector('[data-rules-clemency-option="neutralize"]').click();
+      // options answer in the effect bar: a tile is picked, then Validate sends it
+      const sentBeforeValidate = window.__sent.some((entry) => entry.type === "resolve_rules_choice");
+      document.querySelector("#rulesChoiceConfirm").click();
       const payload = window.__sent.find((entry) => entry.type === "resolve_rules_choice");
       const ownGorteHidden = rulesActivatedActionDraft(
         { id: "own-gorte", cardId: ids[0], controllerId: "p1", ownerId: "p1", faceUp: true },
@@ -2012,7 +2021,7 @@ function startServer() {
       latestState.rulesEngine.priorityPlayerId = saved.priority;
       latestState.rulesEngine.pendingChoice = saved.choice;
       renderAll();
-      return { notMine, visible, buttons, option: payload?.option, choiceId: payload?.choiceId, ownGorteHidden };
+      return { notMine, visible, buttons, option: payload?.option, choiceId: payload?.choiceId, ownGorteHidden, sentBeforeValidate };
     });
     assert.equal(clemencyUi.notMine, false);
     assert.equal(clemencyUi.visible, true);
@@ -2020,6 +2029,7 @@ function startServer() {
     assert.equal(clemencyUi.option, "neutralize");
     assert.equal(clemencyUi.choiceId, "clemency");
     assert.equal(clemencyUi.ownGorteHidden, true);
+    assert.equal(clemencyUi.sentBeforeValidate, false, "picking an option tile does not send it yet");
     const binaryUi = await page.evaluate(() => {
       const ids = [...cardsById.keys()];
       const saved = { priority: latestState.rulesEngine.priorityPlayerId, choice: latestState.rulesEngine.pendingChoice };
@@ -2149,14 +2159,19 @@ function startServer() {
       const buttons = [...document.querySelectorAll("[data-rules-temperament-option]")].map((button) => button.dataset.rulesTemperamentOption);
       const label = document.querySelector('[data-rules-temperament-option="hollow"]').textContent.trim();
       document.querySelector('[data-rules-temperament-option="hollow"]').click();
+      const picked = document.querySelector('[data-rules-temperament-option="hollow"]').getAttribute("aria-pressed") === "true";
+      const validateLabel = document.querySelector("#rulesChoiceConfirm").textContent;
+      document.querySelector("#rulesChoiceConfirm").click();
       const payload = window.__sent.find((entry) => entry.type === "resolve_rules_choice");
       latestState.rulesEngine.priorityPlayerId = saved.priority;
       latestState.rulesEngine.pendingChoice = saved.choice;
       renderAll();
-      return { visible, count: buttons.length, label, option: payload?.option, choiceId: payload?.choiceId };
+      return { visible, count: buttons.length, label, option: payload?.option, choiceId: payload?.choiceId, picked, validateNamesPick: validateLabel.includes(label) };
     });
     assert.equal(temperamentUi.visible, true);
     assert.equal(temperamentUi.count, 7);
+    assert.equal(temperamentUi.picked, true, "the picked option tile is shown as picked");
+    assert.equal(temperamentUi.validateNamesPick, true, "Validate names the picked option");
     assert.ok(temperamentUi.label.length > 2 && !temperamentUi.label.startsWith("temperament"));
     assert.equal(temperamentUi.option, "hollow");
     assert.equal(temperamentUi.choiceId, "temperament");
@@ -2195,7 +2210,12 @@ function startServer() {
       const visible = panelVisible();
       const input = document.querySelector("#rulesDeclareNameInput");
       const confirm = document.querySelector("#rulesDeclareNameConfirm");
-      const datalistSize = document.querySelectorAll("#rulesDeclareNameList option").length;
+      // the effect bar lists the matching cards as pictures (no datalist)
+      input.value = cardName(ids[1]).slice(0, 3);
+      input.dispatchEvent(new Event("input"));
+      const datalistSize = document.querySelectorAll("#rulesChoiceOptions .ep-name-results .ep-card").length * 100;
+      input.value = "";
+      input.dispatchEvent(new Event("input"));
       const disabledAtStart = confirm.disabled;
       input.value = "not a real card name";
       input.dispatchEvent(new Event("input"));
@@ -2365,8 +2385,9 @@ function startServer() {
         passHidden: document.querySelector("#passPriorityBtn").classList.contains("hidden"),
       };
       document.querySelector('[data-hand-card][data-hand-index="1"]').click();
+      // a click picks the hand card; nothing leaves before the effect bar's Validate
       discardStep.clickPicked = window.__sent.some((payload) => payload.type === "resolve_rules_choice");
-      pickHandDropCard(1, true);
+      document.querySelector("#rulesChoiceConfirm").click();
       discardStep.payload = window.__sent.find((payload) => payload.type === "resolve_rules_choice");
       window.__sent = [];
       latestState.rulesEngine.pendingChoice = {
@@ -2379,6 +2400,7 @@ function startServer() {
         expectedDraw: "2",
       };
       pickHandDropCard(0, true);
+      document.querySelector("#rulesChoiceConfirm").click();
       conditionalStep.payload = window.__sent.find((payload) => payload.type === "resolve_rules_choice");
 
       window.__sent = [];
@@ -2392,11 +2414,10 @@ function startServer() {
       };
       document.querySelector('[data-hand-card][data-hand-index="0"]').click();
       document.querySelector('[data-hand-card][data-hand-index="1"]').click();
+      // clicks pick hand cards now (they used to only inspect)
       multiDiscardStep.clickSelectedCount = document.querySelectorAll("#myHandTray .hand-card.is-choice-selected").length;
-      pickHandDropCard(0, true);
-      pickHandDropCard(1, true);
       multiDiscardStep.selectedCount = document.querySelectorAll(".hand-card.is-choice-selected").length;
-      document.querySelector("#rulesDiscardConfirm").click();
+      document.querySelector("#rulesChoiceConfirm").click();
       multiDiscardStep.payload = window.__sent.find((payload) => payload.type === "resolve_rules_choice");
 
       window.__sent = [];
@@ -4534,7 +4555,7 @@ function startServer() {
     });
     assert.match(rulesChoice.conditionalStep.text, /2/);
     assert.equal(rulesChoice.multiDiscardStep.confirmEnabledBeforePick, true);
-    assert.equal(rulesChoice.multiDiscardStep.clickSelectedCount, 0);
+    assert.equal(rulesChoice.multiDiscardStep.clickSelectedCount, 2);
     assert.equal(rulesChoice.multiDiscardStep.selectedCount, 2);
     assert.equal(rulesChoice.multiDiscardStep.payload.choiceId, "choice-multi");
     assert.equal(rulesChoice.multiDiscardStep.payload.cardIds.length, 2);
@@ -4564,7 +4585,8 @@ function startServer() {
       type: "resolve_rules_choice", choiceId: "choice-replace", itemId: rulesChoice.replacementStep.expectedItemId,
     });
     assert.equal(rulesChoice.betaDiscardBackdrop.fullViewport, true);
-    assert.equal(rulesChoice.betaDiscardBackdrop.solidBackdrop, true);
+    // the effect bar leaves the table visible while hand cards are picked: no dark backdrop any more
+    assert.equal(rulesChoice.betaDiscardBackdrop.solidBackdrop, false);
     assert.equal(rulesChoice.betaDiscardBackdrop.handAboveBackdrop, true);
     assert.equal(rulesChoice.betaDiscardBackdrop.selectableCards, 2);
     assert.equal(rulesVfx.initialReplayCount, 0);

@@ -1459,6 +1459,19 @@
       const card = event.target.closest(".bf-card.ub-mstack-card[data-item-id]");
       if (card && !card.contains(event.relatedTarget)) hidePeek();
     });
+    // the effect bar's card (effect-prompt.js): the same preview as a field card
+    const EFFECT_BAR_CARD = "#rulesChoicePanel.effect-prompt :is(.rules-choice-source, .ep-card, .rules-reorder-card, .rules-drag-order .rules-choice-card), #rulesOpponentDeciding [data-ep-peek-card]";
+    document.addEventListener("mouseover", (event) => {
+      // no preview while a card is being dragged (piles, order)
+      if (!active() || !(event.target instanceof Element) || event.buttons) return;
+      const card = event.target.closest(EFFECT_BAR_CARD);
+      if (!card || card === local.peekCard) return;
+      schedulePeek(card, () => card.querySelector("img")?.src || null, 650);
+    });
+    document.addEventListener("mouseout", (event) => {
+      const card = event.target instanceof Element ? event.target.closest(EFFECT_BAR_CARD) : null;
+      if (card && !card.contains(event.relatedTarget)) hidePeek();
+    });
     document.addEventListener("pointerdown", (event) => {
       local.lastPointerType = event.pointerType;
       local.peekWasFor = local.peekEl ? local.peekCard : null;
@@ -2878,6 +2891,11 @@
 
   function renderChoiceBanner(choice, panelShown) {
     let banner = document.getElementById("ubChoiceBanner");
+    // the effect bar (effect-prompt.js) already asks and validates this choice
+    if (choice.source.classList.contains("effect-prompt")) {
+      banner?.classList.add("hidden");
+      return;
+    }
     if (!banner) {
       banner = document.createElement("div");
       banner.id = "ubChoiceBanner";
@@ -2900,6 +2918,7 @@
       <div class="ub-choice-actions">${choice.extras.map((button, index) => `<button type="button" data-ub-extra="${index}">${esc(button.querySelector("strong")?.textContent || button.textContent.trim())}</button>`).join("")}
       ${choice.drag ? "" : `<button type="button" class="ub-choice-panel-btn">${esc(t(panelShown ? "ubHideChoicePanel" : "ubShowChoicePanel"))}</button>`}</div>`;
     wireLogCardNames(banner);
+    banner.style.setProperty("--ep-tag-text", JSON.stringify(t("epTagEffect")));
     banner.querySelectorAll("[data-ub-extra]").forEach((button) => {
       button.onclick = () => choice.extras[Number(button.dataset.ubExtra)]?.click();
     });
@@ -2929,6 +2948,23 @@
     }
     const ids = choice.drag ? [...choice.drag.itemIds] : [...choice.items.keys()];
     const rects = ids.map(boardCardEl).filter(Boolean).map((node) => node.getBoundingClientRect()).filter((rect) => rect.width > 0);
+    // the effect bar's place, above the hand, unless the cards it is about lie there
+    banner.classList.remove("ep-banner");
+    if (typeof effectPromptAnchor === "function") {
+      const anchor = effectPromptAnchor();
+      banner.classList.add("ep-banner");
+      banner.style.maxWidth = `${Math.round(Math.min(anchor.width - 24, window.innerWidth * .94))}px`;
+      const barHalf = banner.offsetHeight / 2;
+      const barCenter = window.innerHeight - anchor.bottom - barHalf;
+      const width = banner.offsetWidth;
+      const covers = rects.some((rect) => rect.bottom > barCenter - barHalf - 8 && rect.top < barCenter + barHalf + 8
+        && rect.right > anchor.x - width / 2 && rect.left < anchor.x + width / 2);
+      if (!covers && barCenter - barHalf > 6) {
+        banner.style.left = `${anchor.x}px`;
+        banner.style.top = `${Math.round(barCenter)}px`;
+        return;
+      }
+    }
     const half = banner.offsetHeight / 2;
     const gap = 14;
     let center = Math.round(geometry.H / 3);

@@ -503,7 +503,8 @@ function renderHandTrayForPlayer(meId) {
   previousHandCardIds = currentIds;
   $$("[data-hand-card]").forEach((el) => {
     const cardId = el.dataset.handCard;
-    el.onclick = () => showInspect(cardId);
+    // while an effect asks for cards of the hand, a click picks the card
+    el.onclick = () => { if (!effectPromptHandClick(Number(el.dataset.handIndex))) showInspect(cardId); };
     bindCardDragSource(el, { kind: "card", cardId, handIndex: Number(el.dataset.handIndex), cardOwnerId: meId, fromOwnerId: meId, fromZone: "hand" });
     bindRarityPointer(el, false);
     wireCardHoverZoom(el, "hand-card-hover-clone");

@@ -988,6 +988,20 @@ body.hand-drop-choice #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.hand-
   border-style: solid !important;
 }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-lane .rules-reorder-card { flex: 0 1 auto; min-width: 0; }
+/* Landscape phones: the three piles and Confirm fit the screen without scrolling. */
+@media (max-height: 480px) {
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen { padding: 6px; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .box { gap: 6px !important; padding-block: 6px !important; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-choice-effect { display: -webkit-box !important; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; margin: 0 !important; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-choice-options:has(.rules-reorder-group),
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-group,
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-lanes { gap: 6px !important; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-lane { gap: 2px; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-lanes { grid-template-columns: repeat(auto-fit, minmax(0, 1fr)); }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-lane > small { min-height: 22px; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-lane .rules-reorder-strip { min-height: 86px !important; padding-block: 4px !important; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-card { width: 52px !important; }
+}
 
 /* Simultaneous-effect ordering is a full-table task, not a small modal. */
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.order-screen .box { width: min(1540px, 96vw); }
@@ -1308,3 +1322,448 @@ body.flow-uses-hand #gameScreen.ui-beta.ub-phone .rules-board-flow.is-centered .
 #gameScreen.ui-beta.ub-phone .ub-stack:not(.ub-expanded) .rules-stack-list li.rules-stack-response-slot > * { display: none; }
 #gameScreen.ui-beta.ub-phone .ub-stack:not(.ub-expanded) .ub-mstack { gap: 4px; padding: 4px; }
 #gameScreen.ui-beta.ub-phone .ub-stack:not(.ub-expanded) .ub-mstack .bf-card.ub-mstack-card { zoom: .27; }
+
+/* ------------------------------------------------------------ effect bar (effect-prompt.js)
+   Every question / option asked by a card effect answers in one bar above the hand:
+   card | tag + question + context | buttons. Options open as tiles above the bar. */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt { background: transparent !important; backdrop-filter: none !important; pointer-events: none; display: block; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt.hidden { display: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .box {
+  position: fixed; left: var(--ep-x, 50vw); bottom: var(--ep-bottom, 200px); transform: translateX(-50%);
+  width: max-content !important; max-width: min(calc(var(--ep-field-w, 100vw) - 24px), 94vw) !important; max-height: none !important; overflow: visible !important;
+  display: grid !important; grid-template-columns: auto minmax(0, auto) auto !important; grid-template-areas: "src head actions" "src text actions";
+  align-items: center; column-gap: 14px; row-gap: 2px; padding: 10px 12px 10px 10px !important; margin: 0;
+  background: linear-gradient(180deg, rgba(var(--ub-pn2), .97), rgba(var(--ub-pn), .97)) !important; color: var(--ub-ink) !important;
+  border: 1px solid rgba(var(--ub-gd), .55) !important; border-radius: 14px !important; box-shadow: 0 14px 40px rgba(0, 0, 0, .55) !important;
+  text-shadow: none !important; pointer-events: auto; animation: ep-rise 200ms var(--ub-ease) both;
+}
+@keyframes ep-rise { from { opacity: 0; transform: translate(-50%, 10px); } to { opacity: 1; transform: translate(-50%, 0); } }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .box > .rules-choice-source {
+  grid-area: src !important; width: 52px !important; height: auto !important; aspect-ratio: 5 / 7;
+  margin: 0 !important; padding: 0; border: 0 !important; border-radius: 6px !important; overflow: hidden; box-shadow: 0 0 0 1px rgba(0, 0, 0, .5) !important; cursor: zoom-in; background: #000;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .box > .rules-choice-source img { display: block; width: 100%; height: 100%; object-fit: cover; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .rules-choice-effect { display: none !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .rules-choice-head { grid-area: head !important; display: flex !important; align-items: center; gap: 10px; margin: 0; padding: 0; border: 0; min-width: 0; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-tag {
+  flex: none; padding: 2px 9px; border-radius: 999px; background: rgba(var(--ub-gd), .18); color: var(--ub-gold-pale);
+  font: 600 14px/1.4 Georgia, "Times New Roman", serif; letter-spacing: .02em;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt #rulesChoiceHeading {
+  margin: 0 !important; padding: 0 !important; border: 0 !important; font: 700 18px/1.25 var(--display-font, Georgia, serif) !important;
+  color: var(--ub-ink) !important; text-align: left; text-transform: none; letter-spacing: .01em; min-width: 0;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt #rulesChoiceText {
+  grid-area: text !important; display: block !important; margin: 0 !important; max-width: 52ch;
+  font-size: 14px !important; line-height: 1.4 !important; color: var(--ub-muted) !important; text-align: left !important;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions { grid-area: actions !important; display: flex; align-items: center; gap: 8px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions > button {
+  margin: 0; min-width: 0; width: auto; height: auto; min-height: 0; max-height: none; align-self: center; display: inline-flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  padding: 9px 16px; border-radius: 9px; font: 600 15px/1.2 Georgia, "Times New Roman", serif; text-transform: none; letter-spacing: 0;
+  cursor: pointer; transition: background 140ms, border-color 140ms, transform 140ms; transform: none; box-shadow: none; text-shadow: none;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions > button strong { font: inherit !important; color: inherit !important; text-transform: none !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions > button span { font-size: 14px; font-weight: 500; opacity: .8; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions > button svg:not(.ep-peek-btn svg) { display: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions > .ep-peek-btn { order: 0; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions > .ep-btn-secondary { order: 1; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions > .ep-btn-primary { order: 2; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-btn-primary { background: var(--ub-gold) !important; color: #1b1404 !important; border: 1px solid var(--ub-gold) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-btn-primary:hover:not(:disabled) { background: var(--ub-gold-pale) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-btn-primary:disabled { background: rgba(var(--ub-gd), .25) !important; border-color: transparent !important; color: rgba(var(--ub-gl), .6) !important; cursor: not-allowed; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-btn-secondary { background: transparent !important; color: var(--ub-ink) !important; border: 1px solid rgba(var(--ub-hi), .3) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-btn-secondary:hover:not(:disabled) { border-color: var(--ub-ink) !important; background: rgba(var(--ub-hi), .06) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions > button.is-picked { outline: 2px solid var(--ub-gold-pale); outline-offset: 2px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-peek-btn { width: 40px; height: 40px; padding: 0 !important; background: transparent; border: 1px solid rgba(var(--ub-hi), .2); color: var(--ub-muted); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-peek-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-peek-btn:hover { color: var(--ub-ink); border-color: rgba(var(--ub-hi), .45); }
+
+/* questions: nothing above the bar */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-question #rulesChoiceOptions { display: none !important; }
+
+/* options: tiles above the bar, the picked one lit, the others faded */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options #rulesChoiceOptions {
+  position: absolute; left: 50%; bottom: calc(100% + 16px); transform: translateX(-50%); grid-area: auto !important;
+  width: min(760px, calc(var(--ep-field-w, 100vw) - 32px)) !important; max-width: none !important; max-height: none !important; overflow: visible !important;
+  display: grid !important; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; padding: 14px !important; margin: 0 !important;
+  background: rgba(var(--ub-pn), .92) !important; border: 1px solid rgba(var(--ub-gd), .3); border-radius: 14px; box-shadow: 0 18px 46px rgba(0, 0, 0, .5);
+  transition: opacity 160ms; pointer-events: auto;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options.ep-peek #rulesChoiceOptions { opacity: .06; pointer-events: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-tile:not(.rules-amphora-back) {
+  position: relative; display: flex !important; flex-direction: row; align-items: center; justify-content: flex-start; gap: 10px; width: 100%; min-height: 56px; margin: 0 !important;
+  padding: 10px 14px !important; text-align: left; border-radius: 10px !important; cursor: pointer; transform: none;
+  background: rgba(var(--ub-pn2), .95) !important; border: 1px solid rgba(var(--ub-gd), .35) !important; color: var(--ub-ink) !important; box-shadow: none !important;
+  transition: border-color 140ms, background 140ms, opacity 140ms, transform 140ms;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-tile:not(.rules-amphora-back) strong { font: 700 15px/1.25 var(--display-font, Georgia, serif) !important; overflow-wrap: anywhere; color: var(--ub-gold-pale) !important; text-transform: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-tile:not(.rules-amphora-back) span { font-size: 14px; color: var(--ub-muted); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-tile img.rules-temperament-choice-symbol { width: 30px; height: 30px; flex: none; margin: 0; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-tile:not(.rules-amphora-back):not(:has(img)) { justify-content: center; text-align: center; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-tile:not(.rules-amphora-back) svg { display: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-tile:not(.rules-amphora-back):hover:not(:disabled) { border-color: var(--ub-gold) !important; transform: translateY(-1px); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-tile[aria-pressed="true"]:not(.rules-amphora-back) {
+  background: rgba(var(--ub-gd), .24) !important; border-color: var(--ub-gold-pale) !important; box-shadow: 0 0 0 2px var(--ub-gold-pale), 0 0 18px rgba(var(--ub-gl), .35) !important;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-tile[aria-pressed="true"]::after {
+  content: "\2713"; position: absolute; top: -9px; right: -9px; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--ub-gold-pale); color: #1b1404; font: 700 14px/1 Georgia, "Times New Roman", serif; box-shadow: 0 2px 6px rgba(0, 0, 0, .5);
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-has-pick .ep-tile[aria-pressed="false"] { opacity: .55; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options #rulesChoiceOptions:has(.rules-amphora-pick) { display: flex !important; justify-content: center; width: max-content !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .rules-amphora-pick { display: flex; gap: 22px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .rules-amphora-back { position: relative; border-radius: 10px; transition: transform 140ms, opacity 140ms; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .rules-amphora-back[aria-pressed="true"] { transform: translateY(-6px); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .rules-amphora-back[aria-pressed="true"] img { box-shadow: 0 0 0 3px var(--ub-gold-pale), 0 0 22px rgba(var(--ub-gl), .45); }
+
+/* the other player's view: the same bar, green, no buttons */
+#gameScreen.ui-beta:not(.hidden) ~ .rules-opponent-deciding.ep-opponent,
+body:has(#gameScreen.ui-beta:not(.hidden)) > .rules-opponent-deciding.ep-opponent {
+  top: auto; bottom: var(--ep-bottom, 200px); left: var(--ep-x, 50vw); transform: translateX(-50%); z-index: 74;
+  gap: 12px; padding: 8px 16px 8px 8px; max-width: min(620px, 94vw); border-radius: 14px; border: 1px solid #3fc9a8;
+  background: linear-gradient(180deg, #111e3af7, #0c1428f7); color: #f5efdf; box-shadow: 0 14px 40px rgba(0, 0, 0, .55);
+}
+body:has(#gameScreen.ui-beta:not(.hidden)) > .rules-opponent-deciding.ep-opponent .ep-opponent-source { flex: none; width: 40px; aspect-ratio: 5 / 7; border-radius: 5px; overflow: hidden; pointer-events: auto; cursor: zoom-in; }
+body:has(#gameScreen.ui-beta:not(.hidden)) > .rules-opponent-deciding.ep-opponent .ep-opponent-source img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 0; }
+body:has(#gameScreen.ui-beta:not(.hidden)) > .rules-opponent-deciding.ep-opponent .ep-opponent-copy { display: grid; gap: 2px; font-size: 15px; }
+body:has(#gameScreen.ui-beta:not(.hidden)) > .rules-opponent-deciding.ep-opponent small { justify-self: start; padding: 1px 9px; border-radius: 999px; background: rgba(63, 201, 168, .18); color: #7fe0c8; font-size: 14px; font-weight: 600; }
+body:has(#gameScreen.ui-beta:not(.hidden)) > .rules-opponent-deciding.ep-opponent.hidden { display: none; }
+
+/* phone: the buttons go under the question, always on screen */
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt .box {
+  grid-template-columns: auto minmax(0, 1fr) !important; grid-template-areas: "src head" "src text" "actions actions"; max-width: 96vw !important; row-gap: 6px; padding: 8px 10px 8px 8px !important;
+}
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt .box > .rules-choice-source { width: 34px !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions > button { padding: 7px 12px; font-size: 14px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-peek-btn { width: 34px; height: 34px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt #rulesChoiceHeading { font-size: 15px !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions { justify-content: flex-end; flex-wrap: wrap; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-options #rulesChoiceOptions { width: 96vw !important; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 6px; padding: 8px !important; bottom: calc(100% + 8px); max-height: 46vh !important; overflow: auto !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-tile:not(.rules-amphora-back) { min-height: 40px; padding: 6px 10px !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-tile:not(.rules-amphora-back) strong { font-size: 14px !important; overflow-wrap: normal; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-tile img.rules-temperament-choice-symbol { width: 22px; height: 22px; }
+@media (prefers-reduced-motion: reduce) { #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .box { animation: none; } }
+
+/* cards (lot 2): the cards open above the bar; a click picks, Validate n/N sends */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards #rulesChoiceOptions {
+  position: absolute; left: 50%; bottom: calc(100% + 16px); transform: translateX(-50%); grid-area: auto !important;
+  width: max-content !important; max-width: min(1180px, calc(var(--ep-field-w, 100vw) - 24px), 96vw) !important; max-height: none !important;
+  display: flex !important; flex-wrap: nowrap; justify-content: safe center; align-items: flex-end; gap: 14px; padding: 18px 18px 14px !important; margin: 0 !important;
+  overflow-x: auto !important; overflow-y: visible !important; scrollbar-width: thin;
+  background: rgba(var(--ub-pn), .92) !important; border: 1px solid rgba(var(--ub-gd), .3); border-radius: 14px; box-shadow: 0 18px 46px rgba(0, 0, 0, .5);
+  transition: opacity 160ms; pointer-events: auto;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards.ep-peek #rulesChoiceOptions { opacity: .06; pointer-events: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards #rulesChoiceOptions > :not(.ep-card) { display: none !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card {
+  position: relative; flex: none; display: flex !important; flex-direction: column; align-items: center; gap: 6px;
+  width: clamp(96px, min(9vw, 17vh), 150px) !important; margin: 0 !important; padding: 0 !important; border: 0 !important;
+  background: none !important; box-shadow: none !important; color: var(--ub-ink) !important; cursor: pointer;
+  transition: transform 160ms var(--ub-ease), opacity 160ms;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card img { display: block; width: 100%; aspect-ratio: 5 / 7; height: auto; object-fit: cover; border-radius: 9px; box-shadow: 0 8px 20px rgba(0, 0, 0, .55), 0 0 0 1px rgba(var(--ub-gd), .45); transition: box-shadow 160ms; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card > span { max-width: 100%; font: 600 14px/1.2 Georgia, "Times New Roman", serif; text-align: center; color: var(--ub-ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card:hover:not(:disabled) { transform: translateY(-6px); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card:hover:not(:disabled) img { box-shadow: 0 12px 26px rgba(0, 0, 0, .6), 0 0 0 2px var(--ub-gold); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card[aria-pressed="true"] { transform: translateY(-8px); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card[aria-pressed="true"] img { box-shadow: 0 0 0 3px var(--ub-gold-pale), 0 0 22px rgba(var(--ub-gl), .45), 0 12px 26px rgba(0, 0, 0, .6); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card[aria-pressed="true"]::after {
+  content: "\2713"; position: absolute; top: -10px; right: -10px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--ub-gold-pale); color: #1b1404; font: 700 15px/1 Georgia, "Times New Roman", serif; box-shadow: 0 2px 6px rgba(0, 0, 0, .5);
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-has-pick .ep-card[aria-pressed="false"]:not(:hover) { opacity: .6; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card:disabled:not([aria-pressed="true"]) { opacity: .4; cursor: default; }
+/* the power split: the −n badge sits on the card and takes the point back */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card .rules-choice-badge { position: absolute; top: -10px; left: -10px; right: auto; bottom: auto; width: auto; transform: none; margin: 0; z-index: 2; min-width: 28px; height: 28px; padding: 0 6px; border-radius: 999px; display: grid; place-items: center; background: #c0392b; color: #fff; font: 700 15px/1 Georgia, "Times New Roman", serif; box-shadow: 0 2px 6px rgba(0, 0, 0, .5); cursor: pointer; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card .rules-choice-badge:empty { display: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card[data-rules-power-target][aria-pressed="true"]::after { content: none; }
+/* every card is on the table: no scene, the table cards glow and take the click */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt.ub-proxied { display: block !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-on-table #rulesChoiceOptions { display: none !important; }
+#gameScreen.ui-beta .bf-card.ep-board-picked { outline: 4px solid var(--ub-gold-pale) !important; outline-offset: 3px; animation: none !important; box-shadow: 0 0 26px rgba(var(--ub-gl), .55) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-hint { display: block; margin-top: 2px; color: var(--ub-gold-pale); font-size: 14px; }
+
+/* hand: nothing opens; a click on a hand card picks it, it rises, greys out and reads "Chosen" */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-hand #rulesChoiceOptions { display: none !important; }
+body.ep-hand-choice #gameScreen.ui-beta .hand-tray .hand-card[data-hand-card] { cursor: pointer; }
+body.ep-hand-choice #gameScreen.ui-beta .hand-tray .hand-card.is-choice-selected { translate: 0 -22px; outline: 3px solid var(--ub-gold-pale); outline-offset: 2px; }
+body.ep-hand-choice #gameScreen.ui-beta .hand-tray .hand-card.is-choice-selected::after {
+  content: var(--ep-chosen, "Chosen"); position: absolute; left: 50%; top: 38%; transform: translate(-50%, -50%) rotate(calc(-1 * var(--hand-rotate, 0deg)));
+  z-index: 5; padding: 4px 12px; border-radius: 999px; background: var(--ub-gold-pale); color: #1b1404;
+  font: 700 15px/1.2 Georgia, "Times New Roman", serif; white-space: nowrap; box-shadow: 0 3px 10px rgba(0, 0, 0, .55); pointer-events: none;
+}
+body.ep-hand-choice #gameScreen.ui-beta .hand-tray .hand-card.ep-hand-ineligible { filter: brightness(.45) saturate(.5); cursor: default; }
+
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-cards #rulesChoiceOptions { max-width: 96vw !important; gap: 8px; padding: 12px 10px 8px !important; bottom: calc(100% + 8px); }
+
+/* phone: short context, the click hint alone when there is one, small cards without names (a long press shows them) */
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt #rulesChoiceText { display: -webkit-box !important; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt #rulesChoiceText:has(.ep-hint) { font-size: 0 !important; display: block !important; max-width: none; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-hint { font-size: 14px; margin: 0; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card { width: clamp(52px, 15vh, 80px) !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card > span { display: none; }
+
+/* a big place (whole deck, full Limbo): rows of smaller cards, a name search and filters */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards.ep-many #rulesChoiceOptions {
+  width: min(1180px, calc(var(--ep-field-w, 100vw) - 24px), 96vw) !important; flex-wrap: wrap; align-items: flex-start; align-content: flex-start;
+  max-height: min(56vh, var(--ep-stage-max, 56vh)) !important; overflow-x: hidden !important; overflow-y: auto !important; gap: 12px 10px; padding-top: 0 !important;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards.ep-many .ep-card { width: clamp(78px, min(6.6vw, 13vh), 112px) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards.ep-many .ep-card > span { font-size: 14px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards .ep-card.ep-filtered { display: none !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards #rulesChoiceOptions > .ep-filter {
+  position: sticky; top: 0; z-index: 3; flex: 0 0 100%; display: flex !important; flex-wrap: wrap; align-items: center; gap: 8px;
+  margin: 0 -18px 4px; padding: 12px 18px 10px; background: rgba(var(--ub-pn), .98); border-bottom: 1px solid rgba(var(--ub-gd), .25);
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .ep-search {
+  flex: 1 1 220px; min-width: 0; max-width: 340px; height: 36px; padding: 0 12px; border-radius: 9px; border: 1px solid rgba(var(--ub-gd), .45);
+  background: rgba(0, 0, 0, .3); color: var(--ub-ink); font: 15px/1.2 Georgia, "Times New Roman", serif;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .ep-search:focus { outline: 2px solid var(--ub-gold-pale); outline-offset: 1px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .ep-chips { display: flex; gap: 6px; flex-wrap: wrap; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .ep-chip {
+  display: inline-flex; align-items: center; gap: 6px; height: 34px; min-width: 34px; margin: 0; padding: 0 12px; border-radius: 999px;
+  border: 1px solid rgba(var(--ub-hi), .25); background: transparent; color: var(--ub-ink); font: 600 14px/1 Georgia, "Times New Roman", serif; text-transform: none; cursor: pointer;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .ep-chip:has(img) { padding: 0 6px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .ep-chip img { width: 22px; height: 22px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .ep-chip[aria-pressed="true"] { background: rgba(var(--ub-gd), .28); border-color: var(--ub-gold-pale); color: var(--ub-gold-pale); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .ep-filter-count { margin-left: auto; font-size: 14px; color: var(--ub-muted); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards #rulesChoiceOptions > .ep-filter-empty { display: none !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-cards #rulesChoiceOptions.ep-filter-none > .ep-filter-empty { display: block !important; flex: 0 0 100%; margin: 12px 0; text-align: center; color: var(--ub-muted); font-size: 15px; }
+/* the picked cards beside Validate */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-picked { order: 1; display: flex; gap: 4px; max-width: 220px; overflow-x: auto; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-picked:empty { display: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions > .ep-picked-card,
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-picked-card { flex: none; width: 30px; padding: 0; margin: 0; border: 0; border-radius: 4px; background: none; cursor: pointer; overflow: hidden; box-shadow: 0 0 0 2px var(--ub-gold-pale); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-picked-card img { display: block; width: 100%; aspect-ratio: 5 / 7; object-fit: cover; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-cards.ep-many #rulesChoiceOptions { max-height: var(--ep-stage-max, 50vh) !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-cards.ep-many .ep-card { width: clamp(46px, 13vh, 64px) !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel .ep-filter { padding: 6px 10px !important; margin: 0 -10px 2px !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel .ep-search { height: 32px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-cards #rulesChoiceOptions > .ep-filter { flex-wrap: nowrap; gap: 6px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel .ep-search { flex: 1 1 120px; max-width: 220px; font-size: 14px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel .ep-chips { flex-wrap: nowrap; overflow-x: auto; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel .ep-chip { height: 30px; padding: 0 9px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel .ep-filter-count { display: none; }
+
+/* piles and orders (lot 3): their drag and drop opens above the bar, Validate sits in the bar */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles { overflow: visible !important; padding: 0 !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions {
+  position: fixed; left: var(--ep-x, 50vw); bottom: calc(var(--ep-bottom, 200px) + var(--ep-bar-h, 90px) + 14px); transform: translateX(-50%);
+  width: min(1180px, calc(var(--ep-field-w, 100vw) - 24px), 96vw) !important; max-width: none !important; max-height: var(--ep-stage-max, 56vh) !important;
+  overflow-x: hidden !important; overflow-y: auto !important; margin: 0 !important; padding: 14px 16px !important; box-sizing: border-box;
+  display: flex !important; flex-direction: column; align-items: center; gap: 10px;
+  background: rgba(var(--ub-pn), .94) !important; border: 1px solid rgba(var(--ub-gd), .3); border-radius: 14px; box-shadow: 0 18px 46px rgba(0, 0, 0, .5);
+  transition: opacity 160ms; pointer-events: auto; z-index: 1;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles.ep-peek > #rulesChoiceOptions { opacity: .06; pointer-events: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-drag-order-hint { display: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-group { width: 100%; gap: 10px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-lanes { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap: 12px !important; width: 100%; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-lane .rules-reorder-strip { min-width: 0 !important; width: 100%; min-height: clamp(110px, 16vh, 190px) !important; box-sizing: border-box; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-card { width: clamp(70px, min(6.5vw, 12vh), 120px) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-pool .rules-reorder-card { width: clamp(84px, min(8vw, 15vh), 140px) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-drag-order { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; padding-top: 8px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-drag-order .rules-choice-card {
+  position: relative; width: clamp(100px, min(9vw, 18vh), 160px); display: flex; flex-direction: column; align-items: center; gap: 6px;
+  padding: 0; border: 0; background: none; box-shadow: none; color: var(--ub-ink); cursor: grab; touch-action: none;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-drag-order .rules-choice-card img { width: 100%; aspect-ratio: 5 / 7; object-fit: cover; border-radius: 9px; box-shadow: 0 8px 20px rgba(0, 0, 0, .55), 0 0 0 1px rgba(var(--ub-gd), .45); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-drag-order .rules-choice-card > span { font: 600 14px/1.25 Georgia, "Times New Roman", serif; text-align: center; color: var(--ub-ink); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-drag-order .rules-choice-badge { top: -10px; right: -10px; left: auto; background: var(--ub-gold-pale); color: #1b1404; font-family: Georgia, "Times New Roman", serif; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-hint:not(.hidden) { margin: 0; color: #ffcf8a; font-size: 14px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions { padding: 8px !important; gap: 6px; bottom: calc(var(--ep-bottom, 200px) + var(--ep-bar-h, 90px) + 8px); }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-lanes { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-lane .rules-reorder-strip { min-height: 60px !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-card { width: 40px !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-pool .rules-reorder-card { width: 42px !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-strip { gap: 6px !important; padding: 4px !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-drag-order .rules-choice-card { width: 70px; }
+
+/* ------------------------------------------------------------ lot 3: paying and targeting for an effect, in the effect bar
+   (board-flow.js adds .ep-flow): card | name + instruction + cost | buttons, above the hand; the table stays visible */
+#gameScreen.ui-beta .rules-board-flow.ep-flow { left: 0; right: 0; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow.is-centered::before { display: none; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-floating-card,
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-floating-card,
+body.flow-uses-hand #gameScreen.ui-beta .rules-board-flow.ep-flow .rules-floating-card {
+  position: fixed; top: auto !important; right: auto; left: var(--ep-x, 50vw); bottom: var(--ep-bottom, 200px); transform: translateX(-50%);
+  width: max-content !important; max-width: min(calc(var(--ep-field-w, 100vw) - 24px), 94vw); max-height: none !important; overflow: visible !important;
+  display: grid; grid-template-columns: 52px minmax(0, auto) !important; justify-items: stretch; align-items: center; gap: 14px;
+  padding: 10px 14px 10px 10px; box-sizing: border-box; filter: none;
+  background: linear-gradient(180deg, rgba(var(--ub-pn2), .97), rgba(var(--ub-pn), .97)); color: var(--ub-ink);
+  border: 1px solid rgba(var(--ub-gd), .55); border-radius: 14px; box-shadow: 0 14px 40px rgba(0, 0, 0, .55);
+  animation: ep-rise 200ms var(--ub-ease) both;
+}
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-floating-card > img,
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-floating-card > img {
+  width: 52px; aspect-ratio: 5 / 7; border: 0; border-radius: 6px; box-shadow: 0 0 0 1px rgba(0, 0, 0, .5); filter: none; object-fit: cover; cursor: zoom-in;
+}
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-floating-copy,
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-floating-copy {
+  width: auto; margin: 0; padding: 0; transform: none; background: none; border: 0; box-shadow: none; border-radius: 0;
+  display: grid; grid-template-columns: minmax(0, auto) auto; grid-template-areas: "name actions" "text actions" "cost actions" "hint actions";
+  column-gap: 18px; row-gap: 2px; align-items: center; text-align: left; font-size: 14px; line-height: 1.4; color: var(--ub-muted);
+}
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-floating-copy > strong {
+  grid-area: name; margin: 0; font: 700 18px/1.25 var(--display-font, Georgia, serif); color: var(--ub-ink); text-transform: none; letter-spacing: .01em;
+}
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-floating-copy > strong::before {
+  content: var(--ep-tag-text, "Effet"); display: inline-block; margin-right: 10px; padding: 2px 9px; border-radius: 999px; vertical-align: 2px;
+  background: rgba(var(--ub-gd), .18); color: var(--ub-gold-pale); font: 600 14px/1.4 Georgia, "Times New Roman", serif;
+}
+#gameScreen.ui-beta .rules-board-flow.ep-flow #rulesFlowInstruction { grid-area: text; margin: 0; max-width: 52ch; color: var(--ub-muted); }
+#gameScreen.ui-beta .rules-board-flow.ep-flow #rulesFlowCost { grid-area: cost; margin: 2px 0 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 16px; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow #rulesFlowCost:empty { display: none; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-flow-cost-row { display: inline-flex; align-items: center; justify-content: flex-start; gap: 8px; margin: 0; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-flow-cost-row > * { white-space: nowrap; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-flow-cost-row > span:first-child { color: var(--ub-muted); font-size: 14px; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-flow-cost-row strong { color: var(--ub-gold-pale); }
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-card-drop-hint { grid-area: hint; margin: 6px 0 0; padding: 4px 10px; font-size: 14px; text-align: left; color: var(--ub-gold-pale); border-color: rgba(var(--ub-gd), .55); }
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-floating-card.drop-target-active { border-color: var(--ub-gold); box-shadow: 0 0 0 2px rgba(var(--ub-gd), .55), 0 14px 40px rgba(0, 0, 0, .55); }
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-floating-card.drop-target-active > img { outline: 0; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow #rulesFlowChoiceActions,
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-zone-pick-actions { grid-area: actions; display: flex; flex-direction: row; align-items: center; gap: 8px; margin: 0; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow #rulesFlowChoiceActions.hidden { display: none; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-zone-pick-actions { grid-row: 1 / span 4; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow :is(#rulesFlowChoiceActions button, .rules-zone-pick-actions button) {
+  width: auto; min-width: 0; height: auto; min-height: 0; margin: 0; padding: 9px 16px; border-radius: 9px;
+  font: 600 15px/1.2 Georgia, "Times New Roman", serif; text-transform: none; letter-spacing: 0; box-shadow: none; text-shadow: none; white-space: nowrap; cursor: pointer;
+}
+#gameScreen.ui-beta .rules-board-flow.ep-flow #rulesFlowDeclineBtn { order: 1; background: transparent; color: var(--ub-ink); border: 1px solid rgba(var(--ub-hi), .3); }
+#gameScreen.ui-beta .rules-board-flow.ep-flow :is(#rulesFlowPayBtn, .rules-zone-pick-actions .primary) { order: 2; background: var(--ub-gold); color: #1b1404; border: 1px solid var(--ub-gold); }
+#gameScreen.ui-beta .rules-board-flow.ep-flow :is(#rulesFlowPayBtn, .rules-zone-pick-actions .primary):hover:not(:disabled) { background: var(--ub-gold-pale); }
+#gameScreen.ui-beta .rules-board-flow.ep-flow :is(#rulesFlowPayBtn, .rules-zone-pick-actions .primary):disabled { background: rgba(var(--ub-gd), .25); border-color: transparent; color: rgba(var(--ub-gl), .6); cursor: not-allowed; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow #rulesFlowCancelBtn { top: -10px; right: -10px; left: auto; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow #rulesChangeWhitePayment { padding: 4px 10px; font-size: 14px; }
+/* phone: the buttons go under the text, always on screen */
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-floating-card { grid-template-columns: 34px minmax(0, 1fr) !important; max-width: 96vw; gap: 10px; padding: 8px 10px 8px 8px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-floating-card > img { width: 34px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-floating-copy { grid-template-columns: minmax(0, 1fr); grid-template-areas: "name" "text" "cost" "hint" "actions"; font-size: 13px; line-height: 1.35; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-floating-copy > strong { font-size: 15px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-zone-pick-actions { grid-row: auto; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow :is(#rulesFlowChoiceActions, .rules-zone-pick-actions) { justify-content: flex-end; flex-wrap: wrap; margin-top: 6px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow :is(#rulesFlowChoiceActions button, .rules-zone-pick-actions button) { padding: 7px 12px; font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { #gameScreen.ui-beta .rules-board-flow.ep-flow .rules-floating-card { animation: none; } }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-card-drop-hint { display: none; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow #rulesFlowCost { gap: 2px 12px; font-size: 12px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-flow-cost-row > span:first-child { font-size: 12px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow :is(#rulesFlowChoiceActions, .rules-zone-pick-actions) { flex-wrap: nowrap; margin-top: 4px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow :is(#rulesFlowChoiceActions button, .rules-zone-pick-actions button) { padding: 6px 10px; font-size: 13px; white-space: normal; }
+/* short screens (landscape phone without the phone layout): the piles stay compact so all lanes fit above the bar */
+@media (max-height: 480px) {
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions { padding: 8px !important; gap: 6px; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-group { gap: 6px; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-lanes { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px !important; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-lane { gap: 2px; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-lane > small { min-height: 0; font-size: 12px; line-height: 1.2; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-lane > small img { display: none; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-lane .rules-reorder-strip { min-height: 60px !important; padding-block: 2px !important; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-card { width: 40px !important; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-pool .rules-reorder-card { width: 42px !important; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-drag-order .rules-choice-card { width: 70px; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .ep-hint { display: none; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-strip { gap: 6px !important; padding: 4px !important; }
+}
+
+/* ------------------------------------------------------------ lot 4: typed answers (a card name, a guess) above the bar */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input #rulesChoiceOptions {
+  position: absolute; left: 50%; bottom: calc(100% + 16px); transform: translateX(-50%); grid-area: auto !important;
+  width: min(820px, calc(var(--ep-field-w, 100vw) - 24px), 96vw) !important; max-width: none !important; max-height: min(60vh, var(--ep-stage-max, 60vh)) !important;
+  display: flex !important; flex-direction: column; align-items: stretch; gap: 12px; padding: 14px 18px !important; margin: 0 !important; box-sizing: border-box;
+  overflow-x: hidden !important; overflow-y: auto !important; scrollbar-width: thin;
+  background: rgba(var(--ub-pn), .94) !important; border: 1px solid rgba(var(--ub-gd), .3); border-radius: 14px; box-shadow: 0 18px 46px rgba(0, 0, 0, .5);
+  transition: opacity 160ms; pointer-events: auto;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input.ep-peek #rulesChoiceOptions { opacity: .06; pointer-events: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .ep-inner-confirm { display: none !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input #rulesChoiceOptions > .ep-filter { display: flex; margin: 0; padding: 0; border: 0; background: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input #rulesChoiceOptions .ep-search { max-width: none; flex: 1 1 auto; height: 40px; font-size: 16px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .ep-name-results { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px 10px; min-height: 0; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .ep-name-hint { margin: 4px 0; width: 100%; text-align: center; color: var(--ub-muted); font-size: 15px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .ep-card {
+  position: relative; flex: none; display: flex !important; flex-direction: column; align-items: center; gap: 6px;
+  width: clamp(78px, min(7vw, 13vh), 112px) !important; margin: 0 !important; padding: 0 !important; border: 0 !important;
+  background: none !important; box-shadow: none !important; color: var(--ub-ink) !important; cursor: pointer; transition: transform 160ms var(--ub-ease);
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .ep-card img { display: block; width: 100%; aspect-ratio: 5 / 7; height: auto; object-fit: cover; border-radius: 8px; box-shadow: 0 6px 16px rgba(0, 0, 0, .5), 0 0 0 1px rgba(var(--ub-gd), .45); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .ep-card > span { max-width: 100%; font: 600 14px/1.2 Georgia, "Times New Roman", serif; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .ep-card:hover { transform: translateY(-4px); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .ep-card:hover img { box-shadow: 0 10px 22px rgba(0, 0, 0, .6), 0 0 0 2px var(--ub-gold); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .ep-card[aria-pressed="true"] { transform: translateY(-6px); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .ep-card[aria-pressed="true"] img { box-shadow: 0 0 0 3px var(--ub-gold-pale), 0 0 22px rgba(var(--ub-gl), .45); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .ep-card[aria-pressed="true"]::after {
+  content: "\2713"; position: absolute; top: -10px; right: -10px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--ub-gold-pale); color: #1b1404; font: 700 15px/1 Georgia, "Times New Roman", serif; box-shadow: 0 2px 6px rgba(0, 0, 0, .5);
+}
+/* a guess: one row of chips per question, the chosen chip gold */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip-group { display: grid; grid-template-columns: 150px minmax(0, 1fr); align-items: center; gap: 10px; margin: 0; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip-group > small { color: var(--ub-muted); font: 600 14px/1.2 Georgia, "Times New Roman", serif; text-transform: none; letter-spacing: 0; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip {
+  display: inline-flex; align-items: center; gap: 6px; height: 36px; min-width: 36px; margin: 0; padding: 0 14px; border-radius: 999px;
+  border: 1px solid rgba(var(--ub-hi), .25); background: transparent; color: var(--ub-ink); font: 600 15px/1 Georgia, "Times New Roman", serif; text-transform: none; cursor: pointer; box-shadow: none;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip img { width: 22px; height: 22px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip:hover { border-color: var(--ub-gold); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip[aria-pressed="true"] { background: rgba(var(--ub-gd), .28); border-color: var(--ub-gold-pale); color: var(--ub-gold-pale); }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-input #rulesChoiceOptions { width: 96vw !important; padding: 8px 10px !important; gap: 8px; bottom: calc(100% + 8px); }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-input .ep-card { width: clamp(46px, 13vh, 64px) !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-input .ep-card > span { display: none; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip-group { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip { height: 30px; padding: 0 10px; font-size: 13px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip-group { justify-items: start; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip-group > small { justify-self: end; text-align: right; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip-group > small::first-letter { text-transform: uppercase; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip-row { justify-content: flex-start; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-input .rules-chip-group > small { justify-self: start; text-align: left; }
+
+/* ------------------------------------------------------------ lot 4: a choice made on the table (a player, a card, a place to drag to)
+   takes the effect bar's look: card | question + hint | buttons, above the hand when nothing it is about lies there */
+#gameScreen.ui-beta .ub-choice-banner.ep-banner {
+  gap: 14px; padding: 10px 14px 10px 10px; border-radius: 14px; border: 1px solid rgba(var(--ub-gd), .55);
+  background: linear-gradient(180deg, rgba(var(--ub-pn2), .97), rgba(var(--ub-pn), .97)); box-shadow: 0 14px 40px rgba(0, 0, 0, .55);
+  width: max-content; box-sizing: border-box;
+}
+#gameScreen.ui-beta .ub-choice-banner.ep-banner .ub-choice-source { width: 52px; box-shadow: 0 0 0 1px rgba(0, 0, 0, .5); }
+#gameScreen.ui-beta .ub-choice-banner.ep-banner .ub-choice-copy strong { font: 700 18px/1.25 var(--display-font, Georgia, serif); color: var(--ub-ink); }
+#gameScreen.ui-beta .ub-choice-banner.ep-banner .ub-choice-copy strong::before {
+  content: var(--ep-tag-text, "Effet"); display: inline-block; margin-right: 10px; padding: 2px 9px; border-radius: 999px; vertical-align: 2px;
+  background: rgba(var(--ub-gd), .18); color: var(--ub-gold-pale); font: 600 14px/1.4 Georgia, "Times New Roman", serif;
+}
+#gameScreen.ui-beta .ub-choice-banner.ep-banner .ub-choice-copy span { font-size: 14px; line-height: 1.4; color: var(--ub-gold-pale); }
+#gameScreen.ui-beta .ub-choice-banner.ep-banner .ub-choice-actions { gap: 8px; }
+#gameScreen.ui-beta .ub-choice-banner.ep-banner .ub-choice-actions:empty { display: none; }
+#gameScreen.ui-beta .ub-choice-banner.ep-banner .ub-choice-actions button {
+  padding: 9px 16px; border-radius: 9px; border: 1px solid rgba(var(--ub-hi), .3); background: transparent; color: var(--ub-ink);
+  font: 600 15px/1.2 Georgia, "Times New Roman", serif;
+}
+#gameScreen.ui-beta .ub-choice-banner.ep-banner .ub-choice-actions button:hover { border-color: var(--ub-gold); background: rgba(var(--ub-gd), .12); }
+#gameScreen.ui-beta.ub-phone .ub-choice-banner.ep-banner { gap: 10px; padding: 8px 10px 8px 8px; }
+#gameScreen.ui-beta.ub-phone .ub-choice-banner.ep-banner .ub-choice-source { width: 34px; }
+#gameScreen.ui-beta.ub-phone .ub-choice-banner.ep-banner .ub-choice-copy strong { font-size: 15px; }
+#gameScreen.ui-beta.ub-phone .ub-choice-banner.ep-banner .ub-choice-copy span { font-size: 13px; }
+#gameScreen.ui-beta.ub-phone .ub-choice-banner.ep-banner .ub-choice-actions button { padding: 6px 10px; font-size: 13px; }
+
+/* retouches: the deck's revealed cards as large as the room up to the Confrontation Zone's totals allows */
+#gameScreen.ui-beta:not(.ub-phone):not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-pool .rules-reorder-card { width: var(--ep-pile-w, 110px) !important; }
+#gameScreen.ui-beta:not(.ub-phone):not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-lane .rules-reorder-card { width: calc(var(--ep-pile-w, 110px) * .6) !important; }
+#gameScreen.ui-beta:not(.ub-phone):not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-reorder-lane .rules-reorder-strip { min-height: calc(var(--ep-pile-w, 110px) * .84 + 16px) !important; }
+/* the order of simultaneous actions: the frame fits the cards */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions:has(.rules-drag-order) { width: max-content !important; max-width: min(1180px, calc(var(--ep-field-w, 100vw) - 24px), 96vw) !important; padding: 16px 24px 12px !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions:has(.rules-drag-order) > :not(.rules-drag-order) { display: none; }
+/* retouches: paying a Tribute in the bar reads in one glance: what is still due (gold), one hint line, the two choices */
+#gameScreen.ui-beta .rules-board-flow.ep-flow .rules-card-drop-hint { margin: 2px 0 0; padding: 0; border: 0; color: var(--ub-muted); font-size: 14px; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow .ep-pay-due { gap: 10px; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow .ep-pay-due .rules-tribute-units,
+#gameScreen.ui-beta .rules-board-flow.ep-flow .ep-pay-covered {
+  display: inline-flex; align-items: center; gap: 8px; padding: 3px 12px; border-radius: 999px; background: rgba(var(--ub-gd), .2); border: 1px solid rgba(var(--ub-gd), .55);
+  color: var(--ub-gold-pale); font: 700 16px/1.2 Georgia, "Times New Roman", serif;
+}
+#gameScreen.ui-beta .rules-board-flow.ep-flow .ep-pay-due .rules-tribute-unit { display: inline-flex; align-items: center; gap: 3px; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow .ep-pay-due .rules-tribute-unit img { width: 20px; height: 20px; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow .ep-pay-covered { background: rgba(63, 201, 168, .18); border-color: rgba(63, 201, 168, .6); color: #7fe0c8; }
+#gameScreen.ui-beta .rules-board-flow.ep-flow #rulesFlowCost { margin-top: 6px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-card-drop-hint { display: none; }

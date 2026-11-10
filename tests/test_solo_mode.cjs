@@ -35,7 +35,7 @@ const mime = {
   });
   try {
     for (const viewport of [{ width: 1440, height: 1000 }, { width: 844, height: 390 }]) {
-      const page = await browser.newPage({ viewport });
+      const page = await browser.newPage({ viewport, locale: "fr-FR" });
       const errors = [];
       page.on("pageerror", (error) => errors.push(error.message));
       await page.route("**/*", (route) => (
@@ -229,9 +229,11 @@ const mime = {
         const zcOppRect = document.querySelector("#ubZcOpp").getBoundingClientRect();
         const totalMeRect = document.querySelector("#ubTotals .ub-total.me").getBoundingClientRect();
         const totalOppRect = document.querySelector("#ubTotals .ub-total.opp").getBoundingClientRect();
+        // since 152.1 the two totals flank the turn counter: each stays on its own player's side
+        const fieldMiddle = (zcMeRect.left + zcMeRect.width / 2 + zcOppRect.left + zcOppRect.width / 2) / 2;
         const confrontationUiAtOuterSides = (
-          totalMeRect.left + totalMeRect.width / 2 < zcMeRect.left + zcMeRect.width / 2
-          && totalOppRect.left + totalOppRect.width / 2 > zcOppRect.left + zcOppRect.width / 2
+          totalMeRect.right <= fieldMiddle
+          && totalOppRect.left >= fieldMiddle
         );
         const confrontationUiPositions = {
           me: totalMeRect.left + totalMeRect.width / 2,

@@ -25,7 +25,10 @@ for path in (ROOT / "server", ROOT / "tools"):
 import automation_coverage
 import card_ability_smoke as smoke
 import main
-import sandbox
+try:
+    import sandbox  # local card sandbox: kept on the developer's machine, out of git
+except ImportError:
+    sandbox = None
 from session import ADVANCED_PHASES
 
 
@@ -39,7 +42,7 @@ TEMPERAMENTS = [
     "phlegmatic", "choleric", "melancholic", "vitreous",
     "capricious", "hollow", "transcendent",
 ]
-CATALOG = sandbox.Catalog(main.CARD_DATA, main.CARD_ABILITIES, main.CARD_RULES)
+CATALOG = sandbox.Catalog(main.CARD_DATA, main.CARD_ABILITIES, main.CARD_RULES) if sandbox else None
 
 
 class CaptureSocket:

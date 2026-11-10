@@ -33,6 +33,8 @@ function resetRulesChoiceInteraction() {
   rulesChoiceContentVisible = false;
   rulesChoiceAnswerPending = null;
   handDropSelection = { choiceId: null, playerId: null, hand: null, indexes: [] };
+  // the effect bar's pick (effect-prompt.js) starts over too
+  effectPromptPick = { choiceId: null, value: null };
 }
 
 function lockRulesChoiceAnswer() {
@@ -40,7 +42,8 @@ function lockRulesChoiceAnswer() {
   const waiting = rulesChoiceAnswerPending?.choiceId === choice?.id
     && rulesChoiceAnswerPending?.playerId === choice?.playerId;
   $("#rulesChoiceOptions")?.setAttribute("aria-busy", waiting ? "true" : "false");
-  if (waiting) $$("#rulesChoiceOptions button, #rulesChoiceOptions input, #rulesChoiceOptions select, #rulesChoiceOptions textarea")
+  // the effect bar's buttons (Validate, decline) lock with the screen they answer
+  if (waiting) $$("#rulesChoiceOptions button, #rulesChoiceOptions input, #rulesChoiceOptions select, #rulesChoiceOptions textarea, #rulesChoicePanel .ep-actions button:not(.ep-peek-btn)")
     .forEach((control) => { control.disabled = true; });
 }
 
@@ -128,6 +131,11 @@ function renderOpponentDecidingBanner() {
   ));
   banner.classList.toggle("hidden", !waiting);
   if (!waiting) return;
+  if (document.querySelector("#gameScreen.ui-beta")) {
+    renderEffectPromptOpponent(banner, choice);
+    return;
+  }
+  banner.classList.remove("ep-opponent");
   const cardId = choice.sourceCardId || choice.targetCardId || choice.cardId;
   const image = cardId ? cardImage(cardId) : "";
   banner.innerHTML = `${image ? `<img src="${esc(image)}" alt="">` : ""}<span>${esc(rulesText("rulesOpponentDeciding", {
@@ -221,7 +229,8 @@ function pickHandDropCard(handIndex, fromDrop = false) {
   }
   if (position >= 0) selected.splice(position, 1);
   else if (selected.length < limit) selected.push(handIndex);
-  if (!choice.upTo && selected.length === limit) sendHandDropSelection(choice);
+  // in the effect bar nothing leaves without Validate; the old screen sends a full selection at once
+  if (!choice.upTo && selected.length === limit && !effectPromptValidates()) sendHandDropSelection(choice);
   else renderRulesChoice();
   return true;
 }
@@ -282,6 +291,7 @@ function renderRulesChoice(force = false) {
   document.body.classList.toggle("choice-blocks-hand", choiceOpen && choicePanel.classList.contains("cards-screen") && !choicePanel.classList.contains("hand-drop") && !choicePanel.classList.contains("hand-swap"));
   const selected = handDrop ? rulesHandDropSelected(handDrop) : [];
   $$("[data-hand-card]").forEach((card) => card.classList.toggle("is-choice-selected", selected.includes(Number(card.dataset.handIndex))));
+  paintEffectPromptHand(handDrop && choiceOpen ? handDrop : null);
 }
 
 // A row of cards put in order by dragging them (pointer events: no browser drag image, no tab split).
@@ -383,8 +393,10 @@ function renderRulesChoiceContent(force = false) {
   const panel = $("#rulesChoicePanel");
   panel.classList.remove("effect-screen");
   renderRulesChoiceScreen();
+  // questions and options answer in the effect bar above the hand (effect-prompt.js)
+  const prompted = applyEffectPrompt();
   rulesChoiceContentVisible = !panel.classList.contains("hidden");
-  const specialised = ["hand-drop", "destination-screen", "replace-screen"].some((name) => panel.classList.contains(name))
+  const specialised = prompted || ["hand-drop", "destination-screen", "replace-screen"].some((name) => panel.classList.contains(name))
     || latestState?.rulesEngine?.pendingChoice?.kind === "deck_reorder" && !pendingTriggeredPlacement;
   if (!panel.classList.contains("hidden") && !specialised) panel.classList.add("cards-screen", "effect-screen");
 }
@@ -393,6 +405,8 @@ function renderRulesChoiceScreen() {
   const panel = $("#rulesChoicePanel");
   const closeButton = $("#rulesChoiceCloseBtn");
   const options = $("#rulesChoiceOptions");
+  // the previous screen's buttons leave the effect bar before the new screen looks up its own (same ids)
+  if (typeof clearEffectPrompt === "function") clearEffectPrompt(panel);
   options.classList.remove(
     "has-destination-card", "has-order", "has-card-picker", "is-reveal-hand", "is-destination-screen", "has-hand-selection",
   );
@@ -444,7 +458,7 @@ function renderRulesChoiceScreen() {
     );
     options.innerHTML = `
       ${choice.cardIds.map((cardId) => `
-        <button type="button" class="rules-choice-card" data-rules-chain-card="${esc(cardId)}">
+        <button type="button" class="rules-choice-card" data-ep-card="${esc(cardId)}" data-rules-chain-card="${esc(cardId)}">
           <img src="${esc(cardImage(cardId))}" alt="">
           <span>${esc(cardName(cardId))}</span>
         </button>`).join("")}
@@ -816,6 +830,8 @@ function renderRulesChoiceScreen() {
           cardIds: ordered.map((item) => item.itemId),
         });
       };
+      // a repaint after a drag re-dresses the new buttons in the effect bar
+      if (!panel.classList.contains("hidden")) applyEffectPrompt();
     };
     paintOrder();
     panel.classList.remove("hidden");
@@ -1030,7 +1046,7 @@ function renderRulesChoiceScreen() {
     options.classList.add("has-card-picker");
     options.innerHTML = `
       ${sourceCards.map((cardId, index) => `
-        <button type="button" class="rules-choice-card" data-rules-private-card="${index}" aria-pressed="false" title="${esc(cardName(cardId))}">
+        <button type="button" class="rules-choice-card" data-ep-card="${esc(cardId)}" data-rules-private-card="${index}" aria-pressed="false" title="${esc(cardName(cardId))}">
           <img src="${esc(cardImage(cardId))}" alt="">
           <span>${esc(cardName(cardId))}</span>
         </button>`).join("")}
@@ -1081,7 +1097,14 @@ function renderRulesChoiceScreen() {
             <span>${esc(cardName(item.cardId))}</span>
           </button>`;
         }).join("")}
-        <p class="rules-drag-order-hint">${esc(rulesText("rulesPowerLossLeft", { count: total - assigned.length }))} · ${esc(t("rulesPowerLossHint"))}</p>`;
+        <p class="rules-drag-order-hint">${esc(rulesText("rulesPowerLossLeft", { count: total - assigned.length }))} · ${esc(t("rulesPowerLossHint"))}</p>
+        <button type="button" class="primary" id="rulesPowerConfirm" data-ep-count="${assigned.length}" data-ep-total="${total}"${assigned.length < total ? " disabled" : ""}>${esc(t("confirm"))} (${assigned.length}/${total})</button>`;
+      // every point is placed first, then Validate sends the split
+      $("#rulesPowerConfirm").onclick = () => {
+        if (assigned.length < total) return;
+        options.querySelectorAll("button").forEach((entry) => { entry.disabled = true; });
+        sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: { itemIds: [...assigned] } });
+      };
       $$("[data-rules-power-target]").forEach((button) => {
         button.onclick = (event) => {
           const itemId = button.dataset.rulesPowerTarget;
@@ -1094,11 +1117,11 @@ function renderRulesChoiceScreen() {
           }
           if (assigned.length >= total) return;
           assigned.push(itemId);
-          if (assigned.length < total) { paintDistribution(); return; }
-          options.querySelectorAll("button").forEach((entry) => { entry.disabled = true; });
-          sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: { itemIds: [...assigned] } });
+          paintDistribution();
         };
       });
+      // a repaint after the first one re-dresses the new buttons in the effect bar
+      if (!panel.classList.contains("hidden")) applyEffectPrompt();
     };
     paintDistribution();
     panel.classList.remove("hidden");
@@ -1256,7 +1279,7 @@ function renderRulesChoiceScreen() {
     });
     options.classList.add("has-card-picker");
     options.innerHTML = (choice.cardIds || []).map((cardId, index) => `
-      <button type="button" class="rules-choice-card" data-rules-suspend-card="${index}">
+      <button type="button" class="rules-choice-card" data-ep-card="${esc(cardId)}" data-rules-suspend-card="${index}">
         <img src="${esc(cardImage(cardId))}" alt="">
         <span>${esc(cardName(cardId))}</span>
       </button>`).join("");
@@ -1308,6 +1331,8 @@ function renderRulesChoiceScreen() {
           cardIds: ordered.map((action) => action.actionId).reverse(),
         });
       };
+      // a repaint after a drag re-dresses the new buttons in the effect bar
+      if (!panel.classList.contains("hidden")) applyEffectPrompt();
     };
     paintOrder();
     panel.classList.remove("hidden");
@@ -1406,7 +1431,7 @@ function renderRulesChoiceScreen() {
     options.innerHTML = shownCards.map((cardId) => {
       const index = pickIndices.get(cardId)?.shift();
       return `
-      <button type="button" class="rules-choice-card" ${index === undefined ? 'disabled aria-disabled="true"' : `data-rules-reveal-index="${index}"`} title="${esc(cardName(cardId))}">
+      <button type="button" class="rules-choice-card" data-ep-card="${esc(cardId)}" ${index === undefined ? 'disabled aria-disabled="true"' : `data-rules-reveal-index="${index}"`} title="${esc(cardName(cardId))}">
         <img src="${esc(cardImage(cardId))}" alt="">
         <span>${esc(cardName(cardId))}</span>
       </button>`;
@@ -1704,7 +1729,7 @@ function renderRulesChoiceScreen() {
   }
   options.classList.add("has-card-picker");
   options.innerHTML = cards.map((cardId, index) => `
-    <button type="button" class="rules-choice-card" data-rules-discard-index="${index}" title="${esc(cardName(cardId))}">
+    <button type="button" class="rules-choice-card" data-ep-card="${esc(cardId)}" data-rules-discard-index="${index}" title="${esc(cardName(cardId))}">
       <img src="${esc(cardImage(cardId))}" alt="">
       <span>${esc(cardName(cardId))}</span>
     </button>`).join("");

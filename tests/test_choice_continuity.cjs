@@ -58,7 +58,10 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
         const partialPowerSurvives = document.querySelector('[data-rules-power-undo="target-0"]').textContent === "−1";
         document.querySelector('[data-rules-power-target="target-1"] img').click();
         document.querySelector('[data-rules-power-target="target-1"] img').click();
-        const validPowerSent = window.__sent.some((payload) => JSON.stringify(payload.option?.itemIds) === JSON.stringify(["target-0", "target-1", "target-1"]));
+        // the last point no longer sends the split: Validate does
+        const heldUntilValidate = !window.__sent.some((payload) => payload.option?.itemIds);
+        document.querySelector("#rulesChoiceConfirm").click();
+        const validPowerSent = heldUntilValidate && window.__sent.some((payload) => JSON.stringify(payload.option?.itemIds) === JSON.stringify(["target-0", "target-1", "target-1"]));
         return { emptyUndoSafe, partialPowerSurvives, validPowerSent };
       });
       const pickers = await page.evaluate(() => {
@@ -77,13 +80,16 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
         window.__setChoice({ id: "temperament", kind: "temperament_choice", options: ["choleric", "vitreous"] });
         const buttons = [...document.querySelectorAll("#rulesChoiceOptions button")];
         buttons[0].click();
+        // option tiles answer through the effect bar's Validate button
+        document.querySelector("#rulesChoiceConfirm").click();
         window.__choiceRefresh();
-        const waitingStaysLocked = [...document.querySelectorAll("#rulesChoiceOptions button")].every((button) => button.disabled);
+        const waitingStaysLocked = [...document.querySelectorAll("#rulesChoiceOptions button, #rulesChoiceConfirm")].every((button) => button.disabled);
         document.querySelectorAll("#rulesChoiceOptions button")[1].click();
         const singleAnswer = window.__sent.length === 1;
         handleServerMessage({ type: "error", message: "Choose a valid option." });
         const retryUnlocked = [...document.querySelectorAll("#rulesChoiceOptions button")].every((button) => !button.disabled);
         document.querySelectorAll("#rulesChoiceOptions button")[1].click();
+        document.querySelector("#rulesChoiceConfirm").click();
         const retrySent = window.__sent.length === 2;
         clearConnectionGameInteractions();
         renderAll();
@@ -106,6 +112,7 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
         pickHandDropCard(0, true);
         const chabakRemainsInHand = rulesHandDropSelected(latestState.rulesEngine.pendingChoice).length === 0 && window.__sent.length === 0;
         pickHandDropCard(1, true); pickHandDropCard(2, true);
+        document.querySelector("#rulesChoiceConfirm").click();
         const chabakOtherCardsSent = JSON.stringify(window.__sent[0]?.cardIds) === JSON.stringify(window.__choiceCards.slice(0, 2));
         latestState.players.p1.zones.hand.cards = ["inner-deserts-084", "inner-deserts-084", window.__choiceCards[0]];
         window.__setChoice({ id: "chabak-spare-copy", kind: "discard_from_hand", count: 2, requireManifestation: true,
@@ -113,6 +120,7 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
         pickHandDropCard(0, true); pickHandDropCard(1, true);
         const lastChabakCopyReserved = rulesHandDropSelected(latestState.rulesEngine.pendingChoice).length === 1 && window.__sent.length === 0;
         pickHandDropCard(2, true);
+        document.querySelector("#rulesChoiceConfirm").click();
         const spareChabakCopyAllowed = JSON.stringify(window.__sent[0]?.cardIds) === JSON.stringify(["inner-deserts-084", window.__choiceCards[0]]);
         return { privatePickSurvives, privateConfirmReady, limboPickSurvives, limboPickSent, waitingStaysLocked, singleAnswer, retryUnlocked, retrySent, reconnectUnlocked, handPicked, staleHandCleared, oldChoiceIgnored,
           chabakRemainsInHand, chabakOtherCardsSent, lastChabakCopyReserved, spareChabakCopyAllowed };

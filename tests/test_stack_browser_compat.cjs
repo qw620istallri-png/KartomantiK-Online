@@ -48,8 +48,9 @@ const sourceHashes = () => Object.fromEntries(sourceFiles.map(file => [file,
               await page.route("**/*", async route => {
                 if (new URL(route.request().url()).hostname === "127.0.0.1") return route.continue();
                 if (artUrls.has(route.request().url())) {
+                  // a slow image server, played locally so the run does not depend on the network
                   await new Promise(resolve => setTimeout(resolve, 350));
-                  return route.continue();
+                  return route.fulfill({ status: 200, contentType: "image/webp", body: fs.readFileSync(path.join(__dirname, "../public/card-back.webp")) });
                 }
                 return route.abort();
               });

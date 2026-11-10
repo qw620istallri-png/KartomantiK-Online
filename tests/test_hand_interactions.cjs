@@ -106,22 +106,30 @@ const mime = { '.js': 'text/javascript', '.css': 'text/css', '.json': 'applicati
       const targetPoint = selector => page.locator(selector).evaluate(el => { const r = el.getBoundingClientRect(); return { x: r.left + r.width / 2, y: r.top + r.height / 2 }; });
       const closeInspect = () => page.evaluate(() => document.querySelector('#inspectCloseBtn').click());
 
-      // Grimoire, exact and multiple selections: taps inspect without selecting.
+      // Grimoire, exact and multiple selections: a tap picks the card (a second tap puts it back),
+      // a drop onto the effect bar picks it too, and nothing leaves before Validate.
+      const picked = () => page.evaluate(() => rulesHandDropSelected(rulesHandDropChoice()).length);
       await tap(2);
       assert.equal(await page.evaluate(() => __sent.length), 0);
-      assert.equal(await page.locator('#inspectPanel').evaluate(el => el.classList.contains('hidden')), false);
-      await closeInspect();
+      assert.equal(await page.locator('#inspectPanel').evaluate(el => el.classList.contains('hidden')), true);
+      assert.equal(await picked(), 1);
+      await tap(2);
+      assert.equal(await picked(), 0);
       await drag(2, await targetPoint('#rulesChoicePanel .rules-choice-source'), true);
       assert.equal(await page.evaluate(() => __sent.length), 0, 'Cancelling a drag must not choose a card');
       await drag(2, await targetPoint('#rulesChoicePanel .rules-choice-source'));
+      assert.equal(await page.evaluate(() => __sent.length), 0, 'A drop picks; Validate sends');
+      await page.locator('#rulesChoiceConfirm').click();
       assert.deepEqual(await page.evaluate(() => __sent.map(message => message.type)), ['resolve_rules_choice']);
       await page.evaluate(() => { __seedChoice(2, true); latestState.rulesEngine.pendingChoice.requireTypes = []; renderAll(); });
-      await tap(0); await closeInspect();
-      assert.equal(await page.evaluate(() => rulesHandDropSelected(rulesHandDropChoice()).length), 0);
+      await tap(0);
+      assert.equal(await picked(), 1);
+      await tap(0);
+      assert.equal(await picked(), 0);
       await drag(0, await targetPoint('#rulesChoicePanel .rules-choice-source'));
       await drag(1, await targetPoint('#rulesChoicePanel .rules-choice-source'));
-      assert.equal(await page.evaluate(() => rulesHandDropSelected(rulesHandDropChoice()).length), 2);
-      await page.locator('#rulesDiscardConfirm').click();
+      assert.equal(await picked(), 2);
+      await page.locator('#rulesChoiceConfirm').click();
       assert.equal(await page.evaluate(() => __sent.at(-1).cardIds.length), 2);
 
       // All mandatory/conditional Tribute windows use the same real drop path.
@@ -207,7 +215,7 @@ const mime = { '.js': 'text/javascript', '.css': 'text/css', '.json': 'applicati
       assert.equal(await page.evaluate(() => __sent.length), 0);
       await drag(0, await targetPoint('#ubZcMe'));
       assert.equal(await page.evaluate(() => __sent.some(message => message.type === 'place_card')), true, JSON.stringify(await page.evaluate(() => ({ sent: __sent, drops: __drops.slice(-2), playable: handCardIsPlayable(latestState.players.p1.zones.hand.cards[0]), reason: handCardUnplayableReason(latestState.players.p1.zones.hand.cards[0]), flow: pendingRulesBoardFlow?.mode, phase: currentPhaseUi().phase?.id }))));
-      console.log(`PASS ${viewport.width}px: full backdrop, inspect-only taps, exact/multiple hand choices, four payment flows, extra costs, Limbo/Grimoire/suspended ghosts, invalid and cancelled drops`);
+      console.log(`PASS ${viewport.width}px: full backdrop, tap-to-pick, exact/multiple hand choices, four payment flows, extra costs, Limbo/Grimoire/suspended ghosts, invalid and cancelled drops`);
       await page.close();
     }
     assert.deepEqual(errors, []);

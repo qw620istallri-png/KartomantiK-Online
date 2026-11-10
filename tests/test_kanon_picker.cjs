@@ -53,7 +53,8 @@ const out = path.join(root, 'reports/systematic-audit/kanon-events-followup');
         }, language);
         const cards = page.locator('[data-rules-private-card]');
         assert.equal(await cards.count(), 4);
-        const confirm = page.locator('#rulesPrivateCardsConfirm');
+        // the effect bar's Validate counts the picks and sends them
+        const confirm = page.locator('#rulesChoiceConfirm');
         assert.equal(await confirm.isDisabled(), true);
         await cards.nth(0).click();
         assert.equal(await confirm.isDisabled(), true);

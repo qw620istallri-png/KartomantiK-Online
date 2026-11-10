@@ -84,6 +84,8 @@ const expectedLabel = 'beta ' + versionParts.join('.');
         await page.waitForTimeout(500); // Inspect the settled picker, after its existing entrance animation.
         if (language === 'fr') await page.screenshot({ path: path.join(out, `picker-${viewport.width}.png`) });
         await cards.nth(1).click();
+        // picking lights the card; Validate in the effect bar sends it
+        await page.click('#rulesChoiceConfirm');
         assert.deepEqual(await page.evaluate(() => window.__handSent), [{ type: 'resolve_rules_choice', choiceId: 'womb-pick', option: '1' }]);
         assert.equal(await cards.nth(0).isDisabled(), true);
         assert.equal(await cards.nth(1).isDisabled(), true);
@@ -98,6 +100,7 @@ const expectedLabel = 'beta ' + versionParts.join('.');
         const traumaHeading = await page.locator('#rulesChoiceHeading').innerText();
         assert.equal(traumaHeading, { fr: 'Choisir une carte à défausser', en: 'Choose a card to discard', it: 'Scegli una carta da scartare' }[language]);
         await cards.nth(3).click();
+        await page.click('#rulesChoiceConfirm');
         assert.deepEqual(await page.evaluate(() => window.__handSent), [{ type: 'resolve_rules_choice', choiceId: 'trauma-pick', option: '3' }]);
         assert.deepEqual(errors, []);
         cases.push({ viewport, language, versionLabel, heading, traumaHeading, fullHand: 4, wombEligible: 2, scenarios: 2, passed: true });

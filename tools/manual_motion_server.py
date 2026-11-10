@@ -1,9 +1,12 @@
 """Loopback-only fixtures for two real browser clients using production handlers."""
 import asyncio
 import json
+import sys
+from pathlib import Path
 from http import HTTPStatus
 from urllib.parse import urlsplit, parse_qs
 from websockets.asyncio.server import serve
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'server'))
 import main
 from session import Session
 

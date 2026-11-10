@@ -56,6 +56,8 @@ const fixtures = JSON.parse(fs.readFileSync(path.join(out, 'picker-fixtures.json
             assert.equal(await cards.count(), 2);
             assert.equal(await cards.nth(0).getAttribute('title'), await cards.nth(1).getAttribute('title'));
             await cards.nth(1).click();
+            // picking lights the card; Validate in the effect bar sends it
+            await page.click('#rulesChoiceConfirm');
             assert.deepEqual(await page.evaluate(() => window.__deckSent), [{ type:'resolve_rules_choice', choiceId:choice.id, option:'1' }]);
             assert.equal(await cards.nth(0).isDisabled(), true);
           } else {

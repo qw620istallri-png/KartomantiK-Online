@@ -69,12 +69,13 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
           const text = await page.locator("#rulesChoiceText").innerText();
           assert.ok(text.includes({ fr: "jusqu’à 2", en: "up to 2", it: "fino a 2" }[language]));
           for (let n = 0; n < count; n++) await page.locator(`[data-rules-discard-index="${n}"]`).click();
-          await page.locator("#rulesDiscardConfirm").click();
+          await page.locator("#rulesChoiceConfirm").click();
           assert.deepEqual(await page.evaluate(() => window.__deckSent), [{ type: "resolve_rules_choice", choiceId: id, cardIds: fixture.cards.slice(0, count) }]);
         }
         await page.evaluate(fixture => window.__deckChoice({ id: "recall", kind: "discard_from_hand", playerId: "p1", count: 1,
           revealSelected: true, candidateCardIds: fixture.cards, sourceCardId: fixture.recall }), fixture);
         await page.locator('[data-rules-discard-index="1"]').click();
+        await page.locator("#rulesChoiceConfirm").click();
         assert.deepEqual(await page.evaluate(() => window.__deckSent), [{ type: "resolve_rules_choice", choiceId: "recall", cardIds: [fixture.cards[1]] }]);
         await page.evaluate(fixture => window.__deckChoice({ id: "mejik", kind: "declare_card_name", mode: "search_deck", declarationCost: true,
           playerId: "p1", targetPlayerId: "p2", sourceCardId: fixture.mejik }), fixture);
@@ -83,10 +84,11 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
         await page.locator("#rulesDeclareNameInput").fill("unknown-name");
         assert.equal(await page.locator("#rulesDeclareNameConfirm").isDisabled(), true);
         await page.locator("#rulesDeclareNameInput").fill(fixture.declaredName);
-        const buttonBox = await page.locator("#rulesDeclareNameConfirm").boundingBox();
+        // the effect bar's Validate sends the declared name
+        const buttonBox = await page.locator("#rulesChoiceConfirm").boundingBox();
         assert.ok(buttonBox.x >= 0 && buttonBox.y >= 0 && buttonBox.x + buttonBox.width <= viewport.width && buttonBox.y + buttonBox.height <= viewport.height);
         await page.screenshot({ path: path.join(out, `name-cost-${language}-${viewport.width}.png`) });
-        await page.locator("#rulesDeclareNameConfirm").click();
+        await page.locator("#rulesChoiceConfirm").click();
         assert.deepEqual(await page.evaluate(() => window.__deckSent), [{ type: "resolve_rules_choice", choiceId: "mejik", option: fixture.cards[0] }]);
         assert.equal(await page.locator("#rulesDeclareNameInput").isDisabled(), true);
         const checks = await page.evaluate(({ fixture, language }) => {

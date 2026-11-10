@@ -56,7 +56,8 @@ const fixtures = JSON.parse(fs.readFileSync(path.join(out, 'picker-fixtures.json
           assert.equal(await cards.count(), choice.cardIds.length);
           const heading = await page.locator('#rulesChoiceHeading').innerText();
           const expected = {
-            gummo: { fr: 'Gummo', en: 'Gummo', it: 'Gummo' },
+            // the effect bar asks a question where the screen was titled with the card's name
+            gummo: { fr: 'Quelle Manifestation Gummo copie-t-il ?', en: 'Which Manifestation does Gummo copy?', it: 'Quale Manifestazione copia Gummo?' },
             wish: { fr: 'Choisir la Manifestation à renvoyer', en: 'Choose the Manifestation to return', it: 'Scegli la Manifestazione da restituire' },
             pescojolero: { fr: 'Prendre une Manifestation dans votre Interzone', en: 'Take a Manifestation into your Interzone', it: 'Prendi una Manifestazione nella tua Interzona' },
           }[purpose][language];
@@ -71,6 +72,9 @@ const fixtures = JSON.parse(fs.readFileSync(path.join(out, 'picker-fixtures.json
             await page.screenshot({ path: path.join(out, `${purpose}-${viewport.width}.png`) });
           }
           await cards.nth(index).click();
+          // picking lights the card; Validate in the effect bar sends it
+          assert.deepEqual(await page.evaluate(() => window.__vesselSent), []);
+          await page.click('#rulesChoiceConfirm');
           assert.deepEqual(await page.evaluate(() => window.__vesselSent), [{ type: 'resolve_rules_choice', choiceId: choice.id, option: String(index) }]);
           assert.equal(await cards.nth(0).isDisabled(), true);
           // A fresh server snapshot after reconnect must offer the same indices.
@@ -80,6 +84,7 @@ const fixtures = JSON.parse(fs.readFileSync(path.join(out, 'picker-fixtures.json
           }, choice);
           assert.equal(await cards.nth(index).isDisabled(), false);
           await cards.nth(index).click();
+          await page.click('#rulesChoiceConfirm');
           assert.equal((await page.evaluate(() => window.__vesselSent))[0].option, String(index));
           cases.push({ viewport, language, purpose, actor: choice.playerId, heading, candidateCount: choice.cardIds.length, selectedIndex: index, passed: true });
         }

@@ -354,11 +354,13 @@ function rulesBoardMinimumPaymentCount(flow) {
 
 function updateRulesTargetArrow(event) {
   if (!pendingRulesBoardFlow || pendingRulesBoardFlow.stage !== "target") return;
-  const cardRect = $("#rulesFloatingCard")?.getBoundingClientRect();
+  const inBar = $("#rulesBoardFlow")?.classList.contains("ep-flow");
+  const cardRect = $(inBar ? "#rulesFloatingCardImg" : "#rulesFloatingCard")?.getBoundingClientRect();
   const path = $("#rulesTargetArrow .rules-target-arrow-line");
   if (!cardRect || !path) return;
-  const startX = cardRect.left + cardRect.width * .08;
-  const startY = cardRect.top + cardRect.height * .46;
+  // from the bar the arrow leaves the top of the effect's card
+  const startX = cardRect.left + cardRect.width * (inBar ? .5 : .08);
+  const startY = cardRect.top + cardRect.height * (inBar ? .1 : .46);
   const endX = event.clientX;
   const endY = event.clientY;
   const curveX = startX + (endX - startX) * .45;
@@ -921,6 +923,18 @@ function renderRulesBoardFlow() {
     return;
   }
   panel.classList.remove("hidden");
+  // a payment or a target asked by an effect answers in the effect bar above the hand, the table stays visible
+  const effectBar = ["stack_payment", "trigger_target", "stack_copy_target", "chain"].includes(flow.mode)
+    && document.querySelector("#gameScreen.ui-beta") && typeof effectPromptAnchor === "function";
+  panel.classList.toggle("ep-flow", Boolean(effectBar));
+  if (effectBar) {
+    const anchor = effectPromptAnchor();
+    panel.style.setProperty("--ep-bottom", `${anchor.bottom}px`);
+    panel.style.setProperty("--ep-x", `${anchor.x}px`);
+    panel.style.setProperty("--ep-field-w", `${anchor.width}px`);
+    const tag = t(flow.mode === "stack_payment" ? "epTagCost" : flow.mode === "trigger_target" ? "epTagTriggered" : "epTagEffect");
+    panel.style.setProperty("--ep-tag-text", JSON.stringify(tag));
+  }
   const dropHint = $("#rulesCardDropHint");
   dropHint.hidden = !["payment", "cost_card", "extra_essence"].includes(flow.stage);
   dropHint.textContent = t("rulesDragCardToEffect");
@@ -1049,9 +1063,15 @@ function renderRulesBoardFlow() {
       source: cardName(flow.choice.sourceCardId),
       target: cardName(flow.choice.targetCardId),
     });
-    $("#rulesFlowCost").innerHTML = `
+    const inBar = panel.classList.contains("ep-flow");
+    const spentAny = Object.values(essence).some((amount) => amount > 0);
+    // in the effect bar: what is still due first, the Essences only once some are spent
+    $("#rulesFlowCost").innerHTML = inBar ? `
+      <div class="rules-flow-cost-row ep-pay-due"><span>${esc(t("rulesTributeRemaining"))}</span>${covered ? `<strong class="ep-pay-covered">${esc(t("epPayCovered"))}</strong>` : rulesTributeUnitsHtml(remaining, "")}</div>
+      ${spentAny ? `<div class="rules-flow-cost-row"><span>${esc(t("rulesEssenceUsed"))}</span>${rulesTributeUnitsHtml(essence, "")}</div>` : ""}` : `
       <div class="rules-flow-cost-row"><span>${esc(t("rulesEssenceUsed"))}</span>${rulesTributeUnitsHtml(essence, t("rulesNoEssenceUsed"))}</div>
       <div class="rules-flow-cost-row"><span>${esc(t("rulesTributeRemaining"))}</span>${rulesTributeUnitsHtml(remaining, t("rulesCoveredByEssence"))}</div>`;
+    if (inBar) $("#rulesCardDropHint").textContent = t("epPayHint");
     declineButton.textContent = rulesStackPaymentDeclineLabel(flow.choice);
     payButton.textContent = t(
       covered
@@ -1062,7 +1082,7 @@ function renderRulesBoardFlow() {
           : flow.choice.kind === "effect_payment"
             ? "rulesPayAndPreventEffect"
           : "rulesPayAndKeepStack"
-        : canPay ? "rulesSelectPayment" : "rulesCannotPay"
+        : canPay ? (inBar ? "epPay" : "rulesSelectPayment") : "rulesCannotPay"
     );
     payButton.disabled = !covered || flow.stage === "committing";
     declineButton.disabled = flow.stage === "committing";

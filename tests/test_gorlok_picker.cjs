@@ -65,6 +65,8 @@ const out = path.join(root, 'reports/systematic-audit/gorlok-draw-followup');
         await page.waitForTimeout(500); // Inspect the settled picker, after its existing entrance animation.
         if (language === 'fr') await page.screenshot({ path: path.join(out, `picker-${viewport.width}.png`) });
         await cards.nth(1).click();
+        // picking lights the card; Validate in the effect bar sends it
+        await page.click('#rulesChoiceConfirm');
         assert.deepEqual(await page.evaluate(() => window.__gorlokSent), [{ type: 'resolve_rules_choice', choiceId: 'gorlok-draw', option: '1' }]);
         assert.equal(await cards.nth(0).isDisabled(), true);
         assert.equal(await cards.nth(1).isDisabled(), true);

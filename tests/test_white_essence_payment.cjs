@@ -19,7 +19,7 @@ const mime = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css
   const browser = await chromium.launch({ channel: process.env.BROWSER_CHANNEL || "chrome", headless: true });
   try {
     for (const viewport of [{ width: 1440, height: 1000 }, { width: 844, height: 390 }]) {
-      const page = await browser.newPage({ viewport });
+      const page = await browser.newPage({ viewport, locale: "fr-FR" });
       const errors = [];
       page.on("pageerror", (error) => errors.push(error.message));
       await page.route("**/*", (route) => new URL(route.request().url()).hostname === "127.0.0.1" ? route.continue() : route.abort());
