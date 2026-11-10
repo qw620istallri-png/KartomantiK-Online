@@ -241,7 +241,10 @@ function renderRulesChoice(force = false) {
   if (choice && pendingTriggeredPlacement) pendingTriggeredPlacement = null;
   if (choice?.playerId && soloControlsPlayer(choice.playerId)) beginSoloInteraction(choice.playerId);
   else if (!choice && soloDeckImportActive()) beginSoloInteraction(deckImportPlayerId);
-  else if (!choice && soloModeActive()) endSoloInteraction();
+  else if (!choice && soloModeActive()
+      && !rules_pregame_active_client()
+      && !rules_recovery_mulligan_active_client()
+      && !standardDeckSetupActiveClient()) endSoloInteraction();
   if (rulesChoiceAnswerPending && (rulesChoiceAnswerPending.choiceId !== choice?.id || rulesChoiceAnswerPending.playerId !== choice?.playerId)) {
     rulesChoiceAnswerPending = null;
     force = true;

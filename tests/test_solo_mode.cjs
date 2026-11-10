@@ -149,6 +149,30 @@ const mime = {
         importDeckPayload({ name: "P2 test", groups: [] }, "P2 test", false, false);
         const pregameP2Import = window.__sent.at(-1);
         document.querySelector("#importCancelBtn").click();
+        latestState.rulesEngine.enabled = true;
+        latestState.rulesEngine.deckConfirmedPlayerIds = ["solo:p1", "solo:p2"];
+        latestState.rulesEngine.openingHandPlayerIds = ["solo:p1", "solo:p2"];
+        latestState.rulesEngine.mulliganPlayerIds = [];
+        latestState.rulesEngine.openingMulliganRequiredPlayerIds = [];
+        latestState.rulesEngine.openingMulliganFailedPlayerIds = [];
+        latestState.rulesEngine.readyPlayerIds = ["solo:p1"];
+        renderAll();
+        const p2OpeningActions = {
+          activePlayerId: myPlayerId,
+          mulliganVisible: !document.querySelector("#rulesPregameMulliganBtn").classList.contains("hidden"),
+          mulliganDisabled: document.querySelector("#rulesPregameMulliganBtn").disabled,
+          readyVisible: !document.querySelector("#rulesPregameReadyBtn").classList.contains("hidden"),
+          readyDisabled: document.querySelector("#rulesPregameReadyBtn").disabled,
+        };
+        window.__sent = [];
+        document.querySelector("#rulesPregameMulliganBtn").click();
+        document.querySelector("#confirmPanelOkBtn").click();
+        p2OpeningActions.mulliganPayload = window.__sent.at(-1);
+        window.__sent = [];
+        renderAll();
+        document.querySelector("#rulesPregameReadyBtn").click();
+        p2OpeningActions.readyPayload = window.__sent.at(-1);
+        latestState.rulesEngine.enabled = false;
         latestState.phaseTracker.turn = 2;
         latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "confrontation_reaction");
         latestState.rulesEngine.deckConfirmedPlayerIds = ["solo:p1", "solo:p2"];
@@ -289,6 +313,7 @@ const mime = {
           pregameGenericHidden,
           pregameP2Editor,
           pregameP2Import,
+          p2OpeningActions,
           pileLayout,
           pileSearch,
           parsedPileKey,
@@ -367,6 +392,15 @@ const mime = {
       });
       assert.equal(result.pregameP2Import.type, "import_deck");
       assert.equal(result.pregameP2Import.actingPlayerId, "solo:p2");
+      assert.deepEqual(result.p2OpeningActions, {
+        activePlayerId: "solo:p2",
+        mulliganVisible: true,
+        mulliganDisabled: false,
+        readyVisible: true,
+        readyDisabled: false,
+        mulliganPayload: { type: "mulligan", actingPlayerId: "solo:p2" },
+        readyPayload: { type: "set_rules_ready", actingPlayerId: "solo:p2" },
+      });
       assert.deepEqual(result.pileLayout.left, [
         "solo:p1:deck",
         "solo:p1:graveyard",
