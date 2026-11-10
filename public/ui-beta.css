@@ -1890,3 +1890,38 @@ body:has(> .rules-zone-target-panel.ep-zone-bar) #rulesTargetArrow { display: no
   #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-reorder-lane { gap: 4px !important; }
   #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-reorder-lane > small { font-size: 10px !important; height: 13px; }
 }
+
+/* ------------------------------------------------------------ 153.3: global check fixes */
+/* number picks (token count): a single row of compact tiles */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options #rulesChoiceOptions:has(> [data-rules-token-count]) { display: flex !important; flex-wrap: wrap; justify-content: center; width: max-content !important; max-width: 96vw !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options #rulesChoiceOptions > [data-rules-token-count] { width: 72px !important; min-width: 0 !important; flex: none; }
+/* face-down picks (Amphora): card-sized, never taller than the room above the bar */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .rules-amphora-back { width: clamp(64px, min(9vw, 17vh), 140px) !important; padding: 0 !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .rules-amphora-back img { display: block; width: 100% !important; height: auto !important; aspect-ratio: 5 / 7; object-fit: cover; }
+/* temperaments on a phone: 3 + 2 so the names fit */
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-options #rulesChoiceOptions:has(> [data-rules-temperament-option]) { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; width: min(560px, 96vw) !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-options [data-rules-temperament-option] strong { font-size: 14px !important; letter-spacing: .02em; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-options #rulesChoiceOptions:has(.rules-amphora-pick) { width: max-content !important; padding: 8px 14px !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-options .rules-amphora-back > :not(img) { display: none !important; }
+
+/* 153.3 phone: one row like the desktop bar (card | question | buttons). The
+   text wraps beside the buttons instead of pushing them onto a row of their own;
+   the bar widens up to the screen before it grows taller. */
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt .box {
+  grid-template-columns: auto minmax(0, 1fr) auto !important; grid-template-areas: "src head actions" "src text actions" !important;
+  width: max-content !important; max-width: 96vw !important; column-gap: 10px; row-gap: 2px;
+}
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions { flex-wrap: nowrap !important; max-width: 44vw; align-self: center; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt .ep-actions > button { white-space: normal; line-height: 1.2; text-align: center; padding: 6px 10px; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt #rulesChoiceText { line-height: 1.3 !important; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-floating-copy { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "name actions" "text actions" "cost actions" "hint actions"; column-gap: 10px; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow :is(#rulesFlowChoiceActions, .rules-zone-pick-actions) { flex-wrap: nowrap; margin-top: 0; max-width: 44vw; }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow :is(#rulesFlowChoiceActions button, .rules-zone-pick-actions button) { white-space: normal; line-height: 1.2; padding: 6px 10px; }
+/* a bar with only a title: the title sits level with the buttons */
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt .box { grid-template-rows: minmax(0, 1fr) auto !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.effect-prompt .rules-choice-head { align-self: center; }
+/* payment / target bars on a phone: wide enough for the text beside the buttons */
+body #gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-floating-card,
+body.flow-uses-hand #gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-floating-card { width: max-content !important; max-width: 96vw !important; grid-template-columns: 34px minmax(0, 1fr) !important; gap: 10px; }
+body #gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-floating-copy { min-width: min(300px, 50vw); }
+#gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow :is(#rulesFlowChoiceActions, .rules-zone-pick-actions) { max-width: 38vw; }
