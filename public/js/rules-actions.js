@@ -312,6 +312,7 @@ function beginRulesBoardPlacementTarget(payload, source) {
   if (ability.targets?.excludeEventSource && source?.itemId) {
     draft.structuredTargets = draft.structuredTargets.filter((target) => target.id !== source.itemId);
   }
+  if (!rulesDraftHasTargetsClient(draft)) return false;
   pendingRulesBoardFlow = {
     mode: "placement",
     source,

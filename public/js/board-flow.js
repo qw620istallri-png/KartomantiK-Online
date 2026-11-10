@@ -336,13 +336,16 @@ function rulesBoardOptionalExtraEssenceMax(flow) {
   const selectedPower = selected.reduce((sum, reference) => (
     sum + Number(rulesTributeCandidate(reference)?.power || 0)
   ), 0);
-  const room = optional.max == null ? selectedPower : Math.max(0, Number(optional.max) - available);
-  if (!room || !selected.length) return available;
-  const requirements = { ...flow.draft.essencePlan.remaining };
-  requirements[optional.temperament] = Number(requirements[optional.temperament] || 0) + room;
-  const remaining = rulesRemainingAfterManifestations(selected, requirements);
-  const missing = Object.values(remaining).reduce((sum, amount) => sum + Math.max(0, amount), 0);
-  return available + Math.max(0, room - missing);
+  const requiredPower = Object.values(flow.draft.essencePlan.remaining || {})
+    .reduce((sum, amount) => sum + Math.max(0, Number(amount || 0)), 0);
+  // Only the part left after the printed Tribute becomes floating Essence.
+  // A 4-power Stampeding Brood paying Rally's {G}{G} therefore contributes 2,
+  // not its full power a second time.
+  const surplus = Math.max(0, selectedPower - requiredPower);
+  const extraCardsPower = rulesBoardExtraTributeCards(flow)
+    .reduce((sum, entry) => sum + Math.max(0, Number(entry.power || 0)), 0);
+  const cap = optional.max == null ? Infinity : Math.max(0, Number(optional.max) - extraCardsPower);
+  return Math.max(0, Math.min(cap, available + surplus));
 }
 
 function rulesBoardMinimumPaymentCount(flow) {
@@ -1161,14 +1164,19 @@ function renderRulesBoardFlow() {
     const current = Math.max(
       0, Math.min(Number(flow.extraEssenceCount || 0), max),
     );
+    flow.extraEssenceCount = current;
     if (!flow.extraTributeIndexes) flow.extraTributeIndexes = new Set();
     const extraCandidates = (flow.draft.extraTributeCards || []).filter(
       (entry) => !flow.selectedPaymentIndexes?.has(entry.index) && entry.index !== flow.costCardIndex,
     );
+    const extraTributePower = rulesBoardExtraTributeCards(flow)
+      .reduce((sum, entry) => sum + Math.max(0, Number(entry.power || 0)), 0);
+    const temperament = flow.draft.encodedAbility?.optionalExtraEssence?.temperament || "hollow";
+    const symbol = temperamentSymbol(temperament);
     const extraCardsHtml = extraCandidates.length ? `
       <div class="rules-flow-cost-row rules-extra-tribute-row">
         <span>${esc(t("rulesOptionalExtraCards"))}</span>
-        <strong>${flow.extraTributeIndexes.size}/${extraCandidates.length}</strong>
+        <strong>${flow.extraTributeIndexes.size}/${extraCandidates.length}${extraTributePower ? ` · <img src="${esc(symbol)}" alt=""> +${extraTributePower}` : ""}</strong>
       </div>` : "";
     $("#rulesBoardEssence").classList.add("hidden");
     $("#rulesFlowInstruction").textContent = rulesText(
@@ -1176,33 +1184,35 @@ function renderRulesBoardFlow() {
       { max },
     );
     $("#rulesFlowCost").innerHTML = `${extraCardsHtml}
-      <div class="rules-flow-cost-row rules-extra-essence-row"${max > 0 ? "" : " hidden"}>
+      <div class="rules-flow-cost-row rules-extra-essence-row"${max > 0 || extraTributePower > 0 ? "" : " hidden"}>
         <span>${esc(t("rulesOptionalExtraEssence"))}</span>
-        <div class="number-stepper">
-          <button type="button" id="rulesExtraEssenceMinus" aria-label="${esc(t("decrease"))}">−</button>
-          <input id="rulesExtraEssenceCount" type="number" min="0" max="${max}" value="${current}">
-          <button type="button" id="rulesExtraEssencePlus" aria-label="${esc(t("increase"))}">+</button>
+        <div class="rules-extra-essence-pools">
+          <button type="button" class="rules-extra-essence-pool" id="rulesExtraEssenceAvailable" ${current >= max ? "disabled" : ""} aria-label="${esc(t("increase"))}" title="${esc(t("increase"))}">
+            <img src="${esc(symbol)}" alt=""><span>×${max - current}<small>${esc(t("essence"))}</small></span>
+          </button>
+          <button type="button" class="rules-extra-essence-pool is-spent" id="rulesExtraEssenceSpent" ${current <= 0 ? "disabled" : ""} aria-label="${esc(t("decrease"))}" title="${esc(t("decrease"))}">
+            <img src="${esc(symbol)}" alt=""><span>×${current}<small>${esc(t("rulesEssenceUsed"))}</small></span>
+          </button>
+          <strong class="rules-extra-token-total" id="rulesExtraEssenceTokenTotal">${esc(t("token"))} ×${current + extraTributePower}</strong>
         </div>
       </div>
       <button type="button" class="primary rules-extra-essence-confirm" id="rulesExtraEssenceConfirm">
         ${esc(t("confirm"))}
       </button>`;
-    const input = $("#rulesExtraEssenceCount");
     const setCount = (value) => {
       flow.extraEssenceCount = Math.max(
         0, Math.min(Number(value || 0), max),
       );
-      input.value = flow.extraEssenceCount;
     };
-    $("#rulesExtraEssenceMinus").onclick = () => {
-      setCount(Number(input.value) - 1);
+    $("#rulesExtraEssenceAvailable").onclick = () => {
+      setCount(current + 1);
+      renderRulesBoardFlow();
     };
-    $("#rulesExtraEssencePlus").onclick = () => {
-      setCount(Number(input.value) + 1);
+    $("#rulesExtraEssenceSpent").onclick = () => {
+      setCount(current - 1);
+      renderRulesBoardFlow();
     };
-    input.onchange = () => setCount(input.value);
     $("#rulesExtraEssenceConfirm").onclick = () => {
-      setCount(input.value);
       flow.extraEssenceConfirmed = true;
       advanceRulesBoardFlow();
     };

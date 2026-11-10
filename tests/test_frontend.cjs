@@ -1663,13 +1663,14 @@ function startServer() {
       await new Promise((resolve) => setTimeout(resolve, 220));
       const hoverRect = document.querySelector(".hand-card-hover-clone")?.getBoundingClientRect();
       const hoverAnchored = Boolean(hoverRect
-        && hoverRect.left >= 11
-        && hoverRect.top >= 11
-        && hoverRect.right <= window.innerWidth - 11
+        && hoverRect.left >= 9
+        && hoverRect.top >= 9
+        && hoverRect.right <= window.innerWidth - 9
+        && hoverRect.bottom <= window.innerHeight - 9
         && handCardRect.left + handCardRect.width / 2 >= hoverRect.left
-        && handCardRect.left + handCardRect.width / 2 <= hoverRect.right
-        && handCardRect.top + handCardRect.height * .3 >= hoverRect.top
-        && handCardRect.top + handCardRect.height * .3 <= hoverRect.bottom);
+        && handCardRect.left + handCardRect.width / 2 <= hoverRect.right);
+      const hoverBottomAnchored = Boolean(hoverRect
+        && Math.abs((window.innerHeight - 10) - hoverRect.bottom) <= 6);
       handCard.dispatchEvent(new MouseEvent("mouseleave"));
       const supportKeywordCard = [...cardsById.values()].find((card) => (
         card.type === "manifestation" && String(card.effect || "").startsWith("Support.")
@@ -1733,7 +1734,7 @@ function startServer() {
       peroperoDeckHand.willHidden = !document.querySelector('#myHandTray [data-ghost-zone="deck"]');
       return {
         initial, voluntaryMulligan, recoveryMulligan, requestedUx, deckEditSummary, unaffordableAura, playableAura, essenceStripShown, essenceStripText, essenceStripBesideToggle, essenceStripRemovePayload, finalEssenceRemovePayload, betaEssence, essenceStripHiddenWhenEmpty,
-        hoverAnchored, manualStackHoverPreview, supportKeywordPlayableFromHand, gorbBlocksController, gorbLeavesOpponentFree, peroperoDeckHand,
+        hoverAnchored, hoverBottomAnchored, manualStackHoverPreview, supportKeywordPlayableFromHand, gorbBlocksController, gorbLeavesOpponentFree, peroperoDeckHand,
       };
     });
     const newChoiceScreens = await page.evaluate(() => {
@@ -3973,7 +3974,8 @@ function startServer() {
     assert.equal(wanderingVeteranUi.supportMarker.present, true);
     assert.equal(wanderingVeteranUi.supportMarker.label, wanderingVeteranUi.expectedSupportLabel);
     assert.equal(wanderingVeteranUi.supportMarker.icon, true);
-    assert(wanderingVeteranUi.supportMarker.width >= 28);
+    assert(wanderingVeteranUi.supportMarker.width >= 20);
+    assert(wanderingVeteranUi.supportMarker.width <= 40);
     assert.equal(supportUi.firstStep.forbidden, false);
     assert.equal(supportUi.firstStep.allowed, true);
     assert.equal(supportUi.reactionStep.supportFromHand, true);
@@ -3987,7 +3989,8 @@ function startServer() {
     assert.equal(supportUi.marker.present, true);
     assert.equal(supportUi.marker.label, supportUi.expectedMarkerLabel);
     assert.equal(supportUi.marker.icon, true);
-    assert(supportUi.marker.width >= 28);
+    assert(supportUi.marker.width >= 20);
+    assert(supportUi.marker.width <= 40);
     assert.equal(supportUi.markerRight, "4px");
     assert.match(supportUi.supportResolutionLog, /Pago/);
     assert.match(supportUi.supportResolutionLog, /10/);
@@ -4503,6 +4506,7 @@ function startServer() {
     });
     assert.equal(pregameUi.essenceStripHiddenWhenEmpty, true);
     assert.equal(pregameUi.hoverAnchored, true);
+    assert.equal(pregameUi.hoverBottomAnchored, true);
     assert.equal(pregameUi.manualStackHoverPreview.shown, true);
     assert.equal(pregameUi.manualStackHoverPreview.image, pregameUi.manualStackHoverPreview.expectedImage);
     assert.equal(pregameUi.manualStackHoverPreview.height, pregameUi.manualStackHoverPreview.expectedHeight);

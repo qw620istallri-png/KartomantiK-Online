@@ -401,11 +401,6 @@ class PriorityMixin:
         for card_id in set(player["zones"]["hand"]):
             metadata = self.card_rules.get(card_id, {})
             card_type = "persistent_will" if metadata.get("playAsPersistentWill") else metadata.get("type")
-            # Reaction is the last chance to change the Confrontation. A Will in
-            # hand keeps the decision with its player, even if the cheap payment
-            # or target preview cannot prove it playable yet.
-            if phase_id == "confrontation_reaction" and card_type == "ephemeral_will" and can_play(card_id, card_type):
-                return True
             if (
                 card_type in RULES_WILL_TYPES and can_play(card_id, card_type)
                 and self.rules_will_affordable(player_id, card_id)
@@ -442,8 +437,7 @@ class PriorityMixin:
             })
             if error or not can_play(card_id, card_type):
                 continue
-            if (phase_id == "confrontation_reaction" and card_type == "ephemeral_will"
-                    or card_type in RULES_WILL_TYPES and self.rules_will_affordable(player_id, card_id, source)):
+            if card_type in RULES_WILL_TYPES and self.rules_will_affordable(player_id, card_id, source):
                 return True
         if response:
             if any(

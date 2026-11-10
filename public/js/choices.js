@@ -396,7 +396,7 @@ function renderRulesChoiceScreen() {
   options.classList.remove(
     "has-destination-card", "has-order", "has-card-picker", "is-reveal-hand", "is-destination-screen", "has-hand-selection",
   );
-  panel.classList.remove("cards-screen", "destination-screen", "hand-drop", "replace-screen", "chain-screen", "player-screen", "hand-swap", "temperament-screen", "deck-reorder-screen");
+  panel.classList.remove("cards-screen", "destination-screen", "hand-drop", "replace-screen", "chain-screen", "player-screen", "hand-swap", "temperament-screen", "deck-reorder-screen", "order-screen");
   if (pendingTriggeredPlacement) {
     bindRulesPlayerTargetDelegate();
     const { payload } = pendingTriggeredPlacement;
@@ -506,8 +506,8 @@ function renderRulesChoiceScreen() {
     // Drag and drop: each group has a lane per destination (top / bottom / extra);
     // dragging a card inside a lane reorders it, dragging it to another lane moves it.
     const laneDefs = (group) => [
-      { side: "top", label: t("rulesDeckTop") },
-      { side: "bottom", label: t("rulesDeckBottom") },
+      ...(group.topCount === 0 ? [] : [{ side: "top", label: t("rulesDeckTop") }]),
+      ...(group.bottomCount === 0 ? [] : [{ side: "bottom", label: t("rulesDeckBottom") }]),
       ...(group.extraSide ? [{ side: "extra", label: t(group.extraSide === "hand" ? "rulesDeckToHand" : "rulesDeckExile") }] : []),
     ];
     const initialSide = (group, index) => {
@@ -1276,6 +1276,7 @@ function renderRulesChoiceScreen() {
     return;
   }
   if (["simultaneous_stack_order", "replacement_order"].includes(choice.kind)) {
+    panel.classList.add("order-screen");
     options.classList.add("has-order");
     $("#rulesChoiceHeading").textContent = t(choice.kind === "replacement_order" ? "rulesReplacementOrderHeading" : "rulesSimultaneousOrderHeading");
     $("#rulesChoiceText").textContent = t(choice.kind === "replacement_order" ? "rulesReplacementOrderText" : "rulesSimultaneousOrderText");

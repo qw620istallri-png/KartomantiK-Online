@@ -267,15 +267,39 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
           window.__setup139({ hand: ["5q6t7i5pzctbi8s_en", "r139-5"], essences: existing ? [["hollow", existing]] : [] });
           beginRulesBoardAction({ cardId: "5q6t7i5pzctbi8s_en", zone: "hand", handIndex: 0 });
           toggleRulesBoardPayment(1);
-          const input = document.querySelector("#rulesExtraEssenceCount");
-          return { max: Number(input.max), stage: pendingRulesBoardFlow.stage, visible: !input.closest(".rules-extra-essence-row").hidden };
+          const available = document.querySelector("#rulesExtraEssenceAvailable");
+          return {
+            max: rulesBoardOptionalExtraEssenceMax(pendingRulesBoardFlow),
+            stage: pendingRulesBoardFlow.stage,
+            visible: !available.closest(".rules-extra-essence-row").hidden,
+          };
         }, existing);
         assert.deepEqual(rally, { max: 3 + existing, stage: "extra_essence", visible: true });
-        await page.locator("#rulesExtraEssenceCount").fill(String(3 + existing));
+        for (let index = 0; index < rally.max; index++) await page.locator("#rulesExtraEssenceAvailable").click();
         await page.locator("#rulesExtraEssenceConfirm").click();
         await page.waitForFunction(() => window.__sent.length === 1);
         assert.equal(await page.evaluate(() => window.__sent[0].extraEssenceCount), 3 + existing);
       }
+      const stampedingBroodRally = await page.evaluate(() => {
+        cardsById.get("r139-4").temperaments = ["phlegmatic"];
+        window.__setup139({ hand: ["5q6t7i5pzctbi8s_en", "r139-4"] });
+        beginRulesBoardAction({ cardId: "5q6t7i5pzctbi8s_en", zone: "hand", handIndex: 0 });
+        toggleRulesBoardPayment(1);
+        return {
+          max: rulesBoardOptionalExtraEssenceMax(pendingRulesBoardFlow),
+          available: document.querySelector("#rulesExtraEssenceAvailable")?.textContent?.trim(),
+          tokenTotal: document.querySelector("#rulesExtraEssenceTokenTotal")?.textContent?.trim(),
+        };
+      });
+      assert.equal(stampedingBroodRally.max, 2);
+      assert.match(stampedingBroodRally.available, /2/);
+      assert.match(stampedingBroodRally.tokenTotal, /0/);
+      await page.locator("#rulesExtraEssenceAvailable").click();
+      await page.locator("#rulesExtraEssenceAvailable").click();
+      assert.match(await page.locator("#rulesExtraEssenceTokenTotal").textContent(), /2/);
+      await page.locator("#rulesExtraEssenceConfirm").click();
+      await page.waitForFunction(() => window.__sent.length === 1);
+      assert.equal(await page.evaluate(() => window.__sent[0].extraEssenceCount), 2);
       await page.evaluate(() => { cardsById.get("r139-5").temperaments = ["choleric"]; });
 
       const cancelledPayment = await page.evaluate(() => {

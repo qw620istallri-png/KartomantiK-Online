@@ -55,6 +55,15 @@ function collectRulesVfxCleanupMoves(details, fallback) {
     const origin = rulesVfxCenter(originElement);
     if (!origin) return;
     const originRect = originElement.getBoundingClientRect();
+    const compactHold = originElement.classList.contains("ub-card-compact")
+      ? {
+          markup: originElement.querySelector(".bf-card-inner")?.outerHTML || "",
+          kindClass: originElement.classList.contains("ub-card-compact-will")
+            ? "ub-card-compact-will"
+            : "ub-card-compact-manifestation",
+          ownerColor: originElement.style.getPropertyValue("--owner-color"),
+        }
+      : null;
     const zone = movement.zone || (movement.status === "removed_copy" ? "exile" : "");
     const containerId = movement.containerId || movement.ownerId;
     const pile = $$("[data-field-pile]").find((element) => element.dataset.fieldPile === `${containerId}:${zone}`);
@@ -62,6 +71,7 @@ function collectRulesVfxCleanupMoves(details, fallback) {
     moves.push({
       cardId, zone, removedCopy: movement.status === "removed_copy", origin,
       originSize: originRect.width ? { width: originRect.width, height: originRect.height } : null,
+      compactHold,
       target: rulesVfxCenter(pile) || (zone === "hand" ? rulesVfxPlayerOrigin(containerId) : fallback),
     });
   });
@@ -71,7 +81,7 @@ function collectRulesVfxCleanupMoves(details, fallback) {
 function captureRulesVfxEvent(entry) {
   const event = captureRulesVfxEventInner(entry);
   if (entry.type === "rules_confrontation_cleanup") {
-    (event.cleanupMoves || []).slice(0, 12).filter((move) => !move.removedCopy).forEach((move) => rulesVfxHoldCard(move.cardId, move.origin, move.originSize));
+    (event.cleanupMoves || []).slice(0, 12).filter((move) => !move.removedCopy).forEach((move) => rulesVfxHoldCard(move.cardId, move.origin, move.originSize, move.compactHold));
     if (event.supportWin) rulesVfxHoldCard(event.supportWin.cardId, event.supportWin.origin);
   }
   return event;
@@ -814,13 +824,19 @@ function playRulesVfxDice(roll, anchor) {
 // A card that is about to fly away stays visible at its place until its flight starts, so it never vanishes first
 const rulesVfxHolds = new Map();
 
-function rulesVfxHoldCard(cardId, origin, size = null) {
+function rulesVfxHoldCard(cardId, origin, size = null, compactHold = null) {
   if (!cardId || !origin || rulesVfxReducedMotion()) return;
   rulesVfxReleaseHold(cardId);
   const hold = document.createElement("div");
   hold.className = "rules-vfx-hold";
   hold.setAttribute("aria-hidden", "true");
-  hold.innerHTML = `<img src="${esc(cardImage(cardId))}" alt="">`;
+  if (compactHold?.markup) {
+    hold.classList.add("bf-card", "ub-compact-hold", "ub-card-compact", compactHold.kindClass);
+    hold.innerHTML = compactHold.markup;
+    if (compactHold.ownerColor) hold.style.setProperty("--owner-color", compactHold.ownerColor);
+  } else {
+    hold.innerHTML = `<img src="${esc(cardImage(cardId))}" alt="">`;
+  }
   // the size of the card it stands for (a small Stalemate strip card stays small)
   const width = size?.width || 104;
   const height = size?.height || 146;

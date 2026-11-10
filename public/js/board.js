@@ -1197,7 +1197,9 @@ function playCardFlipReveal(el, item) {
 }
 
 function compactBattlefieldCardKind(item) {
-  if (!window.uiBeta?.compactCardsEnabled?.() || item?.isTokenCard || !item?.faceUp || !item?.cardId) return null;
+  if (!window.uiBeta?.compactCardsEnabled?.() || item?.isTokenCard) return null;
+  if (!item?.faceUp) return "back";
+  if (!item?.cardId) return null;
   const type = cardsById.get(item.cardId)?.type;
   if (type === "manifestation") return "manifestation";
   if (type === "persistent_will" || type === "ephemeral_will") return "will";
@@ -1270,9 +1272,9 @@ function renderBattlefield() {
       inner = `<div class="bf-card-face${compactKind ? ` ub-compact-card-face ub-compact-card-face-${compactKind}` : ""}${rarityClassAttr(rarity)}" style="${rarityCosmosStyle(item.cardId)}">${raritySurfaceMarkup(rarity, face)}</div>`;
     } else if (canPeek && item.cardId) {
       // the owner (or an observer) gets a faint, colour-tinted peek at a face-down card
-      inner = `<div class="bf-card-face"><div class="back-face owner-peek"><img src="${esc(cardImage(item.cardId))}"></div></div>`;
+      inner = `<div class="bf-card-face${compactKind === "back" ? " ub-compact-card-face ub-compact-card-face-back" : ""}"><div class="back-face owner-peek"><img src="${esc(cardImage(item.cardId))}"></div></div>`;
     } else {
-      inner = `<div class="bf-card-face"><div class="back-face"></div></div>`;
+      inner = `<div class="bf-card-face${compactKind === "back" ? " ub-compact-card-face ub-compact-card-face-back" : ""}"><div class="back-face"></div></div>`;
     }
     const ongoingEffects = (latestState.rulesEngine?.ongoingEffects || []).filter((effect) => effect.target?.itemId === item.id);
     if (ongoingEffects.length) {

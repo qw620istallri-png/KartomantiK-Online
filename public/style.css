@@ -2081,6 +2081,7 @@ body:has(#revealPanel:not(.hidden)) #inspectPanel { z-index: 95; }
   border-color: #fff0a6;
   box-shadow: 0 0 0 3px #f0cf69, 0 0 26px 8px #e8b33abb, 2px 10px 18px #000a;
 }
+.hand-card.is-tribute-selected img { filter: grayscale(1) brightness(.62); opacity: .48; }
 .bf-card.is-tribute-candidate {
   cursor: pointer;
   filter: drop-shadow(0 0 10px #d6b04ecc);

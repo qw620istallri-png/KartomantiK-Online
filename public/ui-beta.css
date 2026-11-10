@@ -174,6 +174,19 @@
   .ub-ess :is(span, button) { padding: 1px 6px 1px 2px; font-size: 12px; }
   .ub-ess img { width: 16px; height: 16px; }
 }
+
+/* Squarer tablet layouts have less horizontal room around the CZ totals. Put
+   floating Essences on their own row; geometry reserves this second row. */
+#gameScreen.ui-beta.ub-square .ub-tside { display: grid; grid-template-rows: auto auto; align-items: center; }
+#gameScreen.ui-beta.ub-square .ub-tside.me { grid-template-columns: minmax(0, auto) auto; }
+#gameScreen.ui-beta.ub-square .ub-tside.opp { grid-template-columns: auto minmax(0, auto); }
+#gameScreen.ui-beta.ub-square .ub-tside.me > .ub-total { grid-column: 1; grid-row: 1; }
+#gameScreen.ui-beta.ub-square .ub-tside.me > .essence-quick { grid-column: 2; grid-row: 1; }
+#gameScreen.ui-beta.ub-square .ub-tside.opp > .ub-total { grid-column: 2; grid-row: 1; }
+#gameScreen.ui-beta.ub-square .ub-tside.opp > .essence-quick { grid-column: 1; grid-row: 1; }
+#gameScreen.ui-beta.ub-square .ub-tside > .ub-ess { grid-column: 1 / -1; grid-row: 2; }
+#gameScreen.ui-beta.ub-square .ub-tside.me > .ub-ess { justify-content: flex-start; }
+#gameScreen.ui-beta.ub-square .ub-tside.opp > .ub-ess { justify-content: flex-end; }
 @keyframes ub-pop { from { opacity: 0; transform: scale(.96); } }
 
 /* priority wheel: centred on the midline, icons only */
@@ -247,7 +260,13 @@
 #gameScreen.ui-beta.ub-compact-cards .bf-card.ub-card-compact .bf-card-inner,
 #gameScreen.ui-beta.ub-compact-cards .bf-card.ub-card-compact .bf-card-face { height: 100%; }
 #gameScreen.ui-beta.ub-compact-cards .ub-compact-card-face { position: relative; isolation: isolate; }
-#gameScreen.ui-beta.ub-compact-cards .ub-compact-card-face-manifestation { --ub-crop-top: 73.5%; --ub-crop-bottom: 26.5%; }
+#gameScreen.ui-beta.ub-compact-cards .bf-card.ub-card-compact-back .back-face {
+  background-image: url('compact-card-back.png?v=20261110-1');
+  background-size: 100% 100%; background-position: center; background-repeat: no-repeat;
+}
+#gameScreen.ui-beta.ub-compact-cards .bf-card.ub-card-compact-back .back-face::before { display: none; }
+#gameScreen.ui-beta.ub-compact-cards .bf-card.ub-card-compact-back .back-face.owner-peek img { opacity: .18; }
+#gameScreen.ui-beta.ub-compact-cards .ub-compact-card-face-manifestation { --ub-crop-top: 78.5%; --ub-crop-bottom: 21.5%; }
 #gameScreen.ui-beta.ub-compact-cards .ub-compact-card-face-will { --ub-crop-top: 89.42%; --ub-crop-bottom: 10.58%; }
 #gameScreen.ui-beta.ub-compact-cards .ub-compact-crop { position: absolute; left: 0; z-index: 0; display: block; width: 100%; overflow: hidden; }
 #gameScreen.ui-beta.ub-compact-cards .ub-compact-crop-top { top: 0; height: var(--ub-crop-top); }
@@ -266,7 +285,7 @@
 
 #gameScreen.ui-beta.ub-compact-cards .bf-card :is(.rules-support-badge,.ub-float-badge,.ub-adamant-badge,.ub-first-badge) {
   position: absolute; z-index: 15; top: 4px; right: 4px; bottom: auto; left: auto;
-  display: grid; place-items: center; width: 28px; min-width: 28px; height: 28px; padding: 5px;
+  display: grid; place-items: center; width: var(--ub-marker-size,21px); min-width: var(--ub-marker-size,21px); height: var(--ub-marker-size,21px); padding: var(--ub-marker-pad,4px);
   border: 1.5px solid var(--ub-marker-tone,#d3a942); border-radius: 50%;
   background: rgb(8 11 15 / .95); color: var(--ub-marker-ink,#fff);
   box-shadow: 0 3px 8px #000b, 0 0 0 1px rgb(255 255 255 / .07); pointer-events: none;
@@ -276,8 +295,24 @@
 #gameScreen.ui-beta.ub-compact-cards .bf-card .ub-float-badge { --ub-marker-tone:#9eafff; --ub-marker-ink:#eef0ff; }
 #gameScreen.ui-beta.ub-compact-cards .bf-card .ub-adamant-badge { --ub-marker-tone:#d6b778; --ub-marker-ink:#fff1cf; }
 #gameScreen.ui-beta.ub-compact-cards .bf-card .ub-first-badge { --ub-marker-tone:#f1cb62; --ub-marker-ink:#ffeaa6; }
-#gameScreen.ui-beta.ub-compact-cards .bf-card:has(.ub-first-badge) :is(.rules-support-badge,.ub-float-badge,.ub-adamant-badge) { top: 36px; }
-#gameScreen.ui-beta.ub-compact-cards .bf-card:has(.rules-support-badge) .ub-adamant-badge { top: 36px; }
+#gameScreen.ui-beta.ub-compact-cards .bf-card:has(.ub-first-badge) :is(.rules-support-badge,.ub-float-badge,.ub-adamant-badge) { top: calc(8px + var(--ub-marker-size,21px)); }
+#gameScreen.ui-beta.ub-compact-cards .bf-card:has(.rules-support-badge) .ub-adamant-badge { top: calc(8px + var(--ub-marker-size,21px)); }
+
+/* End-of-confrontation holds wait on screen while the winner chooses a
+   destination. Rebuild their compact face exactly like the live card instead
+   of fitting a full image into the compact rectangle. */
+.rules-vfx-hold.ub-compact-hold { overflow: visible; background: transparent; }
+.rules-vfx-hold.ub-compact-hold .bf-card-inner,
+.rules-vfx-hold.ub-compact-hold .bf-card-face { width: 100%; height: 100%; }
+.rules-vfx-hold.ub-compact-hold .ub-compact-card-face { position: relative; isolation: isolate; }
+.rules-vfx-hold.ub-compact-hold.ub-card-compact-manifestation .ub-compact-card-face { --ub-crop-top: 78.5%; --ub-crop-bottom: 21.5%; }
+.rules-vfx-hold.ub-compact-hold.ub-card-compact-will .ub-compact-card-face { --ub-crop-top: 89.42%; --ub-crop-bottom: 10.58%; }
+.rules-vfx-hold.ub-compact-hold .ub-compact-crop { position: absolute; left: 0; z-index: 0; display: block; width: 100%; overflow: hidden; }
+.rules-vfx-hold.ub-compact-hold .ub-compact-crop-top { top: 0; height: var(--ub-crop-top); }
+.rules-vfx-hold.ub-compact-hold .ub-compact-crop-bottom { bottom: 0; height: var(--ub-crop-bottom); }
+.rules-vfx-hold.ub-compact-hold .ub-compact-crop img { position: absolute; left: 0; display: block; width: 100%; max-width: none; height: auto; object-fit: initial; }
+.rules-vfx-hold.ub-compact-hold .ub-compact-crop-top img { top: 0; }
+.rules-vfx-hold.ub-compact-hold .ub-compact-crop-bottom img { bottom: 0; }
 
 .ub-peek { position: fixed; z-index: 400; pointer-events: none; border-radius: 14px; overflow: hidden; opacity: 0; transform: scale(.94); transition: opacity 180ms var(--ub-ease, ease), transform 220ms var(--ub-ease, ease); box-shadow: 0 18px 50px rgba(0, 0, 0, .6), 0 0 0 1px rgba(240, 217, 143, .4); background: #000; }
 .ub-peek.on { opacity: 1; transform: none; }
@@ -918,15 +953,15 @@ body.hand-drop-choice #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.hand-
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-lane { display: flex; flex-direction: column; align-items: center; gap: 8px; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-lane > small { display: flex !important; align-items: center; gap: 8px; font: 700 13px/1.2 var(--display-font, Georgia, serif) !important; letter-spacing: .08em; text-transform: uppercase; color: var(--ub-gold-pale, #f0d98f) !important; min-height: 31px; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-back { width: 22px; aspect-ratio: 5 / 7; border-radius: 3px; box-shadow: 0 2px 6px #0008; }
-#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-lane .rules-reorder-strip { min-width: min(330px, 26vw) !important; min-height: 122px !important; flex-wrap: nowrap !important; border: 2px dashed rgba(var(--ub-gd, 211, 169, 66), .45) !important; border-radius: 12px !important; background: rgba(0, 0, 0, .22) !important; }
-#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-card { width: clamp(64px, 5.6vw, 80px) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-lane .rules-reorder-strip { min-width: min(420px, 31vw) !important; min-height: clamp(150px, 20vh, 260px) !important; flex-wrap: nowrap !important; border: 2px dashed rgba(var(--ub-gd, 211, 169, 66), .45) !important; border-radius: 12px !important; background: rgba(0, 0, 0, .22) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-card { width: clamp(90px, min(7.5vw, 13vh), 150px) !important; }
 /* only the card itself: no light frame behind it */
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-card { padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; }
-#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-pool .rules-reorder-card { width: clamp(88px, 8vw, 116px) !important; }
-#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box:has(.rules-reorder-group) > :not(.rules-choice-source):not(.rules-choice-options) { max-width: 820px !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-pool .rules-reorder-card { width: clamp(120px, min(10vw, 18vh), 190px) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box:has(.rules-reorder-group) > :not(.rules-choice-source):not(.rules-choice-options) { max-width: 1300px !important; }
 /* the cards and their lanes use the whole screen width: no scroll bar under Expansive Ponderer's seven cards */
-#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box:has(.rules-reorder-group) { max-width: min(1280px, 96vw) !important; width: auto !important; }
-#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box:has(.rules-reorder-group) > .rules-choice-options { width: 100%; max-width: min(1240px, 94vw) !important; overflow: visible !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box:has(.rules-reorder-group) { max-width: min(1680px, 98vw) !important; width: 100% !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .box:has(.rules-reorder-group) > .rules-choice-options { width: 100%; max-width: min(1640px, 96vw) !important; overflow: visible !important; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-card:hover:not(.is-dragging) { transform: translateY(-6px) scale(1.06) !important; z-index: 30; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-card b { font-family: var(--display-font, Georgia, serif); }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel .rules-reorder-confirm { min-width: 200px; margin-top: 4px; }
@@ -938,11 +973,12 @@ body.hand-drop-choice #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.hand-
 /* Deck distribution: stable targets stay inside the viewport while cards move. */
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen { box-sizing: border-box; padding: 12px; overflow-x: clip; overflow-y: auto; place-items: safe center; overscroll-behavior: contain; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .box { overflow: visible !important; max-height: none !important; }
-#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-lanes { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-lanes { display: grid !important; grid-template-columns: repeat(auto-fit, minmax(min(360px, 100%), 1fr)); width: 100%; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-lane { min-width: 0; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-lane > small { color: var(--ub-ink, #f5efdf) !important; text-shadow: none; }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-lane .rules-reorder-strip {
   box-sizing: border-box; width: 100%; min-width: 0 !important;
+  justify-content: center;
   background: color-mix(in srgb, var(--ub-bg-2, #0f1f40) 94%, var(--ub-gold-pale, #f0d98f) 6%) !important;
   border-color: var(--ub-gold-pale, #f0d98f) !important;
   transform: none; box-shadow: none;
@@ -952,6 +988,26 @@ body.hand-drop-choice #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.hand-
   border-style: solid !important;
 }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-reorder-lane .rules-reorder-card { flex: 0 1 auto; min-width: 0; }
+
+/* Simultaneous-effect ordering is a full-table task, not a small modal. */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.order-screen .box { width: min(1540px, 96vw); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.order-screen .box > :not(.rules-choice-source) { max-width: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.order-screen .rules-drag-order .rules-choice-card { width: clamp(140px, min(11vw, 24vh), 220px); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.order-screen .rules-choice-options { width: 100%; }
+
+/* Rally: click the available Essence pile to spend one, or the committed pile
+   to refund one. Counts stay legible without a tiny numeric input. */
+#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-essence-pools { display: flex; align-items: stretch; justify-content: center; gap: 10px; flex-wrap: wrap; }
+#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-essence-pool {
+  min-width: 118px; min-height: 54px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: 1px solid var(--ub-line); border-radius: 12px; background: rgba(var(--ub-hi), .08); color: var(--ub-ink);
+  font-size: 18px; font-weight: 800; box-shadow: none;
+}
+#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-essence-pool img { width: 30px; height: 30px; }
+#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-essence-pool small { display: block; font-size: 10px; font-weight: 700; color: var(--ub-muted); text-transform: uppercase; letter-spacing: .07em; }
+#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-essence-pool:not(:disabled):hover { border-color: var(--ub-gold); background: rgba(var(--ub-gd), .18); transform: translateY(-1px); }
+#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-essence-pool.is-spent { border-color: color-mix(in srgb, var(--ub-gold) 70%, transparent); }
+#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-token-total { width: 100%; text-align: center; color: var(--ub-gold-pale); font-weight: 800; }
 @media (max-height: 600px) {
   #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-choice-effect { font-size: 13px; line-height: 1.3; margin-bottom: 8px; }
   #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-choice-options:has(.rules-reorder-group),

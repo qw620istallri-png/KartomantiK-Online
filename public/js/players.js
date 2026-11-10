@@ -612,9 +612,8 @@ function wireCardHoverZoom(el, cloneClassName) {
     clone.style.width = cloneWidth + "px";
     clone.style.height = cloneHeight + "px";
     if (cloneClassName === "hand-card-hover-clone") {
-      const margin = 22;
-      const lift = 3;
-      const maxUpwardShift = 36;
+      const margin = 10;
+      const lift = 0;
       const configuredScale = Number.parseFloat(
         getComputedStyle(document.documentElement).getPropertyValue("--hand-hover-scale")
       ) || 1.3;
@@ -629,15 +628,9 @@ function wireCardHoverZoom(el, cloneClassName) {
         window.innerWidth - margin - halfWidth,
         Math.max(margin + halfWidth, rect.left + rect.width / 2),
       );
-      const naturalTop = rect.top + rect.height / 2 - halfHeight;
-      const fullyVisibleTop = Math.min(
-        window.innerHeight - margin - cloneHeight * scale,
-        Math.max(margin, naturalTop),
-      );
-      const cloneTop = Math.max(margin, Math.max(
-        fullyVisibleTop,
-        naturalTop - maxUpwardShift,
-      ));
+      // A hand preview belongs to the bottom edge: keep the whole card on
+      // screen, but do not let it float needlessly high above the hand.
+      const cloneTop = Math.max(margin, window.innerHeight - margin - cloneHeight * scale);
       const centerY = cloneTop + halfHeight;
       // The clone is laid out at its zoomed size and starts scaled down, so the
       // zoomed card is drawn at full resolution instead of an upscaled (blurry) one.
@@ -659,6 +652,20 @@ function wireCardHoverZoom(el, cloneClassName) {
     }
     document.body.appendChild(clone);
     activeCardHoverCleanups.add(clearClone);
+    const clampHoverClone = () => {
+      if (!clone || cloneClassName !== "hand-card-hover-clone") return;
+      const margin = 10;
+      const bounds = clone.getBoundingClientRect();
+      const dx = bounds.left < margin
+        ? margin - bounds.left
+        : Math.min(0, window.innerWidth - margin - bounds.right);
+      const dy = bounds.top < margin
+        ? margin - bounds.top
+        : Math.min(0, window.innerHeight - margin - bounds.bottom);
+      if (!dx && !dy) return;
+      clone.style.left = `${(Number.parseFloat(clone.style.left) || 0) + dx}px`;
+      clone.style.top = `${(Number.parseFloat(clone.style.top) || 0) + dy}px`;
+    };
     // State updates rebuild card containers with innerHTML. Removing a
     // hovered source does not emit mouseleave, so clean up its fixed clone
     // when the source node is detached as well.
@@ -673,18 +680,9 @@ function wireCardHoverZoom(el, cloneClassName) {
       if (!clone) return;
       clone.classList.add("zoomed");
       if (cloneClassName !== "hand-card-hover-clone") return;
-      requestAnimationFrame(() => {
-        if (!clone) return;
-        const margin = 22;
-        const bounds = clone.getBoundingClientRect();
-        const dx = bounds.left < margin
-          ? margin - bounds.left
-          : Math.min(0, window.innerWidth - margin - bounds.right);
-        const dy = bounds.top < margin ? margin - bounds.top : 0;
-        if (!dx && !dy) return;
-        clone.style.left = `${(Number.parseFloat(clone.style.left) || 0) + dx}px`;
-        clone.style.top = `${(Number.parseFloat(clone.style.top) || 0) + dy}px`;
-      });
+      // Clamp only after the grow transition. Clamping its source-position
+      // frame would permanently pull the final preview upward.
+      window.setTimeout(clampHoverClone, 240);
     });
   });
   el.addEventListener("mousemove", (event) => {

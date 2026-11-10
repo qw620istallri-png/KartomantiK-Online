@@ -135,6 +135,12 @@ const mime = { '.js': 'text/javascript', '.css': 'text/css', '.json': 'applicati
         assert.equal(await page.evaluate(() => pendingRulesBoardFlow.selectedPaymentIndexes.size), 0, 'Cancelled payment');
         await drag(0, await targetPoint('#rulesFloatingCardImg'));
         assert.equal(await page.evaluate(() => pendingRulesBoardFlow.selectedPaymentIndexes.size), 1, kind);
+        assert.equal(await page.locator('#myHandTray [data-hand-index="0"]').evaluate(el => el.classList.contains('is-tribute-selected')), true, `${kind}: used Tribute is marked`);
+        assert.notEqual(await page.locator('#myHandTray [data-hand-index="0"] img').evaluate(el => getComputedStyle(el).filter), 'none', `${kind}: used Tribute is greyed`);
+        await drag(0, await targetPoint('#rulesFloatingCardImg'));
+        assert.equal(await page.evaluate(() => pendingRulesBoardFlow.selectedPaymentIndexes.size), 0, `${kind}: dragging again refunds Tribute`);
+        assert.equal(await page.locator('#myHandTray [data-hand-index="0"]').evaluate(el => el.classList.contains('is-tribute-selected')), false, `${kind}: refunded Tribute is available`);
+        await drag(0, await targetPoint('#rulesFloatingCardImg'));
         await tap(1); await closeInspect();
         assert.equal(await page.evaluate(() => pendingRulesBoardFlow.selectedPaymentIndexes.size), 1, 'A tap must not finish paying');
         await drag(1, await targetPoint('#rulesFloatingCardImg'));

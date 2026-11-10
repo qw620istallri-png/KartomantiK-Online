@@ -16,8 +16,11 @@
   // Compact battlefield cards ship by default. Keep a URL escape hatch for
   // comparison and emergency rollback without changing saved game state.
   const COMPACT_CARDS = !new URLSearchParams(location.search).has("full-cards");
-  const COMPACT_MANIFESTATION_RATIO = 566 / 500;
+  // Keep the title/art slice unchanged, but start the footer lower in the
+  // printed card so the first line of rules text can never leak into it.
+  const COMPACT_MANIFESTATION_RATIO = 530 / 500;
   const COMPACT_WILL_RATIO = 520 / 500;
+  const COMPACT_BACK_RATIO = 1060 / 1000;
   const RING = ["phlegmatic", "vitreous", "melancholic", "capricious", "choleric"];
   const DOMINATES = {
     phlegmatic: ["vitreous", "capricious"],
@@ -709,7 +712,9 @@
   // The compact battlefield keeps the physical identity of the printed card.
   // A Manifestation played as a Will (or the reverse) therefore keeps its own crop.
   function compactCardRatio(item) {
-    if (!COMPACT_CARDS || item?.isTokenCard || !item?.faceUp || !item?.cardId) return RATIO;
+    if (!COMPACT_CARDS || item?.isTokenCard) return RATIO;
+    if (!item?.faceUp) return COMPACT_BACK_RATIO;
+    if (!item?.cardId) return RATIO;
     const type = cardsById.get(item.cardId)?.type;
     if (type === "manifestation") return COMPACT_MANIFESTATION_RATIO;
     if (type === "persistent_will" || type === "ephemeral_will") return COMPACT_WILL_RATIO;
@@ -780,7 +785,8 @@
     const handLift = phone && window.matchMedia?.("(pointer: coarse)").matches ? 22 : 0;
     const handPeek = (handCollapsed ? 48 : Math.round(handH * 0.62 + 18)) + handLift;
     const oppHandH = Math.round(phone ? clamp(H * 0.09, 30, 40) : clamp(H * 0.085, 46, 86));
-    const totalsH = phone ? 34 : compact ? 44 : 54;
+    const square = !phone && W / Math.max(H, 1) <= 1.45;
+    const totalsH = phone ? 34 : square ? 76 : compact ? 44 : 54;
     const stale = groups.stalemate.length > 0;
     const staleH = stale ? (phone ? 52 : 84) : 0;
     const bandTop = 0;
@@ -788,7 +794,7 @@
     const zcTop = bandTop + bandH;
     const zcBottom = Math.max(zcTop + 120, H - handPeek);
     return {
-      W, H, compact, phone, colW, fieldL, fieldR, cx, izW, gutW, handPeek, handLift, oppHandH, totalsH, staleH, bandH,
+      W, H, compact, phone, square, colW, fieldL, fieldR, cx, izW, gutW, handPeek, handLift, oppHandH, totalsH, staleH, bandH,
       zcTop, zcBottom, wrapLeft: rect.left, wrapTop: rect.top,
       izMe: { l: fieldL, r: fieldL + izW },
       izOpp: { l: fieldR - izW, r: fieldR },
@@ -853,7 +859,7 @@
     // share the height so both zones keep cards as large as possible: the Wills
     // stay in one column (and the Interzone shrinks) before either doubles up
     const izOpts = { maxW: Math.min(inner * 0.9, 170), gap: 8, maxCols: 2, ratio: izRatio };
-    const pzOpts = { maxW: Math.min(inner * 0.9, 150), gap: 8, maxCols: 2, ratio: willRatio };
+    const pzOpts = { maxW: Math.min(inner * 0.9, 170), gap: 8, maxCols: 2, ratio: willRatio };
     let izShare = 0.82;
     if (wills) {
       let bestScore = -1;
@@ -940,12 +946,14 @@
       const count = groups[side].confrontation.length + (trap ? 1 : 0);
       const width = area.r - area.l;
       const sparse = count <= 2;
-      const densityCap = sparse ? 310 : count <= 4 ? 250 : 130;
       const maxW = COMPACT_CARDS
-        ? Math.min(densityCap, width * (G.phone ? 0.9 : sparse ? 0.8 : 0.72))
+        ? Math.min(310, width * (G.phone ? 0.9 : sparse ? 0.8 : 0.96))
         : Math.min(230, width * (G.phone ? 0.85 : 0.62));
       const zoneRatio = trap ? RATIO : groupCardRatio(groups[side].confrontation, COMPACT_CARDS ? COMPACT_MANIFESTATION_RATIO : RATIO);
-      const cardFit = fit(width - 12, area.b - area.t - 30, count, { maxW, ratio: zoneRatio, balanced: COMPACT_CARDS });
+      // Outside the explicit phone rule below, always choose the arrangement
+      // that produces the largest cards rather than sacrificing size for a
+      // tidier row count.
+      const cardFit = fit(width - 12, area.b - area.t - 30, count, { maxW, ratio: zoneRatio });
       zc[side] = { area, fit: cardFit, trap: null };
       const inner = { l: area.l, r: area.r, t: area.t + 22, b: area.b - 8 };
       // Compact cards are meant to make every battlefield card readable at once.
@@ -1110,10 +1118,23 @@
     const meta = box.meta || {};
     el.style.scale = box.k.toFixed(4);
     el.style.setProperty("--ub-card-base-height", `${box.baseH || CARD_H}px`);
+    // Markers stay readable on tiny layouts, but scale down by at least 25%
+    // relative to the former 28px design size on ordinary and large cards.
+    const screenCardWidth = box.screen?.w || meta.w || CARD_W * box.k;
+    const markerScreenSize = clamp(screenCardWidth * 0.14, 12, 42);
+    const markerBaseSize = markerScreenSize / Math.max(screenCardWidth / CARD_W, 0.01);
+    el.style.setProperty("--ub-marker-size", `${markerBaseSize.toFixed(2)}px`);
+    el.style.setProperty("--ub-marker-pad", `${Math.max(2.5, markerBaseSize * 0.18).toFixed(2)}px`);
     el.classList.add("ub-card", `ub-zone-${meta.zone || "field"}`, `ub-side-${meta.side || "me"}`);
     if (COMPACT_CARDS && (meta.ratio || RATIO) !== RATIO) {
       el.classList.add("ub-card-compact");
-      el.classList.add((meta.ratio || RATIO) === COMPACT_WILL_RATIO ? "ub-card-compact-will" : "ub-card-compact-manifestation");
+      el.classList.add(
+        el.querySelector(".ub-compact-card-face-back")
+          ? "ub-card-compact-back"
+          : (meta.ratio || RATIO) === COMPACT_WILL_RATIO
+            ? "ub-card-compact-will"
+            : "ub-card-compact-manifestation",
+      );
     }
     if (meta.floating) {
       el.classList.add("ub-floating");
@@ -2321,6 +2342,7 @@
     const geometry = local.geometry;
     const { G, players } = geometry;
     const screen = document.getElementById("gameScreen");
+    screen.classList.toggle("ub-square", Boolean(G.square));
     screen.style.setProperty("--ub-colW", `${G.colW}px`);
     document.documentElement.style.setProperty("--ub-colW-root", `${G.colW}px`);
     document.documentElement.style.setProperty("--ub-handPeek-root", `${G.handPeek}px`);

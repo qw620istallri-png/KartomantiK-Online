@@ -1,6 +1,7 @@
 """Regression tests for card bugs reported from play testing.
 
-Wandering Veteran, Shattering the Self, Censor, Destroy, Borombo and Glabron.
+Wandering Veteran, Shattering the Self, Censor, Destroy, Borombo, Glabron and
+Flower Tender.
 Engine tests use the shipped card-abilities.json compiled by the real server
 builder; client tests evaluate the relevant app.js functions with Node.
 """
@@ -59,6 +60,60 @@ def run_node(script):
     if completed.returncode != 0:
         raise AssertionError(completed.stderr)
     return json.loads(completed.stdout)
+
+
+class EntryTargetPlacementClientTests(unittest.TestCase):
+    def test_support_entry_without_a_complete_target_assignment_skips_its_effect(self):
+        helpers = "\n".join((
+            app_function("rulesDraftTargetCombinationValidClient"),
+            app_function("rulesDraftHasTargetsClient"),
+            app_function("beginRulesBoardPlacementTarget"),
+            app_function("requestCardPlacement"),
+        ))
+        flower = ABILITIES["6xfwhr4h38wvm4u_en"][0]
+        kaos = ABILITIES["b0amfkmb3xewx7x_en"][0]
+        result = run_node(f"""
+            let pendingRulesBoardFlow = null;
+            let activeAbility = null;
+            let activeDraft = null;
+            let sent = [];
+            let rendered = 0;
+            const cardsById = new Map();
+            const placementTargetTrigger = () => activeAbility;
+            const buildRulesActionDraft = () => activeDraft;
+            const renderRulesBoardFlow = () => {{ rendered += 1; }};
+            const sendCardPlacement = (payload) => {{ sent.push(payload.cardId); }};
+            {helpers}
+            const payload = {{ cardId: "flower", faceUp: true }};
+            const source = {{ cardId: "flower", zone: "hand" }};
+            activeAbility = {json.dumps(flower)};
+            activeDraft = {{ targetRules: activeAbility.targets, structuredTargets: [] }};
+            const flowerPicker = beginRulesBoardPlacementTarget(payload, source);
+            requestCardPlacement(payload, source);
+
+            activeAbility = {json.dumps(kaos)};
+            activeDraft = {{
+              targetRules: activeAbility.targets,
+              structuredTargets: [{{ key: "only-opponent", targetGroupIndex: 1 }}],
+            }};
+            const groupedPicker = beginRulesBoardPlacementTarget(
+              {{ cardId: "kaos", faceUp: true }}, {{ cardId: "kaos", zone: "hand" }}
+            );
+            requestCardPlacement(
+              {{ cardId: "kaos", faceUp: true }}, {{ cardId: "kaos", zone: "hand" }}
+            );
+            process.stdout.write(JSON.stringify({{
+              flowerPicker, groupedPicker, sent, rendered,
+              pending: pendingRulesBoardFlow !== null,
+            }}));
+        """)
+        self.assertEqual(result, {
+            "flowerPicker": False,
+            "groupedPicker": False,
+            "sent": ["flower", "kaos"],
+            "rendered": 0,
+            "pending": False,
+        })
 
 
 class ReportedCardRulesCase(game_state_tests.RealCardRulesCase):
@@ -178,9 +233,8 @@ class CensorTests(ReportedCardRulesCase):
         session.battlefield = [self.field_item("victim", "p2", "m-1")]
         self.put(p1, "hand", [CENSOR, "will-x"])
         session.card_rules["will-x"]["cost"] = 9  # unaffordable: only Censor could be played
-        # Reaction keeps the player's decision while they hold a Will, even
-        # when the automatic affordability estimate finds no payable action.
-        self.assertTrue(session.rules_player_can_act("p1"))
+        # An unaffordable Will is not an action and must not hold priority.
+        self.assertFalse(session.rules_player_can_act("p1"))
         error, _ = session.declare_rules_action(
             "p1", "Censor", kind="play_card", source={"cardId": CENSOR, "zone": "hand"},
             ability_id="censor-exiles-hand-manifestation-to-destroy",

@@ -113,13 +113,12 @@ class AutoPassTests(unittest.TestCase):
         self.goto(session, "resolution_effects")
         self.assertEqual(session.rules_auto_pass_player(), "p1")
 
-    def test_reaction_waits_for_a_player_holding_a_will_without_a_support(self):
+    def test_reaction_auto_passes_a_player_holding_only_an_unpayable_will(self):
         session, p1, _p2 = self.make_session()
         p1["zones"]["hand"] = ["will-ephemeral"]
         self.goto(session, "confrontation_reaction")
         session.rules_engine["priorityPasses"] = ["p2"]
-        self.assertIsNone(session.rules_auto_pass_player())
-        self.assertFalse(session.rules_confrontation_resolve_prompt())
+        self.assertEqual(session.rules_auto_pass_player(), "p1")
 
     def test_the_confrontation_is_never_resolved_while_someone_can_still_act(self):
         session, p1, p2 = self.make_session()

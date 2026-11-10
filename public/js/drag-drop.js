@@ -26,7 +26,9 @@ function requestCardPlacement(payload, source = null) {
       sendCardPlacement(payload, placementSource);
       return;
     }
-    beginRulesBoardPlacementTarget(payload, placementSource);
+    if (!beginRulesBoardPlacementTarget(payload, placementSource)) {
+      sendCardPlacement(payload, placementSource);
+    }
     return;
   }
   const playerIds = Object.keys(latestState?.players || {});
@@ -258,9 +260,19 @@ function dropTargetElAt(x, y) {
   return el && el.closest("[data-drop-zone], #battlefieldWrap, #myHandTray");
 }
 
+function rulesFloatingCardAt(x, y) {
+  const card = pendingRulesBoardFlow ? document.querySelector("#rulesFloatingCard") : null;
+  if (!card) return null;
+  const hit = [card, card.querySelector("#rulesFloatingCardImg")].filter(Boolean).some((node) => {
+    const rect = node.getBoundingClientRect();
+    return x >= rect.left && x <= rect.right && y >= rect.top && y <= rect.bottom;
+  });
+  return hit ? card : null;
+}
+
 function highlightDropTargetAt(x, y, ctx = null) {
   const hit = document.elementFromPoint(x, y);
-  const target = pendingRulesBoardFlow ? hit?.closest("#rulesFloatingCard")
+  const target = pendingRulesBoardFlow ? hit?.closest("#rulesFloatingCard") || rulesFloatingCardAt(x, y)
     : rulesHandDropChoice() ? hit?.closest("#rulesChoicePanel .box") : dropTargetElAt(x, y);
   if (target !== lastDropHighlight) {
     clearDropHighlights();
@@ -345,7 +357,10 @@ function resolveDrop(ctx, clientX, clientY) {
     reorderHandDrop(ctx.cardId, clientX);
     return;
   }
-  if (resolveRulesBoardCardDrop(ctx, el)) return;
+  // On short touch layouts the centred flow card can visually cover the table
+  // while hit-testing still returns the transformed battlefield below it. Its
+  // screen rectangle is the authoritative drop target.
+  if (resolveRulesBoardCardDrop(ctx, rulesFloatingCardAt(clientX, clientY) || el)) return;
   if (ctx.fromZone === "payment") return; // the virtual cost card's choice may have ended mid-drag
   const manualStackDrop = manualStackAvailable() && el.closest("#ubStack");
   if (manualStackDrop && ctx.kind === "battlefield") {
