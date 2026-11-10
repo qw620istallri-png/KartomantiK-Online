@@ -604,8 +604,17 @@ function armRulesBoardTargets(flow) {
         </button>`;
         }).join("")}
       </div>
+      ${document.querySelector("#gameScreen.ui-beta") ? `<div class="ep-zone-copy"><span class="ep-zone-tag">${esc(t("epTagEffect"))}</span><strong>${esc(sourceCard ? cardName(sourceCard.id) : "")}</strong><span class="ep-zone-hint">${esc(t("epZonePickHint"))}</span></div>` : ""}
       <div class="rules-zone-pick-actions"><button type="button" class="primary" data-zone-pick-confirm ${(flow.selectedTargets || []).length >= minTargets ? "" : "disabled"}>${esc(t("confirm"))} (${(flow.selectedTargets || []).length}/${maxTargets})</button></div>
     </div>`;
+    // the beta table: the same effect bar above the hand, the cards in a scene above it
+    if (document.querySelector("#gameScreen.ui-beta") && typeof effectPromptAnchor === "function") {
+      const anchor = effectPromptAnchor();
+      popup.classList.add("ep-zone-bar");
+      popup.style.setProperty("--ep-bottom", `${anchor.bottom}px`);
+      popup.style.setProperty("--ep-x", `${anchor.x}px`);
+      popup.style.setProperty("--ep-field-w", `${anchor.width}px`);
+    }
     document.body.appendChild(popup);
     popup.querySelectorAll("[data-zone-pick]").forEach((button) => {
       button.onclick = () => {

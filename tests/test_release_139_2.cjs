@@ -237,11 +237,16 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
         await page.mouse.down();
         await page.mouse.move(lane.x + lane.width / 2, lane.y + lane.height / 2, { steps: 10 });
         await page.mouse.up();
+        // the effect bar waits for Validate once every card is placed
+        assert.equal(await page.evaluate(() => window.__sent.length), sentBefore);
+        await page.locator("#rulesRelocationConfirm").click();
       };
+      let sentBefore = 0;
       await moveRelocation("interzone");
       assert.equal(await page.evaluate(() => window.__sent.length), 1);
       await page.evaluate(() => handleServerMessage({ type: "error", message: "Choose a valid destination." }));
       assert.equal(await page.locator('[data-rules-relocation-strip="interzone"] [data-rules-relocation-card="mine"]').count(), 1);
+      sentBefore = 1;
       await moveRelocation("deck");
       assert.equal(await page.evaluate(() => window.__sent.length), 2);
       assert.deepEqual(await page.evaluate(() => window.__sent[1].option.groups[0]),

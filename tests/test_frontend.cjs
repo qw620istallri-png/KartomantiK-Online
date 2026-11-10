@@ -2437,6 +2437,9 @@ function startServer() {
           .filter(Number.isFinite)),
       };
       document.querySelector('[data-rules-recovery-option="discard_deck_bottom_3"]').click();
+      // nothing leaves before Validate in the effect bar
+      recoveryStep.sentBeforeValidate = window.__sent.filter((payload) => payload.type === "resolve_rules_choice").length;
+      document.querySelector("#rulesChoiceConfirm").click();
       recoveryStep.payload = window.__sent.find((payload) => payload.type === "resolve_rules_choice");
 
       latestState.phaseTracker.index = ADVANCED_PHASES.findIndex((phase) => phase.id === "resolution_compare");
@@ -4566,6 +4569,7 @@ function startServer() {
     assert.equal(rulesChoice.recoveryStep.choices, 2);
     assert.match(rulesChoice.recoveryStep.text, /every player|chaque joueur|ogni giocatore/i);
     assert(rulesChoice.recoveryStep.minFont >= 14);
+    assert.equal(rulesChoice.recoveryStep.sentBeforeValidate, 0);
     assert.deepEqual(rulesChoice.recoveryStep.payload, {
       type: "resolve_rules_choice", choiceId: "choice-recovery", option: "discard_deck_bottom_3",
     });

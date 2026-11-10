@@ -614,11 +614,18 @@ function wireCardHoverZoom(el, cloneClassName) {
     if (cloneClassName === "hand-card-hover-clone") {
       const margin = 10;
       const lift = 0;
+      const topHandSource = Boolean(el.closest("#opponentHandFan"));
       const configuredScale = Number.parseFloat(
         getComputedStyle(document.documentElement).getPropertyValue("--hand-hover-scale")
       ) || 1.3;
+      const handCardHeight = Number.parseFloat(
+        getComputedStyle(document.documentElement).getPropertyValue("--hand-card-h")
+      ) || 170;
+      const desiredScale = topHandSource
+        ? Math.max(configuredScale, handCardHeight * configuredScale / Math.max(cloneHeight, 1))
+        : configuredScale;
       const scale = Math.max(1, Math.min(
-        configuredScale,
+        desiredScale,
         (window.innerWidth - margin * 2) / Math.max(cloneWidth, 1),
         (window.innerHeight - margin * 2) / Math.max(cloneHeight, 1),
       ));
@@ -628,9 +635,11 @@ function wireCardHoverZoom(el, cloneClassName) {
         window.innerWidth - margin - halfWidth,
         Math.max(margin + halfWidth, rect.left + rect.width / 2),
       );
-      // A hand preview belongs to the bottom edge: keep the whole card on
-      // screen, but do not let it float needlessly high above the hand.
-      const cloneTop = Math.max(margin, window.innerHeight - margin - cloneHeight * scale);
+      // Keep each solo hand preview beside its own seat: P2 at the top and P1
+      // at the bottom, with the same final card size for both orientations.
+      const cloneTop = topHandSource
+        ? margin
+        : Math.max(margin, window.innerHeight - margin - cloneHeight * scale);
       const centerY = cloneTop + halfHeight;
       // The clone is laid out at its zoomed size and starts scaled down, so the
       // zoomed card is drawn at full resolution instead of an upscaled (blurry) one.
@@ -642,7 +651,8 @@ function wireCardHoverZoom(el, cloneClassName) {
       clone.style.top = `${cloneTop + lift}px`;
       if ($("#gameScreen")?.classList.contains("ui-beta")) {
         // beta table: the hand card itself grows out of its place in the fan
-        const rotation = getComputedStyle(el).getPropertyValue("--hand-rotate").trim() || "0deg";
+        const rotationProperty = topHandSource ? "--fan-rotate" : "--hand-rotate";
+        const rotation = getComputedStyle(el).getPropertyValue(rotationProperty).trim() || "0deg";
         clone.style.setProperty("--hover-dx", `${rect.left + rect.width / 2 - centerX}px`);
         clone.style.setProperty("--hover-dy", `${rect.top + rect.height / 2 - (centerY + lift)}px`);
         clone.style.setProperty("--hover-rot", rotation);

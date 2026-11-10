@@ -22,7 +22,7 @@ const EFFECT_PROMPT_QUESTION_KINDS = new Set([
 
 const EFFECT_PROMPT_OPTION_KINDS = new Set([
   "temperament_choice", "token_count", "score_delta_choice", "points_or_weaken_first",
-  "points_or_hand_limit", "clemency_choice", "skip_confrontation_payment",
+  "points_or_hand_limit", "clemency_choice", "skip_confrontation_payment", "recovery_shared_choice",
 ]);
 
 // typed or composed answers: a card name, a guess (type, temperament, value)
@@ -38,6 +38,7 @@ const EFFECT_PROMPT_CARD_KINDS = new Set([
 // cards dragged into piles or into an order: the piles open above the bar
 const EFFECT_PROMPT_PILE_KINDS = new Set([
   "deck_reorder", "support_return_order", "simultaneous_stack_order", "replacement_order",
+  "confrontation_relocation", "peek_top_card",
 ]);
 
 // the buttons each choice screen builds, in the order they are offered
@@ -45,7 +46,7 @@ const EFFECT_PROMPT_OPTION_SELECTOR = [
   "[data-rules-optional-trigger]", "[data-rules-binary-option]", "[data-rules-optional-discard]",
   "[data-rules-memory-option]", "[data-rules-temperament-option]", "[data-rules-token-count]",
   "[data-rules-score-option]", "[data-rules-weaken-option]", "[data-rules-hand-limit-option]",
-  "[data-rules-clemency-option]", "[data-rules-skip-option]",
+  "[data-rules-clemency-option]", "[data-rules-skip-option]", "[data-rules-recovery-option]",
 ].join(", ");
 
 const EFFECT_PROMPT_CARD_SELECTOR = [
@@ -257,7 +258,7 @@ function applyEffectPrompt() {
   if (mode === "question") applyEffectPromptQuestion(options, actions);
   else if (mode === "options") applyEffectPromptOptions(panel, choice, options, actions);
   else if (mode === "cards") applyEffectPromptCards(panel, choice, options, actions);
-  else if (mode === "piles") applyEffectPromptPiles(panel, options, actions);
+  else if (mode === "piles") applyEffectPromptPiles(panel, choice, options, actions);
   else if (mode === "input") applyEffectPromptInput(panel, choice, options, actions);
   else applyEffectPromptHand(panel, choice, actions);
   placeEffectPrompt();
@@ -567,10 +568,14 @@ function effectPromptPickedStrip(actions, confirm) {
 
 // Piles and orders keep their own drag and drop (choices.js); their Confirm
 // button moves into the bar as Validate, with its id and handler.
-function applyEffectPromptPiles(panel, options, actions) {
+function applyEffectPromptPiles(panel, choice, options, actions) {
   // out of the box: the old full-screen pile rules (".box:has(...)") no longer reach it
   panel.appendChild(options);
-  const confirm = options.querySelector("#rulesDeckReorderConfirm, #rulesSupportOrderConfirm, #rulesSimultaneousOrderConfirm");
+  if (choice.kind === "peek_top_card") {
+    applyEffectPromptPeek(panel, choice, options, actions);
+    return;
+  }
+  const confirm = options.querySelector("#rulesDeckReorderConfirm, #rulesSupportOrderConfirm, #rulesSimultaneousOrderConfirm, #rulesRelocationConfirm");
   actions.appendChild(effectPromptPeekButton(panel));
   if (!confirm) return;
   confirm.classList.add("ep-btn-primary");
@@ -578,6 +583,56 @@ function applyEffectPromptPiles(panel, options, actions) {
   confirm.textContent = t("epValidate");
   actions.appendChild(confirm);
   effectPromptHint(panel, t("epDragHint"));
+}
+
+// Looking at the top card: drag it to a slot (or click a slot), or drop a hand
+// card on the bar to swap; the slot shows the card, Validate sends.
+function applyEffectPromptPeek(panel, choice, options, actions) {
+  const confirm = effectPromptButton("primary ep-btn-primary");
+  confirm.id = "rulesChoiceConfirm";
+  actions.append(effectPromptPeekButton(panel), confirm);
+  options.querySelector(".rules-peek-card")?.classList.add("ep-card");
+  confirm.onclick = () => {
+    const value = effectPromptPick.choiceId === choice.id ? String(effectPromptPick.value || "") : "";
+    if (!value || rulesChoiceAnswerPending?.choiceId === choice.id) return;
+    confirm.disabled = true;
+    if (value.startsWith("swap:")) sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: "swap", cardIds: [value.slice(5)] });
+    else sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: value });
+    lockRulesChoiceAnswer();
+  };
+  effectPromptHint(panel, t(choice.allowSwap ? "epPeekSwapHint" : "epPeekHint"));
+  paintEffectPromptPeek();
+}
+
+function paintEffectPromptPeek() {
+  const choice = latestState?.rulesEngine?.pendingChoice;
+  const options = $("#rulesChoiceOptions");
+  const confirm = $("#rulesChoiceConfirm");
+  if (!choice || choice.kind !== "peek_top_card" || !options || !confirm) return;
+  const value = effectPromptPick.choiceId === choice.id ? String(effectPromptPick.value || "") : "";
+  const swapId = value.startsWith("swap:") ? value.slice(5) : "";
+  const card = options.querySelector(".rules-peek-card");
+  options.querySelectorAll("[data-rules-peek-option]").forEach((slot) => {
+    const picked = slot.dataset.rulesPeekOption === value;
+    slot.setAttribute("aria-pressed", String(picked));
+    const img = slot.querySelector("img");
+    if (img) {
+      img.dataset.epBack ||= img.getAttribute("src");
+      img.src = picked ? cardImage(choice.cardId) : img.dataset.epBack;
+    }
+  });
+  card?.classList.toggle("ep-peek-placed", Boolean(value));
+  options.classList.toggle("ep-has-pick", Boolean(value));
+  const label = swapId ? rulesText("epPeekSwapWith", { card: cardName(swapId) })
+    : value ? options.querySelector(`[data-rules-peek-option="${CSS.escape(value)}"] strong`)?.textContent.trim() : "";
+  confirm.textContent = label ? rulesText("epValidateWith", { option: label }) : t("epValidate");
+  confirm.disabled = !value || rulesChoiceAnswerPending?.choiceId === choice.id;
+  if (typeof paintEffectPromptHand === "function") {
+    const hand = latestState?.players?.[myPlayerId]?.zones?.hand?.cards || [];
+    document.querySelectorAll("#handArea [data-hand-card]").forEach((element) => {
+      element.classList.toggle("is-choice-selected", Boolean(swapId) && Number(element.dataset.handIndex) === hand.indexOf(swapId));
+    });
+  }
 }
 
 function applyEffectPromptHand(panel, choice, actions) {

@@ -18,7 +18,7 @@
   const COMPACT_CARDS = !new URLSearchParams(location.search).has("full-cards");
   // Keep the title/art slice unchanged, but start the footer lower in the
   // printed card so the first line of rules text can never leak into it.
-  const COMPACT_MANIFESTATION_RATIO = 530 / 500;
+  const COMPACT_MANIFESTATION_RATIO = 554 / 500;
   const COMPACT_WILL_RATIO = 520 / 500;
   const COMPACT_BACK_RATIO = 1060 / 1000;
   const RING = ["phlegmatic", "vitreous", "melancholic", "capricious", "choleric"];
@@ -1460,7 +1460,7 @@
       if (card && !card.contains(event.relatedTarget)) hidePeek();
     });
     // the effect bar's card (effect-prompt.js): the same preview as a field card
-    const EFFECT_BAR_CARD = "#rulesChoicePanel.effect-prompt :is(.rules-choice-source, .ep-card, .rules-reorder-card, .rules-drag-order .rules-choice-card), #rulesOpponentDeciding [data-ep-peek-card]";
+    const EFFECT_BAR_CARD = "#rulesChoicePanel.effect-prompt :is(.rules-choice-source, .ep-card, .rules-reorder-card, .rules-drag-order .rules-choice-card), #rulesOpponentDeciding [data-ep-peek-card], .ep-zone-bar .rules-choice-card, .ep-zone-bar .rules-choice-source";
     document.addEventListener("mouseover", (event) => {
       // no preview while a card is being dragged (piles, order)
       if (!active() || !(event.target instanceof Element) || event.buttons) return;

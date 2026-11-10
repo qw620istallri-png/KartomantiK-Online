@@ -2,7 +2,7 @@
 // (see index.html); this file keeps every statement that runs at load, in order.
 
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261110-rules-beta-153";
+const STATIC_ASSET_VERSION = "20261110-rules-beta-153-2";
 
 {
   const versionEl = document.getElementById("appVersion");
@@ -83,7 +83,7 @@ document.addEventListener("mouseover", (event) => {
 
 document.addEventListener("mouseover", (event) => {
   // the effect bar's card uses the table's slower, larger hover preview (ui-beta.js)
-  const target = event.target instanceof Element && !event.buttons && !event.target.closest("#rulesChoicePanel.effect-prompt :is(.rules-choice-source, .ep-card, .rules-reorder-card, .rules-drag-order .rules-choice-card)")
+  const target = event.target instanceof Element && !event.buttons && !event.target.closest("#rulesChoicePanel.effect-prompt :is(.rules-choice-source, .ep-card, .rules-reorder-card, .rules-drag-order .rules-choice-card), .ep-zone-bar :is(.rules-choice-card, .rules-choice-source)")
     ? event.target.closest(CHOICE_PREVIEW_SELECTOR) : null;
   if (target) showChoiceCardPreview(target);
   else if (choicePreviewEl) hideChoiceCardPreview();

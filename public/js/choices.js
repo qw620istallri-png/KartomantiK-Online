@@ -212,6 +212,11 @@ function pickHandDropCard(handIndex, fromDrop = false) {
   if (choice.kind === "peek_top_card") {
     // a hand card dropped on the peek screen swaps with the top card (a plain click does nothing)
     if (!fromDrop) return true;
+    if (effectPromptValidates()) {
+      effectPromptPick = { choiceId: choice.id, value: `swap:${cardId}` };
+      paintEffectPromptPeek();
+      return true;
+    }
     sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: "swap", cardIds: [cardId] });
     return true;
   }
@@ -727,6 +732,12 @@ function renderRulesChoiceScreen() {
     let peekSent = false;
     wireCardToSlots(options.querySelector(".rules-peek-card"), [...options.querySelectorAll("[data-rules-peek-option]")], (slot) => {
       if (peekSent) return;
+      // the effect bar: the card goes to the slot, Validate sends it
+      if (typeof effectPromptMode === "function" && effectPromptMode(choice)) {
+        effectPromptPick = { choiceId: choice.id, value: slot.dataset.rulesPeekOption };
+        paintEffectPromptPeek();
+        return;
+      }
       peekSent = true;
       options.querySelectorAll("button").forEach((button) => { button.disabled = true; });
       sendRulesChoiceAnswer({ type: "resolve_rules_choice", choiceId: choice.id, option: slot.dataset.rulesPeekOption });
@@ -1196,12 +1207,15 @@ function renderRulesChoiceScreen() {
     options.innerHTML = (choice.groups || []).map((group) => `
       <section class="rules-reorder-group" data-rules-relocation-group="${esc(group.playerId)}" data-slots="${Number(group.interzoneSlots || 0)}">
         ${(choice.groups || []).length > 1 ? `<strong>${esc(rulesPlayerName(group.playerId))}</strong>` : ""}
-        <div class="rules-reorder-strip rules-reorder-pool" data-rules-relocation-strip="pool">
-          ${(group.itemIds || []).map(laneCard).join("")}
+        <div class="rules-reorder-lane rules-relocation-pool-lane">
+          <small>${esc(t("epToPlace"))}</small>
+          <div class="rules-reorder-strip rules-reorder-pool" data-rules-relocation-strip="pool">
+            ${(group.itemIds || []).map(laneCard).join("")}
+          </div>
         </div>
         <div class="rules-reorder-lanes">
           <div class="rules-reorder-lane">
-            <small>${esc(t("interzone"))} · ${esc(rulesText("rulesInterzoneSlots", { count: group.interzoneSlots }))}</small>
+            <small title="${esc(rulesText("rulesInterzoneSlots", { count: group.interzoneSlots }))}">${esc(t("interzone"))} <em data-relocation-count>0/${Number(group.interzoneSlots || 0)}</em></small>
             <div class="rules-reorder-strip" data-rules-relocation-strip="interzone"></div>
           </div>
           <div class="rules-reorder-lane">
@@ -1209,13 +1223,19 @@ function renderRulesChoiceScreen() {
             <div class="rules-reorder-strip" data-rules-relocation-strip="deck"></div>
           </div>
         </div>
-      </section>`).join("");
+      </section>`).join("") + `<button type="button" class="primary rules-reorder-confirm" id="rulesRelocationConfirm" disabled>${esc(t("confirm"))}</button>`;
     let relocationSent = false;
-    rulesChoiceRetry = () => { rulesChoiceAnswerPending = null; relocationSent = false; lockRulesChoiceAnswer(); };
+    rulesChoiceRetry = () => {
+      rulesChoiceAnswerPending = null; relocationSent = false; lockRulesChoiceAnswer();
+      const confirm = $("#rulesRelocationConfirm");
+      if (confirm) confirm.disabled = Boolean(options.querySelector('[data-rules-relocation-strip="pool"] [data-rules-relocation-card]'));
+    };
     const refreshLanes = () => {
       options.querySelectorAll("[data-rules-relocation-group]").forEach((section) => {
         const interzone = section.querySelector('[data-rules-relocation-strip="interzone"]');
         interzone.classList.toggle("is-full", interzone.children.length >= Number(section.dataset.slots));
+        const count = section.querySelector("[data-relocation-count]");
+        if (count) count.textContent = `${interzone.children.length}/${Number(section.dataset.slots)}`;
         section.querySelectorAll('[data-rules-relocation-strip="deck"] [data-rules-relocation-card]').forEach((card, index) => {
           card.querySelector("b").textContent = String(index + 1);
         });
@@ -1262,13 +1282,17 @@ function renderRulesChoiceScreen() {
         const up = (e) => {
           card.classList.remove("is-dragging");
           section.querySelectorAll("[data-rules-relocation-strip]").forEach((entry) => entry.classList.remove("is-over"));
-          // everything placed: no confirmation step
-          if (e.type === "pointerup" && !options.querySelector('[data-rules-relocation-strip="pool"] [data-rules-relocation-card]')) submitRelocation();
+          const placed = !options.querySelector('[data-rules-relocation-strip="pool"] [data-rules-relocation-card]');
+          const confirm = $("#rulesRelocationConfirm");
+          if (confirm) confirm.disabled = !placed || relocationSent;
+          // everything placed: the old screen sends at once, the effect bar waits for Validate
+          if (e.type === "pointerup" && placed && !effectPromptValidates()) submitRelocation();
         };
         startCardPointerDrag(event, card, move, up, { capture: false });
       });
     });
     refreshLanes();
+    $("#rulesRelocationConfirm").onclick = (event) => { event.currentTarget.disabled = true; submitRelocation(); };
     panel.classList.remove("hidden");
     return;
   }

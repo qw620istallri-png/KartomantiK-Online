@@ -266,7 +266,7 @@
 }
 #gameScreen.ui-beta.ub-compact-cards .bf-card.ub-card-compact-back .back-face::before { display: none; }
 #gameScreen.ui-beta.ub-compact-cards .bf-card.ub-card-compact-back .back-face.owner-peek img { opacity: .18; }
-#gameScreen.ui-beta.ub-compact-cards .ub-compact-card-face-manifestation { --ub-crop-top: 78.5%; --ub-crop-bottom: 21.5%; }
+#gameScreen.ui-beta.ub-compact-cards .ub-compact-card-face-manifestation { --ub-crop-top: 75.1%; --ub-crop-bottom: 24.9%; }
 #gameScreen.ui-beta.ub-compact-cards .ub-compact-card-face-will { --ub-crop-top: 89.42%; --ub-crop-bottom: 10.58%; }
 #gameScreen.ui-beta.ub-compact-cards .ub-compact-crop { position: absolute; left: 0; z-index: 0; display: block; width: 100%; overflow: hidden; }
 #gameScreen.ui-beta.ub-compact-cards .ub-compact-crop-top { top: 0; height: var(--ub-crop-top); }
@@ -305,7 +305,7 @@
 .rules-vfx-hold.ub-compact-hold .bf-card-inner,
 .rules-vfx-hold.ub-compact-hold .bf-card-face { width: 100%; height: 100%; }
 .rules-vfx-hold.ub-compact-hold .ub-compact-card-face { position: relative; isolation: isolate; }
-.rules-vfx-hold.ub-compact-hold.ub-card-compact-manifestation .ub-compact-card-face { --ub-crop-top: 78.5%; --ub-crop-bottom: 21.5%; }
+.rules-vfx-hold.ub-compact-hold.ub-card-compact-manifestation .ub-compact-card-face { --ub-crop-top: 75.1%; --ub-crop-bottom: 24.9%; }
 .rules-vfx-hold.ub-compact-hold.ub-card-compact-will .ub-compact-card-face { --ub-crop-top: 89.42%; --ub-crop-bottom: 10.58%; }
 .rules-vfx-hold.ub-compact-hold .ub-compact-crop { position: absolute; left: 0; z-index: 0; display: block; width: 100%; overflow: hidden; }
 .rules-vfx-hold.ub-compact-hold .ub-compact-crop-top { top: 0; height: var(--ub-crop-top); }
@@ -1767,3 +1767,126 @@ body.flow-uses-hand #gameScreen.ui-beta .rules-board-flow.ep-flow .rules-floatin
 #gameScreen.ui-beta .rules-board-flow.ep-flow .ep-pay-covered { background: rgba(63, 201, 168, .18); border-color: rgba(63, 201, 168, .6); color: #7fe0c8; }
 #gameScreen.ui-beta .rules-board-flow.ep-flow #rulesFlowCost { margin-top: 6px; }
 #gameScreen.ui-beta.ub-phone .rules-board-flow.ep-flow .rules-card-drop-hint { display: none; }
+
+/* ------------------------------------------------------------ 153.1: looking at the top card, in the bar's scene */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions:has(.rules-peek-row) { width: max-content !important; padding: 18px 24px 14px !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-row { display: flex; align-items: center; gap: 28px; margin: 0; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-slots { display: flex; gap: 14px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles :is(.rules-peek-card, .rules-peek-slot) { width: clamp(96px, min(9vw, 17vh), 150px) !important; margin: 0; flex: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-card img { display: block; width: 100%; aspect-ratio: 5 / 7; object-fit: cover; border-radius: 9px; box-shadow: 0 8px 20px rgba(0, 0, 0, .55), 0 0 0 1px rgba(var(--ub-gd), .45); cursor: grab; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-card.ep-peek-placed { opacity: .35; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-slot {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 0 !important; border: 0 !important; background: none !important; box-shadow: none !important; cursor: pointer;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-slot img { display: block; width: 100%; aspect-ratio: 5 / 7; object-fit: cover; border-radius: 9px; outline: 2px dashed rgba(var(--ub-gd), .55); outline-offset: 3px; opacity: .7; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-slot strong { position: static !important; font: 600 14px/1.2 Georgia, "Times New Roman", serif !important; color: var(--ub-ink) !important; text-transform: none; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-slot:hover img,
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-slot.is-over img { outline-color: var(--ub-gold); opacity: 1; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-slot[aria-pressed="true"] img { outline: 3px solid var(--ub-gold-pale); opacity: 1; box-shadow: 0 0 22px rgba(var(--ub-gl), .45); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-slot[aria-pressed="true"]::after {
+  content: "\2713"; position: absolute; top: -10px; right: -10px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--ub-gold-pale); color: #1b1404; font: 700 15px/1 Georgia, "Times New Roman", serif; box-shadow: 0 2px 6px rgba(0, 0, 0, .5);
+}
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-piles :is(.rules-peek-card, .rules-peek-slot) { width: clamp(54px, 15vh, 80px) !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-row { gap: 16px; }
+/* options with a title and a line under it (Recovery): the line under the title */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-options .ep-tile:not(.rules-amphora-back):has(> span) { flex-direction: column; align-items: flex-start; justify-content: center; text-align: left; gap: 2px; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-slot { flex-direction: column !important; justify-content: flex-start !important; height: auto !important; min-height: 0 !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-slot img { order: 1; position: static !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-slot strong { order: 2; inset: auto !important; transform: none !important; background: none !important; padding: 0 !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions:has(.rules-peek-row) { min-height: 0 !important; height: auto !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-row { min-height: 0 !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-slot strong { font-size: 12px !important; }
+#gameScreen.ui-beta.ub-phone:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-reorder-lane > small { font-size: 12px; line-height: 1.2; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions .rules-card-drop-hint { display: none !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-row { padding-bottom: 26px; align-items: flex-start; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-peek-slot { overflow: visible !important; }
+
+/* ------------------------------------------------------------ 153.1: picking a card in a public zone (Limbo, Exile) during an action: the effect bar */
+body > .rules-zone-target-panel.ep-zone-bar { position: fixed !important; inset: 0 !important; background: transparent !important; backdrop-filter: none !important; pointer-events: none; display: block !important; padding: 0 !important; z-index: 310; }
+body > .rules-zone-target-panel.ep-zone-bar::before { content: none !important; }
+body > .rules-zone-target-panel.ep-zone-bar .box {
+  position: fixed !important; left: var(--ep-x, 50vw) !important; bottom: var(--ep-bottom, 200px) !important; top: auto !important; transform: translateX(-50%) !important;
+  width: max-content !important; max-width: min(calc(var(--ep-field-w, 100vw) - 24px), 94vw) !important; max-height: none !important; overflow: visible !important;
+  display: grid !important; grid-template-columns: auto minmax(0, auto) auto !important; grid-template-areas: "src copy actions" !important; align-items: center; column-gap: 14px;
+  padding: 10px 14px 10px 10px !important; margin: 0 !important; pointer-events: auto;
+  background: linear-gradient(180deg, rgba(var(--ub-pn2, 30, 34, 52), .97), rgba(var(--ub-pn, 20, 23, 36), .97)) !important; color: var(--ub-ink, #f5efdf) !important;
+  border: 1px solid rgba(var(--ub-gd, 211, 169, 66), .55) !important; border-radius: 14px !important; box-shadow: 0 14px 40px rgba(0, 0, 0, .55) !important;
+}
+body > .rules-zone-target-panel.ep-zone-bar .box > .rules-choice-source { grid-area: src !important; position: static !important; width: 52px !important; height: auto !important; margin: 0 !important; border-radius: 6px; overflow: hidden; transform: none !important; }
+body > .rules-zone-target-panel.ep-zone-bar .box > .rules-choice-source img { display: block; width: 100%; aspect-ratio: 5 / 7; object-fit: cover; }
+body > .rules-zone-target-panel.ep-zone-bar .rules-choice-effect { display: none !important; }
+body > .rules-zone-target-panel.ep-zone-bar .ep-zone-copy { grid-area: copy; display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: center; column-gap: 10px; row-gap: 2px; min-width: 0; }
+body > .rules-zone-target-panel.ep-zone-bar .ep-zone-tag { padding: 2px 9px; border-radius: 999px; background: rgba(var(--ub-gd, 211, 169, 66), .18); color: var(--ub-gold-pale, #f1d38a); font: 600 14px/1.4 Georgia, "Times New Roman", serif; }
+body > .rules-zone-target-panel.ep-zone-bar .ep-zone-copy strong { font: 700 18px/1.25 var(--display-font, Georgia, serif); color: var(--ub-ink, #f5efdf); }
+body > .rules-zone-target-panel.ep-zone-bar .ep-zone-hint { grid-column: 1 / -1; color: var(--ub-gold-pale, #f1d38a); font-size: 14px; }
+body > .rules-zone-target-panel.ep-zone-bar .rules-zone-pick-actions { grid-area: actions; margin: 0 !important; display: flex; gap: 8px; }
+body > .rules-zone-target-panel.ep-zone-bar .rules-zone-pick-actions button {
+  width: auto; min-width: 0; margin: 0; padding: 9px 16px; border-radius: 9px; font: 600 15px/1.2 Georgia, "Times New Roman", serif; text-transform: none; letter-spacing: 0;
+  background: var(--ub-gold, #d3a942); color: #1b1404; border: 1px solid var(--ub-gold, #d3a942); box-shadow: none;
+}
+body > .rules-zone-target-panel.ep-zone-bar .rules-zone-pick-actions button:disabled { background: rgba(var(--ub-gd, 211, 169, 66), .25); border-color: transparent; color: rgba(var(--ub-gl, 241, 211, 138), .6); }
+body > .rules-zone-target-panel.ep-zone-bar .rules-choice-options {
+  position: absolute !important; left: 50% !important; bottom: calc(100% + 16px) !important; top: auto !important; transform: translateX(-50%) !important; grid-area: auto !important;
+  width: max-content !important; max-width: min(1180px, calc(var(--ep-field-w, 100vw) - 24px), 96vw) !important; max-height: 56vh !important; overflow: auto !important;
+  display: flex !important; flex-direction: row !important; flex-wrap: wrap !important; align-items: flex-end !important; justify-content: center; gap: 14px; padding: 18px !important; margin: 0 !important;
+  background: rgba(var(--ub-pn, 20, 23, 36), .92) !important; border: 1px solid rgba(var(--ub-gd, 211, 169, 66), .3); border-radius: 14px; box-shadow: 0 18px 46px rgba(0, 0, 0, .5);
+}
+body > .rules-zone-target-panel.ep-zone-bar .rules-choice-card { width: clamp(90px, min(8vw, 15vh), 140px) !important; margin: 0 !important; padding: 0 !important; border: 0 !important; background: none !important; display: flex !important; flex-direction: column; align-items: center; gap: 6px; color: var(--ub-ink, #f5efdf); cursor: pointer; position: relative; }
+body > .rules-zone-target-panel.ep-zone-bar .rules-choice-card img { width: 100%; aspect-ratio: 5 / 7; object-fit: cover; border-radius: 9px; box-shadow: 0 8px 20px rgba(0, 0, 0, .55), 0 0 0 1px rgba(var(--ub-gd, 211, 169, 66), .45); }
+body > .rules-zone-target-panel.ep-zone-bar .rules-choice-card span { font: 600 14px/1.2 Georgia, "Times New Roman", serif; text-align: center; }
+body > .rules-zone-target-panel.ep-zone-bar .rules-choice-card.is-selected img { box-shadow: 0 0 0 3px var(--ub-gold-pale, #f1d38a), 0 0 22px rgba(var(--ub-gl, 241, 211, 138), .45); }
+body > .rules-zone-target-panel.ep-zone-bar .rules-choice-card.is-selected { transform: translateY(-6px); }
+body > .rules-zone-target-panel.ep-zone-bar .rules-choice-card.is-selected::after {
+  content: "\2713"; position: absolute; top: -10px; right: -10px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center;
+  background: var(--ub-gold-pale, #f1d38a); color: #1b1404; font: 700 15px/1 Georgia, "Times New Roman", serif;
+}
+@media (max-width: 900px), (max-height: 480px) {
+  body > .rules-zone-target-panel.ep-zone-bar .box { grid-template-columns: 34px minmax(0, 1fr) !important; grid-template-areas: "src copy" "actions actions" !important; row-gap: 6px; max-width: 96vw !important; }
+  body > .rules-zone-target-panel.ep-zone-bar .box > .rules-choice-source { width: 34px !important; }
+  body > .rules-zone-target-panel.ep-zone-bar .rules-zone-pick-actions { justify-content: flex-end; }
+  body > .rules-zone-target-panel.ep-zone-bar .rules-choice-card { width: clamp(52px, 15vh, 80px) !important; }
+  body > .rules-zone-target-panel.ep-zone-bar .rules-choice-card span { display: none; }
+  body > .rules-zone-target-panel.ep-zone-bar .rules-choice-options { max-width: 96vw !important; padding: 10px !important; gap: 8px; }
+}
+body > .rules-zone-target-panel.ep-zone-bar .rules-choice-card:hover { transform: translateY(-6px) !important; z-index: auto; }
+
+/* 153.1: while the zone-pick bar is open it replaces the ep-flow bar */
+body:has(> .rules-zone-target-panel.ep-zone-bar) #rulesBoardFlow.ep-flow .rules-floating-card,
+body:has(> .rules-zone-target-panel.ep-zone-bar) #rulesTargetArrow { display: none !important; }
+@media (max-height: 560px), (max-width: 700px) {
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles .rules-reorder-lane > small { font-size: 11px !important; line-height: 1.2 !important; letter-spacing: .04em; }
+}
+
+/* ------------------------------------------------------------ 153.2: relocation, one aligned row (to place | Interzone | under the deck) */
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions:has([data-rules-relocation-group]) {
+  --rl-w: clamp(64px, min(8.5vw, 17vh), 132px);
+  width: max-content !important; max-width: 96vw !important; min-height: 0 !important; height: auto !important; padding: 14px 20px 16px !important;
+  display: flex !important; flex-direction: column !important; align-items: stretch !important; gap: 12px !important;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] { display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; align-items: flex-start !important; gap: 16px !important; width: auto !important; margin: 0 !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] > strong { flex: 0 0 100%; font: 700 12px/1.2 var(--display-font, Georgia, serif); letter-spacing: .08em; text-transform: uppercase; color: var(--ub-ink, #f5efdf); }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] > .rules-reorder-lanes { display: contents !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-reorder-lane { display: flex !important; flex-direction: column !important; align-items: stretch !important; gap: 6px !important; min-width: 0; margin: 0 !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-reorder-lane > small {
+  display: flex !important; justify-content: space-between; align-items: center; gap: 10px; min-height: 0 !important; height: 18px; margin: 0 !important;
+  font: 700 12px/1 var(--display-font, Georgia, serif) !important; letter-spacing: .08em; text-transform: uppercase; white-space: nowrap; color: var(--ub-gold-pale, #f0d98f) !important;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-relocation-pool-lane > small { color: var(--ub-ink, #f5efdf) !important; opacity: .75; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-reorder-lane > small em { font-style: normal; color: var(--ub-ink, #f5efdf); opacity: .8; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-reorder-strip {
+  display: flex !important; flex-direction: row !important; flex-wrap: nowrap !important; align-items: center !important; justify-content: center !important; gap: 8px !important;
+  min-width: calc(var(--rl-w) * 2 + 26px) !important; width: auto !important; min-height: calc(var(--rl-w) * 1.4 + 12px) !important; height: auto !important;
+  padding: 5px 8px !important; margin: 0 !important; box-sizing: border-box;
+}
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-reorder-pool { border: 1px solid rgba(var(--ub-gd, 211, 169, 66), .18) !important; border-radius: 12px !important; background: rgba(0, 0, 0, .12) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-reorder-pool:empty { display: flex !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-reorder-strip.is-full { border-color: rgba(var(--ub-gd, 211, 169, 66), .2) !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-reorder-card { width: var(--rl-w) !important; flex: none !important; margin: 0 !important; }
+#gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-reorder-card img { width: 100%; aspect-ratio: 5 / 7; object-fit: cover; }
+@media (max-height: 560px), (max-width: 700px) {
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions:has([data-rules-relocation-group]) { --rl-w: clamp(44px, 14vh, 62px); padding: 8px 12px 10px !important; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] { gap: 8px !important; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-reorder-lane { gap: 4px !important; }
+  #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.ep-piles > #rulesChoiceOptions [data-rules-relocation-group] .rules-reorder-lane > small { font-size: 10px !important; height: 13px; }
+}

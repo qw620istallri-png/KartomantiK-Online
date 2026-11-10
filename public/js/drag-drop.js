@@ -637,6 +637,7 @@ function bindCardDragSource(el, ctx, { touchScroll = false } = {}) {
     if (touchScroll && event.pointerType === "touch") return;
     const control = event.target.closest("button, select");
     if (control && control !== el) return;
+    if (ctx.actingPlayerId && !beginSoloInteraction(ctx.actingPlayerId)) return;
     // the freshly drawn Recovery hand is not playable before it has landed
     if (ctx.fromZone === "hand" && handDrawLocked() && latestState?.rulesEngine?.enabled) return;
     event.preventDefault();
