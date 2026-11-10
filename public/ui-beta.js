@@ -13,6 +13,11 @@
   const CARD_W = 150;
   const CARD_H = 210;
   const RATIO = CARD_H / CARD_W;
+  // Compact battlefield cards ship by default. Keep a URL escape hatch for
+  // comparison and emergency rollback without changing saved game state.
+  const COMPACT_CARDS = !new URLSearchParams(location.search).has("full-cards");
+  const COMPACT_MANIFESTATION_RATIO = 566 / 500;
+  const COMPACT_WILL_RATIO = 520 / 500;
   const RING = ["phlegmatic", "vitreous", "melancholic", "capricious", "choleric"];
   const DOMINATES = {
     phlegmatic: ["vitreous", "capricious"],
@@ -701,18 +706,39 @@
     return { groups, info };
   }
 
+  // The compact battlefield keeps the physical identity of the printed card.
+  // A Manifestation played as a Will (or the reverse) therefore keeps its own crop.
+  function compactCardRatio(item) {
+    if (!COMPACT_CARDS || item?.isTokenCard || !item?.faceUp || !item?.cardId) return RATIO;
+    const type = cardsById.get(item.cardId)?.type;
+    if (type === "manifestation") return COMPACT_MANIFESTATION_RATIO;
+    if (type === "persistent_will" || type === "ephemeral_will") return COMPACT_WILL_RATIO;
+    return RATIO;
+  }
+
+  function groupCardRatio(entries, fallback = RATIO) {
+    if (!COMPACT_CARDS) return RATIO;
+    return Math.max(fallback, ...entries.map((entry) => compactCardRatio(entry.item)));
+  }
+
+  function itemRect(rect, item) {
+    const ratio = compactCardRatio(item);
+    const layoutRatio = rect.ratio || ratio;
+    return { ...rect, y: rect.y + Math.max(0, rect.w * (layoutRatio - ratio) / 2), ratio };
+  }
+
   // ------------------------------------------------------------ geometry
 
-  function fit(width, height, count, { maxW = 240, gap = 10, maxCols = 99 } = {}) {
-    let best = { cols: 1, w: 24 };
+  function fit(width, height, count, { maxW = 240, gap = 10, maxCols = 99, ratio = RATIO, balanced = false } = {}) {
+    let best = { cols: 1, rows: Math.max(count, 1), w: 24 };
     const n = Math.max(count, 1);
     for (let cols = 1; cols <= Math.min(n, maxCols); cols += 1) {
       const rows = Math.ceil(n / cols);
-      const w = Math.min((width - gap * (cols - 1)) / cols, ((height - gap * (rows - 1)) / rows) / RATIO, maxW);
-      if (w > best.w) best = { cols, w };
+      const w = Math.min((width - gap * (cols - 1)) / cols, ((height - gap * (rows - 1)) / rows) / ratio, maxW);
+      if (w > best.w || (balanced && w >= best.w * 0.92 && rows < best.rows)) best = { cols, rows, w };
     }
     best.w = Math.max(24, Math.floor(best.w));
-    return best;
+    return { ...best, ratio };
   }
 
   function interzoneCapacity(playerId) {
@@ -782,17 +808,19 @@
     applyTransform();
   }
 
-  // a screen rectangle (relative to the wrap) -> battlefield-local box for a
-  // 150x210 element scaled around its centre
-  function boxFor(x, y, w) {
+  // A screen rectangle -> battlefield-local box. Compact cards keep the same
+  // 150px design width but use a physical height derived from their printed type.
+  function boxFor(x, y, w, ratio = RATIO) {
     const k = w / CARD_W / zoomLevel;
+    const baseH = CARD_W * ratio;
     const lx = (x - panX) / zoomLevel;
     const ly = (y - panY) / zoomLevel;
     return {
       x: lx - (CARD_W / 2) * (1 - k),
-      y: ly - (CARD_H / 2) * (1 - k),
+      y: ly - (baseH / 2) * (1 - k),
       k,
-      screen: { x, y, w, h: w * RATIO },
+      baseH,
+      screen: { x, y, w, h: w * ratio },
     };
   }
 
@@ -814,6 +842,8 @@
     const available = bottom - top - labelH * 2 - 18;
     const wills = groups[side].will.length;
     const used = groups[side].interzone.length;
+    const izRatio = groupCardRatio(groups[side].interzone, COMPACT_CARDS ? COMPACT_MANIFESTATION_RATIO : RATIO);
+    const willRatio = groupCardRatio(groups[side].will, COMPACT_CARDS ? COMPACT_WILL_RATIO : RATIO);
     const fullCapacity = Math.max(player ? interzoneCapacity(player.id) : 3, used);
     // phone: the Interzone is sized for the cards it holds (one slot when empty),
     // not for every free slot, so the Wills keep the height (the label still
@@ -822,8 +852,8 @@
     const columnFit = (width, height, count, opts) => (G.phone && count > 1 && stackedFit(width, height, count, opts)) || fit(width, height, count, opts);
     // share the height so both zones keep cards as large as possible: the Wills
     // stay in one column (and the Interzone shrinks) before either doubles up
-    const izOpts = { maxW: Math.min(inner * 0.9, 170), gap: 8, maxCols: 2 };
-    const pzOpts = { maxW: Math.min(inner * 0.9, 150), gap: 8, maxCols: 2 };
+    const izOpts = { maxW: Math.min(inner * 0.9, 170), gap: 8, maxCols: 2, ratio: izRatio };
+    const pzOpts = { maxW: Math.min(inner * 0.9, 150), gap: 8, maxCols: 2, ratio: willRatio };
     let izShare = 0.82;
     if (wills) {
       let bestScore = -1;
@@ -843,8 +873,8 @@
     const pzFit = columnFit(inner, pzH, Math.max(wills, 1), pzOpts);
     return {
       column, capacity, fullCapacity, used, wills,
-      iz: { t: izTop, h: izH, fit: izFit, labelY: top },
-      pz: { t: pzTop, h: pzH, fit: pzFit, labelY: pzTop - labelH },
+      iz: { t: izTop, h: izH, fit: izFit, ratio: izRatio, labelY: top },
+      pz: { t: pzTop, h: pzH, fit: pzFit, ratio: willRatio, labelY: pzTop - labelH },
       divider: izTop + izH + 9,
     };
   }
@@ -862,22 +892,22 @@
   // cards overlapping down the zone: every card shows its top (name and art) above the
   // next one; the first card of the group (the First Manifestation) is the one in full view
   const CASCADE_STEP = 0.24;
-  function cascadePositions(area, count, maxW) {
-    const h = Math.min((area.b - area.t) / (1 + CASCADE_STEP * (count - 1)), maxW * RATIO, (area.r - area.l - 12) * RATIO);
-    const w = Math.max(24, Math.floor(h / RATIO));
-    const height = w * RATIO * (1 + CASCADE_STEP * (count - 1));
+  function cascadePositions(area, count, maxW, ratio = RATIO) {
+    const h = Math.min((area.b - area.t) / (1 + CASCADE_STEP * (count - 1)), maxW * ratio, (area.r - area.l - 12) * ratio);
+    const w = Math.max(24, Math.floor(h / ratio));
+    const height = w * ratio * (1 + CASCADE_STEP * (count - 1));
     const top = area.t + Math.max(0, (area.b - area.t - height) / 2);
     const left = area.l + (area.r - area.l - w) / 2;
     return Array.from({ length: count }, (_value, index) => {
       const level = count - 1 - index;
-      return { x: left, y: top + level * CASCADE_STEP * w * RATIO, w, cascade: true, layer: 2 + level };
+      return { x: left, y: top + level * CASCADE_STEP * w * ratio, w, ratio, cascade: true, layer: 2 + level };
     });
   }
-  function gridPositions(area, count, cardFit, { fromRight = false, gap = 10, centerY = true } = {}) {
+  function gridPositions(area, count, cardFit, { fromRight = false, gap = 10, centerY = true, ratio = cardFit.ratio || RATIO } = {}) {
     const cols = Math.min(cardFit.cols, Math.max(count, 1));
     const rows = Math.ceil(Math.max(count, 1) / cols);
     const w = cardFit.w;
-    const h = w * RATIO;
+    const h = w * ratio;
     const gridW = cols * w + (cols - 1) * gap;
     const gridH = rows * h + (rows - 1) * gap;
     const left = area.l + (area.r - area.l - gridW) / 2;
@@ -887,7 +917,7 @@
       const row = Math.floor(index / cols);
       const rawCol = index % cols;
       const col = fromRight ? cols - 1 - rawCol : rawCol;
-      out.push({ x: left + col * (w + gap), y: top + row * (h + gap), w });
+      out.push({ x: left + col * (w + gap), y: top + row * (h + gap), w, ratio });
     }
     return out;
   }
@@ -909,24 +939,52 @@
       const trap = players[side] ? traps[players[side].id] : null;
       const count = groups[side].confrontation.length + (trap ? 1 : 0);
       const width = area.r - area.l;
-      const maxW = Math.min(230, width * (G.phone ? 0.85 : 0.62));
-      const cardFit = fit(width - 12, area.b - area.t - 30, count, { maxW });
+      const sparse = count <= 2;
+      const densityCap = sparse ? 310 : count <= 4 ? 250 : 130;
+      const maxW = COMPACT_CARDS
+        ? Math.min(densityCap, width * (G.phone ? 0.9 : sparse ? 0.8 : 0.72))
+        : Math.min(230, width * (G.phone ? 0.85 : 0.62));
+      const zoneRatio = trap ? RATIO : groupCardRatio(groups[side].confrontation, COMPACT_CARDS ? COMPACT_MANIFESTATION_RATIO : RATIO);
+      const cardFit = fit(width - 12, area.b - area.t - 30, count, { maxW, ratio: zoneRatio, balanced: COMPACT_CARDS });
       zc[side] = { area, fit: cardFit, trap: null };
       const inner = { l: area.l, r: area.r, t: area.t + 22, b: area.b - 8 };
-      // phone: one under the other, then two columns, and only when even that makes
-      // them too small, a cascade (each card showing the top of the one before)
+      // Compact cards are meant to make every battlefield card readable at once.
+      // On a short phone viewport, prefer a tighter 2/3-column grid to the legacy
+      // cascade: the hand already claims the bottom band, so overlapping the
+      // remaining cards would hide both their art and their markers.
       let rects;
-      if (G.phone && count > 1) {
-        const stacked = stackedFit(width - 12, inner.b - inner.t, count, { maxW });
+      if (G.phone && COMPACT_CARDS && count > 1) {
+        const phoneGap = 5;
+        const phoneFitOptions = {
+          maxW,
+          gap: phoneGap,
+          ratio: zoneRatio,
+          balanced: true,
+        };
+        const threeColumnFit = fit(width - 4, inner.b - inner.t, count, { ...phoneFitOptions, maxCols: 3 });
+        const twoColumnFit = fit(width - 4, inner.b - inner.t, count, { ...phoneFitOptions, maxCols: 2 });
+        // Up to six cards, use as many as three rows before opening a third
+        // column. Very short screens may choose three columns sooner when two
+        // columns would make cards more than 10% smaller.
+        const phoneFit = count <= 6 && twoColumnFit.w >= threeColumnFit.w * 0.9
+          ? twoColumnFit
+          : threeColumnFit;
+        rects = gridPositions(inner, count, phoneFit, {
+          fromRight: side === "me",
+          gap: phoneGap,
+          ratio: zoneRatio,
+        });
+      } else if (G.phone && count > 1) {
+        const stacked = stackedFit(width - 12, inner.b - inner.t, count, { maxW, ratio: zoneRatio, balanced: COMPACT_CARDS });
         rects = stacked
-          ? gridPositions(inner, count, stacked, { fromRight: side === "me" })
-          : cascadePositions(inner, count, maxW);
+          ? gridPositions(inner, count, stacked, { fromRight: side === "me", ratio: zoneRatio })
+          : cascadePositions(inner, count, maxW, zoneRatio);
       } else {
-        rects = gridPositions(inner, count, cardFit, { fromRight: side === "me" });
+        rects = gridPositions(inner, count, cardFit, { fromRight: side === "me", ratio: zoneRatio });
       }
       rects.forEach((rect, index) => {
         const entry = groups[side].confrontation[index];
-        if (entry) slots.set(entry.item.id, { ...rect, zone: "confrontation", side });
+        if (entry) slots.set(entry.item.id, { ...itemRect(rect, entry.item), zone: "confrontation", side });
         else zc[side].trap = { ...rect, ...trap };
       });
     }
@@ -935,14 +993,14 @@
       const col = layoutInterzoneColumn(G, side, groups, players);
       columns[side] = col;
       const izArea = { l: col.column.l + 8, r: col.column.r - 8, t: col.iz.t, b: col.iz.t + col.iz.h };
-      col.slotRects = gridPositions(izArea, col.capacity, col.iz.fit, { gap: 8, centerY: false });
+      col.slotRects = gridPositions(izArea, col.capacity, col.iz.fit, { gap: 8, centerY: false, ratio: col.iz.ratio });
       groups[side].interzone.forEach((entry, index) => {
         const rect = col.slotRects[index] || col.slotRects[col.slotRects.length - 1];
-        slots.set(entry.item.id, { ...rect, zone: "interzone", side });
+        slots.set(entry.item.id, { ...itemRect(rect, entry.item), zone: "interzone", side });
       });
       const pzArea = { l: col.column.l + 8, r: col.column.r - 8, t: col.pz.t, b: col.pz.t + col.pz.h };
-      gridPositions(pzArea, groups[side].will.length, col.pz.fit, { gap: 8, centerY: false })
-        .forEach((rect, index) => slots.set(groups[side].will[index].item.id, { ...rect, zone: "will", side }));
+      gridPositions(pzArea, groups[side].will.length, col.pz.fit, { gap: 8, centerY: false, ratio: col.pz.ratio })
+        .forEach((rect, index) => slots.set(groups[side].will[index].item.id, { ...itemRect(rect, groups[side].will[index].item), zone: "will", side }));
     }
     // stalemate: a thin strip under the totals, or the open panel
     const staleCount = groups.stalemate.length;
@@ -963,9 +1021,10 @@
           const half = side === "me"
             ? { l: panel.l + 14, r: panel.cx - 7, t: rowsTop, b: panel.b - 14 }
             : { l: panel.cx + 7, r: panel.r - 14, t: rowsTop, b: panel.b - 14 };
-          const cardFit = fit(half.r - half.l, half.b - half.t - 20, halves[side].length, { maxW: clamp(G.W * 0.13, 100, 200), gap: 10 });
-          gridPositions({ ...half, t: half.t + 18 }, halves[side].length, cardFit, { centerY: false })
-            .forEach((rect, index) => slots.set(halves[side][index].item.id, { ...rect, zone: "stalemate", side, open: true }));
+          const staleRatio = groupCardRatio(halves[side]);
+          const cardFit = fit(half.r - half.l, half.b - half.t - 20, halves[side].length, { maxW: clamp(G.W * 0.13, 100, 200), gap: 10, ratio: staleRatio });
+          gridPositions({ ...half, t: half.t + 18 }, halves[side].length, cardFit, { centerY: false, ratio: staleRatio })
+            .forEach((rect, index) => slots.set(halves[side][index].item.id, { ...itemRect(rect, halves[side][index].item), zone: "stalemate", side, open: true }));
         }
       } else {
         const stripW = Math.min(640, (G.zcOpp.r - G.zcMe.l) * 0.96);
@@ -973,7 +1032,8 @@
         stale.strip = strip;
         stale.summaryW = Math.round(clamp(stripW * 0.4, 130, 220));
         const cardsW = Math.max(0, stripW - stale.summaryW - 84);
-        const w = Math.floor((strip.h - 16) / RATIO);
+        const staleRatio = groupCardRatio(groups.stalemate);
+        const w = Math.floor((strip.h - 16) / staleRatio);
         stale.max = Math.max(1, Math.floor(cardsW / (w + 4)));
         stale.w = w;
         const shown = groups.stalemate.slice(0, stale.max);
@@ -981,7 +1041,8 @@
         const start = strip.l + stale.summaryW + 24 + (cardsW - totalW) / 2;
         groups.stalemate.forEach((entry, index) => {
           const i = Math.min(index, shown.length - 1);
-          slots.set(entry.item.id, { x: start + i * (w + 4), y: strip.t + (strip.h - w * RATIO) / 2, w, zone: "stalemate", side: entry.side, strip: true, hiddenExtra: index >= shown.length });
+          const ratio = compactCardRatio(entry.item);
+          slots.set(entry.item.id, { x: start + i * (w + 4), y: strip.t + (strip.h - w * ratio) / 2, w, ratio, zone: "stalemate", side: entry.side, strip: true, hiddenExtra: index >= shown.length });
         });
       }
       // a stalemated card whose destination is being chosen leaves the strip:
@@ -993,13 +1054,14 @@
         // in my Confrontation Zone (my own cards there have already left), under the
         // choice banner (top: a third of the screen) so nothing covers it
         const w = Math.round(clamp(G.W * 0.09, 90, 150));
+        const ratio = compactCardRatio(destEntry.item);
         const bannerBottom = G.H / 3 + 90 - (G.wrapTop || 0);
         const y = Math.min(
-          Math.max(G.zcTop + 8, bannerBottom + 12, (G.zcTop + G.zcBottom) / 2 - (w * RATIO) / 2),
-          Math.max(G.zcTop + 8, G.zcBottom - w * RATIO - 8),
+          Math.max(G.zcTop + 8, bannerBottom + 12, (G.zcTop + G.zcBottom) / 2 - (w * ratio) / 2),
+          Math.max(G.zcTop + 8, G.zcBottom - w * ratio - 8),
         );
         const x = (G.zcMe.l + G.zcMe.r) / 2 - w / 2;
-        slots.set(destEntry.item.id, { x, y, w, zone: "stalemate", side: destEntry.side, focus: true });
+        slots.set(destEntry.item.id, { x, y, w, ratio, zone: "stalemate", side: destEntry.side, focus: true });
       }
     }
     // Float and other stacked cards: on top of their anchor, offset, floating
@@ -1016,19 +1078,19 @@
         const w = anchor.w * 0.92;
         slots.set(entry.item.id, {
           x: anchor.x + dir * anchor.w * 0.24 * n + (anchor.w - w) / 2,
-          y: anchor.y - anchor.w * RATIO * 0.1 * n,
-          w, zone: anchor.zone, side: anchor.side, floating: true, layer: 4 + n,
+          y: anchor.y - anchor.w * (anchor.ratio || RATIO) * 0.1 * n,
+          w, ratio: compactCardRatio(entry.item), zone: anchor.zone, side: anchor.side, floating: true, layer: 4 + n,
         });
         stackedResolved.push(entry);
         return false;
       });
     }
     pending.forEach((entry) => {
-      const fallback = { x: G.cx - 40, y: G.zcTop + 10, w: 80, zone: "confrontation", side: entry.side };
+      const fallback = { x: G.cx - 40, y: G.zcTop + 10, w: 80, ratio: compactCardRatio(entry.item), zone: "confrontation", side: entry.side };
       slots.set(entry.item.id, fallback);
     });
     const boxes = new Map();
-    slots.forEach((rect, id) => boxes.set(id, { ...boxFor(rect.x, rect.y, rect.w), meta: rect, info: info.get(id) }));
+    slots.forEach((rect, id) => boxes.set(id, { ...boxFor(rect.x, rect.y, rect.w, rect.ratio), meta: rect, info: info.get(id) }));
     local.geometry = { G, groups, players, zc, columns, stale, info };
     local.placement = boxes;
     return boxes;
@@ -1047,10 +1109,16 @@
   function decorateCard(el, item, box) {
     const meta = box.meta || {};
     el.style.scale = box.k.toFixed(4);
+    el.style.setProperty("--ub-card-base-height", `${box.baseH || CARD_H}px`);
     el.classList.add("ub-card", `ub-zone-${meta.zone || "field"}`, `ub-side-${meta.side || "me"}`);
+    if (COMPACT_CARDS && (meta.ratio || RATIO) !== RATIO) {
+      el.classList.add("ub-card-compact");
+      el.classList.add((meta.ratio || RATIO) === COMPACT_WILL_RATIO ? "ub-card-compact-will" : "ub-card-compact-manifestation");
+    }
     if (meta.floating) {
       el.classList.add("ub-floating");
       el.style.zIndex = String(meta.layer || 5);
+      el.insertAdjacentHTML("beforeend", `<span class="ub-float-badge" title="Float" aria-label="Float"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="7" width="12" height="13" rx="2"></rect><path d="M8 7V5.5A2.5 2.5 0 0 1 10.5 3H18a2 2 0 0 1 2 2v11.5a2.5 2.5 0 0 1-2.5 2.5H16"></path></svg></span>`);
     }
     if (meta.cascade) el.style.zIndex = String(meta.layer);
     if (meta.open) el.classList.add("ub-stale-open");
@@ -1119,7 +1187,7 @@
       // dropped onto a card of that zone: take its place in the order
       const hit = local.placement && [...local.placement.entries()].find(([id, box]) => (
         id !== item?.id && box.meta?.zone === zone && box.meta?.side === side
-        && x >= box.meta.x && x <= box.meta.x + box.meta.w && y >= box.meta.y && y <= box.meta.y + box.meta.w * RATIO
+        && x >= box.meta.x && x <= box.meta.x + box.meta.w && y >= box.meta.y && y <= box.meta.y + box.meta.w * (box.meta.ratio || RATIO)
       ));
       if (hit) {
         const target = list.findIndex((entry) => entry.item.id === hit[0]);
@@ -1147,7 +1215,7 @@
   function itemCenter(item) {
     const box = local.placement?.get(item.id);
     if (!box) return null;
-    return { x: box.x + CARD_W / 2, y: box.y + CARD_H / 2 };
+    return { x: box.x + CARD_W / 2, y: box.y + (box.baseH || CARD_H) / 2 };
   }
 
   // ------------------------------------------------------------ chrome
@@ -1729,7 +1797,7 @@
       const col = columns[side];
       setBox(node, { l: col.column.l, r: col.column.r, t: 0, b: G.H });
       const free = col.slotRects.slice(col.used).map((rect) => (
-        `<span class="ub-slot" style="left:${rect.x - col.column.l}px;top:${rect.y}px;width:${rect.w}px;height:${rect.w * RATIO}px">${esc(t("ubFreeSlot"))}</span>`
+        `<span class="ub-slot" style="left:${rect.x - col.column.l}px;top:${rect.y}px;width:${rect.w}px;height:${rect.w * (rect.ratio || RATIO)}px">${esc(t("ubFreeSlot"))}</span>`
       )).join("");
       node.innerHTML = `
         <span class="ub-zlab" style="top:${col.iz.labelY}px"><span data-fit="interzone">${esc(t("ubInterzone"))}</span><b>${col.used}/${col.fullCapacity}</b></span>
@@ -2310,6 +2378,7 @@
     build();
     localizeTable();
     screen.classList.add("ui-beta");
+    screen.classList.toggle("ub-compact-cards", COMPACT_CARDS);
     relocate();
     lockHandSize(true);
     applyTheme();
@@ -3425,6 +3494,7 @@
     fieldZone(item) { return active() ? classify(item, firstManifestationIds()).zone : null; },
     manualPlacement(item) { return inferZone(item?.x, item?.y); },
     decorateCard,
+    compactCardsEnabled() { return COMPACT_CARDS; },
     dropLogical,
     clearTouchDropPreview() {
       document.querySelectorAll(".ub-touch-zone-over").forEach(node => node.classList.remove("ub-touch-zone-over"));

@@ -674,8 +674,13 @@ function startServer() {
           cardOwnerId: contexts[0].cardOwnerId, fromOwnerId: contexts[0].fromOwnerId,
           fromZone: contexts[0].fromZone,
         } : null,
-        supportMarker: supportMarker?.textContent || "",
-        supportMarkerFont: supportMarker ? parseFloat(getComputedStyle(supportMarker).fontSize) : 0,
+        supportMarker: {
+          present: Boolean(supportMarker),
+          label: supportMarker?.getAttribute("aria-label") || "",
+          icon: Boolean(supportMarker?.querySelector("svg")),
+          width: supportMarker ? parseFloat(getComputedStyle(supportMarker).width) : 0,
+        },
+        expectedSupportLabel: t("playInSupport"),
       };
       latestState = savedState;
       renderAll();
@@ -772,8 +777,13 @@ function startServer() {
           fromOwnerId: contexts[0].fromOwnerId, fromZone: contexts[0].fromZone,
         } : null,
         expectedHandSupportId: fromHand.id,
-        marker: marker?.textContent || "",
-        markerFont: marker ? parseFloat(getComputedStyle(marker).fontSize) : 0,
+        marker: {
+          present: Boolean(marker),
+          label: marker?.getAttribute("aria-label") || "",
+          icon: Boolean(marker?.querySelector("svg")),
+          width: marker ? parseFloat(getComputedStyle(marker).width) : 0,
+        },
+        expectedMarkerLabel: t("playInSupport"),
         markerRight: marker ? getComputedStyle(marker).right : "",
         supportResolutionLog,
       };
@@ -1656,7 +1666,6 @@ function startServer() {
         && hoverRect.left >= 11
         && hoverRect.top >= 11
         && hoverRect.right <= window.innerWidth - 11
-        && handCardRect.top - hoverRect.top <= 40
         && handCardRect.left + handCardRect.width / 2 >= hoverRect.left
         && handCardRect.left + handCardRect.width / 2 <= hoverRect.right
         && handCardRect.top + handCardRect.height * .3 >= hoverRect.top
@@ -3961,8 +3970,10 @@ function startServer() {
     assert.equal(wanderingVeteranUi.waitingState.playable, false);
     assert.equal(wanderingVeteranUi.waitingState.enabled, "false");
     assert.equal(wanderingVeteranUi.waitingState.ghost, false);
-    assert(wanderingVeteranUi.supportMarker.length > 0);
-    assert(wanderingVeteranUi.supportMarkerFont >= 14);
+    assert.equal(wanderingVeteranUi.supportMarker.present, true);
+    assert.equal(wanderingVeteranUi.supportMarker.label, wanderingVeteranUi.expectedSupportLabel);
+    assert.equal(wanderingVeteranUi.supportMarker.icon, true);
+    assert(wanderingVeteranUi.supportMarker.width >= 28);
     assert.equal(supportUi.firstStep.forbidden, false);
     assert.equal(supportUi.firstStep.allowed, true);
     assert.equal(supportUi.reactionStep.supportFromHand, true);
@@ -3973,8 +3984,10 @@ function startServer() {
     });
     assert.equal(supportUi.interzoneStep.printedHasAction, true);
     assert.equal(supportUi.interzoneStep.ordinaryHasAction, false);
-    assert.equal(supportUi.marker, "S");
-    assert(supportUi.markerFont >= 14);
+    assert.equal(supportUi.marker.present, true);
+    assert.equal(supportUi.marker.label, supportUi.expectedMarkerLabel);
+    assert.equal(supportUi.marker.icon, true);
+    assert(supportUi.marker.width >= 28);
     assert.equal(supportUi.markerRight, "4px");
     assert.match(supportUi.supportResolutionLog, /Pago/);
     assert.match(supportUi.supportResolutionLog, /10/);

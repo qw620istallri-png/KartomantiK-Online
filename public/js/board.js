@@ -1196,6 +1196,32 @@ function playCardFlipReveal(el, item) {
   playCardImpactRing(el, tier, tone, hasEffect, delay + Math.round(duration * 0.72));
 }
 
+function compactBattlefieldCardKind(item) {
+  if (!window.uiBeta?.compactCardsEnabled?.() || item?.isTokenCard || !item?.faceUp || !item?.cardId) return null;
+  const type = cardsById.get(item.cardId)?.type;
+  if (type === "manifestation") return "manifestation";
+  if (type === "persistent_will" || type === "ephemeral_will") return "will";
+  return null;
+}
+
+function compactBattlefieldFaceMarkup(item, kind) {
+  const src = esc(cardImage(item.cardId));
+  const name = esc(cardName(item.cardId));
+  return `<span class="ub-compact-crop ub-compact-crop-top"><img src="${src}" alt="${name}" title="${name}"></span><span class="ub-compact-crop ub-compact-crop-bottom" aria-hidden="true"><img src="${src}" alt=""></span>`;
+}
+
+function compactBattlefieldIcon(kind) {
+  if (kind === "support") return `<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4.5" y="3.5" width="15" height="17" rx="2"></rect><path d="M8.5 12h7M12 8.5v7"></path></svg>`;
+  if (kind === "adamant") return `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v3c0 2.2-1.8 4-4 4h-2v3h4v4H6v-4h4v-3H8a4 4 0 0 1-4-4V5Z"></path><path d="M7 19h10"></path></svg>`;
+  return "";
+}
+
+function compactCardHasAdamant(item) {
+  if (!window.uiBeta?.compactCardsEnabled?.() || !item?.faceUp || !item?.cardId) return false;
+  const card = cardsById.get(item.cardId);
+  return /(?:^|\n)Adamant\./i.test(String(card?.originalEffect || card?.effect || ""));
+}
+
 function renderBattlefield() {
   $("#battlefieldBg").classList.toggle("rotated", mySeat() === 1);
   renderPiles();
@@ -1232,12 +1258,16 @@ function renderBattlefield() {
     );
     // a trusted observer gets the same "owner peek" as the actual owner
     const canPeek = isMine || isObserver || soloModeActive();
+    const compactKind = compactBattlefieldCardKind(item);
     let inner;
     if (item.isTokenCard) {
       inner = `<div class="bf-card-face" style="background:${esc(temperamentInk(item.temperament))}">${tokenCardFaceHtml(item)}</div>`;
     } else if (item.faceUp && item.cardId) {
       const rarity = normalizeRarity(item.rarity);
-      inner = `<div class="bf-card-face${rarityClassAttr(rarity)}" style="${rarityCosmosStyle(item.cardId)}">${raritySurfaceMarkup(rarity, `<img src="${esc(cardImage(item.cardId))}" alt="${esc(cardName(item.cardId))}" title="${esc(cardName(item.cardId))}">`)}</div>`;
+      const face = compactKind
+        ? compactBattlefieldFaceMarkup(item, compactKind)
+        : `<img src="${esc(cardImage(item.cardId))}" alt="${esc(cardName(item.cardId))}" title="${esc(cardName(item.cardId))}">`;
+      inner = `<div class="bf-card-face${compactKind ? ` ub-compact-card-face ub-compact-card-face-${compactKind}` : ""}${rarityClassAttr(rarity)}" style="${rarityCosmosStyle(item.cardId)}">${raritySurfaceMarkup(rarity, face)}</div>`;
     } else if (canPeek && item.cardId) {
       // the owner (or an observer) gets a faint, colour-tinted peek at a face-down card
       inner = `<div class="bf-card-face"><div class="back-face owner-peek"><img src="${esc(cardImage(item.cardId))}"></div></div>`;
@@ -1257,7 +1287,14 @@ function renderBattlefield() {
       controllerId,
       () => rulesActivateMarkerMarkup(item),
     );
-    el.innerHTML = `<div class="bf-card-inner" style="transform:rotate(${item.rotation || 0}deg)">${inner}${item.faceUp && item.cardId ? automationCoverageBadgeHtml(item.cardId) : ""}${rulesTemperamentMarkerMarkup(item, ongoingEffects)}${item.effectsDisabled ? `<span class="rules-effects-disabled-badge" title="${esc(t("rulesEffectsDisabled"))}" aria-label="${esc(t("rulesEffectsDisabled"))}">Ø</span>` : ""}${item.isCopy ? `<span class="copy-card-stamp">${esc(t("copyStamp"))}</span>` : ""}</div><div class="counters">${rulesCardCountersMarkup(item, ongoingEffects, printedPower)}</div>${rulesFieldZoneMarkerMarkup(item.fieldZone)}${rulesControllerMarkerMarkup(item)}${item.isSupport ? `<span class="rules-support-badge" title="${esc(t("playInSupport"))}" aria-label="${esc(t("playInSupport"))}">S</span>` : ""}${rulesEffectMarkerMarkup(ongoingEffects)}${activationMarkup}`;
+    const compactSupport = window.uiBeta?.compactCardsEnabled?.() && item.isSupport;
+    const supportMarkup = item.isSupport
+      ? `<span class="rules-support-badge" title="${esc(t("playInSupport"))}" aria-label="${esc(t("playInSupport"))}">${compactSupport ? compactBattlefieldIcon("support") : "S"}</span>`
+      : "";
+    const adamantMarkup = compactCardHasAdamant(item)
+      ? `<span class="ub-adamant-badge" title="Adamant" aria-label="Adamant">${compactBattlefieldIcon("adamant")}</span>`
+      : "";
+    el.innerHTML = `<div class="bf-card-inner" style="transform:rotate(${item.rotation || 0}deg)">${inner}${item.faceUp && item.cardId ? automationCoverageBadgeHtml(item.cardId) : ""}${rulesTemperamentMarkerMarkup(item, ongoingEffects)}${item.effectsDisabled ? `<span class="rules-effects-disabled-badge" title="${esc(t("rulesEffectsDisabled"))}" aria-label="${esc(t("rulesEffectsDisabled"))}">Ø</span>` : ""}${item.isCopy ? `<span class="copy-card-stamp">${esc(t("copyStamp"))}</span>` : ""}</div><div class="counters">${rulesCardCountersMarkup(item, ongoingEffects, printedPower)}</div>${rulesFieldZoneMarkerMarkup(item.fieldZone)}${rulesControllerMarkerMarkup(item)}${supportMarkup}${adamantMarkup}${rulesEffectMarkerMarkup(ongoingEffects)}${activationMarkup}`;
     if (!isObserver) bindCardDragSource(el, {
       kind: "battlefield",
       itemId: item.id,
