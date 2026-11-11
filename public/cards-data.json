@@ -11135,7 +11135,7 @@
     "cost": null,
     "power": 1,
     "powerCost": "{T}",
-    "points": -50,
+    "points": 0,
     "temperaments": [
       "transcendent"
     ],
