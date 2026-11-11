@@ -404,6 +404,8 @@ class CardsEffectsMixin:
                 return {"kind": result.get("kind"), "status": "no_hand_card"}
             if result.get("optional") and not action.get("optionalAccepted"):
                 return {"kind": result.get("kind"), "status": "declined"}
+            if result.get("destination") == "interzone" and not self.rules_hand_manifestation_fits_interzone(player_id):
+                return {"kind": result.get("kind"), "status": "interzone_full"}
             target = next((
                 entry for entry in action.get("targets") or [] if entry.get("kind") == "card"
             ), None)

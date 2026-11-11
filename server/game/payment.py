@@ -585,6 +585,11 @@ class PaymentMixin:
             if entry["zone"] == "hand":
                 if requested_counts[key] > hand.count(card_id) - reserved_source:
                     return "A selected Tribute card is no longer in your Hand.", None
+                if requested_counts[key] > (
+                    hand.count(card_id) - reserved_source
+                    - self.rules_stack_reserved_hand_count(player_id, card_id)
+                ):
+                    return "A card declared in the Stack cannot pay Tribute before it resolves.", None
             elif entry["zone"] == "receptacle":
                 if not any(
                     self.rules_item_controller_id(source) == player_id

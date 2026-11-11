@@ -640,6 +640,19 @@ class BoardMixin:
         )
         return (floating.get("stackedOn") or floating.get("id")) if floating else None
 
+    def rules_hand_manifestation_fits_interzone(self, player_id):
+        """True when at least one Manifestation from the Hand can still enter the Interzone."""
+        if self.rules_interzone_slot_count(player_id) < self.rules_interzone_capacity(player_id):
+            return True
+        return any(
+            self.rules_interzone_share_anchor(player_id, {
+                "id": None, "ownerId": player_id, "controllerId": player_id, "cardId": card_id,
+                "faceUp": True, "rotation": 0.0, "counters": {}, "stackedOn": None,
+            })
+            for card_id in self.players[player_id]["zones"]["hand"]
+            if self.card_rules.get(card_id, {}).get("type") == "manifestation"
+        )
+
     def rules_interzone_capacity(self, player_id):
         bonus = 0
         for item in self.rules_active_passive_sources("extend_interzone"):

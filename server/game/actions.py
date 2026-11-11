@@ -1521,7 +1521,7 @@ class ActionsMixin:
             >= self.rules_interzone_capacity(player_id)
         ):
             return "There is no space left in your Interzone.", None
-        if ability.get("loseScore") and self.rules_points_changes_prevented():
+        if ability.get("loseScore") and self.rules_point_cost_unpayable(player_id):
             return "Points cannot currently be gained or lost.", None
         counter_cost = ability.get("removeCountersFromSource")
         if isinstance(counter_cost, dict):

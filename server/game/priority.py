@@ -299,7 +299,7 @@ class PriorityMixin:
             hand.remove(source_card_id)
         if sum(self.card_rules.get(cid, {}).get("type") == "manifestation" for cid in hand) < int(ability.get("requireHandManifestations") or 0):
             return True
-        if ability.get("loseScore") and self.rules_points_changes_prevented():
+        if ability.get("loseScore") and self.rules_point_cost_unpayable(player_id):
             return True
         condition = str(ability.get("condition") or "")
         if condition == "controller_lost_confrontation":

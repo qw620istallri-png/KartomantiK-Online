@@ -436,10 +436,11 @@ class ZonesMixin:
             return "A card can only enter its owner's Deck, Hand, Limbo, or Exile."
         return None
 
-    def rules_source_reservation_error(self, container_id, zone, card_id):
-        if not self.rules_engine["enabled"] or zone != "hand":
-            return None
-        reserved = sum(
+    def rules_stack_reserved_hand_count(self, container_id, card_id):
+        """Copies of a Hand card declared on the Stack that must stay in Hand until they resolve."""
+        if not self.rules_engine["enabled"]:
+            return 0
+        return sum(
             1 for action in self.rules_engine["actionStack"]
             if action.get("controllerId") == container_id
             and not action.get("sourceOnStack")
@@ -447,6 +448,11 @@ class ZonesMixin:
             and (action.get("source") or {}).get("zone") == "hand"
             and (action.get("source") or {}).get("cardId") == card_id
         )
+
+    def rules_source_reservation_error(self, container_id, zone, card_id):
+        if not self.rules_engine["enabled"] or zone != "hand":
+            return None
+        reserved = self.rules_stack_reserved_hand_count(container_id, card_id)
         available = self.players.get(container_id, {}).get("zones", {}).get("hand", []).count(card_id)
         if reserved and available <= reserved:
             return "A card declared in the Stack cannot leave your Hand before it resolves."
@@ -673,6 +679,27 @@ class ZonesMixin:
             for card_id in player["zones"]["receptacle"]
         )
 
+    def rules_balance_blocks(self, player_id, delta):
+        """Balance of the Spirit: True when this player cannot take this point change."""
+        if not delta or player_id not in self.players:
+            return False
+        totals = {pid: self.rules_vessel_total(pid) for pid in self.players}
+        others = [pid for pid in self.players if pid != player_id]
+        mine = totals[player_id]
+        if delta > 0:
+            return all(mine > totals[pid] for pid in others)
+        return all(mine < totals[pid] for pid in others)
+
+    def rules_point_cost_unpayable(self, player_id):
+        """A Point cost cannot be paid while point changes are prevented or redirected away."""
+        if self.rules_points_changes_prevented():
+            return True
+        return bool(
+            self.rules_engine.get("enabled") and len(self.players) >= 2
+            and self.rules_active_passive_sources("balance_points")
+            and self.rules_balance_blocks(player_id, -1)
+        )
+
     def rules_balance_redirect(self, player_id, delta, observe=True):
         """Balance of the Spirit: the richest player cannot gain nor the poorest lose."""
         if (
@@ -682,15 +709,9 @@ class ZonesMixin:
             or not self.rules_active_passive_sources("balance_points")
         ):
             return False
-        totals = {pid: self.rules_vessel_total(pid) for pid in self.players}
-        others = [pid for pid in self.players if pid != player_id]
-        mine = totals[player_id]
-        if delta > 0:
-            blocked = all(mine > totals[pid] for pid in others)
-        else:
-            blocked = all(mine < totals[pid] for pid in others)
-        if not blocked:
+        if not self.rules_balance_blocks(player_id, delta):
             return False
+        others = [pid for pid in self.players if pid != player_id]
         self._balance_guard = True
         try:
             for pid in others:

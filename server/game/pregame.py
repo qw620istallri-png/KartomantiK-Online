@@ -48,7 +48,7 @@ class PregameMixin:
     def rules_opening_hand_is_playable(self, player_id):
         player = self.players.get(player_id)
         return bool(player and any(
-            self.rules_card_can_be_first_manifestation(card_id)
+            self.rules_card_can_be_first_manifestation(card_id, player_id)
             for card_id in player["zones"]["hand"]
         ))
 
