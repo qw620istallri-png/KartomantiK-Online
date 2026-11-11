@@ -720,7 +720,9 @@
   // The compact battlefield keeps the physical identity of the printed card.
   // A Manifestation played as a Will (or the reverse) therefore keeps its own crop.
   function compactCardRatio(item) {
-    if (!COMPACT_CARDS || item?.isTokenCard) return RATIO;
+    if (!COMPACT_CARDS) return RATIO;
+    // a token stands for a Manifestation: same footprint as a cropped one
+    if (item?.isTokenCard) return COMPACT_MANIFESTATION_RATIO;
     if (!item?.faceUp) return COMPACT_BACK_RATIO;
     if (!item?.cardId) return RATIO;
     const type = cardsById.get(item.cardId)?.type;
@@ -766,6 +768,12 @@
     return 3 + Math.max(0, bonus);
   }
 
+  // Height of the totals band: one row, or two when the essences go below.
+  function totalsBandHeight(stack, phone, compact) {
+    if (stack) return phone ? 58 : compact ? 76 : 88;
+    return phone ? 34 : compact ? 44 : 54;
+  }
+
   function computeGeometry(groups) {
     const wrap = document.getElementById("battlefieldWrap");
     const rect = wrap.getBoundingClientRect();
@@ -794,7 +802,10 @@
     const handPeek = (handCollapsed ? 48 : Math.round(handH * 0.62 + 18)) + handLift;
     const oppHandH = Math.round(phone ? clamp(H * 0.09, 30, 40) : clamp(H * 0.085, 46, 86));
     const square = !phone && W / Math.max(H, 1) <= 1.45;
-    const totalsH = phone ? 34 : square ? 76 : compact ? 44 : 54;
+    // the totals' essences go on a second row when the screen is squarish, or
+    // when they were measured running into the turn counter (fitTotals)
+    const stackTotals = square || Boolean(local.totalsFit?.stack);
+    const totalsH = totalsBandHeight(stackTotals, phone, compact);
     const stale = groups.stalemate.length > 0;
     const staleH = stale ? (phone ? 52 : 84) : 0;
     const bandTop = 0;
@@ -802,7 +813,7 @@
     const zcTop = bandTop + bandH;
     const zcBottom = Math.max(zcTop + 120, H - handPeek);
     return {
-      W, H, compact, phone, square, colW, fieldL, fieldR, cx, izW, gutW, handPeek, handLift, oppHandH, totalsH, staleH, bandH,
+      W, H, compact, phone, square, stackTotals, colW, fieldL, fieldR, cx, izW, gutW, handPeek, handLift, oppHandH, totalsH, staleH, bandH,
       zcTop, zcBottom, wrapLeft: rect.left, wrapTop: rect.top,
       izMe: { l: fieldL, r: fieldL + izW },
       izOpp: { l: fieldR - izW, r: fieldR },
@@ -1767,6 +1778,60 @@
     const turn = Number(latestState.phaseTracker?.turn || 1);
     totals.innerHTML = `${block("me", me)}<span class="ub-vs ub-turn" title="${esc(t("ubTurn"))} ${turn}"><small>${esc(t("ubTurn"))}</small><b>${turn}</b></span>${block("opp", opp)}`;
     bindEssenceQuickControls(totals);
+    fitTotals(G, totals);
+  }
+
+  // True when a points pill, the "+" essence button or a floating essence runs
+  // into the turn counter (it would cover it and stop taking clicks) or spills
+  // out of the band.
+  function totalsCrowded(totals) {
+    const turn = totals.querySelector(".ub-turn")?.getBoundingClientRect();
+    const band = totals.getBoundingClientRect();
+    if (!turn) return false;
+    const gap = 4;
+    // a name squeezed down to a couple of letters counts as crowded too
+    if ([...totals.querySelectorAll(".ub-who2")].some((name) => name.textContent.trim() && name.clientWidth < 56 && name.scrollWidth > name.clientWidth)) return true;
+    return [...totals.querySelectorAll(".ub-tside > .ub-total, .ub-tside > .essence-quick > .essence-quick-add, .ub-ess > *")].some((node) => {
+      const r = node.getBoundingClientRect();
+      if (!r.width) return false;
+      if (r.left < band.left - 1 || r.right > band.right + 1) return true;
+      return r.left < turn.right + gap && r.right > turn.left - gap && r.top < turn.bottom && r.bottom > turn.top;
+    });
+  }
+
+  // Picks the lightest totals layout where nothing covers the turn counter:
+  // one row, then essences on a second row, then a slimmer counter as well.
+  // The horizontal fit does not depend on the band's height, so each layout is
+  // tried in place (same frame, no paint); the board is laid out again only
+  // when the chosen row count differs from the one it was computed with.
+  function fitTotals(G, totals) {
+    const screen = document.getElementById("gameScreen");
+    const steps = G.square
+      ? [{ stack: true, tight: false }, { stack: true, tight: true }]
+      : G.phone
+        ? [{ stack: false, tight: false }, { stack: false, tight: true }, { stack: true, tight: true }]
+        : [{ stack: false, tight: false }, { stack: true, tight: false }, { stack: true, tight: true }];
+    const height = totals.style.height;
+    let chosen = steps[steps.length - 1];
+    for (const step of steps) {
+      screen.classList.toggle("ub-totals-stack", step.stack);
+      screen.classList.toggle("ub-turn-tight", step.tight);
+      totals.style.height = `${totalsBandHeight(step.stack, G.phone, G.compact)}px`;
+      if (!totalsCrowded(totals)) { chosen = step; break; }
+    }
+    screen.classList.toggle("ub-totals-stack", chosen.stack);
+    screen.classList.toggle("ub-turn-tight", chosen.tight);
+    totals.style.height = height;
+    totals.classList.toggle("ub-totals-crowded", totalsCrowded(totals));
+    local.totalsFit = chosen;
+    if (chosen.stack !== Boolean(G.stackTotals) && !local.totalsRefit) {
+      local.totalsRefit = requestAnimationFrame(() => {
+        local.totalsRefit = 0;
+        if (!active()) return;
+        renderBattlefield();
+        renderChrome();
+      });
+    }
   }
 
   function renderWheel(G, players) {
@@ -2384,6 +2449,7 @@
     const { G, players } = geometry;
     const screen = document.getElementById("gameScreen");
     screen.classList.toggle("ub-square", Boolean(G.square));
+    screen.classList.toggle("ub-totals-stack", Boolean(G.stackTotals));
     screen.style.setProperty("--ub-colW", `${G.colW}px`);
     document.documentElement.style.setProperty("--ub-colW-root", `${G.colW}px`);
     document.documentElement.style.setProperty("--ub-handPeek-root", `${G.handPeek}px`);

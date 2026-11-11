@@ -149,6 +149,8 @@
 .ub-tside { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .ub-tside.me { justify-content: flex-start; }
 .ub-tside.opp { flex-direction: row-reverse; justify-content: flex-start; }
+/* a long name shortens (ellipsis) rather than pushing the "+" onto the turn counter */
+.ub-tside > .ub-total { flex: 0 1 auto; }
 .ub-total { --tc: #8b8b8b; flex: none; min-width: 0; max-width: 100%; justify-content: center !important; display: flex; align-items: center; gap: 12px; padding: 6px 16px; border-radius: 12px; background: rgba(var(--ub-lo), .35); border: 2px solid rgba(var(--ub-hi), .08); transition: border-color 320ms, box-shadow 320ms, transform 320ms var(--ub-spring); }
 .ub-total.me { justify-content: flex-end; }
 .ub-total.opp { flex-direction: row-reverse; justify-content: flex-end; }
@@ -175,18 +177,32 @@
   .ub-ess img { width: 16px; height: 16px; }
 }
 
-/* Squarer tablet layouts have less horizontal room around the CZ totals. Put
-   floating Essences on their own row; geometry reserves this second row. */
-#gameScreen.ui-beta.ub-square .ub-tside { display: grid; grid-template-rows: auto auto; align-items: center; }
-#gameScreen.ui-beta.ub-square .ub-tside.me { grid-template-columns: minmax(0, auto) auto; }
-#gameScreen.ui-beta.ub-square .ub-tside.opp { grid-template-columns: auto minmax(0, auto); }
-#gameScreen.ui-beta.ub-square .ub-tside.me > .ub-total { grid-column: 1; grid-row: 1; }
-#gameScreen.ui-beta.ub-square .ub-tside.me > .essence-quick { grid-column: 2; grid-row: 1; }
-#gameScreen.ui-beta.ub-square .ub-tside.opp > .ub-total { grid-column: 2; grid-row: 1; }
-#gameScreen.ui-beta.ub-square .ub-tside.opp > .essence-quick { grid-column: 1; grid-row: 1; }
-#gameScreen.ui-beta.ub-square .ub-tside > .ub-ess { grid-column: 1 / -1; grid-row: 2; }
-#gameScreen.ui-beta.ub-square .ub-tside.me > .ub-ess { justify-content: flex-start; }
-#gameScreen.ui-beta.ub-square .ub-tside.opp > .ub-ess { justify-content: flex-end; }
+/* Squarer layouts, or any screen where the totals were measured running into
+   the turn counter (fitTotals in ui-beta.js), put floating Essences on their
+   own row; geometry reserves this second row. */
+#gameScreen.ui-beta.ub-totals-stack .ub-tside { display: grid; grid-template-rows: auto auto; align-items: center; }
+#gameScreen.ui-beta.ub-totals-stack .ub-tside.me { grid-template-columns: minmax(0, max-content) max-content; justify-content: start; }
+#gameScreen.ui-beta.ub-totals-stack .ub-tside.opp { grid-template-columns: max-content minmax(0, max-content); justify-content: end; }
+#gameScreen.ui-beta.ub-totals-stack .ub-tside > .essence-quick { justify-self: center; }
+#gameScreen.ui-beta.ub-totals-stack .ub-tside.me > .ub-total { grid-column: 1; grid-row: 1; }
+#gameScreen.ui-beta.ub-totals-stack .ub-tside.me > .essence-quick { grid-column: 2; grid-row: 1; }
+#gameScreen.ui-beta.ub-totals-stack .ub-tside.opp > .ub-total { grid-column: 2; grid-row: 1; }
+#gameScreen.ui-beta.ub-totals-stack .ub-tside.opp > .essence-quick { grid-column: 1; grid-row: 1; }
+#gameScreen.ui-beta.ub-totals-stack .ub-tside > .ub-ess { grid-column: 1 / -1; grid-row: 2; contain: inline-size; min-width: 0; }
+#gameScreen.ui-beta.ub-totals-stack .ub-tside.me > .ub-ess { justify-content: flex-start; }
+#gameScreen.ui-beta.ub-totals-stack .ub-tside.opp > .ub-ess { justify-content: flex-end; }
+/* the counter lines up with the points pills, leaving the essence row free */
+#gameScreen.ui-beta.ub-totals-stack .ub-totals { align-items: start; }
+#gameScreen.ui-beta.ub-totals-stack .ub-totals > .ub-tside { align-self: stretch; align-content: start; }
+/* still too tight: the counter drops its label and keeps the number */
+#gameScreen.ui-beta.ub-turn-tight .ub-turn { padding: 4px 10px; }
+#gameScreen.ui-beta.ub-turn-tight .ub-turn small { display: none; }
+#gameScreen.ui-beta.ub-turn-tight .ub-totals { gap: 6px; }
+#gameScreen.ui-beta.ub-turn-tight .ub-tside { gap: 4px; }
+#gameScreen.ui-beta.ub-turn-tight .ub-ess { gap: 2px; }
+/* last resort: nothing may hide the turn counter or the essences' clicks */
+.ub-totals .ub-turn { position: relative; z-index: 1; }
+.ub-totals .ub-tside > .essence-quick, .ub-totals .ub-ess { position: relative; z-index: 2; }
 @keyframes ub-pop { from { opacity: 0; transform: scale(.96); } }
 
 /* priority wheel: centred on the midline, icons only */
