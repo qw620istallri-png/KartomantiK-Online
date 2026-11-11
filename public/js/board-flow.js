@@ -49,6 +49,14 @@ function clearRulesBoardTargets() {
   if (path) path.setAttribute("d", "");
 }
 
+// Closing a flow ends the solo interaction (back to Player 1). A choice that
+// opens a new flow must be built for its own player, or the targets of
+// Player 2's card are read from Player 1's side (Zombieswing in the Limbo).
+function reopenRulesBoardFlowFor(choice) {
+  closeRulesBoardFlow();
+  if (choice?.playerId && soloControlsPlayer(choice.playerId)) beginSoloInteraction(choice.playerId);
+}
+
 function closeRulesBoardFlow() {
   clearTimeout(rulesFlowFlipTimer);
   rulesFlowFlipTimer = null;
@@ -104,7 +112,7 @@ function syncRulesChainBoardFlow() {
     return;
   }
   if (pendingRulesBoardFlow?.mode === "chain" && pendingRulesBoardFlow.choiceId === choice.id) return;
-  closeRulesBoardFlow();
+  reopenRulesBoardFlowFor(choice);
   const source = { cardId: choice.sourceCardId, zone: "battlefield" };
   pendingRulesBoardFlow = {
     mode: "chain",
@@ -150,7 +158,7 @@ function syncRulesStackPaymentBoardFlow() {
     return;
   }
   if (pendingRulesBoardFlow?.mode === "stack_payment" && pendingRulesBoardFlow.choiceId === choice.id) return;
-  closeRulesBoardFlow();
+  reopenRulesBoardFlowFor(choice);
   const source = { cardId: choice.targetCardId || choice.relatedCardId || choice.sourceCardId, zone: "stack" };
   const encodedAbility = { tribute: choice.payment };
   const paymentDraft = rulesActionPaymentDraft(
@@ -199,7 +207,7 @@ function syncRulesTriggerTargetBoardFlow() {
     pendingRulesBoardFlow?.mode === "trigger_target"
     && pendingRulesBoardFlow.choiceId === choice.id
   ) return;
-  closeRulesBoardFlow();
+  reopenRulesBoardFlowFor(choice);
   const encodedAbility = {
     targets: choice.targetRules || { min: 0, max: 0 },
   };
@@ -236,7 +244,7 @@ function syncRulesStackCopyBoardFlow() {
     return;
   }
   if (pendingRulesBoardFlow?.mode === "stack_copy_target" && pendingRulesBoardFlow.choiceId === choice.id) return;
-  closeRulesBoardFlow();
+  reopenRulesBoardFlowFor(choice);
   const encodedAbility = { targets: choice.targetRules || { min: 0, max: 0 } };
   pendingRulesBoardFlow = {
     mode: "stack_copy_target",
