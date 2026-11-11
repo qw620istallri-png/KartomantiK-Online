@@ -1445,7 +1445,15 @@ function renderBattlefield() {
       }
       if (item.faceUp) items.push({ label: t("copyCard"), onSelect: () => send({ type: "copy_card", itemId: item.id }) });
       items.push({ separator: true });
-      if (isMine) items.push({ label: t("flip"), onSelect: () => send({ type: "flip_card", itemId: item.id }), highlight: !item.faceUp });
+      if (isMine) items.push({
+        label: t("flip"),
+        onSelect: () => send({
+          type: "flip_card",
+          itemId: item.id,
+          ...(soloControlsPlayer(controllerId) ? { actingPlayerId: controllerId } : {}),
+        }),
+        highlight: !item.faceUp,
+      });
       items.push({ label: t("exhaust"), onSelect: () => send({ type: "move_battlefield_item", itemId: item.id, x: item.x, y: item.y, rotation: item.rotation ? 0 : 90 }) });
       if (
         isMine

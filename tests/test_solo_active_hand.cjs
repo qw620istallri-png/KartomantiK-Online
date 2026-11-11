@@ -147,6 +147,7 @@ const mime = {
         });
       }
       const topHover = await page.locator(".hand-card-hover-clone").boundingBox();
+      const topSourceOpacity = await topCard.evaluate((element) => getComputedStyle(element).opacity);
       await topCard.dispatchEvent("mouseleave");
       await page.waitForTimeout(220);
 
@@ -167,6 +168,70 @@ const mime = {
         window.__sent.find((entry) => entry.type === "place_card") || null
       ));
 
+      await page.evaluate(() => {
+        const p2CardId = latestState.players["solo:p2"].zones.hand.cards[0];
+        latestState.rulesEngine.enabled = false;
+        latestState.rulesEngine.priorityPlayerId = null;
+        latestState.phaseTracker.passedPlayerIds = [];
+        latestState.battlefield = [{
+          id: "solo-p2-field",
+          cardId: p2CardId,
+          ownerId: "solo:p2",
+          controllerId: "solo:p2",
+          faceUp: true,
+          fieldZone: "confrontation",
+          x: 900,
+          y: 400,
+          rotation: 0,
+          counters: { power: 2, tempCounter: -1 },
+          stackedOn: null,
+        }];
+        window.__sent = [];
+        endSoloInteraction();
+        renderAll();
+      });
+      await page.waitForTimeout(500);
+
+      const expandButton = page.locator("[data-ub-solo-toggle-hand]");
+      const expandButtonCount = await expandButton.count();
+      let expandedHand = null;
+      if (expandButtonCount) {
+        await expandButton.click();
+        await page.waitForTimeout(260);
+        const expandedTopCard = await page.locator("#opponentHandFan [data-opponent-hand-card]").boundingBox();
+        const activeBottomCard = await page.locator("#myHandTray [data-hand-card]").boundingBox();
+        expandedHand = {
+          pressed: await expandButton.getAttribute("aria-pressed"),
+          classApplied: await page.locator("#opponentHandFan").evaluate((element) => element.classList.contains("solo-hand-expanded")),
+          heightRatio: expandedTopCard.height / activeBottomCard.height,
+        };
+      }
+
+      const manualCounters = await page.locator('.bf-card[data-item-id="solo-p2-field"] .bf-counter:not(.bf-gem-essence)').evaluateAll((elements) => (
+        elements.map((element) => {
+          const style = getComputedStyle(element);
+          return {
+            background: style.backgroundColor,
+            borderColor: style.borderTopColor,
+            borderRadius: style.borderRadius,
+          };
+        })
+      ));
+      if (qaDir) {
+        await page.screenshot({
+          path: path.join(qaDir, `solo-p2-expanded-manual-${viewport.width}x${viewport.height}.png`),
+        });
+      }
+      await page.locator('.bf-card[data-item-id="solo-p2-field"]').dispatchEvent("contextmenu", {
+        button: 2,
+        clientX: 700,
+        clientY: 300,
+      });
+      await page.locator(".ctx-menu button").filter({ hasText: "Retourner" }).click();
+      const flip = await page.evaluate(() => (
+        window.__sent.find((entry) => entry.type === "flip_card") || null
+      ));
+
       assert.equal(setup.actorAfterRender, "solo:p1");
       assert.equal(setup.topActive, true);
       assert.equal(setup.bottomInactive, true);
@@ -176,9 +241,21 @@ const mime = {
       assert.ok(topHover.y < viewport.height / 2, `P2 hover opened too low at ${topHover.y}`);
       assert.ok(topHover.height / bottomHover.height > 0.85, `P2 hover was too small: ${topHover.height}/${bottomHover.height}`);
       assert.ok(topHover.height / bottomHover.height < 1.15, `P2 hover was too large: ${topHover.height}/${bottomHover.height}`);
+      assert.equal(topSourceOpacity, "0");
       assert.equal(drag?.actingPlayerId, "solo:p2");
       assert.equal(drag?.cardId, setup.p2CardId);
       assert.equal(drag?.faceUp, false);
+      assert.equal(expandButtonCount, 1);
+      assert.deepEqual(expandedHand && {
+        pressed: expandedHand.pressed,
+        classApplied: expandedHand.classApplied,
+      }, { pressed: "true", classApplied: true });
+      assert.ok(expandedHand.heightRatio > 0.9 && expandedHand.heightRatio < 1.1, `Expanded P2/P1 height ratio was ${expandedHand.heightRatio}`);
+      assert.equal(manualCounters.length, 2);
+      assert.ok(manualCounters.every((counter) => counter.background === "rgb(8, 11, 15)"), JSON.stringify(manualCounters));
+      assert.ok(manualCounters.every((counter) => counter.borderRadius === "999px"), JSON.stringify(manualCounters));
+      assert.notEqual(manualCounters[0].borderColor, manualCounters[1].borderColor);
+      assert.equal(flip?.actingPlayerId, "solo:p2");
       assert.deepEqual(errors, []);
       await page.close();
     }

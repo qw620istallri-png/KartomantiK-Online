@@ -297,6 +297,31 @@
 #gameScreen.ui-beta.ub-compact-cards .bf-card .ub-first-badge { --ub-marker-tone:#f1cb62; --ub-marker-ink:#ffeaa6; }
 #gameScreen.ui-beta.ub-compact-cards .bf-card:has(.ub-first-badge) :is(.rules-support-badge,.ub-float-badge,.ub-adamant-badge) { top: calc(8px + var(--ub-marker-size,21px)); }
 #gameScreen.ui-beta.ub-compact-cards .bf-card:has(.rules-support-badge) .ub-adamant-badge { top: calc(8px + var(--ub-marker-size,21px)); }
+#gameScreen.ui-beta.ub-compact-cards .bf-card .counters {
+  bottom: calc(var(--ub-marker-size, 21px) * -.42);
+  gap: 3px;
+  z-index: 16;
+}
+#gameScreen.ui-beta.ub-compact-cards .bf-card.is-exhausted .counters {
+  bottom: 14px;
+}
+#gameScreen.ui-beta.ub-compact-cards .bf-card .bf-counter:not(.bf-gem-essence) {
+  width: auto;
+  min-width: calc(var(--ub-marker-size, 21px) + 8px);
+  height: var(--ub-marker-size, 21px);
+  padding: 0 5px;
+  border: 1.5px solid #d3a942;
+  border-radius: 999px;
+  background: rgb(8 11 15);
+  color: #fff;
+  font-size: clamp(9px, calc(var(--ub-marker-size, 21px) - 9px), 13px);
+  font-variant-numeric: tabular-nums;
+  box-shadow: 0 3px 8px #000b, 0 0 0 1px rgb(255 255 255 / .07);
+}
+#gameScreen.ui-beta.ub-compact-cards .bf-card .bf-counter-temp:not(.bf-gem-essence) {
+  border-color: #5aa9c9;
+  color: #dff8ff;
+}
 
 /* End-of-confrontation holds wait on screen while the winner chooses a
    destination. Rebuild their compact face exactly like the live card instead
@@ -348,6 +373,19 @@
 #gameScreen.ui-beta .opponent-hand-fan.solo-hand-fan .opponent-hand-card:focus-visible {
   transform: translateX(calc(-50% + var(--fan-x) * .9)) translateY(18%) rotate(0deg) scale(2);
 }
+#gameScreen.ui-beta .opponent-hand-card.ub-hover-src {
+  opacity: 0;
+  transition: none;
+}
+#gameScreen.ui-beta .opponent-hand-fan.solo-hand-expanded {
+  z-index: 75;
+  opacity: 1;
+  filter: none;
+  transform: translateX(-50%) translateY(8px) scale(1);
+}
+#gameScreen.ui-beta .opponent-hand-fan.solo-hand-expanded .opponent-hand-card {
+  --ub-back-w: calc(var(--hand-card-h, 170px) * .716);
+}
 .ub-solo-controls {
   display: inline-flex;
   align-items: center;
@@ -369,6 +407,11 @@
 .ub-solo-controls button:hover,
 .ub-solo-controls button:focus-visible {
   background: color-mix(in srgb, var(--pc) 38%, var(--ub-panel));
+}
+.ub-solo-controls button[aria-pressed="true"] {
+  border-color: var(--ub-gold-pale);
+  background: color-mix(in srgb, var(--pc) 48%, var(--ub-panel));
+  color: var(--ub-gold-pale);
 }
 .ub-solo-controls svg {
   width: 14px;
@@ -909,6 +952,11 @@ body:has(#gameScreen.ui-beta:not(.hidden)) { overscroll-behavior: none; }
 #gameScreen.ui-beta.ub-phone #ubPlayerLogBtn { display: none; }
 #gameScreen.ui-beta.ub-phone .ub-tabs button { padding: 4px 4px; font-size: 10px; }
 #gameScreen.ui-beta.ub-phone .ub-oppbar { gap: 4px; overflow: hidden; }
+#gameScreen.ui-beta.ub-phone .ub-solo-controls { flex: none; gap: 2px; }
+#gameScreen.ui-beta.ub-phone .ub-solo-controls button { width: 21px; height: 21px; border-radius: 6px; }
+#gameScreen.ui-beta.ub-phone .ub-solo-controls svg { width: 12px; height: 12px; }
+#gameScreen.ui-beta.ub-phone #ubWhoOpp .ub-chip { padding-inline: 4px; }
+#gameScreen.ui-beta.ub-phone #ubWhoOpp .ub-chip .hand-stack-icon { display: none; }
 #gameScreen.ui-beta.ub-phone .ub-oppbar .mini { font-size: 8px; }
 #gameScreen.ui-beta.ub-phone .ub-oppbar .mini b { font-size: 11px; }
 #gameScreen.ui-beta.ub-phone .ub-oppbar .pts { font-size: 13px; }

@@ -378,7 +378,7 @@ const mime = {
         target: "Deck du joueur P2",
         closed: true,
       });
-      assert.equal(result.panelControls, 3);
+      assert.equal(result.panelControls, 4);
       assert.deepEqual(result.pregameButtons.map(({ playerId, label }) => ({ playerId, label })), [
         { playerId: "solo:p1", label: "Importer un deck" },
         { playerId: "solo:p2", label: "Importer un deck" },

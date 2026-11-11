@@ -104,6 +104,8 @@
     ubHandCards: "cartes en main",
     ubPhaseWaiting: "Attente…",
     ubFirstManifestation: "Première Manifestation",
+    ubExpandOppHand: "Agrandir la main de P2",
+    ubCollapseOppHand: "Réduire la main de P2",
   });
   Object.assign(ui.en, {
     ubTurn: "Turn",
@@ -179,6 +181,8 @@
     ubHandCards: "cards in hand",
     ubPhaseWaiting: "Waiting…",
     ubFirstManifestation: "First Manifestation",
+    ubExpandOppHand: "Enlarge P2 hand",
+    ubCollapseOppHand: "Reduce P2 hand",
   });
   Object.assign(ui.it, {
     ubTurn: "Turno",
@@ -254,6 +258,8 @@
     ubHandCards: "carte in mano",
     ubPhaseWaiting: "Attesa…",
     ubFirstManifestation: "Prima Manifestazione",
+    ubExpandOppHand: "Ingrandisci la mano di P2",
+    ubCollapseOppHand: "Riduci la mano di P2",
   });
 
   const ICONS = {
@@ -282,6 +288,7 @@
     exile: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="m6.5 6.5 11 11"/></svg>',
     vessel: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h8M9 3v4l-4 6a6 6 0 0 0 5 8h4a6 6 0 0 0 5-8l-4-6V3"/></svg>',
     eye: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12Z"/><circle cx="12" cy="12" r="2.6"/></svg>',
+    expand: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M9 20H4v-5M15 20h5v-5"/></svg>',
   };
 
   const local = {
@@ -312,6 +319,7 @@
     inGame: false,
     longPress: null,
     swallowMenuUntil: 0,
+    soloHandExpanded: false,
   };
 
   const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
@@ -2026,6 +2034,7 @@
             <button type="button" data-ub-solo-draw-one="${esc(player.id)}" title="${esc(t("handDrawOneBtn"))}">+1</button>
             <button type="button" data-ub-solo-draw-limit="${esc(player.id)}" title="${esc(t("handDrawHandBtn"))}">↥</button>
             <button type="button" data-ub-solo-edit-deck="${esc(player.id)}" title="${esc(t("editDeck"))}">${ICONS.deck}</button>
+            <button type="button" data-ub-solo-toggle-hand aria-pressed="${String(local.soloHandExpanded)}" title="${esc(t(local.soloHandExpanded ? "ubCollapseOppHand" : "ubExpandOppHand"))}">${ICONS.expand}</button>
           </span>`
         : "";
       node.innerHTML = `<span class="ub-dot" title="${esc(priorityId === player.id ? t("ubPriority") : "")}"></span><span class="ub-name" title="${esc(player.name)}">${esc(player.name)}</span>${soloControls}${passBadge}${activity}${handChip}${eye}`;
@@ -2059,6 +2068,25 @@
         openImportDeckPanel();
       };
     });
+    const syncSoloHandExpansion = () => {
+      if (!soloModeActive()) local.soloHandExpanded = false;
+      const expanded = soloModeActive() && local.soloHandExpanded;
+      document.getElementById("opponentHandFan")?.classList.toggle("solo-hand-expanded", expanded);
+      const button = document.querySelector("[data-ub-solo-toggle-hand]");
+      if (!button) return;
+      const label = t(expanded ? "ubCollapseOppHand" : "ubExpandOppHand");
+      button.setAttribute("aria-pressed", String(expanded));
+      button.setAttribute("aria-label", label);
+      button.title = label;
+    };
+    document.querySelectorAll("[data-ub-solo-toggle-hand]").forEach((button) => {
+      button.onclick = (event) => {
+        event.stopPropagation();
+        local.soloHandExpanded = !local.soloHandExpanded;
+        syncSoloHandExpansion();
+      };
+    });
+    syncSoloHandExpansion();
   }
 
   // player icons on each side of the opponent's hand: priority / passed state,
