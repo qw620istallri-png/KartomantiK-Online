@@ -284,14 +284,21 @@
 }
 #gameScreen.ui-beta.ub-compact-cards .bf-card.ub-card-compact-back .back-face::before { display: none; }
 #gameScreen.ui-beta.ub-compact-cards .bf-card.ub-card-compact-back .back-face.owner-peek img { opacity: .18; }
-#gameScreen.ui-beta.ub-compact-cards .ub-compact-card-face-manifestation { --ub-crop-top: 75.1%; --ub-crop-bottom: 24.9%; }
-#gameScreen.ui-beta.ub-compact-cards .ub-compact-card-face-will { --ub-crop-top: 89.42%; --ub-crop-bottom: 10.58%; }
-#gameScreen.ui-beta.ub-compact-cards .ub-compact-crop { position: absolute; left: 0; z-index: 0; display: block; width: 100%; overflow: hidden; }
-#gameScreen.ui-beta.ub-compact-cards .ub-compact-crop-top { top: 0; height: var(--ub-crop-top); }
-#gameScreen.ui-beta.ub-compact-cards .ub-compact-crop-bottom { bottom: 0; height: var(--ub-crop-bottom); }
-#gameScreen.ui-beta.ub-compact-cards .ub-compact-crop img { position: absolute; left: 0; display: block; width: 100%; max-width: none; height: auto; object-fit: initial; }
-#gameScreen.ui-beta.ub-compact-cards .ub-compact-crop-top img { top: 0; }
-#gameScreen.ui-beta.ub-compact-cards .ub-compact-crop-bottom img { bottom: 0; }
+/* Compact cut. Each face shows two slices of the printed card: the top slice
+   (title and art) from --tf to --tt, the bottom slice (footer) from --bf to
+   --bt, all in % of the printed card's height. The top slice lies 1px over the
+   bottom one. Values come from ui-beta.js (COMPACT_CROP, crop tuner) through
+   the --ub-crop-* variables on :root; the printed card is 1.4x as tall as wide,
+   hence the 1.4cqw per %. */
+.ub-compact-card-face-manifestation { --tf: var(--ub-crop-m-tf, 0); --tt: var(--ub-crop-m-tt, 59.3); --bf: var(--ub-crop-m-bf, 79.6); --bt: var(--ub-crop-m-bt, 100); }
+.ub-compact-card-face-will { --tf: var(--ub-crop-w-tf, 0); --tt: var(--ub-crop-w-tt, 66.2); --bf: var(--ub-crop-w-bf, 92.1); --bt: var(--ub-crop-w-bt, 100); }
+:is(#gameScreen.ui-beta.ub-compact-cards, .rules-vfx-hold.ub-compact-hold, .ub-crop-tuner) .ub-compact-card-face { position: relative; isolation: isolate; container-type: inline-size; overflow: hidden; background: var(--carbon, #171714); }
+:is(#gameScreen.ui-beta.ub-compact-cards, .rules-vfx-hold.ub-compact-hold, .ub-crop-tuner) .ub-compact-crop { position: absolute; left: 0; z-index: 0; display: block; width: 100%; overflow: hidden; }
+:is(#gameScreen.ui-beta.ub-compact-cards, .rules-vfx-hold.ub-compact-hold, .ub-crop-tuner) .ub-compact-crop-top { top: 0; z-index: 1; height: calc((var(--tt) - var(--tf)) * 1.4cqw + 1px); }
+:is(#gameScreen.ui-beta.ub-compact-cards, .rules-vfx-hold.ub-compact-hold, .ub-crop-tuner) .ub-compact-crop-bottom { bottom: 0; height: calc((var(--bt) - var(--bf)) * 1.4cqw); }
+:is(#gameScreen.ui-beta.ub-compact-cards, .rules-vfx-hold.ub-compact-hold, .ub-crop-tuner) .ub-compact-crop img { position: absolute; left: 0; bottom: auto; display: block; width: 100%; max-width: none; height: 140cqw; object-fit: fill; }
+:is(#gameScreen.ui-beta.ub-compact-cards, .rules-vfx-hold.ub-compact-hold, .ub-crop-tuner) .ub-compact-crop-top img { top: calc(var(--tf) * -1.4cqw); }
+:is(#gameScreen.ui-beta.ub-compact-cards, .rules-vfx-hold.ub-compact-hold, .ub-crop-tuner) .ub-compact-crop-bottom img { top: calc(var(--bf) * -1.4cqw); }
 #gameScreen.ui-beta.ub-compact-cards .rarity-desert-surface > .ub-compact-crop { z-index: 0; }
 
 /* The rarity textures remain untouched. Only full-card-sized outer glows are
@@ -347,15 +354,6 @@
 .rules-vfx-hold.ub-compact-hold { overflow: visible; background: transparent; }
 .rules-vfx-hold.ub-compact-hold .bf-card-inner,
 .rules-vfx-hold.ub-compact-hold .bf-card-face { width: 100%; height: 100%; }
-.rules-vfx-hold.ub-compact-hold .ub-compact-card-face { position: relative; isolation: isolate; }
-.rules-vfx-hold.ub-compact-hold.ub-card-compact-manifestation .ub-compact-card-face { --ub-crop-top: 75.1%; --ub-crop-bottom: 24.9%; }
-.rules-vfx-hold.ub-compact-hold.ub-card-compact-will .ub-compact-card-face { --ub-crop-top: 89.42%; --ub-crop-bottom: 10.58%; }
-.rules-vfx-hold.ub-compact-hold .ub-compact-crop { position: absolute; left: 0; z-index: 0; display: block; width: 100%; overflow: hidden; }
-.rules-vfx-hold.ub-compact-hold .ub-compact-crop-top { top: 0; height: var(--ub-crop-top); }
-.rules-vfx-hold.ub-compact-hold .ub-compact-crop-bottom { bottom: 0; height: var(--ub-crop-bottom); }
-.rules-vfx-hold.ub-compact-hold .ub-compact-crop img { position: absolute; left: 0; display: block; width: 100%; max-width: none; height: auto; object-fit: initial; }
-.rules-vfx-hold.ub-compact-hold .ub-compact-crop-top img { top: 0; }
-.rules-vfx-hold.ub-compact-hold .ub-compact-crop-bottom img { bottom: 0; }
 
 .ub-peek { position: fixed; z-index: 400; pointer-events: none; border-radius: 14px; overflow: hidden; opacity: 0; transform: scale(.94); transition: opacity 180ms var(--ub-ease, ease), transform 220ms var(--ub-ease, ease); box-shadow: 0 18px 50px rgba(0, 0, 0, .6), 0 0 0 1px rgba(240, 217, 143, .4); background: #000; }
 .ub-peek.on { opacity: 1; transform: none; }
@@ -395,14 +393,31 @@
   opacity: 0;
   transition: none;
 }
-#gameScreen.ui-beta .opponent-hand-fan.solo-hand-expanded {
+/* Solo: P2's cards carry their printed frame; no extra border or light ring,
+   hovered or not (the playable glow stays when not hovered). */
+#gameScreen.ui-beta .opponent-hand-fan.solo-hand-fan .opponent-hand-card { border: 0; }
+#gameScreen.ui-beta .opponent-hand-fan.solo-hand-fan .opponent-hand-card:is(:hover, :focus-visible) { box-shadow: 0 14px 34px rgba(0, 0, 0, .6); outline: none; }
+#gameScreen.ui-beta .opponent-hand-fan.solo-hand-fan .opponent-hand-card:is(:hover, :focus-visible)::after { display: none; }
+/* Enlarged: laid flat across the field, spaced so every card stays readable
+   (sizes from layoutExpandedSoloHand in ui-beta.js). */
+#gameScreen.ui-beta .opponent-hand-fan.solo-hand-fan.solo-hand-expanded {
   z-index: 75;
   opacity: 1;
   filter: none;
-  transform: translateX(-50%) translateY(8px) scale(1);
+  width: var(--solo-fan-w, 900px);
+  height: calc(var(--solo-card-w, 120px) * 1.4 + 12px);
+  transform: translateX(-50%);
 }
-#gameScreen.ui-beta .opponent-hand-fan.solo-hand-expanded .opponent-hand-card {
-  --ub-back-w: calc(var(--hand-card-h, 170px) * .716);
+#gameScreen.ui-beta .opponent-hand-fan.solo-hand-fan.solo-hand-expanded .opponent-hand-card {
+  --ub-back-w: var(--solo-card-w, 120px);
+  top: 8px;
+  transform: translateX(calc(-50% + var(--fan-c, 0) * var(--solo-step, 60px)));
+  box-shadow: 0 8px 18px rgba(0, 0, 0, .55);
+}
+#gameScreen.ui-beta .opponent-hand-fan.solo-hand-fan.solo-hand-expanded .opponent-hand-card:is(:hover, :focus-visible) {
+  z-index: 80;
+  transform: translateX(calc(-50% + var(--fan-c, 0) * var(--solo-step, 60px))) translateY(4%) scale(1.18);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, .65);
 }
 .ub-solo-controls {
   display: inline-flex;
@@ -1001,6 +1016,9 @@ body.hand-drop-choice #gameScreen.ui-beta .hand-area { z-index: 90; }
 #gameScreen.ui-beta .ub-zc.ub-drop-ok { box-shadow: inset 0 0 0 2px rgba(240, 217, 143, .45), 0 0 26px -8px rgba(240, 217, 143, .5); }
 #gameScreen.ui-beta .ub-zc.ub-drop-hover { box-shadow: inset 0 0 0 3px rgba(240, 217, 143, .85), inset 0 0 60px -12px rgba(240, 217, 143, .45), 0 0 34px -6px rgba(240, 217, 143, .7); }
 /* hand hover: the hand card itself grows out of the fan, then shrinks back */
+/* P2's solo hand cards are buttons: their zoom clone must not keep the
+   button's padding and light background (it read as a white frame) */
+button.hand-card-hover-clone { padding: 0; min-height: 0; background: var(--carbon, #171714); color: inherit; }
 .hand-card-hover-clone.ub-grow { transition: transform 200ms cubic-bezier(.2, .8, .25, 1); transform: translate(var(--hover-dx, 0px), var(--hover-dy, 0px)) rotate(var(--hover-rot, 0deg)) scale(var(--hand-hover-from, 1)); }
 .hand-card-hover-clone.ub-grow.zoomed { transform: translate(0px, -3px) rotate(0deg) scale(1); }
 #gameScreen.ui-beta .hand-card.ub-hover-src { opacity: 0; transition: none; }

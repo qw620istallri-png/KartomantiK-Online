@@ -16,10 +16,62 @@
   // Compact battlefield cards ship by default. Keep a URL escape hatch for
   // comparison and emergency rollback without changing saved game state.
   const COMPACT_CARDS = !new URLSearchParams(location.search).has("full-cards");
-  // Keep the title/art slice unchanged, but start the footer lower in the
-  // printed card so the first line of rules text can never leak into it.
-  const COMPACT_MANIFESTATION_RATIO = 554 / 500;
-  const COMPACT_WILL_RATIO = 520 / 500;
+  // Compact cut, in % of the printed card's height: the top slice (title and
+  // art) and the bottom slice (footer) of each kind. A browser can override it
+  // with the crop tuner (?crop-tuner, saved under CROP_KEY); the card ratios
+  // follow the slices so the board keeps every card at its true shape.
+  const COMPACT_CROP_DEFAULTS = {
+    manifestation: { topFrom: 0, topTo: 59.3, bottomFrom: 79.6, bottomTo: 100 },
+    will: { topFrom: 0, topTo: 66.2, bottomFrom: 92.1, bottomTo: 100 },
+  };
+  const CROP_KEY = "ko_compact_crop";
+  const CROP_FIELDS = ["topFrom", "topTo", "bottomFrom", "bottomTo"];
+  const CROP_VARS = { topFrom: "tf", topTo: "tt", bottomFrom: "bf", bottomTo: "bt" };
+  function sanitizeCrop(value, fallback) {
+    const out = {};
+    CROP_FIELDS.forEach((field) => {
+      const n = Number(value?.[field]);
+      out[field] = Number.isFinite(n) ? Math.min(100, Math.max(0, n)) : fallback[field];
+    });
+    if (out.topTo <= out.topFrom) out.topTo = Math.min(100, out.topFrom + 1);
+    if (out.bottomTo <= out.bottomFrom) out.bottomFrom = Math.max(0, out.bottomTo - 1);
+    return out;
+  }
+  function loadCompactCrop() {
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(CROP_KEY) || "null"); } catch { saved = null; }
+    return {
+      manifestation: sanitizeCrop(saved?.manifestation, COMPACT_CROP_DEFAULTS.manifestation),
+      will: sanitizeCrop(saved?.will, COMPACT_CROP_DEFAULTS.will),
+    };
+  }
+  let compactCrop = loadCompactCrop();
+  const cropRatio = (kind) => {
+    const c = compactCrop[kind];
+    return ((c.topTo - c.topFrom) + (c.bottomTo - c.bottomFrom)) / 100 * RATIO;
+  };
+  let COMPACT_MANIFESTATION_RATIO = cropRatio("manifestation");
+  let COMPACT_WILL_RATIO = cropRatio("will");
+  function applyCompactCropVars() {
+    const root = document.documentElement.style;
+    [["manifestation", "m"], ["will", "w"]].forEach(([kind, key]) => {
+      CROP_FIELDS.forEach((field) => root.setProperty(`--ub-crop-${key}-${CROP_VARS[field]}`, String(compactCrop[kind][field])));
+    });
+  }
+  applyCompactCropVars();
+  function setCompactCrop(next, { save = true } = {}) {
+    compactCrop = {
+      manifestation: sanitizeCrop(next?.manifestation ?? compactCrop.manifestation, compactCrop.manifestation),
+      will: sanitizeCrop(next?.will ?? compactCrop.will, compactCrop.will),
+    };
+    COMPACT_MANIFESTATION_RATIO = cropRatio("manifestation");
+    COMPACT_WILL_RATIO = cropRatio("will");
+    applyCompactCropVars();
+    if (save) {
+      try { localStorage.setItem(CROP_KEY, JSON.stringify(compactCrop)); } catch { /* private mode */ }
+    }
+    return compactCrop;
+  }
   const COMPACT_BACK_RATIO = 1060 / 1000;
   const RING = ["phlegmatic", "vitreous", "melancholic", "capricious", "choleric"];
   const DOMINATES = {
@@ -1150,7 +1202,7 @@
       el.classList.add(
         el.querySelector(".ub-compact-card-face-back")
           ? "ub-card-compact-back"
-          : (meta.ratio || RATIO) === COMPACT_WILL_RATIO
+          : el.querySelector(".ub-compact-card-face-will")
             ? "ub-card-compact-will"
             : "ub-card-compact-manifestation",
       );
@@ -2136,7 +2188,9 @@
     const syncSoloHandExpansion = () => {
       if (!soloModeActive()) local.soloHandExpanded = false;
       const expanded = soloModeActive() && local.soloHandExpanded;
-      document.getElementById("opponentHandFan")?.classList.toggle("solo-hand-expanded", expanded);
+      const fan = document.getElementById("opponentHandFan");
+      fan?.classList.toggle("solo-hand-expanded", expanded);
+      if (fan && expanded) layoutExpandedSoloHand(fan);
       const button = document.querySelector("[data-ub-solo-toggle-hand]");
       if (!button) return;
       const label = t(expanded ? "ubCollapseOppHand" : "ubExpandOppHand");
@@ -2152,6 +2206,23 @@
       };
     });
     syncSoloHandExpansion();
+  }
+
+  // Solo, P2's hand enlarged: laid flat across the whole field, cards as large
+  // as P1's hand allows while every card keeps its title readable (at least
+  // ~60% of each card shows next to its neighbour).
+  function layoutExpandedSoloHand(fan) {
+    const G = local.geometry?.G;
+    const count = fan.querySelectorAll(".opponent-hand-card").length;
+    if (!G || !count) return;
+    const avail = Math.max(200, G.fieldR - G.fieldL - 24);
+    const handW = (typeof handCardHeight === "number" ? handCardHeight : 170) * 0.716;
+    const heightCap = Math.max(60, (G.H - G.handPeek - 40) / 1.4 * 0.6);
+    const cardW = Math.max(56, Math.min(handW, heightCap, avail / (1 + 0.62 * Math.max(0, count - 1))));
+    const step = count > 1 ? Math.min(cardW + 12, (avail - cardW) / (count - 1)) : 0;
+    fan.style.setProperty("--solo-card-w", `${cardW.toFixed(1)}px`);
+    fan.style.setProperty("--solo-step", `${step.toFixed(1)}px`);
+    fan.style.setProperty("--solo-fan-w", `${avail}px`);
   }
 
   // player icons on each side of the opponent's hand: priority / passed state,
@@ -3638,6 +3709,16 @@
     return original.call(this, text, isError, ...rest);
   });
 
+  // ?crop-tuner opens the hand tuner of the compact cut (js/crop-tuner.js)
+  if (new URLSearchParams(location.search).has("crop-tuner")) {
+    const version = document.querySelector('script[src*="ui-beta.js"]')?.src.split("?")[1] || "";
+    window.addEventListener("load", () => {
+      const script = document.createElement("script");
+      script.src = `js/crop-tuner.js${version ? `?${version}` : ""}`;
+      document.body.appendChild(script);
+    });
+  }
+
   window.uiBeta = {
     active,
     enabled,
@@ -3647,6 +3728,22 @@
     manualPlacement(item) { return inferZone(item?.x, item?.y); },
     decorateCard,
     compactCardsEnabled() { return COMPACT_CARDS; },
+    compactCrop: {
+      get: () => structuredClone(compactCrop),
+      defaults: () => structuredClone(COMPACT_CROP_DEFAULTS),
+      ratio: (kind) => cropRatio(kind),
+      set(next) {
+        const value = setCompactCrop(next);
+        if (active() && latestState) { renderBattlefield(); renderChrome(); }
+        return structuredClone(value);
+      },
+      reset() {
+        try { localStorage.removeItem(CROP_KEY); } catch { /* private mode */ }
+        setCompactCrop(COMPACT_CROP_DEFAULTS, { save: false });
+        if (active() && latestState) { renderBattlefield(); renderChrome(); }
+        return structuredClone(compactCrop);
+      },
+    },
     dropLogical,
     clearTouchDropPreview() {
       document.querySelectorAll(".ub-touch-zone-over").forEach(node => node.classList.remove("ub-touch-zone-over"));

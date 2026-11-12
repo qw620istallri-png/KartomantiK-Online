@@ -314,13 +314,13 @@ function renderOpponentHandFan() {
     const arc = -Math.abs(center) * Math.abs(center) * 1.7;
     const offset = center * 45;
     if (!cardId) {
-      return `<button type="button" class="opponent-hand-card is-hidden" data-opponent-hand-slot="${index}" style="--fan-rotate:${rotate}deg;--fan-arc:${arc}px;--fan-x:${offset}px;--fan-z:${index};--owner-color:${esc(playerColor(opponent.id))}" aria-label="${esc(t("cards"))}"></button>`;
+      return `<button type="button" class="opponent-hand-card is-hidden" data-opponent-hand-slot="${index}" style="--fan-rotate:${rotate}deg;--fan-arc:${arc}px;--fan-x:${offset}px;--fan-c:${center};--fan-z:${index};--owner-color:${esc(playerColor(opponent.id))}" aria-label="${esc(t("cards"))}"></button>`;
     }
     const playable = solo && evaluateForSoloPlayer(
       opponent.id,
       () => handCardIsPlayable(cardId) || handCardHasHandAction(cardId),
     );
-    return `<button type="button" class="opponent-hand-card is-known${playable ? " is-playable" : ""}" data-opponent-hand-slot="${index}" data-opponent-hand-card="${esc(cardId)}" data-solo-player-id="${solo ? esc(opponent.id) : ""}" style="--fan-rotate:${rotate}deg;--fan-arc:${arc}px;--fan-x:${offset}px;--fan-z:${index};--owner-color:${esc(playerColor(opponent.id))}" title="${esc(cardName(cardId))}"><img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"></button>`;
+    return `<button type="button" class="opponent-hand-card is-known${playable ? " is-playable" : ""}" data-opponent-hand-slot="${index}" data-opponent-hand-card="${esc(cardId)}" data-solo-player-id="${solo ? esc(opponent.id) : ""}" style="--fan-rotate:${rotate}deg;--fan-arc:${arc}px;--fan-x:${offset}px;--fan-c:${center};--fan-z:${index};--owner-color:${esc(playerColor(opponent.id))}" title="${esc(cardName(cardId))}"><img src="${esc(cardImage(cardId))}" alt="${esc(cardName(cardId))}"></button>`;
   }).join("");
   if (solo) {
     fan.onclick = null;
