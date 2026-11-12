@@ -48,11 +48,13 @@ const mime = { '.html':'text/html', '.js':'text/javascript', '.css':'text/css', 
             renderBattlefield();
             const card=document.querySelector(`.bf-card[data-item-id="${frame.targetId}"]`);
             if(!card)throw new Error('Target missing from board');
-            const counters=[...card.querySelectorAll('.counters .bf-counter-effect')];
-            return {texts:counters.map(n=>n.textContent),titles:counters.map(n=>n.title),
+            // power markers of every origin add up into one marker (+2 and -2: none)
+            const counters=[...card.querySelectorAll('.counters .bf-counter:not(.bf-counter-special)')];
+            const effects=[...card.querySelectorAll('.counters .bf-counter-effect')];
+            return {texts:counters.map(n=>n.textContent),titles:effects.map(n=>n.title),
               statePower:latestState.battlefield.find(i=>i.id===frame.targetId).effectivePower};
           },frame);
-          const delta=frame.expectedPower-frame.printedPower-frame.explicitPower;
+          const delta=frame.expectedPower-frame.printedPower;
           assert.equal(result.statePower,frame.expectedPower);
           assert.deepEqual(result.texts,delta?[`${delta>0?'+':''}${delta}`]:[]);
           assert.ok(result.titles.every(Boolean));

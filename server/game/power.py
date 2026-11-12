@@ -405,7 +405,7 @@ class PowerMixin:
         base *= doubling
         for effect in self.rules_engine.get("ongoingEffects") or []:
             if effect.get("kind") in {"copy_power_temperament", "copy_power_effects"} and effect.get("source", {}).get("itemId") == item_id:
-                if self.rules_ongoing_effect_active(effect):
+                if self.rules_ongoing_effect_active(effect) and not effect.get("powerStripped"):
                     base = int((effect.get("snapshot") or {}).get("power", base))
             elif (effect.get("kind") == "base_power_double" and effect.get("target", {}).get("itemId") == item_id
                   and self.rules_ongoing_effect_active(effect)):

@@ -289,9 +289,53 @@ class SetFieldPowerFamily(RealCardRulesCase):
                 self.assertTrue(any(
                     effect.get("preventsModifiers") for effect in removed
                 ))
-                self.assertEqual(self.power(session, "target"), 8)
+                # the removed +3 does not come back: only the lock expires
+                self.assertEqual(self.power(session, "target"), 5)
                 session.adjust_rules_power_counter(target, 1)
-                self.assertEqual(self.power(session, "target"), 9)
+                self.assertEqual(self.power(session, "target"), 6)
+
+    def test_removed_modifiers_and_markers_stay_gone_after_the_turn(self):
+        """Reported 12/11: Sandokaron kept a +3 and a -3 marker after Trim,
+        then got its +3 back on the next turn."""
+        for card_id in (TRIM, EQUALIZE):
+            with self.subTest(card_id=card_id):
+                session, p1, _p2 = self.started()
+                self.configure_manifestation(session, "m-10", 5)
+                self.configure_manifestation(session, "m-11", 2)
+                boosted = self.field_item(
+                    "boosted", "p1", "m-10",
+                    counters={"power": -1, "tempCounter": 2, "Banner": 1},
+                )
+                low = self.field_item("low", "p2", "m-11")
+                session.battlefield = [boosted, low]
+                for effect_id, value, duration in (
+                    ("plus3", 3, "while_target_on_field"),
+                    ("plus1", 1, "until_end_of_turn"),
+                ):
+                    self.assertTrue(session.append_rules_ongoing_effect({
+                        "id": effect_id, "kind": "power_modifier",
+                        "duration": duration, "startedTurn": 3,
+                        "value": value,
+                        "target": {"kind": "card", "itemId": "boosted"},
+                    }))
+                self.assertEqual(self.power(session, "boosted"), 10)
+
+                self.play(session, p1, card_id)
+                expected = 5 if card_id == TRIM else 2
+                self.assertEqual(self.power(session, "boosted"), expected)
+                # power markers are gone, other counters stay
+                self.assertEqual(boosted["counters"], {"Banner": 1})
+                self.assertFalse(any(
+                    effect.get("kind") == "power_modifier"
+                    for effect in session.rules_engine["ongoingEffects"]
+                ))
+
+                session.phase_tracker["turn"] = 4
+                session.prune_rules_ongoing_effects()
+                self.assertEqual(self.power(session, "boosted"), expected)
+                self.assertEqual(self.power(session, "low"), 2)
+                session.adjust_rules_power_counter(boosted, 1)
+                self.assertEqual(self.power(session, "boosted"), expected + 1)
 
     def test_both_resolve_and_pay_normally_with_no_field_manifestation(self):
         for card_id in (TRIM, EQUALIZE):

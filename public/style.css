@@ -1399,6 +1399,14 @@ body.hand-drawing #myHandTray .hand-card { cursor: progress; }
   display: grid; place-items: center; font-size: 14px; font-weight: 900; color: var(--carbon); box-shadow: 1px 2px 4px #0004;
 }
 .bf-counter-temp { background: #5aa9c9; border-color: #2f7392; color: #fff; }
+/* special counters (Banner, Burn, Formula...): an icon and a count, not a power "+N" */
+.bf-counter-special {
+  width: auto; min-width: 30px; padding: 0 7px 0 5px; border-radius: 999px; gap: 3px;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: #2b2440; border-color: #a58ad8; color: #efe6ff;
+}
+.bf-counter-special .bf-counter-icon { width: 15px; height: 15px; flex: none; }
+.bf-counter-special b { font-weight: 900; font-variant-numeric: tabular-nums; }
 .bf-gem-essence { padding: 2px; cursor: pointer; }
 .bf-gem-essence img { width: 24px; height: 24px; object-fit: contain; }
 .bf-gem-essence:disabled { opacity: 1; cursor: default; }

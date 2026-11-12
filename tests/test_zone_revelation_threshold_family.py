@@ -126,6 +126,7 @@ class ZoneRevelationThresholdFamily(RealCardRulesCase):
 
     def test_dulfer_weakens_the_current_first_until_that_occurrence_leaves(self):
         session, _p1, p2 = self.started()
+        session.card_rules["m-1"]["power"] = 4  # survives the -2
         first = self.field_item("first", "p2", "m-1", "confrontation")
         session.battlefield = [first]
         session.rules_engine["firstManifestationItemIds"] = {"p2": "first"}

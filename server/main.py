@@ -1004,7 +1004,9 @@ async def record_rules_pass_result(session, result, actor_id):
             revelation_order, revelation_priority, priority_rolls = session.rules_revelation_order()
             for item_id in revelation_order:
                 item = session.find_battlefield_item(item_id)
-                if item and not item.get("persistedFirst"):
+                if item and not item.get("persistedFirst") and (
+                    item.get("firstAlreadyEnteredTurn") != session.phase_tracker["turn"]
+                ):
                     triggered_actions.extend(session.queue_rules_battlefield_entry_triggers(
                         item["cardId"], item["ownerId"], item["id"], True,
                         defer=True,

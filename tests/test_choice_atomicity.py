@@ -130,6 +130,7 @@ class ChoiceAtomicityTests(unittest.TestCase):
 
     def test_power_distribution_can_assign_multiple_losses_to_one_target(self):
         session, _, _ = self.case.started()
+        session.card_rules["m-1"]["power"] = 5  # survives the -2 (0 or less: destroyed)
         session.rules_engine["pendingChoice"] = {"id": "loss", "kind": "power_loss_distribution", "playerId": "p1",
             "count": 2, "candidateItemIds": ["first-a"], "sourceCardId": "test-source"}
         error, result = session.resolve_rules_choice("p1", "loss", option={"itemIds": ["first-a", "first-a"]})

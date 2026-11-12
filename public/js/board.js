@@ -695,7 +695,7 @@ function rulesCardCountersMarkup(item, ongoingEffects, printedPower) {
 
 function counterCircles(
   counters, ongoingEffects = [], effectivePower = null,
-  printedPower = null,
+  printedPower = null, specialIcons = true,
 ) {
   const renderedCounters = { ...(counters || {}) };
   const ongoingPower = ongoingEffects
@@ -727,21 +727,52 @@ function counterCircles(
       renderedCounters.rulesContinuousPower = continuousPower;
     }
   }
-  return Object.entries(renderedCounters)
-    .filter(([, v]) => v)
-    .map(([k, v]) => {
-      const temporary = k === "tempCounter" || k === "rulesTempPower";
-      const continuous = k === "rulesContinuousPower";
-      const effectDerived = k === "rulesTempPower"
-        || k === "rulesPermanentPower"
-        || continuous;
-      const title = effectDerived
-        ? ` title="${esc(t(continuous ? "continuousModifier" : temporary ? "temporaryCounter" : "permanentCounter"))}"`
+  // Power markers of the same kind add up into one marker: a permanent +3 and
+  // a -3 cancel out and no marker is shown. Temporary ones (until the end of
+  // the turn) stay apart, since they do not last as long.
+  let markup = "";
+  for (const temporary of [false, true]) {
+    const parts = Object.entries(renderedCounters).filter(([k, v]) => (
+      RULES_POWER_COUNTER_KEYS.has(k) && Number(v)
+      && (k === "tempCounter" || k === "rulesTempPower") === temporary
+    ));
+    const total = parts.reduce((sum, [, v]) => sum + Number(v), 0);
+    if (!total) continue;
+    const continuous = parts.every(([k]) => k === "rulesContinuousPower");
+    const effectDerived = parts.some(([k]) => k === "rulesTempPower"
+      || k === "rulesPermanentPower" || k === "rulesContinuousPower");
+    const titles = parts.length > 1
+      ? [t("powerCounterTotal"), ...parts.map(([k, v]) => `${t(RULES_POWER_COUNTER_TITLES[k])} ${Number(v) > 0 ? "+" : ""}${Number(v)}`)].join(" · ")
+      : effectDerived
+        ? t(continuous ? "continuousModifier" : temporary ? "temporaryCounter" : "permanentCounter")
         : "";
-      return `<span class="bf-counter${temporary ? " bf-counter-temp" : ""}${effectDerived ? " bf-counter-effect" : ""}"${title}>${v > 0 ? "+" : ""}${v}</span>`;
+    const title = titles ? ` title="${esc(titles)}"` : "";
+    markup += `<span class="bf-counter${temporary ? " bf-counter-temp" : ""}${effectDerived ? " bf-counter-effect" : ""}"${title}>${total > 0 ? "+" : ""}${total}</span>`;
+  }
+  // Any other counter (Banner, Burn, Formula...) is a special marker, not a
+  // power bonus: an icon and its count, never a "+".
+  return markup + Object.entries(renderedCounters)
+    .filter(([k, v]) => !RULES_POWER_COUNTER_KEYS.has(k) && v)
+    .map(([k, v]) => {
+      if (!specialIcons) {
+        return `<span class="bf-counter">${v > 0 ? "+" : ""}${v}</span>`;
+      }
+      const label = rulesText("specialCounter", { name: k, count: v });
+      return `<span class="bf-counter bf-counter-special" data-counter-name="${esc(k)}" title="${esc(label)}" aria-label="${esc(label)}">${RULES_SPECIAL_COUNTER_ICON}<b>${esc(String(v))}</b></span>`;
     })
     .join("");
 }
+
+const RULES_POWER_COUNTER_KEYS = new Set([
+  "power", "tempCounter", "rulesTempPower", "rulesPermanentPower", "rulesContinuousPower",
+]);
+const RULES_POWER_COUNTER_TITLES = {
+  power: "permanentCounter", rulesPermanentPower: "permanentCounter",
+  tempCounter: "temporaryCounter", rulesTempPower: "temporaryCounter",
+  rulesContinuousPower: "continuousModifier",
+};
+// a small marker token (hexagonal chip), drawn in the counter's text colour
+const RULES_SPECIAL_COUNTER_ICON = '<svg class="bf-counter-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 1.2 14 4.6v6.8L8 14.8 2 11.4V4.6z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="8" cy="8" r="2.3" fill="currentColor"/></svg>';
 
 // A two-column +1/-1/reset grid for a card/token's counters: one column for
 // its existing "permanent" counter (power/mark/essence — whichever this
@@ -1529,7 +1560,7 @@ function renderBattlefield() {
         : `<img src="${esc(temperamentSymbol(token.temperament))}" alt=""><span class="bf-essence-count">${count > 0 ? "+" : ""}${count}</span>`;
     } else {
       el.style.background = token.color || playerColor(token.ownerId);
-      el.innerHTML = `<span>${esc(token.label || "")}</span><div class="counters">${counterCircles(token.counters)}</div>`;
+      el.innerHTML = `<span>${esc(token.label || "")}</span><div class="counters">${counterCircles(token.counters, [], null, null, false)}</div>`;
     }
     if (!isObserver) {
       bindDrag(el, (x, y) => {

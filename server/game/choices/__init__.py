@@ -63,6 +63,35 @@ class ChoicesMixin:
     @replacement_checkpoint("choice")
     def resolve_rules_choice(self, player_id, choice_id, card_ids=None, option=None, item_id=None,
                              placement=None, targets=None, transcendent_payment=None):
+        powers_before = self.rules_field_power_snapshot() if self.rules_engine.get("enabled") else None
+        error, payload = self._resolve_rules_choice(
+            player_id, choice_id, card_ids, option, item_id, placement, targets, transcendent_payment,
+        )
+        if error is None and powers_before is not None:
+            self._rules_state_actions_after_choice(powers_before, payload)
+        return error, payload
+
+    def _rules_state_actions_after_choice(self, powers_before, payload):
+        """A choice can change Power too (a card put into an Interzone under
+        Spiked Pit, a split of -N...): a Manifestation that falls to 0 or less
+        is destroyed right away, as after any resolved effect."""
+        if self.ended or self.rules_engine.get("pendingChoice"):
+            return
+        if not any(
+            item.get("faceUp")
+            and self.rules_manifestation_characteristics(item)["power"] <= 0
+            < powers_before.get(item.get("id"), 1)
+            for item in self.battlefield
+        ):
+            return
+        state_actions = self.resolve_rules_state_actions(powers_before)
+        if state_actions.get("triggeredActions"):
+            self.queue_rules_simultaneous_actions(state_actions["triggeredActions"])
+        if state_actions.get("destroyed") and isinstance(payload, dict):
+            payload.setdefault("stateActions", {})["destroyed"] = state_actions["destroyed"]
+
+    def _resolve_rules_choice(self, player_id, choice_id, card_ids=None, option=None, item_id=None,
+                              placement=None, targets=None, transcendent_payment=None):
         if self.ended:
             return "The game has already ended.", None
         choice = self.rules_engine.get("pendingChoice")

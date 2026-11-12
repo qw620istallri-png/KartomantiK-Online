@@ -99,10 +99,11 @@ class ChoiceLivenessAuditTests(game_tests.RealCardRulesCase):
 
     def test_ju_lien_still_resolves_with_an_open_support_slot(self):
         session, p1, _, _, _ = self.started()
-        self.put(p1, "hand", [self.SPLENDOR])
+        # a Will with a Tribute cost: Splendor (cost 0) would enter at 0 power and be destroyed
+        self.put(p1, "hand", [self.MULTICASTIGATE])
         session.apply_rules_action_result(self.ju_lien_action(session))
         choice = session.rules_engine["pendingChoice"]
-        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=[self.SPLENDOR])
+        error, _ = session.resolve_rules_choice("p1", choice["id"], card_ids=[self.MULTICASTIGATE])
         self.assertIsNone(error)
         self.assertEqual(p1["zones"]["hand"], [])
         self.assertTrue(any(item.get("willManifestation") for item in session.battlefield))

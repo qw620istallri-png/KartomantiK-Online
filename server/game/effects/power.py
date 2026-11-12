@@ -2,6 +2,12 @@
 
 from ..common import RULES_WILL_TYPES, RULES_TEMPERAMENTS, new_id
 
+# Power modifiers that Trim the Excess / Equalize take away from the field.
+RULES_STRIPPED_POWER_MODIFIERS = frozenset({
+    "power_modifier", "power_set", "power_set_maximum",
+    "power_minimum", "power_maximum",
+})
+
 
 class PowerEffectsMixin:
     def set_rules_item_temperament(self, item, temperament, action):
@@ -267,11 +273,51 @@ class PowerEffectsMixin:
     def _rules_result_set_field_power(self, action, result, player_id, player):
         # "on the field": the Stalemate Zone is not part of the field
         items = self.rules_confrontation_items(None, ("interzone", "confrontation"))
+        # Wills are permanent unless they say otherwise: only "cannot receive
+        # modifiers" ends with the turn. The power modifiers the card had are
+        # removed for good (a +3 does not come back next turn), and the markers
+        # go with them; Equalize's own new power is a lasting modifier.
+        powers_before = self.rules_field_power_snapshot()
+        item_ids = {item["id"] for item in items}
+        # A copied power (Mimer) is a modifier too: the copier goes back to its
+        # own printed power, and keeps the copied Temperament (Istallri, 12/11).
+        for effect in self.rules_engine.get("ongoingEffects") or []:
+            if (effect.get("kind") in {"copy_power_temperament", "copy_power_effects"}
+                    and effect.get("source", {}).get("itemId") in item_ids):
+                effect["powerStripped"] = True
         bases = {item["id"]: self.rules_manifestation_base_power(item) for item in items}
         floor = min(bases.values()) if bases else 0
+        self.rules_engine["ongoingEffects"] = [
+            effect for effect in self.rules_engine.get("ongoingEffects") or []
+            if not (
+                effect.get("kind") in RULES_STRIPPED_POWER_MODIFIERS
+                and effect.get("target", {}).get("itemId") in item_ids
+            )
+        ]
+        for item in items:
+            for key in ("power", "tempCounter"):
+                (item.get("counters") or {}).pop(key, None)
+            for key in ("minimumPower", "maximumPower"):
+                item.pop(key, None)
         effect_ids = []
         for item in items:
             value = bases[item["id"]] if result.get("mode") == "base" else floor
+            current = self.rules_manifestation_characteristics(item)["power"]
+            if result.get("mode") != "base" and value != current:
+                lasting = {
+                    "id": new_id(), "actionId": action.get("id"),
+                    "abilityId": (action.get("ability") or {}).get("id"),
+                    "controllerId": player_id,
+                    "source": dict(action.get("source") or {}),
+                    "target": {
+                        "kind": "card", "itemId": item["id"],
+                        "cardId": item.get("cardId"), "ownerId": item.get("ownerId"),
+                    },
+                    "kind": "power_set", "duration": "while_target_on_field",
+                    "startedTurn": self.phase_tracker["turn"], "value": int(value),
+                    "powerAdjustment": int(value) - current,
+                }
+                self.rules_engine["ongoingEffects"].append(lasting)
             effect = {
                 "id": new_id(), "actionId": action.get("id"),
                 "abilityId": (action.get("ability") or {}).get("id"),
@@ -285,8 +331,10 @@ class PowerEffectsMixin:
                 "startedTurn": self.phase_tracker["turn"], "value": int(value), "preventsModifiers": True,
             }
             effect["powerAdjustment"] = effect["value"] - self.rules_manifestation_characteristics(item)["power"]
-            if self.append_rules_ongoing_effect(effect):
-                effect_ids.append(effect["id"])
+            # an earlier lock on this card was stripped above: nothing blocks it
+            self.rules_engine["ongoingEffects"].append(effect)
+            effect_ids.append(effect["id"])
+        self.record_rules_power_changes(powers_before)
         return {
             "kind": result.get("kind"), "status": "set" if effect_ids else "nothing",
             "mode": result.get("mode"), "effectIds": effect_ids,

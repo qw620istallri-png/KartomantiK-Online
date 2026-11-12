@@ -6658,6 +6658,8 @@ class AssistedRulesTests(unittest.TestCase):
             "id": "target", "ownerId": "p2", "cardId": "m-2",
             "faceUp": True, "fieldZone": "confrontation", "counters": {},
         }
+        # strong enough to survive the -2 (at 0 or less it is destroyed)
+        session.card_rules["m-2"]["power"] = 5
         session.battlefield = [kanon, target]
         self.fill_deck(p2, ["will-ephemeral", "m-3", "will-persistent"])
 
@@ -6678,7 +6680,7 @@ class AssistedRulesTests(unittest.TestCase):
         self.assertIsNone(error)
         self.assertEqual(len(applied["effectIds"]), 2)
         self.assertEqual(
-            session.rules_manifestation_characteristics(target)["power"], -1
+            session.rules_manifestation_characteristics(target)["power"], 3
         )
         self.assertEqual(p2["zones"]["hand"], ["m-3"])
 
@@ -10780,6 +10782,7 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         # Dulfer in p2's vessel: p2 chooses between losing 10 points and -2 on its First Manifestation.
         self.put(p2, "receptacle", [dulfer])
         p2["zoneOwners"]["receptacle"] = {dulfer: "p1"}
+        session.card_rules["m-1"]["power"] = 4  # survives the -2
         session.battlefield = [self.field_item("f2", "p2", "m-1")]
         session.rules_engine["firstManifestationItemIds"] = {"p2": "f2"}
         queued = session.queue_rules_revelation_triggers(defer=True)

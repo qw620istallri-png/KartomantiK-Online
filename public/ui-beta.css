@@ -347,6 +347,17 @@
   border-color: #5aa9c9;
   color: #dff8ff;
 }
+#gameScreen.ui-beta.ub-compact-cards .bf-card .bf-counter-special {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  border-color: #a58ad8;
+  color: #efe6ff;
+}
+#gameScreen.ui-beta.ub-compact-cards .bf-card .bf-counter-special .bf-counter-icon {
+  width: 1.05em;
+  height: 1.05em;
+}
 
 /* End-of-confrontation holds wait on screen while the winner chooses a
    destination. Rebuild their compact face exactly like the live card instead
@@ -783,6 +794,22 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 #gameScreen.ui-beta .bf-card.ub-choice-drag { cursor: grab; }
 #gameScreen.ui-beta .bf-card.ub-choice-lifted { opacity: .35; }
 .ub-choice-ghost { box-shadow: 0 20px 40px rgba(0, 0, 0, .6); border-radius: 10px; transition: none !important; animation: none !important; }
+/* The dragged copy lives in <body>, outside #gameScreen: its corner markers
+   (Adamant anvil, Support, Float) need their own copy of the compact rules,
+   otherwise the bare SVG grows to full size and drops under the card. */
+.ub-choice-ghost :is(.rules-support-badge,.ub-float-badge,.ub-adamant-badge) {
+  position: absolute; z-index: 15; top: 4px; right: 4px; bottom: auto; left: auto;
+  display: grid; place-items: center; box-sizing: border-box;
+  width: var(--ub-marker-size,21px); min-width: var(--ub-marker-size,21px); height: var(--ub-marker-size,21px); padding: var(--ub-marker-pad,4px);
+  border: 1.5px solid var(--ub-marker-tone,#d3a942); border-radius: 50%;
+  background: rgb(8 11 15 / .95); color: var(--ub-marker-ink,#fff);
+  box-shadow: 0 3px 8px #000b; pointer-events: none;
+}
+.ub-choice-ghost :is(.rules-support-badge,.ub-float-badge,.ub-adamant-badge) svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.ub-choice-ghost .rules-support-badge { --ub-marker-tone:#72d9ee; --ub-marker-ink:#ddfbff; }
+.ub-choice-ghost .ub-float-badge { --ub-marker-tone:#9eafff; --ub-marker-ink:#eef0ff; }
+.ub-choice-ghost .ub-adamant-badge { --ub-marker-tone:#d6b778; --ub-marker-ink:#fff1cf; }
+.ub-choice-ghost:has(.rules-support-badge) .ub-adamant-badge { top: calc(8px + var(--ub-marker-size,21px)); }
 @keyframes ub-choice-glow { 50% { outline-color: rgba(240, 217, 143, .35); } }
 #gameScreen.ui-beta .ub-side.ub-choice-target { box-shadow: inset 0 0 0 3px var(--ub-gold), inset 0 0 60px rgba(var(--ub-gd), .25); cursor: pointer; }
 #gameScreen.ui-beta .ub-choice-target { cursor: pointer; }

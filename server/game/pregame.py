@@ -390,6 +390,10 @@ class PregameMixin:
             item = self.rules_existing_first_manifestation(player_id)
             if item is not None:
                 item["isSupport"] = False
+                # already in the Confrontation Zone (Chained in the End Phase by
+                # Help!...): it has entered once, the Revelation is not a new entry
+                if item.get("faceUp"):
+                    item["firstAlreadyEnteredTurn"] = self.phase_tracker["turn"]
                 selected[player_id] = item["id"]
                 if player_id not in validated:
                     validated.append(player_id)
