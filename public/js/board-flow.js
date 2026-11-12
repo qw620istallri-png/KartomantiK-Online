@@ -336,20 +336,25 @@ function rulesBoardExtraTributeCards(flow) {
   ));
 }
 
+// What the printed Tribute's Manifestations pay beyond the cost: Rally turns
+// it into Tokens by default instead of leaving it as floating Essence.
+function rulesBoardTributeSurplus(flow) {
+  const selectedPower = rulesBoardSelectedPayments(flow).reduce((sum, reference) => (
+    sum + Number(rulesTributeCandidate(reference)?.power || 0)
+  ), 0);
+  const requiredPower = Object.values(flow.draft.essencePlan?.remaining || {})
+    .reduce((sum, amount) => sum + Math.max(0, Number(amount || 0)), 0);
+  return Math.max(0, selectedPower - requiredPower);
+}
+
 function rulesBoardOptionalExtraEssenceMax(flow) {
   const optional = flow.draft.encodedAbility?.optionalExtraEssence;
   if (!optional) return 0;
   const available = Number(flow.draft.optionalExtraEssenceMax || 0);
-  const selected = rulesBoardSelectedPayments(flow);
-  const selectedPower = selected.reduce((sum, reference) => (
-    sum + Number(rulesTributeCandidate(reference)?.power || 0)
-  ), 0);
-  const requiredPower = Object.values(flow.draft.essencePlan.remaining || {})
-    .reduce((sum, amount) => sum + Math.max(0, Number(amount || 0)), 0);
   // Only the part left after the printed Tribute becomes floating Essence.
   // A 4-power Stampeding Brood paying Rally's {G}{G} therefore contributes 2,
   // not its full power a second time.
-  const surplus = Math.max(0, selectedPower - requiredPower);
+  const surplus = rulesBoardTributeSurplus(flow);
   const extraCardsPower = rulesBoardExtraTributeCards(flow)
     .reduce((sum, entry) => sum + Math.max(0, Number(entry.power || 0)), 0);
   const cap = optional.max == null ? Infinity : Math.max(0, Number(optional.max) - extraCardsPower);
@@ -1198,6 +1203,12 @@ function renderRulesBoardFlow() {
 
   if (flow.stage === "extra_essence") {
     const max = rulesBoardOptionalExtraEssenceMax(flow);
+    // the Tribute's surplus starts spent on Tokens; a click on the spent pile gives it back
+    const surplus = rulesBoardTributeSurplus(flow);
+    if (flow.extraEssenceSurplus !== surplus) {
+      flow.extraEssenceSurplus = surplus;
+      flow.extraEssenceCount = Math.min(max, surplus);
+    }
     const current = Math.max(
       0, Math.min(Number(flow.extraEssenceCount || 0), max),
     );
@@ -1213,7 +1224,7 @@ function renderRulesBoardFlow() {
     const extraCardsHtml = extraCandidates.length ? `
       <div class="rules-flow-cost-row rules-extra-tribute-row">
         <span>${esc(t("rulesOptionalExtraCards"))}</span>
-        <strong>${flow.extraTributeIndexes.size}/${extraCandidates.length}${extraTributePower ? ` · <img src="${esc(symbol)}" alt=""> +${extraTributePower}` : ""}</strong>
+        <strong class="rules-extra-tribute-count">${flow.extraTributeIndexes.size}/${extraCandidates.length}${extraTributePower ? `<span class="rules-extra-tribute-power"><img src="${esc(symbol)}" alt="">+${extraTributePower}</span>` : ""}</strong>
       </div>` : "";
     $("#rulesBoardEssence").classList.add("hidden");
     $("#rulesFlowInstruction").textContent = rulesText(
@@ -1225,12 +1236,12 @@ function renderRulesBoardFlow() {
         <span>${esc(t("rulesOptionalExtraEssence"))}</span>
         <div class="rules-extra-essence-pools">
           <button type="button" class="rules-extra-essence-pool" id="rulesExtraEssenceAvailable" ${current >= max ? "disabled" : ""} aria-label="${esc(t("increase"))}" title="${esc(t("increase"))}">
-            <img src="${esc(symbol)}" alt=""><span>×${max - current}<small>${esc(t("essence"))}</small></span>
+            <img src="${esc(symbol)}" alt=""><span>×${max - current}<small>${esc(t("rulesExtraEssenceLeft"))}</small></span>
           </button>
           <button type="button" class="rules-extra-essence-pool is-spent" id="rulesExtraEssenceSpent" ${current <= 0 ? "disabled" : ""} aria-label="${esc(t("decrease"))}" title="${esc(t("decrease"))}">
-            <img src="${esc(symbol)}" alt=""><span>×${current}<small>${esc(t("rulesEssenceUsed"))}</small></span>
+            <img src="${esc(symbol)}" alt=""><span>×${current}<small>${esc(t("rulesExtraEssenceSpent"))}</small></span>
           </button>
-          <strong class="rules-extra-token-total" id="rulesExtraEssenceTokenTotal">${esc(t("token"))} ×${current + extraTributePower}</strong>
+          <strong class="rules-extra-token-total" id="rulesExtraEssenceTokenTotal"><img src="${esc(symbol)}" alt="">${esc(t("token"))} ×${current + extraTributePower}</strong>
         </div>
       </div>
       <button type="button" class="primary rules-extra-essence-confirm" id="rulesExtraEssenceConfirm">

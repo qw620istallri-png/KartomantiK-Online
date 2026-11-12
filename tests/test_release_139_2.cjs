@@ -280,7 +280,9 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
           };
         }, existing);
         assert.deepEqual(rally, { max: 3 + existing, stage: "extra_essence", visible: true });
-        for (let index = 0; index < rally.max; index++) await page.locator("#rulesExtraEssenceAvailable").click();
+        // the Tribute's surplus (3) starts spent on Tokens; only the floating Essences need a click
+        assert.match(await page.locator("#rulesExtraEssenceTokenTotal").textContent(), /×3/);
+        for (let index = 0; index < existing; index++) await page.locator("#rulesExtraEssenceAvailable").click();
         await page.locator("#rulesExtraEssenceConfirm").click();
         await page.waitForFunction(() => window.__sent.length === 1);
         assert.equal(await page.evaluate(() => window.__sent[0].extraEssenceCount), 3 + existing);
@@ -297,11 +299,13 @@ const mime = { ".html": "text/html", ".css": "text/css", ".js": "text/javascript
         };
       });
       assert.equal(stampedingBroodRally.max, 2);
-      assert.match(stampedingBroodRally.available, /2/);
-      assert.match(stampedingBroodRally.tokenTotal, /0/);
+      assert.match(stampedingBroodRally.available, /×0/);
+      assert.match(stampedingBroodRally.tokenTotal, /×2/);
+      // refund one, then spend it again
+      await page.locator("#rulesExtraEssenceSpent").click();
+      assert.match(await page.locator("#rulesExtraEssenceTokenTotal").textContent(), /×1/);
       await page.locator("#rulesExtraEssenceAvailable").click();
-      await page.locator("#rulesExtraEssenceAvailable").click();
-      assert.match(await page.locator("#rulesExtraEssenceTokenTotal").textContent(), /2/);
+      assert.match(await page.locator("#rulesExtraEssenceTokenTotal").textContent(), /×2/);
       await page.locator("#rulesExtraEssenceConfirm").click();
       await page.waitForFunction(() => window.__sent.length === 1);
       assert.equal(await page.evaluate(() => window.__sent[0].extraEssenceCount), 2);

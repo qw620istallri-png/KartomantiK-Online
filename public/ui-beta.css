@@ -1097,19 +1097,30 @@ body.hand-drop-choice #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.hand-
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.order-screen .rules-drag-order .rules-choice-card { width: clamp(140px, min(11vw, 24vh), 220px); }
 #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.order-screen .rules-choice-options { width: 100%; }
 
-/* Rally: click the available Essence pile to spend one, or the committed pile
-   to refund one. Counts stay legible without a tiny numeric input. */
-#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-essence-pools { display: flex; align-items: stretch; justify-content: center; gap: 10px; flex-wrap: wrap; }
-#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-essence-pool {
-  min-width: 118px; min-height: 54px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-  border: 1px solid var(--ub-line); border-radius: 12px; background: rgba(var(--ub-hi), .08); color: var(--ub-ink);
-  font-size: 18px; font-weight: 800; box-shadow: none;
+/* Rally: click the available Essence pile to spend one, or the spent pile to
+   refund one. The flow sits inside #gameScreen, so the rules hang off it. */
+#gameScreen.ui-beta .rules-board-flow :is(.rules-extra-tribute-row, .rules-extra-essence-row) {
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 100%; margin: 4px 0;
 }
-#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-essence-pool img { width: 30px; height: 30px; }
-#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-essence-pool small { display: block; font-size: 10px; font-weight: 700; color: var(--ub-muted); text-transform: uppercase; letter-spacing: .07em; }
-#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-essence-pool:not(:disabled):hover { border-color: var(--ub-gold); background: rgba(var(--ub-gd), .18); transform: translateY(-1px); }
-#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-essence-pool.is-spent { border-color: color-mix(in srgb, var(--ub-gold) 70%, transparent); }
-#gameScreen.ui-beta:not(.hidden) ~ .rules-board-flow .rules-extra-token-total { width: 100%; text-align: center; color: var(--ub-gold-pale); font-weight: 800; }
+#gameScreen.ui-beta .rules-board-flow .rules-extra-essence-row[hidden] { display: none; }
+#gameScreen.ui-beta .rules-board-flow :is(.rules-extra-tribute-row, .rules-extra-essence-row) > span:first-child { color: var(--ub-muted); font-size: 14px; line-height: 1.3; text-align: center; }
+#gameScreen.ui-beta .rules-board-flow .rules-extra-tribute-count { display: inline-flex; align-items: center; gap: 10px; color: var(--ub-gold-pale); font-size: 17px; font-weight: 800; }
+#gameScreen.ui-beta .rules-board-flow .rules-extra-tribute-power { display: inline-flex; align-items: center; gap: 4px; }
+#gameScreen.ui-beta .rules-board-flow :is(.rules-extra-tribute-count, .rules-extra-token-total) img { width: 20px; height: 20px; object-fit: contain; }
+#gameScreen.ui-beta .rules-board-flow .rules-extra-essence-pools { display: flex; align-items: stretch; justify-content: center; gap: 8px 10px; flex-wrap: wrap; width: 100%; }
+#gameScreen.ui-beta .rules-board-flow .rules-extra-essence-pool {
+  flex: 1 1 0; min-width: 0; max-width: 150px; min-height: 52px; margin: 0; padding: 6px 10px; display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  border: 1px solid var(--ub-line); border-radius: 12px; background: rgba(var(--ub-hi), .08); color: var(--ub-ink);
+  font-size: 18px; font-weight: 800; line-height: 1.1; box-shadow: none; cursor: pointer;
+}
+#gameScreen.ui-beta .rules-board-flow .rules-extra-essence-pool img { width: 26px; height: 26px; object-fit: contain; flex: none; }
+#gameScreen.ui-beta .rules-board-flow .rules-extra-essence-pool > span { display: flex; flex-direction: column; align-items: flex-start; }
+#gameScreen.ui-beta .rules-board-flow .rules-extra-essence-pool small { display: block; font-size: 10px; font-weight: 700; color: var(--ub-muted); text-transform: uppercase; letter-spacing: .07em; }
+#gameScreen.ui-beta .rules-board-flow .rules-extra-essence-pool:not(:disabled):hover { border-color: var(--ub-gold); background: rgba(var(--ub-gd), .18); transform: translateY(-1px); }
+#gameScreen.ui-beta .rules-board-flow .rules-extra-essence-pool:disabled { opacity: .45; cursor: default; }
+#gameScreen.ui-beta .rules-board-flow .rules-extra-essence-pool.is-spent { border-color: color-mix(in srgb, var(--ub-gold) 70%, transparent); background: rgba(var(--ub-gd), .12); }
+#gameScreen.ui-beta .rules-board-flow .rules-extra-token-total { display: inline-flex; align-items: center; justify-content: center; gap: 6px; width: 100%; color: var(--ub-gold-pale); font-family: var(--display-font); font-size: 18px; font-weight: 800; }
+#gameScreen.ui-beta .rules-board-flow .rules-extra-essence-confirm { display: block; width: auto; min-width: 160px; margin: 10px auto 0; }
 @media (max-height: 600px) {
   #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-choice-effect { font-size: 13px; line-height: 1.3; margin-bottom: 8px; }
   #gameScreen.ui-beta:not(.hidden) ~ #rulesChoicePanel.deck-reorder-screen .rules-choice-options:has(.rules-reorder-group),
