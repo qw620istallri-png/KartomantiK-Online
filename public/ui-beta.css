@@ -256,6 +256,8 @@
 
 /* ---------- cards on the field: art only, plus the automation overlays ---------- */
 #gameScreen.ui-beta .bf-card { transition: box-shadow 160ms; }
+/* the printed card already has its frame: no extra dark band around it */
+#gameScreen.ui-beta .bf-card .bf-card-face { border: 0; }
 #gameScreen.ui-beta .bf-card .bf-field-zone-marker { display: none; }
 #gameScreen.ui-beta .bf-card .ub-first-badge {
   position: absolute; z-index: 6; right: 8px; top: 8px; width: 30px; height: 30px; display: grid; place-items: center;
@@ -691,6 +693,10 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 #gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .inspect-history { order: 3; flex: none; width: auto; max-height: none; flex-direction: row; gap: 6px; overflow-x: auto; overflow-y: hidden; padding: 6px 0 2px; border-top: 1px solid #d3a94233; scrollbar-width: none; }
 #gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .inspect-history-card { flex: none; width: 38px; }
 #gameScreen.ui-beta:not(.hidden) ~ #inspectPanel .inspect-resize-handle { display: none; }
+/* the pile browser leaves the inspect column visible (inspecting a card from it
+   shows it there): it covers only the rest of the screen */
+#gameScreen.ui-beta:not(.hidden):not(.ub-phone) ~ #inspectPanel:not(.hidden) ~ #deckBrowserPanel { left: var(--ub-colW-root, 260px); }
+#gameScreen.ui-beta:not(.hidden):not(.ub-phone) ~ #inspectPanel:not(.hidden) ~ #deckBrowserPanel .box { width: min(calc(100% - 32px), 1300px); }
 
 /* ---------- top bar theme picker ---------- */
 .ui-beta-theme-row { display: grid; gap: 4px; padding: 4px 0 6px; border-bottom: 1px solid #ffffff1f; margin-bottom: 2px; }

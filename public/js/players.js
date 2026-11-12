@@ -10,11 +10,35 @@ function visibleFieldZone(item) {
   return item.fieldZone || window.uiBeta?.fieldZone?.(item) || "field";
 }
 
+// Manual play: a card waiting in the Stack is not on the field, and a floating
+// card (stacked on another one) belongs to the zone of the card it floats on,
+// wherever its own coordinates happen to be. Returns null for a Stack card.
+function manualFieldAnchor(item) {
+  let current = item;
+  for (let depth = 0; current && depth < 12; depth += 1) {
+    if (current.manualStack) return null;
+    if (!current.stackedOn) return current;
+    const anchor = (latestState?.battlefield || []).find((other) => other.id === current.stackedOn);
+    if (!anchor || anchor === current) return current;
+    current = anchor;
+  }
+  return current;
+}
+
+// True when a field card is in its controller's Confrontation Zone.
+function inConfrontationZone(item) {
+  if (latestState?.rulesEngine?.enabled) return visibleFieldZone(item) === "confrontation";
+  const anchor = manualFieldAnchor(item);
+  return Boolean(anchor) && visibleFieldZone(anchor) === "confrontation";
+}
+
 function confrontationPlayerId(item) {
   if (latestState?.rulesEngine?.enabled) {
     return item.controllerId || item.ownerId;
   }
-  const placement = window.uiBeta?.manualPlacement?.(item);
+  const anchor = manualFieldAnchor(item);
+  if (!anchor) return null;
+  const placement = window.uiBeta?.manualPlacement?.(anchor);
   if (placement?.zone !== "confrontation") return null;
   return Object.values(latestState?.players || {}).find(
     (player) => Number(player.seat || 0) === Number(placement.seat || 0),
@@ -24,7 +48,7 @@ function confrontationPlayerId(item) {
 // Total Power of a player's face-up Manifestations in the Confrontation Zone
 function confrontationPowerOf(playerId) {
   return (latestState?.battlefield || []).reduce((total, item) => {
-    if (!item.faceUp || item.pendingSupportActionId || visibleFieldZone(item) !== "confrontation") return total;
+    if (!item.faceUp || item.pendingSupportActionId || !inConfrontationZone(item)) return total;
     if (confrontationPlayerId(item) !== playerId) return total;
     if (!fieldItemIsManifestation(item)) return total;
     // the server's own count when it sends one (never below 0, ignored Power = 0)
@@ -40,7 +64,7 @@ function activeTemperamentOf(playerId) {
   const battlefield = latestState?.battlefield || [];
   let best = null;
   battlefield.forEach((item, index) => {
-    if (!item.faceUp || item.pendingSupportActionId || visibleFieldZone(item) !== "confrontation") return;
+    if (!item.faceUp || item.pendingSupportActionId || !inConfrontationZone(item)) return;
     if ((item.controllerId || item.ownerId) !== playerId) return;
     if (!fieldItemIsManifestation(item)) return;
     const order = Number(item.confrontationOrder || 0);
