@@ -134,3 +134,29 @@ class FirstManifestationPlayabilityTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DewInvokerReplacedEntryTests(unittest.TestCase):
+    """Found by self-play (2026-11-12): with an exile_incoming_manifestations
+    effect on the player, the Manifestation chosen for Dew Invoker is exiled
+    instead of entering the Interzone. The discard used to be refused ("no
+    room") after the card had already been exiled, so the game froze."""
+
+    def test_an_exiled_entry_still_resolves_the_choice(self):
+        session = make_session("resolution_effects")
+        manifestation = TRIBUTE
+        give_hand(session, "p1", [manifestation])
+        session.rules_engine["ongoingEffects"].append({
+            "id": "exile-effect", "kind": "exile_incoming_manifestations",
+            "controllerId": "p2", "target": {"playerId": "p1"},
+            "source": {"cardId": CARD[2]},
+        })
+        choice = {"id": "c1", "kind": "discard_from_hand", "playerId": "p1", "count": 1,
+                  "requireManifestation": True, "destination": "interzone",
+                  "actionId": "dew", "controllerId": "p1", "sourceCardId": DEW_INVOKER}
+        session.rules_engine["pendingChoice"] = choice
+        error, _payload = session._resolve_rules_discard_choice("p1", "c1", choice, [manifestation])
+        self.assertIsNone(error)
+        self.assertNotIn(manifestation, session.players["p1"]["zones"]["hand"])
+        self.assertIn(manifestation, session.players["p1"]["zones"]["exile"])
+        self.assertIsNone(session.rules_engine["pendingChoice"])

@@ -1252,7 +1252,9 @@ class CardsChoicesMixin:
                     }],
                     "ability": {"result": {"kind": "move_zone_target_to_field_zone", "fieldZone": "interzone"}},
                 })
-                if (moved or {}).get("status") != "moved":
+                # A replacement (e.g. "exiled" by an exile_incoming_manifestations
+                # effect) still resolves the discard: only a refused move is an error.
+                if (moved or {}).get("status") in (None, "interzone_full", "target_missing"):
                     return "Your Interzone has no room for this Manifestation.", None
                 continue
             if destination == "exile":
