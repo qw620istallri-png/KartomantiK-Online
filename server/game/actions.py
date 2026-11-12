@@ -155,6 +155,9 @@ class ActionsMixin:
             )
             if permission_error:
                 return permission_error, None
+            if permission is None:
+                # nothing lets this card be played in Support from the Limbo
+                return "This card cannot be played in Support from the Limbo.", None
         elif zone == "deck" and kind == "play_card" and as_support:
             if (
                 container_id != player_id

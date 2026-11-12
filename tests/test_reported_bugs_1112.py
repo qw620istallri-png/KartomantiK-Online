@@ -142,6 +142,30 @@ class TrimRevertsMimerTests(game_tests.RealCardRulesCase):
         self.assertEqual(self.power_of(session, "mimer"), 3)
 
 
+
+class LimboSupportWithoutPermissionTests(game_tests.RealCardRulesCase):
+    """Bot lab, round 410: asking to play a Limbo card in Support when nothing
+    allows it crashed (permission None) instead of answering with a rule error."""
+
+    def test_a_limbo_card_without_permission_is_refused_cleanly(self):
+        session, p1, _p2 = self.make_session()
+        session.rules_engine.update(readyPlayerIds=["p1", "p2"], firstManifestationComplete=True,
+                                    priorityPlayerId="p1")
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("confrontation_reaction")
+        self.put(p1, "graveyard", ["m-2"])
+        error, source = session.rules_action_source(
+            "p1", "play_card", {"cardId": "m-2", "zone": "graveyard"}, as_support=True,
+        )
+        self.assertEqual(error, "This card cannot be played in Support from the Limbo.")
+        self.assertIsNone(source)
+        error, _action = session.declare_rules_action(
+            "p1", "Support", kind="play_card",
+            source={"cardId": "m-2", "zone": "graveyard"}, as_support=True,
+        )
+        self.assertIsNotNone(error)
+        self.assertEqual(p1["zones"]["graveyard"], ["m-2"])
+
+
 if __name__ == "__main__":
     import unittest
     unittest.main()
