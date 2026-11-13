@@ -91,6 +91,7 @@
     ubToolCreate: "Créer (jeton, essence, dé)",
     ubChoosePlayer: "Choisis un joueur",
     ubClickPlayer: "Clique sur le côté du terrain, le total, le nom ou l’icône du joueur visé.",
+    ubTargetPlayer: "Cibler {name}",
     ubClickCard: "Clique sur une des cartes en surbrillance sur le terrain.",
     ubDragDestination: "Glisse la carte dans ta colonne Interzone, ou dans ta colonne (sous ton deck).",
     ubDragToDeck: "Glisse une carte en surbrillance sur ton deck (ou clique dessus).",
@@ -168,6 +169,7 @@
     ubToolCreate: "Create (token, essence, die)",
     ubChoosePlayer: "Choose a player",
     ubClickPlayer: "Click the targeted player's side of the field (or their name).",
+    ubTargetPlayer: "Target {name}",
     ubClickCard: "Click one of the highlighted cards on the field.",
     ubDragDestination: "Drag the card into your Interzone column, or into your side column (under your deck).",
     ubDragToDeck: "Drag a highlighted card onto your deck (or click it).",
@@ -245,6 +247,7 @@
     ubToolCreate: "Crea (segnalino, essenza, dado)",
     ubChoosePlayer: "Scegli un giocatore",
     ubClickPlayer: "Clicca sul lato del campo (o sul nome) del giocatore bersaglio.",
+    ubTargetPlayer: "Bersaglio: {name}",
     ubClickCard: "Clicca su una delle carte evidenziate sul campo.",
     ubDragDestination: "Trascina la carta nella colonna Interzona, o nella tua colonna (sotto il mazzo).",
     ubDragToDeck: "Trascina una carta evidenziata sul tuo mazzo (o cliccala).",
@@ -3200,6 +3203,8 @@
         svg.remove();
         document.removeEventListener("pointermove", moveChoiceArrow);
       }
+      document.getElementById("ubChoiceArrowTag")?.remove();
+      document.getElementById("gameScreen")?.removeAttribute("data-ub-target-over");
       return;
     }
     if (svg) return;
@@ -3225,10 +3230,33 @@
     const curveY = Math.min(startY, event.clientY) - Math.min(120, Math.abs(event.clientX - startX) * .2 + 40);
     path.setAttribute("d", `M ${startX} ${startY} Q ${curveX} ${curveY} ${event.clientX} ${event.clientY}`);
     const players = sidePlayers();
-    const over = sideUnder(event.clientX, event.clientY, event.target);
-    for (const side of ["me", "opp"]) {
-      playerTargetNodes(side).forEach((node) => node.classList.toggle("ub-target-over", over === side && local.choice?.players.has(players[side]?.id)));
+    const side = sideUnder(event.clientX, event.clientY, event.target);
+    const over = side && local.choice?.players.has(players[side]?.id) ? side : null;
+    for (const name of ["me", "opp"]) {
+      playerTargetNodes(name).forEach((node) => node.classList.toggle("ub-target-over", over === name));
     }
+    // which player the click would pick, named at the tip of the arrow
+    const screen = document.getElementById("gameScreen");
+    if (over) screen?.setAttribute("data-ub-target-over", over);
+    else screen?.removeAttribute("data-ub-target-over");
+    let tag = document.getElementById("ubChoiceArrowTag");
+    if (!over) {
+      tag?.classList.add("hidden");
+      return;
+    }
+    if (!tag) {
+      tag = document.createElement("div");
+      tag.id = "ubChoiceArrowTag";
+      tag.className = "ub-choice-arrow-tag";
+      tag.setAttribute("aria-hidden", "true");
+      screen?.appendChild(tag);
+    }
+    const player = players[over];
+    tag.textContent = t("ubTargetPlayer").replace("{name}", player?.name || "");
+    tag.style.setProperty("--pc", playerColor(player?.id));
+    tag.style.left = `${event.clientX}px`;
+    tag.style.top = `${event.clientY}px`;
+    tag.classList.remove("hidden");
   }
 
   // which player a point of the screen names (their half of the field, header, icon or total)

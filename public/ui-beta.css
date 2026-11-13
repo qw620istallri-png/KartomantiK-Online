@@ -811,7 +811,9 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 .ub-choice-ghost .ub-adamant-badge { --ub-marker-tone:#d6b778; --ub-marker-ink:#fff1cf; }
 .ub-choice-ghost:has(.rules-support-badge) .ub-adamant-badge { top: calc(8px + var(--ub-marker-size,21px)); }
 @keyframes ub-choice-glow { 50% { outline-color: rgba(240, 217, 143, .35); } }
-#gameScreen.ui-beta .ub-side.ub-choice-target { box-shadow: inset 0 0 0 3px var(--ub-gold), inset 0 0 60px rgba(var(--ub-gd), .25); cursor: pointer; }
+/* a player to pick: both sides are only marked as clickable (dashed), the one under
+   the pointer lights up in its player's colour and the other one dims */
+#gameScreen.ui-beta .ub-side.ub-choice-target { outline: 2px dashed rgba(240, 217, 143, .45); outline-offset: -8px; cursor: pointer; }
 #gameScreen.ui-beta .ub-choice-target { cursor: pointer; }
 #gameScreen.ui-beta .ub-izcol.ub-drop-ok, #gameScreen.ui-beta .field-pile.ub-drop-ok { box-shadow: inset 0 0 0 2px rgba(240, 217, 143, .55); border-radius: 10px; }
 #gameScreen.ui-beta .ub-izcol.ub-drop-over, #gameScreen.ui-beta .field-pile.ub-drop-over { box-shadow: inset 0 0 0 3px var(--ub-gold), 0 0 24px rgba(240, 217, 143, .45); background-color: rgba(var(--ub-gd), .14); }
@@ -856,7 +858,15 @@ button.ub-chip:hover { background: rgba(var(--ub-hi), .12); }
 #gameScreen.ui-beta .ub-piles .field-pile .pile-label { white-space: normal; overflow: hidden; text-overflow: clip; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; line-height: 1.15; }
 
 /* ---------- player targets, arrow, spotlight ---------- */
-#gameScreen.ui-beta .ub-target-over.ub-side { box-shadow: inset 0 0 0 4px var(--ub-gold), inset 0 0 90px rgba(var(--ub-gd), .35) !important; }
+#gameScreen.ui-beta .ub-side.me.ub-target-over { --ub-tc: var(--me); }
+#gameScreen.ui-beta .ub-side.opp.ub-target-over { --ub-tc: var(--opp); }
+#gameScreen.ui-beta .ub-target-over.ub-side { outline: 4px solid var(--ub-tc, var(--ub-gold)); outline-offset: -4px; box-shadow: inset 0 0 120px color-mix(in srgb, var(--ub-tc, var(--ub-gold)) 45%, transparent) !important; }
+#gameScreen.ui-beta[data-ub-target-over="me"] .ub-side.opp.ub-choice-target,
+#gameScreen.ui-beta[data-ub-target-over="opp"] .ub-side.me.ub-choice-target { outline-color: transparent; filter: brightness(.6) saturate(.5); }
+#gameScreen.ui-beta :is(#ubAvMe, #ubAvOpp).ub-target-over .ub-av-circle { box-shadow: 0 0 0 3px #fff, 0 0 0 7px var(--pc), 0 0 28px 8px color-mix(in srgb, var(--pc) 70%, transparent); animation: none; }
+#gameScreen.ui-beta :is(#ubWhoMe, #ubWhoOpp).ub-target-over { border-radius: 12px; box-shadow: 0 0 0 3px var(--pc, var(--ub-gold)), 0 0 22px color-mix(in srgb, var(--pc, var(--ub-gold)) 60%, transparent); }
+.ub-choice-arrow-tag { position: fixed; z-index: 296; pointer-events: none; transform: translate(14px, -130%); padding: 5px 12px; border-radius: 99px; border: 2px solid var(--pc, #f0d98f); background: rgb(8 11 15 / .92); color: #fff; font: 600 14px/1.2 var(--display-font, Georgia, serif); letter-spacing: .04em; white-space: nowrap; box-shadow: 0 6px 18px #000a, 0 0 14px color-mix(in srgb, var(--pc, #f0d98f) 55%, transparent); }
+.ub-choice-arrow-tag.hidden { display: none; }
 .ub-choice-arrow { position: fixed; inset: 0; width: 100vw; height: 100vh; z-index: 295; pointer-events: none; overflow: visible; }
 .ub-choice-arrow .ub-arrow-line { fill: none; stroke: #f0d98f; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 10 8; filter: drop-shadow(0 0 6px rgba(240, 217, 143, .7)); animation: ub-arrow-flow 700ms linear infinite; }
 .ub-choice-arrow marker path { fill: #f0d98f; }

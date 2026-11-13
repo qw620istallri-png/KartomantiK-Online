@@ -39,8 +39,10 @@ function resetRulesChoiceInteraction() {
 
 function lockRulesChoiceAnswer() {
   const choice = latestState?.rulesEngine?.pendingChoice;
-  const waiting = rulesChoiceAnswerPending?.choiceId === choice?.id
-    && rulesChoiceAnswerPending?.playerId === choice?.playerId;
+  // no server choice (a player picked for a card being played): nothing to wait for
+  const waiting = Boolean(choice && rulesChoiceAnswerPending)
+    && rulesChoiceAnswerPending.choiceId === choice.id
+    && rulesChoiceAnswerPending.playerId === choice.playerId;
   $("#rulesChoiceOptions")?.setAttribute("aria-busy", waiting ? "true" : "false");
   // the effect bar's buttons (Validate, decline) lock with the screen they answer
   if (waiting) $$("#rulesChoiceOptions button, #rulesChoiceOptions input, #rulesChoiceOptions select, #rulesChoiceOptions textarea, #rulesChoicePanel .ep-actions button:not(.ep-peek-btn)")
