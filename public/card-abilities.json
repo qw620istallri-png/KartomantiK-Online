@@ -4231,7 +4231,8 @@
         "event": "enters_support",
         "zone": "confrontation",
         "eventController": "owner",
-        "eventNonToken": true
+        "eventNonToken": true,
+        "eventNotSource": true
       },
       "result": {
         "kind": "create_event_token_copy_in_support"

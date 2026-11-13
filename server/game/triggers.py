@@ -468,6 +468,10 @@ class TriggersMixin:
                     continue
                 if trigger.get("eventSourceOnly") and item_id != event_item_id:
                     continue
+                if trigger.get("eventNotSource") and item_id == event_item_id:
+                    # Gomeran: its own entry in Support is not a "manifestation
+                    # entering in Support" it can copy (no self-copy).
+                    continue
             if (
                 trigger.get("eventController") == "opponent"
                 and event_controller_id == controller_id
@@ -689,6 +693,7 @@ class TriggersMixin:
                         "sourceZone": str(trigger.get("sourceZone") or "")[:32],
                         "enteredFromZone": str(trigger.get("enteredFromZone") or "")[:32],
                         "eventSourceOnly": bool(trigger.get("eventSourceOnly")),
+                        "eventNotSource": bool(trigger.get("eventNotSource")),
                         "played": bool(trigger.get("played")),
                         "firstWillOfTurn": bool(trigger.get("firstWillOfTurn")),
                         "phaseIds": [

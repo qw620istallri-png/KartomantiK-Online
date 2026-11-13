@@ -107,10 +107,20 @@ def continuous_power_rules_for_card(card):
     return rules
 
 
+# Wills that put Manifestations or tokens into Support (Help!, Reforging Fate,
+# Twist the Soul, Consult, Mirror the Impulse, Rally, Recall the Consumed): Support Manifestations can only be played during the
+# Reaction, and nothing played in the Resolution may change the confrontation
+# outcome (rulings by Istallri, 13/11). The ids are
+# kept inside the function: tests compile it alone from this file.
 def play_phases_for_card(card):
     effect = card.get("effect") or ""
     if card.get("type") != "ephemeral_will":
         return None
+    if str(card.get("id") or "").startswith((
+        "mv2vad6gwrfbi1l", "z2fen73ktw8pbqz", "gu9rppos4r9ucsr", "9c7s9dn3sa5dcko",
+        "72zvsiuky5ytolh", "5q6t7i5pzctbi8s", "inner-deserts-072",
+    )):
+        return ["confrontation_reaction"]
     if re.search(r"only during the Reaction\b", effect):
         return ["confrontation_reaction"]
     if re.search(r"only during the Resolution\b", effect):

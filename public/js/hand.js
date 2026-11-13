@@ -240,8 +240,17 @@ function rulesTopOfStackIsWillClient(card) {
     && ["ephemeral_will", "persistent_will"].includes(cardsById.get(top.source?.cardId)?.type);
 }
 
+// Wills that put Manifestations or tokens into Support (ruling 13/11):
+// Reaction only, like play_phases_for_card on the server.
+const RULES_REACTION_ONLY_SUPPORT_WILL_IDS = [
+  "mv2vad6gwrfbi1l", "z2fen73ktw8pbqz", "gu9rppos4r9ucsr", "9c7s9dn3sa5dcko",
+  "72zvsiuky5ytolh", "5q6t7i5pzctbi8s", "inner-deserts-072",
+];
+
 function rulesEphemeralPhasesClient(card) {
   const effect = String(card?.effect || "");
+  const cardId = String(card?.id || "");
+  if (RULES_REACTION_ONLY_SUPPORT_WILL_IDS.some((prefix) => cardId.startsWith(prefix))) return ["confrontation_reaction"];
   if (/only during the Reaction\b/.test(effect)) return ["confrontation_reaction"];
   if (/only during the Resolution\b/.test(effect)) return ["resolution_compare", "resolution_effects", "resolution_move"];
   if (/only before the Revelation\b/.test(effect)) return ["confrontation_before_revelation"];

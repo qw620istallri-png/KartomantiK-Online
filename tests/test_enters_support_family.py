@@ -21,6 +21,7 @@ GOMERAN_ABILITY = {
         "zone": "confrontation",
         "eventController": "owner",
         "eventNonToken": True,
+        "eventNotSource": True,
     },
     "result": {"kind": "create_event_token_copy_in_support"},
 }
