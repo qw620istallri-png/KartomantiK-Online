@@ -156,7 +156,7 @@ class LimboSupportWithoutPermissionTests(game_tests.RealCardRulesCase):
         error, source = session.rules_action_source(
             "p1", "play_card", {"cardId": "m-2", "zone": "graveyard"}, as_support=True,
         )
-        self.assertEqual(error, "This card cannot be played in Support from the Limbo.")
+        self.assertEqual(error, "You have no effect letting you play this card from your Limbo.")
         self.assertIsNone(source)
         error, _action = session.declare_rules_action(
             "p1", "Support", kind="play_card",
