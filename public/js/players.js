@@ -814,9 +814,15 @@ function initPileBrowser() {
     pileBrowserStaged = new Map();
     setMyActivity(null);
   };
-  // Card-list whitespace remains a safe scrolling surface.
+  // A click on empty space closes the pile; on touch the card list's
+  // whitespace stays a safe scrolling surface.
   $("#deckBrowserPanel").addEventListener("click", (event) => {
-    if (event.target === $("#deckBrowserPanel")) $("#deckBrowserCloseBtn").click();
+    const panel = $("#deckBrowserPanel");
+    const empty = event.target === panel
+      || event.target === panel.querySelector(".box")
+      || event.target.matches(".deck-browser-head, .deck-browser-actions")
+      || (event.target === $("#deckBrowserCards") && lastPointerType !== "touch");
+    if (empty) $("#deckBrowserCloseBtn").click();
   });
   $("#deckBrowserValidateBtn").onclick = () => {
     const { ownerId, zone } = $("#deckBrowserPanel").dataset;
