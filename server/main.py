@@ -1376,12 +1376,14 @@ async def handle_message(ws, info, data):
             return await send_error(ws, "Unknown player.")
         count = max(1, min(int(data.get("count") or 1), 50))
         drawn = []
+        hand_before = len(player["zones"]["hand"])
         for _ in range(min(count, len(player["zones"]["deck"]))):
             card_id = player["zones"]["deck"][0]
             error, _ = session.move_zone_card(actor_id, "deck", actor_id, "hand", card_id, "bottom")
             if error:
                 return await send_error(ws, error)
             drawn.append(card_id)
+        session.move_new_hand_cards_left(actor_id, hand_before)
         session.add_log(actor_id, "draw", {"count": len(drawn)})
         session.touch()
         await broadcast_state(session)
@@ -1410,12 +1412,14 @@ async def handle_message(ws, info, data):
         else:
             needed = max(0, HAND_LIMIT - len(player["zones"]["hand"]))
             drawn = []
+            hand_before = len(player["zones"]["hand"])
             for _ in range(min(needed, len(player["zones"]["deck"]))):
                 card_id = player["zones"]["deck"][0]
                 error, _ = session.move_zone_card(actor_id, "deck", actor_id, "hand", card_id, "bottom")
                 if error:
                     return await send_error(ws, error)
                 drawn.append(card_id)
+            session.move_new_hand_cards_left(actor_id, hand_before)
             session.add_log(actor_id, "draw_to_limit", {"count": len(drawn)})
         session.touch()
         await broadcast_state(session)

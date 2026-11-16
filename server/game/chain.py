@@ -306,6 +306,7 @@ class ChainMixin:
             return drawn
         previous_batch = getattr(self, "_rules_draw_batch_id", None)
         self._rules_draw_batch_id = new_id()
+        hand_before = len(player["zones"]["hand"])
         try:
             for _index in range(min(max(0, int(count)), len(player["zones"]["deck"]))):
                 card_id = player["zones"]["deck"][0]
@@ -318,6 +319,7 @@ class ChainMixin:
                     drawn.append(card_id)
         finally:
             self._rules_draw_batch_id = previous_batch
+        self.move_new_hand_cards_left(player_id, hand_before)
         return drawn
 
     def rules_hand_limit(self, player_id, default_limit=7):

@@ -134,7 +134,8 @@ class PrivateHandClauses(unittest.TestCase):
                 else:
                     self.womb(s)
                     self.choose(s, option="yes")
-                self.choose(s, option="1")
+                # the drawn copy is the left one now (drawn cards enter on the left)
+                self.choose(s, option="0")
                 self.assertEqual(s.players["p2"]["zones"]["hand"], ["m2"])
                 s.rules_engine["actionStack"].append(gorlok)
                 s.resolve_rules_top_action()

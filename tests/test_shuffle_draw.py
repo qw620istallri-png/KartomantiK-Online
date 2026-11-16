@@ -201,7 +201,7 @@ class ShuffleDraw(unittest.TestCase):
         self.field(s,'l3ne0zha51w387z_en','purifying',owner='p2',zone='field')
         original=list(s.players['p2']['zones']['hand'])
         self.resolve(s)
-        self.assertEqual(s.players['p2']['zones']['hand'][:2],original)
+        self.assertEqual(s.players['p2']['zones']['hand'][-2:],original)
         self.assertEqual(len(s.players['p2']['zones']['hand']),6)
 
     def check_own_hand_protection(self,row):

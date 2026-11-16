@@ -146,6 +146,7 @@ function paintStaticText() {
   $("#tokenPanelHeading").textContent = t("tokenPanelHeading");
   $("#tokenPanelHint").textContent = t("tokenPanelHint");
   $("#tokenPowerLabel").textContent = t("tokenPower");
+  $("#tokenCountLabel").textContent = t("essenceCount");
   $("#tokenCancelBtn").textContent = t("close");
   $("#tokenCreateBtn").textContent = t("create");
   $("#createEssenceBtn").title = t("neutralToken");

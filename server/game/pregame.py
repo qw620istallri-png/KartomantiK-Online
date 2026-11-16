@@ -111,6 +111,13 @@ class PregameMixin:
         return None, {"enabled": player_id in enabled}
 
     def _draw_rules_recovery_hand(self, player_id, default_limit=7):
+        hand_before = len(self.players[player_id]["zones"]["hand"])
+        error, result = self._draw_rules_recovery_hand_cards(player_id, default_limit)
+        if not error:
+            self.move_new_hand_cards_left(player_id, hand_before)
+        return error, result
+
+    def _draw_rules_recovery_hand_cards(self, player_id, default_limit=7):
         before_limit = self.rules_recovery_hand_limit(player_id, default_limit, "before_draw")
         if self.rules_quasimillenary_active(player_id) and self.players[player_id]["zones"]["graveyard"]:
             player = self.players[player_id]

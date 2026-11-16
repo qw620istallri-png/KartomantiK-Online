@@ -67,7 +67,7 @@ class ConditionalDiscardReplacement(unittest.TestCase):
             expected=[] if has_bob else deck[kanon['count']:requested]
         else:expected=[] if has_bob else deck[:requested]
         self.assertEqual(s.players['p1']['zones']['deck'],deck[requested:])
-        self.assertEqual(s.players['p1']['zones']['hand'],hand[1:]+expected)
+        self.assertEqual(s.players['p1']['zones']['hand'],expected+hand[1:])
         if has_bob:
             # BOB replaces these draws too; an empty Hand must not hide a skipped draw.
             for cid in deck[:requested]:

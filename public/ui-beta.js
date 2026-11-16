@@ -2344,6 +2344,10 @@
       card.style.left = "";
       card.style.top = "";
       card.style.scale = "";
+      // mini cards: the card is as tall as its cut, with no empty band under the face
+      const ratio = compactCardRatio(item);
+      card.style.setProperty("--ub-card-base-height", `${Math.round(CARD_W * ratio)}px`);
+      card.classList.toggle("ub-card-compact", ratio !== RATIO);
       list.appendChild(card);
     });
   }

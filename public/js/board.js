@@ -263,6 +263,7 @@ function initTokenToolbar() {
     selectedTemperament = null;
     $$("#tokenTemperamentGrid button").forEach((b) => b.classList.remove("active"));
     $("#tokenPowerInput").value = 1;
+    $("#tokenCountInput").value = 1;
     $("#tokenPanel").classList.remove("hidden");
     setMyActivity("token");
   };
@@ -273,12 +274,17 @@ function initTokenToolbar() {
   $("#tokenCreateBtn").onclick = () => {
     if (!selectedTemperament) return;
     const power = Math.max(-20, Math.min(20, Math.round(Number($("#tokenPowerInput").value) || 0)));
+    const count = Math.max(1, Math.min(10, Math.round(Number($("#tokenCountInput").value) || 1)));
     const view = fieldCenterLogical();
     const center = rotateForSeat(view.x, view.y);
-    send({
-      type: "create_token_card", temperament: selectedTemperament, power,
-      x: center.x - 75 + Math.random() * 60 - 30, y: center.y - 105 + Math.random() * 60 - 30,
-    });
+    // several tokens fan out side by side around the field centre
+    for (let n = 0; n < count; n += 1) {
+      const offset = (n - (count - 1) / 2) * 40;
+      send({
+        type: "create_token_card", temperament: selectedTemperament, power,
+        x: center.x - 75 + offset + Math.random() * 16 - 8, y: center.y - 105 + Math.random() * 16 - 8,
+      });
+    }
     $("#tokenPanel").classList.add("hidden");
     setMyActivity(null);
   };

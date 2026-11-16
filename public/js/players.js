@@ -748,6 +748,17 @@ function wirePileBrowserCards(ownerId, zone) {
       ZONES.forEach((z) => {
         const toOwnerId = cardDestinationOwner(cardOwnerId, z);
         if (!toOwnerId || (toOwnerId === ownerId && z === zone)) return;
+        // the deck takes a side: on top or underneath
+        if (z === "deck") {
+          ["top", "bottom"].forEach((position) => {
+            const label = t(position === "top" ? "moveToDeckTop" : "moveToDeckBottom");
+            items.push({
+              label,
+              onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "move", toOwnerId, toZone: z, position, label }),
+            });
+          });
+          return;
+        }
         items.push({
           label: cardDestinationLabel(cardOwnerId, z),
           onSelect: () => stagePileBrowserChoice(ownerId, zone, cardId, { kind: "move", toOwnerId, toZone: z, label: t(z) }),
@@ -811,7 +822,7 @@ function initPileBrowser() {
     const { ownerId, zone } = $("#deckBrowserPanel").dataset;
     for (const [cardId, entry] of pileBrowserStaged) {
       if (entry.kind === "play") playFromZone(ownerId, zone, cardId, entry.faceUp);
-      else send({ type: "move_card", fromOwnerId: ownerId, fromZone: zone, toOwnerId: entry.toOwnerId, toZone: entry.toZone, cardId });
+      else send({ type: "move_card", fromOwnerId: ownerId, fromZone: zone, toOwnerId: entry.toOwnerId, toZone: entry.toZone, cardId, ...(entry.position ? { position: entry.position } : {}) });
     }
     pileBrowserStaged = new Map();
     $("#deckBrowserPanel").classList.add("hidden");

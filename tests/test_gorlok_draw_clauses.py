@@ -50,7 +50,8 @@ class GorlokDrawClauses(unittest.TestCase):
         self.assertEqual(self.shown(s), ["m2", "m3", "m4"])
         result = self.choose(s, option="1")
         self.assertEqual((result["cardId"], result["shown"]), ("m3", 3))
-        self.assertEqual(s.players["p2"]["zones"]["hand"], ["pw3", "m2", "m4"])
+        # drawn cards enter the Hand on its left, in draw order
+        self.assertEqual(s.players["p2"]["zones"]["hand"], ["m2", "m4", "pw3"])
         self.assertEqual(s.players["p2"]["zones"]["exile"], ["m3"])
         self.assertEqual(s.rules_manifestation_characteristics(host)["power"], before - 3)
 
@@ -166,7 +167,10 @@ class GorlokDrawClauses(unittest.TestCase):
     def test_old_identical_hand_copy_leaves_but_drawn_copy_remains_valid(self):
         s, _ = self.setup(hand=["m2"])
         action, = self.draw(s, 2)
+        # the old copy now sits right of the drawn cards: pick that instance
+        s._rules_hand_pick = ("p2", s.rules_hand_card_entries("p2")[-1]["id"])
         s.move_zone_card("p2", "hand", "p2", "graveyard", "m2")
+        s._rules_hand_pick = None
         self.resolve(s, action)
         self.assertEqual(self.shown(s), ["m2", "m3"])
 
@@ -185,11 +189,11 @@ class GorlokDrawClauses(unittest.TestCase):
         s, _ = self.setup(hand=["pw3"])
         action, = self.draw(s, 2)
         s.move_zone_card("p2", "hand", "p2", "hand", "m2", "bottom")
-        self.assertEqual(s.players["p2"]["zones"]["hand"], ["pw3", "m3", "m2"])
+        self.assertEqual(s.players["p2"]["zones"]["hand"], ["m3", "pw3", "m2"])
         self.resolve(s, action)
         self.assertEqual(self.shown(s), ["m2", "m3"])
         self.choose(s, option="0")
-        self.assertEqual(s.players["p2"]["zones"]["hand"], ["pw3", "m3"])
+        self.assertEqual(s.players["p2"]["zones"]["hand"], ["m3", "pw3"])
 
     def test_two_identical_draw_events_exile_the_selected_instance_only(self):
         s, host = self.setup(deck=["m2", "m2"])

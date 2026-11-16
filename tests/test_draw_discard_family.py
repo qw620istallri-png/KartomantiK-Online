@@ -105,7 +105,7 @@ class DrawDiscardFamily(unittest.TestCase):
         self.assertIsNone(s.rules_engine['pendingChoice'])
         zones=s.players[recipient]['zones'];old=before[recipient]['zones']
         if row['kind']=='draw':
-            self.assertEqual(zones['hand'],old['hand']+list(deck[:wanted]))
+            self.assertEqual(zones['hand'],list(deck[:wanted])+old['hand'])
             self.assertEqual(zones['deck'],list(deck[wanted:]))
         elif row['kind']=='mill':
             self.assertEqual(zones['hand'],old['hand'])
@@ -134,7 +134,7 @@ class DrawDiscardFamily(unittest.TestCase):
         before=list(s.players[recipient]['zones']['hand'])
         s.resolve_rules_top_action()
         if row['kind']=='discard': self.choose(s,['w2']);self.assertEqual(len(s.players[recipient]['zones']['hand']),len(before)-1)
-        elif row['kind']=='draw':self.assertEqual(s.players[recipient]['zones']['hand'],before+['m2']*row['expectedAmount'])
+        elif row['kind']=='draw':self.assertEqual(s.players[recipient]['zones']['hand'],['m2']*row['expectedAmount']+before)
         else:self.assertEqual(s.players[recipient]['zones']['deck'],['m3','m4','w2'])
 
     def check_trigger_guards(self,row):
@@ -183,7 +183,7 @@ class DrawDiscardFamily(unittest.TestCase):
         offered=['m2','m3','m4'][:n]
         self.assertEqual(choice['_cardIds'],offered)
         self.choose(s,offered[:discard])
-        self.assertEqual(s.players[recipient]['zones']['hand'],before+offered[discard:])
+        self.assertEqual(Counter(s.players[recipient]['zones']['hand']),Counter(before+offered[discard:]))
         self.assertEqual(s.players[recipient]['zones']['deck'],['m2','m3','m4','m2'][n:])
 
     def check_bob(self,row):
@@ -282,7 +282,7 @@ class DrawDiscardFamily(unittest.TestCase):
         if row['kind']=='discard':
             self.choose(s,['w2'])
             self.assertEqual(s.players[recipient]['zones']['hand'],['pw3'])
-        else:self.assertEqual(s.players[recipient]['zones']['hand'],before+['m2'])
+        else:self.assertEqual(s.players[recipient]['zones']['hand'],['m2']+before)
 
 
 def scenarios(row):

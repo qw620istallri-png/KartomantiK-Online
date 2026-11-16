@@ -272,6 +272,20 @@ class ZonesMixin:
             by_player[player_id] = entries
         return entries
 
+    def move_new_hand_cards_left(self, player_id, before_count):
+        """Cards that just entered the Hand (appended in draw order) go to its
+        left end, still in draw order; private occurrence identities follow."""
+        hand = self.players[player_id]["zones"]["hand"]
+        added = len(hand) - max(0, int(before_count))
+        if added <= 0 or added >= len(hand):
+            return
+        entries = None
+        if getattr(self, "rules_engine", {}).get("enabled"):
+            entries = self.rules_hand_card_entries(player_id)
+        hand[:] = hand[-added:] + hand[:-added]
+        if entries is not None and len(entries) == len(hand):
+            entries[:] = entries[-added:] + entries[:-added]
+
     def rules_surviving_drawn_hand_cards(self, player_id, cards):
         current = {entry["id"]: entry["cardId"] for entry in self.rules_hand_card_entries(player_id)}
         return [card for card in cards if current.get(card.get("handEntryId")) == card.get("cardId")]
