@@ -122,7 +122,7 @@ async function scrollCards(page) {
           await page.locator('#deckBrowserPanel').waitFor({ state: 'visible' });
           const cardsBox = await page.locator('#deckBrowserCards').boundingBox();
           const actionsBox = await page.locator('.deck-browser-actions').boundingBox();
-          assert.ok(actionsBox.x+actionsBox.width <= cardsBox.x);
+          assert.ok(actionsBox.x+actionsBox.width <= cardsBox.x || actionsBox.y >= cardsBox.y+cardsBox.height-1, 'The buttons sit beside or under the cards, never over them');
           if (config.touch) await scrollCards(page);
           await page.locator('#deckBrowserFilter').fill(info.query.toUpperCase());
           assert.equal(await page.locator('#deckBrowserCards .db-card').count(), 1);

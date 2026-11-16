@@ -689,7 +689,11 @@ function fitActiveContextMenu() {
   menu.style.maxWidth = Math.max(0, width - 8) + "px";
   menu.style.minWidth = Math.min(170, Math.max(0, width - 8)) + "px";
   const rect = menu.getBoundingClientRect();
-  menu.style.left = Math.max(left + 4, Math.min(parseFloat(menu.style.left) || 0, left + width - rect.width - 4)) + "px";
+  // a menu opened beside the inspect column never covers it
+  const inspect = document.querySelector("#inspectPanel:not(.hidden) .box")?.getBoundingClientRect();
+  const besideInspect = inspect && inspect.width < width / 2 && Number(menu.dataset.x) >= inspect.right;
+  const minLeft = besideInspect ? inspect.right + 4 : left + 4;
+  menu.style.left = Math.max(minLeft, Math.min(parseFloat(menu.style.left) || 0, left + width - rect.width - 4)) + "px";
   menu.style.top = Math.max(top + 4, Math.min(parseFloat(menu.style.top) || 0, top + height - rect.height - 4)) + "px";
 }
 window.addEventListener("resize", fitActiveContextMenu);
@@ -766,6 +770,7 @@ function showContextMenu(clientX, clientY, items) {
   menu.className = "ctx-menu";
   menu.style.left = clientX + "px";
   menu.style.top = clientY + "px";
+  menu.dataset.x = clientX;
   menu.innerHTML = items
     .map((item, i) => {
       if (item.separator) return `<div class="ctx-sep"></div>`;

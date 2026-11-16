@@ -772,7 +772,16 @@ function wirePileBrowserCards(ownerId, zone) {
 
 const DECK_BROWSER_SIZE_KEY = "ko_deck_browser_card_w";
 
+// The size slider counts for a 1440x900 screen: larger screens scale the
+// cards up with them (up to twice), smaller ones keep the chosen size.
+function updatePileBrowserScale() {
+  const scale = Math.min(2, Math.max(1, Math.min(window.innerWidth / 1440, window.innerHeight / 900)));
+  document.documentElement.style.setProperty("--db-scale", scale.toFixed(3));
+}
+
 function initPileBrowser() {
+  updatePileBrowserScale();
+  window.addEventListener("resize", updatePileBrowserScale);
   $("#deckBrowserFilterLabel").textContent = t("deckBrowserFilter");
   $("#deckBrowserFilter").placeholder = t("deckBrowserFilter");
   $("#deckBrowserFilter").oninput = () => {
