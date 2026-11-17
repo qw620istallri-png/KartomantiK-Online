@@ -596,8 +596,29 @@ function updateRarityPointer(el, event, tilt, source = el) {
 
 function bindRarityPointer(el, tilt = false, source = el) {
   if (!el || !source || !el.classList.contains("ko-rarity-card")) return;
-  source.addEventListener("pointermove", (event) => updateRarityPointer(el, event, tilt, source));
+  // Bind once per source (inspect re-binds the same panel on every card) and
+  // apply at most one pointer update per frame, so fast mouse moves stay cheap.
+  if (source._koRarityPointer) {
+    Object.assign(source._koRarityPointer, { el, tilt });
+    return;
+  }
+  const binding = { el, tilt, pending: null, frame: 0 };
+  source._koRarityPointer = binding;
+  source.addEventListener("pointermove", (event) => {
+    binding.pending = event;
+    if (binding.frame) return;
+    binding.frame = requestAnimationFrame(() => {
+      binding.frame = 0;
+      const pending = binding.pending;
+      binding.pending = null;
+      if (pending) updateRarityPointer(binding.el, pending, binding.tilt, source);
+    });
+  });
   source.addEventListener("pointerleave", () => {
+    if (binding.frame) cancelAnimationFrame(binding.frame);
+    binding.frame = 0;
+    binding.pending = null;
+    const { el, tilt } = binding;
     el.style.setProperty("--spot-x", "50%");
     el.style.setProperty("--spot-y", "50%");
     el.style.setProperty("--fx-shift-x", "0px");

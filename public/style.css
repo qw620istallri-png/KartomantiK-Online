@@ -2716,6 +2716,13 @@ body:not(.rarity-effects-disabled) .rarity-desert {
 @media (prefers-reduced-motion: reduce) {
   .rarity-desert-surface,.desert-storm-layer { animation: none; }
 }
+/* Perf: looping rarity animations (glows, sweeps, sand storm) only run on the
+   card being looked at: hovered, zoomed from the hand/deck or in the inspect
+   panel. Every other rarity card keeps its look but stops repainting. */
+.ko-rarity-card:not(:hover):not(.hand-card-hover-clone):not(.db-card-hover-clone):not(.inspect-img),
+.ko-rarity-card:not(:hover):not(.hand-card-hover-clone):not(.db-card-hover-clone):not(.inspect-img)::after,
+.ko-rarity-card:not(:hover):not(.hand-card-hover-clone):not(.db-card-hover-clone):not(.inspect-img) .rarity-desert-surface,
+.ko-rarity-card:not(:hover):not(.hand-card-hover-clone):not(.db-card-hover-clone):not(.inspect-img) .desert-storm-layer { animation-play-state: paused; }
 
 /* ---------- assisted combat: compact Arena-style play surface ---------- */
 .game-header-hot-zone {
