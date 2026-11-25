@@ -84,6 +84,8 @@ function captureRulesVfxEvent(entry) {
     (event.cleanupMoves || []).slice(0, 12).filter((move) => !move.removedCopy).forEach((move) => rulesVfxHoldCard(move.cardId, move.origin, move.originSize, move.compactHold));
     if (event.supportWin) rulesVfxHoldCard(event.supportWin.cardId, event.supportWin.origin);
   }
+  // Mollino: the First Manifestation stays in view until it flies under its deck
+  (event.preMoved || []).forEach((move) => rulesVfxHoldCard(move.cardId, move.origin));
   return event;
 }
 
@@ -192,10 +194,20 @@ function captureRulesVfxEventInner(entry) {
       return element && image ? { image, origin: rulesVfxCenter(element) } : null;
     }).filter(Boolean)
     : [];
+  // Mollino: the opposing First Manifestation goes under its deck before the
+  // Chain. Remember where it stood before the board re-renders.
+  const preMoved = entry.type === "rules_action_resolved"
+    ? (details.effectResult?.preMoved || []).slice(0, 4).map((move) => ({
+      cardId: move.cardId,
+      origin: rulesVfxCenter(rulesVfxFindBattlefieldItem(move.itemId)) || rulesVfxPlayerOrigin(move.ownerId),
+      target: rulesVfxPileCenter(move.ownerId, "deck") || rulesVfxPlayerOrigin(move.ownerId),
+    }))
+    : [];
   return {
     entry,
     stateDestroyed,
     massExiled,
+    preMoved,
     cleanupMoves: entry.type === "rules_confrontation_cleanup" ? collectRulesVfxCleanupMoves(details, fallback) : [],
     spotlightOrigin,
     declaredTargets,
@@ -1681,6 +1693,17 @@ function playRulesVfxEventInner(event) {
         return playRulesVfxTopReveal(entry);
       }
       playRulesVfxCardScene(entry, target);
+      const preMoved = event.preMoved || [];
+      preMoved.forEach((move, index) => {
+        // shown one after the other, after the effect is read, so the
+        // Chain that follows is not mistaken for the same movement
+        setRulesVfxTimeout(() => {
+          if (!rulesVfxReducedMotion()) {
+            playRulesVfxFlight("effect-card", move.origin, move.target, { cardId: move.cardId, index, big: true });
+          }
+          playRulesVfxImpact(move.target, t("rulesVfxDeckBottom"), "moved", { delay: 380 });
+        }, vfxMs(900 + index * 700));
+      });
       (event.massExiled || []).forEach((card, index) => playRulesVfxExileDissolve(card.origin, card.image, 500 + index * 90));
       (event.stateDestroyed || []).forEach((move, index) => {
         if (rulesVfxReducedMotion()) {
@@ -1795,6 +1818,8 @@ function playRulesVfxEventInner(event) {
       if (movedCard?.status === "removed_copy") {
         playRulesVfxImpact(movedCard.origin, t("rulesVfxCopyGone"), "target-gone");
       }
+      // the Chain window waits for this beat (rulesAnimationsBusyFor)
+      if (preMoved.length) return 900 + preMoved.length * 700 + 1100;
       return;
     }
     if (entry.type === "rules_choice_resolved") {

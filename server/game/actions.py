@@ -124,7 +124,7 @@ class ActionsMixin:
             if kind == "play_card" and not as_support and not tebebe_manifestation and not (
                 metadata.get("type") in RULES_WILL_TYPES
                 and (
-                    item.get("playableFree") == self.phase_tracker["turn"]
+                    item.get("playableFree")
                     or item.get("concealedWill")
                     or item.get("persuaded")
                 )
@@ -293,7 +293,7 @@ class ActionsMixin:
             if played_item and played_item.get("tebebeConcealed"):
                 clean_source["fixedTribute"] = {"hollow": 3}
             elif played_item and (
-                played_item.get("playableFree") == self.phase_tracker["turn"]
+                played_item.get("playableFree")
                 or played_item.get("concealedFree")
             ):
                 clean_source["noTribute"] = True

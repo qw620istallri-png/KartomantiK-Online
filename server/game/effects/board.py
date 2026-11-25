@@ -193,6 +193,13 @@ class BoardEffectsMixin:
             }
         if self.rules_support_entry_locked(target_id, put=True):
             return {"kind": result.get("kind"), "status": "prevented", "discarded": discarded}
+        if self.rules_card_blocked_from_confrontation(target_id, found):
+            # Kox / Zizek: uncovered, but it cannot enter Support. It is not one
+            # of the discarded cards, so it stays where it is (top of the deck).
+            return {
+                "kind": result.get("kind"), "status": "cannot_enter",
+                "cardId": found, "discarded": discarded,
+            }
         owner_id = self.take_zone_card(target_id, "deck", found)
         seat = self.players[target_id].get("seat")
         item = {
@@ -268,6 +275,8 @@ class BoardEffectsMixin:
             return {"kind": result.get("kind"), "status": "target_missing"}
         if self.rules_support_entry_locked(self.rules_item_controller_id(item), put=True):
             return {"kind": result.get("kind"), "status": "prevented"}
+        if self.rules_card_blocked_from_confrontation(self.rules_item_controller_id(item), item.get("cardId")):
+            return {"kind": result.get("kind"), "status": "cannot_enter"}
         item["stackedOn"] = None
         self.mark_rules_support_entry(item)
         self.queue_rules_effect_support_entry(item, "interzone", enters_field=False)
@@ -777,6 +786,8 @@ class BoardEffectsMixin:
             return {"kind": result.get("kind"), "status": "target_missing"}
         if self.rules_support_entry_locked(player_id, put=True):
             return {"kind": result.get("kind"), "status": "prevented"}
+        if self.rules_card_blocked_from_confrontation(player_id, card_id):
+            return {"kind": result.get("kind"), "status": "cannot_enter"}
         self.take_zone_card(container_id, "receptacle", card_id)
         seat = self.players[player_id].get("seat")
         item = {

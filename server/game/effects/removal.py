@@ -100,6 +100,8 @@ class RemovalEffectsMixin:
             return {"kind": result.get("kind"), "status": "prevented"}
         moved = []
         for item in list(self.rules_confrontation_items(player_id, ("stalemate",))):
+            if self.rules_card_blocked_from_confrontation(player_id, item.get("cardId")):
+                continue
             item["stackedOn"] = None
             self.mark_rules_support_entry(item)
             moved.append(item["id"])

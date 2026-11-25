@@ -532,6 +532,8 @@ class CardsEffectsMixin:
             or card_id not in self.players[owner_id]["zones"]["graveyard"]
         ):
             return {"kind": result.get("kind"), "status": "source_missing"}
+        if self.rules_card_blocked_from_confrontation(owner_id, card_id):
+            return {"kind": result.get("kind"), "status": "cannot_enter"}
         self.take_zone_card(owner_id, "graveyard", card_id)
         seat = self.players[owner_id].get("seat")
         item = {
@@ -625,6 +627,8 @@ class CardsEffectsMixin:
                 "kind": result.get("kind"),
                 "status": "target_missing",
             }
+        if self.rules_card_blocked_from_confrontation(player_id, target.get("cardId")):
+            return {"kind": result.get("kind"), "status": "cannot_enter"}
         error, owner_id, replacement = self.rules_zone_move_replacement(
             target.get("containerId"), "graveyard", "battlefield", target.get("cardId"),
         )

@@ -238,10 +238,19 @@ class BoardMixin:
         settled = []
         for item in list(self.battlefield):
             manifestation = item.get("willManifestation")
-            if not manifestation or item.get("id") not in participant_ids:
+            if not manifestation:
+                continue
+            # A Will put into the Stalemate Zone before the Resolution (Atavic
+            # Volatility...) "enters stalemate": it settles like a stalemate.
+            put_in_stalemate = (
+                item.get("id") not in participant_ids
+                and self.rules_field_zone(item) == "stalemate"
+                and manifestation.get("turn") == self.phase_tracker["turn"]
+            )
+            if item.get("id") not in participant_ids and not put_in_stalemate:
                 continue
             controller_id = self.rules_item_controller_id(item)
-            if result.get("stalemate"):
+            if result.get("stalemate") or put_in_stalemate:
                 key = "onStalemate"
             elif result.get("winnerId") == controller_id:
                 key = "onWin"
@@ -260,9 +269,12 @@ class BoardMixin:
                 entry = self._rules_remove_field_item(item, owner_id, "exile", "top")
             else:
                 # Ju Lien: the Will stays on the field (effects still off) and can
-                # be played from there, without tribute, until the end of the turn.
+                # be played from there, without tribute, as if it were in the hand.
+                # The card sets no time limit, so the right lasts while it stays
+                # there (before, it ended with the turn and left a dead Will on
+                # the field for the rest of the game).
                 self.revert_rules_will_manifestation(item)
-                item["playableFree"] = self.phase_tracker["turn"]
+                item["playableFree"] = True
                 entry = {"status": "playable_free"}
             participant_ids.discard(item.get("id"))
             settled.append({**entry, "itemId": item.get("id"), "cardId": item.get("cardId"), "outcome": outcome})
@@ -552,6 +564,14 @@ class BoardMixin:
             ) < needed
         return False
 
+    def rules_card_blocked_from_confrontation(self, player_id, card_id):
+        """Kox ("cannot enter the Confrontation Zone") and Zizek (unless 6 Wills
+        in your Limbo): Support is in the Confrontation Zone, so no effect may
+        put them there either (Chain, Consult, Limbo or Vessel to Support...)."""
+        return self.rules_confrontation_entry_blocked(
+            player_id, self.card_rules.get(card_id, {})
+        )
+
     def rules_card_can_enter_support(self, item, from_zone="interzone"):
         metadata = self.rules_item_card_rules(item)
         if self.rules_confrontation_entry_blocked(
@@ -819,6 +839,8 @@ class BoardMixin:
     def rules_card_chain_restriction_error(self, player_id, card_id):
         if self.card_rules.get(card_id, {}).get("playAsPersistentWill"):
             return "This Manifestation can only be played as a Persistent Will and cannot be Chained."
+        if self.rules_card_blocked_from_confrontation(player_id, card_id):
+            return "This Manifestation cannot enter the Confrontation Zone."
         if self.rules_support_entry_locked(player_id):
             return "Manifestations cannot be put in Support until the end of the turn."
         return self.rules_card_play_restriction_error(player_id, card_id)

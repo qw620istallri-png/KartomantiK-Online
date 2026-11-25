@@ -204,6 +204,7 @@ class DecisionsChoicesMixin:
                 option == "yes" and item is not None
                 and self.rules_field_zone(item) == "interzone"
                 and not self.rules_support_entry_locked(player_id)
+                and not self.rules_card_blocked_from_confrontation(player_id, item.get("cardId"))
             ):
                 item["stackedOn"] = None
                 self.mark_rules_support_entry(item)

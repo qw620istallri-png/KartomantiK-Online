@@ -626,6 +626,8 @@ class ChainMixin:
         zone = result.get("zone")
         ready = []
         proofs = []
+        # Mollino: what left the field before the Chain, so the table can show it
+        pre_moved = []
         for chain_player_id in chain_players:
             member = self.players.get(chain_player_id)
             if member is None:
@@ -637,9 +639,15 @@ class ChainMixin:
                     )
                 )
                 if first is not None:
-                    self._rules_remove_field_item(
+                    movement = self._rules_remove_field_item(
                         first, first.get("ownerId"), "deck", "bottom"
                     )
+                    pre_moved.append({
+                        "itemId": first.get("id"), "cardId": first.get("cardId"),
+                        "ownerId": first.get("ownerId"), "toZone": "deck",
+                        "position": "bottom",
+                        "status": (movement or {}).get("status"),
+                    })
             eligible = list(self.rules_chain_candidates(chain_player_id, zone))
             if eligible:
                 ready.append(chain_player_id)
@@ -658,7 +666,7 @@ class ChainMixin:
         ]
         proof_payload = {}
         if forced:
-            proof_payload = {
+            proof_payload.update({
                 "handProof": list(self.players[forced[0]]["zones"]["hand"]),
                 "handProofPlayerId": forced[0],
                 "handProofs": [
@@ -668,13 +676,14 @@ class ChainMixin:
                     }
                     for pid in forced
                 ],
-            }
+            })
         if not ready:
             return {
                 "kind": "chain_manifestation", "status": "no_eligible_card",
                 "playerId": chain_players[0] if chain_players else controller_id,
                 "fromZone": zone,
                 **proof_payload,
+                **({"preMoved": pre_moved} if pre_moved else {}),
             }
         first_player_id = ready[0]
         choice = self.make_rules_chain_choice(
@@ -697,6 +706,8 @@ class ChainMixin:
             "fromZone": zone, "optional": choice["optional"],
         }
         payload.update(proof_payload)
+        if pre_moved:
+            payload["preMoved"] = pre_moved
         return payload
 
     def commit_rules_simultaneous_chain_choice(self, choice, card_id, container_id, placement):
@@ -813,6 +824,8 @@ class ChainMixin:
 
     def place_rules_hand_card_in_support(self, player_id, card_id):
         """Play a Manifestation from hand into Support by an effect (queues its entry triggers)."""
+        if self.rules_card_blocked_from_confrontation(player_id, card_id):
+            return None
         owner_id = self.take_zone_card(player_id, "hand", card_id)
         if owner_id is None:
             return None

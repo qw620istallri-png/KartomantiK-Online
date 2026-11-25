@@ -469,7 +469,7 @@ class PriorityMixin:
                 card_type in RULES_WILL_TYPES
                 and (
                     item.get("concealedWill") or item.get("persuaded")
-                    or item.get("playableFree") == self.phase_tracker["turn"]
+                    or item.get("playableFree")
                 )
                 and can_play(item.get("cardId"), card_type)
             ):

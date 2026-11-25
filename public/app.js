@@ -2,7 +2,7 @@
 // (see index.html); this file keeps every statement that runs at load, in order.
 
 // Keep this value in sync with index.html and style.css when a local asset changes.
-const STATIC_ASSET_VERSION = "20261124-rules-beta-153-47";
+const STATIC_ASSET_VERSION = "20261125-rules-beta-153-48";
 
 {
   const versionEl = document.getElementById("appVersion");

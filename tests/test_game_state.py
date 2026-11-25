@@ -9540,9 +9540,14 @@ class ConfrontationOutcomePilotTests(unittest.TestCase):
         session.rules_engine["firstManifestationItemIds"] = {"p2": "first"}
         self.put(p2, "hand", ["m-2"])
         self.put(p2, "deck", ["m-4"])
-        session.apply_rules_action_result(self.chain_action(mollino))
+        payload = session.apply_rules_action_result(self.chain_action(mollino))
         self.assertIsNone(session.find_battlefield_item("first"))
         self.assertEqual(p2["zones"]["deck"], ["m-4", "m-3"])
+        # The table shows the card going under the deck before the Chain (report 25/11)
+        self.assertEqual(
+            [(m["itemId"], m["cardId"], m["position"]) for m in payload["preMoved"]],
+            [("first", "m-3", "bottom")],
+        )
         self.assertEqual(session.rules_engine["pendingChoice"]["playerId"], "p2")
 
     def test_kazadur_gains_power_per_opponent_manifestation_up_to_three(self):
@@ -14171,7 +14176,7 @@ class LotTwentyOneTests(RealCardRulesCase):
             if winner == "p1":
                 self.assertEqual(settled[0]["status"], "playable_free")
                 item = session.find_battlefield_item(payload["itemId"])
-                self.assertEqual(item["playableFree"], session.phase_tracker["turn"])
+                self.assertIs(item["playableFree"], True)
                 self.assertEqual(session.rules_field_zone(item), "field")
                 self.assertEqual(session.rules_item_card_rules(item)["type"], "ephemeral_will")
                 self.assertNotIn("will-eph", p1["zones"]["hand"])
@@ -14196,18 +14201,47 @@ class LotTwentyOneTests(RealCardRulesCase):
                 self.assertIsNone(session.find_battlefield_item(payload["itemId"]))
             session.battlefield = []
 
-    def test_ju_lien_free_play_right_ends_with_the_turn(self):
+    def test_ju_lien_free_play_right_outlives_the_turn(self):
+        """Player report 25/11: the won Will stayed on the field for good.
+
+        The card sets no time limit: the Will can still be played for free on a
+        later turn instead of becoming a dead card on the field.
+        """
         session, p1, p2 = self.setup_wills()
         item = self.field_item("w", "p1", "will-eph", field_zone="field", controllerId="p1", x=0, y=0, rotation=0, stackedOn=None,
-                               effectsDisabled=True, playableFree=session.phase_tracker["turn"])
+                               effectsDisabled=True, playableFree=True)
         session.battlefield = [item]
         session.rules_engine["priorityPlayerId"] = "p1"
         session.phase_tracker["turn"] += 1
         session.prune_rules_ongoing_effects()
-        self.assertNotIn("playableFree", item)
-        error, _ = session.declare_rules_action(
+        self.assertTrue(item["playableFree"])
+        session.phase_tracker["index"] = ADVANCED_PHASES.index("end_actions")
+        error, action = session.declare_rules_action(
             "p1", "Play", kind="play_card", source={"cardId": "will-eph", "zone": "battlefield", "itemId": "w"})
-        self.assertIn("already on the field", error)
+        self.assertIsNone(error)
+        self.assertFalse(action["cost"]["tributePaid"])
+
+    def test_ju_lien_will_put_into_stalemate_before_the_resolution_is_exiled(self):
+        session, p1, p2 = self.setup_wills()
+        self.put(p1, "hand", ["will-eph"])
+        self.ju_lien_put(session, "will-eph")
+        will = session.battlefield[-1]
+        will["fieldZone"] = "stalemate"
+        result = {"winnerId": "p1", "stalemate": False}
+        settled = session.settle_rules_will_manifestations(result, set())
+        self.assertEqual(settled[0]["outcome"], "exile")
+        self.assertIsNone(session.find_battlefield_item(will["id"]))
+        self.assertIn("will-eph", p1["zones"]["exile"])
+
+    def test_ju_lien_will_that_never_fought_is_exiled_at_the_next_turn(self):
+        session, p1, p2 = self.setup_wills()
+        self.put(p1, "hand", ["will-eph"])
+        self.ju_lien_put(session, "will-eph")
+        will = session.battlefield[-1]
+        session.phase_tracker["turn"] += 1
+        session.prune_rules_ongoing_effects()
+        self.assertIsNone(session.find_battlefield_item(will["id"]))
+        self.assertIn("will-eph", p1["zones"]["exile"])
 
     def test_a_converted_will_that_never_fought_goes_back_to_normal_at_the_next_turn(self):
         session, p1, p2 = self.setup_wills()

@@ -501,11 +501,6 @@ class StackMixin:
                 self.release_rules_suspended_by(source_id)
         for pending in [entry for entry in self.battlefield if entry.get("pendingExile")]:
             self._rules_remove_field_item(pending, pending.get("ownerId"), "exile", "top")
-        for expired in [
-            entry for entry in self.battlefield
-            if entry.get("playableFree") and entry["playableFree"] != self.phase_tracker["turn"]
-        ]:
-            expired.pop("playableFree", None)
         for stale in [
             entry for entry in self.battlefield
             if entry.get("willManifestation")
@@ -514,7 +509,12 @@ class StackMixin:
                 or self.rules_field_zone(entry) not in {"confrontation", "stalemate"}
             )
         ]:
-            self.revert_rules_will_manifestation(stale)
+            if stale["willManifestation"].get("onWin") == "free_play":
+                # Ju Lien: a Will put from the hand that never won its
+                # confrontation is exiled; it must not stay on the field.
+                self._rules_remove_field_item(stale, stale.get("ownerId"), "exile", "top")
+            else:
+                self.revert_rules_will_manifestation(stale)
         battlefield_ids = {item.get("id") for item in self.battlefield}
         current_turn = self.phase_tracker["turn"]
         kept = []
