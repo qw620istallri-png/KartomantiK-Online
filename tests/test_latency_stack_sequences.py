@@ -234,6 +234,18 @@ class LatencyStackSequences(unittest.IsolatedAsyncioTestCase):
         await self.receive_until(self.ws1, lambda m: m.get("type") == "state" and not m["rulesEngine"].get("priorityPasses") and m["rulesEngine"]["priorityPlayerId"] == "p1")
         self.assertEqual(self.session.current_phase_id(), "confrontation_reaction")
 
+    async def test_pass_is_final_once_the_opponent_starts_acting(self):
+        self.prepare()
+        valid = self.context()
+        await self.send(self.ws1, {"type": "pass_priority", "passed": True, "rulesContext": valid})
+        await self.receive_until(self.ws2, lambda m: m.get("type") == "state" and m["rulesEngine"].get("priorityPasses") == ["p1"])
+        await self.send(self.ws2, {"type": "claim_rules_priority"})
+        await self.receive_until(self.ws1, lambda m: m.get("type") == "state" and m["rulesEngine"].get("priorityPassLocked"))
+        await self.send(self.ws1, {"type": "pass_priority", "passed": False, "rulesContext": valid})
+        error = await self.receive_until(self.ws1, lambda m: m.get("type") == "error")
+        self.assertIn("already acting", error.get("message", ""))
+        self.assertEqual(self.session.rules_engine["priorityPlayerId"], "p2")
+
     async def test_cancelling_a_gone_memory_really_resumes_the_suspended_stack(self):
         self.prepare([self.effect("bottom", 7)])
         self.session.rules_engine["pendingChoice"] = {"id": "obsolete-memory", "kind": "effect_memory_return",

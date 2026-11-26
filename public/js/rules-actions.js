@@ -1183,6 +1183,7 @@ function openRulesActionPanel(source) {
   const draft = buildRulesActionDraft(source);
   const { card, encodedAbility } = draft;
   if (!rules?.enabled || rules.priorityPlayerId !== myPlayerId || isObserver || !card) return;
+  claimRulesPriorityIfAnswering();
   if (draft.essencePlan.transcendentChoice) {
     closeRulesActionPanel();
     pendingRulesBoardFlow = { mode: "action", source, draft, selectedPaymentIndexes: new Set(), stage: "essence_allocation" };

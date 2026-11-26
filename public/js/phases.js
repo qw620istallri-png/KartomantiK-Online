@@ -95,6 +95,7 @@ function toggleMyPhasePass() {
       return;
     }
     const alreadyPassed = (rules.priorityPasses || []).includes(actionPlayerId);
+    if (alreadyPassed && rules.priorityPassLocked) return;
     if (alreadyPassed) send({
       type: "pass_priority",
       passed: false,
@@ -349,7 +350,9 @@ function renderRulesStack() {
   const immediatePending = rulesImmediateEffectPendingClient();
   const myPriority = playersReady && !pendingChoice && !immediatePending && !firstManifestation && !isObserver
     && (priorityPlayerId === myPlayerId || soloControlsPlayer(priorityPlayerId));
-  const canCancelPass = playersReady && !pendingChoice && !immediatePending && !isObserver && myPassActive;
+  const myPassShown = playersReady && !pendingChoice && !immediatePending && !isObserver && myPassActive;
+  // a pass can be taken back only while the opponent has not started acting
+  const canCancelPass = myPassShown && !rules.priorityPassLocked;
   const stack = Array.isArray(rules.actionStack) ? rules.actionStack : [];
   const resolutionArmed = stack.length > 0 && priorityPasses.length > 0;
   if (!myPriority && !$("#rulesActionPanel").classList.contains("hidden")) closeRulesActionPanel();
@@ -365,7 +368,7 @@ function renderRulesStack() {
   const priority = $("#rulesPriority");
   priority.classList.toggle("waiting", firstManifestation || !playersReady || !priorityPlayerId || Boolean(pendingChoice) || immediatePending);
   priority.classList.toggle("is-mine", myPriority);
-  priority.classList.toggle("is-passed", canCancelPass);
+  priority.classList.toggle("is-passed", myPassShown);
   priority.textContent = firstManifestation
     ? t(isObserver ? "rulesFirstManifestationObserver" : mineFirstValidated ? "rulesFirstManifestationWaiting" : "rulesFirstManifestationChoose")
     : pendingChoice
@@ -378,7 +381,7 @@ function renderRulesStack() {
     ? t("rulesImmediateResolving")
     : !playersReady || !priorityPlayerId
     ? t("rulesWaitingPlayers")
-    : canCancelPass
+    : myPassShown
       ? rulesText("rulesPriorityPassedSelf", { player: rulesPlayerName(priorityPlayerId) })
     : myPriority && stack.length
       ? t(resolutionArmed ? "rulesYourPriorityResolve" : "rulesYourPriorityRespond")
@@ -690,4 +693,19 @@ function renderRulesPregame() {
   $("#rulesPregameReadyBtn").disabled = decksReady ? !canKeepHand : !mineHasDeck;
   $("#rulesPregameReadyBtn").dataset.action = decksReady ? "opening" : "deck";
   $("#rulesPregameReadyBtn").classList.toggle("opponent-validated", !decksReady && opponentDeckConfirmed && !mineDeckConfirmed);
+}
+
+// 26/11: once the opponent passed to us, starting an action (opening a play
+// or a payment) locks their pass, so they cannot take priority back mid-payment.
+let lastRulesPriorityClaim = "";
+function claimRulesPriorityIfAnswering() {
+  const rules = latestState?.rulesEngine;
+  if (!rules?.enabled || isObserver || soloModeActive()) return;
+  const passes = rules.priorityPasses || [];
+  if (rules.priorityPlayerId !== myPlayerId || !passes.length || passes.includes(myPlayerId) || rules.priorityPassLocked) return;
+  const stack = rules.actionStack || [];
+  const key = JSON.stringify([latestState?.phaseTracker?.turn, latestState?.phaseTracker?.index, passes, stack.length, stack[stack.length - 1]?.id]);
+  if (key === lastRulesPriorityClaim) return;  // once per priority window
+  lastRulesPriorityClaim = key;
+  send({ type: "claim_rules_priority" });
 }

@@ -241,6 +241,18 @@ class ResolutionMixin:
                 self.queue_rules_simultaneous_actions(valid)
         return resolved
 
+    def claim_rules_priority(self, player_id):
+        """The player holding priority after the opponent passed starts an
+        action: from now on that pass is final (it can only be cancelled while
+        the other player has done nothing)."""
+        if not self.rules_engine["enabled"] or player_id not in self.players:
+            return "Unable to claim priority.", None
+        passes = self.rules_engine["priorityPasses"]
+        if self.rules_engine.get("priorityPlayerId") != player_id or not passes or player_id in passes:
+            return None, {"status": "ignored"}
+        self.rules_engine["priorityPassLocked"] = True
+        return None, {"status": "locked"}
+
     @replacement_checkpoint("priority")
     def pass_rules_priority(self, player_id, passed=None):
         if not self.rules_engine["enabled"]:
@@ -256,6 +268,11 @@ class ResolutionMixin:
         if self.rules_recovery_mulligan_active():
             return "Complete the required Recovery Mulligan before playing.", None
         if passed is False:
+            # 26/11 report: once the opponent has started an action with the
+            # priority this pass gave them (even only choosing a payment), the
+            # pass can no longer be taken back.
+            if self.rules_engine.get("priorityPassLocked") and self.rules_engine["priorityPasses"] == [player_id]:
+                return "Your opponent is already acting: your pass can no longer be cancelled.", None
             if self.rules_engine["priorityPasses"] == [player_id]:
                 self.rules_engine["priorityPasses"] = []
                 self.rules_engine["priorityPlayerId"] = player_id
@@ -280,6 +297,7 @@ class ResolutionMixin:
         previous_passes = self.rules_engine["priorityPasses"]
         if not previous_passes:
             self.rules_engine["priorityPasses"] = [player_id]
+            self.rules_engine["priorityPassLocked"] = False
             self.rules_engine["priorityPlayerId"] = self.other_rules_player_id(player_id)
             return None, {
                 "status": "passed",

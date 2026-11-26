@@ -2382,6 +2382,15 @@ async def handle_message(ws, info, data):
         session.touch()
         await broadcast_state(session)
 
+    elif msg_type == "claim_rules_priority":
+        if is_observer or actor_id not in session.players:
+            return
+        error, result = session.claim_rules_priority(actor_id)
+        if error or result.get("status") != "locked":
+            return
+        session.touch()
+        await broadcast_state(session)
+
     elif msg_type == "request_rules_stack_payment":
         if is_observer or actor_id not in session.players:
             return await send_error(ws, "Observers cannot pay for a Stack action.")

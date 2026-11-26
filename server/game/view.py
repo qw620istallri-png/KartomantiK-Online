@@ -481,6 +481,7 @@ class ViewMixin:
                 ),
                 "conditionalSupportHandCardIds": conditional_support_hand_card_ids,
                 "priorityPasses": list(self.rules_engine["priorityPasses"]),
+                "priorityPassLocked": bool(self.rules_engine.get("priorityPassLocked")),
                 "actionStack": [
                     self.rules_stack_action_for_view(action, viewer_id, role)
                     for action in self.rules_engine["actionStack"]

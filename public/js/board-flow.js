@@ -692,6 +692,15 @@ function armRulesBoardTargets(flow) {
     });
   });
   if (!visibleTargets.length) {
+    // every legal target already chosen (one card in the Interzone for "up to 3"):
+    // nothing left to pick, so the choice is sent as it stands
+    if (
+      flow.mode === "trigger_target" && multiPick && !candidates.length
+      && (flow.selectedTargets || []).length >= Math.max(1, minTargets)
+    ) {
+      scheduleRulesBoardSubmit();
+      return;
+    }
     $("#rulesFlowInstruction").textContent = t("rulesBoardNoVisibleTarget");
     return;
   }
@@ -896,6 +905,7 @@ function refreshRulesBoardAction(flow) {
 }
 
 function renderRulesBoardFlow() {
+  if (pendingRulesBoardFlow) claimRulesPriorityIfAnswering();
   const counterFlow = pendingRulesBoardFlow;
   if (counterFlow?.counterEssencePending) {
     const pending = counterFlow.counterEssencePending;
@@ -1061,7 +1071,17 @@ function renderRulesBoardFlow() {
     const activeEffect = rulesActiveAbilityMarkup(flow.choice.sourceAbilityId);
     if (activeEffect) $("#rulesFlowInstruction").innerHTML = activeEffect;
     else $("#rulesFlowInstruction").textContent = rulesText("rulesTriggerChooseTargetInstruction", { card: cardName(flow.choice.sourceCardId) });
-    $("#rulesFlowCost").innerHTML = "";
+    // "up to N targets" (Echo of the Wilds: 1 to 3 cards of your Interzone):
+    // a Confirm button once the minimum is chosen, or the choice could only
+    // end with N different targets (26/11: 1 card in the Interzone, stuck).
+    const selected = flow.selectedTargets || [];
+    const targetRules = flow.draft.targetRules || {};
+    const canConfirm = flow.stage !== "committing" && !targetRules.groups && Number(targetRules.max || 0) > 1;
+    $("#rulesFlowCost").innerHTML = canConfirm
+      ? `<div class="rules-zone-pick-actions"><button type="button" class="primary" id="rulesConfirmTargets" ${selected.length >= Number(targetRules.min || 0) ? "" : "disabled"}>${esc(t("confirm"))} (${selected.length}/${targetRules.max})</button></div>`
+      : "";
+    const confirmTargets = $("#rulesConfirmTargets");
+    if (confirmTargets) confirmTargets.onclick = confirmRulesBoardTargets;
     if (flow.stage === "committing") clearRulesBoardTargets();
     else armRulesBoardTargets(flow);
     return;

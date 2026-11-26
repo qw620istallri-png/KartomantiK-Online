@@ -414,13 +414,20 @@ class ConfrontationMixin:
         forced_winner_id = self.rules_engine.get(
             "forcedConfrontationWinnerId"
         )
+        # Unpredictable Loudmouth: the last Manifestation to have ENTERED the
+        # Confrontation Zone this turn. Compare with the entry counter, not with
+        # the cards still there: a later entry that has since left still came
+        # after it (26/11 player report), and an entry from an earlier turn
+        # does not count.
+        last_entry = max(
+            [int(self.rules_engine.get("confrontationEntrySequence") or 0)]
+            + [int(item.get("confrontationOrder") or 0) for item in self.rules_confrontation_items()]
+        )
+        turn_start = int(self.rules_engine.get("confrontationTurnStartSequence") or 0)
         loudmouth_forces_stalemate = any(
             passive.get("kind") == "stalemate_if_last_confrontation_entry"
-            and int(source.get("confrontationOrder") or 0)
-            == max((
-                int(item.get("confrontationOrder") or 0)
-                for item in self.rules_confrontation_items()
-            ), default=0)
+            and int(source.get("confrontationOrder") or 0) == last_entry
+            and last_entry > turn_start
             for source in self.rules_active_passive_sources(
                 "stalemate_if_last_confrontation_entry"
             )
@@ -951,6 +958,7 @@ class ConfrontationMixin:
             ),
             default=0,
         )
+        self.rules_engine["confrontationTurnStartSequence"] = self.rules_engine["confrontationEntrySequence"]
         self.rules_engine["confrontationResult"] = None
         self.rules_engine["forcedConfrontationWinnerId"] = None
         self.rules_engine["forcedConfrontationStalemate"] = False

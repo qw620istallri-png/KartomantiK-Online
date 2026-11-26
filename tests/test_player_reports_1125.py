@@ -66,6 +66,30 @@ class LoudmouthRepro(RealCardRulesCase):
         self.assertEqual(order[-1], self.LOUD)
         self.assertTrue(self.compare(s)["stalemate"])
 
+    def test_later_entries_that_left_still_came_after_it(self):
+        # 26/11 report: the Loudmouth was already in the Zone, two Manifestations
+        # entered after it. Even if they have left since, it is no longer the
+        # last to have entered: no stalemate.
+        s, p1, p2 = self.setup_reaction()
+        self.play(s, "p1", self.LOUD); self.resolve_top(s)
+        s.rules_engine["priorityPlayerId"] = "p1"
+        self.play(s, "p1", "m-5"); self.resolve_top(s)
+        s.rules_engine["priorityPlayerId"] = "p1"
+        self.play(s, "p1", "m-6"); self.resolve_top(s)
+        s.battlefield = [item for item in s.battlefield if item["cardId"] not in ("m-5", "m-6")]
+        self.assertFalse(self.compare(s)["stalemate"])
+
+    def test_entry_from_an_earlier_turn_does_not_count(self):
+        # Still in the Zone from an earlier turn, the Loudmouth did not enter
+        # "this turn": alone or not, it does not force the stalemate.
+        s, p1, p2 = self.setup_reaction()
+        self.play(s, "p1", self.LOUD); self.resolve_top(s)
+        s.battlefield = [item for item in s.battlefield if item["cardId"] == self.LOUD] + [
+            self.field_item("b3", "p2", "m-2")]
+        s.battlefield[-1].update(fieldZone="confrontation", confrontationOrder=1)
+        s.reset_rules_confrontation_turn()
+        self.assertFalse(self.compare(s)["stalemate"])
+
 
 if __name__ == "__main__":
     unittest.main()
@@ -113,3 +137,43 @@ class KoxZizekSupportEntryTests(RealCardRulesCase):
         self.assertFalse(any(item["cardId"] == self.KOX for item in session.battlefield))
         self.assertEqual(p1["zones"]["graveyard"], ["w-0"])
         self.assertEqual(p1["zones"]["deck"][0], self.KOX)
+
+
+class PriorityPassLockTests(RealCardRulesCase):
+    """26/11 (Atavic) : un passage ne se reprend que si l'adversaire n'a rien commencé."""
+    ALL = ()
+
+    def passed(self):
+        session, _p1, _p2 = self.make_session()
+        session.rules_engine["enabled"] = True
+        session.rules_engine["priorityPlayerId"] = "p1"
+        self.assertEqual(session.pass_rules_priority("p1")[1]["status"], "passed")
+        return session
+
+    def test_pass_can_be_cancelled_while_the_opponent_does_nothing(self):
+        session = self.passed()
+        self.assertEqual(session.pass_rules_priority("p1", passed=False)[1]["status"], "cancelled")
+        self.assertEqual(session.rules_engine["priorityPlayerId"], "p1")
+
+    def test_opponent_starting_an_action_makes_the_pass_final(self):
+        session = self.passed()
+        self.assertEqual(session.claim_rules_priority("p2")[1]["status"], "locked")
+        error, _ = session.pass_rules_priority("p1", passed=False)
+        self.assertIn("already acting", error)
+        self.assertEqual(session.rules_engine["priorityPasses"], ["p1"])
+        self.assertEqual(session.rules_engine["priorityPlayerId"], "p2")
+
+    def test_only_the_player_answering_a_pass_can_lock_it(self):
+        session = self.passed()
+        self.assertEqual(session.claim_rules_priority("p1")[1]["status"], "ignored")
+        session.rules_engine["priorityPasses"] = []
+        self.assertEqual(session.claim_rules_priority("p2")[1]["status"], "ignored")
+        self.assertFalse(session.rules_engine["priorityPassLocked"])
+
+    def test_a_new_pass_starts_unlocked(self):
+        session = self.passed()
+        session.claim_rules_priority("p2")
+        session.rules_engine["priorityPasses"] = []  # p2 acted: a new priority window
+        session.rules_engine["priorityPlayerId"] = "p1"
+        session.pass_rules_priority("p1")
+        self.assertEqual(session.pass_rules_priority("p1", passed=False)[1]["status"], "cancelled")
