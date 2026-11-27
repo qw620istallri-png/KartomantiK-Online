@@ -899,6 +899,7 @@ class PriorityMixin:
                     if other.get("stackedOn") == source_item.get("id"):
                         other["stackedOn"] = None
                 action["sourceOnStack"] = True
+        powers_before_costs = self.rules_field_power_snapshot()
         tribute_result = self.pay_rules_tribute(player_id, clean_payment)
         action["cost"]["tributeMovements"] = tribute_result["movements"]
         action["cost"]["createdEssence"] = tribute_result["createdEssence"]
@@ -973,4 +974,11 @@ class PriorityMixin:
             and self.card_rules.get(clean_source.get("cardId"), {}).get("type") in RULES_WILL_TYPES
         ):
             self.queue_rules_will_target_watchers(action)
+        # Costs change Power too (Reduce on Gigabonblade, Thorn...): a
+        # Manifestation paid down to 0 or less is destroyed right away,
+        # while the ability it paid for stays on the Stack.
+        cost_state = {}
+        self._rules_state_actions_after_choice(powers_before_costs, cost_state)
+        if cost_state.get("stateActions"):
+            action["cost"]["stateActions"] = cost_state["stateActions"]
         return None, action

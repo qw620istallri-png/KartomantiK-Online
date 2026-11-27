@@ -4,7 +4,7 @@
 // fallback for a flaky connection. A new release changes VERSION, which makes
 // the browser install this worker again: the page then offers a reload
 // (never forced, and never in the middle of a game).
-const VERSION = "20261126-rules-beta-153-49";
+const VERSION = "20261127-rules-beta-153-50";
 const CACHE = `kko-${VERSION}`;
 const SHELL = ["./", "manifest.webmanifest", "icons/icon-192.png", "icons/icon-512.png"];
 

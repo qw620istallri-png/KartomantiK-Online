@@ -542,8 +542,11 @@ Deck ; le choix ne dépend plus d'un glisser-déposer depuis une pile invisible.
 
 ## Conséquences automatiques
 
-Après une résolution, `resolve_rules_state_actions` détruit immédiatement une
-Manifestation dont la puissance vient d'atteindre 0 ou moins. Les effets de
+Après une résolution, un choix ou le paiement d'un coût (Reduce de
+Gigabonblade, par exemple), `resolve_rules_state_actions` détruit immédiatement une
+Manifestation dont la puissance vient d'atteindre 0 ou moins. Une destruction qui
+fait elle-même perdre de la puissance (pénalité -2 de Gigabonblade) est revérifiée
+en cascade. Les effets de
 remplacement sont consultés avant cette destruction :
 
 1. Berta peut empêcher la puissance de descendre sous sa valeur de base ;

@@ -116,6 +116,13 @@ class ConfrontationMixin:
             ]
             if not candidates:
                 break
+            # Snapshot before this batch leaves: a departure can itself lower
+            # Power (Gigabonblade's -2 to every Manifestation), and a card it
+            # brings to 0 must be destroyed on the next pass.
+            powers_before_removal = {
+                item.get("id"): self.rules_manifestation_characteristics(item)["power"]
+                for item in self.battlefield
+            }
             removed_items = []
             sustained_any = False
             life_sources = self.rules_active_passive_sources(
@@ -172,10 +179,6 @@ class ConfrontationMixin:
                 if sustained_any:
                     break
                 break
-            powers_before_removal = {
-                item.get("id"): self.rules_manifestation_characteristics(item)["power"]
-                for item in self.battlefield
-            }
             self.prune_rules_ongoing_effects()
             previous_powers = powers_before_removal
         return {
